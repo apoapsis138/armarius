@@ -10,8 +10,11 @@ each keystroke, so neither front-end knows how a kind is found.
 
 A record is found by its name first; then a faction by its members'
 names, a record by the place it is in, and by the Tribunal whose lands
-that place is (places.lands_of). Secrets, notes and descriptions are not
-searched, nor season records or the calendar.
+that place is (places.lands_of). Notes and descriptions are not
+searched, nor season records or the calendar. The storyguide's Find also
+searches each record's Secrets, a match there marked secret; a player's
+never does, and never lists a record the players don't know of
+(viewing.py), nor names one as where another is.
 
 Books, spells and enchanted devices have no page of their own: each
 opens the page that holds it (its owner, the magus who knows it, its
@@ -24,11 +27,11 @@ from __future__ import annotations
 
 import unicodedata
 from collections.abc import Callable, Iterable, Iterator
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from functools import cache
 from typing import Any
 
-from . import catalog, memberships, neighbours, places, references
+from . import catalog, memberships, neighbours, places, references, viewing
 from . import enchanted_devices as ed
 from . import familiars as fam
 from .models import Character, Saga
@@ -37,6 +40,11 @@ from .rules import sites
 
 #: What a match's place and the words after it are joined with.
 SEPARATOR = " · "
+
+#: How a match in a record's Secrets is shown: the storyguide's alone.
+SECRET = "secret"
+#: How much of the Secrets a match on them shows, either side of the words.
+_AROUND = 24
 
 #: The lists a Spot names, on the page its entry opens.
 BOOKS, DEVICES, SPELLS = "books", "devices", "spells"
@@ -301,8 +309,41 @@ KINDS: dict[str, Callable[[Saga], Iterable[Entry]]] = {
 
 
 def entries(saga: Saga) -> list[Entry]:
-    """Every record Find can open, kind by kind."""
-    return [entry for list_kind in KINDS.values() for entry in list_kind(saga)]
+    """Every record Find can open, kind by kind, as whoever is looking may
+    read it: the storyguide's with each record's Secrets to be found by, a
+    player's without the records they don't know of."""
+    found = [entry for list_kind in KINDS.values() for entry in list_kind(saga)]
+    if viewing.storyguide_reads():
+        return [_with_secrets(saga, entry) for entry in found]
+    hidden = viewing.unknown_names(saga)
+    return [
+        _without_names(entry, hidden)
+        for entry in found
+        if viewing.ref_known(saga, entry.ref)
+    ]
+
+
+def _with_secrets(saga: Saga, entry: Entry) -> Entry:
+    """`entry` found by its record's Secrets too (not a book's or spell's,
+    which live on another's page)."""
+    if entry.spot is not None:
+        return entry
+    record = references.target(saga, entry.ref)
+    words = viewing.secret_words(record) if record is not None else ""
+    if not words:
+        return entry
+    return replace(entry, also=(*entry.also, (SECRET, words)))
+
+
+def _without_names(entry: Entry, hidden: set[str]) -> Entry:
+    """`entry` naming none of the `hidden` records as where it is."""
+    if not hidden:
+        return entry
+    place = "" if any(name and name in entry.place for name in hidden) else entry.place
+    also = tuple((how, words) for how, words in entry.also if words not in hidden)
+    if place == entry.place and also == entry.also:
+        return entry
+    return replace(entry, place=place, also=also)
 
 
 #: A page's Ref kind as the holder kind its device list is kept by.
@@ -360,6 +401,7 @@ _ALSO_RANKS: dict[str, int] = {
     "known by": 4,
     "familiar of": 4,
     "in the lands of": 5,
+    SECRET: 6,
 }
 
 
@@ -406,10 +448,26 @@ def _match(entry: Entry, needle: str) -> Match | None:
         return Match(entry, rank)
     found = [
         Match(entry, _ALSO_RANKS[how], f"{how} {words}", words)
+        if how != SECRET
+        else Match(entry, _ALSO_RANKS[how], f"secret: {_snippet(words, needle)}")
         for how, words in entry.also
         if needle in fold(words)
     ]
     return min(found, key=lambda m: m.rank, default=None)
+
+
+def _snippet(words: str, needle: str) -> str:
+    """The stretch of `words` around where `needle` (folded) is, on one line."""
+    line = " ".join(words.split())
+    at = fold(line).find(needle)
+    if at < 0:
+        return line[: 2 * _AROUND]
+    start, stop = max(0, at - _AROUND), at + len(needle) + _AROUND
+    return (
+        ("…" if start else "")
+        + line[start:stop].strip()
+        + ("…" if stop < len(line) else "")
+    )
 
 
 def search(found: list[Entry], query: str) -> list[Match]:

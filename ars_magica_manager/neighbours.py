@@ -35,6 +35,7 @@ from . import (
     town_guilds,
     towns,
     universities,
+    viewing,
     world,
 )
 from .form_spec import DialogField
@@ -248,8 +249,9 @@ def kinds_of(group_key: str) -> list[NeighbourKind]:
 
 
 def members(saga: Saga, group_key: str) -> list[Neighbour]:
-    """The neighbours listed under the group `group_key`, as entered."""
-    return [n for n in saga.neighbours if kind_of(n).group == group_key]
+    """The neighbours listed under the group `group_key`, as entered: those
+    whoever is looking may read (viewing.shown)."""
+    return [n for n in viewing.shown(saga.neighbours) if kind_of(n).group == group_key]
 
 
 def groups_shown(saga: Saga) -> list[Group]:

@@ -63,6 +63,7 @@ def test_a_characters_manage_chapter_exports_updates_and_deletes(app):
         "Update from a File",
         "Interests",
         "Demote",
+        "Hide from the Players",
         "Print to PDF",
         "Delete Leandro",
     ]

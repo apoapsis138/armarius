@@ -14,7 +14,7 @@ from textual.app import ComposeResult
 from textual.containers import Vertical, VerticalScroll
 from textual.widgets import Button, Collapsible, Static, TabbedContent
 
-from .... import arms, neighbour_filter, neighbours, open_stories
+from .... import arms, neighbour_filter, neighbours, open_stories, viewing
 from ....forms import neighbour as neighbour_forms
 from ....markup import aligned, escape, markdown_text
 from ....models import Covenant, Neighbour, Saga
@@ -36,6 +36,7 @@ from ..widgets import (
     SheetSection,
     TwoColumns,
     fact_markup,
+    marked_title,
 )
 from .base import SheetView
 from .kind_tabs import KindTabsView, list_id
@@ -51,7 +52,7 @@ def _list_id(section_id: str) -> str:
 def _facts_text(facts: list[Fact], column: int) -> str:
     half = (len(facts) + 1) // 2
     shown = facts[:half] if column == 0 else facts[half:]
-    return aligned([(f.label, fact_markup(f)) for f in shown])
+    return aligned([(f.label, fact_markup(f)) for f in viewing.facts(shown)])
 
 
 class RegionSheetView(SheetView):
@@ -234,7 +235,7 @@ class NeighbourSheetView(KindTabsView):
         with (
             Vertical(id="nb-top-panel"),
             PinnedCollapsible(
-                title=escape(self.neighbour.name), id=NEIGHBOUR_INFO_SECTION
+                title=marked_title(self.neighbour), id=NEIGHBOUR_INFO_SECTION
             ),
         ):
             self._on_refresh(NEIGHBOUR_INFO_SECTION, self._refresh_title)
@@ -276,11 +277,11 @@ class NeighbourSheetView(KindTabsView):
 
     def _more_tabs(self) -> list[KindTab]:
         """The kind's further tabs this neighbour shows: a storyguide-only
-        one (Roll Tables) only to the storyguide, as Secrets."""
+        one (Roll Tables) only to the storyguide (viewing.STORYGUIDE_ONLY)."""
         return [
             m
             for m in self.kind.more
-            if m.shows(self.neighbour) and (self.show_secrets or not m.storyguide_only)
+            if m.shows(self.neighbour) and viewing.reads(part=m.tab_id)
         ]
 
     def kind_holder(self) -> Neighbour:
@@ -302,13 +303,13 @@ class NeighbourSheetView(KindTabsView):
         return aligned(
             [
                 (f.label, fact_markup(f) or "[$label]—[/]")
-                for f in facts(self.saga, self.neighbour)
+                for f in viewing.facts(facts(self.saga, self.neighbour))
             ]
         )
 
     def _refresh_title(self) -> None:
         panel = self.query_one(f"#{NEIGHBOUR_INFO_SECTION}", Collapsible)
-        panel.title = escape(self.neighbour.name)
+        panel.title = marked_title(self.neighbour)
 
     def _facts(self, column: int) -> str:
         facts = region_sheet.neighbour_facts(self.saga, self.neighbour)

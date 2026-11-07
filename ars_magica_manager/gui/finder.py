@@ -31,6 +31,7 @@ from PySide6.QtGui import (
     QIcon,
     QKeyEvent,
     QPainter,
+    QPainterPath,
     QPaintEvent,
     QPen,
     QPixmap,
@@ -78,6 +79,30 @@ def magnifier_icon(colour: str, size: int = 20, ratio: float = 2.0) -> QIcon:
     pen.setWidthF(2.6)
     painter.setPen(pen)
     painter.drawLine(QPointF(12.6, 12.6), QPointF(17.2, 17.2))
+    painter.end()
+    picture.setDevicePixelRatio(ratio)
+    return QIcon(picture)
+
+
+def eye_icon(colour: str, size: int = 20, ratio: float = 2.0) -> QIcon:
+    """An eye drawn in `colour`, for Player view: two arcs meeting at the
+    corners, and the iris filled."""
+    side = round(size * ratio)
+    picture = QPixmap(side, side)
+    picture.fill(Qt.GlobalColor.transparent)
+    painter = QPainter(picture)
+    painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+    painter.scale(side / 20, side / 20)
+    pen = QPen(QColor(colour), 1.6)
+    pen.setCapStyle(Qt.PenCapStyle.RoundCap)
+    painter.setPen(pen)
+    painter.setBrush(Qt.BrushStyle.NoBrush)
+    outline = QPainterPath(QPointF(2, 10))
+    outline.quadTo(QPointF(10, 2), QPointF(18, 10))
+    outline.quadTo(QPointF(10, 18), QPointF(2, 10))
+    painter.drawPath(outline)
+    painter.setBrush(QColor(colour))
+    painter.drawEllipse(QPointF(10, 10), 2.6, 2.6)
     painter.end()
     picture.setDevicePixelRatio(ratio)
     return QIcon(picture)

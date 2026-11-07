@@ -38,7 +38,7 @@ from __future__ import annotations
 import unicodedata
 from typing import TYPE_CHECKING, Any
 
-from ...models import Covenant, Creature
+from ...models import Covenant, Creature, as_secrets, secret_words
 from ..builder import Builder, dormant, paragraphs
 
 if TYPE_CHECKING:
@@ -1612,6 +1612,9 @@ STORIES = paragraphs(
 
 
 def _add(record: Any, attr: str, more: str) -> None:
+    if attr == "secrets":
+        record.secrets = as_secrets(paragraphs(secret_words(record.secrets), more))
+        return
     setattr(record, attr, paragraphs(getattr(record, attr) or "", more))
 
 

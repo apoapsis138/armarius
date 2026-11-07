@@ -25,11 +25,13 @@ from .. import (
     tombs,
     town_court,
     towns,
+    viewing,
 )
 from ..commands import Act, Command, Refuse, SectionOps
 from ..forms import charter_strength as charter_strength_forms
 from ..forms import hunting as hunting_forms
 from ..forms import neighbour as neighbour_forms
+from ..forms import secrets as secret_forms
 from ..forms import threshold as threshold_forms
 from ..models import Covenant, Neighbour, Saga
 from ..models.hermetic_projects import BURNING_CITY, INTANGIBLE_ASSASSIN, LIVING_CORPSE
@@ -151,7 +153,9 @@ class NeighbourPage(QWidget):
             self.codex.add(
                 kind.tab.title, kind.tab.icon or kind.key, self._kind_chapter(kind.tab)
             )
-        shown = [m for m in kind.more if m.shows(neighbour)]
+        shown = [
+            m for m in kind.more if m.shows(neighbour) and viewing.reads(part=m.tab_id)
+        ]
         for more in (m for m in shown if not m.after_standing):
             self.codex.add(
                 more.title, more.icon or kind.key, self._kind_chapter(more, facts=False)
@@ -163,7 +167,12 @@ class NeighbourPage(QWidget):
             self.codex.add(
                 more.title, more.icon or kind.key, self._kind_chapter(more, facts=False)
             )
-        self.codex.add("Secrets", "secrets", secrets_chapter(neighbour, p, run))
+        if secret_forms.shown(neighbour):
+            self.codex.add(
+                secret_forms.tab_title(neighbour),
+                "secrets",
+                secrets_chapter(saga, neighbour, p, run),
+            )
         if controls is not None:
             self.codex.add("Manage", "manage", controls.chapter(p))
         outer.addWidget(self.codex, 1)

@@ -7,7 +7,7 @@ A chapter of the saga's page, on the desktop only: the saga's maps, each with a 
 - **Hover** over a pin to see the record in the Inspector: its name, what kind it is and its summary. Where several records share a spot, the pin shows how many, and the Inspector lists them all.
 - **Click** a pin to open its record's page; **Back** (its name in the trail) returns to the Atlas, at the same map and place. Where several share the spot, a click lists them to choose from.
 - **Show** chooses which kinds of record the map shows: covenants, laboratories, neighbours and places, creatures.
-- **Table view** leaves off the secret pins, and every record shown at one, for a screen your players can see across the table. A secret pin has a dashed ring, so it can be told apart without its colour.
+- In [Player view](help:player-view) (the eye in the title bar), for a screen your players can see across the table, the map leaves off the secret pins, every record shown at one, and every record the players don't know of; pins can't be moved or changed then. A secret pin has a dashed ring, so it can be told apart without its colour. A secret pin hides only itself, and an unknown record only itself: a known creature in an unknown grove still shows at the grove's pin, without the grove's name.
 
 A record with no pin of its own on the map is shown at the pin of what it sits in, however far out: a laboratory at its covenant's pin, a covenant built in a forest at the forest's, a regio's creature at its place's. The Inspector says where ("at the Black Forest"). A mobile covenant follows its stop in force, so its pin moves with it as the seasons pass, even past a pin of its own.
 
@@ -40,7 +40,7 @@ The pins belong to the saga. A Tribunal pack may bring its maps with a pin for e
 
 - **Place on Map** lists the covenants, neighbours and creatures with no pin on the map yet. Choose one, then click where it is on the map (Esc stops).
 - **Drag** a record's own pin to move it. A record shown at another's pin can't be dragged: place it to give it a pin of its own.
-- **Right-click** a pin to open its record, make it **Secret** (left off the Table view) or **take it off the map**. A pack's pin taken off stays off when the pack is imported again; placing the record again brings it back.
+- **Right-click** a pin to open its record, make it **Secret** (left off in Player view) or **take it off the map**. A pack's pin taken off stays off when the pack is imported again; placing the record again brings it back.
 - A record's page has **Show on Map** in its **Manage** chapter while it shows on a map: it opens the Atlas on that map, its pin ringed.
 
 ### Scale and distance
@@ -82,6 +82,6 @@ To use a better export later, click **Edit Map** and choose the new picture: the
 
 If the map has a scale bar, click **Set Scale**, click the bar's two ends and type its length: Measure then shows distances, and the Travel calculator fills in its miles.
 
-Laboratories, and anything else that sits in a place, need no pins of their own: each shows at the pin of its covenant or place. Before showing the map to your players, tick **Table view**.
+Laboratories, and anything else that sits in a place, need no pins of their own: each shows at the pin of its covenant or place. Before showing the map to your players, turn on [Player view](help:player-view) with the eye in the title bar.
 
 **See also:** [The Atlas](help:saga-atlas), [Pins](help:atlas-pins)

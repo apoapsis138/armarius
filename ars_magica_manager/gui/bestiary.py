@@ -13,6 +13,7 @@ from PySide6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
 from .. import artwork, creatures
 from .. import sheet_text as st
 from ..forms import creature as creature_forms
+from ..forms import secrets as secret_forms
 from ..forms import virtue as virtue_forms
 from ..forms import world as world_forms
 from ..grids import Grid
@@ -106,9 +107,15 @@ class CreaturePage(QWidget):
             "Combat": self._combat,
             "Powers & Vis": self._powers,
             "Description": self._description,
-            "Secrets": lambda: secrets_chapter(creature, p, run),
+            "Secrets": lambda: secrets_chapter(saga, creature, p, run),
         }
         for name, concept in CHAPTERS:
+            if name == "Secrets":
+                if secret_forms.shown(creature):
+                    self.codex.add(
+                        secret_forms.tab_title(creature), concept, builders[name]()
+                    )
+                continue
             self.codex.add(name, concept, builders[name]())
         if controls is not None:
             self.codex.add("Manage", "manage", controls.chapter(p))

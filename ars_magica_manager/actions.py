@@ -15,7 +15,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from enum import StrEnum
 from functools import partial
-from typing import TYPE_CHECKING, NamedTuple, Protocol
+from typing import TYPE_CHECKING, Any, NamedTuple, Protocol
 
 from . import (
     action_books,
@@ -35,6 +35,7 @@ from . import (
     theban_customs,
     threats,
     traditions,
+    viewing,
     world,
 )
 from . import book_value as bv
@@ -52,6 +53,7 @@ from .forms import careers, go_to, take_up
 from .forms import certamen_duel as certamen_forms
 from .forms import charter as charter_forms
 from .forms import hubris as hubris_forms
+from .forms import secrets as secret_forms
 from .forms import threshold as threshold_forms
 from .forms import tmre_divination as tmre_divination_forms
 from .forms import tmre_dreams as tmre_dream_forms
@@ -137,6 +139,7 @@ from .sections import (
     ORDERS_SECTION,
     PLAYERS_SECTION,
     REGION_STORIES_SECTION,
+    SECRETS_SECTION,
     SIEGES_SECTION,
     SILVER_SECTIONS,
     SOURCES_SECTION,
@@ -399,6 +402,18 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("h", "delay_threat", "Delay or Hasten"),
     MenuItem("g", "grow_story", "Grow into a Threat"),
     MenuItem("q", "merge_doubles", merges.TITLE),
+    # Who may read what (viewing.py): telling the players of a record, or
+    # taking it back; many at once on the Region; and the storyguide's
+    # own window seen as the players see it.
+    MenuItem("k", "reveal", "Reveal to the Players"),
+    MenuItem("k", "conceal", "Hide from the Players"),
+    MenuItem("k", "mark_unknown", "Hide from the Players"),
+    MenuItem("v", "player_view", "Player View"),
+    # One secret of a record's Secrets list, revealed or taken back, or
+    # split into a secret for each paragraph.
+    MenuItem("k", "reveal_secret", "Reveal the Secret"),
+    MenuItem("k", "conceal_secret", "Hide the Secret Again"),
+    MenuItem("s", "split_secret", "Split by Paragraph"),
     # A chapter of what the troupe did: on a threat, or a chosen open story.
     MenuItem("t", "take_up_tale", "Take Up the Tale"),
     MenuItem("t", "take_up_story", "Take Up the Tale"),
@@ -791,6 +806,8 @@ def available(action: str, facts: ActionFacts) -> bool:
     delete and decides what More and New offer."""
     if not facts.player_may(action):
         return False
+    if not viewing.offers(action):
+        return False
     if not action_books.book_allows(action, facts.saga):
         return False
     if action in deeds.DEEDS and _drafting(facts):
@@ -1048,6 +1065,27 @@ def _merges_doubles(facts: ActionFacts) -> bool:
         NodeKind.REGION,
         NodeKind.NEIGHBOUR_GROUP,
     ) and bool(merges.doubles(facts.saga))
+
+
+def _reveals(facts: ActionFacts, *, known: bool) -> bool:
+    """Reveal (a record the players don't know of) or Hide from the
+    Players (one they do): on a record of the world the troupe doesn't
+    play (viewing.can_be_unknown)."""
+    record = facts.record_to_delete()
+    return (
+        facts.on_record()
+        and viewing.can_be_unknown(record)
+        and getattr(record, "known", True) == known
+    )
+
+
+def _on_region(facts: ActionFacts) -> bool:
+    """On the saga or the Region (the desktop's The Region chapter)."""
+    return facts.selected_kind in (
+        NodeKind.SAGA,
+        NodeKind.REGION,
+        NodeKind.NEIGHBOUR_GROUP,
+    )
 
 
 def _on_dormant_threat(facts: ActionFacts) -> bool:
@@ -1485,6 +1523,10 @@ _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     "found_covenant": _on_ruin,
     "begin_story": _on_dormant_threat,
     "merge_doubles": _merges_doubles,
+    "reveal": partial(_reveals, known=False),
+    "conceal": partial(_reveals, known=True),
+    "mark_unknown": _on_region,
+    "player_view": _on_saga,
     "delay_threat": _on_threat_under_way,
     "take_up_tale": _on_threat_under_way,
     "go_to": _goes_to,
@@ -1613,6 +1655,31 @@ def _with_morale_rules(action: str) -> Callable[[ActionFacts, str], bool]:
         )
 
     return rule
+
+
+def _chosen_secret(facts: ActionFacts, section: str) -> tuple[Any, int] | None:
+    """The record on show and its chosen secret's row, in its Secrets list."""
+    if section != SECRETS_SECTION:
+        return None
+    record = facts.record_to_delete()
+    row = facts.chosen_row(SECRETS_SECTION)
+    found = getattr(record, "secrets", None)
+    if not isinstance(found, list) or row is None or not 0 <= row < len(found):
+        return None
+    return record, row
+
+
+def _on_secret(facts: ActionFacts, section: str, *, revealed: bool) -> bool:
+    """Reveal the Secret (one not revealed) or Hide the Secret Again (one
+    revealed), on the chosen row of a record's Secrets."""
+    chosen = _chosen_secret(facts, section)
+    return chosen is not None and chosen[0].secrets[chosen[1]].revealed == revealed
+
+
+def _splits_secret(facts: ActionFacts, section: str) -> bool:
+    """Split by Paragraph: on a chosen secret of several paragraphs."""
+    chosen = _chosen_secret(facts, section)
+    return chosen is not None and secret_forms.splits(*chosen)
 
 
 def _in_more_section(action: str) -> Callable[[ActionFacts, str], bool]:
@@ -1868,6 +1935,9 @@ def _imports(facts: ActionFacts, section: str) -> bool:
 #: When each action that depends on the active section is offered. An
 #: action in neither table is always offered.
 _SECTION_RULES: dict[str, Callable[[ActionFacts, str], bool]] = {
+    "reveal_secret": partial(_on_secret, revealed=False),
+    "conceal_secret": partial(_on_secret, revealed=True),
+    "split_secret": _splits_secret,
     "add": _has_verb("add"),
     "remove": _has_verb("remove"),
     "edit": _has_verb("edit"),

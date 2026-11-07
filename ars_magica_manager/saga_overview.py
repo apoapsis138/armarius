@@ -10,7 +10,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 from dataclasses import dataclass, replace
 
-from . import catalog, tribunal_packages, tribunals, world
+from . import catalog, tribunal_packages, tribunals, viewing, world
 from .markup import escape, fit
 from .models import (
     COMPANION_TYPES,
@@ -94,7 +94,7 @@ def covenant_cards(saga: Saga) -> list[CovenantCard]:
     """Each covenant with its aura and how many people and laboratories
     it has."""
     cards = []
-    for covenant in world.troupe_first(saga.covenants):
+    for covenant in world.troupe_first(viewing.shown(saga.covenants)):
         people = members(saga, covenant.id)
         labs = [lab for lab in saga.laboratories if lab.covenant_id == covenant.id]
         aura, realm = realms.aura_of(covenant)
@@ -119,7 +119,9 @@ def covenant_cards(saga: Saga) -> list[CovenantCard]:
 
 
 def members(saga: Saga, covenant_id: str | None) -> list[Character]:
-    return [c for c in saga.characters if c.covenant_id == covenant_id]
+    """The characters of the covenant (None: of none) whoever is looking
+    may read."""
+    return [c for c in viewing.shown(saga.characters) if c.covenant_id == covenant_id]
 
 
 @dataclass(frozen=True)

@@ -38,8 +38,7 @@ class ExportActions(WorkspaceBase):
                 data = transfer.export_data(
                     self.saga, record, with_members=with_members
                 )
-                if not self._is_storyguide():
-                    data = transfer.without_secrets(data)
+                data = transfer.for_reader(data)
                 self.app.deliver_binary(
                     io.BytesIO(json.dumps(data, indent=2).encode("utf-8")),
                     save_filename=path.name,
@@ -70,7 +69,7 @@ class ExportActions(WorkspaceBase):
         that Import reads back (A Whole Saga)."""
         if self.app.is_web:
             # A browser copy: the file goes to the player's computer.
-            data = transfer.export_saga_data(self.saga)
+            data = transfer.for_reader(transfer.export_saga_data(self.saga))
             self.app.deliver_binary(
                 io.BytesIO(json.dumps(data, indent=2).encode("utf-8")),
                 save_filename=transfer.saga_file_name(self.saga),

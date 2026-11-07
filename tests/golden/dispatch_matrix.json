@@ -6,7 +6,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Saga",
         "d": "(disabled)",
-        "m": "MenuScreen: Import, Export Saga, Export Pack, Host for Players, Set Date",
+        "m": "MenuScreen: Import, Export Saga, Export Pack, Host for Players, Set Date, Hide from the Players, Player View",
         "slash": "(disabled)"
       }
     }
@@ -555,9 +555,9 @@
     "SheetSection#section-secrets": {
       "active": "section-secrets",
       "keys": {
-        "a": "(disabled)",
-        "e": "FieldsDialog: Secrets of Keep",
-        "d": "(disabled)",
+        "a": "FieldsDialog: New Secret of Keep",
+        "e": "(nothing)",
+        "d": "(nothing)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -570,7 +570,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Character Info",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Traditions, Cast a Power, Export, Interests, Update from a File, In Creation / In Play, Demote, Go To, Certamen, Scholarly, Disputatio, A Scholar's Career, Religion, A Mother's Curse, Craft & Trade, Make Greek Fire, Tribunal & Order, Hermetic Letter, Invoke a Broken Oath, Dealings with Faerie, An Offer to Faerie, Apprenticeship, Turbulence",
+        "m": "MenuScreen: Traditions, Cast a Power, Export, Interests, Update from a File, In Creation / In Play, Demote, Hide from the Players, Go To, Certamen, Scholarly, Disputatio, A Scholar's Career, Religion, A Mother's Curse, Craft & Trade, Make Greek Fire, Tribunal & Order, Hermetic Letter, Invoke a Broken Oath, Dealings with Faerie, An Offer to Faerie, Apprenticeship, Turbulence",
         "slash": "(disabled)"
       }
     },
@@ -957,9 +957,9 @@
     "SheetSection#section-secrets": {
       "active": "section-secrets",
       "keys": {
-        "a": "(disabled)",
-        "e": "FieldsDialog: Secrets of Leandro",
-        "d": "(disabled)",
+        "a": "FieldsDialog: New Secret of Leandro",
+        "e": "(nothing)",
+        "d": "(nothing)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -1470,7 +1470,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Covenant",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Export, Update from a File, Promote, Demote, Arms, Go To",
+        "m": "MenuScreen: Export, Update from a File, Promote, Demote, Arms, Hide from the Players, Go To",
         "slash": "(disabled)"
       }
     },
@@ -1577,9 +1577,9 @@
     "SheetSection#section-secrets": {
       "active": "section-secrets",
       "keys": {
-        "a": "(disabled)",
-        "e": "FieldsDialog: Secrets of Fengheld",
-        "d": "(disabled)",
+        "a": "FieldsDialog: New Secret of Fengheld",
+        "e": "(nothing)",
+        "d": "(nothing)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -1779,9 +1779,9 @@
     "SheetSection#section-secrets": {
       "active": "section-secrets",
       "keys": {
-        "a": "(disabled)",
-        "e": "FieldsDialog: Secrets of Rhine",
-        "d": "(disabled)",
+        "a": "FieldsDialog: New Secret of Rhine",
+        "e": "(nothing)",
+        "d": "(nothing)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -1961,9 +1961,9 @@
     "SheetSection#section-secrets": {
       "active": "section-secrets",
       "keys": {
-        "a": "(disabled)",
-        "e": "FieldsDialog: Secrets of Theban",
-        "d": "(disabled)",
+        "a": "FieldsDialog: New Secret of Theban",
+        "e": "(nothing)",
+        "d": "(nothing)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -2143,9 +2143,9 @@
     "SheetSection#section-secrets": {
       "active": "section-secrets",
       "keys": {
-        "a": "(disabled)",
-        "e": "FieldsDialog: Secrets of Normandy",
-        "d": "(disabled)",
+        "a": "FieldsDialog: New Secret of Normandy",
+        "e": "(nothing)",
+        "d": "(nothing)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -2158,7 +2158,7 @@
         "a": "(disabled)",
         "e": "(disabled)",
         "d": "(disabled)",
-        "m": "(disabled)",
+        "m": "FieldsDialog: Hide from the Players",
         "slash": "(disabled)"
       }
     },
@@ -2168,7 +2168,7 @@
         "a": "(disabled)",
         "e": "(disabled)",
         "d": "(disabled)",
-        "m": "(disabled)",
+        "m": "FieldsDialog: Hide from the Players",
         "slash": "(disabled)"
       }
     },
@@ -2178,7 +2178,7 @@
         "a": "ChooseScreen: New Neighbour: what kind?",
         "e": "FieldsDialog: Edit Gottfried of Arnsberg",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "FieldsDialog: Hide from the Players",
         "slash": "FieldsDialog: Filter Neighbours"
       }
     },
@@ -2188,7 +2188,7 @@
         "a": "FieldsDialog: New Church",
         "e": "FieldsDialog: Edit Archbishop of Cologne",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "FieldsDialog: Hide from the Players",
         "slash": "FieldsDialog: Filter Neighbours"
       }
     },
@@ -2198,7 +2198,7 @@
         "a": "FieldsDialog: New University",
         "e": "FieldsDialog: Edit The Studium of Cologne",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "FieldsDialog: Hide from the Players",
         "slash": "FieldsDialog: Filter Neighbours"
       }
     },
@@ -2208,7 +2208,7 @@
         "a": "FieldsDialog: New Faction",
         "e": "FieldsDialog: Edit The Black Pool Coven",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "FieldsDialog: Hide from the Players",
         "slash": "FieldsDialog: Filter Neighbours"
       }
     },
@@ -2218,7 +2218,7 @@
         "a": "FieldsDialog: New Threat",
         "e": "FieldsDialog: Edit The Hollow Crown",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "FieldsDialog: Hide from the Players",
         "slash": "FieldsDialog: Filter Neighbours"
       }
     },
@@ -2228,7 +2228,7 @@
         "a": "FieldsDialog: New Place",
         "e": "FieldsDialog: Edit The Siebengebirge",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "FieldsDialog: Hide from the Players",
         "slash": "FieldsDialog: Filter Neighbours"
       }
     },
@@ -2238,7 +2238,7 @@
         "a": "FieldsDialog: New Custom",
         "e": "FieldsDialog: Edit The Weavers' Peace",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "FieldsDialog: Hide from the Players",
         "slash": "FieldsDialog: Filter Neighbours"
       }
     },
@@ -2248,7 +2248,7 @@
         "a": "(disabled)",
         "e": "(nothing)",
         "d": "(disabled)",
-        "m": "(nothing)",
+        "m": "MenuScreen: Grow into a Threat, Hide from the Players",
         "slash": "(disabled)"
       }
     },
@@ -2258,7 +2258,7 @@
         "a": "(disabled)",
         "e": "(disabled)",
         "d": "(disabled)",
-        "m": "(disabled)",
+        "m": "FieldsDialog: Hide from the Players",
         "slash": "(disabled)"
       }
     }
@@ -2270,7 +2270,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Gottfried of Arnsberg",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Arms, Go To",
+        "m": "MenuScreen: Arms, Hide from the Players, Go To",
         "slash": "(disabled)"
       }
     },
@@ -2417,10 +2417,10 @@
     "SheetSection#section-secrets": {
       "active": "section-secrets",
       "keys": {
-        "a": "(disabled)",
-        "e": "FieldsDialog: Secrets of Gottfried of Arnsberg",
-        "d": "(disabled)",
-        "m": "ChooseScreen: Go To",
+        "a": "FieldsDialog: New Secret of Gottfried of Arnsberg",
+        "e": "FieldsDialog: Edit Secret of Gottfried of Arnsberg",
+        "d": "ConfirmScreen",
+        "m": "MenuScreen: Reveal the Secret, Go To",
         "slash": "(disabled)"
       }
     }
@@ -2432,7 +2432,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Soest",
         "d": "ConfirmScreen",
-        "m": "FieldsDialog: Arms of Soest",
+        "m": "MenuScreen: Arms, Hide from the Players",
         "slash": "(disabled)"
       }
     },
@@ -2569,9 +2569,9 @@
     "SheetSection#section-secrets": {
       "active": "section-secrets",
       "keys": {
-        "a": "(disabled)",
-        "e": "FieldsDialog: Secrets of Soest",
-        "d": "(disabled)",
+        "a": "FieldsDialog: New Secret of Soest",
+        "e": "(nothing)",
+        "d": "(nothing)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -2584,7 +2584,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Archbishop of Cologne",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Arms, Go To",
+        "m": "MenuScreen: Arms, Hide from the Players, Go To",
         "slash": "(disabled)"
       }
     },
@@ -2631,9 +2631,9 @@
     "SheetSection#section-secrets": {
       "active": "section-secrets",
       "keys": {
-        "a": "(disabled)",
-        "e": "FieldsDialog: Secrets of Archbishop of Cologne",
-        "d": "(disabled)",
+        "a": "FieldsDialog: New Secret of Archbishop of Cologne",
+        "e": "(nothing)",
+        "d": "(nothing)",
         "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
@@ -2646,7 +2646,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit The Studium of Cologne",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "ConfirmScreen",
         "slash": "(disabled)"
       }
     },
@@ -2703,9 +2703,9 @@
     "SheetSection#section-secrets": {
       "active": "section-secrets",
       "keys": {
-        "a": "(disabled)",
-        "e": "FieldsDialog: Secrets of The Studium of Cologne",
-        "d": "(disabled)",
+        "a": "FieldsDialog: New Secret of The Studium of Cologne",
+        "e": "(nothing)",
+        "d": "(nothing)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -2718,7 +2718,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit The Black Pool Coven",
         "d": "ConfirmScreen",
-        "m": "FieldsDialog: Arms of The Black Pool Coven",
+        "m": "MenuScreen: Arms, Hide from the Players",
         "slash": "(disabled)"
       }
     },
@@ -2785,9 +2785,9 @@
     "SheetSection#section-secrets": {
       "active": "section-secrets",
       "keys": {
-        "a": "(disabled)",
-        "e": "FieldsDialog: Secrets of The Black Pool Coven",
-        "d": "(disabled)",
+        "a": "FieldsDialog: New Secret of The Black Pool Coven",
+        "e": "(nothing)",
+        "d": "(nothing)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -2800,7 +2800,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit The Hollow Crown",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Delay or Hasten, Take Up the Tale, Go To",
+        "m": "MenuScreen: Delay or Hasten, Hide from the Players, Take Up the Tale, Go To",
         "slash": "(disabled)"
       }
     },
@@ -2867,9 +2867,9 @@
     "SheetSection#section-secrets": {
       "active": "section-secrets",
       "keys": {
-        "a": "(disabled)",
-        "e": "FieldsDialog: Secrets of The Hollow Crown",
-        "d": "(disabled)",
+        "a": "FieldsDialog: New Secret of The Hollow Crown",
+        "e": "(nothing)",
+        "d": "(nothing)",
         "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
@@ -2882,7 +2882,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit The Drachenfels",
         "d": "ConfirmScreen",
-        "m": "ChooseScreen: Go To",
+        "m": "MenuScreen: Hide from the Players, Go To",
         "slash": "(disabled)"
       }
     },
@@ -3009,9 +3009,9 @@
     "SheetSection#section-secrets": {
       "active": "section-secrets",
       "keys": {
-        "a": "(disabled)",
-        "e": "FieldsDialog: Secrets of The Drachenfels",
-        "d": "(disabled)",
+        "a": "FieldsDialog: New Secret of The Drachenfels",
+        "e": "(nothing)",
+        "d": "(nothing)",
         "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
@@ -3098,7 +3098,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Aeolus",
         "d": "ConfirmScreen",
-        "m": "ChooseScreen: Go To",
+        "m": "MenuScreen: Hide from the Players, Go To",
         "slash": "(disabled)"
       }
     },
@@ -3235,9 +3235,9 @@
     "SheetSection#section-secrets": {
       "active": "section-secrets",
       "keys": {
-        "a": "(disabled)",
-        "e": "FieldsDialog: Secrets of Aeolus",
-        "d": "(disabled)",
+        "a": "FieldsDialog: New Secret of Aeolus",
+        "e": "(nothing)",
+        "d": "(nothing)",
         "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
@@ -3407,9 +3407,9 @@
     "SheetSection#section-secrets": {
       "active": "section-secrets",
       "keys": {
-        "a": "(disabled)",
-        "e": "FieldsDialog: Secrets of Transylvania",
-        "d": "(disabled)",
+        "a": "FieldsDialog: New Secret of Transylvania",
+        "e": "(nothing)",
+        "d": "(nothing)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -3589,9 +3589,9 @@
     "SheetSection#section-secrets": {
       "active": "section-secrets",
       "keys": {
-        "a": "(disabled)",
-        "e": "FieldsDialog: Secrets of Hibernia",
-        "d": "(disabled)",
+        "a": "FieldsDialog: New Secret of Hibernia",
+        "e": "(nothing)",
+        "d": "(nothing)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -3803,9 +3803,9 @@
     "SheetSection#section-secrets": {
       "active": "section-secrets",
       "keys": {
-        "a": "(disabled)",
-        "e": "FieldsDialog: Secrets of Greater Alps",
-        "d": "(disabled)",
+        "a": "FieldsDialog: New Secret of Greater Alps",
+        "e": "(nothing)",
+        "d": "(nothing)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }

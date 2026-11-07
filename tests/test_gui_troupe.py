@@ -12,11 +12,12 @@ import pytest
 pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
+from gui_steps import answering
 from PySide6.QtWidgets import QApplication, QLabel
 
 from ars_magica_manager import storage, troupe
 from ars_magica_manager.gui import pictures
-from ars_magica_manager.gui.bookmark import Ribbon
+from ars_magica_manager.gui.bookmark import Ribbon, Seal
 from ars_magica_manager.gui.character_sheet import CharacterSheet
 from ars_magica_manager.gui.covenant import CovenantPage
 from ars_magica_manager.gui.pages import SagaPage
@@ -110,6 +111,36 @@ def test_every_record_page_has_its_ribbon(app):
     assert _ribbon(window).record_id == "npc"
     window.open_covenant(None)  # the characters of no covenant: no record
     assert window.page().findChildren(Ribbon) == []  # type: ignore[union-attr]
+
+
+def _seal(window: MainWindow) -> Seal:
+    [seal] = window.page().findChildren(Seal)  # type: ignore[union-attr]
+    return seal
+
+
+def test_the_seal_under_the_ribbon_reveals_and_hides_a_record(app):
+    """A record the players may not know of has a seal under its ribbon,
+    saying Hidden or Known only on hover; a click reveals or hides it
+    after asking. The troupe's own records have none."""
+    window = _window()
+    window.show_character("pc1")
+    assert window.page().findChildren(Seal) == []  # type: ignore[union-attr]
+    window.open_neighbour("n1")
+    assert _seal(window).known and "Known" in _seal(window).toolTip()
+    answering(window, True)
+    _seal(window).click()
+    assert not storage.load_saga("troupe_saga").neighbours[0].known
+    assert "Hidden" in _seal(window).toolTip()
+    answering(window, True)
+    _seal(window).click()
+    assert storage.load_saga("troupe_saga").neighbours[0].known
+
+
+def test_player_view_shows_no_seal(app):
+    window = _window()
+    window.toggle_player_view()
+    window.open_neighbour("n1")
+    assert window.page().findChildren(Seal) == []  # type: ignore[union-attr]
 
 
 def test_a_page_reopens_on_the_chapter_it_was_left_at(app):

@@ -17,6 +17,7 @@ from .. import (
     threats,
     tribunal_packages,
     tribunals,
+    viewing,
     vis_sites,
     world,
 )
@@ -39,7 +40,7 @@ def _attitude_cell(saga: Saga, record: Neighbour | Covenant) -> tuple[str, str |
 
 def others(saga: Saga) -> list[Covenant]:
     """The covenants the troupe doesn't play."""
-    return [c for c in saga.covenants if not c.played]
+    return [c for c in viewing.shown(saga.covenants) if not c.played]
 
 
 # -- the Region's top panel --
@@ -58,7 +59,7 @@ def facts(saga: Saga, showing: bool = True) -> list[Fact]:
     controls say so themselves)."""
     home = neighbours.home(saga)
     tribunal = tribunals.of(saga, home) if home is not None else None
-    held = [n for n in saga.neighbours if neighbours.kind_of(n).attitude]
+    held = [n for n in viewing.shown(saga.neighbours) if neighbours.kind_of(n).attitude]
     scores = [neighbours.score(saga, n) for n in held]
     warm = sum(1 for s in scores if s is not None and s > 0)
     wary = sum(1 for s in scores if s is not None and s < 0)
@@ -118,7 +119,7 @@ def due_threat(saga: Saga) -> Neighbour | None:
 
 def neighbours_title(saga: Saga) -> str:
     """ "Neighbours (6)": those that hold an attitude, places aside."""
-    held = [n for n in saga.neighbours if neighbours.kind_of(n).attitude]
+    held = [n for n in viewing.shown(saga.neighbours) if neighbours.kind_of(n).attitude]
     return f"Neighbours ({len(held)})"
 
 
@@ -219,7 +220,9 @@ def threats_grid(saga: Saga) -> Grid:
         words, colour = _attitude_cell(saga, found)
         if colour:
             styles[(index, 4)] = colour
-        upcoming = threats.reached(saga, found).next
+        upcoming = (
+            threats.reached(saga, found).next if viewing.storyguide_reads() else None
+        )
         rows.append(
             [
                 found.name,
@@ -540,7 +543,7 @@ def by_place(saga: Saga) -> list[PlaceRow]:
     what rests on it (its neighbours, covenants and creatures) and the
     places inside it, each under the one it sits in; then what is placed
     nowhere. Places in places is a Composite, walked once."""
-    every = sites.all_places(saga)
+    every = viewing.shown(sites.all_places(saga))
     known = {p.id for p in every}
     inside: dict[str | None, list[Neighbour]] = {}
     for found in every:
@@ -548,20 +551,20 @@ def by_place(saga: Saga) -> list[PlaceRow]:
         inside.setdefault(parent, []).append(found)
     resting: dict[str, list[Neighbour | Covenant | Creature]] = {}
     nowhere: list[Neighbour | Covenant | Creature] = []
-    for record in saga.neighbours:
+    for record in viewing.shown(saga.neighbours):
         if sites.is_place(record):
             continue
         if record.place_id in known:
             resting.setdefault(record.place_id, []).append(record)
         else:
             nowhere.append(record)
-    for covenant in saga.covenants:
+    for covenant in viewing.shown(saga.covenants):
         at = sites.covenant_place(saga, covenant)
         if at is not None:
             resting.setdefault(at[0].id, []).append(covenant)
         elif not covenant.played:
             nowhere.append(covenant)
-    for creature in saga.creatures:
+    for creature in viewing.shown(saga.creatures):
         if creature.place_id in known:
             resting.setdefault(creature.place_id, []).append(creature)
     rows: list[PlaceRow] = []

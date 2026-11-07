@@ -34,7 +34,7 @@ from PySide6.QtGui import (
 )
 from PySide6.QtWidgets import QGridLayout, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
-from .. import artwork, medallions, references, world
+from .. import artwork, medallions, references, viewing, world
 from ..markup import markdown_text
 from ..models import Attitude, Saga
 from ..sheets import character as cs
@@ -168,7 +168,8 @@ def fact_grid(
     grid.setContentsMargins(0, 0, 0, 0)
     grid.setHorizontalSpacing(28)
     grid.setVerticalSpacing(10)
-    for i, fact in enumerate(facts):
+    # A record the reader may not know of is named nowhere (viewing.facts).
+    for i, fact in enumerate(viewing.facts(facts)):
         cell = QWidget()
         stack = QVBoxLayout(cell)
         stack.setContentsMargins(0, 0, 0, 0)

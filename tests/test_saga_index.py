@@ -4,7 +4,7 @@ Secrets and notes are not searched."""
 
 from __future__ import annotations
 
-from ars_magica_manager import references, saga_index
+from ars_magica_manager import references, saga_index, viewing
 from ars_magica_manager.models import (
     Book,
     Character,
@@ -18,6 +18,7 @@ from ars_magica_manager.models import (
     Saga,
     Spell,
     Tribunal,
+    as_secrets,
 )
 
 
@@ -36,7 +37,7 @@ def _saga() -> Saga:
             name="Gottfried of Arnsberg",
             kind="lord",
             place_id="drachenfels",
-            secrets="Secretly a werewolf",
+            secrets=as_secrets("Secretly a werewolf"),
             summary="A grasping lord",
         ),
         Neighbour(
@@ -182,10 +183,28 @@ def test_a_record_is_found_by_its_place_and_its_tribunals_lands():
     assert ranks["The Drachenfels"] < ranks["The Wyrm"]
 
 
-def test_secrets_and_notes_are_not_searched():
+def test_notes_are_not_searched_and_secrets_only_by_the_storyguide():
     saga = _saga()
-    assert _found(saga, "werewolf") == []
     assert _found(saga, "grasping") == []
+    [match] = saga_index.search(saga_index.entries(saga), "werewolf")
+    assert match.note == "secret: Secretly a werewolf"
+    viewing.use(viewing.TABLE_VIEWER, saga)
+    assert _found(saga, "werewolf") == []
+
+
+def test_a_player_never_finds_an_unknown_record_nor_where_it_is():
+    saga = _saga()
+    saga.neighbours.append(
+        Neighbour(id="grove", name="The Hidden Grove", kind="place", known=False)
+    )
+    saga.neighbours.append(
+        Neighbour(id="hermit", name="The Hermit", kind="faction", place_id="grove")
+    )
+    assert "The Hidden Grove" in _found(saga, "hidden")
+    viewing.use(viewing.TABLE_VIEWER, saga)
+    assert _found(saga, "hidden") == []
+    [hermit] = [e for e in saga_index.entries(saga) if e.name == "The Hermit"]
+    assert hermit.place == ""
 
 
 def test_no_words_lists_everything_and_unknown_words_nothing():

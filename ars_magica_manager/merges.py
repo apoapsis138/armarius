@@ -145,7 +145,10 @@ def _move_words(n: Neighbour, record: Character | Creature) -> None:
         record.summary = _written(record.summary, words)
     else:
         record.notes = _written(record.notes, words)
-    record.secrets = _written(record.secrets, n.secrets)
+    record.secrets = [
+        *record.secrets,
+        *(s for s in n.secrets if s not in record.secrets),
+    ]
 
 
 def _move_place(n: Neighbour, record: Character | Creature) -> None:

@@ -1,3 +1,5 @@
+from ars_magica_manager.models import as_secrets
+
 """Helpers shared by several test modules (fixtures live in conftest.py)."""
 
 import re
@@ -606,7 +608,7 @@ def everything_saga() -> Saga:
                 name="Gottfried of Arnsberg",
                 kind="lord",
                 summary="Count of Arnsberg. Wants the mill rent.",
-                secrets="He owes the Archbishop more than he can pay.",
+                secrets=as_secrets("He owes the Archbishop more than he can pay."),
                 ruler="Count Gottfried",
                 answers_to="cologne",
                 attitudes=[

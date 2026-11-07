@@ -15,6 +15,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from ...models import as_secrets, secret_words
 from ..builder import paragraphs, secrets
 
 if TYPE_CHECKING:
@@ -939,4 +940,4 @@ def build(provence: Provence) -> None:
     eras = paragraphs(*(f"{title}. {text}" for title, text in ERAS))
     # Any history already written keeps its place, its secrets ahead of ours.
     tribunal.history = paragraphs(tribunal.history, eras)
-    tribunal.secrets = paragraphs(tribunal.secrets, FUTURE)
+    tribunal.secrets = as_secrets(paragraphs(secret_words(tribunal.secrets), FUTURE))

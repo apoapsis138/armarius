@@ -52,6 +52,7 @@ from .... import (
     storage,
     transfer,
     tribunals,
+    viewing,
     world,
 )
 from .... import books as bk
@@ -309,6 +310,10 @@ _STORYGUIDE_ACTIONS = frozenset(
         "delay_threat",
         "grow_story",
         "merge_doubles",
+        "reveal",
+        "conceal",
+        "mark_unknown",
+        "player_view",
         "take_up_tale",
         "take_up_story",
         "create_character",
@@ -714,6 +719,12 @@ class WorkspaceBase(Screen[None]):
         return self.query_one(f"#{DETAIL_PANE_ID}", VerticalScroll)
 
     async def on_mount(self) -> None:
+        #: Player view (viewing.py): the storyguide's own copy as the
+        #: players see it, remembered for the saga on this computer.
+        self._player_view = self._is_storyguide() and viewing.player_view_on(
+            self.saga.id
+        )
+        self._use_viewer()
         self._update_saga_clock()
         self._rebuild_tree()
         if not self._is_storyguide():
@@ -872,6 +883,8 @@ class WorkspaceBase(Screen[None]):
         saga = self.saga
         player = self._signed_in()
         who = f" | {escape(player.name)}" if player is not None else ""
+        if viewing.current().kind == viewing.TABLE:
+            who += " | Player view"
         self.sub_title = (
             f"{escape(saga.name)} | {saga.current_season} {saga.current_year}{who}"
         )
@@ -883,7 +896,7 @@ class WorkspaceBase(Screen[None]):
 
         # The troupe's covenants at the top; the others in the Region,
         # each under its Tribunal.
-        for covenant in self.saga.covenants:
+        for covenant in viewing.shown(self.saga.covenants):
             if covenant.played:
                 self._add_covenant_node(tree.root, covenant, expand=True)
         self._add_region(tree.root)
@@ -898,7 +911,9 @@ class WorkspaceBase(Screen[None]):
         # this is where things land if they're taken out of one.
         covenant_ids = {c.id for c in self.saga.covenants}
         loose_characters = [
-            c for c in self.saga.characters if c.covenant_id not in covenant_ids
+            c
+            for c in viewing.shown(self.saga.characters)
+            if c.covenant_id not in covenant_ids
         ]
         if loose_characters:
             group = tree.root.add(
@@ -940,7 +955,11 @@ class WorkspaceBase(Screen[None]):
         """A covenant's node, with its characters and laboratories under it.
         A covenant kept at Line or Sketch detail lists only the groups it
         has anything in."""
-        characters = [c for c in self.saga.characters if c.covenant_id == covenant.id]
+        characters = [
+            c
+            for c in viewing.shown(self.saga.characters)
+            if c.covenant_id == covenant.id
+        ]
         labs = [lab for lab in self.saga.laboratories if lab.covenant_id == covenant.id]
         label = escape(world.marked_name(covenant)) + _creating(covenant)
         data = (NodeKind.COVENANT, covenant.id)
@@ -973,7 +992,7 @@ class WorkspaceBase(Screen[None]):
         """The Region: each Tribunal with the covenants the troupe doesn't
         play under it, then any such covenant that has no Tribunal."""
         region = parent.add("The Region", data=(NodeKind.REGION,), expand=True)
-        others = [c for c in self.saga.covenants if not c.played]
+        others = [c for c in viewing.shown(self.saga.covenants) if not c.played]
         for tribunal in self.saga.tribunals:
             node = region.add(
                 escape(tribunal.name),
@@ -1622,9 +1641,6 @@ class WorkspaceBase(Screen[None]):
             # widget not yet removed collides with its freshly-mounted
             # replacement and Textual raises DuplicateIds.
             await detail_pane.remove_children()
-            for widget in widgets:
-                if isinstance(widget, SheetView):
-                    widget.show_secrets = self._is_storyguide()
             await detail_pane.mount(*widgets)
 
     async def _show_placeholder_detail(self, title: str, hint: str) -> None:
@@ -1646,8 +1662,8 @@ class WorkspaceBase(Screen[None]):
         lines.append(f"Optional rules: {rule_options.summary(saga)}")
         lines += [
             "",
-            f"Covenants: {len(saga.covenants)}",
-            f"Characters: {len(saga.characters)}",
+            f"Covenants: {len(viewing.shown(saga.covenants))}",
+            f"Characters: {len(viewing.shown(saga.characters))}",
             f"Laboratories: {len(saga.laboratories)}",
             f"Books: {len(saga.books)}",
             f"Spells: {len(saga.spells)}",
@@ -2095,6 +2111,35 @@ class WorkspaceBase(Screen[None]):
             NodeKind.CREATURE: self.selected_creature,
         }.get(self.selected_kind)
         return pl.may_change(self.saga, self._signed_in(), record)
+
+    def _use_viewer(self) -> None:
+        """Tell the core who is reading this copy (viewing.use)."""
+        viewing.use(
+            viewing.viewer_for(
+                self._signed_in(), player_view=getattr(self, "_player_view", False)
+            ),
+            self.saga,
+        )
+
+    async def action_player_view(self) -> None:
+        """More's Player View on the saga: turn the storyguide's own copy
+        to what the players see, or back."""
+        self._player_view = not self._player_view
+        viewing.set_player_view(self.saga.id, self._player_view)
+        self._use_viewer()
+        self._update_saga_clock()
+        self._rebuild_tree()
+        tree = self._nav_tree()
+        tree.select_node(tree.root)
+        # Selecting a node toggles it open or shut: the saga stays open.
+        self.call_after_refresh(tree.root.expand)
+        await self._show_saga_detail()
+        self.refresh_bindings()
+        self.notify(
+            "Player view: you see what the players see."
+            if self._player_view
+            else "Player view is off: you see everything."
+        )
 
     def _is_storyguide(self) -> bool:
         """Whether whoever is using this copy runs the saga: the

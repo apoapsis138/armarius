@@ -4,7 +4,7 @@ import sys
 import pytest
 from tiers import is_screen_test_file
 
-from ars_magica_manager import catalog, neighbour_filter, paths, storage
+from ars_magica_manager import catalog, neighbour_filter, paths, storage, viewing
 
 # The desktop version's sounds stay silent under test (gui/sounds.py).
 os.environ["ARMARIUS_SOUNDS"] = "off"
@@ -37,6 +37,9 @@ def isolated_sagas_dir(tmp_path, monkeypatch):
     monkeypatch.setattr(storage, "_last_seen", {})
     # And how each saga's Region lists are filtered.
     monkeypatch.setattr(neighbour_filter, "_CURRENT", {})
+    # And who is reading: the storyguide, unless a test says otherwise.
+    monkeypatch.setattr(viewing, "_in_use", viewing.STORYGUIDE_VIEWER)
+    monkeypatch.setattr(viewing, "_saga", None)
 
 
 @pytest.fixture(autouse=True)

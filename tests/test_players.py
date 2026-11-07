@@ -341,6 +341,7 @@ async def test_only_the_storyguide_sees_a_records_secrets(in_a_browser):
             assert not ws._current_sheet_view().query("#tab-secrets"), node
 
         app.player = hedda
+        ws._use_viewer()
         await _show(pilot, ws, ("neighbour", "gottfried"))
         assert ws._current_sheet_view().query("#tab-secrets")
 
@@ -360,6 +361,7 @@ async def test_only_the_storyguide_sees_and_rolls_roll_tables(in_a_browser):
             assert not ws._available("roll_table"), key
 
         app.player = hedda
+        ws._use_viewer()
         assert ws._player_may("roll_table")
         for key in _WITH_TABLES:
             view = await _sheet_of(pilot, ws, key)

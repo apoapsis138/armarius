@@ -1,7 +1,7 @@
 ===== tab-nb-church
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-     Archbishop of Cologne
+     Archbishop of Cologne 👁
 
       Kind:            Church                  Realm:        Divine
       Detail:          Line                    Book:         TC
@@ -44,7 +44,7 @@
 ===== tab-nb-standing
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-     Archbishop of Cologne
+     Archbishop of Cologne 👁
 
       Kind:            Church                  Realm:        Divine
       Detail:          Line                    Book:         TC
@@ -87,7 +87,7 @@
 ===== tab-secrets
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-     Archbishop of Cologne
+     Archbishop of Cologne 👁
 
       Kind:            Church                  Realm:        Divine
       Detail:          Line                    Book:         TC
@@ -100,10 +100,10 @@
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Secrets
+    ▼ Secrets (0)
 
-      Nothing secret written yet: edit it to add what only you should know.
-
+      No secrets yet: add what only you should know, one secret at a time.
+      No secrets yet: add what only you should know, one secret at a time.
 
 
 

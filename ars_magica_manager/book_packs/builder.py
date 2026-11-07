@@ -64,6 +64,8 @@ from ..models import (
     TribunalDiaryEntry,
     VirtueFlawInstance,
     as_character_type,
+    as_secrets,
+    secret_words,
 )
 from ..models.common import SEASONS, SECRETS_HEADING
 from ..models.world import FULL, SKETCH
@@ -279,6 +281,15 @@ class Builder:
         self.replaces: dict[str, str] = {}
         self.sketches: dict[str, Character] = {}
 
+    # -- what the players know of --
+
+    def secret[R: (Character, Covenant, Neighbour, Creature)](self, record: R) -> R:
+        """Mark `record` as one the players don't know of (viewing.py): it
+        is imported unknown, where every other record is imported known,
+        until the storyguide reveals it."""
+        record.known = False
+        return record
+
     # -- ids --
 
     def _covenant_id(self, name: str) -> str:
@@ -323,7 +334,7 @@ class Builder:
             meeting_place=meeting_place,
             covenants_total=covenants_total,
             magi_total=magi_total,
-            secrets=secrets,
+            secrets=as_secrets(secrets),
         )
         self.saga.tribunals.append(tribunal)
         return tribunal
@@ -541,7 +552,7 @@ class Builder:
             liege_id=liege.id if liege is not None else None,
             oath=oath,
             aegis_of_the_hearth=aegis,
-            secrets=secrets,
+            secrets=as_secrets(secrets),
         )
         if place is not None:
             covenant.place_id, covenant.place_level = place.id, level
@@ -574,7 +585,7 @@ class Builder:
             covenant_id=covenant.id if covenant else None,
             detail=detail,
             summary=summary,
-            secrets=secrets,
+            secrets=as_secrets(secrets),
             traditions=list(traditions or []),
         )
         character.hermetic.house = house
@@ -730,7 +741,7 @@ class Builder:
             realm=realm,
             details=dict(details or {}),
             arms=arms.to_dict() if arms else {},
-            secrets=secrets,
+            secrets=as_secrets(secrets),
         )
         if place is not None:
             neighbour.place_id, neighbour.place_level = place.id, level
@@ -1110,7 +1121,9 @@ class Builder:
         kept = next(n for n in records if n.name == keep)
         gone = next(n for n in reversed(records) if n.name == drop and n is not kept)
         kept.summary = paragraphs(kept.summary, gone.summary)
-        kept.secrets = paragraphs(kept.secrets, gone.secrets).strip()
+        kept.secrets = as_secrets(
+            paragraphs(secret_words(kept.secrets), secret_words(gone.secrets)).strip()
+        )
         for record in self.saga.neighbours:
             if record.answers_to == gone.id:
                 record.answers_to = kept.id
@@ -1200,7 +1213,7 @@ class Builder:
             order=order,
             hierarchy=hierarchy,
             weakness=weakness,
-            secrets=secrets,
+            secrets=as_secrets(secrets),
         )
         creature.characteristics = replace(
             creature.characteristics, **block.get("characteristics", {})
@@ -1479,7 +1492,9 @@ def hide_holdings(saga: Saga) -> None:
             kept, held = _split_holdings(getattr(record, name))
             if held:
                 setattr(record, name, kept)
-                record.secrets = paragraphs(record.secrets, *held).strip()
+                record.secrets = as_secrets(
+                    paragraphs(secret_words(record.secrets), *held).strip()
+                )
 
 
 #: Books whose stat blocks keep a spell at its printed level and Arts as

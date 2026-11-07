@@ -303,7 +303,8 @@ async def test_selecting_character_shows_sheet_fields():
         await _select_character(pilot, app)
 
         view = app.screen._character_sheet_view
-        assert view.query_one("#section-char-info", Collapsible).title == "Leandro"
+        # Leandro has no player: the storyguide sees him marked known (👁).
+        assert view.query_one("#section-char-info", Collapsible).title == "Leandro 👁"
         assert "Test Covenant" in view._info_right_text()
         assert "Leandro's Sanctum" in view._info_right_text()
         assert "Int: +3" in view._characteristics_text()

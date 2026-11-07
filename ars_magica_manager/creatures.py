@@ -12,7 +12,7 @@ kind of Character; the rules here are plain functions."""
 
 from __future__ import annotations
 
-from . import references, storage, world
+from . import references, storage, viewing, world
 from .models import BodyVis, Creature, CreaturePower, Saga
 from .rules import derived, realms, scores
 
@@ -31,8 +31,9 @@ def add(saga: Saga, name: str) -> Creature:
 
 
 def listed(saga: Saga) -> list[Creature]:
-    """The Bestiary in order: by name."""
-    return sorted(saga.creatures, key=lambda c: c.name.casefold())
+    """The Bestiary in order, by name: the creatures whoever is looking
+    may read (viewing.shown)."""
+    return sorted(viewing.shown(saga.creatures), key=lambda c: c.name.casefold())
 
 
 def vis_text(vis: BodyVis) -> str:

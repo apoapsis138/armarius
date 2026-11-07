@@ -11,7 +11,7 @@ from textual.app import ComposeResult
 from textual.containers import Vertical, VerticalScroll
 from textual.widgets import Button, Collapsible, Static, TabbedContent
 
-from .... import creatures
+from .... import creatures, viewing
 from .... import sheet_text as st
 from ....boon_hook_text import counted
 from ....forms import creature as creature_forms
@@ -42,6 +42,7 @@ from ..widgets import (
     SheetSection,
     TwoColumns,
     fact_markup,
+    marked_title,
 )
 from .base import SheetView
 
@@ -49,7 +50,9 @@ from .base import SheetView
 def _facts_text(facts: list[Fact], column: int) -> str:
     half = (len(facts) + 1) // 2
     shown = facts[:half] if column == 0 else facts[half:]
-    return aligned([(f.label, fact_markup(f) or "[$label]—[/]") for f in shown])
+    return aligned(
+        [(f.label, fact_markup(f) or "[$label]—[/]") for f in viewing.facts(shown)]
+    )
 
 
 def _list_id(section_id: str) -> str:
@@ -150,7 +153,7 @@ class CreatureSheetView(SheetView):
         with (
             Vertical(id="cr-top-panel"),
             PinnedCollapsible(
-                title=escape(self.creature.name), id=CREATURE_INFO_SECTION
+                title=marked_title(self.creature), id=CREATURE_INFO_SECTION
             ),
         ):
             self._on_refresh(CREATURE_INFO_SECTION, self._refresh_title)
@@ -171,7 +174,7 @@ class CreatureSheetView(SheetView):
 
     def _refresh_title(self) -> None:
         panel = self.query_one(f"#{CREATURE_INFO_SECTION}", Collapsible)
-        panel.title = escape(self.creature.name)
+        panel.title = marked_title(self.creature)
 
     def _facts(self, column: int) -> str:
         return _facts_text(crs.facts(self.saga, self.creature), column)

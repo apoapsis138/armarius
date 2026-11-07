@@ -9,7 +9,7 @@ from dataclasses import dataclass, field
 from typing import Any, TypedDict
 
 from .atlas import AtlasMap
-from .common import Change, known_fields, move_secrets
+from .common import Change, Secret, known_fields, move_secrets
 from .polemic import Argument
 from .traits import new_instance_id
 
@@ -228,7 +228,7 @@ class Tribunal:
     meeting: Meeting | None = None
     #: What only the storyguide should read: the record's Secrets
     #: chapter, hidden from players signed in to a hosted copy.
-    secrets: str = ""
+    secrets: list[Secret] = field(default_factory=list)
     # Polemic (Transforming Mythic Europe pp. 27-35): the arguments meant
     # for coming meetings, each with its texts. Older saves load without.
     arguments: list[Argument] = field(default_factory=list)

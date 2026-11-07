@@ -61,7 +61,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import artwork
+from .. import artwork, viewing
 from ..arts import ART_ABBREVIATIONS, ARTS, FORMS, TECHNIQUES
 from ..tables import Table
 from ..tribunal_packages.rhine import gild_tree
@@ -815,12 +815,22 @@ class Codex(QSplitter):
         self.setSizes([180, 900, 340])
 
     def add(
-        self, name: str, concept: str, page: QWidget | Callable[[], QWidget]
+        self,
+        name: str,
+        concept: str,
+        page: QWidget | Callable[[], QWidget],
+        part: str = "",
     ) -> None:
         """Add a chapter, with its icon (artwork.ICON_NAMES); the first
         one added is shown. A chapter given as a function that builds it
         is built only when first turned to, for one too big to draw
-        every time its page opens."""
+        every time its page opens. `part` is the chapter's id where only
+        the storyguide may read it (viewing.STORYGUIDE_ONLY): left out
+        for anyone else."""
+        if part and not viewing.reads(part=part):
+            if isinstance(page, QWidget):
+                page.deleteLater()
+            return
         if not isinstance(page, QWidget):
             self._later[self.pages.count()] = page
             page = QWidget()

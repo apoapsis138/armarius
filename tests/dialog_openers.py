@@ -1056,6 +1056,10 @@ OPENERS: dict[str, Opener] = {
     "create saga": Opener(None, lambda p: p.action_create_saga()),
     "edit saga": Opener("saga", lambda ws: ws._edit_saga()),
     "set date": Opener("saga", lambda ws: ws.action_set_date()),
+    "add secret": Opener(
+        "character", _built(lambda ws: ws._core_verb("section-secrets", "add"))
+    ),
+    "hide from the players": Opener("saga", lambda ws: ws.action_mark_unknown()),
     "create covenant": Opener("saga", lambda ws: ws.action_create_covenant()),
     "create tribunal": Opener("saga", lambda ws: ws.action_create_tribunal()),
     "add faction": Opener(

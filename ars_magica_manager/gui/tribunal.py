@@ -28,6 +28,7 @@ from .. import (
 )
 from ..commands import Command, Form, Refuse, SectionOps, Then
 from ..forms import polemic as polemic_forms
+from ..forms import secrets as secret_forms
 from ..forms import tribunal as tribunal_forms
 from ..forms import wizards_war
 from ..markup import aligned, escape, markdown_text
@@ -119,7 +120,12 @@ class TribunalPage(QWidget):
                 ),
             )
         self.codex.add("Diary", "year", self._diary())
-        self.codex.add("Secrets", "secrets", secrets_chapter(tribunal, p, run))
+        if secret_forms.shown(tribunal):
+            self.codex.add(
+                secret_forms.tab_title(tribunal),
+                "secrets",
+                secrets_chapter(saga, tribunal, p, run),
+            )
         if controls is not None:
             self.codex.add("Manage", "manage", controls.chapter(p))
         outer.addWidget(self.codex, 1)

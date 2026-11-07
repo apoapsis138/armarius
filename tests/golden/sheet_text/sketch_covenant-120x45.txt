@@ -1,7 +1,7 @@
 ===== tab-cov-sketch
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-     Fengheld
+     Fengheld 👁
 
       Tribunal: Rhine                          Detail: Sketch   played: no
       Founded:  (not set)                      Votes:  3 (1 named, 2 unnamed)
@@ -44,7 +44,7 @@
 ===== tab-cov-charter
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-     Fengheld
+     Fengheld 👁
 
       Tribunal: Rhine                          Detail: Sketch   played: no
       Founded:  (not set)                      Votes:  3 (1 named, 2 unnamed)
@@ -87,7 +87,7 @@
 ===== tab-cov-diary
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-     Fengheld
+     Fengheld 👁
 
       Tribunal: Rhine                          Detail: Sketch   played: no
       Founded:  (not set)                      Votes:  3 (1 named, 2 unnamed)
@@ -130,7 +130,7 @@
 ===== tab-secrets
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-     Fengheld
+     Fengheld 👁
 
       Tribunal: Rhine                          Detail: Sketch   played: no
       Founded:  (not set)                      Votes:  3 (1 named, 2 unnamed)
@@ -142,10 +142,10 @@
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Secrets
+    ▼ Secrets (0)
 
-      Nothing secret written yet: edit it to add what only you should know.
-
+      No secrets yet: add what only you should know, one secret at a time.
+      No secrets yet: add what only you should know, one secret at a time.
 
 
 

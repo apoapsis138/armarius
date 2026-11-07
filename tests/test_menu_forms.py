@@ -51,6 +51,7 @@ def test_each_page_offers_what_applies_there():
         "Export Pack",
         "Host for Players",
         "Set Date",
+        "Hide from the Players",
     ]
     assert _labels(menu_forms.new_items(page)) == [
         "New Covenant",
@@ -77,6 +78,8 @@ def test_each_page_offers_what_applies_there():
         "Update from a File",
         "In Creation / In Play",
         "Demote",
+        # Leandro has no player: the storyguide may hide him (viewing.py).
+        "Hide from the Players",
         "Craft by Magic",
         # The Byzantine customs, with every book in play.
         "Hermetic Letter",

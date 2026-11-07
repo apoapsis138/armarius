@@ -1093,8 +1093,10 @@ class SagaPage(QWidget):
         self.settings = SettingsChapter(
             saga, p, self.codex, run, self._buttons("Saga Settings")
         )
-        self.codex.add("Saga Settings", "edit", self.settings.page)
-        self.codex.add("Saga Management", "manage", self._management())
+        self.codex.add("Saga Settings", "edit", self.settings.page, "saga-settings")
+        self.codex.add(
+            "Saga Management", "manage", self._management(), "saga-management"
+        )
         column.addWidget(self.codex, 1)
 
     def chapters(self) -> list[str]:

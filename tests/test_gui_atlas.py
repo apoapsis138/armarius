@@ -121,13 +121,15 @@ def test_the_atlas_shows_the_pins_and_a_pin_opens_its_record(app, tmp_path):
     )  # type: ignore[union-attr]
 
 
-def test_the_table_view_leaves_off_the_secret_pin(app, tmp_path):
+def test_player_view_leaves_off_the_secret_pin(app, tmp_path):
     window = _window(_saga(tmp_path))
+    window.toggle_player_view()
     chapter = _atlas(window)
-    chapter.table.setChecked(True)
     assert _names(chapter) == [["Durenmar", "The Tower"]]
-    assert "secret pins are left off" in chapter.line.text()
-    chapter.table.setChecked(False)
+    assert "secret pins and what the players" in chapter.line.text()
+    assert window.view_button.text().strip() == "Player view"
+    window.toggle_player_view()
+    chapter = _atlas(window)
     assert len(_names(chapter)) == 2
 
 

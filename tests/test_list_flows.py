@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from typing import Any
 
 import pytest
-from support import build_all_tabs, wait_until
+from support import build_all_tabs, menu, wait_until
 from textual.widgets import Checkbox, Input, Select, TabPane, TextArea, Tree
 
 from ars_magica_manager import battles, place_events, sieges, storage, tombs
@@ -64,6 +64,7 @@ from ars_magica_manager.models import (
     Saga,
     SagaSource,
     ScoredTrait,
+    Secret,
     Siege,
     Stigma,
     TraditionEffect,
@@ -73,6 +74,7 @@ from ars_magica_manager.models import (
 from ars_magica_manager.models.hermetic_projects import ProjectStage
 from ars_magica_manager.models.menagerie import Beast, Breeding
 from ars_magica_manager.models.stops import CovenantStop
+from ars_magica_manager.sections import SECRETS_SECTION
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import (
     ConfirmScreen,
@@ -855,6 +857,47 @@ async def test_clauses_edit_delete_and_break_act_on_the_chosen_row():
         await pilot.press("y")
         assert await wait_until(pilot, lambda: len(_saved(case)) == 2)
         assert [c.number for c in _saved(case)] == ["1", "2"]
+
+
+async def test_secrets_edit_reveal_and_delete_act_on_the_chosen_row():
+    """In one session, on a covenant's Secrets: e opens the chosen secret,
+    More's Reveal the Secret reveals it, and d
+    deletes it after asking."""
+    saga = _saga()
+    saga.covenants[0].secrets = [
+        Secret("The [gap]", "The aegis has a gap."),
+        Secret("Spring", "A vis spring under the chapel."),
+    ]
+    storage.save_saga(saga)
+    case = ListCase(
+        ("covenant", "cov1"),
+        SECRETS_SECTION,
+        "secrets-list",
+        lambda s: s.covenants[0].secrets,
+    )
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        workspace, view = await _open(pilot, app, case)
+
+        await _choose_row(pilot, view, case, 1)
+        await _press(pilot, app, "e", FieldsDialog)
+        assert app.screen.query_one("#fld-title", Input).value == "Spring"
+        await pilot.press("escape")
+        assert await wait_until(pilot, lambda: app.screen is workspace)
+
+        await menu(pilot, app, "m", "Reveal the Secret")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        assert "Reveal Spring" in _confirm_message(app)
+        await pilot.press("y")
+        assert await wait_until(pilot, lambda: _saved(case)[1].revealed)
+        assert not _saved(case)[0].revealed
+
+        await _choose_row(pilot, view, case, 0)
+        await _press(pilot, app, "d", ConfirmScreen)
+        assert _confirm_message(app) == "Delete The [gap]?"
+        await pilot.press("y")
+        assert await wait_until(pilot, lambda: len(_saved(case)) == 1)
+        assert [c.title for c in _saved(case)] == ["Spring"]
 
 
 # -- A covenant's guests --

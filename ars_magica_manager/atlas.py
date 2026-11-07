@@ -26,9 +26,12 @@ times are in miles (p. 408). The Errata says nothing of either.
 
 Pattern: a pin is a references.Ref drawn at a position, so each
 front-end opens it with the kind-to-opener dict it already has for
-links (Strategy, reduced to a dict). The Table view, for a screen the
-players watch, is a viewer the pins are filtered for: a secret pin, and
-every record shown at it, is left off.
+links (Strategy, reduced to a dict). For anyone but the storyguide
+(viewing.py: a player, or Player view on a screen the players watch) the
+pins are filtered: a secret pin, and every record shown at it, is left
+off, and so is a record the players don't know of. A secret pin hides
+only itself; an unknown record hides only itself, so a known record at an
+unknown place's pin still shows there, without the place's name.
 """
 
 from __future__ import annotations
@@ -42,7 +45,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from . import creatures, mobile_covenants, neighbours, storage
+from . import creatures, mobile_covenants, neighbours, storage, viewing
 from .commands import Choice, ChooseFile, Confirm, Form, Picked, notes
 from .form_spec import DialogField
 from .markup import escape
@@ -334,14 +337,17 @@ def shown_pins(
     saga: Saga,
     map_id: str,
     *,
-    table: bool = False,
+    table: bool | None = None,
     kinds: Collection[str] | None = None,
 ) -> list[ShownPin]:
     """The records `map_id` shows, each where it is: at its own pin, a
     mobile covenant at its stop's Place, the rest at the pin of the place
-    they are in. With `table` (a screen the players watch), a secret pin
-    and every record shown at it are left off. `kinds` narrows them to
-    those kinds of record."""
+    they are in. With `table` (by default, whenever anyone but the
+    storyguide is looking), a secret pin and every record shown at it are
+    left off, and so is a record the players don't know of. `kinds`
+    narrows them to those kinds of record."""
+    if table is None:
+        table = not viewing.storyguide_reads()
     own = {
         (pin.kind, pin.record_id): pin
         for pin in saga.pins
@@ -366,6 +372,8 @@ def shown_pins(
     for kind, found in _records(saga):
         if kinds is not None and kind not in kinds:
             continue
+        if table and not viewing.is_known(found):
+            continue
         located = where(kind, found, frozenset())
         if located is None:
             continue
@@ -379,7 +387,7 @@ def shown_pins(
                 concept(kind, found),
                 summary(found),
                 pin if mine else None,
-                "" if mine else host.name,
+                "" if mine or (table and not viewing.is_known(host)) else host.name,
             )
         )
     return shown

@@ -47,6 +47,8 @@ from ....forms import go_to as go_to_forms
 from ....forms import hunting as hunting_forms
 from ....forms import neighbour as neighbour_forms
 from ....forms import polemic as polemic_forms
+from ....forms import reveal as reveal_forms
+from ....forms import secrets as secret_forms
 from ....forms import take_up as take_up_forms
 from ....forms import threshold as threshold_forms
 from ....forms import tribunal as tribunal_forms
@@ -80,6 +82,7 @@ from ....sections import (
     NEIGHBOUR_INFO_SECTION,
     REGION_STORIES_SECTION,
     REGION_THREATS_SECTION,
+    SECRETS_SECTION,
     STAGES_SECTION,
     TABLES_SECTION,
     TOKENS_SECTION,
@@ -116,6 +119,15 @@ _REF_NODES: dict[str, NodeKind] = {
     "neighbours": NodeKind.NEIGHBOUR,
     "creatures": NodeKind.CREATURE,
 }
+
+
+#: The top panels whose title marks a record known or hidden.
+_INFO_SECTIONS = (
+    "section-nb-info",
+    "section-cr-info",
+    "section-cov-info",
+    "section-char-info",
+)
 
 
 class RecordActions(WorkspaceBase):
@@ -723,6 +735,56 @@ class RecordActions(WorkspaceBase):
             self.app,
             threats.begin_command(self.saga, record),
             lambda _end: self._commit(NEIGHBOUR_INFO_SECTION, STAGES_SECTION),
+        )
+
+    def action_reveal(self) -> None:
+        """More's Reveal to the Players on a record the players don't know of."""
+        self._reveal_step(reveal_forms.reveal)
+
+    def action_conceal(self) -> None:
+        """More's Hide from the Players on a record they know of."""
+        self._reveal_step(reveal_forms.conceal)
+
+    def _reveal_step(self, step: Callable[[Any, Any], Any]) -> None:
+        record = self._record_to_delete()
+        if record is None:
+            return
+        run_steps(
+            self.app,
+            step(self.saga, record),
+            lambda end: self._commit_told(end, *_INFO_SECTIONS, tree=True),
+        )
+
+    def action_reveal_secret(self) -> None:
+        """More's Reveal the Secret on a record's chosen secret."""
+        self._secret_step(reveal_forms.reveal_secret)
+
+    def action_conceal_secret(self) -> None:
+        """More's Hide the Secret Again on a record's chosen secret."""
+        self._secret_step(reveal_forms.conceal_secret)
+
+    def action_split_secret(self) -> None:
+        """More's Split by Paragraph on a record's chosen secret."""
+        self._secret_step(lambda _saga, record, row: secret_forms.split(record, row))
+
+    def _secret_step(self, step: Callable[[Any, Any, Any], Any]) -> None:
+        view = self._current_sheet_view()
+        record = self._record_to_delete()
+        row = view.section_row(SECRETS_SECTION) if view is not None else None
+        if record is None or row is None:
+            return
+        run_steps(
+            self.app,
+            step(self.saga, record, row),
+            lambda end: self._commit_told(end, SECRETS_SECTION),
+        )
+
+    def action_mark_unknown(self) -> None:
+        """More's Hide from the Players on the saga or the Region: many at once."""
+        run_steps(
+            self.app,
+            reveal_forms.mark_unknown(self.saga),
+            lambda end: self._commit_told(end, tree=True),
         )
 
     def action_merge_doubles(self) -> None:

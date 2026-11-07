@@ -16,7 +16,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ...arts import ART_LOOKUP
-from ...models import Book, Character, CharterClause, Covenant
+from ...models import Book, Character, CharterClause, Covenant, as_secrets, secret_words
 from ...models.books import TEXT_ENCHANTMENT, TEXT_LONGEVITY, TEXT_OTHER, TEXT_SPELL
 from ...models.devices import InstilledEffect
 from ...models.world import FULL
@@ -2197,8 +2197,10 @@ def _overwrites(hibernia: Hibernia) -> None:
     saga = hibernia.b.saga
     for character in saga.characters:
         if character.name.startswith("Cú Chonnacht"):
-            character.secrets = character.secrets.replace(
-                "The book says nothing more of him. ", ""
+            character.secrets = as_secrets(
+                secret_words(character.secrets).replace(
+                    "The book says nothing more of him. ", ""
+                )
             )
     for neighbour in saga.neighbours:
         if neighbour.name == "Tír na nÓg, the Otherworld":

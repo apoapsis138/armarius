@@ -19,12 +19,12 @@ from textual.widgets import (
 )
 from textual.widgets._collapsible import CollapsibleTitle
 
-from .... import connections, world
+from .... import connections, viewing, world
 from .... import enchanted_devices as ed
 from ....boon_hook_text import counted
 from ....commands import SectionOps
+from ....forms import secrets as secret_forms
 from ....forms import world as world_forms
-from ....forms.secrets import secrets_text
 from ....markup import aligned, escape, inherited
 from ....models import (
     FULL,
@@ -39,8 +39,10 @@ from ....sections import (
     ATTITUDE_SECTION,
     CONNECTIONS_SECTION,
     FAVOURS_SECTION,
+    KNOWN_SECRETS_SECTION,
     LINKS_SECTION,
     SECRETS_SECTION,
+    SECRETS_TAB,
 )
 from ..widgets import (
     DetailsPanel,
@@ -145,10 +147,6 @@ class SheetView(Vertical):
         #: The core's Add, Edit and Delete (commands.SectionOps) for each
         #: section in sections.CORE_SECTIONS this sheet shows.
         self.core_ops: dict[str, SectionOps] = {}
-        #: Whether the record's Secrets tab, and any other tab for the
-        #: storyguide alone (a neighbour's Roll Tables), is shown: the
-        #: workspace turns it off for a player signed in to a hosted copy.
-        self.show_secrets = True
 
     def section_row(self, section_id: str) -> int | None:
         """The chosen row of `section_id`'s list, by its data index; 0 for a
@@ -218,18 +216,45 @@ class SheetView(Vertical):
         )
 
     def _secrets_tab(self, record: Any) -> ComposeResult:
-        """The record's Secrets tab, last, unless the storyguide alone may
-        see it and isn't the one looking."""
-        if not self.show_secrets:
+        """The record's Secrets tab, last: the storyguide's list of every
+        secret, or for anyone else (viewing.py) a Known section of those
+        revealed, left out while none is."""
+        if not secret_forms.shown(record):
             return
 
         def build() -> ComposeResult:
-            with VerticalScroll(), SheetSection(title="Secrets", id=SECRETS_SECTION):
-                yield self._static(
-                    SECRETS_SECTION, lambda: secrets_text(record), id="secrets-text"
-                )
+            with VerticalScroll():
+                if secret_forms.storyguides(record):
+                    with SheetSection(
+                        title=self._titled(
+                            SECRETS_SECTION,
+                            SECRETS_SECTION,
+                            lambda: counted("Secrets", len(record.secrets)),
+                        ),
+                        id=SECRETS_SECTION,
+                    ):
+                        yield self._list(
+                            SECRETS_SECTION,
+                            lambda: (
+                                secret_forms.secret_rows(record)
+                                or [(None, f"[$label]{secret_forms.NONE_YET}[/]")]
+                            ),
+                            id="secrets-list",
+                        )
+                        yield self._static(
+                            SECRETS_SECTION,
+                            lambda: secret_forms.secrets_text(record),
+                            id="secrets-text",
+                        )
+                    return
+                with SheetSection(title="Known", id=KNOWN_SECRETS_SECTION):
+                    yield self._static(
+                        KNOWN_SECRETS_SECTION,
+                        lambda: secret_forms.known_text(record),
+                        id="known-secrets-text",
+                    )
 
-        yield self._tab("Secrets", "tab-secrets", build)
+        yield self._tab(secret_forms.tab_title(record), SECRETS_TAB, build)
 
     @staticmethod
     def _scrolling(build: Callable[[], ComposeResult]) -> Callable[[], ComposeResult]:
@@ -419,7 +444,7 @@ class SheetView(Vertical):
             found = connections.facts(self.saga, record)
             if not found:
                 return "[$label]No connections.[/]"
-            return aligned([(f.label, fact_markup(f)) for f in found])
+            return aligned([(f.label, fact_markup(f)) for f in viewing.facts(found)])
 
         with SheetSection(title="Connections", id=CONNECTIONS_SECTION):
             yield self._static(CONNECTIONS_SECTION, text, id="connections-text")

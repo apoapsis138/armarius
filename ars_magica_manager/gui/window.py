@@ -53,6 +53,7 @@ from .. import (
     saga_index,
     storage,
     title_page,
+    viewing,
 )
 from .. import familiars as fam
 from .. import print_layout as pl
@@ -94,7 +95,7 @@ from .character_sheet import CharacterSheet
 from .conflicts import FightPage, SiegePage
 from .covenant import CovenantPage
 from .familiar import FamiliarPage
-from .finder import FinderPanel, magnifier_icon
+from .finder import FinderPanel, eye_icon, magnifier_icon
 from .forms import NoticeDialog, answer, run_steps, step_dialog
 from .help import HelpPage
 from .icon import app_icon
@@ -356,6 +357,14 @@ class MainWindow(QMainWindow):
         self.find_button.setToolTip("Find a record in the saga by name (Ctrl+F)")
         self.find_button.clicked.connect(self.open_finder)
         bar.addWidget(self.find_button)
+        #: Player view, while a saga is open: the saga as the players see
+        #: it (viewing.py), said in words beside the eye while it is on.
+        self.view_button = QPushButton()
+        self.view_button.setFlat(True)
+        self.view_button.setCheckable(True)
+        self.view_button.setAccessibleName("Player view")
+        self.view_button.clicked.connect(self.toggle_player_view)
+        bar.addWidget(self.view_button)
         self.help = QPushButton("  Help")
         self.help.setFlat(True)
         self.help.setToolTip("Help on this page (? or F1)")
@@ -538,6 +547,7 @@ class MainWindow(QMainWindow):
             return
         self.saga_ids = storage.list_sagas()
         self.saga = None
+        self._use_viewer()
         self.go([Place(SHELF)])
         if key == title_page.NEW:
             self.new_saga()
@@ -562,6 +572,7 @@ class MainWindow(QMainWindow):
         """Read the sagas again and show the shelf."""
         self.saga_ids = storage.list_sagas()
         self.saga = None
+        self._use_viewer()
         self.go([Place(SHELF)])
 
     def new_saga(self) -> None:
@@ -616,12 +627,44 @@ class MainWindow(QMainWindow):
             QTimer.singleShot(0, lambda: self.tell("Saved by a newer Armarius", note))
 
     def load(self, saga: Saga) -> None:
-        """Open `saga` at its page of covenants."""
+        """Open `saga` at its page of covenants, in Player view if it was
+        left in it on this computer."""
         self.saga = saga
+        self._use_viewer()
         # Its user-made entries join the shared catalogs, as in the terminal.
         catalog.use_saga(saga)
         title_page.remember_saga(saga.id)
         self.go([Place(SHELF), Place(SAGA)])
+
+    def _use_viewer(self) -> None:
+        """Tell the core who reads the saga open: the storyguide, or the
+        table while Player view is on (viewing.use)."""
+        saga = self.saga
+        on = saga is not None and viewing.player_view_on(saga.id)
+        viewing.use(viewing.viewer_for(None, player_view=on), saga)
+
+    def _draw_view_button(self) -> None:
+        on = viewing.current().kind == viewing.TABLE
+        self.view_button.setChecked(on)
+        self.view_button.setText("  Player view" if on else "")
+        self.view_button.setToolTip(
+            "Player view is on: the saga as the players see it. Click to see "
+            "everything again."
+            if on
+            else "Player view: see the saga as the players do, for a screen they watch"
+        )
+
+    def toggle_player_view(self) -> None:
+        """The eye in the title bar: Player view on or off, remembered for
+        the saga, and the page on show drawn again for its reader."""
+        saga = self.saga
+        if saga is None:
+            return
+        viewing.set_player_view(saga.id, not viewing.player_view_on(saga.id))
+        self._use_viewer()
+        if self.finder is not None and shiboken6.isValid(self.finder):
+            self.finder.close()
+        self.redraw()
 
     def open_covenant(self, covenant_id: str | None) -> None:
         self.go([*self._up_to(SAGA), Place(COVENANT, covenant_id)])
@@ -1059,6 +1102,14 @@ class MainWindow(QMainWindow):
         )
 
     def _build(self, place: Place) -> QWidget:
+        """The page of `place`, unless it shows a record whoever is looking
+        may not read (viewing.py: Player view)."""
+        record = self._place_record(place)
+        if record is not None and not viewing.reads(record):
+            return QLabel("The players don't know of this yet (Player view).")
+        return self._build_page(place)
+
+    def _build_page(self, place: Place) -> QWidget:
         p, saga = self.palette_, self.saga
         if place.kind == HELP:
             return self._help_page()
@@ -1178,6 +1229,21 @@ class MainWindow(QMainWindow):
             self._placer(),
             open_sanctum=lambda: self.open_sanctum(character.id),
         )
+
+    def _place_record(self, place: Place) -> object | None:
+        """The record a page of `place` shows, for those Reveal applies to."""
+        saga = self.saga
+        if saga is None or place.id is None:
+            return None
+        if place.kind == NEIGHBOUR:
+            return saga.neighbour(place.id)
+        if place.kind == CREATURE:
+            return saga.creature(place.id)
+        if place.kind == COVENANT:
+            return saga.covenant(place.id)
+        if place.kind == CHARACTER:
+            return saga.character(place.id)
+        return None
 
     def _controls(self) -> RecordControls | None:
         """What the record's page needs to manage the record (manage.py):
@@ -1395,6 +1461,8 @@ class MainWindow(QMainWindow):
         saga = self.saga
         shown = saga is not None and bool(self.trail) and self.trail[-1].kind != SHELF
         self.find_button.setVisible(shown)
+        self.view_button.setVisible(shown)
+        self._draw_view_button()
         # The headpiece carries the present season while a saga's page is on show.
         self.headpiece.saga = saga if shown else None
         self.headpiece.update()
@@ -1524,5 +1592,6 @@ class MainWindow(QMainWindow):
         self.settings.setIcon(pictures.gear_icon(p["label"]))
         self.help.setIcon(pictures.icon("help", p["label"]))
         self.find_button.setIcon(magnifier_icon(p["label"]))
+        self.view_button.setIcon(eye_icon(p["label"]))
         self._draw_sound()
         self._draw_motion()

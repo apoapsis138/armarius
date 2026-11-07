@@ -260,6 +260,11 @@ VOTE_SECTION = "section-meeting-vote"
 #: A record's Secrets chapter (forms/secrets.py): the same section on a
 #: covenant's, character's, Tribunal's, neighbour's and creature's sheet.
 SECRETS_SECTION = "section-secrets"
+#: The tab (on the desktop, the chapter) that holds it.
+SECRETS_TAB = "tab-secrets"
+#: The secrets revealed to the troupe, in the same tab: what anyone but
+#: the storyguide reads there (viewing.py).
+KNOWN_SECRETS_SECTION = "section-known-secrets"
 #: A character's supernatural powers (forms.power).
 POWERS_SECTION = "section-char-powers"
 #: The supernatural effects on a character all the time
@@ -428,7 +433,7 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     BUSINESS_SECTION: frozenset({"edit", "remove"}),
     ATTENDANCE_SECTION: frozenset({"edit"}),
     VOTE_SECTION: frozenset({"edit"}),
-    SECRETS_SECTION: frozenset({"edit"}),
+    SECRETS_SECTION: frozenset({"add", "edit", "remove"}),
     GOODS_SECTION: frozenset({"add", "edit", "remove"}),
     # A place's Tomb tab (Lands of the Nile).
     TOMB_SECTION: frozenset({"edit"}),

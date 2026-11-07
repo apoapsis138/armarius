@@ -9,7 +9,7 @@ from textual.app import ComposeResult
 from textual.containers import Vertical, VerticalScroll
 from textual.widgets import Static, TabbedContent
 
-from .... import battles, conflicts, fights, sieges
+from .... import battles, conflicts, fights, sieges, viewing
 from ....markup import aligned
 from ....models import Saga
 from ....sections import (
@@ -80,7 +80,7 @@ class ConflictsSheetView(SheetView):
         facts = conflicts.header_facts(self.saga)
         half = (len(facts) + 1) // 2
         shown = facts[:half] if column == 0 else facts[half:]
-        return aligned([(f.label, fact_markup(f)) for f in shown])
+        return aligned([(f.label, fact_markup(f)) for f in viewing.facts(shown)])
 
     def _lists_tab(self) -> ComposeResult:
         saga = self.saga

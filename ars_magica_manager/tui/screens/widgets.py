@@ -33,7 +33,7 @@ from textual.widgets._footer import FooterKey
 from textual.widgets._tabbed_content import ContentTabs
 from textual.widgets.option_list import Option
 
-from ... import references, world
+from ... import references, viewing, world
 from ...markup import escape
 from ...models import Attitude
 from ...references import Fact
@@ -662,11 +662,16 @@ class SheetSection(FocusableSection):
 
     A click on the title of a section that isn't the focused one only
     focuses it; a click on the focused section's title collapses or expands
-    it. From the keyboard that is the workspace's `c`."""
+    it. From the keyboard that is the workspace's `c`.
+
+    A section only the storyguide reads (viewing.STORYGUIDE_ONLY, by its
+    id) is not shown to anyone else."""
 
     def __init__(self, *children: Widget, title: str, **kwargs: Any) -> None:
         kwargs.setdefault("collapsed", False)
         super().__init__(*children, title=title, **kwargs)
+        if self.id and not viewing.reads(part=self.id):
+            self.display = False
         self._title = SectionTitle(
             label=title,
             collapsed_symbol="▶",
@@ -905,9 +910,30 @@ class TableHeader(Static):
     """
 
 
+#: The mark after a record's name on its sheet, for the storyguide: known
+#: to the players, or hidden from them (viewing.py). The desktop draws its
+#: seal under the bookmark ribbon instead.
+KNOWN_MARK, HIDDEN_MARK = "👁", "🚫"
+
+
+def marked_title(record: Any) -> str:
+    """A record's name for its sheet's top panel (markup), with 👁 while the
+    players know of it or 🚫 while it is hidden from them; no mark on the
+    troupe's own records, nor for anyone but the storyguide."""
+    name = escape(record.name)
+    if not viewing.can_be_unknown(record) or not viewing.offers("reveal"):
+        return name
+    return f"{name} {KNOWN_MARK if viewing.is_known(record) else HIDDEN_MARK}"
+
+
 def fact_markup(fact: Fact) -> str:
     """A fact's value as markup, each record it names a link that opens
-    it (the workspace's open_ref)."""
+    it (the workspace's open_ref); a record the reader may not know of is
+    not named (viewing.scrub)."""
+    shown = viewing.scrub(fact)
+    if shown is None:
+        return ""
+    fact = shown
     return "".join(
         escape(words)
         if found is None

@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.77.0",
+  "app_version": "3.83.0",
   "kind": "pack",
   "name": "Sanctuary of Ice: the Greater Alps Tribunal",
   "from_saga": "Sanctuary of Ice: the Greater Alps Tribunal",
@@ -121,7 +121,15 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "La, when still the apprentice Lucia, fell in with the Black Mark, a Criamon splinter that holds the Dominion will destroy all magic unless stopped and doubts that it comes from an almighty God; she murdered a priest on his own altar and has been cursed by God since.\n\nEcho is in love with a Criamon three centuries dead, an affair that is also an illicit Twilight; the ghostly Esther is a juno born of it. The Primi delay Esther's unpetrifying to watch it.\n\nVis stores: 100 pawns\n\nVis: 160 pawns a year, much of it from creatures that must be hunted down and killed (the book's own figure, kept: A12 as amended)\n\nLibrary: the ghosts serve as its library, about 2100 levels of spells if they will teach; Hermetic books worth 450 points, kept mostly for trade (its magi study from vis or in the Magic realm); mundane books worth 60 points, mostly tractatus on Enigmatic Wisdom",
+        "secrets": [
+          {
+            "title": "",
+            "text": "La, when still the apprentice Lucia, fell in with the Black Mark, a Criamon splinter that holds the Dominion will destroy all magic unless stopped and doubts that it comes from an almighty God; she murdered a priest on his own altar and has been cursed by God since.\n\nEcho is in love with a Criamon three centuries dead, an affair that is also an illicit Twilight; the ghostly Esther is a juno born of it. The Primi delay Esther's unpetrifying to watch it.\n\nVis stores: 100 pawns\n\nVis: 160 pawns a year, much of it from creatures that must be hunted down and killed (the book's own figure, kept: A12 as amended)\n\nLibrary: the ghosts serve as its library, about 2100 levels of spells if they will teach; Hermetic books worth 450 points, kept mostly for trade (its magi study from vis or in the Magic realm); mundane books worth 60 points, mostly tractatus on Enigmatic Wisdom",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true,
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -223,6 +231,8 @@
             "dwindling": false,
             "dwindling_from": null,
             "dwindled_years": 0,
+            "place_id": null,
+            "place_level": 0,
             "ship": null
           }
         ],
@@ -262,19 +272,19 @@
             "kind": "places",
             "target_id": "the_rorschach_chapter",
             "note": "A chapter of the covenant",
-            "id": "4aebc9be6494"
+            "id": "1d9283005630"
           },
           {
             "kind": "places",
             "target_id": "juno_s_spire",
             "note": "A chapter of the covenant",
-            "id": "8f1c8d86513f"
+            "id": "d389507357af"
           },
           {
             "kind": "places",
             "target_id": "the_tower_of_ashes",
             "note": "A chapter of the covenant",
-            "id": "7eb7c0d0185b"
+            "id": "66ac296c50fc"
           }
         ],
         "unnamed_magi": 9,
@@ -298,7 +308,15 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "Vis stores: 100 pawns\n\nVis: 60 pawns a year, with the Domleschg oak grove's Rego vis among its sources and the Bavarian Common divided at the Fair\n\nLibrary: 2100 levels of spells, favouring investigation and violence; Hermetic books worth 900 points, strongest in Intellego and Ignem; mundane books worth 240 points, favouring Hermetic history and law",
+        "secrets": [
+          {
+            "title": "",
+            "text": "Vis stores: 100 pawns\n\nVis: 60 pawns a year, with the Domleschg oak grove's Rego vis among its sources and the Bavarian Common divided at the Fair\n\nLibrary: 2100 levels of spells, favouring investigation and violence; Hermetic books worth 900 points, strongest in Intellego and Ignem; mundane books worth 240 points, favouring Hermetic history and law",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true,
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -407,7 +425,15 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "Vis stores: 200 pawns\n\nVis: 105 pawns a year, mostly Perdo, Auram and Herbam (the book prints +15; 30 pawns and 5 a point, Fourth Edition core p. 206)\n\nLibrary: 4500 levels of spells, mostly unpleasant faerie magic; Hermetic books worth 1350 points, favouring Perdo; mundane books worth 300 points, favouring faerie lore",
+        "secrets": [
+          {
+            "title": "",
+            "text": "Vis stores: 200 pawns\n\nVis: 105 pawns a year, mostly Perdo, Auram and Herbam (the book prints +15; 30 pawns and 5 a point, Fourth Edition core p. 206)\n\nLibrary: 4500 levels of spells, mostly unpleasant faerie magic; Hermetic books worth 1350 points, favouring Perdo; mundane books worth 300 points, favouring faerie lore",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true,
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -509,6 +535,8 @@
             "dwindling": false,
             "dwindling_from": null,
             "dwindled_years": 0,
+            "place_id": null,
+            "place_level": 0,
             "ship": null
           }
         ],
@@ -565,7 +593,15 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "Vis stores: 200 pawns, mostly Corpus\n\nVis: 80 pawns a year, 50 of them Corpus, the dead god's flesh among them\n\nLibrary: 3900 levels of spells, mostly Corpus rituals; Hermetic books worth 1800 levels, mostly fine Corpus tractatus with the lab texts and notes of every longevity researcher; mundane books worth 240 levels",
+        "secrets": [
+          {
+            "title": "",
+            "text": "Vis stores: 200 pawns, mostly Corpus\n\nVis: 80 pawns a year, 50 of them Corpus, the dead god's flesh among them\n\nLibrary: 3900 levels of spells, mostly Corpus rituals; Hermetic books worth 1800 levels, mostly fine Corpus tractatus with the lab texts and notes of every longevity researcher; mundane books worth 240 levels",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true,
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -674,7 +710,15 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "Vis: its income, about twenty years' worth, held in store by the Quaesitores",
+        "secrets": [
+          {
+            "title": "",
+            "text": "Vis: its income, about twenty years' worth, held in store by the Quaesitores",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true,
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -766,31 +810,31 @@
             "kind": "places",
             "target_id": "valnastium_s_vienna_chapter",
             "note": "A chapter of the covenant",
-            "id": "580ee39a0dfa"
+            "id": "39dba9ac28f9"
           },
           {
             "kind": "places",
             "target_id": "valnastium_s_constance_chapter",
             "note": "A chapter of the covenant",
-            "id": "472b1d45edb9"
+            "id": "59e2f1a2963f"
           },
           {
             "kind": "places",
             "target_id": "valnastium_s_saint_gallen_chapter",
             "note": "A chapter of the covenant",
-            "id": "ab1dd2848d1f"
+            "id": "0b00964b9061"
           },
           {
             "kind": "places",
             "target_id": "valnastium_s_geneva_chapter",
             "note": "A chapter of the covenant",
-            "id": "158cdfc9131c"
+            "id": "67a4aa355070"
           },
           {
             "kind": "neighbours",
             "target_id": "the_abbey_of_saint_gallen",
             "note": "Ally",
-            "id": "af0d860c7da6"
+            "id": "99c12c652f6d"
           }
         ],
         "unnamed_magi": 7,
@@ -814,7 +858,15 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "Vis stores: 100 pawns\n\nVis: 125 pawns a year, traded to give a broad mix of Techniques (the book prints +19, 570 pawns; 30 pawns and 5 a point gives 125, and 570 is taken for a slip)\n\nLibrary: 2400 levels of spells; Hermetic books worth 900 levels; mundane books worth 1200 levels, some held in the chapters",
+        "secrets": [
+          {
+            "title": "",
+            "text": "Vis stores: 100 pawns\n\nVis: 125 pawns a year, traded to give a broad mix of Techniques (the book prints +19, 570 pawns; 30 pawns and 5 a point gives 125, and 570 is taken for a slip)\n\nLibrary: 2400 levels of spells; Hermetic books worth 900 levels; mundane books worth 1200 levels, some held in the chapters",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true,
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -848,98 +900,98 @@
             "year": null,
             "says": "A magus votes at the Tribunal only if his covenant has bought him a chair: it declares a permanent vis source, has the Quaesitores assess it, and pledges ten pawns a year of it to his upkeep, at least a year before the meeting if he is to vote. The vis is not paid to anyone; the pledge shows the covenant will not poach from its neighbours. Vis distilled from an aura (\"farming\") does not count. A magus with no chair is a vagrant, a Low Crime, though a chair registered at any time protects him from its punishments. A chair belongs to the covenant, whose council fills it when its magus leaves.",
             "case_id": "",
-            "id": "90cc449a08ef"
+            "id": "e3a8ed09e78f"
           },
           {
             "title": "The yearly pawn",
             "year": null,
             "says": "Each covenant pays a pawn of vis a year to the senior members of Houses Guernicus and Mercere in the Tribunal. It began as a tradition and entered the Code; it was once a pawn for each magus.",
             "case_id": "",
-            "id": "43a197da08ed"
+            "id": "c269f794209a"
           },
           {
             "title": "Vis treaties",
             "year": null,
             "says": "Gifts of vis exchanged so often between two covenants that both sides want the supply guaranteed are ratified as treaties and entered in the Code; they are delivered in Frustration Week. A treaty's income may pay for a chair, but vis owed away may not.",
             "case_id": "",
-            "id": "5b979bde6dbc"
+            "id": "93a52b2a3078"
           },
           {
             "title": "No new covenants",
             "year": null,
             "says": "No new covenant may be founded unless it can show that, after its costs, it can spend ten pawns a year on each magus from sources no one else has claimed, and a pawn for the Quaesitores and Redcaps. None has been allowed for centuries; the Tribunal grows by chapters instead.",
             "case_id": "",
-            "id": "a1fa9952a545"
+            "id": "4e4a76958d1b"
           },
           {
             "title": "Ostracism",
             "year": null,
             "says": "As the first business of each meeting every magus writes on a sherd the name of the magus he most despises, or leaves it blank. If at least one magus in four named the one with the most sherds, that magus must leave the Greater Alps before the second full moon, for twenty-one years, or be Marched. The exile ends the day before a Tribunal. An ostracised Praeco is replaced by the next eldest, with no second vote; an ostracised chief Quaesitor by his deputy. An ostracised magus may hand the sigils he carries, his own aside, to another magus.",
             "case_id": "",
-            "id": "0166e13312d6"
+            "id": "0e063fcb09f7"
           },
           {
             "title": "Amaranth",
             "year": null,
             "says": "All amaranth, the faerie flower that addicts magi, is to be destroyed. The traffic goes on, around Ingolstadt above all; the neighbouring Tribunals have not banned it, and the Grand Tribunal has never been asked.",
             "case_id": "",
-            "id": "bec864bd9c1d"
+            "id": "b8f6e1d11975"
           },
           {
             "title": "Churches the Code protects",
             "year": null,
             "says": "The city of Constance and the monasteries of the Great and Little Saint Bernard passes, vital to the Redcaps and favoured by House Jerbiton, are named in the Code as places where even minor violence is judged interference with the Church.",
             "case_id": "",
-            "id": "c50e9f9c7b52"
+            "id": "4b892ac26d40"
           },
           {
             "title": "Flagrant spending",
             "year": null,
             "says": "Covenants may not draw attention to themselves by making goods from vis to sell. The ruling was aimed at Sinews of Knowledge, which was ordered to stop its trade.",
             "case_id": "",
-            "id": "54bb118bb898"
+            "id": "fc8463ebf8fb"
           },
           {
             "title": "Pilate's ghost",
             "year": null,
             "says": "No magus may harvest vis from the ghost of Pontius Pilate on Mount Pilatus. The meeting that made the ruling also sent its condolences to the sodales of the magi crushed by the avalanche that spoiled the first attempt.",
             "case_id": "",
-            "id": "42434975a489"
+            "id": "41333236964b"
           },
           {
             "title": "The Bavarian Common",
             "year": null,
             "says": "After the Sundering of Tremere destroyed the covenant of Highest Aspiration, several covenants raced to claim its resources. An emergency meeting gave its vis sources to the Quaesitores to harvest and divide among the covenants each year, and disbanded every rival chapter house in Bavaria but the Icy North's. The Common supports two chairs, for the quaesitor and the hoplite who keep it.",
             "case_id": "",
-            "id": "7f04a6252280"
+            "id": "0e310b37c017"
           },
           {
             "title": "The estates of Tarragon Vale",
             "year": null,
             "says": "No estate of Tarragon Vale's vanished magi may be settled without proof of their deaths; until then the Quaesitores keep the covenant's vis income, spending only what its Aegis and its Shrouded Glen need. The heirs have pressed the matter at a meeting, and the Quaesitores' position was upheld pending further evidence.",
             "case_id": "",
-            "id": "0ce19a2cb8e2"
+            "id": "931c71529b52"
           },
           {
             "title": "A sanctum a season",
             "year": 1165,
             "says": "Snadstrich of Ex Miscellanea, of no covenant, was said to have moved her sanctum seven times in one year. The Tribunal ruled that a magus may not establish a new sanctum more than once a season (The Wizard's Grimoire).",
             "case_id": "",
-            "id": "c5b01820636d"
+            "id": "e778cd2ee7e0"
           },
           {
             "title": "Andru's pardon",
             "year": 1194,
             "says": "A faerie lord took grogs and covenfolk of Valnastium to use as pieces in a great game of his; its magi rescued them, killing many faeries. Andru argued that every magus may defend his property, servants included, and that the rescue was self-defence; the Tribunal narrowly accepted it and pardoned him (The Wizard's Grimoire; Sanctuary of Ice calls it a just war on one of the faerie kings of Val Fanes, and gossip says Andru claimed a summer prince's crown in it).",
             "case_id": "",
-            "id": "22cd66d0b5a8"
+            "id": "bb81281d4df4"
           },
           {
             "title": "Syrestis's fine",
             "year": 1194,
             "says": "Syrestis of Bjornaer, visiting covenants of the Greater Alps, killed livestock and game in his animal shapes, harming his hosts' relations with their neighbours. Both the Rhine and the Greater Alps heard the case: the Rhine fined him three pawns, the Greater Alps ten. A quaesitor ruled that he must pay the Greater Alps, where the crimes were done, and owed the Rhine nothing (The Wizard's Grimoire).",
             "case_id": "",
-            "id": "3987ff85f2b2"
+            "id": "f8f9dae73ceb"
           }
         ],
         "treasury": [],
@@ -951,7 +1003,7 @@
             "details": "The Grand Tribunal of 865 awards the site of the dead god's priesthood, sealed by House Guernicus since the Sundering, to Sancia filia Sabrina, who founds the Longevity Project there.",
             "changes": [],
             "margin": "",
-            "id": "0b58581ae750"
+            "id": "e16a9b64d35d"
           },
           {
             "year": 1165,
@@ -960,7 +1012,7 @@
             "details": "The meeting rules on Snadstrich's seven sancta in a year.",
             "changes": [],
             "margin": "",
-            "id": "3f1e326a772c"
+            "id": "6efa8ac21f36"
           },
           {
             "year": 1194,
@@ -969,7 +1021,7 @@
             "details": "The meeting narrowly accepts Andru's defence of Valnastium's rescue of its servants from a faerie lord, and fines Syrestis of Bjornaer ten pawns.",
             "changes": [],
             "margin": "",
-            "id": "22a87211841e"
+            "id": "bb6380aec06e"
           },
           {
             "year": 1198,
@@ -978,7 +1030,7 @@
             "details": "The four magi of Tarragon Vale and its covenfolk vanish without a trace. The Quaesitores begin keeping its vis.",
             "changes": [],
             "margin": "",
-            "id": "61e24dd73830"
+            "id": "29cdb50d9898"
           },
           {
             "year": 1206,
@@ -987,7 +1039,7 @@
             "details": "The Primus of Guernicus appoints Athena Alpina, trained in the Roman Tribunal, chief Quaesitor of the Alps.",
             "changes": [],
             "margin": "",
-            "id": "c187d7d9cc74"
+            "id": "a948f8bf7c5e"
           },
           {
             "year": 1214,
@@ -996,7 +1048,7 @@
             "details": "At the meeting Athena is forced to send away one of her hoplites, a Tremere maga.",
             "changes": [],
             "margin": "",
-            "id": "74eb3ade2b6c"
+            "id": "162936735a44"
           },
           {
             "year": 1215,
@@ -1005,7 +1057,7 @@
             "details": "A magical accident in Sicily brings about the birth of two dozen Gifted children at once.",
             "changes": [],
             "margin": "",
-            "id": "450a1ab72df5"
+            "id": "b399e123ebdf"
           },
           {
             "year": 1217,
@@ -1014,7 +1066,7 @@
             "details": "Kentigern of Ex Miscellanea, newly retrained at Magvillus, joins the Quaesitores at the Icy North motherhouse.",
             "changes": [],
             "margin": "",
-            "id": "e473702814c5"
+            "id": "494d04aa0496"
           }
         ],
         "package_data": {
@@ -1030,7 +1082,14 @@
           }
         },
         "meeting": null,
-        "secrets": "Athena Alpina's even-handedness toward House Tremere, which her neighbours call blatant favouritism, may see her ostracised at the next meeting. Cato was sent to the Alps partly to make sure that, if she goes, Adrasteia of Tytalus does not become chief Quaesitor.\n\nA myth runs through the Alps that the mountains lie across the spine of a dragon so large it eats other dragons, and that widespread disorder would wake it. Few magi believe it wholeheartedly.",
+        "secrets": [
+          {
+            "title": "",
+            "text": "Athena Alpina's even-handedness toward House Tremere, which her neighbours call blatant favouritism, may see her ostracised at the next meeting. Cato was sent to the Alps partly to make sure that, if she goes, Adrasteia of Tytalus does not become chief Quaesitor.\n\nA myth runs through the Alps that the mountains lie across the spine of a dragon so large it eats other dragons, and that widespread disorder would wake it. Few magi believe it wholeheartedly.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
         "arguments": [],
         "maps": []
       }
@@ -1058,7 +1117,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_western_alps",
@@ -1082,7 +1142,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "bavaria",
@@ -1106,7 +1167,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_eastern_marches",
@@ -1130,7 +1192,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_axis_magica",
@@ -1227,7 +1290,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_motherhouse_of_the_icy_north",
@@ -1251,7 +1315,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "mont_joux",
@@ -1284,7 +1349,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_falls_of_sinews_of_knowledge",
@@ -1308,7 +1374,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "tarragon_vale_s_hill",
@@ -1332,7 +1399,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "valnastium",
@@ -1356,7 +1424,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_church_of_saint_cyprian",
@@ -1380,7 +1449,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_aare_gorge",
@@ -1404,7 +1474,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "baden",
@@ -1428,7 +1499,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "vindonissa",
@@ -1452,7 +1524,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "botzberg",
@@ -1476,7 +1549,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_cirque_d_annibal",
@@ -1500,7 +1574,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_domleschg",
@@ -1524,7 +1599,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_pierres_de_niton",
@@ -1548,7 +1624,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "pfeffers",
@@ -1572,7 +1649,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "heiligenblut",
@@ -1596,7 +1674,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "lukerbad",
@@ -1620,7 +1699,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "martigny",
@@ -1644,7 +1724,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "mount_pilatus",
@@ -1668,7 +1749,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_temple_of_mercury",
@@ -1692,7 +1774,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_righi",
@@ -1716,7 +1799,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "saint_beatus_cave",
@@ -1740,7 +1824,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_hospice_of_saint_bernard",
@@ -1764,7 +1849,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_saint_gotthard_pass",
@@ -1788,7 +1874,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "saint_pierre",
@@ -1812,7 +1899,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_rosegarten",
@@ -1836,7 +1924,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "val_fanes",
@@ -1860,7 +1949,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "vorarlberg",
@@ -1884,7 +1974,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_danube",
@@ -1908,7 +1999,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "mittenwald",
@@ -1932,7 +2024,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_augsburg_tunnels",
@@ -1956,7 +2049,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_statue_of_trivia",
@@ -1980,7 +2074,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "dachstein",
@@ -2013,7 +2108,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_dolomites",
@@ -2037,7 +2133,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "klagenfurt",
@@ -2061,7 +2158,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_habach_emerald_mine",
@@ -2085,7 +2183,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "saint_wolfgang",
@@ -2109,7 +2208,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "schwyz",
@@ -2133,7 +2233,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "staubbach_fall",
@@ -2157,7 +2258,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_werfen_ice_caves",
@@ -2181,7 +2283,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_w_rthsee",
@@ -2205,7 +2308,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_rorschach_chapter",
@@ -2229,7 +2333,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "juno_s_spire",
@@ -2253,7 +2358,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_tower_of_ashes",
@@ -2277,7 +2383,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "valnastium_s_vienna_chapter",
@@ -2301,7 +2408,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "valnastium_s_constance_chapter",
@@ -2325,7 +2433,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "valnastium_s_saint_gallen_chapter",
@@ -2349,7 +2458,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "valnastium_s_geneva_chapter",
@@ -2373,7 +2483,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "frederick_ii_holy_roman_emperor",
@@ -2396,7 +2507,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "leopold_vi_duke_of_austria",
@@ -2419,7 +2531,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "louis_i_wittelsbach_count_palatine_of_the_rhine",
@@ -2442,7 +2555,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "thomas_i_count_of_savoy",
@@ -2465,7 +2579,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_counts_of_kyburg",
@@ -2488,7 +2603,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_hapsburgs",
@@ -2511,7 +2627,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_house_of_z_hringen",
@@ -2534,7 +2651,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_bishop_of_basel",
@@ -2556,7 +2674,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_bishop_of_constance",
@@ -2578,7 +2697,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_bishop_of_chur",
@@ -2600,7 +2720,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_bishop_of_geneva",
@@ -2622,7 +2743,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_bishop_of_lausanne",
@@ -2644,7 +2766,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_bishop_of_regensburg",
@@ -2666,7 +2789,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_archbishop_of_salzburg",
@@ -2688,7 +2812,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_abbey_of_saint_gallen",
@@ -2710,7 +2835,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_abbey_of_einsiedeln",
@@ -2732,7 +2858,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_abbey_of_reichenau",
@@ -2754,7 +2881,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_abbey_of_melk",
@@ -2776,7 +2904,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "basel",
@@ -2798,7 +2927,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "berne",
@@ -2820,7 +2950,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "constance",
@@ -2842,7 +2973,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "fribourg",
@@ -2864,7 +2996,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "geneva",
@@ -2886,7 +3019,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "lausanne",
@@ -2908,7 +3042,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "lucerne",
@@ -2930,7 +3065,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "chur",
@@ -2952,7 +3088,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "zurich",
@@ -2974,7 +3111,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "interlaken",
@@ -2996,7 +3134,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "augsburg",
@@ -3018,7 +3157,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "munich",
@@ -3040,7 +3180,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "regensburg",
@@ -3062,7 +3203,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "salzburg",
@@ -3084,7 +3226,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "vienna",
@@ -3106,7 +3249,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_rowan_sisterhood",
@@ -3134,11 +3278,12 @@
             "kind": "characters",
             "target_id": "jacinta",
             "note": "Its leader",
-            "id": "db2df96db27d"
+            "id": "354644b660b2"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_craft_school",
@@ -3166,17 +3311,18 @@
             "kind": "characters",
             "target_id": "constance",
             "note": "A leading member",
-            "id": "30173d00ccab"
+            "id": "db5c09968c0c"
           },
           {
             "kind": "characters",
             "target_id": "angela",
             "note": "A member",
-            "id": "52d711423b22"
+            "id": "0f36fecfbc21"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_jovians",
@@ -3204,11 +3350,12 @@
             "kind": "characters",
             "target_id": "pietro",
             "note": "Its founder",
-            "id": "9632ec1d0944"
+            "id": "4a2b67b7a0b9"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_black_mark",
@@ -3233,7 +3380,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_cult_of_dyssynergy",
@@ -3258,7 +3406,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_abbaye_des_vignerons",
@@ -3283,7 +3432,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_ostracism_of_athena_alpina",
@@ -3320,23 +3470,31 @@
             "kind": "characters",
             "target_id": "athena_alpina",
             "note": "The magus at risk",
-            "id": "c798c7d5e420"
+            "id": "69aa5796fbac"
           },
           {
             "kind": "characters",
             "target_id": "cato",
             "note": "Her deputy",
-            "id": "4917eddcea78"
+            "id": "a6c78e6e79ac"
           },
           {
             "kind": "characters",
             "target_id": "adrasteia",
             "note": "Who must not succeed her",
-            "id": "386baaea5440"
+            "id": "166473b6fa88"
           }
         ],
         "arms": {},
-        "secrets": "Cato was sent to the Alps partly so that, if she goes, the chief Quaesitor's place passes to him and not to Adrasteia of Tytalus."
+        "secrets": [
+          {
+            "title": "",
+            "text": "Cato was sent to the Alps partly so that, if she goes, the chief Quaesitor's place passes to him and not to Adrasteia of Tytalus.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "raids_on_the_bavarian_common",
@@ -3373,17 +3531,18 @@
             "kind": "characters",
             "target_id": "adrasteia",
             "note": "Hunts the raiders",
-            "id": "91bbfba9e08d"
+            "id": "1b8949aa8a41"
           },
           {
             "kind": "characters",
             "target_id": "katrina",
             "note": "Hunts the raiders",
-            "id": "126abd933d55"
+            "id": "0e7e7f3154e1"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_sicilian_children",
@@ -3420,11 +3579,12 @@
             "kind": "covenants",
             "target_id": "the_covenant_of_the_icy_north",
             "note": "Offers the chair",
-            "id": "f77574095a0d"
+            "id": "559e047138ae"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_vanishing_away",
@@ -3451,17 +3611,18 @@
             "kind": "covenants",
             "target_id": "tarragon_vale",
             "note": "The vanished covenant",
-            "id": "e377eaf7e535"
+            "id": "01e740ced60e"
           },
           {
             "kind": "characters",
             "target_id": "cymena",
             "note": "Lives at the site",
-            "id": "b3a4e470cc89"
+            "id": "2940628be5c7"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "jacinta_and_the_flambeau_primacy",
@@ -3488,11 +3649,12 @@
             "kind": "characters",
             "target_id": "jacinta",
             "note": "The likely Prima",
-            "id": "95f7da19ac2f"
+            "id": "9f3d53772b31"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_amaranth_trade",
@@ -3519,11 +3681,12 @@
             "kind": "characters",
             "target_id": "philomena",
             "note": "An amaranth halfling",
-            "id": "f499a3b3d582"
+            "id": "d5f92f6ed36c"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "esther_in_stone",
@@ -3550,11 +3713,12 @@
             "kind": "characters",
             "target_id": "esther",
             "note": "The petrified maga",
-            "id": "fdba35ec6bc2"
+            "id": "fc1359212efb"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_banner_of_winter",
@@ -3581,11 +3745,12 @@
             "kind": "covenants",
             "target_id": "the_covenant_where_journeys_end",
             "note": "Searches for it",
-            "id": "a97f30a86889"
+            "id": "fbd12fb80d64"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_vienna_basilisk",
@@ -3612,11 +3777,12 @@
             "kind": "characters",
             "target_id": "kentigern",
             "note": "Suspects a magus makes basilisks",
-            "id": "e2e0fefad375"
+            "id": "b02306f65a67"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_deaths_at_werfen",
@@ -3640,7 +3806,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "sinews_of_knowledge_s_money",
@@ -3667,17 +3834,18 @@
             "kind": "covenants",
             "target_id": "sinews_of_knowledge",
             "note": "The covenant",
-            "id": "c7a8ecb2c5bc"
+            "id": "00719dcb8ac4"
           },
           {
             "kind": "characters",
             "target_id": "ragoneda",
             "note": "Its liaison to a trading partner",
-            "id": "9b3c255afc07"
+            "id": "a0cf0922eecf"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       }
     ],
     "characters": [
@@ -4129,7 +4297,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Prima of House Criamon, filia Demetrius, forty-one and looking an energetic adolescent who knows far too much: her master, an alchemist, gave her a longevity potion at fourteen, and she has kept her body from growing up in his honour. Named for the mushroom the first local magicians used, she finds such compounds dull, doubts her own insights, and chose to support others instead, building the mushroom farms that feed the living. She did not expect the Primacy: it is the wish to give up wisdom to serve others, not wisdom, that marks a Primus. She leads the council of magi and elected covenfolk, and dislikes obfuscation (DE p. 21; Houses of Hermes: Mystery Cults pp. 44, 56).",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -4720,7 +4889,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filia Johannes, an elderly maga who believes a Hermes Portal between the Cave and the North Pole would line up the Earth's axis with its magical and magnetic fields, making the Earth more like the stars, so that the answer to the Enigma could exist in it without being sullied.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -5285,7 +5455,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filius Yannes, a Muto Mentem specialist with strong Intellego and Herbam who brews mind-altering substances, alcohol above all. Popular with grogs across Europe and drunk much of the time, he studies drunken mobs, spikes the wells of remote villages, and is to host the nine-yearly meeting of magical brewers in 1226. The Quaesitores blame him for much of the petty trouble at the Midsummer Fair. He holds that the Enigma's answer will take the mundanes into the Twilight lineage, and that ecstasy is the one philosophy they will accept.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -5798,7 +5969,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filia Gribbinus, a pleasant, bland maga in her sixties, a Mentem specialist with an affinity for ghosts, who is gaining little wisdom for an illicit affair. If it came out, her covenmates would send her from the Central Clutch for her own good. She and Esther, trained by the same master, argue often.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -6277,7 +6449,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filia Gribbinus, once an Imaginem specialist, turned to stone by faeries a couple of years ago. Her ghost floated free when the statue came home, but the curse can be undone, so she may not be dead; she is unsure whether she is a projected image, a ghost, or a spirit that thinks it is Esther, and fears she is someone else's figment. Arguably a member of the covenant: no one is sure.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -6768,7 +6941,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filius Circum Perfico, who travels Europe studying diviners and seers to learn where their knowledge comes from. He sends letters dated before a disaster, to be delivered only after it, asking how its survivors lived, since a warning would spoil his observations, and many magi never forgive him. A Seeker of sorts, he is browbeaten by others for what he withholds.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -7283,7 +7457,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filius Frederico, the covenant's chief baker, who no longer studies magic and acts as little like a magus as he can, seeking wisdom in the small perfect moments of mundane life.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -7769,7 +7944,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filius Flauberto the Difficult, who makes atonal music with summoned spirits, believing a hidden composition resonates under the world's events. Many of his line were driven mad by Plato's Comma, the flaw in the seven notes that answer the seven planets.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -8249,7 +8425,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filius Aurelia, a skilled Terram magus and surveyor who believes the Roman roads overlie magical paths, with the Great Ones buried at the great crossings under the cities; reckon finely enough and one could dig up an ancient. Seekers consult him, and he may go to Egypt to help catalogue a cat cemetery, with younger, more violent magi.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -8690,7 +8867,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filius Cato, a young magus who believes ball games are the folk remnants of pagan rites that might lead toward the Enigma or the Seekers' sacred places; Darius's ally.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -9156,7 +9334,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filia Innocu, who sees Twilight as a metamorphosis like a moth's and studies creatures that transform. Her philosophy has people outgrowing the Enigma, the House's politics wrong and the Primi's sacrifice pointless, so she does not debate it.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -9670,7 +9849,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filia Gribbinus, first trained in House Bonisagus by Dexter, whose long study of the Enigma has drawn her into Criamon. She makes mystical spaces in which things impossible in the mundane world become possible.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -10162,7 +10342,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filia Vespasian the Avaricious, from Hibernia, with plain links to Bright Summer: the House's specialist in faeries, a Vim maga with weaker Arts than most of her House, who retrained under a Merinita to learn Faerie Magic. She holds Twilight and deep Arcadia to be the same place. Her three apprentices share her air of knowing more than one could understand.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -10666,7 +10847,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filius Circum Perfico, a haruspex who seeks the Enigma in the entrails of magical beasts, and of familiars most of all; he once looked at the liver of a young Jerbiton killed in a lab accident. Magi send him the remains of beasts whose vis they have cut out, which makes him the Redcaps' least favourite magus, and his bottled oddities sell at the Fair.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -11259,7 +11441,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "The chief Quaesitor of the Alps for fourteen years, appointed by the Primus of Guernicus; called Alpina to tell her from the many Athenas of her House. An Intellego specialist most interested in Hermetic contracts of trade and sale, she runs the Fair and arranges the exchange of listed sites between covenants. Respected for her post and disliked as a person, since she lacks her neighbours' biases: trained in the Roman Tribunal, she does not dislike the Tremere and wants them to play a larger part. She is a hundred and twelve and looks in her late sixties, of Slavic blood, dark-haired, tall and solid, and travels in the stola with its veil, lifting it to speak in public.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -11824,7 +12007,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "The second most senior quaesitor in the Tribunal and Athena's deputy, who spies in disguise as a crumpled drunk old man (or a busty serving maid), letting magi take him for a magical incompetent until his subtle illusions catch them.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -12348,7 +12532,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "A quaesitor of House Tytalus, chosen for stealth and defensive violence, who roams the borders hunting raiders who plunder the vis sites the Code calls Alpine. Allowed to strike only those caught in the act, she lays elaborate traps and ruses, always with two hoplites at her back. Elsewhere her methods would not pass; here the powerful covenants wish for more like her, and the Primus of Guernicus, who sees she may become a problem, keeps her because she deters vigilantes and counter-raids, which she treats as fair game too.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -13184,7 +13369,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "A quaesitor of a Hibernian beast-mage tradition with a magical affinity for dogs, whose faerie hounds prowl the Midsummer Fair growling at anyone who smells suspicious. A skilled tracker, he hunts magical beasts through blizzards and air elementals through the sky, and calls on the nearest covenant for a quarry too strong for him. Once a monastic novice, he keeps an interest in the Church and canon law, vets the contracts between mundanes and the covenants' shell houses, and is the quaesitor likeliest to witness an oath. He came three years ago from retraining at Magvillus: a respectable quaesitor and a poor hedge wizard both, and so an unknown quantity.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -13745,7 +13931,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "An archmage of Criamon and a hoplite, who seeks the Enigma through the violent application of magic to the body: his spells, he holds, purify his enemies and teach them not to break the Code. Arms and reason share a Greek root, and he means to make the world's pieces fit by shoving them. One of the finest exponents of certamen in the Tribunal, with some success against demons; his deadliest spell is a high-level form of the Gift of the Enigma. He will not be called back to the Central Clutch soon.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -14205,7 +14392,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "One of the Order's youngest hoplites, whose heartbeast is the wolverine, the glutton: all but tireless, very strong and immune to cold. She serves the Quaesitores, travels with Adrasteia, and is preparing to challenge for archmage, exploring magical sites for creatures whose vis she can trade for items useful in either form.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -14759,7 +14947,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "The senior maga of the Rorschach Chapter, a Gifted Mercere who makes lesser enchanted devices for Redcaps of other Tribunals: illusions for disguise, invisibility and swift travel.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -15260,7 +15449,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Of the Rorschach Chapter: an alchemist with the Gentle Gift who brews the longevity potions of the Tribunal's Redcaps and, by arrangement with House Guernicus, its long-serving hoplites. He prefers travel to the laboratory and goes often between the covenants. His large mundane family has many Redcaps in it.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -15867,7 +16057,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Archmage of Juno's Spire, the Tribunal's senior hoplite and its lictor: a spry, small, elderly man fascinated by structured conflict. Trained in House Tytalus, he won his way into Flambeau by beating its champions with lightning, because it was hard and because some Tytalus think it their duty to found lineages in other Houses; some Flambeau call his descendants, the Jovians, interlopers. Hunting a leopard for his hoplite's sash, he was stalked and ambushed by it, and courted it as his familiar: Cinnamon, who catches birds from behind clouds. Rumour makes him the Antares, the Council of Archmagi's ceremonial war leader, who wears a great ruby.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -16491,7 +16682,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Archmaga of the Tower of Ashes, filia Nicoli of the line of Apromor: the eldest of her line and so the most able Perdo maga in the Order, who studies \"suboptimal\" spells that make Perdo do other Techniques' work (one ages blood into a scab to bind wounds, another destroys disease spirits; Carve the Mystic Tower etches a building out of rock). Many Alpine magi hope she dies before the few Flambeau older or deadlier than she, for as Prima she would make the Icy North her House's domus magna. She leads the Rowan Sisterhood. She and Pietro were born in the same Portuguese village, declared Wizard's War on each other on the same day twenty-eight years ago, and have been allies, rivals, enemies and perhaps lovers since; neither has fought a witnessed certamen. Her apprentice Ash is now the maga Noire.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -17069,7 +17261,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filia Rosalia, an ice-distorted, faerie-blooded maga who rarely leaves the covenant: leader of its council and community, a kind of stern aunt to her people, with the right to veto any policy. Her sigil is the icicle. Her sodales fear her Final Twilight may make her a faerie in the absent Queen's place, twisting the covenfolk into the shapes of the Queen's slain servants; she might one day have to be exiled. She and Andru of Valnastium are enemies, Miklos going between them.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -17586,7 +17779,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filius Innocu, born of two parents distorted by the Aura of Ice, with the barbegazi's features: huge feet to tunnel through snow or slide over ice, burial in snow no harm to him, blizzards at his call. No one can tell where his faerie powers end and his Hermetic magic begins; many think he makes gestures with his faerie powers as a private jest. His sigil is icicles forming in his beard.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -18028,7 +18222,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filia Lupina, daughter of a farmer and a goose maiden, who lacks the bundle of feathers that would let her take her mother's shape: her master trimmed the few she sprouted each year and used them in experiments. Graduated a decade ago, she has saved every feather since as Muto vis, and does not know her bundle is almost whole. She is timid, happier in a group with a strong leader, and still stuck in the unhappy adolescence her master's meddling left her.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -18515,7 +18710,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filia Bertrand, taken as an apprentice in error: her father was no faerie but a water elemental that possessed and sustained a drowned sailor. She has Faerie Magic, but her style is practical, decisive and acquisitive, and she often represents the covenant to other magi: mysterious, a little frightening and skilled in certamen. Her sigil coats each spell's target in moisture, deadly in the Alps.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -19000,7 +19196,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filia Bullfinch, a middle-aged Bjornaer maga whose heartbeast is the ibex. Faeries took her at sixteen, in mid-apprenticeship; she found her heartbeast with their help and served as a faerie wet nurse after her son, now the covenant's turb captain, was weaned. Recruited as a faerie midwife for the covenfolk's hard births, she travels the Order to deliver children too strange for Corpus spells. Her magic is poor for her age, and she cannot take an apprentice. She believes she is the new Amalthea, destined to find and raise the new Jupiter Pennius; her House thinks her mad and has asked the other Bjornaer to keep her from harm.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -19764,13 +19961,14 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filius Kosma, a young Jerbiton who fell for Lyndsay, a companion the covenant brought to the Fair, and after three years and some willing mind-reading was let in. They have four children, none Gifted, each with faerie blood from both sides. Faerie-blooded himself, tied to night and summer, charming and a fine musician with his Arcadian mandolin, he is the covenant's emissary, an unofficial go-between of Yselt and Andru through Sourdine, and fascinated by magical clothes. A non-voting member.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [
           {
             "kind": "characters",
             "target_id": "sourdine",
             "note": "His contact at Valnastium",
-            "id": "2232d3860c50"
+            "id": "417c81bee497"
           }
         ],
         "attitudes": [],
@@ -20264,7 +20462,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filius Caspar, of middle age, bonded with Kamilla; both take the shape of the lammergeier, and they share a laboratory and a sanctum. The less enlightened of the pair, since the perfect vulture is female, he spends more time in human form and has the better social skills: he dissects what he wants with great skill, mentions trouble-making stratagems to others rather than try them, and is glacially patient, then efficient and ruthless.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -20729,7 +20928,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filia Bamber, slightly younger than her partner Eginhard and the dominant of the two: she exemplifies the vulture's mind, intimidating smaller creatures, endlessly patient and so prudent about combat that it passes for cowardice. (The book also spells her Kamillia.)",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -21394,7 +21594,15 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Archmaga, filia Rafe, the Longevity Project's chief researcher, slowed because her predecessors all but exhausted its line of work; if she succeeds, magi of middling Corpus could keep themselves until Twilight. Her own contribution is the potion that slows apparent aging. She asks magi to send her the bodies of human-shaped faeries through the Redcaps, freely shares a spell that keeps such bodies from decay, and pays for rare ones; some Merinita hate her for dissecting their kin. A Progressive, who sees Bonisagus as human and fallible and her own generation as no lesser. Many suspect she can strip a man's organs out onto a table; in truth she is no combat maga.",
-        "secrets": "She is an amaranth halfling, daughter of one of the faeries who grow the forbidden flower: immune to it, since her body makes it, she stopped aging at 21 and began gaining Twilight as if under a longevity potion, and expects to fade into Arcadia to join her father. She has a weak hold over amaranth addicts, who resist her words the worse for their addiction.",
+        "secrets": [
+          {
+            "title": "",
+            "text": "She is an amaranth halfling, daughter of one of the faeries who grow the forbidden flower: immune to it, since her body makes it, she stopped aging at 21 and began gaining Twilight as if under a longevity potion, and expects to fade into Arcadia to join her father. She has a weak hold over amaranth addicts, who resist her words the worse for their addiction.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -22010,7 +22218,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Archmage, filius Valentin, the senior Verditius of the Tribunal and the finest longevity brewer active in the Order. He brews at most one potion for others every two years, and though a poor fighter has leverage enough to deter archmagi: to win his help one must outbid what an archmage or Primus could offer, and never by threat. He breaks no new ground and rarely competes at Verdi, so his House ranks him second tier, but he is its wealthiest and among its most influential. He holds the right to Staubbach Fall's Imaginem vis.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -22531,7 +22740,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filius Lorenz, who studies the means by which hedge wizards lengthen their lives, to give them Hermetic form. His best lead inverts a familiar bond, so that the magus dies of age only when his familiar does: a snake, an eagle or an immortal faerie or elemental would carry him to Twilight without aging rolls, but its death would kill him at once.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -23023,7 +23233,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filia Havelock (the member list calls her filius Seneca), whose name means stammerer: a curse stops her speaking aright while casting, so she leans on casting tools and is more traditional than most. She keeps the covenant's machines running, the great wheel above all, and is among the few of her House who repair enchanted items, a costly ritual designed anew each time; magi send her the strange things they dig up in the Levant, and she can often tell what one does and disable its defences. A descendant of Himinis the Mad, whose devices hide dangerous jokes.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -23545,7 +23756,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filius Luise, a professional intruder: for a stiff fee he walks into a dead magus's sanctum, makes sure nothing is about to explode, and for more disarms its wards; diabolism costs extra. The Council of Archmagi and the Quaesitores hire him, and between jobs he breaks into living magi's labs to show them their weaknesses. One of the highest Parmas in the Order, a Rego Vim specialist who keeps his trade secrets, with Charmed Life or Destiny or both; he spreads rumours of a unique Parma, a way past the Aegis and an artifact of the Mercurian priesthood.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -24035,7 +24247,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filia Sigurd, whose heartbeast is a piest, a serpent-whale the Irish know, from her birth near the Temple of Nodens in the Stonehenge Tribunal. She lives in the covenant's vast underground lake, explores the caves that riddle the Alps, and farms the deep pools: winkles by the pound and oysters by the bucket at the Fair, lobsters too big for two hands to ring, and now seed pearls, to ease the Tribunal's quarrel over wealth made by magic.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -24950,7 +25163,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filia Elisa, a comparatively young Corpus maga and a long-term, non-voting visitor who trades her service as the covenant's negotiator on minor matters for library and laboratory time; the maga a young covenant is likeliest to deal with at the Fair. She makes longevity enchantments for young magi, as tattoos, and is the covenant's chosen liaison to the spring covenant it hopes to trade through. Her sigil, the colour of bone, marks all her work: since her longevity potion she is all bone and ivory, and her fingernails are serrated like an infant's teeth and change with her mood. She keeps company to stay human, knowing that solitude leads to the Tower of Skulls. Her apprentice Augustina, eight years in training, is a bone maga of Animal who wants adventure.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -25450,7 +25664,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "A Redcap without the Gift, small and level-headed, who looks in her late twenties: a mythic Redcap of the Alps, sure of every safe road between the covenants. She killed an Alpine dragonette herself and wears boots of its skin, of which she is very proud.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -26548,19 +26763,20 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Primus of House Jerbiton, filius Astrolabe, from Greece: elected Secundus at thirty-eight and Primus at forty-three, in 1182, helped by his fame for finding Akrotiri, the city buried in ash on Thera, whose works of art he recovered until vampires drove him off. Tall, muscular and clean-shaven, with short dark curls, dignified before crowds and warm alone; his hardest spells are illusions. A conciliator who looks conservative but may radicalise his House: he favours open dealings with great mundanes, keeps a network of agents and a vast correspondence, rallied the House to save Constantinople's art, and hopes to show the Church that the Gift is a charism. His talisman is a flame-red wedding veil, and his familiar a small aristocratic cat, Crucifixo (Houses of Hermes: Societates p. 52).",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [
           {
             "kind": "characters",
             "target_id": "carmine",
             "note": "His wife",
-            "id": "f15e6a8d29ea"
+            "id": "33285aff2b62"
           },
           {
             "kind": "creatures",
             "target_id": "crucifixo",
             "note": "his familiar, Crucifixo",
-            "id": "75a5b9c00bf4"
+            "id": "af5efa48e16f"
           }
         ],
         "attitudes": [],
@@ -27188,7 +27404,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filia Frederich et Vortimer, over a hundred and thirty: trained in House Verditius, she worked for the Jerbiton under contract for fifty years before joining the House. Andru made her his Lesser Secundus, an office the Fifth Edition's House no longer has. A leader of the Craft School, which prizes the beautiful and the useful, she builds soaring, twisting laboratories and simple items for specialist labs; her lab texts sell at the Fair. Her adoptive parens Vortimer is of the lineage of Carolinus. The eldest living magus whose age the book gives, and so the Praeco here.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -27715,7 +27932,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filia Constance, a Crafter who uses casting tools and makes magical instruments prized by musicians, and the covenant's factor at the Fair, where she buys unpredictably for her art, once a Belaquin grog's club of faerie-grown wood for its sound. Crafters and natural magicians compete for things of virtue. Not in the book's member list, but described as one (the twelfth).",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -28242,7 +28460,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filia Bronwyn, the House's finest spy: Gently Gifted and a silent caster of subtle gestures, she is Lord Roland of the Val Gardenia at the Emperor's court, but would sooner take a kidnapped servant's place and smooth it over with Mentem. One of Andru's closest confidants, she runs the top of his intelligence network, whose reports go to the library's correlators, and is Miklos's contact.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -28719,7 +28938,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filia Andru, who leads the House's push into Islamic North Africa with the pro-Islamic Jerbiton of Iberia's \"Roman\" covenants and their links to Moorish magicians. She is quietly trying to learn what became of the last covenant founded near Tunis, said to be enslaved by desert demons.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -29205,7 +29425,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filia Natura, an Animal specialist who keeps the stables, kennels and mews: horses, donkeys, hounds and hawks trained to accept the Gifted, a few truly magical, sold at the Fair and along the Redcap roads. She pays well for breeding stock and established pairs of magical beasts, and is beginning to tame griffins.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -29714,7 +29935,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filia Bibliophilus, a magus of middle years, the latest of the valley's line of librarian-magi, who keep a small community with their like at Durenmar, Verdi and a few other covenants.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -30241,7 +30463,8 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filia Astrolabe, trained by the Primus's own parens, who studies Hermetic phonotactics, the voice as a tool of casting, and now rhyme and metre in spells, which would make them easier to learn if harder to design. Flighty and easily distracted, she has not published, and her verse is doggerel.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -30788,13 +31011,14 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Filia Susannah of House Flambeau, of mixed Iberian blood, one of the most beautiful women alive, dark-haired and dressed in black. She came in Andru's entourage forty-three years ago, became his model, his mistress and his wife, and is the valley's hostess. She follows the School of Sebastian, works magic on molten metal, and helps House Jerbiton when extreme violence is called for; she has passed the Jerbiton Gauntlet but prefers her independence. A muse. Their children are middle-aged, with grandchildren in their twenties; none has the Gift, and some are autocrats, scribes, priests and librarians (Houses of Hermes: Societates p. 52).",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [
           {
             "kind": "characters",
             "target_id": "andru",
             "note": "Her husband",
-            "id": "576810576981"
+            "id": "f45a77389700"
           }
         ],
         "attitudes": [],
@@ -30985,7 +31209,8 @@
         "portrait": "",
         "detail": "Sketch",
         "summary": "A chef from the Engadine whose food is as good as magic, at home with both noble and peasant cooking: an urban kind of folk magician. Sanctuary of Ice makes her a Larta, an unGifted member of House Jerbiton; the errata removes such members, so she is a companion of the covenant.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -31175,7 +31400,8 @@
         "portrait": "",
         "detail": "Sketch",
         "summary": "The elderly but powerful blacksmith of the Village of the Vale, whose smithy is one of the most magical places in the valley. His large family serves as grogs; some have a frightening knack with weapons and become sergeants elsewhere, and his journeymen find places in covenants across the Order. A Larta in Sanctuary of Ice, a companion here.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -31365,7 +31591,8 @@
         "portrait": "",
         "detail": "Sketch",
         "summary": "The valley's chief minstrel, who composes rather than performs: soaring choral prayers, magical when others sing them, often clergy in churches, and a key part of Andru's charm offensive. She seems an odd, perhaps unique, natural magician. A Larta in Sanctuary of Ice, a companion here.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -31527,6 +31754,8 @@
             "dwindling": false,
             "dwindling_from": null,
             "dwindled_years": 0,
+            "place_id": null,
+            "place_level": 0,
             "ship": null
           }
         ],
@@ -31697,7 +31926,7 @@
             "attack": 7,
             "defense": 7,
             "damage": 0,
-            "id": "9ec91df2d01d"
+            "id": "f6ae2a19fd1d"
           }
         ],
         "soak": 0,
@@ -31889,7 +32118,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Handles the things she loved in life as if alive. Her gloves make it needless, but most strong ghosts have it.",
-            "id": "2e79785e6aca"
+            "id": "de356c6eb44a"
           },
           {
             "name": "Unquiet Spirit",
@@ -31903,7 +32132,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Flings things with her thoughts: in the Cave, up to 250 pounds as far as 100 paces, lighter things falling straight down at the edge of its reach; landing one precisely is a targeting roll, +2 to hit a man-sized target with a small object. ReTe with Animal, Aquam, Corpus or Herbam requisites for what she throws. Fourth Edition: 1 points.",
-            "id": "627951775446"
+            "id": "de97e4efc5a1"
           }
         ],
         "vis": [],
@@ -31917,7 +32146,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "jane_the_fifth_primus",
@@ -32023,7 +32253,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Moves things of extraordinary weight anywhere in the aura, a Might point a magnitude of Target; she seems to touch what she moves. Nothing in the aura less than a year can be moved, though she can push it with other things. Fourth Edition: 3 points.",
-            "id": "8b9bafa4b138"
+            "id": "157d2f2a639d"
           },
           {
             "name": "The Primi's Magic",
@@ -32037,7 +32267,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Casts any spontaneous spell up to level 25 and any formulaic spell she knows up to level 60, at 1 Might point a magnitude; she earns no Twilight. Points spent come back to the Primi when a new Primus joins them. She knows every Vim and Mentem spell of the core rules to level 60 and many spells to level 25 of other Forms.",
-            "id": "d89ecec8da90"
+            "id": "d777c71ab32c"
           }
         ],
         "vis": [],
@@ -32051,7 +32281,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "barbegazi",
@@ -32146,7 +32377,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A snowstorm that buries the gnomes and their enemies: the book's Control Auram 8, fixed as a Greater Power, as their Might follows their role.",
-            "id": "2dff2dae8bc4"
+            "id": "7173d44781dc"
           },
           {
             "name": "Shake the Mountain",
@@ -32160,7 +32391,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Brings snow and rock down on those below: the book's Control Terram 8, fixed as a Greater Power.",
-            "id": "2372ca91d542"
+            "id": "3977824df8c2"
           },
           {
             "name": "Faerie Gifts",
@@ -32174,7 +32405,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enchants small objects, as the Fourth Edition's Faeries describes: the cheese one gave a poor girl of Lucerne turned to gold.",
-            "id": "c96812399232"
+            "id": "8909c3ead87d"
           }
         ],
         "vis": [
@@ -32182,7 +32413,7 @@
             "pawns": 2,
             "art": "Terram",
             "where": "one pawn in each great foot; its Art is whatever the gnome was doing when killed",
-            "id": "c6e25bd1ccf9"
+            "id": "764233b2b94f"
           }
         ],
         "equipment": "",
@@ -32195,7 +32426,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "crucifixo",
@@ -32252,7 +32484,7 @@
             "attack": 13,
             "defense": 14,
             "damage": -1,
-            "id": "1267863c2d44"
+            "id": "4646100f44f3"
           }
         ],
         "soak": 0,
@@ -32486,7 +32718,7 @@
             "pawns": 1,
             "art": "Mentem",
             "where": "in his body",
-            "id": "e31745129507"
+            "id": "a0aa831b2c4b"
           }
         ],
         "equipment": "",
@@ -32499,7 +32731,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       }
     ],
     "enchanted_devices": [],
@@ -32744,7 +32977,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Prima of House Criamon, filia Demetrius, forty-one and looking an energetic adolescent who knows far too much: her master, an alchemist, gave her a longevity potion at fourteen, and she has kept her body from growing up in his honour. Named for the mushroom the first local magicians used, she finds such compounds dull, doubts her own insights, and chose to support others instead, building the mushroom farms that feed the living. She did not expect the Primacy: it is the wish to give up wisdom to serve others, not wisdom, that marks a Primus. She leads the council of magi and elected covenfolk, and dislikes obfuscation (DE p. 21; Houses of Hermes: Mystery Cults pp. 44, 56).",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -32934,7 +33168,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filia Johannes, an elderly maga who believes a Hermes Portal between the Cave and the North Pole would line up the Earth's axis with its magical and magnetic fields, making the Earth more like the stars, so that the answer to the Enigma could exist in it without being sullied.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -33124,7 +33359,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filius Yannes, a Muto Mentem specialist with strong Intellego and Herbam who brews mind-altering substances, alcohol above all. Popular with grogs across Europe and drunk much of the time, he studies drunken mobs, spikes the wells of remote villages, and is to host the nine-yearly meeting of magical brewers in 1226. The Quaesitores blame him for much of the petty trouble at the Midsummer Fair. He holds that the Enigma's answer will take the mundanes into the Twilight lineage, and that ecstasy is the one philosophy they will accept.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -33314,7 +33550,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filia Gribbinus, a pleasant, bland maga in her sixties, a Mentem specialist with an affinity for ghosts, who is gaining little wisdom for an illicit affair. If it came out, her covenmates would send her from the Central Clutch for her own good. She and Esther, trained by the same master, argue often.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -33504,7 +33741,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filia Gribbinus, once an Imaginem specialist, turned to stone by faeries a couple of years ago. Her ghost floated free when the statue came home, but the curse can be undone, so she may not be dead; she is unsure whether she is a projected image, a ghost, or a spirit that thinks it is Esther, and fears she is someone else's figment. Arguably a member of the covenant: no one is sure.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -33694,7 +33932,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filius Circum Perfico, who travels Europe studying diviners and seers to learn where their knowledge comes from. He sends letters dated before a disaster, to be delivered only after it, asking how its survivors lived, since a warning would spoil his observations, and many magi never forgive him. A Seeker of sorts, he is browbeaten by others for what he withholds.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -33884,7 +34123,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filius Frederico, the covenant's chief baker, who no longer studies magic and acts as little like a magus as he can, seeking wisdom in the small perfect moments of mundane life.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -34074,7 +34314,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filius Flauberto the Difficult, who makes atonal music with summoned spirits, believing a hidden composition resonates under the world's events. Many of his line were driven mad by Plato's Comma, the flaw in the seven notes that answer the seven planets.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -34264,7 +34505,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filius Aurelia, a skilled Terram magus and surveyor who believes the Roman roads overlie magical paths, with the Great Ones buried at the great crossings under the cities; reckon finely enough and one could dig up an ancient. Seekers consult him, and he may go to Egypt to help catalogue a cat cemetery, with younger, more violent magi.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -34454,7 +34696,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filius Cato, a young magus who believes ball games are the folk remnants of pagan rites that might lead toward the Enigma or the Seekers' sacred places; Darius's ally.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -34644,7 +34887,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filia Innocu, who sees Twilight as a metamorphosis like a moth's and studies creatures that transform. Her philosophy has people outgrowing the Enigma, the House's politics wrong and the Primi's sacrifice pointless, so she does not debate it.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -34834,7 +35078,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filia Gribbinus, first trained in House Bonisagus by Dexter, whose long study of the Enigma has drawn her into Criamon. She makes mystical spaces in which things impossible in the mundane world become possible.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -35024,7 +35269,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filia Vespasian the Avaricious, from Hibernia, with plain links to Bright Summer: the House's specialist in faeries, a Vim maga with weaker Arts than most of her House, who retrained under a Merinita to learn Faerie Magic. She holds Twilight and deep Arcadia to be the same place. Her three apprentices share her air of knowing more than one could understand.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -35214,7 +35460,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filius Circum Perfico, a haruspex who seeks the Enigma in the entrails of magical beasts, and of familiars most of all; he once looked at the liver of a young Jerbiton killed in a lab accident. Magi send him the remains of beasts whose vis they have cut out, which makes him the Redcaps' least favourite magus, and his bottled oddities sell at the Fair.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -35404,7 +35651,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "The chief Quaesitor of the Alps for fourteen years, appointed by the Primus of Guernicus; called Alpina to tell her from the many Athenas of her House. An Intellego specialist most interested in Hermetic contracts of trade and sale, she runs the Fair and arranges the exchange of listed sites between covenants. Respected for her post and disliked as a person, since she lacks her neighbours' biases: trained in the Roman Tribunal, she does not dislike the Tremere and wants them to play a larger part. She is a hundred and twelve and looks in her late sixties, of Slavic blood, dark-haired, tall and solid, and travels in the stola with its veil, lifting it to speak in public.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -35594,7 +35842,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "The second most senior quaesitor in the Tribunal and Athena's deputy, who spies in disguise as a crumpled drunk old man (or a busty serving maid), letting magi take him for a magical incompetent until his subtle illusions catch them.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -35784,7 +36033,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "A quaesitor of House Tytalus, chosen for stealth and defensive violence, who roams the borders hunting raiders who plunder the vis sites the Code calls Alpine. Allowed to strike only those caught in the act, she lays elaborate traps and ruses, always with two hoplites at her back. Elsewhere her methods would not pass; here the powerful covenants wish for more like her, and the Primus of Guernicus, who sees she may become a problem, keeps her because she deters vigilantes and counter-raids, which she treats as fair game too.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -35974,7 +36224,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "An archmage of Criamon and a hoplite, who seeks the Enigma through the violent application of magic to the body: his spells, he holds, purify his enemies and teach them not to break the Code. Arms and reason share a Greek root, and he means to make the world's pieces fit by shoving them. One of the finest exponents of certamen in the Tribunal, with some success against demons; his deadliest spell is a high-level form of the Gift of the Enigma. He will not be called back to the Central Clutch soon.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -36164,7 +36415,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "One of the Order's youngest hoplites, whose heartbeast is the wolverine, the glutton: all but tireless, very strong and immune to cold. She serves the Quaesitores, travels with Adrasteia, and is preparing to challenge for archmage, exploring magical sites for creatures whose vis she can trade for items useful in either form.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -36354,7 +36606,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "The senior maga of the Rorschach Chapter, a Gifted Mercere who makes lesser enchanted devices for Redcaps of other Tribunals: illusions for disguise, invisibility and swift travel.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -36544,7 +36797,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Of the Rorschach Chapter: an alchemist with the Gentle Gift who brews the longevity potions of the Tribunal's Redcaps and, by arrangement with House Guernicus, its long-serving hoplites. He prefers travel to the laboratory and goes often between the covenants. His large mundane family has many Redcaps in it.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -36734,7 +36988,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Archmage of Juno's Spire, the Tribunal's senior hoplite and its lictor: a spry, small, elderly man fascinated by structured conflict. Trained in House Tytalus, he won his way into Flambeau by beating its champions with lightning, because it was hard and because some Tytalus think it their duty to found lineages in other Houses; some Flambeau call his descendants, the Jovians, interlopers. Hunting a leopard for his hoplite's sash, he was stalked and ambushed by it, and courted it as his familiar: Cinnamon, who catches birds from behind clouds. Rumour makes him the Antares, the Council of Archmagi's ceremonial war leader, who wears a great ruby.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -36924,7 +37179,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Archmaga of the Tower of Ashes, filia Nicoli of the line of Apromor: the eldest of her line and so the most able Perdo maga in the Order, who studies \"suboptimal\" spells that make Perdo do other Techniques' work (one ages blood into a scab to bind wounds, another destroys disease spirits; Carve the Mystic Tower etches a building out of rock). Many Alpine magi hope she dies before the few Flambeau older or deadlier than she, for as Prima she would make the Icy North her House's domus magna. She leads the Rowan Sisterhood. She and Pietro were born in the same Portuguese village, declared Wizard's War on each other on the same day twenty-eight years ago, and have been allies, rivals, enemies and perhaps lovers since; neither has fought a witnessed certamen. Her apprentice Ash is now the maga Noire.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -37114,7 +37370,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filia Rosalia, an ice-distorted, faerie-blooded maga who rarely leaves the covenant: leader of its council and community, a kind of stern aunt to her people, with the right to veto any policy. Her sigil is the icicle. Her sodales fear her Final Twilight may make her a faerie in the absent Queen's place, twisting the covenfolk into the shapes of the Queen's slain servants; she might one day have to be exiled. She and Andru of Valnastium are enemies, Miklos going between them.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -37304,7 +37561,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filius Innocu, born of two parents distorted by the Aura of Ice, with the barbegazi's features: huge feet to tunnel through snow or slide over ice, burial in snow no harm to him, blizzards at his call. No one can tell where his faerie powers end and his Hermetic magic begins; many think he makes gestures with his faerie powers as a private jest. His sigil is icicles forming in his beard.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -37494,7 +37752,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filia Lupina, daughter of a farmer and a goose maiden, who lacks the bundle of feathers that would let her take her mother's shape: her master trimmed the few she sprouted each year and used them in experiments. Graduated a decade ago, she has saved every feather since as Muto vis, and does not know her bundle is almost whole. She is timid, happier in a group with a strong leader, and still stuck in the unhappy adolescence her master's meddling left her.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -37684,7 +37943,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filia Bertrand, taken as an apprentice in error: her father was no faerie but a water elemental that possessed and sustained a drowned sailor. She has Faerie Magic, but her style is practical, decisive and acquisitive, and she often represents the covenant to other magi: mysterious, a little frightening and skilled in certamen. Her sigil coats each spell's target in moisture, deadly in the Alps.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -37874,7 +38134,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filia Bullfinch, a middle-aged Bjornaer maga whose heartbeast is the ibex. Faeries took her at sixteen, in mid-apprenticeship; she found her heartbeast with their help and served as a faerie wet nurse after her son, now the covenant's turb captain, was weaned. Recruited as a faerie midwife for the covenfolk's hard births, she travels the Order to deliver children too strange for Corpus spells. Her magic is poor for her age, and she cannot take an apprentice. She believes she is the new Amalthea, destined to find and raise the new Jupiter Pennius; her House thinks her mad and has asked the other Bjornaer to keep her from harm.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -38064,7 +38325,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filius Caspar, of middle age, bonded with Kamilla; both take the shape of the lammergeier, and they share a laboratory and a sanctum. The less enlightened of the pair, since the perfect vulture is female, he spends more time in human form and has the better social skills: he dissects what he wants with great skill, mentions trouble-making stratagems to others rather than try them, and is glacially patient, then efficient and ruthless.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -38254,7 +38516,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filia Bamber, slightly younger than her partner Eginhard and the dominant of the two: she exemplifies the vulture's mind, intimidating smaller creatures, endlessly patient and so prudent about combat that it passes for cowardice. (The book also spells her Kamillia.)",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -38444,7 +38707,15 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Archmaga, filia Rafe, the Longevity Project's chief researcher, slowed because her predecessors all but exhausted its line of work; if she succeeds, magi of middling Corpus could keep themselves until Twilight. Her own contribution is the potion that slows apparent aging. She asks magi to send her the bodies of human-shaped faeries through the Redcaps, freely shares a spell that keeps such bodies from decay, and pays for rare ones; some Merinita hate her for dissecting their kin. A Progressive, who sees Bonisagus as human and fallible and her own generation as no lesser. Many suspect she can strip a man's organs out onto a table; in truth she is no combat maga.",
-      "secrets": "She is an amaranth halfling, daughter of one of the faeries who grow the forbidden flower: immune to it, since her body makes it, she stopped aging at 21 and began gaining Twilight as if under a longevity potion, and expects to fade into Arcadia to join her father. She has a weak hold over amaranth addicts, who resist her words the worse for their addiction.",
+      "secrets": [
+        {
+          "title": "",
+          "text": "She is an amaranth halfling, daughter of one of the faeries who grow the forbidden flower: immune to it, since her body makes it, she stopped aging at 21 and began gaining Twilight as if under a longevity potion, and expects to fade into Arcadia to join her father. She has a weak hold over amaranth addicts, who resist her words the worse for their addiction.",
+          "revealed_year": null,
+          "revealed_season": ""
+        }
+      ],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -38634,7 +38905,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Archmage, filius Valentin, the senior Verditius of the Tribunal and the finest longevity brewer active in the Order. He brews at most one potion for others every two years, and though a poor fighter has leverage enough to deter archmagi: to win his help one must outbid what an archmage or Primus could offer, and never by threat. He breaks no new ground and rarely competes at Verdi, so his House ranks him second tier, but he is its wealthiest and among its most influential. He holds the right to Staubbach Fall's Imaginem vis.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -38824,7 +39096,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filius Lorenz, who studies the means by which hedge wizards lengthen their lives, to give them Hermetic form. His best lead inverts a familiar bond, so that the magus dies of age only when his familiar does: a snake, an eagle or an immortal faerie or elemental would carry him to Twilight without aging rolls, but its death would kill him at once.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -39014,7 +39287,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filia Havelock (the member list calls her filius Seneca), whose name means stammerer: a curse stops her speaking aright while casting, so she leans on casting tools and is more traditional than most. She keeps the covenant's machines running, the great wheel above all, and is among the few of her House who repair enchanted items, a costly ritual designed anew each time; magi send her the strange things they dig up in the Levant, and she can often tell what one does and disable its defences. A descendant of Himinis the Mad, whose devices hide dangerous jokes.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -39204,7 +39478,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filius Luise, a professional intruder: for a stiff fee he walks into a dead magus's sanctum, makes sure nothing is about to explode, and for more disarms its wards; diabolism costs extra. The Council of Archmagi and the Quaesitores hire him, and between jobs he breaks into living magi's labs to show them their weaknesses. One of the highest Parmas in the Order, a Rego Vim specialist who keeps his trade secrets, with Charmed Life or Destiny or both; he spreads rumours of a unique Parma, a way past the Aegis and an artifact of the Mercurian priesthood.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -39394,7 +39669,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filia Sigurd, whose heartbeast is a piest, a serpent-whale the Irish know, from her birth near the Temple of Nodens in the Stonehenge Tribunal. She lives in the covenant's vast underground lake, explores the caves that riddle the Alps, and farms the deep pools: winkles by the pound and oysters by the bucket at the Fair, lobsters too big for two hands to ring, and now seed pearls, to ease the Tribunal's quarrel over wealth made by magic.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -39584,7 +39860,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filia Frederich et Vortimer, over a hundred and thirty: trained in House Verditius, she worked for the Jerbiton under contract for fifty years before joining the House. Andru made her his Lesser Secundus, an office the Fifth Edition's House no longer has. A leader of the Craft School, which prizes the beautiful and the useful, she builds soaring, twisting laboratories and simple items for specialist labs; her lab texts sell at the Fair. Her adoptive parens Vortimer is of the lineage of Carolinus. The eldest living magus whose age the book gives, and so the Praeco here.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -39774,7 +40051,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filia Constance, a Crafter who uses casting tools and makes magical instruments prized by musicians, and the covenant's factor at the Fair, where she buys unpredictably for her art, once a Belaquin grog's club of faerie-grown wood for its sound. Crafters and natural magicians compete for things of virtue. Not in the book's member list, but described as one (the twelfth).",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -39964,7 +40242,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filia Bronwyn, the House's finest spy: Gently Gifted and a silent caster of subtle gestures, she is Lord Roland of the Val Gardenia at the Emperor's court, but would sooner take a kidnapped servant's place and smooth it over with Mentem. One of Andru's closest confidants, she runs the top of his intelligence network, whose reports go to the library's correlators, and is Miklos's contact.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -40154,7 +40433,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filia Andru, who leads the House's push into Islamic North Africa with the pro-Islamic Jerbiton of Iberia's \"Roman\" covenants and their links to Moorish magicians. She is quietly trying to learn what became of the last covenant founded near Tunis, said to be enslaved by desert demons.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -40344,7 +40624,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filia Natura, an Animal specialist who keeps the stables, kennels and mews: horses, donkeys, hounds and hawks trained to accept the Gifted, a few truly magical, sold at the Fair and along the Redcap roads. She pays well for breeding stock and established pairs of magical beasts, and is beginning to tame griffins.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -40534,7 +40815,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filia Bibliophilus, a magus of middle years, the latest of the valley's line of librarian-magi, who keep a small community with their like at Durenmar, Verdi and a few other covenants.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -40724,7 +41006,8 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filia Astrolabe, trained by the Primus's own parens, who studies Hermetic phonotactics, the voice as a tool of casting, and now rhyme and metre in spells, which would make them easier to learn if harder to design. Flighty and easily distracted, she has not published, and her verse is doggerel.",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [],
       "attitudes": [],
       "favours": [],
@@ -40914,13 +41197,14 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Filia Susannah of House Flambeau, of mixed Iberian blood, one of the most beautiful women alive, dark-haired and dressed in black. She came in Andru's entourage forty-three years ago, became his model, his mistress and his wife, and is the valley's hostess. She follows the School of Sebastian, works magic on molten metal, and helps House Jerbiton when extreme violence is called for; she has passed the Jerbiton Gauntlet but prefers her independence. A muse. Their children are middle-aged, with grandchildren in their twenties; none has the Gift, and some are autocrats, scribes, priests and librarians (Houses of Hermes: Societates p. 52).",
-      "secrets": "",
+      "secrets": [],
+      "known": true,
       "links": [
         {
           "kind": "characters",
           "target_id": "andru",
           "note": "Her husband",
-          "id": "576810576981"
+          "id": "f45a77389700"
         }
       ],
       "attitudes": [],

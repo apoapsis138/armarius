@@ -25,6 +25,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+from ...models import as_secrets, secret_words
 from ..builder import Builder, dormant, paragraphs
 
 if TYPE_CHECKING:
@@ -1807,7 +1808,7 @@ def _add_to(record: Any, more: str, hidden: str = "") -> None:
     """Add a paragraph to a record's summary, and `hidden` to its
     secrets."""
     record.summary = paragraphs(record.summary, more)
-    record.secrets = paragraphs(record.secrets, hidden)
+    record.secrets = as_secrets(paragraphs(secret_words(record.secrets), hidden))
 
 
 #: The links `finish` makes where the other parts made the target:

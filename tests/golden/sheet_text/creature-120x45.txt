@@ -1,7 +1,7 @@
 ===== tab-cr-traits
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-     Aeolus
+     Aeolus 👁
 
       Might:          Magic Might 8            How many:    One
       (Animal)                                 Found at:    The Drachenfels
@@ -44,7 +44,7 @@
 ===== tab-cr-combat
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-     Aeolus
+     Aeolus 👁
 
       Might:          Magic Might 8            How many:    One
       (Animal)                                 Found at:    The Drachenfels
@@ -87,7 +87,7 @@
 ===== tab-cr-powers
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-     Aeolus
+     Aeolus 👁
 
       Might:          Magic Might 8            How many:    One
       (Animal)                                 Found at:    The Drachenfels
@@ -130,7 +130,7 @@
 ===== tab-cr-description
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-     Aeolus
+     Aeolus 👁
 
       Might:          Magic Might 8            How many:    One
       (Animal)                                 Found at:    The Drachenfels
@@ -173,7 +173,7 @@
 ===== tab-secrets
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-     Aeolus
+     Aeolus 👁
 
       Might:          Magic Might 8            How many:    One
       (Animal)                                 Found at:    The Drachenfels
@@ -202,10 +202,10 @@
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Secrets
+    ▼ Secrets (0)
 
-      Nothing secret written yet: edit it to add what only you should know.
-
+      No secrets yet: add what only you should know, one secret at a time.
+      No secrets yet: add what only you should know, one secret at a time.
 
 
 

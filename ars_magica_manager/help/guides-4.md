@@ -398,14 +398,18 @@ a name, the Role *Player*, and a passcode you give them yourself. Add a *Storygu
 Write what the players mustn't learn on each record's
 [Secrets](help:tab-secrets)
 <!-- tui -->
-tab (its last; `e` there edits it),
+tab (its last; `a` there adds one),
 <!-- /tui -->
 <!-- gui -->
-chapter (**Edit Secrets** there),
+chapter (**Add** there),
 <!-- /gui -->
-not in its summary or notes. A player who signs in never sees that tab,
-and a record they export leaves its secrets out; everything else on the
-sheet they can read. The [Roll Tables](help:tab-nb-tables) of places,
+not in its summary or notes, one secret at a time. A player who signs
+in sees only the secrets you reveal, in the record's Known section, and a
+record they export carries only those; everything else on the sheet they
+can read. A record they mustn't know of at all yet (a hidden
+grove, a rival covenant) you hide with **Hide from the Players**, and
+reveal when they learn of it: see [Player view](help:player-view) and
+[How to reveal a record](help:guide-reveal). The [Roll Tables](help:tab-nb-tables) of places,
 threats, factions and lords are yours alone too: a player doesn't see
 that tab and can't roll, and a row's "(SG: ...)" note shows on your roll
 but never in the Diary line it writes.
@@ -1384,6 +1388,52 @@ Flaviae; years later one of them breaks it.
    **Charge at Tribunal** puts the case on the Tribunal's docket.
 
 **See also:** [The charter](help:section-cov-charter), [Clauses](help:section-cov-clauses)
+
+# How to reveal a record to the players
+<!-- help: guide-reveal -->
+
+Your saga holds a grove the troupe hasn't found yet, and tonight they
+find it.
+
+1. **Hide it before they know.** On the grove's page, choose **Hide from
+   the Players**
+<!-- tui -->
+   in More (`m`).
+<!-- /tui -->
+<!-- gui -->
+   in its Manage chapter, or click the seal under its bookmark ribbon
+   (an eye in a ring; struck through once it is hidden).
+<!-- /gui -->
+   To hide a whole pack's places at once, use Hide from the Players on
+   the Region, and choose Places.
+2. **Look as they do.**
+<!-- tui -->
+   **Player View**, in More on the saga, shows the saga as the players
+   see it; the header says so.
+<!-- /tui -->
+<!-- gui -->
+   The eye in the title bar turns on **Player view**: the saga as the
+   players see it, for a screen across the table.
+<!-- /gui -->
+   The grove is in no list, not in Find and not on the Atlas.
+3. **Reveal it.** When they find it, turn Player view off and choose
+   **Reveal to the Players** on its page. A line dated this season goes
+   in the troupe's covenant's Diary, and the grove shows everywhere.
+4. **Took it back?** Hide from the Players again takes that Diary line
+   out too.
+5. **Tell them one secret.** The grove keeps a list of secrets on its
+   Secrets
+<!-- tui -->
+   tab. Choose the one they learned and, in More (`m`), **Reveal the
+   Secret**.
+<!-- /tui -->
+<!-- gui -->
+   chapter. Choose the one they learned and click **Reveal**.
+<!-- /gui -->
+   It shows in the grove's Known section, dated, and the Diary says so.
+   A secret written as one long piece? **Split by Paragraph** first.
+
+**See also:** [Player view](help:player-view), [How to host a saga](help:guide-hosting)
 
 # How to find a record
 <!-- help: guide-find-record -->

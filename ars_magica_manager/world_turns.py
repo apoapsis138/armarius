@@ -32,7 +32,16 @@ import random
 from dataclasses import dataclass, field
 from typing import Any
 
-from . import economics, neighbours, place_events, places, threats, towns, world
+from . import (
+    economics,
+    neighbours,
+    place_events,
+    places,
+    threats,
+    towns,
+    viewing,
+    world,
+)
 from .commands import Confirm, Form, SectionOps
 from .form_spec import DialogField
 from .grids import Grid
@@ -279,7 +288,10 @@ def _written(
             _diary_line(year, season, f"{place.name}: {text}"),
         ),
         append_change(
-            "neighbour", place.id, ["details", "diary"], _diary_line(year, season, text)
+            "neighbour",
+            place.id,
+            ["details", "diary"],
+            {**_diary_line(year, season, text), "about": viewing.about(threat)},
         ),
     ]
 

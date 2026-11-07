@@ -13,6 +13,7 @@ from textual.widgets import (
 from .... import books as bk
 from .... import (
     neighbours,
+    viewing,
 )
 from ....actions import (
     NodeKind,
@@ -138,7 +139,9 @@ class NavigationActions(WorkspaceBase):
 
     async def _select_saga_content(self, ident: str | None) -> None:
         self.selected_covenant = None
-        view = SagaContentSheetView(self.saga, players=self._is_storyguide())
+        view = SagaContentSheetView(
+            self.saga, players=viewing.reads(part="tab-content-players")
+        )
         await self._set_detail(view)
         self._saga_content_view = view
         self._focus_first_section(initial=True)

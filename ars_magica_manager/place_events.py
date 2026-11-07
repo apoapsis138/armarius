@@ -37,7 +37,7 @@ import re
 from dataclasses import dataclass
 from typing import Any, Required, TypedDict, cast
 
-from . import places, threats, vis_sites
+from . import places, threats, viewing, vis_sites
 from .commands import Command, Confirm, Refuse, SectionOps
 from .form_spec import DialogField, pairs
 from .grids import Grid
@@ -548,6 +548,9 @@ class PlaceDiaryEntry(TypedDict, total=False):
     season: str
     text: str
     chapter: bool
+    #: The records a line the app wrote is about, each "kind:id": hidden
+    #: from players while one is unknown (viewing.py).
+    about: list[str]
 
 
 def diary(place: Neighbour) -> list[PlaceDiaryEntry]:
@@ -565,18 +568,21 @@ def diary_grid(_saga: Saga, place: Neighbour) -> Grid:
 
 
 def diary_rows(record: Neighbour, empty: str) -> Grid:
-    """A neighbour's diary, oldest first; `empty` says why there is none."""
+    """A neighbour's diary, oldest first; `empty` says why there is none. A
+    line about a record the reader doesn't know of is left out
+    (viewing.py)."""
+    shown = [(i, e) for i, e in enumerate(diary(record)) if viewing.shows_line(dict(e))]
     rows = [
         [
             " ".join(str(p) for p in (e.get("season"), e.get("year")) if p),
             ("Chapter: " if e.get("chapter") else "") + e.get("text", ""),
         ]
-        for e in diary(record)
+        for _, e in shown
     ]
     return Grid(
         ["When", "What happened"],
         rows,
-        list(range(len(rows))),
+        [i for i, _ in shown],
         empty,
         caps=[12, 0],
         stretch=1,
@@ -854,7 +860,6 @@ TABLES_TAB = KindTab(
     "Roll Tables",
     "tab-nb-tables",
     (KindList(TABLES_SECTION, tables_title, tables_grid, table_ops),),
-    storyguide_only=True,
 )
 DIARY_TAB = KindTab(
     "Diary",

@@ -14,7 +14,7 @@ from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from typing import Any
 
-from .. import catalog, goods, tribunal_packages, tribunals, vassals, world
+from .. import catalog, goods, tribunal_packages, tribunals, vassals, viewing, world
 from .. import covenant_build as cov_build
 from .. import covenant_diary as cov_diary
 from .. import economics as eco
@@ -724,4 +724,5 @@ def diary_cards(diary: list[CovenantDiaryEntry]) -> list[DiaryCard]:
             cov_diary.amounts(diary[i]),
         )
         for i in reversed(cov_diary.date_order(diary))
+        if viewing.shows_entry(diary[i])
     ]

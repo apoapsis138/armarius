@@ -591,6 +591,7 @@ GUIDES = [
     "guide-guest-stay",
     "guide-find-action",
     "guide-charter",
+    "guide-reveal",
     "guide-find-record",
 ]
 

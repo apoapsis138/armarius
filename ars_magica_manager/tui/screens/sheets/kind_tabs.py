@@ -8,6 +8,7 @@ from textual.app import ComposeResult
 from textual.containers import Vertical, VerticalScroll
 from textual.widgets import Static
 
+from .... import viewing
 from ....markup import aligned, escape, markdown_text
 from ....models import Neighbour, Saga
 from ....neighbour_lists import KindBlock, KindList, KindTab
@@ -139,7 +140,7 @@ class KindTabsView(SheetView):
                     lambda: aligned(
                         [
                             (f.label, fact_markup(f) or "[$label]—[/]")
-                            for f in facts(saga, n)
+                            for f in viewing.facts(facts(saga, n))
                         ]
                     ),
                     id=f"{stem}-facts",

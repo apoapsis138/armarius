@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
+from . import viewing
 from .models import (
     Character,
     Covenant,
@@ -43,18 +44,29 @@ def write(
     neighbours: Iterable[Neighbour] = (),
 ) -> int:
     """One line, under `name`, in each diary; returns how many were
-    written (each record once)."""
+    written (each record once). A covenant's or neighbour's line is marked
+    as about the neighbours, characters and creatures named, so a player
+    doesn't read it while one is unknown (viewing.py)."""
     count = 0
+    characters, neighbours = list(characters), list(neighbours)
+    about = viewing.about(*neighbours, *characters)
     for character in _once(characters):
         character.diary.append(DiaryEntry(year, season, name, text))
         count += 1
     for covenant in _once(covenants):
-        covenant.diary.append(CovenantDiaryEntry(year, season, name, text))
+        covenant.diary.append(
+            CovenantDiaryEntry(year, season, name, text, about=list(about))
+        )
         count += 1
     for neighbour in _once(neighbours):
-        details_list(neighbour, "diary").append(
-            {"year": year, "season": season, "text": f"{name}: {text}"}
-        )
+        line: dict[str, object] = {
+            "year": year,
+            "season": season,
+            "text": f"{name}: {text}",
+        }
+        if about:
+            line["about"] = list(about)
+        details_list(neighbour, "diary").append(line)
         count += 1
     return count
 

@@ -21,6 +21,7 @@ from . import (
     places,
     references,
     story_chapters,
+    viewing,
     world,
 )
 from .models import Character, Covenant, Creature, Familiar, Laboratory, Neighbour, Saga
@@ -48,7 +49,11 @@ def link_kind(record: Any) -> str | None:
 def _named(label: str, found: list[tuple[Any, str]]) -> list[Fact]:
     """A fact naming each of `found` (a record and its note), each
     linked; none while there are none."""
-    shown = [(r, note) for r, note in found if references.ref(r) is not None]
+    shown = [
+        (r, note)
+        for r, note in found
+        if references.ref(r) is not None and viewing.reads(r)
+    ]
     if not shown:
         return []
     value = ", ".join(f"{r.name} ({note})" if note else r.name for r, note in shown)

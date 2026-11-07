@@ -30,6 +30,7 @@ from .... import (
     tribunal_packages,
     tribunals,
     vassals,
+    viewing,
     world,
 )
 from .... import covenant_build as cov_build
@@ -85,6 +86,7 @@ from ..widgets import (
     TableHeader,
     TwoColumns,
     fact_markup,
+    marked_title,
 )
 from .base import SheetView
 from .kind_tabs import KindTabsView
@@ -216,7 +218,9 @@ class CovenantSheetView(KindTabsView):
     KIND_WATCHED = ("section-eco-income",)
 
     def compose(self) -> ComposeResult:
-        with PinnedCollapsible(title=escape(self.covenant.name), id="section-cov-info"):
+        with PinnedCollapsible(
+            title=marked_title(self.covenant), id="section-cov-info"
+        ):
             with TwoColumns(id="cov-info-body", text=True):
                 yield Static(self._info_left_text(), id="cov-info-left")
                 yield Static(self._info_right_text(), id="cov-info-right")
@@ -537,7 +541,9 @@ class CovenantSheetView(KindTabsView):
                 lambda: aligned(
                     [
                         (f.label, fact_markup(f) or "[$label]—[/]")
-                        for f in town_charter.terms_facts(saga, charter())
+                        for f in viewing.facts(
+                            town_charter.terms_facts(saga, charter())
+                        )
                     ]
                 ),
                 id="cov-charter-terms-facts",
@@ -888,8 +894,8 @@ class CovenantSheetView(KindTabsView):
         )
 
     def _refresh_info(self) -> None:
-        self.query_one("#section-cov-info", Collapsible).title = escape(
-            self.covenant.name
+        self.query_one("#section-cov-info", Collapsible).title = marked_title(
+            self.covenant
         )
         self.query_one("#cov-info-left", Static).update(self._info_left_text())
         self.query_one("#cov-info-right", Static).update(self._info_right_text())

@@ -13,6 +13,7 @@ from .common import (
     ExperimentalEffect,
     FatigueLevel,
     Handedness,
+    Secret,
     experimental_effects,
     known_fields,
     move_secrets,
@@ -1119,7 +1120,11 @@ class Character:
     summary: str = ""
     #: What only the storyguide should read: the record's Secrets
     #: chapter, hidden from players signed in to a hosted copy.
-    secrets: str = ""
+    secrets: list[Secret] = field(default_factory=list)
+    #: Whether the players know of it (viewing.py): an unknown record is
+    #: left out of everything a player reads until the storyguide reveals
+    #: it. Older saves load known.
+    known: bool = True
     links: list[Link] = field(default_factory=list)
     #: His attitude toward each player covenant and the favours owed
     #: between him and the troupe, as a neighbour's are (models.world).

@@ -21,7 +21,7 @@ from __future__ import annotations
 from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 
-from . import place_events, threats, tribunal_terms, tribunals
+from . import place_events, threats, tribunal_terms, tribunals, viewing
 from .grids import Grid
 from .markup import escape
 from .models import (
@@ -423,11 +423,27 @@ def entries(
     covenant) only what concerns it."""
     start, stop = now(saga), end(saga)
     found = [e for source in SOURCES for e in source(saga, start, stop)]
+    if not viewing.storyguide_reads():
+        found = public(saga, found)
     if show in SHOWS and show != EVERYTHING:
         found = [e for e in found if e.show == show]
     if covenant is not None:
         found = [e for e in found if concerns(saga, e, covenant)]
     return sorted(found, key=lambda e: e.when)
+
+
+#: What Ahead shows the players (viewing.py): the dates anyone in the
+#: saga could know (Tribunal meetings and terms, fairs, aging rolls and
+#: the storyguide's own calendar), never a threat's stage, a place's
+#: trigger or the world's yearly turn.
+PUBLIC: frozenset[str] = frozenset({TRIBUNAL, NEIGHBOURS, INCOME, CHARACTERS, CALENDAR})
+
+
+def public(saga: Saga, found: list[Entry]) -> list[Entry]:
+    """The entries of `found` the players may read: public dates, from no
+    record they don't know of."""
+    hidden = viewing.unknown_names(saga)
+    return [e for e in found if e.show in PUBLIC and e.source not in hidden]
 
 
 def by_season(found: list[Entry]) -> list[tuple[int, str, list[Entry]]]:

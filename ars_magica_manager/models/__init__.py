@@ -99,13 +99,17 @@ from .common import FatigueLevel as FatigueLevel
 from .common import Handedness as Handedness
 from .common import Modifier as Modifier
 from .common import ReasonChange as ReasonChange
+from .common import Secret as Secret
 from .common import SetChange as SetChange
 from .common import VirtueFlawTier as VirtueFlawTier
 from .common import VirtueFlawType as VirtueFlawType
 from .common import _validate_vf_tier_cost as _validate_vf_tier_cost
 from .common import as_character_type as as_character_type
+from .common import as_secrets as as_secrets
 from .common import experimental_effects as experimental_effects
 from .common import known_fields as known_fields
+from .common import read_secrets as read_secrets
+from .common import secret_words as secret_words
 from .conflicts import CHARACTER_FIGHTER as CHARACTER_FIGHTER
 from .conflicts import CREATURE_FIGHTER as CREATURE_FIGHTER
 from .conflicts import TYPED_FIGHTER as TYPED_FIGHTER

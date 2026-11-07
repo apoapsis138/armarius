@@ -1,13 +1,20 @@
 """A record's bookmark: a ribbon at the foot of its page's header, as a
 book's ribbon marks a page. Bookmarked, it is filled in the heading's
 colour and the record is kept in the saga's The Troupe chapter
-(troupe.py); otherwise it is a faint outline. Drawn in code."""
+(troupe.py); otherwise it is a faint outline. Drawn in code.
+
+Under the ribbon, on a record the players may not know of
+(viewing.can_be_unknown), its seal: an eye, struck through while the
+record is hidden from the players. It says Hidden or Known when the
+mouse is over it, and a click reveals or hides the record (forms/reveal.py)."""
 
 from __future__ import annotations
 
+from collections.abc import Callable
+
 from PySide6.QtCore import QPointF, QSize, Qt
 from PySide6.QtGui import QColor, QPainter, QPainterPath, QPaintEvent, QPen
-from PySide6.QtWidgets import QAbstractButton, QHBoxLayout, QWidget
+from PySide6.QtWidgets import QAbstractButton, QHBoxLayout, QVBoxLayout, QWidget
 
 from .. import troupe
 from .themes import Palette
@@ -66,7 +73,76 @@ class Ribbon(QAbstractButton):
         painter.end()
 
 
-def with_bookmark(header: QWidget, ribbon: Ribbon | None) -> QWidget:
+#: The seal's size, in pixels.
+SEAL = 34
+
+
+class Seal(QAbstractButton):
+    """Whether the players know of a record: an eye in a ring, struck
+    through and filled in the primary ink while it is hidden, a plain eye
+    in the label ink once it is known. Its words are its tooltip; a click
+    runs `act` (Reveal or Hide)."""
+
+    def __init__(self, known: bool, p: Palette, act: Callable[[], None]) -> None:
+        super().__init__()
+        self.known, self.p = known, p
+        self.setFixedSize(QSize(SEAL + 4, SEAL + 4))
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.setAttribute(Qt.WidgetAttribute.WA_Hover)
+        self.setAccessibleName("Known" if known else "Hidden")
+        self.setToolTip(
+            "Known to the players. Click to hide it from them"
+            if known
+            else "Hidden from the players. Click to reveal it to them"
+        )
+        self.clicked.connect(act)
+
+    def paintEvent(self, _event: QPaintEvent) -> None:
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        hidden = not self.known
+        ink = QColor(
+            self.p["primary" if hidden else "heading" if self.underMouse() else "label"]
+        )
+        centre = QPointF(self.width() / 2, self.height() / 2)
+        fill = QColor(ink)
+        fill.setAlpha(40 if hidden else 15)
+        painter.setPen(QPen(ink, 1.5))
+        painter.setBrush(fill)
+        painter.drawEllipse(centre, SEAL / 2, SEAL / 2)
+        # The eye, 20 units across, drawn about the centre.
+        painter.translate(centre.x() - 10, centre.y() - 10)
+        pen = QPen(ink, 1.6)
+        pen.setCapStyle(Qt.PenCapStyle.RoundCap)
+        painter.setPen(pen)
+        painter.setBrush(Qt.BrushStyle.NoBrush)
+        lids = QPainterPath(QPointF(2, 10))
+        lids.quadTo(QPointF(10, 2), QPointF(18, 10))
+        lids.quadTo(QPointF(10, 18), QPointF(2, 10))
+        painter.drawPath(lids)
+        painter.setBrush(ink)
+        painter.drawEllipse(QPointF(10, 10), 2.6, 2.6)
+        if hidden:
+            pen.setWidthF(2.0)
+            painter.setPen(pen)
+            painter.drawLine(QPointF(3, 17), QPointF(17, 3))
+        painter.end()
+
+
+def with_seal(ribbon: Ribbon, seal: Seal | None) -> QWidget:
+    """The ribbon with the record's seal under it, when it has one."""
+    if seal is None:
+        return ribbon
+    box = QWidget()
+    column = QVBoxLayout(box)
+    column.setContentsMargins(0, 0, 0, 0)
+    column.setSpacing(6)
+    column.addWidget(ribbon, 0, Qt.AlignmentFlag.AlignHCenter)
+    column.addWidget(seal, 0, Qt.AlignmentFlag.AlignHCenter)
+    return box
+
+
+def with_bookmark(header: QWidget, ribbon: QWidget | None) -> QWidget:
     """A page's header with its ribbon at the right of its foot; the header
     alone when the page has none."""
     if ribbon is None:

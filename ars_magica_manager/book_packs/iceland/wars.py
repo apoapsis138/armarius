@@ -36,7 +36,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from ...models import Creature, Neighbour
+from ...models import Creature, Neighbour, as_secrets, secret_words
 from ...rules.sites import PLACE
 from ..builder import Builder, characteristics, dormant, paragraphs
 
@@ -81,7 +81,9 @@ def _replace_sketch(b: Builder, creature: Creature) -> None:
     for sketch in b.saga.creatures:
         if sketch.name == creature.name and sketch is not creature:
             creature.id = sketch.id
-            creature.secrets = paragraphs(sketch.secrets, creature.secrets)
+            creature.secrets = as_secrets(
+                paragraphs(secret_words(sketch.secrets), secret_words(creature.secrets))
+            )
             creature.place_id = sketch.place_id or creature.place_id
             creature.place_level = sketch.place_level
             b.saga.creatures.remove(sketch)
@@ -341,7 +343,7 @@ def _factions(b: Builder, people: dict[str, Any]) -> dict[str, Neighbour]:
             secrets=odin_hidden,
         )
     else:
-        odin.secrets = paragraphs(odin.secrets, odin_hidden)
+        odin.secrets = as_secrets(paragraphs(secret_words(odin.secrets), odin_hidden))
     crusaders = b.faction(
         "The Hermetic Crusaders",
         summary="Magi of Houses Flambeau and Guernicus who want action "

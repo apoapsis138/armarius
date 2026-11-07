@@ -26,7 +26,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import artwork, traditions
+from .. import artwork, traditions, viewing
 from .. import house_rules as hr
 from .. import players as pl
 from .. import saga_content as sc
@@ -143,6 +143,8 @@ class SagaContentPage(QWidget):
             # The Goods ledger and the traditions' cards are long: drawn
             # when first turned to.
             build = builders[name]
+            if name == "Players" and not viewing.reads(part="tab-content-players"):
+                continue
             self.codex.add(name, concept, build if name in LATER else build())
         outer.addWidget(self.codex, 1)
 

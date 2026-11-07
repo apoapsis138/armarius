@@ -38,9 +38,9 @@ import zipfile
 from collections.abc import Callable, Iterable
 from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
-from typing import Any, TypedDict
+from typing import Any, TypedDict, cast
 
-from . import __version__, catalog, places, portraits, storage
+from . import __version__, catalog, places, portraits, storage, viewing
 from .atlas import maps as atlas_maps
 from .files import write_atomic
 from .models import (
@@ -164,14 +164,28 @@ def export_data(
     )
 
 
+def _revealed(secrets: object) -> list[Any]:
+    """A saved record's secrets the players know: the revealed ones (an
+    older export's words, never revealed, none)."""
+    if not isinstance(secrets, list):
+        return []
+    return [
+        s
+        for s in cast(list[object], secrets)
+        if isinstance(s, dict) and s.get("revealed_year") is not None
+    ]
+
+
 def without_secrets(data: dict[str, Any]) -> dict[str, Any]:
-    """An export with every record's secrets left out: what a player
-    signed in to a hosted copy downloads."""
+    """An export with every record's secrets the players don't know left
+    out, the revealed ones kept: what a player downloads."""
     kept = dict(data)
     kept["saga"] = {
         key: (
             [
-                {**r, "secrets": ""} if isinstance(r, dict) and "secrets" in r else r
+                {**r, "secrets": _revealed(r["secrets"])}
+                if isinstance(r, dict) and "secrets" in r
+                else r
                 for r in value
             ]
             if isinstance(value, list)
@@ -180,6 +194,62 @@ def without_secrets(data: dict[str, Any]) -> dict[str, Any]:
         for key, value in data["saga"].items()
     }
     return kept
+
+
+#: The saga lists whose records can be unknown to the players.
+_REVEALABLE = ("characters", "covenants", "neighbours", "creatures")
+
+
+def _troupes_own(key: str, record: dict[str, Any]) -> bool:
+    """Whether a saved record is the troupe's own, so always known (as
+    viewing.troupes_own, on the saved shape)."""
+    if key == "characters":
+        background = record.get("background") or {}
+        return bool(
+            str(background.get("player") or "").strip() or background.get("player_id")
+        )
+    if key == "covenants":
+        return record.get("played", True) is not False
+    return False
+
+
+def without_unknown(data: dict[str, Any]) -> dict[str, Any]:
+    """An export with every record the players don't know of left out, and
+    the pins that showed one."""
+    saga = data["saga"]
+    gone: set[str] = set()
+    kept_saga = dict(saga)
+    for key in _REVEALABLE:
+        records = saga.get(key)
+        if not isinstance(records, list):
+            continue
+        kept = []
+        for record in records:
+            if (
+                isinstance(record, dict)
+                and record.get("known") is False
+                and not _troupes_own(key, record)
+            ):
+                gone.add(str(record.get("id")))
+            else:
+                kept.append(record)
+        kept_saga[key] = kept
+    if isinstance(saga.get("pins"), list):
+        kept_saga["pins"] = [
+            p
+            for p in saga["pins"]
+            if not (isinstance(p, dict) and p.get("record_id") in gone)
+        ]
+    return {**data, "saga": kept_saga}
+
+
+def for_reader(data: dict[str, Any]) -> dict[str, Any]:
+    """An export as whoever is looking may take it away (viewing.py): the
+    storyguide's whole; anyone else's (a player, or Player view) without
+    Secrets or the records the players don't know of."""
+    if viewing.storyguide_reads():
+        return data
+    return without_unknown(without_secrets(data))
 
 
 def bundle_data(
@@ -388,7 +458,9 @@ def export_to(
     """Write `record`'s export to `path` (its folder is made if needed):
     a zip with SUFFIX's name changed when it carries a portrait. The file
     written."""
-    return write_export(path, export_data(saga, record, with_members=with_members))
+    return write_export(
+        path, for_reader(export_data(saga, record, with_members=with_members))
+    )
 
 
 def saga_file_name(saga: Saga) -> str:
@@ -415,7 +487,7 @@ def export_saga_to(path: Path, saga: Saga) -> Path:
     """Write the whole saga's export to `path` (its folder is made if
     needed), with its maps and portraits as a zip when it has any. The
     file written."""
-    return write_export(path, export_saga_data(saga))
+    return write_export(path, for_reader(export_saga_data(saga)))
 
 
 # ------------------------------------------------------------------ import

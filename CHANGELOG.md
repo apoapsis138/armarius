@@ -123,6 +123,23 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.84.0 — 2026-11-07
+
+### Sodales
+
+- **Who may read what**: one rule now decides what a player sees, everywhere: on every page and list, in Find, on the Atlas, in Looking Ahead and in what they export. The storyguide sees everything.
+- **Known to the players**: a record of the world beyond the troupe (a neighbour or place, a creature, a covenant the troupe doesn't play, a character no player plays) is known to the players or hidden from them. A hidden record is left out of everything they read, and a page that names it shows neither its name nor a link. Older sagas keep everything known; a pack brings its records known, except any it marks secret.
+- **Reveal to the Players** and **Hide from the Players** on a record's page: revealing writes a dated line in each troupe covenant's Diary, and hiding it again takes that line out. **Hide from the Players** on the Region hides a whole list at once, or only what lies in one Tribunal's lands.
+- On the desktop a **seal** under a record's bookmark ribbon shows which it is: an eye in a ring, struck through while the record is hidden. Hover to read Hidden or Known, and click to reveal or hide it. In the terminal the name at the top of the sheet ends in 👁 or 🚫.
+- **Player view**: an eye beside Find on the desktop (Player View in More on the saga in the terminal) shows the saga as the players see it, for a screen they can watch. It is remembered for each saga, says "Player view" in words while it is on, and leaves off what only the storyguide does: rolling on a table, Reveal and Hide, hosting, Import, Export Pack and a threat's story actions.
+- For the players, a threat shows only the stages that have come, never its clock or what is still to come. Looking Ahead shows only the dates anyone could know: Tribunal meetings and terms, fairs, aging rolls and the storyguide's calendar. A Diary line the app wrote about a hidden record waits until the record is revealed.
+- **Secrets as a list**: each record's Secrets are a list of secrets, each with a short title, revealed one by one. Each is added, edited and deleted on its own and marked "Revealed" with its season and year, or "Not revealed". **Reveal** writes a dated line in the troupe's Diary. Players see the revealed ones in the record's **Known** section. **Split by Paragraph** breaks a long secret into one for each paragraph, after showing the parts. Older saves and the packs bring their secrets in as one untitled secret.
+- The storyguide's **Find** also searches every secret, a match there marked "secret"; a player's Find never does. A player's export carries only the revealed secrets.
+
+### Mappa Mundi
+
+- The Atlas's Table view is now **Player view**: it leaves off the secret pins, the records shown at them and every record the players don't know of, and pins can't be moved while it is on.
+
 ## 3.83.0 — 2026-11-07
 
 ### Peregrinatio

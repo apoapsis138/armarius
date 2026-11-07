@@ -17,7 +17,7 @@ from __future__ import annotations
 
 from typing import Any, TypedDict, cast
 
-from . import references
+from . import references, viewing
 from .commands import Choice, Choose, Picked, SectionOps
 from .form_spec import DialogField
 from .grids import Grid
@@ -92,7 +92,7 @@ def factions_of(saga: Saga, record: Any) -> list[tuple[Neighbour, str]]:
     who = f"{found.kind}:{found.id}"
     return [
         (n, m.get("role") or "")
-        for n in saga.neighbours
+        for n in viewing.shown(saga.neighbours)
         if n.kind == "faction"
         for m in n.details.get("roster") or []
         if m.get("who") == who
@@ -108,8 +108,12 @@ def members_title(_saga: Saga, faction: Neighbour) -> str:
 
 def members_grid(saga: Saga, faction: Neighbour) -> Grid:
     rows = []
-    for member in roster(faction):
+    keys: list[int | None] = []
+    for index, member in enumerate(roster(faction)):
         found = record_of(saga, member)
+        if found is not None and not viewing.reads(found):
+            continue
+        keys.append(index)
         rows.append(
             [
                 name_of(saga, member),
@@ -120,7 +124,7 @@ def members_grid(saga: Saga, faction: Neighbour) -> Grid:
     return Grid(
         ["Member", "Kind", "Role"],
         rows,
-        list(range(len(rows))),
+        keys,
         "No members recorded: add a character, a creature or a neighbour.",
         caps=[30, 10, 0],
     )

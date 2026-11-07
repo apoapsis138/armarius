@@ -28,6 +28,7 @@ from __future__ import annotations
 import unicodedata
 from typing import TYPE_CHECKING, Any
 
+from ...models import as_secrets, secret_words
 from ..builder import Builder, dormant, paragraphs
 
 if TYPE_CHECKING:
@@ -1197,7 +1198,7 @@ def _add_to(record: Any, more: str, hidden: str = "", attr: str = "summary") -> 
     its secrets."""
     setattr(record, attr, paragraphs(getattr(record, attr) or "", more))
     if hidden:
-        record.secrets = paragraphs(record.secrets, hidden)
+        record.secrets = as_secrets(paragraphs(secret_words(record.secrets), hidden))
 
 
 def _place(hibernia: Hibernia, places: list[Any], *keys: str) -> Any | None:

@@ -5,8 +5,9 @@ turret, a ruin, a place's or creature's realm, a lord's arms).
 Hovering a pin shows the record in the inspector; clicking it opens the
 record's page, so Back returns here; dragging one of the troupe's pins
 moves it; its right-click menu opens it, makes it secret or takes it off
-the map. The Table view, for a screen the players watch, leaves off the
-secret pins and every record shown at them.
+the map. Player view (viewing.py), for a screen the players watch, leaves
+off the secret pins, every record shown at them and every record the
+players don't know of, and pins can't be moved there.
 
 Which pins show, and where, is the core's (atlas.py); opening a pin's
 record goes through the window's own opener for a link (a Go step), as
@@ -35,7 +36,6 @@ from PySide6.QtGui import (
     QWheelEvent,
 )
 from PySide6.QtWidgets import (
-    QCheckBox,
     QComboBox,
     QGraphicsItem,
     QGraphicsObject,
@@ -54,7 +54,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import artwork
+from .. import artwork, viewing
 from .. import atlas as at
 from ..arms import Arms
 from ..commands import Act, Choose, Command, Go, Picked
@@ -88,17 +88,23 @@ ZOOM_MOST, ZOOM_LEAST = 8.0, 0.05
 @dataclass
 class _Kept:
     """What the Atlas keeps while the app runs: the map on show for each
-    saga, where each map was looked at, the Table view and the kinds left
-    off, and the record Show on Map asked for."""
+    saga, where each map was looked at, the kinds left off, and the
+    record Show on Map asked for."""
 
     chosen: dict[str, str] = field(default_factory=dict)
     views: dict[str, tuple[float, float, float]] = field(default_factory=dict)
-    table: bool = False
     hidden_kinds: set[str] = field(default_factory=set)
     focus: tuple[str, str] | None = None
 
 
 KEPT = _Kept()
+
+
+def _table() -> bool:
+    """Whether the map is drawn for the players (viewing.py: Player view,
+    or a player): secret pins and unknown records are left off, and pins
+    can't be moved or changed."""
+    return not viewing.storyguide_reads()
 
 
 def show_on_map(kind: str, record_id: str) -> None:
@@ -266,8 +272,8 @@ class PinItem(QGraphicsObject):
     @property
     def movable(self) -> bool:
         """Whether a drag moves it: one record, at a pin of its own, off
-        the Table view."""
-        return len(self.here) == 1 and self.here[0].pin is not None and not KEPT.table
+        Player view."""
+        return len(self.here) == 1 and self.here[0].pin is not None and not _table()
 
     def boundingRect(self) -> QRectF:
         half = max(PIN / 2 + 12, self.name_width / 2)
@@ -405,7 +411,7 @@ class MapView(QGraphicsView):
         saga = self.chapter.saga
         kinds = [k for k in at.SHOWN_KINDS if k not in KEPT.hidden_kinds]
         spots: dict[tuple[float, float], list[at.ShownPin]] = {}
-        for shown in at.shown_pins(saga, self.map.id, table=KEPT.table, kinds=kinds):
+        for shown in at.shown_pins(saga, self.map.id, kinds=kinds):
             spots.setdefault((shown.x, shown.y), []).append(shown)
         for (x, y), here in spots.items():
             # A record's own pin first, so its mark is the one drawn.
@@ -623,9 +629,9 @@ class MapView(QGraphicsView):
             heading = menu.addAction(f"Open {shown.ref.name}")
             heading.triggered.connect(lambda _c=False, s=shown: self.chapter.open(s))
             pin = shown.pin
-            if pin is None or KEPT.table:
+            if pin is None or _table():
                 continue
-            secret = menu.addAction("Secret: left off the Table view")
+            secret = menu.addAction("Secret: left off in Player view")
             secret.setCheckable(True)
             secret.setChecked(pin.secret)
             secret.triggered.connect(
@@ -638,7 +644,7 @@ class MapView(QGraphicsView):
 
 class AtlasChapter(QWidget):
     """The Atlas: the chosen map with its buttons, the filter of which
-    kinds of record show and the Table view switch. Its buttons redraw the
+    kinds of record show. Its buttons redraw the
     chapter in place, so the rest of the saga page is left as it was."""
 
     def __init__(
@@ -800,10 +806,6 @@ class AtlasChapter(QWidget):
             action.toggled.connect(lambda on, k=kind: self._show_kind(k, on))
         kinds.setMenu(menu)
         row.addWidget(kinds)
-        self.table = QCheckBox("Table view: leave off the secret pins")
-        self.table.setChecked(KEPT.table)
-        self.table.toggled.connect(self._table_view)
-        row.addWidget(self.table)
         row.addStretch(1)
         if self.view_map is not None and at.has_scale(self.view_map):
             row.addWidget(edit_button("Measure", self.p, self.measure, "search"))
@@ -828,12 +830,6 @@ class AtlasChapter(QWidget):
         if self.view is not None:
             self.view.draw_pins()
 
-    def _table_view(self, on: bool) -> None:
-        KEPT.table = on
-        if self.view is not None:
-            self.view.draw_pins()
-        self.say("")
-
     def _fit(self) -> None:
         if self.view is not None:
             self.view.fit()
@@ -851,7 +847,12 @@ class AtlasChapter(QWidget):
                 + at.scale_words(self.view.map)
                 + "  Scroll to zoom, drag to look around; hover a pin to see it, "
                 "click to open it, drag one to move it."
-                + ("  Table view: secret pins are left off." if KEPT.table else "")
+                + (
+                    "  Player view: secret pins and what the players don't "
+                    "know of are left off."
+                    if _table()
+                    else ""
+                )
             )
         self.line.setText(words)
 
@@ -866,7 +867,7 @@ class AtlasChapter(QWidget):
             notes = [at.kind_word(found)] if len(here) > 1 else []
             if shown.at:
                 notes.append(f"at {shown.at}")
-            if shown.secret and not KEPT.table:
+            if shown.secret and not _table():
                 notes.append("secret pin")
             note = f"[dim]{escape(', '.join(notes))}[/]" if notes else ""
             if len(here) > 1:

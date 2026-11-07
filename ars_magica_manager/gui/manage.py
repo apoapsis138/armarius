@@ -23,14 +23,15 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import atlas, world
+from .. import atlas, viewing, world
 from ..actions import NodeKind
 from ..commands import Command
 from ..forms import menu as menu_forms
+from ..forms import reveal as reveal_forms
 from ..forms.menu import DELETE_RECORD, Page
 from ..models import FULL, Character, Covenant, Laboratory
 from . import pictures
-from .bookmark import Ribbon
+from .bookmark import Ribbon, Seal, with_seal
 from .markup_html import plain
 from .themes import Palette
 from .widgets import chapter_title, edit_button, scrolling_page, serif, text
@@ -103,14 +104,23 @@ class RecordControls:
     def chapter(self, p: Palette) -> QWidget:
         return manage_chapter(self, p)
 
-    def bookmark(self, p: Palette) -> Ribbon | None:
-        """The record's bookmark (bookmark.py), for its page's header."""
+    def bookmark(self, p: Palette) -> QWidget | None:
+        """The record's bookmark (bookmark.py), for its page's header, with
+        its seal under it where the players may not know of it: shown to
+        the storyguide only, a click revealing or hiding it."""
         page = self.page
         kind = BOOKMARKED.get(page.kind) if page.kind is not None else None
         record = page.record_to_delete()
         if kind is None or record is None:
             return None
-        return Ribbon(page.saga.id, kind, record.id, p)
+        ribbon = Ribbon(page.saga.id, kind, record.id, p)
+        if not viewing.can_be_unknown(record) or not viewing.offers("reveal"):
+            return ribbon
+        known = viewing.is_known(record)
+        step = reveal_forms.conceal if known else reveal_forms.reveal
+        saga = page.saga
+        seal = Seal(known, p, lambda: self.run(step(saga, record), None))
+        return with_seal(ribbon, seal)
 
     def mode(self, p: Palette) -> QWidget | None:
         record = self.page.creation_record()

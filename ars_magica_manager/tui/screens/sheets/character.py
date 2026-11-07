@@ -44,7 +44,6 @@ from ....forms import religion as religion_forms
 from ....forms import tradition as tradition_forms
 from ....forms import world as world_forms
 from ....forms.secrets import secrets_ops
-from ....markup import escape
 from ....models import (
     LINE,
     Character,
@@ -80,6 +79,7 @@ from ..widgets import (
     SheetSection,
     TableHeader,
     TwoColumns,
+    marked_title,
 )
 from .base import SheetView
 from .lists import BookListView
@@ -548,7 +548,7 @@ class CharacterSheetView(SheetView):
         character = self.character
         with Vertical(id="char-top-panel"):
             with PinnedCollapsible(
-                title=escape(character.name), id="section-char-info"
+                title=marked_title(character), id="section-char-info"
             ):
                 with TwoColumns(id="char-info-body", text=True):
                     yield self._static(
@@ -574,8 +574,8 @@ class CharacterSheetView(SheetView):
                 )
 
     def _refresh_title(self) -> None:
-        self.query_one("#section-char-info", Collapsible).title = escape(
-            self.character.name
+        self.query_one("#section-char-info", Collapsible).title = marked_title(
+            self.character
         )
 
     def _description_tab(self) -> ComposeResult:

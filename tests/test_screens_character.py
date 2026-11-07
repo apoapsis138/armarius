@@ -421,7 +421,7 @@ async def test_edit_character_info_updates_name_covenant_and_laboratory():
         assert isinstance(app.screen, WorkspaceScreen)
         view = app.screen._character_sheet_view
         assert view.query_one("#section-char-info", Collapsible).title == (
-            "Leandro the Elder"
+            "Leandro the Elder 👁"
         )
         info_lines = strip_markup(view._info_right_text()).splitlines()
         assert any(

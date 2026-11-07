@@ -15,6 +15,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ...arms import Arms
+from ...models import as_secrets, secret_words
 from ..builder import Builder, paragraphs
 
 if TYPE_CHECKING:
@@ -45,7 +46,7 @@ def _add_to(record: Neighbour, more: str, hidden: str = "") -> None:
     """Add the Gorge's paragraph to a record another part made, and
     `hidden` to its secrets."""
     record.summary = paragraphs(record.summary, more)
-    record.secrets = paragraphs(record.secrets, hidden)
+    record.secrets = as_secrets(paragraphs(secret_words(record.secrets), hidden))
 
 
 def build(rhine: Rhine) -> None:
@@ -1755,7 +1756,7 @@ def _factions(rhine: Rhine, gorge: Neighbour, cologne: Neighbour) -> None:
         offers="Norse magics of shape-changing, prophecy, far-seeing and the runes",
     )
     if "order_of_odin" in world:
-        _add_to(world["order_of_odin"], odin.summary, odin.secrets)
+        _add_to(world["order_of_odin"], odin.summary, secret_words(odin.secrets))
         world["order_of_odin"].details["wants"] = odin.details["wants"]
         world["order_of_odin"].details["offers"] = odin.details["offers"]
         rhine.b.saga.neighbours.remove(odin)

@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from . import settings, world
+from . import settings, viewing, world
 from .models import Character, Covenant, Saga
 from .seasons.defaults import is_player_character
 
@@ -121,7 +121,7 @@ def other_bookmarks(saga: Saga) -> list[tuple[str, list[object]]]:
     groups = []
     for kind in KIND_TITLES:
         records = [record(saga, m) for m in marks if m.kind == kind]
-        found = [r for r in records if r is not None]
+        found = [r for r in records if r is not None and viewing.reads(r)]
         if found:
             groups.append((kind, found))
     return groups

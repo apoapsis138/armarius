@@ -1,7 +1,7 @@
 ===== tab-nb-studium
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-     The Studium of Cologne
+     The Studium of Cologne 👁
 
       Kind:            University              Answers to: no one
       Detail:          Sketch                  Realm:      none
@@ -44,7 +44,7 @@
 ===== tab-nb-standing
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-     The Studium of Cologne
+     The Studium of Cologne 👁
 
       Kind:            University              Answers to: no one
       Detail:          Sketch                  Realm:      none
@@ -87,7 +87,7 @@
 ===== tab-secrets
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-     The Studium of Cologne
+     The Studium of Cologne 👁
 
       Kind:            University              Answers to: no one
       Detail:          Sketch                  Realm:      none
@@ -99,10 +99,10 @@
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Secrets
+    ▼ Secrets (0)
 
-      Nothing secret written yet: edit it to add what only you should know.
-
+      No secrets yet: add what only you should know, one secret at a time.
+      No secrets yet: add what only you should know, one secret at a time.
 
 
 

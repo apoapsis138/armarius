@@ -1,3 +1,5 @@
+from ars_magica_manager.models import secret_words
+
 """Galdor and trollskap (Land of Fire & Ice, with Hedge Magic RE's frame):
 the song's total, what it may ask, holding it, the deal with a lord, the
 item bound, the fylgja, and the pack's working sheets."""
@@ -625,7 +627,7 @@ def test_biorn_and_signy_belong_to_their_traditions(pack):
     assert person(pack, "Biorn Egilsson").traditions == [galdor.TRADITION_ID]
     signy = person(pack, "Signy Grettisdottir")
     assert signy.traditions == [galdor.TROLLSYNIR_ID]
-    assert "Magic Resistance 63" in signy.secrets
+    assert "Magic Resistance 63" in secret_words(signy.secrets)
 
 
 def test_bard_stays_a_creature_with_named_powers(pack):
@@ -636,8 +638,8 @@ def test_bard_stays_a_creature_with_named_powers(pack):
 
 def test_the_ranks_of_iceland_points_to_the_catalog(pack):
     ranks = next(n for n in pack.neighbours if n.name == "The Ranks of Iceland")
-    assert "Social Status" in ranks.secrets
-    assert "Freeman +0" not in ranks.secrets
+    assert "Social Status" in secret_words(ranks.secrets)
+    assert "Freeman +0" not in secret_words(ranks.secrets)
 
 
 def test_the_galdor_virtue_alone_shows_the_chapter():

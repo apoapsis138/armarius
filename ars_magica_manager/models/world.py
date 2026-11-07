@@ -8,7 +8,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from .common import known_fields, move_secrets
+from .common import Secret, known_fields, move_secrets
 from .traits import new_instance_id
 
 #: How much of a character or covenant is written down: a line, a sketch
@@ -144,7 +144,11 @@ class Neighbour:
     arms: dict[str, str] = field(default_factory=dict)
     #: What only the storyguide should read: the record's Secrets
     #: chapter, hidden from players signed in to a hosted copy.
-    secrets: str = ""
+    secrets: list[Secret] = field(default_factory=list)
+    #: Whether the players know of it (viewing.py): an unknown record is
+    #: left out of everything a player reads until the storyguide reveals
+    #: it. Older saves load known.
+    known: bool = True
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Neighbour:

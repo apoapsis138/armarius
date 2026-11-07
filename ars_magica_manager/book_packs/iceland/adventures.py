@@ -19,7 +19,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from ...models import BodyVis, Character
+from ...models import BodyVis, Character, as_secrets, secret_words
 from ...models.world import Neighbour
 from ..builder import Builder, characteristics, dormant, paragraphs
 from ..builder import secrets as hidden
@@ -68,7 +68,9 @@ def _site(
     found = _named(b, name)
     if found is None:
         return b.place(name, summary=summary, secrets=secrets, **fields)
-    found.secrets = paragraphs(found.secrets, summary, secrets)
+    found.secrets = as_secrets(
+        paragraphs(secret_words(found.secrets), summary, secrets)
+    )
     return found
 
 
@@ -86,7 +88,9 @@ def _sketch(
     new sketch."""
     for character in b.saga.characters:
         if character.name == name:
-            character.secrets = paragraphs(character.secrets, secrets)
+            character.secrets = as_secrets(
+                paragraphs(secret_words(character.secrets), secrets)
+            )
             return character
     return b.magus(
         name,

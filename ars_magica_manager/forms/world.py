@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from .. import catalog, creation, deletion, places, vassals, world
+from .. import catalog, creation, deletion, places, vassals, viewing, world
 from ..commands import Choice, Choose, Command, Confirm, Form, Refuse, SectionOps
 from ..form_spec import EMPHASIS_HINT, DialogField, attr, pairs
 from ..markup import escape
@@ -449,11 +449,13 @@ def link_ops(saga: Saga, record: Any) -> SectionOps:
 
 
 def link_rows(saga: Saga, record: Any) -> list[tuple[int | None, str]]:
-    """The links as rows, each with its kind. The records that link here
-    are the page's Linked from (connections)."""
+    """The links as rows, each with its kind; a link to a record the
+    reader doesn't know of is left out (viewing.py). The records that link
+    here are the page's Linked from (connections)."""
     return [
         (i, f"{LINK_NOUNS.get(link.kind, link.kind)}: {world.link_label(saga, link)}")
         for i, link in enumerate(record.links)
+        if (target := world.link_target(saga, link)) is None or viewing.reads(target)
     ]
 
 
@@ -768,14 +770,20 @@ def favour_table(record: Any) -> Table:
 
 
 def link_table(saga: Saga, record: Any) -> Table:
+    """The links, each with its kind; a link to a record the reader
+    doesn't know of is left out (viewing.py)."""
     rows = []
-    for link in record.links:
+    keys: list[int | None] = []
+    for index, link in enumerate(record.links):
         target = world.link_target(saga, link)
+        if target is not None and not viewing.reads(target):
+            continue
         name = getattr(target, "name", "") if target is not None else "(gone)"
+        keys.append(index)
         rows.append(
             [escape(name), LINK_NOUNS.get(link.kind, link.kind), escape(link.note)]
         )
-    return Table(["Linked to", "What", "Note"], rows, markup=True)
+    return Table(["Linked to", "What", "Note"], rows, keys, markup=True)
 
 
 def magi_table(saga: Saga, covenant: Covenant) -> Table:

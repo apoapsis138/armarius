@@ -241,8 +241,14 @@ Arnsberg · Lord · The Drachenfels".
   with its row chosen (a covenant's book in its Library, a device among
   its holder's Enchanted Devices, a spell in Known Spells). A book nobody
   owns is not listed, nor a spell nobody knows.
-- **Not searched:** Secrets, notes and descriptions, the seasons played
-  and the calendar.
+- **Secrets, for the storyguide:** your Find also looks in each record's
+  [Secrets](help:tab-secrets), last, a match there marked "secret" with
+  the words around it. A player's Find never does, and in
+  [Player view](help:player-view) yours doesn't either.
+- **What the players don't know of** is never listed for a player or in
+  Player view, nor named as where another record is.
+- **Not searched:** notes and descriptions, the seasons played and the
+  calendar.
 
 **See also:** [How to find a record](help:guide-find-record)
 
@@ -1108,7 +1114,7 @@ Choose who plays a character with **Played by** in the character's Biographical 
 
 - change the characters they play, with those characters' familiars, laboratories and books, and their season plans;
 - change the covenants too, if you ticked May change covenants for them;
-- look at everything else but each record's [Secrets](help:tab-secrets), which they never see, and Export a character, laboratory or covenant (the file downloads in their browser, without its secrets).
+- look at everything else but each record's [Secrets](help:tab-secrets), which they never see, and the records they don't know of (see [Player view](help:player-view)), and Export a character, laboratory or covenant (the file downloads in their browser, without its secrets or the records they don't know of).
 
 Only the storyguide (your own window, or someone signed in as Storyguide) can make new records (New), advance or set the season, import, give things between records, share spells, or change the saga itself, its content and its players. Keys a player can't use there don't appear, and if a change slips through anyway, the app doesn't save it and says so.
 
@@ -1119,9 +1125,10 @@ Only the storyguide (your own window, or someone signed in as Storyguide) can ma
 
 What only the storyguide should know about a record: the covenant's
 hidden debt, the magus's true master, where a missing founder really
-went. Every covenant, character, Tribunal, neighbour and creature has
-one, kept apart from its summary and notes so those can be read aloud
-or shown to the players as they are.
+went. Every covenant, character, Tribunal, neighbour and creature keeps
+a list of them, apart from its summary and notes so those can be read
+aloud or shown to the players as they are. Each secret is a short title
+and its words, and says whether it has been revealed, and when.
 <!-- tui -->
 It is the record's last tab, **Secrets**.
 <!-- /tui -->
@@ -1129,26 +1136,163 @@ It is the record's last tab, **Secrets**.
 It is the record's last chapter before Manage, **Secrets**.
 <!-- /gui -->
 
-A player signed in to a hosted copy never sees it: the tab isn't there
-for them, and a record they export downloads without its secrets. Your
-own window, and anyone signed in as Storyguide, always sees it.
+You see every secret, each marked "Not revealed" or "Revealed" with the
+season and year. A player signed in to a hosted copy, and your own
+window in [Player view](help:player-view), see only those revealed, in
+the record's **Known** section instead; with none revealed the tab isn't
+there for them. A record a player exports carries only its revealed
+secrets. Your Find searches every secret, theirs none.
 
-Older sagas and content packs kept secrets at the end of a summary or
-notes under a **Secrets** heading. Opening the saga moves them here.
+Older sagas and content packs kept a record's secrets as one piece of
+writing (some at the end of a summary or notes under a **Secrets**
+heading). Opening the saga makes that one untitled secret; **Split by
+Paragraph** breaks it up. Packs bring theirs the same way.
 
-**See also:** [What a signed-in player can do](help:players-access), [How to host a saga](help:guide-hosting)
+**See also:** [How to reveal a record to the players](help:guide-reveal), [What a signed-in player can do](help:players-access), [How to host a saga](help:guide-hosting)
 
 ### Secrets
 <!-- help: section-secrets -->
 
+The list of the record's secrets, each with its title (or, untitled,
+its first words) and whether it is revealed; every secret is written in
+full below the list.
+
 <!-- tui -->
-**You type:** with `e`, the record's Secrets, as many paragraphs as you
-like. It supports **bold** and *italic*.
+`a` adds a secret, `e` edits the one chosen and `d` deletes it after
+asking. More (`m`) on a chosen secret offers **Reveal the Secret** (or
+**Hide the Secret Again** once revealed) and, for a secret of several
+paragraphs, **Split by Paragraph**.
 <!-- /tui -->
 <!-- gui -->
-**You type:** with **Edit Secrets**, the record's Secrets, as many
-paragraphs as you like. It supports **bold** and *italic*.
+**Add**, **Edit** and **Delete** act on the secret chosen, as do
+**Reveal** (or **Hide Again** once revealed) and, for a secret of
+several paragraphs, **Split**.
 <!-- /gui -->
+
+- **Reveal** marks it revealed this season and writes a dated line,
+  "Revealed: the record: the secret", in each troupe covenant's Diary;
+  the players see it in Known from then on. On a record the players
+  don't know of yet, it shows once the record is revealed too. **Hide
+  Again** takes it back, and its Diary line.
+- **Split by Paragraph** shows the parts first, then makes one secret of
+  each paragraph, each revealed as the whole was; the first keeps the
+  title.
+
+**You type:** a **Title** (a few words, optional) and the **Secret**
+itself, as many paragraphs as you like. It supports **bold** and
+*italic*.
+
+### Known
+<!-- help: known-secrets -->
+
+What the players have been told of the record's secrets: each one the
+storyguide revealed, with its title and the season it was revealed in.
+It is what a player, or the storyguide's window in
+[Player view](help:player-view), sees in place of Secrets.
+
+# Player view
+<!-- help: player-view -->
+
+What the players may read, and the storyguide's own window shown as they
+see it. Every page, list, search and export asks the same question, so a
+player sees the same saga wherever they look.
+
+<!-- tui -->
+**Player View**, in More (`m`) on the saga at the top of the tree, turns
+it on or off. While it is on, the header says "Player view".
+<!-- /tui -->
+<!-- gui -->
+The **eye** in the title bar, beside Find, turns it on or off; while it
+is on, the words "Player view" stand beside it. Use it on a screen your
+players can see across the table.
+<!-- /gui -->
+
+The app remembers it for each saga on this computer. A player signed in
+to a hosted copy always sees the saga this way. In a solo saga, with
+nobody signing in, Player view is your guard against spoilers: it is off
+until you turn it on.
+
+- **Known to the players.** Every record of the world beyond the troupe
+  (a neighbour or place, a creature, a covenant the troupe doesn't play,
+  a character no player plays) is either known to the players or not.
+  One they don't know of is left out of every list, of Find, of the
+  Atlas and of Looking Ahead; a page that names it shows neither its
+  name nor a link, and a line that names nothing else is left out. The
+  troupe's own characters, covenants and laboratories are always known.
+- **Reveal to the Players** tells them of a record: a dated line saying
+  so goes in each troupe covenant's Diary. **Hide from the Players**
+  takes it back, and takes that line out. Both are on the record's own
+  page (More in the terminal, Manage on the desktop). Hide from the
+  Players on the Region hides a whole list at once (see
+  [Hide many records](help:mark-unknown)).
+<!-- tui -->
+- **The mark** after a record's name, at the top of its sheet, shows
+  which it is: 👁 while the players know of it, 🚫 while it is hidden
+  from them. The troupe's own records have none, and Player view shows
+  none.
+<!-- /tui -->
+<!-- gui -->
+- **The seal** under a record's bookmark ribbon shows which it is: an
+  eye in a ring, struck through and inked red while the record is
+  hidden from the players, plain once it is known. Hover over it to read
+  Hidden or Known; click it to reveal or hide the record. The troupe's
+  own records have none, and Player view shows none.
+<!-- /gui -->
+- **The storyguide's alone:** each record's [Secrets](help:tab-secrets),
+  a place's or lord's [Roll Tables](help:tab-nb-tables), Needs You, Saga
+  Management, Saga Settings and the Players list of Saga Content. The
+  books in play, catalogs, House Rules and spells stay on show.
+- **Threats:** a threat's stages show only once they have come or been
+  marked; never its clock, its position or what is still to come.
+- **Looking Ahead** shows only the dates anyone could know: Tribunal
+  meetings and terms, fairs, aging rolls and your own calendar entries,
+  never a threat's stage, a place's trigger or the world's yearly turn.
+- **The Diary:** a line the app wrote about a record the players don't
+  know of (a threat's stage, a roll on a place's table) is left out
+  until it is revealed; lines you typed always show.
+- **Exports** made in Player view, or by a player, leave out Secrets and
+  the records the players don't know of. Yours otherwise are whole.
+- **Actions** only the storyguide takes are left off while Player view is
+  on: Roll on a table, Reveal and Hide, hosting, Import, Export Pack,
+  Edit Saga, and beginning, growing, delaying or taking up a threat's
+  story.
+
+Sagas from before keep every record known; a pack brings its records
+known, except any it marks secret.
+
+**See also:** [How to reveal a record to the players](help:guide-reveal), [What a signed-in player can do](help:players-access), [A record's Secrets](help:tab-secrets)
+
+### Hide many records
+<!-- help: mark-unknown -->
+
+Hide from the Players on the saga
+<!-- tui -->
+or the Region (More, `m`)
+<!-- /tui -->
+<!-- gui -->
+page's The Region chapter
+<!-- /gui -->
+hides a whole list at once: a pack's every place, say, before the troupe
+has travelled.
+
+**You type:** **Which** list (Lords and Towns, the Church, Universities,
+Factions, Threats, Places, Customs and Lore, Other covenants,
+Non-player characters or the Bestiary), and **In the lands of** to take
+only those in one Tribunal's lands (blank: wherever they are).
+
+**The app works out:** how many records the players know of now would be
+hidden, shown as you choose. Nothing is deleted; reveal each one as the
+troupe learns of it.
+
+# Saga Management
+<!-- help: saga-management; gui -->
+
+A chapter of the saga's page: Import, Export Saga, Export a Cult, Export
+Pack and Host for Players (or Stop Hosting), each with a line on what it
+does. It is the storyguide's alone: [Player view](help:player-view)
+leaves it out.
+
+**See also:** [Import Data](help:import-data), [How to host a saga](help:guide-hosting)
 
 # Signing in
 <!-- help: sign-in -->

@@ -7,7 +7,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 from dataclasses import dataclass
 
-from . import catalog, story_chapters
+from . import catalog, story_chapters, viewing
 from .arts import ART_ABBREVIATIONS
 from .markup import escape, markdown_text
 from .models import (
@@ -215,6 +215,8 @@ def rows(diary: Sequence[CovenantDiaryEntry]) -> list[tuple[int | None, str]]:
     result: list[tuple[int | None, str]] = []
     for index in date_order(diary):
         entry = diary[index]
+        if not viewing.shows_entry(entry):
+            continue
         label = (
             f"{entry.year} {entry.season:<6}  {categories[index]:<{width}}  "
             f"{escape(entry.name)}"

@@ -132,6 +132,7 @@ from . import library as library_forms
 from . import mystery_cults as cult_forms
 from . import neighbour as neighbour_forms
 from . import pilgrimage as pilgrimage_forms
+from . import reveal as reveal_forms
 from . import season as season_forms
 from . import ship_build as ship_build_forms
 from . import sin as sin_forms
@@ -161,6 +162,12 @@ DELETE_RECORD = "delete_record"
 #: Worksheet is offered, but opens a page rather than running a command.
 NOT_ON_PAGES = frozenset(
     {
+        # The desktop's eye in the title bar.
+        "player_view",
+        # The Secrets list's own row buttons.
+        "reveal_secret",
+        "conceal_secret",
+        "split_secret",
         "edit_arms",
         "edit_fatigue",
         "edit_familiar_fatigue",
@@ -532,6 +539,11 @@ MANAGE: dict[str, str] = {
     "its words; the story is marked Grown, naming the threat.",
     "take_up_tale": "Write a chapter of the threat's tale: what the troupe "
     "did, met or avoided, in its Diary and the troupe's covenants'.",
+    "reveal": "Tell the players of it: they see it in lists, Find and the "
+    "Atlas, and its name where a page names it. A dated line goes in the "
+    "troupe's covenants' Diary.",
+    "conceal": "Take it back: it is left out of everything the players read "
+    "until you reveal it again, and the line its reveal wrote goes.",
     "delay_threat": "Push the threat later or bring it sooner: its dated stages "
     "still to come move together, or it moves back or on along its track; "
     "the reason goes in its Diary.",
@@ -585,6 +597,7 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "export_cult": ((NodeKind.SAGA, "Saga Management"),),
     "export_pack": ((NodeKind.SAGA, "Saga Management"),),
     "merge_doubles": ((NodeKind.SAGA, "The Region"),),
+    "mark_unknown": ((NodeKind.SAGA, "The Region"),),
     "host_saga": ((NodeKind.SAGA, "Saga Management"),),
     "stop_hosting": ((NodeKind.SAGA, "Saga Management"),),
     "set_date": ((NodeKind.SAGA, "Seasons"),),
@@ -1943,6 +1956,9 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "found_covenant": _found_command,
     "begin_story": _begin_command,
     "merge_doubles": lambda page: merges.merge_form(page.saga),
+    "reveal": lambda page: reveal_forms.reveal(page.saga, page.record_to_delete()),
+    "conceal": lambda page: reveal_forms.conceal(page.saga, page.record_to_delete()),
+    "mark_unknown": lambda page: reveal_forms.mark_unknown(page.saga),
     "delay_threat": _delay_command,
     "take_up_tale": _take_up_command,
     "edit_saga": lambda page: creation_forms.saga_details_form(page.saga),

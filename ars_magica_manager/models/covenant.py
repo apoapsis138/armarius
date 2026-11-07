@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 from typing import Any, TypedDict
 
 from ..arts import ART_BY_NAME
-from .common import SEASONS, known_fields, move_secrets
+from .common import SEASONS, Secret, known_fields, move_secrets
 from .hermetic_projects import HermeticProject, projects_from
 from .holdings import Arrival, Economics, Inhabitant, Loyalty, Population, Possession
 from .land_shaping import LandProject
@@ -83,6 +83,10 @@ class CovenantDiaryEntry:
     threat_id: str | None = None
     id: str = ""
     story_id: str = ""
+    #: The records a line the app wrote is about, each "kind:id"
+    #: (references.KINDS): hidden from players while one is unknown
+    #: (viewing.py). A line typed in names none.
+    about: list[str] = field(default_factory=list)
 
 
 class HistoryEra(TypedDict):
@@ -512,7 +516,11 @@ class Covenant:
     charter_of_covenant: CovenantCharter = field(default_factory=CovenantCharter)
     #: What only the storyguide should read: the record's Secrets
     #: chapter, hidden from players signed in to a hosted copy.
-    secrets: str = ""
+    secrets: list[Secret] = field(default_factory=list)
+    #: Whether the players know of it (viewing.py): an unknown record is
+    #: left out of everything a player reads until the storyguide reveals
+    #: it. Older saves load known.
+    known: bool = True
     # Hermetic Projects (Hermetic Projects pp. 36-41): the great works it
     # has begun, and the one its Projects tab shows ("" for the first).
     hermetic_projects: list[HermeticProject] = field(default_factory=list)

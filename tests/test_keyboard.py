@@ -440,6 +440,8 @@ async def test_more_on_the_saga_offers_import_export_and_set_date():
             "Export Pack",
             "Host for Players",
             "Set Date",
+            "Hide from the Players",
+            "Player View",
         ]
         assert "m More" in _footer(app)
         await menu(pilot, app, "m", "Set Date")
@@ -466,6 +468,8 @@ async def test_more_on_a_record_offers_export_and_its_mode():
             "Update from a File",
             "In Creation / In Play",
             "Demote",
+            # Leandro has no player: the storyguide may hide him.
+            "Hide from the Players",
             "Go To",
             # The Byzantine customs, with every book in play.
             "Hermetic Letter",

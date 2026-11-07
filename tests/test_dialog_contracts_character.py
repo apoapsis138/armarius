@@ -27,6 +27,14 @@ from ars_magica_manager.rules import divine_state as ds
 from ars_magica_manager.rules import merchants
 
 CONTRACTS: dict[str, Contract] = {
+    "add secret": Contract(
+        prefill={"Title": "", "Secret": ""},
+        edits={"Title": "His master", "Secret": "Trained by a diabolist."},
+        saved=lambda s: [(x.title, x.text) for x in s.characters[0].secrets],
+        expected=[("His master", "Trained by a diabolist.")],
+        invalid={"Secret": ""},
+        shown={"#secrets-list": "His master"},
+    ),
     # Creation Worksheet
     "spend creation xp": Contract(
         prefill={"Ability or Art": Select.NULL, "Pool xp": "5"},

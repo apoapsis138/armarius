@@ -28,6 +28,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+from ...models import as_secrets, secret_words
 from ..builder import paragraphs
 
 if TYPE_CHECKING:
@@ -61,7 +62,7 @@ def _append(record: Neighbour, text: str, hidden: str = "") -> None:
     """Add `text` to the summary of a record another part made, and
     `hidden` at the end of its secrets."""
     record.summary = paragraphs(record.summary, text)
-    record.secrets = paragraphs(record.secrets, hidden)
+    record.secrets = as_secrets(paragraphs(secret_words(record.secrets), hidden))
 
 
 def _find(hibernia: Hibernia, *names: str, contains: str = "") -> Neighbour | None:

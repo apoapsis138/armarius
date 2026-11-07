@@ -144,10 +144,71 @@ def split_secrets(text: str) -> tuple[str, str]:
     return text[: found.start()].rstrip(), text[found.end() :].strip()
 
 
+@dataclass
+class Secret:
+    """One of a record's Secrets: a short title, its words, and the season
+    and year the storyguide revealed it to the troupe (no year: not
+    revealed). Only the storyguide reads one not revealed (viewing.py)."""
+
+    title: str = ""
+    text: str = ""
+    revealed_year: int | None = None
+    revealed_season: str = ""
+
+    @property
+    def revealed(self) -> bool:
+        return self.revealed_year is not None
+
+    @classmethod
+    def from_dict(cls, data: object, record: str = "") -> Secret:
+        if not isinstance(data, dict):
+            raise ValueError(f"{record}: a secret should be a record, not {data!r}.")
+        d = known_fields(cls, cast(dict[str, Any], data))
+        for key in ("title", "text", "revealed_season"):
+            if not isinstance(d.get(key, ""), str):
+                raise ValueError(f"{record}: a secret's {key} should be words.")
+        year = d.get("revealed_year")
+        if year is not None and (not isinstance(year, int) or isinstance(year, bool)):
+            raise ValueError(f"{record}: a secret's revealed year should be a number.")
+        return cls(**d)
+
+
+def read_secrets(value: object, record: str = "") -> list[Secret]:
+    """A record's saved secrets as a list: an older save's words (one
+    untitled secret, none when blank) or the list itself."""
+    if value is None or isinstance(value, str):
+        return [Secret(text=value.strip())] if value and value.strip() else []
+    if isinstance(value, list):
+        return [
+            v if isinstance(v, Secret) else Secret.from_dict(v, record)
+            for v in cast(list[object], value)
+        ]
+    raise ValueError(f"{record}: its secrets should be a list, not {value!r}.")
+
+
+def secret_words(secrets: list[Secret]) -> str:
+    """Every secret's words, a blank line between: what a pack adds to,
+    and what Find looks in."""
+    return "\n\n".join(
+        part
+        for s in secrets
+        if (part := "\n".join(w for w in (s.title, s.text) if w.strip()).strip())
+    )
+
+
+def as_secrets(text: str) -> list[Secret]:
+    """`text` as a record's secrets: one untitled secret, none when blank
+    (how a pack writes what a book says is secret)."""
+    return [Secret(text=text.strip())] if text.strip() else []
+
+
 def move_secrets(data: dict[str, Any], *keys: str) -> dict[str, Any]:
     """`data` (a record as saved) with what follows a Secrets heading in
-    each of its `keys` moved to the end of its `secrets`."""
-    found = [data.get("secrets") or ""]
+    each of its `keys` moved to its secrets, and its secrets read as a
+    list (read_secrets): an older save's words are one untitled secret,
+    the words moved joining it (or, after a list, a secret of their own)."""
+    saved = data.get("secrets")
+    found = [saved if isinstance(saved, str) else ""]
     for key in keys:
         if isinstance(data.get(key), str):
             shown, hidden = split_secrets(data[key])
@@ -159,7 +220,12 @@ def move_secrets(data: dict[str, Any], *keys: str) -> dict[str, Any]:
                 )
             data[key] = shown
             found.append(hidden)
-    data["secrets"] = "\n\n".join(part for part in found if part.strip())
+    words = "\n\n".join(part for part in found if part.strip())
+    record = str(data.get("name") or data.get("id") or "a record")
+    if isinstance(saved, list):
+        data["secrets"] = read_secrets(saved, record) + read_secrets(words, record)
+    else:
+        data["secrets"] = read_secrets(words, record)
     return data
 
 

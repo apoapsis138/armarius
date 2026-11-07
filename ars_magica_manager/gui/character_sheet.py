@@ -89,7 +89,9 @@ from ..forms import go_to as go_to_forms
 from ..forms import menu as menu_forms
 from ..forms import power as power_forms
 from ..forms import religion as religion_forms
+from ..forms import reveal as reveal_forms
 from ..forms import season as season_forms
+from ..forms import secrets as secret_forms
 from ..forms import spell as spell_forms
 from ..forms import tradition as tradition_forms
 from ..forms import trait as trait_forms
@@ -97,7 +99,6 @@ from ..forms import virtue as virtue_forms
 from ..forms import vis as vis_forms
 from ..forms import whereabouts as whereabouts_forms
 from ..forms import world as world_forms
-from ..forms.secrets import NONE_YET, secrets_form
 from ..markup import escape
 from ..models import (
     CHARGED,
@@ -119,6 +120,7 @@ from ..sections import (
     COVERS_SECTION,
     ORDINATIONS_SECTION,
     PETITIONS_SECTION,
+    SECRETS_SECTION,
     STIGMATA_SECTION,
 )
 from ..sheets import character as cs
@@ -419,20 +421,63 @@ def section(
     return box
 
 
-def secrets_chapter(record: Any, p: Palette, run: Callable[[Command], None]) -> QWidget:
-    """A record's Secrets chapter (forms/secrets.py): what only the
-    storyguide should read, edited through the core's form."""
-    hidden = record.secrets.strip()
+def secrets_chapter(
+    saga: Saga, record: Any, p: Palette, run: Callable[[Command], None]
+) -> QWidget:
+    """A record's Secrets chapter (forms/secrets.py): the storyguide's list
+    of every secret, each revealed or not, with Add, Edit, Delete, Reveal,
+    Hide and Split; for anyone else (viewing.py) its Known section, the
+    secrets revealed."""
+    if not secret_forms.storyguides(record):
+        return scrolling_page(
+            p, section("Known", p, TextBlock(secret_forms.known_text(record), p))
+        )
+    table = Table(
+        ["Secret", "Revealed"],
+        [
+            [escape(secret_forms.title_of(s)), secret_forms.state_text(s)]
+            for s in record.secrets
+        ],
+        markup=True,
+    )
+
+    def is_revealed(row: int) -> bool:
+        return 0 <= row < len(record.secrets) and record.secrets[row].revealed
+
+    verbs: list[RowVerb] = [
+        (
+            "Reveal",
+            "open",
+            lambda row: reveal_forms.reveal_secret(saga, record, row),
+            lambda row: 0 <= row < len(record.secrets) and not is_revealed(row),
+        ),
+        (
+            "Hide Again",
+            "secrets",
+            lambda row: reveal_forms.conceal_secret(saga, record, row),
+            is_revealed,
+        ),
+        (
+            "Split",
+            "edit",
+            lambda row: secret_forms.split(record, row),
+            lambda row: secret_forms.splits(record, row),
+        ),
+    ]
     return scrolling_page(
         p,
-        section(
-            "Secrets",
+        table_section(
+            f"Secrets ({len(record.secrets)})",
+            table,
+            secret_forms.secrets_ops(record)[SECRETS_SECTION],
             p,
-            prose(hidden, p)
-            if hidden
-            else text(NONE_YET, p["dim"], serif(12.5, italic=True), wrap=True),
-            edits={"Edit Secrets": lambda: run(secrets_form(record))},
+            run,
+            empty=secret_forms.NONE_YET,
+            more=verbs,
         ),
+        TextBlock(secret_forms.secrets_text(record), p)
+        if record.secrets
+        else QWidget(),
     )
 
 
@@ -752,13 +797,19 @@ class CharacterSheet(QWidget):
             "Deeds": self._deeds,
             "Planning": self._planning,
             "Diary": self._diary,
-            "Secrets": lambda: secrets_chapter(character, palette, run),
+            "Secrets": lambda: secrets_chapter(saga, character, palette, run),
         }
         for name, concept in CHAPTERS:
             if name in _left_out(saga, character):
                 continue
             if name == "Religion":
                 concept = religion_forms.icon(character)
+            if name == "Secrets":
+                if secret_forms.shown(character):
+                    self.codex.add(
+                        secret_forms.tab_title(character), concept, builders[name]()
+                    )
+                continue
             self.codex.add(name, concept, builders[name]())
             if name == "Hermetic Magic" or (
                 name == "Virtues & Flaws" and character.type != "magus"

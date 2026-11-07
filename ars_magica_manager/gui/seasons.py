@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from PySide6.QtWidgets import QVBoxLayout, QWidget
 
-from .. import attention, seasons, story_chapters, world_turns
+from .. import attention, seasons, story_chapters, viewing, world_turns
 from ..forms import advance as advance_forms
 from ..forms import take_up as take_up_forms
 from ..models import Saga, SeasonRecord
@@ -75,7 +75,8 @@ class SeasonsPage(QWidget):
             if records and records[0] is record:
                 records = records[1:]
         self.codex.add(AHEAD, "season", self._ahead())
-        self.codex.add(NEEDS_YOU, "season", self._needs_you())
+        if viewing.reads(part="section-attention"):
+            self.codex.add(NEEDS_YOU, "season", self._needs_you())
         for record in records:
             self.codex.add(seasons.record_label(record), "season", self._record(record))
         if not records and played is None:

@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.77.0",
+  "app_version": "3.83.0",
   "kind": "pack",
   "name": "The Cradle and the Crescent",
   "from_saga": "The Cradle and the Crescent",
@@ -104,7 +104,8 @@
             "concerns": "",
             "threat_id": null,
             "id": "",
-            "story_id": ""
+            "story_id": "",
+            "about": []
           },
           {
             "year": 720,
@@ -123,7 +124,8 @@
             "concerns": "",
             "threat_id": null,
             "id": "",
-            "story_id": ""
+            "story_id": "",
+            "about": []
           },
           {
             "year": 746,
@@ -142,7 +144,8 @@
             "concerns": "",
             "threat_id": null,
             "id": "",
-            "story_id": ""
+            "story_id": "",
+            "about": []
           },
           {
             "year": 786,
@@ -161,7 +164,8 @@
             "concerns": "",
             "threat_id": null,
             "id": "",
-            "story_id": ""
+            "story_id": "",
+            "about": []
           },
           {
             "year": 787,
@@ -180,7 +184,8 @@
             "concerns": "",
             "threat_id": null,
             "id": "",
-            "story_id": ""
+            "story_id": "",
+            "about": []
           },
           {
             "year": 789,
@@ -199,7 +204,8 @@
             "concerns": "",
             "threat_id": null,
             "id": "",
-            "story_id": ""
+            "story_id": "",
+            "about": []
           },
           {
             "year": 803,
@@ -218,7 +224,8 @@
             "concerns": "",
             "threat_id": null,
             "id": "",
-            "story_id": ""
+            "story_id": "",
+            "about": []
           },
           {
             "year": 805,
@@ -237,7 +244,8 @@
             "concerns": "",
             "threat_id": null,
             "id": "",
-            "story_id": ""
+            "story_id": "",
+            "about": []
           },
           {
             "year": 810,
@@ -256,7 +264,8 @@
             "concerns": "",
             "threat_id": null,
             "id": "",
-            "story_id": ""
+            "story_id": "",
+            "about": []
           },
           {
             "year": 850,
@@ -275,7 +284,8 @@
             "concerns": "",
             "threat_id": null,
             "id": "",
-            "story_id": ""
+            "story_id": "",
+            "about": []
           },
           {
             "year": 868,
@@ -294,7 +304,8 @@
             "concerns": "",
             "threat_id": null,
             "id": "",
-            "story_id": ""
+            "story_id": "",
+            "about": []
           },
           {
             "year": 889,
@@ -313,7 +324,8 @@
             "concerns": "",
             "threat_id": null,
             "id": "",
-            "story_id": ""
+            "story_id": "",
+            "about": []
           },
           {
             "year": 900,
@@ -332,7 +344,8 @@
             "concerns": "",
             "threat_id": null,
             "id": "",
-            "story_id": ""
+            "story_id": "",
+            "about": []
           },
           {
             "year": 912,
@@ -351,7 +364,8 @@
             "concerns": "",
             "threat_id": null,
             "id": "",
-            "story_id": ""
+            "story_id": "",
+            "about": []
           },
           {
             "year": 919,
@@ -370,7 +384,8 @@
             "concerns": "",
             "threat_id": null,
             "id": "",
-            "story_id": ""
+            "story_id": "",
+            "about": []
           },
           {
             "year": 925,
@@ -389,7 +404,8 @@
             "concerns": "",
             "threat_id": null,
             "id": "",
-            "story_id": ""
+            "story_id": "",
+            "about": []
           },
           {
             "year": 950,
@@ -408,7 +424,8 @@
             "concerns": "",
             "threat_id": null,
             "id": "",
-            "story_id": ""
+            "story_id": "",
+            "about": []
           },
           {
             "year": 1050,
@@ -427,7 +444,8 @@
             "concerns": "",
             "threat_id": null,
             "id": "",
-            "story_id": ""
+            "story_id": "",
+            "about": []
           },
           {
             "year": 1090,
@@ -446,7 +464,8 @@
             "concerns": "",
             "threat_id": null,
             "id": "",
-            "story_id": ""
+            "story_id": "",
+            "about": []
           },
           {
             "year": 1099,
@@ -465,7 +484,8 @@
             "concerns": "",
             "threat_id": null,
             "id": "",
-            "story_id": ""
+            "story_id": "",
+            "about": []
           },
           {
             "year": 1123,
@@ -484,7 +504,8 @@
             "concerns": "",
             "threat_id": null,
             "id": "",
-            "story_id": ""
+            "story_id": "",
+            "about": []
           },
           {
             "year": 1144,
@@ -503,7 +524,8 @@
             "concerns": "",
             "threat_id": null,
             "id": "",
-            "story_id": ""
+            "story_id": "",
+            "about": []
           },
           {
             "year": 1148,
@@ -522,7 +544,8 @@
             "concerns": "",
             "threat_id": null,
             "id": "",
-            "story_id": ""
+            "story_id": "",
+            "about": []
           },
           {
             "year": 1174,
@@ -541,7 +564,8 @@
             "concerns": "",
             "threat_id": null,
             "id": "",
-            "story_id": ""
+            "story_id": "",
+            "about": []
           },
           {
             "year": 1186,
@@ -560,7 +584,8 @@
             "concerns": "",
             "threat_id": null,
             "id": "",
-            "story_id": ""
+            "story_id": "",
+            "about": []
           },
           {
             "year": 1190,
@@ -579,7 +604,8 @@
             "concerns": "",
             "threat_id": null,
             "id": "",
-            "story_id": ""
+            "story_id": "",
+            "about": []
           }
         ],
         "power_level": "",
@@ -599,13 +625,13 @@
             "kind": "places",
             "target_id": "ashab_al_qalb_the_followers_of_the_heart",
             "note": "Its family",
-            "id": "5f261a8dbe05"
+            "id": "5e933aef20e2"
           },
           {
             "kind": "characters",
             "target_id": "niya_al_waziriyya_al_jabr_satefa_al_inshai_al_qasri_al_qalb",
             "note": "Vizier",
-            "id": "d52017c91781"
+            "id": "4abbfb6b3c4b"
           }
         ],
         "unnamed_magi": 99,
@@ -629,7 +655,15 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "Library: the Order's oldest, its contents not given in the book.",
+        "secrets": [
+          {
+            "title": "",
+            "text": "Library: the Order's oldest, its contents not given in the book.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true,
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -721,7 +755,7 @@
             "kind": "places",
             "target_id": "ashab_al_najm_the_followers_of_the_star",
             "note": "Its family",
-            "id": "8ec74bc1b856"
+            "id": "44946129dd2f"
           }
         ],
         "unnamed_magi": 0,
@@ -745,7 +779,15 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "Library: the finest collection of magic in Persia, with Meriq's own books on Artes Liberales and Solomonic Astrology; the book gives no scores.",
+        "secrets": [
+          {
+            "title": "",
+            "text": "Library: the finest collection of magic in Persia, with Meriq's own books on Artes Liberales and Solomonic Astrology; the book gives no scores.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true,
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -837,13 +879,13 @@
             "kind": "places",
             "target_id": "ashab_al_yad_the_followers_of_the_hand",
             "note": "Its family",
-            "id": "3f4a7f26c7ae"
+            "id": "5335f27f9a9a"
           },
           {
             "kind": "characters",
             "target_id": "nil_al_wazir_al_salih_al_yad",
             "note": "Vizier",
-            "id": "4fc23c17cc2c"
+            "id": "0513ec56842b"
           }
         ],
         "unnamed_magi": 0,
@@ -867,7 +909,8 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -976,7 +1019,8 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -1068,7 +1112,7 @@
             "kind": "characters",
             "target_id": "arkhaman_laqy_al_hayz_al_nahr",
             "note": "Vizier",
-            "id": "9b8d437edf93"
+            "id": "ef7b64442164"
           }
         ],
         "unnamed_magi": 0,
@@ -1092,7 +1136,8 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -1184,7 +1229,7 @@
             "kind": "places",
             "target_id": "ashab_al_nahr_the_followers_of_the_river",
             "note": "Its family",
-            "id": "cd8c2b77ddfd"
+            "id": "0c8eb912c7df"
           }
         ],
         "unnamed_magi": 0,
@@ -1208,7 +1253,8 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -1317,7 +1363,8 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -1426,7 +1473,8 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -1535,7 +1583,8 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -1644,7 +1693,8 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -1753,7 +1803,8 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -1845,7 +1896,7 @@
             "kind": "places",
             "target_id": "ashab_al_sakhr_the_followers_of_the_stone",
             "note": "Its family",
-            "id": "d10687a0b5cc"
+            "id": "2f281455e819"
           }
         ],
         "unnamed_magi": 0,
@@ -1869,7 +1920,8 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -1961,7 +2013,7 @@
             "kind": "places",
             "target_id": "ashab_al_nahr_the_followers_of_the_river",
             "note": "Its family",
-            "id": "d169986b246b"
+            "id": "fc946b007220"
           }
         ],
         "unnamed_magi": 0,
@@ -1985,7 +2037,8 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -2025,65 +2078,66 @@
             "kind": "places",
             "target_id": "ashab_al_sakhr_the_followers_of_the_stone",
             "note": "One of the five families",
-            "id": "e853205ae4ae"
+            "id": "f2b1dcf0b9f6"
           },
           {
             "kind": "places",
             "target_id": "ashab_al_nahr_the_followers_of_the_river",
             "note": "One of the five families",
-            "id": "989bc561cf84"
+            "id": "22613f6cbf82"
           },
           {
             "kind": "places",
             "target_id": "ashab_al_najm_the_followers_of_the_star",
             "note": "One of the five families",
-            "id": "59f6701f8c9d"
+            "id": "40d843ba6855"
           },
           {
             "kind": "places",
             "target_id": "ashab_al_yad_the_followers_of_the_hand",
             "note": "One of the five families",
-            "id": "ce4ed3679ad2"
+            "id": "e4a57ee86a87"
           },
           {
             "kind": "places",
             "target_id": "ashab_al_qalb_the_followers_of_the_heart",
             "note": "One of the five families",
-            "id": "5fe7d8db759d"
+            "id": "d9f32fdcf7ca"
           },
           {
             "kind": "places",
             "target_id": "ashab_al_halqa_the_followers_of_the_circle",
             "note": "Unrecognised",
-            "id": "47557e13c272"
+            "id": "cb1c0e856b6a"
           },
           {
             "kind": "places",
             "target_id": "the_nizaris",
             "note": "Feud: traitors to the Order",
-            "id": "09a6418e63d0"
+            "id": "1b4c229db1c5"
           },
           {
             "kind": "places",
             "target_id": "the_hall_of_the_majlis",
             "note": "Its council's hall",
-            "id": "aa54b3224b50"
+            "id": "980d9c32ba80"
           },
           {
             "kind": "places",
             "target_id": "the_grand_vizier_s_island_fortress",
             "note": "The grand vizier's stronghold",
-            "id": "ca7ee2bf0ac0"
+            "id": "5adcf680ebcf"
           },
           {
             "kind": "characters",
             "target_id": "kha_trazh_al_wazir_al_dall_ariq_al_qalb",
             "note": "Grand vizier",
-            "id": "082a6b0b9558"
+            "id": "4efe622e5cb8"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "ashab_al_sakhr_the_followers_of_the_stone",
@@ -2109,7 +2163,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "ashab_al_nahr_the_followers_of_the_river",
@@ -2138,11 +2193,12 @@
             "kind": "characters",
             "target_id": "arkhaman_laqy_al_hayz_al_nahr",
             "note": "His family",
-            "id": "b488fcfe5943"
+            "id": "ffa7294406da"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_jinn",
@@ -2170,113 +2226,114 @@
             "kind": "places",
             "target_id": "jinnistan",
             "note": "Their homes",
-            "id": "a397dc68a35a"
+            "id": "ba2429b3d504"
           },
           {
             "kind": "places",
             "target_id": "the_mountains_of_qaf",
             "note": "Their homeland's wall",
-            "id": "99fbe6dc471b"
+            "id": "fe25f0ff3700"
           },
           {
             "kind": "places",
             "target_id": "amerabad_the_city_of_amber",
             "note": "Their City of Amber, in Jinnistan",
-            "id": "0d3dec4e9a42"
+            "id": "8a05a4d1af6f"
           },
           {
             "kind": "places",
             "target_id": "golden_baghdad",
             "note": "Their bazaars there",
-            "id": "e9c4a2ac160a"
+            "id": "316c0dfa5cd6"
           },
           {
             "kind": "places",
             "target_id": "khashgar_of_the_jinn",
             "note": "Their city on the Silk Road",
-            "id": "b6d1ed0ea522"
+            "id": "86db3cf63970"
           },
           {
             "kind": "places",
             "target_id": "al_khadar_the_green_ocean",
             "note": "The ocean only they cross freely",
-            "id": "496597ffe3d4"
+            "id": "2add9780ed4b"
           },
           {
             "kind": "places",
             "target_id": "the_court_of_golden_baghdad",
             "note": "The faerie court of the tales",
-            "id": "4ee14d3db5ea"
+            "id": "f8ad1bbfc715"
           },
           {
             "kind": "creatures",
             "target_id": "kharrat_the_braggart",
             "note": "a shaitan, bound to a sahir",
-            "id": "e356c68c8b96"
+            "id": "065b08778200"
           },
           {
             "kind": "creatures",
             "target_id": "jumayl_a_jinni_guide",
             "note": "one of the jann",
-            "id": "68458e20234d"
+            "id": "72e04ae9b81e"
           },
           {
             "kind": "creatures",
             "target_id": "bali_al_ard_the_swallower_of_the_ground",
             "note": "a faerie jinni in a horse's shape",
-            "id": "25e3fb5f785b"
+            "id": "0f156b14bcf8"
           },
           {
             "kind": "creatures",
             "target_id": "abd_al_qininna_servant_of_the_bottle",
             "note": "an 'afrit of the Bottles of Suleiman",
-            "id": "ff7945cf3b08"
+            "id": "95769c0da312"
           },
           {
             "kind": "creatures",
             "target_id": "ghula_faerie",
             "note": "the dark faerie jinn of the desert",
-            "id": "6ed3c0cbeaab"
+            "id": "b7db2ac21404"
           },
           {
             "kind": "creatures",
             "target_id": "baghl_the_earth_jinni",
             "note": "a Magic jinni of the earth",
-            "id": "9f7e8e9efcb9"
+            "id": "2d9c3771937e"
           },
           {
             "kind": "creatures",
             "target_id": "zawba_a_whirlwind_of_the_desert",
             "note": "a Magic jinni of whirling sand",
-            "id": "e4c5d78f0f9c"
+            "id": "4eadbbd99d3d"
           },
           {
             "kind": "creatures",
             "target_id": "ighraq_al_siq_the_drowning_flood_of_the_gorge",
             "note": "a pagan jinni of the river",
-            "id": "ee8258714d04"
+            "id": "75567eab282b"
           },
           {
             "kind": "creatures",
             "target_id": "the_buran_of_yenghissar",
             "note": "a storm demon reckoned among the corrupt jinn",
-            "id": "4630d1af7d20"
+            "id": "308e7b85fd60"
           },
           {
             "kind": "creatures",
             "target_id": "ghul_infernal",
             "note": "the degenerate Infernal jinn",
-            "id": "e8fb1d72f229"
+            "id": "cb9b6139323d"
           },
           {
             "kind": "creatures",
             "target_id": "qareen",
             "note": "the companion spirit every person has",
-            "id": "e165b44fef31"
+            "id": "15854e2d79df"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "jinnistan",
@@ -2300,7 +2357,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_mountains_of_qaf",
@@ -2324,7 +2382,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "iraq",
@@ -2348,7 +2407,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "baghdad",
@@ -2370,7 +2430,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "mosul",
@@ -2392,7 +2453,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "georgia",
@@ -2416,7 +2478,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "greater_armenia",
@@ -2440,7 +2503,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_pit_of_harut_and_marut",
@@ -2464,7 +2528,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "caliph_of_baghdad",
@@ -2487,7 +2552,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "ayyubid_sultan_of_egypt",
@@ -2510,7 +2576,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "ayyubid_sultan_of_aleppo",
@@ -2533,7 +2600,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "emir_of_mosul",
@@ -2556,7 +2624,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "king_of_georgia",
@@ -2579,7 +2648,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "lord_of_alamut",
@@ -2602,7 +2672,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_nizaris",
@@ -2631,11 +2702,12 @@
             "kind": "places",
             "target_id": "lord_of_alamut",
             "note": "Their head",
-            "id": "a983208288a9"
+            "id": "d40e79e69c1d"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "sultan_of_rum",
@@ -2658,7 +2730,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "emperor_of_trebizond",
@@ -2681,7 +2754,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_fifth_crusade",
@@ -2725,7 +2799,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_mongol_conquest",
@@ -2839,7 +2914,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "arabia",
@@ -2866,29 +2942,30 @@
             "kind": "creatures",
             "target_id": "ghul_infernal",
             "note": "the Infernal ghuls of its graveyards and slums",
-            "id": "58656263c872"
+            "id": "b65d4c86a722"
           },
           {
             "kind": "creatures",
             "target_id": "ghula_faerie",
             "note": "the faerie ghulas who marry and feed on men",
-            "id": "f689257ab7c5"
+            "id": "039c37b12f18"
           },
           {
             "kind": "creatures",
             "target_id": "zawba_a_whirlwind_of_the_desert",
             "note": "the whirlwind jinn of the sands",
-            "id": "49b2fa0a5221"
+            "id": "47ef6d0f93fb"
           },
           {
             "kind": "creatures",
             "target_id": "dromedary",
             "note": "the one-humped camel",
-            "id": "922bac67aacc"
+            "id": "3b1e50d80347"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_hijaz",
@@ -2915,11 +2992,12 @@
             "kind": "places",
             "target_id": "ayyubid_sultan_of_egypt",
             "note": "Its overlord, in name",
-            "id": "a7e5b22a8965"
+            "id": "ff5980615ca6"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_najd_and_yamama",
@@ -2946,35 +3024,36 @@
             "kind": "creatures",
             "target_id": "bali_al_ard_the_swallower_of_the_ground",
             "note": "a jinni racehorse of the Bedouin races",
-            "id": "30fa69651e4d"
+            "id": "eebae2978c02"
           },
           {
             "kind": "creatures",
             "target_id": "saluqi",
             "note": "the Bedouin's prized hunting hounds",
-            "id": "4c6855b2ba63"
+            "id": "79ebab201ca3"
           },
           {
             "kind": "creatures",
             "target_id": "saqr",
             "note": "the falconers' saqr",
-            "id": "03f5d341a417"
+            "id": "2c189d5f51b6"
           },
           {
             "kind": "creatures",
             "target_id": "shahin",
             "note": "the falconers' shahin",
-            "id": "e9c1e3483960"
+            "id": "a227fe0bd229"
           },
           {
             "kind": "creatures",
             "target_id": "arabian_racehorse",
             "note": "the Arabian racehorse",
-            "id": "fbb8ae7718f9"
+            "id": "d8f87d2e73a5"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "bahrayn",
@@ -3001,11 +3080,12 @@
             "kind": "creatures",
             "target_id": "jumayl_a_jinni_guide",
             "note": "a jann caravan guard who drinks in its markets",
-            "id": "ff0961be3986"
+            "id": "e8b85a536302"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_empty_quarter",
@@ -3038,7 +3118,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "asir_and_yemen",
@@ -3062,7 +3143,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "hadramawt",
@@ -3089,17 +3171,18 @@
             "kind": "creatures",
             "target_id": "nisnas",
             "note": "the half-men of the forests",
-            "id": "35dc945f7089"
+            "id": "4818b0fc249f"
           },
           {
             "kind": "creatures",
             "target_id": "flying_serpent_iaculus",
             "note": "the winged serpents of the incense trees",
-            "id": "094215f39f9a"
+            "id": "69ad33a1e1ea"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "uman",
@@ -3123,7 +3206,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_haram_of_mecca",
@@ -3147,7 +3231,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_haram_mosque",
@@ -3180,7 +3265,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_well_of_zamzam",
@@ -3204,7 +3290,15 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "Zamzam is also a name: an ancient Magic marid lies trapped in a smothered Magic regio at the bottom of the well, its powers crushed by the Divine aura. What strength it keeps goes into keeping the water so pure, and it has come to hate its prison. It remembers far back, and knows things of the past no other source can tell.\n\nStory seeds:\nThe Marid of the Well: the marid Zamzam lies in a smothered Magic regio at the foot of the well, keeping its water pure and hating the Dominion that holds it; it knows things of the distant past no one else does, but how could anyone speak with it unseen in Islam's holiest shrine, and what would it do if freed?\n\nVis: on the night after Ramadan ends the Divine aura over the well sinks a little, and its water, drawn by moonlight, is an unusual Extraordinary Aquam vis: each mouthful restores all of a character's lost Fatigue levels by an unknown non-Hermetic effect of ritual strength. The book gives no number of pawns."
+        "secrets": [
+          {
+            "title": "",
+            "text": "Zamzam is also a name: an ancient Magic marid lies trapped in a smothered Magic regio at the bottom of the well, its powers crushed by the Divine aura. What strength it keeps goes into keeping the water so pure, and it has come to hate its prison. It remembers far back, and knows things of the past no other source can tell.\n\nStory seeds:\nThe Marid of the Well: the marid Zamzam lies in a smothered Magic regio at the foot of the well, keeping its water pure and hating the Dominion that holds it; it knows things of the distant past no one else does, but how could anyone speak with it unseen in Islam's holiest shrine, and what would it do if freed?\n\nVis: on the night after Ramadan ends the Divine aura over the well sinks a little, and its water, drawn by moonlight, is an unusual Extraordinary Aquam vis: each mouthful restores all of a character's lost Fatigue levels by an unknown non-Hermetic effect of ritual strength. The book gives no number of pawns.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "the_mosque_of_the_jinn",
@@ -3228,7 +3322,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_haram_of_medina",
@@ -3252,7 +3347,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "ukaz",
@@ -3276,7 +3372,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "al_qudayd",
@@ -3300,7 +3397,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_nest_of_lukman_s_falcons",
@@ -3333,7 +3431,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_stone_lovers",
@@ -3357,7 +3456,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_valley_of_abqar",
@@ -3390,7 +3490,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_ruins_of_ma_rib",
@@ -3414,7 +3515,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_temple_of_ghumdam",
@@ -3438,7 +3540,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "iram_the_city_of_a_thousand_pillars",
@@ -3465,11 +3568,12 @@
             "kind": "creatures",
             "target_id": "giant_of_ad",
             "note": "the giants of 'Ad in the deep desert",
-            "id": "275fc7ab9484"
+            "id": "f7345a6bb86f"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_trees_that_cry_blood",
@@ -3493,7 +3597,15 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "Vis: frankincense gathered from these trees during a violent storm comes as unusually pure tears, each holding one pawn of Rego Terram vis; each tree gives several pawns a harvest."
+        "secrets": [
+          {
+            "title": "",
+            "text": "Vis: frankincense gathered from these trees during a violent storm comes as unusually pure tears, each holding one pawn of Rego Terram vis; each tree gives several pawns a harvest.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "the_haunted_shores_of_hajar",
@@ -3517,7 +3629,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "ayyubid_sultan_of_yemen",
@@ -3540,7 +3653,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "grand_sharif_of_mecca",
@@ -3563,7 +3677,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "uyunid_emir_of_bahrayn",
@@ -3586,7 +3701,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "nabhanid_king_of_uman",
@@ -3609,7 +3725,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "yahmad_lords_of_muscat",
@@ -3632,7 +3749,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "mecca",
@@ -3654,7 +3772,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "medina",
@@ -3676,7 +3795,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "ta_if",
@@ -3698,7 +3818,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "sana_a",
@@ -3723,11 +3844,12 @@
             "kind": "creatures",
             "target_id": "kharrat_the_braggart",
             "note": "the Infernal jinni bound to Sana'a's young vizier",
-            "id": "6df8f1c33020"
+            "id": "cd24a2445cd8"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "muscat",
@@ -3752,11 +3874,12 @@
             "kind": "places",
             "target_id": "the_harbour_of_muscat",
             "note": "Its harbour",
-            "id": "7c97079f14d2"
+            "id": "0d2cd825a8d7"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "nizwa",
@@ -3778,7 +3901,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "hajar",
@@ -3803,11 +3927,12 @@
             "kind": "places",
             "target_id": "the_harbour_of_hajar",
             "note": "Its harbour",
-            "id": "e6b45045b826"
+            "id": "f77e76b9a757"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "tayma",
@@ -3829,7 +3954,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "khaybar",
@@ -3851,7 +3977,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_bedouin_sahirs",
@@ -3877,7 +4004,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "muru_a_the_bedouin_code",
@@ -3903,7 +4031,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_cult_of_the_daughters_of_allah",
@@ -3928,7 +4057,15 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "Farida, the newest of the three, has doubts: her Muslim upbringing, what she is asked to do, or the child she may be carrying, who would replace her in a family that is never more than three."
+        "secrets": [
+          {
+            "title": "",
+            "text": "Farida, the newest of the three, has doubts: her Muslim upbringing, what she is asked to do, or the child she may be carrying, who would replace her in a family that is never more than three.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "the_witches_of_nizwa",
@@ -3953,7 +4090,15 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "The book leaves their nature open: Infernalists, faerie wizards, Soqotran witches in exile, agents of the Olibanum King working against the Order of Suleiman, the last of Sheba's astral sorceresses, or nothing but slander."
+        "secrets": [
+          {
+            "title": "",
+            "text": "The book leaves their nature open: Infernalists, faerie wizards, Soqotran witches in exile, agents of the Olibanum King working against the Order of Suleiman, the last of Sheba's astral sorceresses, or nothing but slander.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "the_jurhumites",
@@ -3978,7 +4123,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "mesopotamia",
@@ -4002,7 +4148,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_jazira",
@@ -4029,17 +4176,18 @@
             "kind": "creatures",
             "target_id": "girtablullu_the_scorpion_man",
             "note": "the scorpion-men who guard the old ruins",
-            "id": "4a9e25652ba5"
+            "id": "5e30d2c974f8"
           },
           {
             "kind": "creatures",
             "target_id": "mushhushshu_the_snake_dragon",
             "note": "the snake-dragons of old Assyria",
-            "id": "a6cf55071433"
+            "id": "3984f810e2bd"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "azarbayjan",
@@ -4063,7 +4211,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "arran",
@@ -4087,7 +4236,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "mukan",
@@ -4111,7 +4261,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "shirvan",
@@ -4135,7 +4286,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "gilan",
@@ -4159,7 +4311,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_palace_of_shirin",
@@ -4183,7 +4336,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_palace_of_ctesiphon",
@@ -4207,7 +4361,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "dayr_al_aqul",
@@ -4231,7 +4386,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "dayr_hizqil",
@@ -4255,7 +4411,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_ruins_of_babylon",
@@ -4282,17 +4439,18 @@
             "kind": "places",
             "target_id": "the_pit_of_harut_and_marut",
             "note": "Beneath the ruins",
-            "id": "ee7549affd12"
+            "id": "18feb786e7c4"
           },
           {
             "kind": "creatures",
             "target_id": "aladlammu_and_apsasu",
             "note": "the winged bull guardians against demons",
-            "id": "edaea7823221"
+            "id": "7b2c13a4cede"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_great_swamp",
@@ -4316,7 +4474,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_ruins_of_uruk",
@@ -4340,7 +4499,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_whirlpool_at_ubulla",
@@ -4364,7 +4524,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "nimrod_s_furnace",
@@ -4388,7 +4549,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_tomb_of_al_husayn",
@@ -4412,7 +4574,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_shrine_of_ali",
@@ -4436,7 +4599,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_jinni_s_gorge",
@@ -4463,11 +4627,19 @@
             "kind": "creatures",
             "target_id": "ighraq_al_siq_the_drowning_flood_of_the_gorge",
             "note": "the drowning flood of the gorge",
-            "id": "2de4dac9e7cd"
+            "id": "d30703141b92"
           }
         ],
         "arms": {},
-        "secrets": "Vis: clear rainwater that gathers each year in a niche cut into the block, 2 pawns of Aquam."
+        "secrets": [
+          {
+            "title": "",
+            "text": "Vis: clear rainwater that gathers each year in a niche cut into the block, 2 pawns of Aquam.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "mount_judi",
@@ -4500,7 +4672,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_battlefield_of_siffin",
@@ -4524,7 +4697,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_sanjah_bridge",
@@ -4548,7 +4722,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "lake_urmiya",
@@ -4572,7 +4747,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_sorcerer_s_tower_of_urmiya",
@@ -4596,7 +4772,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_fountain_of_the_water_of_life",
@@ -4620,7 +4797,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_rock_of_moses",
@@ -4644,7 +4822,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_armenian_highlands",
@@ -4668,7 +4847,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "atabeg_of_azarbayjan",
@@ -4691,7 +4871,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "shirvanshah",
@@ -4714,7 +4895,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "emir_of_gilan",
@@ -4740,17 +4922,18 @@
             "kind": "places",
             "target_id": "the_nizaris",
             "note": "His allies",
-            "id": "3461b7b18d08"
+            "id": "5b3620f72d5d"
           },
           {
             "kind": "places",
             "target_id": "lord_of_alamut",
             "note": "His son-in-law",
-            "id": "46edb45b0eff"
+            "id": "7151ba2ae723"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "al_mada_in",
@@ -4772,7 +4955,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "basra",
@@ -4794,7 +4978,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "ubulla",
@@ -4816,7 +5001,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "kufa",
@@ -4838,7 +5024,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "najaf",
@@ -4860,7 +5047,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "hilla",
@@ -4882,7 +5070,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "samarra",
@@ -4904,7 +5093,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "kutha",
@@ -4926,7 +5116,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "nasibin",
@@ -4948,7 +5139,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "barqa_id",
@@ -4970,7 +5162,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "amid",
@@ -4992,7 +5185,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "raqqa",
@@ -5014,7 +5208,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "harran",
@@ -5036,7 +5231,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "edessa",
@@ -5058,7 +5254,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "arzanjan",
@@ -5080,7 +5277,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "tabriz",
@@ -5102,7 +5300,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "maragha",
@@ -5124,7 +5323,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "baylaqan",
@@ -5146,7 +5346,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "bajarvan",
@@ -5168,7 +5369,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "shamakhi",
@@ -5190,7 +5392,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "barvan",
@@ -5212,7 +5415,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "tiflis",
@@ -5234,7 +5438,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_sabians_of_harran",
@@ -5259,7 +5464,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_ashipu",
@@ -5284,7 +5490,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_brass_smiths_guild_of_arzanjan",
@@ -5309,7 +5516,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "persia",
@@ -5336,11 +5544,12 @@
             "kind": "creatures",
             "target_id": "nasu_spirit",
             "note": "the corpse-flies of the nasu spirit",
-            "id": "479dc4f35321"
+            "id": "5d468c9bfa27"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "fars",
@@ -5364,7 +5573,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "jibal",
@@ -5388,7 +5598,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "khuzistan",
@@ -5412,7 +5623,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "kirman",
@@ -5436,7 +5648,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "daylam",
@@ -5460,7 +5673,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "qumis",
@@ -5484,7 +5698,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_great_desert",
@@ -5511,17 +5726,18 @@
             "kind": "creatures",
             "target_id": "persian_gazelle",
             "note": "the Persian gazelle",
-            "id": "fee7b388dacd"
+            "id": "2845e2da9cb6"
           },
           {
             "kind": "creatures",
             "target_id": "olghoi_khorkhoi_the_death_worm",
             "note": "the death worm under the sand",
-            "id": "12bb0a126b81"
+            "id": "c80bc25e587c"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "makran",
@@ -5545,7 +5761,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "khurasan",
@@ -5569,7 +5786,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "seistan",
@@ -5593,7 +5811,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "quhistan",
@@ -5617,7 +5836,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "ghur",
@@ -5641,7 +5861,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_khwarazm_shah",
@@ -5667,41 +5888,42 @@
             "kind": "places",
             "target_id": "salghurid_atabeg_of_fars",
             "note": "Sworn to him",
-            "id": "71dcdca79335"
+            "id": "a23ac8e04c4e"
           },
           {
             "kind": "places",
             "target_id": "ghuzz_atabeg_of_khuzistan",
             "note": "Sworn to him",
-            "id": "0c54e09be521"
+            "id": "41a88a7e77ba"
           },
           {
             "kind": "places",
             "target_id": "samarkand",
             "note": "His eastern capital",
-            "id": "5e0fa54dbdc9"
+            "id": "5b15aaddfdaf"
           },
           {
             "kind": "places",
             "target_id": "gurganj",
             "note": "His capital",
-            "id": "81ffe7e2ed78"
+            "id": "418810cea4ef"
           },
           {
             "kind": "places",
             "target_id": "great_khan_of_the_mongols",
             "note": "His enemy",
-            "id": "78c0d3e8cdb4"
+            "id": "a95931eb1cfc"
           },
           {
             "kind": "places",
             "target_id": "the_mongol_conquest",
             "note": "The war he brought on",
-            "id": "1e2f61e19847"
+            "id": "059af9a63629"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "salghurid_atabeg_of_fars",
@@ -5724,7 +5946,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "ghuzz_atabeg_of_khuzistan",
@@ -5747,7 +5970,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "arranjan",
@@ -5769,7 +5993,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_well_of_hindijan",
@@ -5793,7 +6018,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "darabgerd",
@@ -5815,7 +6041,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_hill_of_the_seven_coloured_salt",
@@ -5839,7 +6066,15 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "Vis: the salt is Dedicated Vis (Realms of Power: Magic) for summoning jinn, who love it: each pawn counts as two when summoning a jinni, though not other spirits. The book gives no yearly amount. Princes keep the salt workings in their own hands and use the salt to woo or reward sahirs."
+        "secrets": [
+          {
+            "title": "",
+            "text": "Vis: the salt is Dedicated Vis (Realms of Power: Magic) for summoning jinn, who love it: each pawn counts as two when summoning a jinni, though not other spirits. The book gives no yearly amount. Princes keep the salt workings in their own hands and use the salt to woo or reward sahirs.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "kajaran",
@@ -5861,7 +6096,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "istakhr",
@@ -5883,7 +6119,15 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "The sahir who found the cup uses it to pry on neighbours and rivals (the troupe perhaps among them); the book does not name him."
+        "secrets": [
+          {
+            "title": "",
+            "text": "The sahir who found the cup uses it to pry on neighbours and rivals (the troupe perhaps among them); the book does not name him.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "the_forest_of_kamfiruz",
@@ -5907,7 +6151,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "kish",
@@ -5932,11 +6177,12 @@
             "kind": "places",
             "target_id": "the_harbour_of_kish",
             "note": "Its harbour",
-            "id": "8600fc212696"
+            "id": "dc05a578bf00"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "shiraz",
@@ -5958,7 +6204,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_imamzadihs_of_shiraz",
@@ -5982,7 +6229,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "shapur",
@@ -6004,7 +6252,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_black_man",
@@ -6028,7 +6277,15 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "The statue is a great div, one of the forty-five named demons (which one is unknown), bound in it long ago by a mobed. Knowing his binding would not last forever, he made the leaves green, to fade as it wore off; each anointing came with a mobed's blessing that renewed it. Under Muslim rule the rite was banned as idolatry, and only a tenth of one leaf is still green: the demon is nearly free."
+        "secrets": [
+          {
+            "title": "",
+            "text": "The statue is a great div, one of the forty-five named demons (which one is unknown), bound in it long ago by a mobed. Knowing his binding would not last forever, he made the leaves green, to fade as it wore off; each anointing came with a mobed's blessing that renewed it. Under Muslim rule the rite was banned as idolatry, and only a tenth of one leaf is still green: the demon is nearly free.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "yazd",
@@ -6050,7 +6307,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "isfahan",
@@ -6072,7 +6330,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "kirmanshah",
@@ -6094,7 +6353,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "qum",
@@ -6116,7 +6376,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_mosque_of_jam_karan",
@@ -6140,7 +6401,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "rayy",
@@ -6162,7 +6424,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_shrine_of_shahr_banu",
@@ -6186,7 +6449,15 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "Vis: Aquam, in the water of the shrine's spring, when it is drawn while Venus is in the sky; the book gives no amount."
+        "secrets": [
+          {
+            "title": "",
+            "text": "Vis: Aquam, in the water of the shrine's spring, when it is drawn while Venus is in the sky; the book gives no amount.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "savah",
@@ -6208,7 +6479,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "ahwaz",
@@ -6230,7 +6502,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "gundeshapur",
@@ -6252,7 +6525,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "ramhurmuz",
@@ -6274,7 +6548,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "bardasir",
@@ -6296,7 +6571,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "jiruft",
@@ -6318,7 +6594,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_forest_of_jiruft",
@@ -6342,7 +6619,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "mazandaran",
@@ -6369,17 +6647,18 @@
             "kind": "creatures",
             "target_id": "baghl_the_earth_jinni",
             "note": "the earth jinni of a quarried cave",
-            "id": "664672b662d7"
+            "id": "e2a523441ccb"
           },
           {
             "kind": "creatures",
             "target_id": "hyrcanian_tiger",
             "note": "the swift tigers that hunt its gazelles",
-            "id": "a25abf0703f7"
+            "id": "0dfba506f129"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "gurgan",
@@ -6401,7 +6680,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "mount_damavand",
@@ -6428,17 +6708,25 @@
             "kind": "creatures",
             "target_id": "azi_dahak_duke_of_the_spirits_of_deceit",
             "note": "Zahhak's demon",
-            "id": "383bf39a72a4"
+            "id": "d7b09a10610e"
           },
           {
             "kind": "creatures",
             "target_id": "the_simurgh",
             "note": "the great bird of the mountain",
-            "id": "caf271cec203"
+            "id": "c909efa719f8"
           }
         ],
         "arms": {},
-        "secrets": "The first Zahhak was not killed by Feridun: with an angel's help he was chained and buried under the mountain. The demon has long since left him, but he lives on there, kept from death by the holy bonds, an ancient survivor of the heroic age who might teach something to those facing a new Zahhak."
+        "secrets": [
+          {
+            "title": "",
+            "text": "The first Zahhak was not killed by Feridun: with an angel's help he was chained and buried under the mountain. The demon has long since left him, but he lives on there, kept from death by the holy bonds, an ancient survivor of the heroic age who might teach something to those facing a new Zahhak.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "baghl_s_cave",
@@ -6462,7 +6750,15 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "Vis: 1 pawn of Terram a year, as a quartz-crusted stalactite at the back of the cave."
+        "secrets": [
+          {
+            "title": "",
+            "text": "Vis: 1 pawn of Terram a year, as a quartz-crusted stalactite at the back of the cave.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "the_great_wall_of_gurgan",
@@ -6486,7 +6782,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "alamut",
@@ -6513,29 +6810,30 @@
             "kind": "places",
             "target_id": "maimun_diz",
             "note": "Nizari castle",
-            "id": "120978968424"
+            "id": "a73a2cbd7660"
           },
           {
             "kind": "places",
             "target_id": "girdkuh",
             "note": "Nizari castle",
-            "id": "7a1e23c191f6"
+            "id": "7bc3a58b2c59"
           },
           {
             "kind": "places",
             "target_id": "the_nizaris",
             "note": "Its masters",
-            "id": "3a0e8f6d37cf"
+            "id": "be78159ec2bf"
           },
           {
             "kind": "places",
             "target_id": "lord_of_alamut",
             "note": "Its masters",
-            "id": "a1ba5905ef1e"
+            "id": "b84b8e706704"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "maimun_diz",
@@ -6559,7 +6857,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "girdkuh",
@@ -6583,7 +6882,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "damghan",
@@ -6605,7 +6905,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_caspian_gates",
@@ -6629,7 +6930,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_dasht_i_kavir",
@@ -6653,7 +6955,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_rig_i_jinn",
@@ -6677,7 +6980,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_dasht_i_lut",
@@ -6701,7 +7005,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_gandom_beriyan",
@@ -6734,7 +7039,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_gedrosian_desert",
@@ -6758,7 +7064,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "zaranj",
@@ -6783,11 +7090,19 @@
             "kind": "places",
             "target_id": "rostam_s_tower",
             "note": "In the town",
-            "id": "06b4fd051a90"
+            "id": "bfd8378efb23"
           }
         ],
         "arms": {},
-        "secrets": "The 120-day wind is a host of air elementals (Realms of Power: Magic) on their yearly migration, playing as they pass."
+        "secrets": [
+          {
+            "title": "",
+            "text": "The 120-day wind is a host of air elementals (Realms of Power: Magic) on their yearly migration, playing as they pass.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "rostam_s_tower",
@@ -6811,7 +7126,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "dartal",
@@ -6833,7 +7149,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "herat",
@@ -6855,7 +7172,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "merv",
@@ -6877,7 +7195,15 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "Faeries keep stalls in the market beside the townsfolk and help earn Merv its name. They draw their life from trading with mortals but supply nothing themselves: each deal they make is with another mortal who has the thing, so getting anything rare means a chain of favours, each faerie asking for something else, from a pebble with a white spot to the Sasanid king's crown. The trick is to know when to stop."
+        "secrets": [
+          {
+            "title": "",
+            "text": "Faeries keep stalls in the market beside the townsfolk and help earn Merv its name. They draw their life from trading with mortals but supply nothing themselves: each deal they make is with another mortal who has the thing, so getting anything rare means a chain of favours, each faerie asking for something else, from a pebble with a white spot to the Sasanid king's crown. The trick is to know when to stop.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "mashhad",
@@ -6899,7 +7225,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_shrine_of_imam_reza",
@@ -6923,7 +7250,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "nishapur",
@@ -6945,7 +7273,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_footsteps_of_imam_reza",
@@ -6969,7 +7298,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "bamiyan",
@@ -6991,7 +7321,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_idols_of_bamiyan",
@@ -7015,7 +7346,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "firuzkuh",
@@ -7037,7 +7369,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_minaret_of_firuzkuh",
@@ -7061,7 +7394,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "ghazni",
@@ -7083,7 +7417,15 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "Its wealth is a False God's gift, through that demon's Wealth of Nations power (Realms of Power: The Infernal) that the Ghaznians worship in secret."
+        "secrets": [
+          {
+            "title": "",
+            "text": "Its wealth is a False God's gift, through that demon's Wealth of Nations power (Realms of Power: The Infernal) that the Ghaznians worship in secret.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "kabul",
@@ -7105,7 +7447,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_yatus",
@@ -7133,17 +7476,18 @@
             "kind": "places",
             "target_id": "mount_damavand",
             "note": "Their seven closed houses",
-            "id": "d2fae172a52f"
+            "id": "dd7d88dd6017"
           },
           {
             "kind": "places",
             "target_id": "the_nizaris",
             "note": "Rivals for Mazandaran's vis",
-            "id": "c2d4c6025b72"
+            "id": "51ebd0755e6e"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_ghuzz",
@@ -7171,11 +7515,12 @@
             "kind": "places",
             "target_id": "ghuzz_atabeg_of_khuzistan",
             "note": "Their kin in Khuzistan",
-            "id": "99dbfe31420f"
+            "id": "94690e9513e5"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_shansabani",
@@ -7203,35 +7548,43 @@
             "kind": "places",
             "target_id": "firuzkuh",
             "note": "Their hidden retreat",
-            "id": "9bb31ceafdd7"
+            "id": "4eccaf31269a"
           },
           {
             "kind": "places",
             "target_id": "bamiyan",
             "note": "One of their capitals",
-            "id": "9eb067ce2c7f"
+            "id": "b54387f97859"
           },
           {
             "kind": "places",
             "target_id": "ghazni",
             "note": "One of their capitals",
-            "id": "d275e00621c4"
+            "id": "77dc2e201878"
           },
           {
             "kind": "creatures",
             "target_id": "azi_dahak_duke_of_the_spirits_of_deceit",
             "note": "Their forefather's demon",
-            "id": "fe34d90d64b3"
+            "id": "21084c515b61"
           },
           {
             "kind": "places",
             "target_id": "great_khan_of_the_mongols",
             "note": "Their heir, by rumour",
-            "id": "3569ce737bbb"
+            "id": "faf3079cb4d8"
           }
         ],
         "arms": {},
-        "secrets": "One rumour that will not die puts the Shansabani heir at Genghis Khan's court."
+        "secrets": [
+          {
+            "title": "",
+            "text": "One rumour that will not die puts the Shansabani heir at Genghis Khan's court.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "the_zutt",
@@ -7256,7 +7609,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_balu",
@@ -7284,11 +7638,12 @@
             "kind": "places",
             "target_id": "the_ghuzz",
             "note": "Hated foes",
-            "id": "998ad1712c6c"
+            "id": "41be26103a81"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_peris_and_pairikas",
@@ -7313,7 +7668,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_carpet_weavers_of_isfahan",
@@ -7341,11 +7697,19 @@
             "kind": "places",
             "target_id": "the_nizaris",
             "note": "Yarankush's sect",
-            "id": "e04af819eca0"
+            "id": "a420b03d06ef"
           }
         ],
         "arms": {},
-        "secrets": "Yarankush is a Nizari, and weaves into each carpet's design a hidden sign that tells the sect's killers not to step on it."
+        "secrets": [
+          {
+            "title": "",
+            "text": "Yarankush is a Nizari, and weaves into each carpet's design a hidden sign that tells the sect's killers not to step on it.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "the_silk_road",
@@ -7372,11 +7736,12 @@
             "kind": "creatures",
             "target_id": "bactrian_camel",
             "note": "the two-humped camels of the caravans",
-            "id": "a65d42e51863"
+            "id": "b6549a9f043f"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "transoxiana",
@@ -7403,29 +7768,30 @@
             "kind": "creatures",
             "target_id": "steppe_pony",
             "note": "the nomads' hardy ponies",
-            "id": "bcf05338b845"
+            "id": "07c7f946edfb"
           },
           {
             "kind": "creatures",
             "target_id": "lesser_steppe_spirit",
             "note": "the genii loci of the steppe",
-            "id": "ec6a2103389c"
+            "id": "513c6b50706b"
           },
           {
             "kind": "creatures",
             "target_id": "mongol_trooper",
             "note": "the Mongol horsemen",
-            "id": "4e3884046286"
+            "id": "96d3cc2705d5"
           },
           {
             "kind": "creatures",
             "target_id": "mongol_spirit_shaman",
             "note": "the shamans who ride with the Mongols",
-            "id": "6d48101e9dc5"
+            "id": "3378b27e2793"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "khwarazm",
@@ -7452,11 +7818,12 @@
             "kind": "creatures",
             "target_id": "asian_elephant",
             "note": "the elephants of the eastern armies",
-            "id": "d852d9ca7b46"
+            "id": "75f4c131546f"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "sogdiana",
@@ -7480,7 +7847,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "farghana",
@@ -7507,11 +7875,12 @@
             "kind": "creatures",
             "target_id": "the_heavenly_horse_of_farghana",
             "note": "the blood-sweating horses of the valley",
-            "id": "dd69350b8737"
+            "id": "b599492987f9"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "bactria",
@@ -7535,7 +7904,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "badakhshan",
@@ -7562,11 +7932,12 @@
             "kind": "creatures",
             "target_id": "ruq",
             "note": "the giant eagles of the high valleys",
-            "id": "dd02bb0db16a"
+            "id": "dcff99b41ca2"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_wakhan",
@@ -7590,7 +7961,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_oxus",
@@ -7614,7 +7986,15 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "The winter freeze is the outcome of a running struggle between the Faerie and Magic jinn who claim the lands on either bank. In winter the faeries rule and the rivers ice over, letting nomads, and their stories, cross between steppe and town, feeding the faeries on the strife; in summer the old Magic spirits take back the rivers and let them run to water the towns downstream."
+        "secrets": [
+          {
+            "title": "",
+            "text": "The winter freeze is the outcome of a running struggle between the Faerie and Magic jinn who claim the lands on either bank. In winter the faeries rule and the rivers ice over, letting nomads, and their stories, cross between steppe and town, feeding the faeries on the strife; in summer the old Magic spirits take back the rivers and let them run to water the towns downstream.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "the_old_bed_of_the_oxus",
@@ -7638,7 +8018,15 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "Vis: Aquam, as small clear pools that form along the dry bed on cool nights while Aquarius is rising; the book gives no amount."
+        "secrets": [
+          {
+            "title": "",
+            "text": "Vis: Aquam, as small clear pools that form along the dry bed on cool nights while Aquarius is rising; the book gives no amount.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "the_jaxartes",
@@ -7662,7 +8050,15 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "The old river spirit feeds on the townsmen's dread of the steppe's barbarians: every few centuries it calls a faerie host under a new name down the Arcadian road by Talas, one more wave in an endless cycle of ruin, each slightly different, each breaking on civilisation's shore. The Mongols may be only its latest telling."
+        "secrets": [
+          {
+            "title": "",
+            "text": "The old river spirit feeds on the townsmen's dread of the steppe's barbarians: every few centuries it calls a faerie host under a new name down the Arcadian road by Talas, one more wave in an endless cycle of ruin, each slightly different, each breaking on civilisation's shore. The Mongols may be only its latest telling.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "the_aral_sea",
@@ -7686,7 +8082,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "jabal_jaghrahaz",
@@ -7710,7 +8107,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_kyzylkum",
@@ -7734,7 +8132,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "gurganj",
@@ -7759,11 +8158,12 @@
             "kind": "places",
             "target_id": "the_gutluk_temir_minaret",
             "note": "Its sahirs' tower",
-            "id": "0ce64a942961"
+            "id": "0b39bf748ae0"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_gutluk_temir_minaret",
@@ -7787,7 +8187,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "kath",
@@ -7809,7 +8210,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "otrar",
@@ -7831,7 +8233,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_ruins_of_otrar",
@@ -7855,7 +8258,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "samarkand",
@@ -7880,11 +8284,12 @@
             "kind": "places",
             "target_id": "the_shahr_i_zindah",
             "note": "Its street of tombs",
-            "id": "5dafbe223573"
+            "id": "fa130c6b5f63"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_shahr_i_zindah",
@@ -7908,7 +8313,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "bukhara",
@@ -7933,17 +8339,18 @@
             "kind": "places",
             "target_id": "the_kalyan_minaret",
             "note": "Its minaret",
-            "id": "5906ec6442f5"
+            "id": "b8b0097be213"
           },
           {
             "kind": "places",
             "target_id": "job_s_spring",
             "note": "Its house's charge",
-            "id": "4c94a77bd1e1"
+            "id": "c878a064929b"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_kalyan_minaret",
@@ -7976,7 +8383,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_tomb_of_isma_il_samanid",
@@ -8000,7 +8408,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "job_s_spring",
@@ -8024,7 +8433,15 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "Vis: faerie-tainted Terram and Aquam, which the faerie jinni of the spring gives in a bargain for acting out the old story within its walls; the book gives no amount."
+        "secrets": [
+          {
+            "title": "",
+            "text": "Vis: faerie-tainted Terram and Aquam, which the faerie jinni of the spring gives in a bargain for acting out the old story within its walls; the book gives no amount.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "the_wishing_tree_of_kasri_orifon",
@@ -8057,7 +8474,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "balkh",
@@ -8079,7 +8497,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_ruins_of_ai_khanoum",
@@ -8103,7 +8522,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_gymnasium_of_ai_khanoum",
@@ -8127,7 +8547,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "sogdian_rock",
@@ -8151,7 +8572,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "khojend",
@@ -8173,7 +8595,15 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "Another altar of Alexander is hidden under the town or in the ruins beside it."
+        "secrets": [
+          {
+            "title": "",
+            "text": "Another altar of Alexander is hidden under the town or in the ruins beside it.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "osh",
@@ -8195,7 +8625,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_mines_of_lahzvard",
@@ -8219,7 +8650,15 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "Vis: a Lapis Lazuli of Virtue holds 2 pawns of Corpus."
+        "secrets": [
+          {
+            "title": "",
+            "text": "Vis: a Lapis Lazuli of Virtue holds 2 pawns of Corpus.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "the_faerie_road_to_serica",
@@ -8243,7 +8682,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_roof_of_the_world",
@@ -8270,11 +8710,12 @@
             "kind": "places",
             "target_id": "the_mountains_of_qaf",
             "note": "Part of Qaf, in legend",
-            "id": "8f77df3fa580"
+            "id": "826bfbd0d82a"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "janaindar_the_city_above_the_clouds",
@@ -8298,7 +8739,15 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "The book leaves its truth open, offering a lost Nephilim settlement, the real Hyperborea in Turkistan, an old and secluded covenant of elder magi, the heirs of a rival tradition founded by Viea, Trianoma's sister, a final hiding place of the Zoroastrian mobeds, a high covenant site, or the Diedne's last sanctum."
+        "secrets": [
+          {
+            "title": "",
+            "text": "The book leaves its truth open, offering a lost Nephilim settlement, the real Hyperborea in Turkistan, an old and secluded covenant of elder magi, the heirs of a rival tradition founded by Viea, Trianoma's sister, a final hiding place of the Zoroastrian mobeds, a high covenant site, or the Diedne's last sanctum.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "turris_lapidae_the_stone_tower",
@@ -8322,7 +8771,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "khashgar",
@@ -8347,11 +8797,12 @@
             "kind": "places",
             "target_id": "khashgar_of_the_jinn",
             "note": "The jinn city behind it",
-            "id": "20cf42760632"
+            "id": "75aac97cf7c3"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "yenghissar",
@@ -8375,7 +8826,15 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "The sahir who bound the buran is Infernally aligned and used the Goetic Art of Binding (Realms of Power: The Infernal); the spirit rages in his ancestral sword, ever trying to wreak elemental havoc round its careless captor."
+        "secrets": [
+          {
+            "title": "",
+            "text": "The sahir who bound the buran is Infernally aligned and used the Goetic Art of Binding (Realms of Power: The Infernal); the spirit rages in his ancestral sword, ever trying to wreak elemental havoc round its careless captor.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "the_taklimakan",
@@ -8402,11 +8861,12 @@
             "kind": "creatures",
             "target_id": "the_buran_of_yenghissar",
             "note": "the storm demon bound in the Yenghissar sword",
-            "id": "f5950cca8a12"
+            "id": "8820b6a8e1f5"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_great_steppe",
@@ -8430,7 +8890,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "tashkent",
@@ -8452,7 +8913,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "talas",
@@ -8474,7 +8936,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "great_khan_of_the_mongols",
@@ -8500,17 +8963,25 @@
             "kind": "places",
             "target_id": "khashgar",
             "note": "Taken without a fight",
-            "id": "60f302c5afcf"
+            "id": "71f474e3dddd"
           },
           {
             "kind": "places",
             "target_id": "the_mongol_conquest",
             "note": "His war",
-            "id": "04fdbe6085e8"
+            "id": "34f5aae2b0ac"
           }
         ],
         "arms": {},
-        "secrets": "What the Khan truly is the book leaves to each troupe, offering, with none chosen: an Infernal horde, its leaders Angels of Punishment, demons of the Avengers of Evil posing as God's vengeance, or the Khan a new Zahhak possessed by Azi Dahak; the Spawn of Gog and Magog, a horde ridden out of Arcadia in the endless nomad cycle, the Khan a dark faerie monarch and his officers court faeries; the legions of Prester John, faeries playing a pious part, born of garbled tales of the Qara Khitai's defeat of Sultan Sanjar; the Vengeance of God, a true Divine host of punishment; Blood of Heroes, the Khan and his generals scions of Ares or of Attila; or a Spirit Votary of Great Tengri, who made his bargain on the holy mountain of Burkhan Khaldun and wields elemental powers great enough to force the Order of Hermes to unite against him. Some Persian sahirs already fear the Zahhak."
+        "secrets": [
+          {
+            "title": "",
+            "text": "What the Khan truly is the book leaves to each troupe, offering, with none chosen: an Infernal horde, its leaders Angels of Punishment, demons of the Avengers of Evil posing as God's vengeance, or the Khan a new Zahhak possessed by Azi Dahak; the Spawn of Gog and Magog, a horde ridden out of Arcadia in the endless nomad cycle, the Khan a dark faerie monarch and his officers court faeries; the legions of Prester John, faeries playing a pious part, born of garbled tales of the Qara Khitai's defeat of Sultan Sanjar; the Vengeance of God, a true Divine host of punishment; Blood of Heroes, the Khan and his generals scions of Ares or of Attila; or a Spirit Votary of Great Tengri, who made his bargain on the holy mountain of Burkhan Khaldun and wields elemental powers great enough to force the Order of Hermes to unite against him. Some Persian sahirs already fear the Zahhak.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "the_qara_khitai",
@@ -8538,17 +9009,18 @@
             "kind": "places",
             "target_id": "khashgar",
             "note": "Once theirs",
-            "id": "a5a12d747d42"
+            "id": "a8c389bfe69c"
           },
           {
             "kind": "places",
             "target_id": "the_khwarazm_shah",
             "note": "Beat them in 1218",
-            "id": "6ad263689ad7"
+            "id": "e578620092dc"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "amerabad_the_city_of_amber",
@@ -8572,7 +9044,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "golden_baghdad",
@@ -8596,7 +9069,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "khashgar_of_the_jinn",
@@ -8620,7 +9094,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "al_khadar_the_green_ocean",
@@ -8645,7 +9120,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_court_of_golden_baghdad",
@@ -8673,11 +9149,12 @@
             "kind": "places",
             "target_id": "golden_baghdad",
             "note": "Its city",
-            "id": "a94296bd4d20"
+            "id": "21c5e92aae90"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "adur_farnbag",
@@ -8710,7 +9187,15 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "The mobeds who brought the fire from Khwarazm still live on Kavarvand, kept alive across the centuries by the Gifts of Gayomart."
+        "secrets": [
+          {
+            "title": "",
+            "text": "The mobeds who brought the fire from Khwarazm still live on Kavarvand, kept alive across the centuries by the Gifts of Gayomart.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "adur_gushnasp",
@@ -8743,7 +9228,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "adur_burzen_mihr",
@@ -8776,7 +9262,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "naw_bahar",
@@ -8817,7 +9304,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "lake_zarah_and_mount_khajeh",
@@ -8841,7 +9329,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_cypresses_of_kishmar",
@@ -8865,7 +9354,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_pirs_of_yazd",
@@ -8889,7 +9379,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "sirishk",
@@ -8913,7 +9404,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_mazdeans",
@@ -8942,77 +9434,85 @@
             "kind": "places",
             "target_id": "adur_farnbag",
             "note": "The Royal Fire of the priests",
-            "id": "8b9da0d3aeec"
+            "id": "a424e3f9b014"
           },
           {
             "kind": "places",
             "target_id": "adur_gushnasp",
             "note": "The Royal Fire of the warriors",
-            "id": "daf1c07b1956"
+            "id": "176728660480"
           },
           {
             "kind": "places",
             "target_id": "adur_burzen_mihr",
             "note": "The Royal Fire of the farmers and craftsmen",
-            "id": "61daaca9f33a"
+            "id": "7e8d8a9f88f9"
           },
           {
             "kind": "places",
             "target_id": "naw_bahar",
             "note": "Its great temple, and a hidden community",
-            "id": "8d509767a9c1"
+            "id": "7bd2998420d6"
           },
           {
             "kind": "places",
             "target_id": "lake_zarah_and_mount_khajeh",
             "note": "Zoroaster's lake",
-            "id": "98f78fbc5a9b"
+            "id": "b6ae4da07146"
           },
           {
             "kind": "places",
             "target_id": "the_cypresses_of_kishmar",
             "note": "Zoroaster's cypress and its seedlings",
-            "id": "82a5dbc8db28"
+            "id": "17a63451ef38"
           },
           {
             "kind": "places",
             "target_id": "the_pirs_of_yazd",
             "note": "Its pilgrim shrines",
-            "id": "6cb1111b9fa2"
+            "id": "0c8029cd231a"
           },
           {
             "kind": "places",
             "target_id": "sirishk",
             "note": "A temple with a mobed still in it",
-            "id": "c48e5db99102"
+            "id": "002637971e93"
           },
           {
             "kind": "creatures",
             "target_id": "azi_dahak_duke_of_the_spirits_of_deceit",
             "note": "The serpent-demon a temple's flame repels",
-            "id": "dad02488a1b4"
+            "id": "49bf70b5c960"
           },
           {
             "kind": "places",
             "target_id": "the_yatus",
             "note": "Old enemies: the mobeds' purges broke them",
-            "id": "a14ebb618a02"
+            "id": "8a0a94bbce4b"
           },
           {
             "kind": "places",
             "target_id": "the_order_of_suleiman",
             "note": "Strained: a few mobeds became sahirs",
-            "id": "f6d8e7b46b0e"
+            "id": "6075e7db56d1"
           },
           {
             "kind": "places",
             "target_id": "the_nizaris",
             "note": "Rivals for Daylam's rulers",
-            "id": "201e3d1a7954"
+            "id": "5641cf71ce0a"
           }
         ],
         "arms": {},
-        "secrets": "The mobeds who carried Adur Farnbag from Khwarazm to Mount Kavarvand are still alive there, through the Gifts of Gayomart, and a living Mazdean community shelters in the higher levels of Naw Bahar's regio. The most devout mobeds still know the rite of Saoshyant's Elixir, the faith's road to a life without end."
+        "secrets": [
+          {
+            "title": "",
+            "text": "The mobeds who carried Adur Farnbag from Khwarazm to Mount Kavarvand are still alive there, through the Gifts of Gayomart, and a living Mazdean community shelters in the higher levels of Naw Bahar's regio. The most devout mobeds still know the rite of Saoshyant's Elixir, the faith's road to a life without end.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "ashab_al_najm_the_followers_of_the_star",
@@ -9041,17 +9541,18 @@
             "kind": "places",
             "target_id": "the_house_of_the_heavens",
             "note": "Its old seat",
-            "id": "ffa81ed0ae5f"
+            "id": "afdc9ad7b268"
           },
           {
             "kind": "characters",
             "target_id": "meriq_al_asala_al_qalani_al_safar_al_najm",
             "note": "Asala",
-            "id": "fbdea3b3b1ab"
+            "id": "1ee80d1a6fbd"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "ashab_al_yad_the_followers_of_the_hand",
@@ -9080,11 +9581,12 @@
             "kind": "characters",
             "target_id": "nil_al_wazir_al_salih_al_yad",
             "note": "His family",
-            "id": "a6c325368cac"
+            "id": "8db890be3b9a"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "ashab_al_qalb_the_followers_of_the_heart",
@@ -9113,17 +9615,18 @@
             "kind": "characters",
             "target_id": "kha_trazh_al_wazir_al_dall_ariq_al_qalb",
             "note": "His family",
-            "id": "6761228b3705"
+            "id": "2589fa83d3e5"
           },
           {
             "kind": "characters",
             "target_id": "niya_al_waziriyya_al_jabr_satefa_al_inshai_al_qasri_al_qalb",
             "note": "Likely next Asala",
-            "id": "df3ee6a2f25e"
+            "id": "f75b27275856"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "ashab_al_halqa_the_followers_of_the_circle",
@@ -9149,7 +9652,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_hall_of_the_majlis",
@@ -9173,7 +9677,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_grand_vizier_s_island_fortress",
@@ -9197,7 +9702,15 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "A pit at its centre is the Order's prison. The grand vizier is said to hold an Arcane Connection to it, and a Travel ritual of level 45, the Oubliette al-Wazir, opens a way straight there without crossing the Twilight Void, so a traitor can be sent into exile with no one the wiser."
+        "secrets": [
+          {
+            "title": "",
+            "text": "A pit at its centre is the Order's prison. The grand vizier is said to hold an Arcane Connection to it, and a Travel ritual of level 45, the Oubliette al-Wazir, opens a way straight there without crossing the Twilight Void, so a traitor can be sent into exile with no one the wiser.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "the_house_of_the_heavens",
@@ -9221,7 +9734,15 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "The book leaves why they went, and whether Meriq is right, to the storyguide."
+        "secrets": [
+          {
+            "title": "",
+            "text": "The book leaves why they went, and whether Meriq is right, to the storyguide.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "the_observatory_of_savah",
@@ -9245,7 +9766,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_halls_of_the_house_of_healing",
@@ -9278,7 +9800,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_majlis_of_1220_and_the_succession",
@@ -9335,65 +9858,66 @@
             "kind": "characters",
             "target_id": "kha_trazh_al_wazir_al_dall_ariq_al_qalb",
             "note": "The ageing grand vizier",
-            "id": "b163aa0e598b"
+            "id": "797694db538d"
           },
           {
             "kind": "characters",
             "target_id": "niya_al_waziriyya_al_jabr_satefa_al_inshai_al_qasri_al_qalb",
             "note": "Would act for him; unlikely to keep it",
-            "id": "9832f41b45dc"
+            "id": "ad723c51f151"
           },
           {
             "kind": "characters",
             "target_id": "arkhaman_laqy_al_hayz_al_nahr",
             "note": "A new vizier this summer",
-            "id": "0d3e1f0c6e0c"
+            "id": "00a15a369603"
           },
           {
             "kind": "characters",
             "target_id": "nil_al_wazir_al_salih_al_yad",
             "note": "Accused again",
-            "id": "dbb5fb462c59"
+            "id": "d57d2d3c72ce"
           },
           {
             "kind": "characters",
             "target_id": "meriq_al_asala_al_qalani_al_safar_al_najm",
             "note": "An Asala; votes",
-            "id": "d002feea0dfe"
+            "id": "2e2b3dedcee4"
           },
           {
             "kind": "covenants",
             "target_id": "dar_al_hikma",
             "note": "Its vizier acts by custom",
-            "id": "811f34f80269"
+            "id": "7cdc4729f3ab"
           },
           {
             "kind": "places",
             "target_id": "the_order_of_suleiman",
             "note": "Whose grand vizier it is",
-            "id": "2cce0b4513d0"
+            "id": "35ee1441684c"
           },
           {
             "kind": "places",
             "target_id": "ashab_al_qalb_the_followers_of_the_heart",
             "note": "The family of most grand viziers",
-            "id": "90b3e5283d1a"
+            "id": "c274cc27ad64"
           },
           {
             "kind": "places",
             "target_id": "ashab_al_sakhr_the_followers_of_the_stone",
             "note": "Picks its Asala by a test of arms",
-            "id": "fb9dbf70c271"
+            "id": "0adcc58aa901"
           },
           {
             "kind": "places",
             "target_id": "the_hall_of_the_majlis",
             "note": "Where it meets",
-            "id": "69fbfea50e04"
+            "id": "a6235abf61bd"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_solomonic_counter_crusade",
@@ -9450,35 +9974,36 @@
             "kind": "places",
             "target_id": "the_order_of_suleiman",
             "note": "Plans it",
-            "id": "87eac219e428"
+            "id": "79b7518f5666"
           },
           {
             "kind": "places",
             "target_id": "ashab_al_sakhr_the_followers_of_the_stone",
             "note": "Drives it",
-            "id": "13363b0e0deb"
+            "id": "3f82e9161576"
           },
           {
             "kind": "places",
             "target_id": "the_fifth_crusade",
             "note": "What it answers",
-            "id": "62ed9ee0051b"
+            "id": "0567e3f3b2c0"
           },
           {
             "kind": "places",
             "target_id": "the_grand_vizier_s_island_fortress",
             "note": "Where war is talked",
-            "id": "0dcbab1eb06c"
+            "id": "7c10eba395dc"
           },
           {
             "kind": "characters",
             "target_id": "kha_trazh_al_wazir_al_dall_ariq_al_qalb",
             "note": "Holds it back",
-            "id": "29545f04a0c1"
+            "id": "2c3752b91afe"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "jalal_al_din_hasan_s_alliances_and_the_feud",
@@ -9535,65 +10060,66 @@
             "kind": "places",
             "target_id": "the_nizaris",
             "note": "The sect",
-            "id": "613884b7b68a"
+            "id": "aa3b7dc456e2"
           },
           {
             "kind": "places",
             "target_id": "lord_of_alamut",
             "note": "Its master",
-            "id": "414ff308f409"
+            "id": "aa30a3a003df"
           },
           {
             "kind": "places",
             "target_id": "the_order_of_suleiman",
             "note": "Its old enemy",
-            "id": "bd7770a352e8"
+            "id": "34316d3bf4d9"
           },
           {
             "kind": "places",
             "target_id": "emir_of_gilan",
             "note": "His father-in-law",
-            "id": "3de238149d45"
+            "id": "e1e78af7b93b"
           },
           {
             "kind": "places",
             "target_id": "atabeg_of_azarbayjan",
             "note": "An ally",
-            "id": "203a94219c0a"
+            "id": "bd44edb54545"
           },
           {
             "kind": "places",
             "target_id": "the_khwarazm_shah",
             "note": "The enemy he courts against",
-            "id": "c56c528776e2"
+            "id": "537c932d98f2"
           },
           {
             "kind": "places",
             "target_id": "caliph_of_baghdad",
             "note": "A friend he seeks",
-            "id": "7a7ba5543c4f"
+            "id": "f1d1589bc552"
           },
           {
             "kind": "places",
             "target_id": "great_khan_of_the_mongols",
             "note": "A friend he seeks",
-            "id": "e7c4781ae197"
+            "id": "892dad09d037"
           },
           {
             "kind": "places",
             "target_id": "alamut",
             "note": "His seat",
-            "id": "6e69609b007b"
+            "id": "126cde186edf"
           },
           {
             "kind": "characters",
             "target_id": "nil_al_wazir_al_salih_al_yad",
             "note": "Suspected of ties",
-            "id": "f422cb3d339f"
+            "id": "f2ea9aeef749"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_succession_at_mecca",
@@ -9650,29 +10176,30 @@
             "kind": "places",
             "target_id": "grand_sharif_of_mecca",
             "note": "The Grand Sharif",
-            "id": "32d1e56ce7c9"
+            "id": "2610116183e4"
           },
           {
             "kind": "places",
             "target_id": "ayyubid_sultan_of_yemen",
             "note": "Steps in",
-            "id": "3228259f5ac4"
+            "id": "62a541161fed"
           },
           {
             "kind": "places",
             "target_id": "mecca",
             "note": "The city",
-            "id": "5a9a3dbe5391"
+            "id": "dc57f1582662"
           },
           {
             "kind": "places",
             "target_id": "the_haram_mosque",
             "note": "The Haram",
-            "id": "8f270e9d2b89"
+            "id": "9a0d980a5877"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "azi_dahak_seeks_a_host",
@@ -9729,41 +10256,49 @@
             "kind": "creatures",
             "target_id": "azi_dahak_duke_of_the_spirits_of_deceit",
             "note": "The demon",
-            "id": "950c60d5fd2d"
+            "id": "8d6342b4a1da"
           },
           {
             "kind": "places",
             "target_id": "the_shansabani",
             "note": "Zahhak's line; an heir at court",
-            "id": "1c32c610803b"
+            "id": "cef10f257519"
           },
           {
             "kind": "places",
             "target_id": "great_khan_of_the_mongols",
             "note": "A Zahhak?",
-            "id": "609e89535a55"
+            "id": "b476cf7517ff"
           },
           {
             "kind": "places",
             "target_id": "the_mazdeans",
             "note": "Their fire harms him",
-            "id": "75d611c25143"
+            "id": "3c1ecb206ff6"
           },
           {
             "kind": "places",
             "target_id": "mount_damavand",
             "note": "The first Zahhak",
-            "id": "ccc743d4e9f3"
+            "id": "55d5932d5315"
           },
           {
             "kind": "places",
             "target_id": "the_yatus",
             "note": "Guard a rite against Persia's foes",
-            "id": "c7a5afbe18e2"
+            "id": "d3f39f375628"
           }
         ],
         "arms": {},
-        "secrets": "The book leaves it to the troupe whether the demon is behind the Mongols. If he is, ridding the horde of him can be a whole saga; if not, he waits for another ruler's ambition."
+        "secrets": [
+          {
+            "title": "",
+            "text": "The book leaves it to the troupe whether the demon is behind the Mongols. If he is, ridding the horde of him can be a whole saga; if not, he waits for another ruler's ambition.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "the_demons_of_ghur_and_kabul",
@@ -9820,29 +10355,30 @@
             "kind": "places",
             "target_id": "ghur",
             "note": "Its haunted towns",
-            "id": "8413aff085d6"
+            "id": "c8026ec612ef"
           },
           {
             "kind": "places",
             "target_id": "kabul",
             "note": "The Shadowed One's city",
-            "id": "b80afbb9c84c"
+            "id": "1ad7a73f4c67"
           },
           {
             "kind": "places",
             "target_id": "ghazni",
             "note": "Its False God",
-            "id": "2a62d2e0c65d"
+            "id": "9485f631250a"
           },
           {
             "kind": "places",
             "target_id": "the_shansabani",
             "note": "Left the demons behind",
-            "id": "6500a08d5484"
+            "id": "0126ea4eedd8"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "saving_merv_s_books",
@@ -9899,29 +10435,30 @@
             "kind": "covenants",
             "target_id": "the_house_of_wisdom_of_merv",
             "note": "Copies the books",
-            "id": "9b129afa675a"
+            "id": "6d32d62d80a9"
           },
           {
             "kind": "places",
             "target_id": "merv",
             "note": "Its libraries",
-            "id": "9ed14587d12b"
+            "id": "a477d569258e"
           },
           {
             "kind": "places",
             "target_id": "the_mongol_conquest",
             "note": "What is coming",
-            "id": "e45bb006c1a7"
+            "id": "d29bf49f4989"
           },
           {
             "kind": "places",
             "target_id": "the_nizaris",
             "note": "Want a tome of their theology",
-            "id": "be5c88cb8fe8"
+            "id": "fb54ec6391ef"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_apparition_at_durenmar",
@@ -9968,23 +10505,31 @@
             "kind": "places",
             "target_id": "the_mongol_conquest",
             "note": "The ruin in the east",
-            "id": "a6c9bd0f790f"
+            "id": "137519caa37d"
           },
           {
             "kind": "creatures",
             "target_id": "lesser_steppe_spirit",
             "note": "The steppe's spirits",
-            "id": "aebee79a0174"
+            "id": "cbc90246aaf7"
           },
           {
             "kind": "creatures",
             "target_id": "mongol_spirit_shaman",
             "note": "A walker in spirit?",
-            "id": "753af7e961cb"
+            "id": "301c2f5beb9b"
           }
         ],
         "arms": {},
-        "secrets": "Whether it is the Aquila himself or a shaman of his line travelling by phantasticum, the book does not say. If his lineage survived on the steppe, two centuries apart from the Order, its magic may no longer look Hermetic, its loyalty may lie with the nomads, and it may have given Parma Magica to the horde's hedge wizards."
+        "secrets": [
+          {
+            "title": "",
+            "text": "Whether it is the Aquila himself or a shaman of his line travelling by phantasticum, the book does not say. If his lineage survived on the steppe, two centuries apart from the Order, its magic may no longer look Hermetic, its loyalty may lie with the nomads, and it may have given Parma Magica to the horde's hedge wizards.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "itineris_serica",
@@ -10042,23 +10587,24 @@
             "kind": "characters",
             "target_id": "cartophilius",
             "note": "Proposes it",
-            "id": "dee46696d0cf"
+            "id": "f20bad67ad05"
           },
           {
             "kind": "places",
             "target_id": "the_wakhan",
             "note": "The road east",
-            "id": "32e06280f2cf"
+            "id": "1ac60eb5357f"
           },
           {
             "kind": "places",
             "target_id": "the_mongol_conquest",
             "note": "In its path",
-            "id": "30c218a601f2"
+            "id": "d0574da71250"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_followers_of_the_circle_return",
@@ -10116,23 +10662,24 @@
             "kind": "places",
             "target_id": "ashab_al_halqa_the_followers_of_the_circle",
             "note": "The Followers of the Circle",
-            "id": "db42b23a9ae3"
+            "id": "113f3c7c660b"
           },
           {
             "kind": "places",
             "target_id": "the_order_of_suleiman",
             "note": "Asked to help",
-            "id": "bfee458cb62f"
+            "id": "63bde6e7cecf"
           },
           {
             "kind": "places",
             "target_id": "the_hall_of_the_majlis",
             "note": "Where the plea is heard",
-            "id": "97eba2fd882a"
+            "id": "4c23c5761815"
           }
         ],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_harbour_of_hajar",
@@ -10157,7 +10704,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_harbour_of_muscat",
@@ -10182,7 +10730,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_harbour_of_kish",
@@ -10207,7 +10756,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_harbour_of_hindijan",
@@ -10232,7 +10782,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_harbour_of_tiz",
@@ -10257,7 +10808,8 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": [],
+        "known": true
       }
     ],
     "characters": [
@@ -10448,7 +11000,8 @@
         "portrait": "",
         "detail": "Sketch",
         "summary": "Vizier of the Dar al-Hikma, a Gifted sahira of the Heart. She has found a way of joining her Solomonic arts that gives her two spells of her own: one calls a spirit straight out of the Magic Realm, the other many spirits at once. For that the house chose her to lead it, young as she is and Gifted though she is, and she is likely to be the next Asala al-Qalb when the present one dies.\n\nShe holds that the Order has stagnated and that its Gifted members are its best hope of surviving, a view few share: under a tenth of the sahirs are Gifted, and those are not much liked. If Kha'trazh dies between meetings she would act for him by custom, and is unlikely to keep the post at the vote.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -10649,7 +11202,8 @@
         "portrait": "",
         "detail": "Sketch",
         "summary": "The Asala al-Najm, head of the Followers of the Star, a wizened old man of Savah best known for a hat that seems to be on inside out; his head, he jokes, sits on his hat. When the last Asala vanished from Nasibin in 1186 Meriq put himself forward, and the astrologer-viziers, having asked the stars, accepted him. Many now think he takes the charge too lightly, but no one asks him to go.\n\nHe is unGifted, a fine communicator, and the author of many good books on Artes Liberales, Solomonic Astrology and more. He maintains that the House of the Heavens at Nasibin is still the family's home.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -10858,13 +11412,21 @@
         "portrait": "",
         "detail": "Sketch",
         "summary": "Vizier of the House of Healing at Gundeshapur, a Follower of the Hand born to a Christian family, who took Islam after he joined the Order. He is a great historian of the Middle East and knows Europe's past as well. He is no great healer, to his family's disappointment, and prefers Solomonic Storytelling; his singing voice is said to enchant. The accusations made against him at the Majlis do not seem to trouble him.",
-        "secrets": "Many believe he is far too close to the Nizaris, some of whom have called on him at the House of Healing; how close, the book does not say.",
+        "secrets": [
+          {
+            "title": "",
+            "text": "Many believe he is far too close to the Nizaris, some of whom have called on him at the House of Healing; how close, the book does not say.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true,
         "links": [
           {
             "kind": "places",
             "target_id": "the_nizaris",
             "note": "Suspected ties",
-            "id": "78e83300c3af"
+            "id": "b18c3e6e9c83"
           }
         ],
         "attitudes": [],
@@ -11472,13 +12034,21 @@
         "portrait": "",
         "detail": "Full",
         "summary": "A young sahir of the River, vizier of the house at Sana'a. His mother, niece of the imam, bore him in secret at the house to keep him from her uncle, and said his father was a black-eyed jinni of flame. Raised by the sahirs, he wanted only to serve them, and as he grew to look like his mother's family they brought him into the Order. The first spirit he summoned was Kharrat, the Infernal jinni he believes to be that father, whom he has kept in hand with vis so far.\n\nHis Gift came late, and its power has made him wild: one spell leads him to cast another, and his taint unsettles those without The Gift. His masters fear he will go mad without Gifted company, so they have made him vizier and are sending him to Baghdad this summer. He is pale, with black hair, thin brows and a curled moustache, an innocent twinkle and a confident smile, a hooded robe that has hardly travelled, and usually a seat.",
-        "secrets": "Kharrat is sure that the boy's longing for a father's approval will carry him into evil, and means to bind him to a duty to go and find his mother, whose shame the spirit would relish.",
+        "secrets": [
+          {
+            "title": "",
+            "text": "Kharrat is sure that the boy's longing for a father's approval will carry him into evil, and means to bind him to a duty to go and find his mother, whose shame the spirit would relish.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true,
         "links": [
           {
             "kind": "creatures",
             "target_id": "kharrat_the_braggart",
             "note": "His bound jinni",
-            "id": "cd0f5338b2ae"
+            "id": "e0a03354ee16"
           }
         ],
         "attitudes": [],
@@ -11688,7 +12258,8 @@
         "portrait": "",
         "detail": "Sketch",
         "summary": "Grand vizier of the Order of Suleiman for nearly thirty years, a Follower of the Heart from Basra. He is calm and quiet and weighs every word; no one thinks him especially clever or strong, and he lacks The Gift. He took the laqab al-Wazir al-Dall, 'the dignified vizier', as a promise not to abuse his place. The viziers keep electing him because he heeds them, hears out anyone who wants to speak, and stays on fair terms with all five Asalat. Close to a hundred years old, he looks barely fifty, and many expect him to die soon.\n\nHe avoids open conflict with the Order of Hermes for now. At the Majlis he holds formal council the first evening, into the night and all the next day, keeping the hardest matters for the second evening after dinner, and does not mind who dozes.\n\nStory seeds:\nA Test of Arms: the Followers of the Stone choose their Asala by combat, and a vengeful sahir who hates Kha'trazh may challenge his own family's head to win the seat and a vote against him.\nThe Vizier's Opposition: Kha'trazh expels a well-loved sahir accused of betraying the Suhhar, and the leader of his opponents promises to bring the exile back in exchange for votes.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -11878,7 +12449,8 @@
         "portrait": "",
         "detail": "Sketch",
         "summary": "A magus of Mercere thought odd even by his own House's lights, son of Geographicus, who helped found an earlier covenant that travelled. At the last Normandy Tribunal he proposed another: a band of magi passing as a merchant caravan, going east to fabled Serica to find where silk truly comes from, and asking to be funded as a covenant devoted to research. He belongs to no covenant yet.",
-        "secrets": "",
+        "secrets": [],
+        "known": true,
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -12187,7 +12759,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "kharrat_the_braggart",
@@ -12289,7 +12862,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 2,
-            "id": "24252598506b"
+            "id": "ce60ee93cd9c"
           }
         ],
         "soak": 10,
@@ -12376,7 +12949,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes an illusory shape that only his chosen victim, 'Arkhaman, can see; to him it seems a living person in every way.",
-            "id": "bf7d4d46d886"
+            "id": "02d8af20a8b2"
           },
           {
             "name": "Protection of the Close Friend",
@@ -12390,7 +12963,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "His chosen victim cannot move against him unless sorely provoked, as a son could not strike his mother. The victim may rage at him freely, but each fresh attempt to oppose him in deed takes a great effort of will.",
-            "id": "e90f0c19be09"
+            "id": "a7b34eca9c8c"
           },
           {
             "name": "Control Human",
@@ -12404,7 +12977,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "If it penetrates, he commands his companion, who obeys as well as he can; the victim may try to throw off the control each time he is told to act against his faith. Its Initiative is his Quickness.",
-            "id": "9f4994558087"
+            "id": "09277f2e45a6"
           },
           {
             "name": "Envisioning",
@@ -12418,7 +12991,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enters his companion's dreams for 1 point, slowly darkening them and speaking through any figure in them; or, for 5 points, forces a waking vision of whatever he likes. A vision can stun for a round, and the victim needs a Brave roll of 9+ to avoid retching, fits or terror. The text gives the cost once as 1 or 2; the pack follows the power's own account and the qareen's (1 or 5).",
-            "id": "cd20bda3f814"
+            "id": "14a650061e4b"
           },
           {
             "name": "Coagulation",
@@ -12432,7 +13005,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Forms a body, as Realms of Power: The Infernal p. 31 describes.",
-            "id": "a9c42e9d709f"
+            "id": "335c81b9f859"
           },
           {
             "name": "Obsession",
@@ -12446,7 +13019,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Stirs the trait Overconfident in a victim, for 1 to 3 points, as Realms of Power: The Infernal p. 31 describes.",
-            "id": "93143c298ac0"
+            "id": "747856f9e379"
           }
         ],
         "vis": [
@@ -12454,7 +13027,7 @@
             "pawns": 2,
             "art": "Ignem",
             "where": "in his eyes",
-            "id": "b84233af0a4c"
+            "id": "4f06b635940f"
           }
         ],
         "equipment": "",
@@ -12467,7 +13040,15 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": "His aim is to bind 'Arkhaman by an accepted duty and send him to find his mother, the imam's niece who hid his birth: the shame his coming would bring her is what the demon relishes."
+        "secrets": [
+          {
+            "title": "",
+            "text": "His aim is to bind 'Arkhaman by an accepted duty and send him to find his mother, the imam's niece who hid his birth: the shame his coming would bring her is what the demon relishes.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "the_buran_of_yenghissar",
@@ -12663,7 +13244,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Shows a lost traveller his missing friends or a welcoming oasis before it falls on him, or shows itself as a sandstorm in a man's shape with burning eyes to terrify. An image of one thing costs 1 point, one filling a room 5. Every such image has some flaw: a wrong smell, or only one person sees it.",
-            "id": "4bd697ab8420"
+            "id": "682c925a0133"
           },
           {
             "name": "Elemental Control of Wind",
@@ -12677,7 +13258,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Any Creo, Muto or Rego Auram effect, at 1 Might point a magnitude (so its cost varies), up to a level no higher than its Might and never a Ritual.",
-            "id": "f0ea9d3dfb49"
+            "id": "fcb1a196a309"
           },
           {
             "name": "Recalcitrance",
@@ -12691,7 +13272,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always active. Any supernatural attempt to control it, though not to destroy it, treats its Might as half again as high, or raises the Ease Factor by half: a Circular Ward Against Demons must be of level 38 to hold it back.",
-            "id": "4ff5d1f1a5a6"
+            "id": "661f42779ef9"
           }
         ],
         "vis": [
@@ -12699,7 +13280,7 @@
             "pawns": 5,
             "art": "Auram",
             "where": "vis prava, left as black sand when it is dispersed",
-            "id": "9a718d57d684"
+            "id": "0b5063704153"
           }
         ],
         "equipment": "",
@@ -12712,7 +13293,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "ghul_infernal",
@@ -12831,7 +13413,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Gives someone, most often itself or its beasts, the Berserk Virtue until they calm down.",
-            "id": "bf25ed7008ed"
+            "id": "e110d3fb2813"
           },
           {
             "name": "Change Form",
@@ -12845,7 +13427,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Reshapes its own flesh at will into a human or animal form (Corpus or Animal), most ghuls into one kind only, within the natural Size of that kind. It is no spell, so Magic Resistance does nothing against a changed ghul's blows.",
-            "id": "4e00398d8313"
+            "id": "a513634a666a"
           },
           {
             "name": "Endurance of the Enraged",
@@ -12859,7 +13441,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Wound penalties do not touch it, except on Defense.",
-            "id": "ea66f93a6991"
+            "id": "f5ae2147a102"
           },
           {
             "name": "Restoration",
@@ -12873,7 +13455,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "The next blow that strikes it heals, instead, the wound it took the last time it was hurt; one blow each use.",
-            "id": "ac1c39f884aa"
+            "id": "92b8d86e7518"
           }
         ],
         "vis": [],
@@ -12887,7 +13469,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "qareen",
@@ -12970,7 +13553,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes an illusory shape only its companion sees, who takes it for a real person.",
-            "id": "2fa110df16cd"
+            "id": "11d0b5d115a8"
           },
           {
             "name": "Control Human",
@@ -12984,7 +13567,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "If it penetrates, the qareen commands its companion, who may fight free each time an order goes against his faith.",
-            "id": "a99677395afd"
+            "id": "214ebccfe739"
           },
           {
             "name": "Envisioning",
@@ -12998,7 +13581,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Haunts its companion's dreams for 1 point, twisting them darker little by little and speaking through any figure in them; or, for 5 points, forces a waking vision that can stun him for a round, after which a Brave roll of 9+ is needed to keep from retching, fits or terror. Its favourite way of speaking to him.",
-            "id": "f42f69be9f07"
+            "id": "2c226b915adb"
           },
           {
             "name": "Protection of the Appointed Companion",
@@ -13012,7 +13595,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its companion can no more move against it than against his own mother: he may be furious with it, but to oppose it in deed takes great will and a Confidence point, each time.",
-            "id": "cbfae85359d0"
+            "id": "868c746cf70a"
           }
         ],
         "vis": [],
@@ -13026,7 +13609,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "azi_dahak_duke_of_the_spirits_of_deceit",
@@ -13155,7 +13739,7 @@
             "attack": 15,
             "defense": 10,
             "damage": 20,
-            "id": "352a8e6ad93e"
+            "id": "707cea2c5706"
           }
         ],
         "soak": 15,
@@ -13277,7 +13861,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Forms a body, and lets it go when he likes.",
-            "id": "aef20a484c01"
+            "id": "d2ccca1fde42"
           },
           {
             "name": "Obsession",
@@ -13291,7 +13875,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Stirs the trait Power Hungry, for 1 to 3 points (Realms of Power: The Infernal p. 31).",
-            "id": "111be92f176f"
+            "id": "ce0fbdd47567"
           },
           {
             "name": "Envisioning",
@@ -13305,7 +13889,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Appears in someone's dreams.",
-            "id": "b94652cb5566"
+            "id": "db0c5440660f"
           },
           {
             "name": "Possession",
@@ -13319,7 +13903,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Costs what he puts into it, and he usually puts in his whole Might Pool, ruling his victim's acts. He regains no Might while he possesses, so he must leave now and then; meanwhile the victim dreams of his own death and damnation and may try to bar the demon's return (Realms of Power: The Infernal p. 32).",
-            "id": "c7c7f5a70e26"
+            "id": "a4f74b539deb"
           },
           {
             "name": "Trust of the Innocent",
@@ -13333,7 +13917,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "The target believes one plausible lie until shown otherwise; Intelligence against 6 resists.",
-            "id": "d873849fc88d"
+            "id": "19a0fa180128"
           },
           {
             "name": "Forked Tongue of the Serpent",
@@ -13347,7 +13931,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "The target believes any lie, however absurd, until he repeats it to someone and hears how foolish it is. An Intelligence roll of 9+ also sees through it, the first an hour after and then once an hour.",
-            "id": "631b9ac052b3"
+            "id": "1712f037e403"
           },
           {
             "name": "The Serpent's Oracle",
@@ -13361,7 +13945,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Works any Intellego effect, or foresees the nearest consequences of one chosen act.",
-            "id": "f9c012d23e79"
+            "id": "0564a07b0a05"
           },
           {
             "name": "Empower the Possessed",
@@ -13375,7 +13959,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A victim he possesses who wilfully uses a Goetic Art adds Azi Dahak's own score in it, and may use the demon's Hierarchy in place of his own.",
-            "id": "5aac87e3b00e"
+            "id": "4f41838b0954"
           }
         ],
         "vis": [
@@ -13383,7 +13967,7 @@
             "pawns": 8,
             "art": "Mentem",
             "where": "vis prava, in his eyes",
-            "id": "b667380e75ad"
+            "id": "28c69d0e7305"
           }
         ],
         "equipment": "",
@@ -13396,7 +13980,15 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": "Some Persian sahirs suspect that Genghis Khan is a Zahhak, or takes counsel from one, since he turns on Persia the way Azi Dahak's hosts do; whether it is so is the storyguide's choice. The first Zahhak was never slain: an angel helped Feridun chain him beneath Mount Damavand, where he lives yet, freed of the demon and kept from death by holy bonds."
+        "secrets": [
+          {
+            "title": "",
+            "text": "Some Persian sahirs suspect that Genghis Khan is a Zahhak, or takes counsel from one, since he turns on Persia the way Azi Dahak's hosts do; whether it is so is the storyguide's choice. The first Zahhak was never slain: an angel helped Feridun chain him beneath Mount Damavand, where he lives yet, freed of the demon and kept from death by holy bonds.",
+            "revealed_year": null,
+            "revealed_season": ""
+          }
+        ],
+        "known": true
       },
       {
         "id": "jumayl_a_jinni_guide",
@@ -13671,7 +14263,7 @@
             "attack": 14,
             "defense": 9,
             "damage": 8,
-            "id": "1c35a980b980"
+            "id": "378fce17e4c9"
           }
         ],
         "soak": 3,
@@ -13835,7 +14427,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As Circling Winds of Protection, lasting for as long as he goes on reciting verses of the Qur'an (the Duration of Recitation, much like Concentration).",
-            "id": "4a1d0573152e"
+            "id": "fd4aea42cfe7"
           },
           {
             "name": "Blinding Light of the Pious",
@@ -13849,7 +14441,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As Flash of the Scarlet Flames.",
-            "id": "6fba0ca253f4"
+            "id": "0f910593d421"
           },
           {
             "name": "Tay al-Ard (Travel)",
@@ -13863,7 +14455,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes him, and two people whose hands he holds, at once to any place he has visited or holds an Arcane Connection to, however far. As the Leap of Homecoming at Touch and Group; one Intricacy point lowers its cost.",
-            "id": "4bad551bc825"
+            "id": "e084f74069b9"
           }
         ],
         "vis": [
@@ -13871,7 +14463,7 @@
             "pawns": 3,
             "art": "Vim",
             "where": "in a camel's tooth",
-            "id": "63f821b421eb"
+            "id": "afc0448391d1"
           }
         ],
         "equipment": "A fine Damascus steel long sword, a caravan guard's leather scale armour, showy jewellery.",
@@ -13884,7 +14476,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "bali_al_ard_the_swallower_of_the_ground",
@@ -14159,7 +14752,7 @@
             "attack": 3,
             "defense": 4,
             "damage": 5,
-            "id": "eafed249b427"
+            "id": "430074d4a9df"
           }
         ],
         "soak": 3,
@@ -14225,7 +14818,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Carries him at once to any place within seven leagues that he can see or holds an Arcane Connection to. As Seven League Stride, but not being Hermetic it takes his rider too. Four Intricacy points speed it and cheapen it.",
-            "id": "2bd5e1ea52dd"
+            "id": "370eea2cf986"
           },
           {
             "name": "Immateriality",
@@ -14239,7 +14832,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Makes him immaterial until the next sunrise or nightfall.",
-            "id": "c965f3143011"
+            "id": "67055c549665"
           }
         ],
         "vis": [
@@ -14247,7 +14840,7 @@
             "pawns": 1,
             "art": "Animal",
             "where": "in a copper horseshoe",
-            "id": "302b739690e2"
+            "id": "86321c883e36"
           }
         ],
         "equipment": "Tack and harness of rare quality, horseshoes of coppery gold.",
@@ -14260,7 +14853,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "abd_al_qininna_servant_of_the_bottle",
@@ -14554,7 +15148,7 @@
             "penetration_bonus": 15,
             "quality": "",
             "description": "A Ritual Power. Whoever frees the seemingly captive 'afrit may bargain for three wishes, or for a span of conditional service as its nature dictates, if he swears to destroy the bottle and set the jinni free for ever. Five Intricacy points cheapen it.",
-            "id": "66b04ea741a4"
+            "id": "72e26f4f45c5"
           },
           {
             "name": "Eidolon",
@@ -14568,7 +15162,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Taken twice: its glamour shows both as the copper bottle that seems to hold it and as a towering column of smoke in a man's shape rising from the bottle's mouth.",
-            "id": "f5e485248701"
+            "id": "c8f155bbd08f"
           },
           {
             "name": "Illusionary Home",
@@ -14582,7 +15176,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Raises a sumptuous phantom palace for whoever holds the bottle.",
-            "id": "fe7b2360ba83"
+            "id": "ea15113bca28"
           },
           {
             "name": "Flight",
@@ -14596,7 +15190,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always active: as Wings of the Soaring Wind.",
-            "id": "b871dde5f805"
+            "id": "4592b339f563"
           },
           {
             "name": "Loosely Material",
@@ -14610,7 +15204,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "At a cost that varies, gives a would-be master a plain bottle to handle, or gives its 'afrit form enough substance to carry loads, use Touch powers or fight when its master bids.",
-            "id": "6d71ff2a8c50"
+            "id": "22fb5aa6bf73"
           },
           {
             "name": "Tay al-Ard (Travel)",
@@ -14624,7 +15218,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Bears the 'afrit and whatever it carries at once to any place the bottle's holder has visited or holds an Arcane Connection to, at any distance; as the Leap of Homecoming. One Intricacy point cheapens it.",
-            "id": "eac11651ca6e"
+            "id": "67a34c81c7ac"
           },
           {
             "name": "Serendipitous Wealth",
@@ -14638,7 +15232,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Ritual Power that seems to grant the Wealthy Virtue, but, like the False Gods' Wealth of Nations, fetches the treasure from somewhere else (Realms of Power: The Infernal p. 37). Five Intricacy points cheapen it.",
-            "id": "9caf3474488f"
+            "id": "bb3356169863"
           }
         ],
         "vis": [
@@ -14646,7 +15240,7 @@
             "pawns": 6,
             "art": "Imaginem",
             "where": "gathered in its bottle",
-            "id": "5e8b01734e7d"
+            "id": "0442e9aa5a20"
           }
         ],
         "equipment": "",
@@ -14659,7 +15253,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "ghula_faerie",
@@ -14857,7 +15452,7 @@
             "attack": 11,
             "defense": 10,
             "damage": 5,
-            "id": "84686656d2f5"
+            "id": "523b077be4f2"
           },
           {
             "name": "Fangs",
@@ -14865,7 +15460,7 @@
             "attack": 10,
             "defense": 8,
             "damage": 4,
-            "id": "17b9541de909"
+            "id": "d67d01de4554"
           }
         ],
         "soak": 0,
@@ -14938,7 +15533,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Puts a person she touches to sleep. ReCo (Base 4, +1 Touch, +4 Until); one Intricacy point cheapens it.",
-            "id": "efa271dae8e7"
+            "id": "40bf8f790f90"
           },
           {
             "name": "Illusionary Home",
@@ -14952,7 +15547,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always active: a glamour that makes a place look, sound, smell, feel and even taste like the home her role calls for. MuIm (Base 5, +3 Structure, +2 Sun, +1 Touch, +1 constant); four Intricacy points cheapen it.",
-            "id": "4ca64353b31d"
+            "id": "44f625a35532"
           },
           {
             "name": "Transform Into Human",
@@ -14966,7 +15561,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power that turns her between her human shape and her feeding shape. MuCo(An) (Base 10, +2 Sun, +1 Size); five Intricacy points cheapen it and speed it.",
-            "id": "f336bebe7374"
+            "id": "21dca84f1ad8"
           }
         ],
         "vis": [
@@ -14974,7 +15569,7 @@
             "pawns": 4,
             "art": "Imaginem",
             "where": "in rats' skulls",
-            "id": "b430227d0178"
+            "id": "78ca02767926"
           }
         ],
         "equipment": "Perfume and a wardrobe.",
@@ -14987,7 +15582,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "baghl_the_earth_jinni",
@@ -15241,7 +15837,7 @@
             "attack": 11,
             "defense": 3,
             "damage": 15,
-            "id": "6d7e68a58cbc"
+            "id": "8de90705b31c"
           }
         ],
         "soak": 10,
@@ -15321,7 +15917,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Turns a person he touches to stone until sunrise or the dawn call to prayer (Base 20, +1 Touch, +2 Sun); three Mastery points cheapen it.",
-            "id": "8324f3851ce9"
+            "id": "5a250147c27a"
           },
           {
             "name": "Ruler of Earth",
@@ -15335,7 +15931,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "His Focus Power: any non-Ritual Perdo or Rego Terram effect up to level 15, at 1 Might point a magnitude (1 to 3).",
-            "id": "5487144c7e54"
+            "id": "8fb884a75536"
           },
           {
             "name": "Incorporeal",
@@ -15349,7 +15945,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always active: by nature unseen and untouchable, beyond the reach of the physical world. Magic can aim at him only if the caster can sense him. In this state he has no physical scores, and uses his physical Characteristics only against other bodiless beings.",
-            "id": "4bc4e94d01c8"
+            "id": "d4d8cb42f7c4"
           },
           {
             "name": "Donning the Corporeal Veil",
@@ -15363,7 +15959,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Makes the body described under Appearance, with its arms and armour, its Size, combat scores and wounds. It never tires and lasts until he lets it go; killing it does not kill him.",
-            "id": "3abc4e127a31"
+            "id": "c03e049891d3"
           },
           {
             "name": "Presence",
@@ -15377,7 +15973,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always active: he knows everything that happens in his haunt. It must penetrate to sense anyone with Magic Resistance.",
-            "id": "894c5681f211"
+            "id": "4a0224fc339d"
           }
         ],
         "vis": [
@@ -15385,7 +15981,7 @@
             "pawns": 3,
             "art": "Terram",
             "where": "in his body, if he is slain in the flesh",
-            "id": "4e9eea82cbbc"
+            "id": "3e7b3b06bcdb"
           }
         ],
         "equipment": "",
@@ -15398,7 +15994,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "zawba_a_whirlwind_of_the_desert",
@@ -15676,7 +16273,7 @@
             "attack": 12,
             "defense": 8,
             "damage": 6,
-            "id": "ff561ac88990"
+            "id": "958fa819c3e8"
           }
         ],
         "soak": 7,
@@ -15805,7 +16402,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes a body (Size +1) so it can strike foes; a Greater Power (Realms of Power: Magic p. 102).",
-            "id": "02e2a2d3df7c"
+            "id": "31df092c72b6"
           },
           {
             "name": "Flay",
@@ -15819,7 +16416,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its touch tears the skin half off a foe, who takes a Heavy Wound. A Greater Power, its Mastery points spent on cost, speed and Penetration.",
-            "id": "6ed347d413a9"
+            "id": "eacf2c69040c"
           },
           {
             "name": "Presence",
@@ -15833,7 +16430,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always active: it knows all that passes in its haunt, which may be as large as a Structure (Realms of Power: Magic p. 103).",
-            "id": "b6e57ace3f3e"
+            "id": "73789ba9ba3e"
           }
         ],
         "vis": [
@@ -15841,13 +16438,13 @@
             "pawns": 3,
             "art": "Terram",
             "where": "in the little whirl of black sand it leaves",
-            "id": "9cd0532d3552"
+            "id": "fa0119391fd9"
           },
           {
             "pawns": 1,
             "art": "Auram",
             "where": "in the little whirl of black sand it leaves",
-            "id": "bb8c9c5695a8"
+            "id": "21f77c7023bc"
           }
         ],
         "equipment": "",
@@ -15860,7 +16457,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "ighraq_al_siq_the_drowning_flood_of_the_gorge",
@@ -16325,7 +16923,7 @@
             "attack": 8,
             "defense": 2,
             "damage": 11,
-            "id": "27cb5bb79973"
+            "id": "a9f289a93c6c"
           },
           {
             "name": "Lance",
@@ -16333,7 +16931,7 @@
             "attack": 8,
             "defense": 2,
             "damage": 16,
-            "id": "4a9b1ad03e68"
+            "id": "84b608a02578"
           }
         ],
         "soak": 6,
@@ -16448,7 +17046,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "His Focus Power: any non-Ritual Creo or Rego Aquam effect up to level 40, at 1 Might point a magnitude (1 to 8). He may use a Range of the waterway (as Sight) and a Target of the body of water (as Structure), reaching anyone on or in his reach of the river, or the whole Zab (Realms of Power: Magic p. 43). Three Mastery points raise its level by 15.",
-            "id": "adf08336df50"
+            "id": "1acd80e0e8e9"
           },
           {
             "name": "Drown",
@@ -16462,7 +17060,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "In floodwave form only: after a melee blow lands he swallows a foe smaller than himself, who must roll against deprivation (ArM5 pp. 180-181) and may struggle free each round by the grappling rules (ArM5 p. 174).",
-            "id": "976f948ec941"
+            "id": "3baaa7ae64bd"
           },
           {
             "name": "Donning the Corporeal Veil",
@@ -16476,7 +17074,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes the body under Appearance, with its arms, armour, combat scores and wounds; it never tires and lasts until he lets it go, and killing it does not kill him. Slow: it needs an extra round to prepare.",
-            "id": "43f8cde9314d"
+            "id": "11fdd322f23e"
           },
           {
             "name": "Grant Water Lore",
@@ -16490,7 +17088,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Gives someone the Minor Mystery Virtue Water Lore, for a while or for good (Houses of Hermes: Mystery Cults pp. 103-104). His canyon is a source of Quality 4; a magus who talks the spiteful jinni into teaching him learns as from a teacher, at Quality 9.",
-            "id": "cad507703e3b"
+            "id": "7b396bba7be1"
           },
           {
             "name": "Grant Wilding",
@@ -16504,7 +17102,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Gives the Major Mystery Virtue Wilding to someone who already has a Water Lore score, for a while or for good (Houses of Hermes: Mystery Cults pp. 105-106).",
-            "id": "03a261e5d878"
+            "id": "f064b7a68650"
           },
           {
             "name": "Presence",
@@ -16518,7 +17116,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always active once he is loose: he knows all that happens in his haunt; it must penetrate to sense anyone with Magic Resistance.",
-            "id": "6e74e6a01dcd"
+            "id": "d4546cb6288d"
           },
           {
             "name": "Transform into Floodwave",
@@ -16532,7 +17130,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Becomes a flood that seems to draw on the river's own water. Slow: it needs an extra round to prepare.",
-            "id": "b32141b996f7"
+            "id": "867955b75918"
           }
         ],
         "vis": [
@@ -16540,7 +17138,7 @@
             "pawns": 8,
             "art": "Aquam",
             "where": "in smooth stones of many hues, if he is slain",
-            "id": "d93d1ec37e28"
+            "id": "ea5b5cfbdf1b"
           }
         ],
         "equipment": "",
@@ -16553,7 +17151,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "nisnas",
@@ -16847,7 +17446,7 @@
             "attack": 2,
             "defense": 8,
             "damage": -3,
-            "id": "d55e5a7a00c7"
+            "id": "c5a89081d3cb"
           }
         ],
         "soak": 6,
@@ -16962,7 +17561,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Huge bounds that carry it swiftly over the ground, like the Gift of the Frog's Legs but with a great leap every round. A Greater Power, cheapened and speeded.",
-            "id": "7d36956dfc64"
+            "id": "ef119a0dd1da"
           }
         ],
         "vis": [
@@ -16970,7 +17569,7 @@
             "pawns": 2,
             "art": "Corpus",
             "where": "in its foot",
-            "id": "da6a16689bfd"
+            "id": "b22e841da5bd"
           }
         ],
         "equipment": "",
@@ -16983,7 +17582,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "giant_of_ad",
@@ -17201,7 +17801,7 @@
             "attack": 3,
             "defense": -2,
             "damage": 15,
-            "id": "c262d63f059a"
+            "id": "cf3a45edc3a9"
           },
           {
             "name": "Stomp (kick)",
@@ -17209,7 +17809,7 @@
             "attack": 4,
             "defense": -1,
             "damage": 16,
-            "id": "fb5976eee316"
+            "id": "192257f254fb"
           }
         ],
         "soak": 3,
@@ -17303,7 +17903,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "His Focus Power: any non-Ritual Creo, Intellego or Muto Terram effect on stone up to level 20, at 1 Might point a magnitude (1 to 4).",
-            "id": "48b6efdb6499"
+            "id": "5233bad370b6"
           }
         ],
         "vis": [
@@ -17311,19 +17911,19 @@
             "pawns": 1,
             "art": "Corpus",
             "where": "in his heart",
-            "id": "485764cf2bce"
+            "id": "d5bcd2c435ec"
           },
           {
             "pawns": 1,
             "art": "Terram",
             "where": "in his left hand",
-            "id": "dcb30ead7489"
+            "id": "30dd7e0ae7d4"
           },
           {
             "pawns": 1,
             "art": "Terram",
             "where": "in his right hand",
-            "id": "9ec6810560ff"
+            "id": "74dd89be34c6"
           }
         ],
         "equipment": "Mason's tools, Bedouin robes the colour of sand.",
@@ -17336,7 +17936,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "aladlammu_and_apsasu",
@@ -17611,7 +18212,7 @@
             "attack": 12,
             "defense": 8,
             "damage": 14,
-            "id": "89e87b3660ec"
+            "id": "0bcfca99c89c"
           }
         ],
         "soak": 8,
@@ -17691,7 +18292,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Meeting a demon's eye, by sight or Second Sight, strips it of 15 Might. PeVi (Base 5, +1 Eye); a Lesser Power, cheapened and speeded.",
-            "id": "b492943e6a05"
+            "id": "c5c17c612b37"
           },
           {
             "name": "Repel the Nightstalking Spirit",
@@ -17705,7 +18306,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Makes a room or a patch of clear ground safe: if the power penetrates, no demon of Infernal Might 25 or less can enter. Where no boundary exists the beast must mark an unbroken line, which need not be a circle. ReVi (Base 25, +1 for the unusual Target); a Greater Power, cheapened, with 10 experience points of Penetration.",
-            "id": "a83c2d5e9575"
+            "id": "9fc8e119f7e8"
           },
           {
             "name": "Restoration of the Defiled Body",
@@ -17719,7 +18320,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As the spell of that name (ArM5 p. 129). A Ritual Power, so it costs a permanent point of Might Score as well as Might points. CrCo (Base 20, +1 Touch), with 15 experience points of Penetration.",
-            "id": "962131b9f7d0"
+            "id": "93fe79e3c4be"
           }
         ],
         "vis": [
@@ -17727,7 +18328,7 @@
             "pawns": 6,
             "art": "Animal",
             "where": "in its hooves",
-            "id": "1c738edc140b"
+            "id": "c41fe2904740"
           }
         ],
         "equipment": "",
@@ -17740,7 +18341,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "girtablullu_the_scorpion_man",
@@ -17964,7 +18566,7 @@
             "attack": 20,
             "defense": 13,
             "damage": 11,
-            "id": "d88b093866f7"
+            "id": "c25fcecf997d"
           },
           {
             "name": "Sting",
@@ -17972,7 +18574,7 @@
             "attack": 15,
             "defense": 15,
             "damage": 9,
-            "id": "8ecd3f0c48ab"
+            "id": "1a311e57d2a2"
           }
         ],
         "soak": 12,
@@ -18087,7 +18689,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "The tail's sting: anyone struck needs a Stamina roll of 9+ or takes a Heavy Wound. The sting is a weapon, so the power has no Initiative of its own. PeCo (Base 15, +1 Touch); a Lesser Power, cheapened, with 10 experience points of Penetration.",
-            "id": "a5ee4c8cd6f8"
+            "id": "b3e4cf2a4172"
           }
         ],
         "vis": [
@@ -18095,7 +18697,7 @@
             "pawns": 3,
             "art": "Perdo",
             "where": "in its sting",
-            "id": "bcfa13e6a276"
+            "id": "f118b4cafd4e"
           }
         ],
         "equipment": "A bow with eleven arrows in the quiver; lamellar armour, as full metal-reinforced leather.",
@@ -18108,7 +18710,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "mushhushshu_the_snake_dragon",
@@ -18449,7 +19052,7 @@
             "attack": 18,
             "defense": 9,
             "damage": 9,
-            "id": "32bc4ecbd678"
+            "id": "d544527dda0a"
           },
           {
             "name": "Claws",
@@ -18457,7 +19060,7 @@
             "attack": 14,
             "defense": 10,
             "damage": 10,
-            "id": "f32f251c8f17"
+            "id": "88fe2f804327"
           }
         ],
         "soak": 15,
@@ -18593,7 +19196,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Picks out which of a band of people threatens it most, usually the best fighter; it also notices that magic is present, though not how strong. InCo(Vi) (Base 5, +1 Eye, +2 Group, +1 requisite); a Lesser Power, cheapened and speeded.",
-            "id": "c831976d718d"
+            "id": "9ec8b275bfd0"
           },
           {
             "name": "Voice of Regal Authority",
@@ -18607,7 +19210,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always active: whoever hears its voice feels a strong urge to do as it says. ReMe (Base 5, +2 Sun, +3 Sound, +1 constant); a Greater Power, cheapened.",
-            "id": "04f98b80b083"
+            "id": "a4d7da44b561"
           },
           {
             "name": "Eye of the Serpent",
@@ -18621,7 +19224,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Holds a person rooted by a look. ReCo (Base 5, +1 Eye, +1 Concentration); a Lesser Power, cheapened and speeded.",
-            "id": "5d27eee2d94a"
+            "id": "49e04a69dd16"
           }
         ],
         "vis": [
@@ -18629,7 +19232,7 @@
             "pawns": 5,
             "art": "Vim",
             "where": "in its horns",
-            "id": "61efbe6833c5"
+            "id": "4fc7da3a3e54"
           }
         ],
         "equipment": "",
@@ -18642,7 +19245,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "nasu_spirit",
@@ -18868,7 +19472,7 @@
             "attack": 7,
             "defense": 0,
             "damage": 10,
-            "id": "8bef3c5a52e1"
+            "id": "11118242b778"
           }
         ],
         "soak": 0,
@@ -18934,7 +19538,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes a body, which it may drop at any time; a nasu seldom leaves the world while there are corpses left to eat. Cr(Re)An (Base 5, +1 Touch, +2 Sun, +1 requisite); a Greater Power, cheapened and speeded.",
-            "id": "bfb2dbc312c7"
+            "id": "4e38deb6ea7b"
           },
           {
             "name": "Corpse-Feeding",
@@ -18948,7 +19552,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Ritual Power. A nasu that crawls into an opening of a corpse comes out three rounds later as ten, each its double with this power too, though a swarm of any size holds only one pawn of vis. Every three rounds a swarm can grow by 3 Size, as far as the corpses allow; growing, it attacks the living and makes more corpses. CrAn(Vi) (Base 5, +1 Touch, +2 Group, +1 requisite).",
-            "id": "451a8882a7b4"
+            "id": "a283241bcfa8"
           },
           {
             "name": "Swarm Form",
@@ -18962,7 +19566,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Greater Power with no Hermetic match. A nasu fights only as a swarm, which must be the Size of its foe or more: a hundred thousand (Size +3) can take on an ordinary group of people. Weapons cannot kill it; only area effects such as fire or smoke, each fifth of the swarm caught costing it 1 Might point.",
-            "id": "d8a217f3336a"
+            "id": "f51ae9d31b91"
           }
         ],
         "vis": [
@@ -18970,7 +19574,7 @@
             "pawns": 1,
             "art": "Animal",
             "where": "in its body (one pawn for a whole swarm)",
-            "id": "2e047068cb1a"
+            "id": "fb037b10f46a"
           }
         ],
         "equipment": "",
@@ -18983,7 +19587,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "hyrcanian_tiger",
@@ -19205,7 +19810,7 @@
             "attack": 11,
             "defense": 12,
             "damage": 1,
-            "id": "f63976599afb"
+            "id": "5d6f55802ab8"
           },
           {
             "name": "Trip",
@@ -19213,7 +19818,7 @@
             "attack": 11,
             "defense": 13,
             "damage": null,
-            "id": "ac14ee61982d"
+            "id": "063eb5456b4d"
           }
         ],
         "soak": 2,
@@ -19293,7 +19898,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "It is fast by nature, but for a Might point it covers 500 paces more in one round. ReAn (Base 20, as for ReCo); a Personal Power, cheapened.",
-            "id": "9843e0e651d9"
+            "id": "b17540027776"
           }
         ],
         "vis": [
@@ -19301,7 +19906,7 @@
             "pawns": 2,
             "art": "Animal",
             "where": "in its feet",
-            "id": "ca394e54ac36"
+            "id": "d7dc44d10d2b"
           }
         ],
         "equipment": "",
@@ -19314,7 +19919,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_simurgh",
@@ -19711,7 +20317,7 @@
             "attack": 12,
             "defense": 8,
             "damage": 19,
-            "id": "5cb26254b819"
+            "id": "32b42827d7ca"
           }
         ],
         "soak": 12,
@@ -19819,7 +20425,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Her Focus Power: any non-Ritual effect of the winds up to level 50, at 1 Might point a magnitude (1 to 10); its Initiative is minus its cost.",
-            "id": "f193f6fb73da"
+            "id": "b1fb6f88ed89"
           },
           {
             "name": "Grant Fertility",
@@ -19833,7 +20439,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Ritual Power worked as she flies over the fields: like The Bountiful Feast, but over ten times the area, and making beasts fruitful as well as crops. CrHe(An) (Base 1, +3 Sight, +4 Year, +4 Boundary, +2 Size, +1 Animal requisite), cheapened by 9 in all.",
-            "id": "6b5e920c5c65"
+            "id": "6eaa5d6b2c85"
           }
         ],
         "vis": [
@@ -19841,7 +20447,7 @@
             "pawns": 15,
             "art": "Animal",
             "where": "in her breast feathers",
-            "id": "98c68efef560"
+            "id": "3b906beb8ccc"
           }
         ],
         "equipment": "",
@@ -19854,7 +20460,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "persian_gazelle",
@@ -20000,7 +20607,7 @@
             "attack": 8,
             "defense": 9,
             "damage": 1,
-            "id": "052575b26c40"
+            "id": "0ab3c60830f6"
           },
           {
             "name": "Dodge",
@@ -20008,7 +20615,7 @@
             "attack": null,
             "defense": 10,
             "damage": null,
-            "id": "770e53ca603a"
+            "id": "accdd1248a3d"
           }
         ],
         "soak": 4,
@@ -20087,7 +20694,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "olghoi_khorkhoi_the_death_worm",
@@ -20330,7 +20938,7 @@
             "attack": 11,
             "defense": 9,
             "damage": 30,
-            "id": "d2b5548be4b7"
+            "id": "a3c59dfe2c17"
           },
           {
             "name": "Bludgeon (and +10 fire)",
@@ -20338,7 +20946,7 @@
             "attack": 15,
             "defense": 10,
             "damage": 9,
-            "id": "63b1457af84b"
+            "id": "d87ebeb62d34"
           }
         ],
         "soak": 10,
@@ -20404,7 +21012,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Spits burning venom up to 15 paces on a Thrown Weapon attack, at -2 beyond 5 paces and -4 beyond 10. Only a shield parries it, else it must be dodged with Brawl; a hit does +30 damage. Not usable from June to November (its Restricted Power). CrIg (Base 25, +2 Voice); a Greater Power, cheapened and speeded.",
-            "id": "fd8001578196"
+            "id": "c876a42e4063"
           },
           {
             "name": "Fiery Touch",
@@ -20418,7 +21026,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always active: its burning slime adds +10 damage to its bludgeon and eats metal, so a foe's armour loses a point of Protection even if he soaks it all. CrIg (Base 5, +1 Touch, +2 Sun, +1 corrosive, +1 constant); a Personal Power taken twice, cheapened.",
-            "id": "b0ccceb5fa4e"
+            "id": "5a33cb8029c2"
           }
         ],
         "vis": [
@@ -20426,7 +21034,7 @@
             "pawns": 3,
             "art": "Ignem",
             "where": "in its body",
-            "id": "90030a3302e2"
+            "id": "9348a266707b"
           }
         ],
         "equipment": "",
@@ -20439,7 +21047,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "bactrian_camel",
@@ -20529,7 +21138,7 @@
             "attack": 3,
             "defense": 2,
             "damage": 4,
-            "id": "a8d2d2bb779d"
+            "id": "0158288f2b05"
           }
         ],
         "soak": 4,
@@ -20595,7 +21204,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Scents water fit to drink up to two miles off.",
-            "id": "5274225aa320"
+            "id": "0a6ce82ad133"
           },
           {
             "name": "Survive Without Water",
@@ -20609,7 +21218,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Lasts up to two weeks without drinking.",
-            "id": "76fa34fea244"
+            "id": "2622662b2602"
           }
         ],
         "vis": [],
@@ -20623,7 +21232,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "asian_elephant",
@@ -20787,7 +21397,7 @@
             "attack": 4,
             "defense": 2,
             "damage": 13,
-            "id": "a2bd85c714c9"
+            "id": "d431690f6fe4"
           },
           {
             "name": "Trunk (grapple)",
@@ -20795,7 +21405,7 @@
             "attack": 4,
             "defense": 2,
             "damage": null,
-            "id": "ee73b526aadb"
+            "id": "4b40aaa2bcea"
           }
         ],
         "soak": 9,
@@ -20868,7 +21478,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always active: the trunk handles things like a hand, though work needing two hands is at -3.",
-            "id": "f8ffe1ec00ba"
+            "id": "640639e05474"
           }
         ],
         "vis": [],
@@ -20882,7 +21492,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "the_heavenly_horse_of_farghana",
@@ -21121,7 +21732,7 @@
             "attack": 2,
             "defense": 6,
             "damage": 6,
-            "id": "75dfec62187f"
+            "id": "c69ed1cffd51"
           }
         ],
         "soak": 4,
@@ -21187,7 +21798,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always active: it runs at full speed whatever the ground, up to thirty miles a day, even over open water or chasms without slowing. ReAn (Base 10, +2 Sun, +1 constant); a Personal Power.",
-            "id": "aaff8599e457"
+            "id": "06b6f2809a71"
           }
         ],
         "vis": [
@@ -21195,7 +21806,7 @@
             "pawns": 1,
             "art": "Animal",
             "where": "a year, faerie-tainted, in the bloody sweat gathered from it",
-            "id": "724ab8dd3de9"
+            "id": "4aa01353e1df"
           }
         ],
         "equipment": "",
@@ -21208,7 +21819,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "ruq",
@@ -21573,7 +22185,7 @@
             "attack": 7,
             "defense": 6,
             "damage": 14,
-            "id": "1749abcb3ec4"
+            "id": "b84a649354f3"
           },
           {
             "name": "Talons",
@@ -21581,7 +22193,7 @@
             "attack": 11,
             "defense": 3,
             "damage": 13,
-            "id": "df9c8980c2cc"
+            "id": "e2f2c2c4dfc9"
           },
           {
             "name": "Grapple",
@@ -21589,7 +22201,7 @@
             "attack": 6,
             "defense": 1,
             "damage": null,
-            "id": "3c119770a028"
+            "id": "bdb967c08383"
           }
         ],
         "soak": 5,
@@ -21676,7 +22288,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Weakens the arms of someone held in its talons after a Grapple, so he cannot struggle free by opposing the Grapple; a Lesser Power, ReCo (Base 3, +2 Sun, +1 Eye).",
-            "id": "c103218acae0"
+            "id": "519b1654e900"
           },
           {
             "name": "Paralyzing Stare",
@@ -21690,7 +22302,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Holds fast any target of human size who meets its terrible stare. ReCo (Base 5, +1 Eye, +1 Concentration); a Lesser Power, cheapened.",
-            "id": "7e6c6d69bc8f"
+            "id": "9cad75fe7096"
           }
         ],
         "vis": [
@@ -21698,7 +22310,7 @@
             "pawns": 3,
             "art": "Animal",
             "where": "in its wingtip feathers",
-            "id": "c67610646dfd"
+            "id": "3f09f82d5851"
           }
         ],
         "equipment": "",
@@ -21711,7 +22323,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "steppe_pony",
@@ -21812,7 +22425,7 @@
             "attack": 0,
             "defense": 5,
             "damage": 3,
-            "id": "67438155c52c"
+            "id": "f91c45847bf2"
           }
         ],
         "soak": 4,
@@ -21863,7 +22476,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "lesser_steppe_spirit",
@@ -21947,7 +22561,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "saluqi",
@@ -22020,7 +22635,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "saqr",
@@ -22093,7 +22709,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "shahin",
@@ -22166,7 +22783,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "dromedary",
@@ -22239,7 +22857,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "arabian_racehorse",
@@ -22312,7 +22931,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "flying_serpent_iaculus",
@@ -22385,7 +23005,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "mongol_trooper",
@@ -22526,7 +23147,7 @@
             "attack": 7,
             "defense": 6,
             "damage": 4,
-            "id": "486496660fb1"
+            "id": "c74965e74603"
           },
           {
             "name": "Composite bow (mounted)",
@@ -22534,7 +23155,7 @@
             "attack": 16,
             "defense": 13,
             "damage": 8,
-            "id": "60de4e3d3ebc"
+            "id": "309cfe1999a3"
           },
           {
             "name": "Composite bow (on foot)",
@@ -22542,7 +23163,7 @@
             "attack": 13,
             "defense": 10,
             "damage": 8,
-            "id": "6cbf14c33b82"
+            "id": "5e1fe5140d5b"
           },
           {
             "name": "Saber (mounted)",
@@ -22550,7 +23171,7 @@
             "attack": 14,
             "defense": 12,
             "damage": 7,
-            "id": "8ed347f91f10"
+            "id": "e21006e29de9"
           },
           {
             "name": "Saber (on foot)",
@@ -22558,7 +23179,7 @@
             "attack": 11,
             "defense": 9,
             "damage": 7,
-            "id": "04e6375ea2a2"
+            "id": "d4958b49b742"
           },
           {
             "name": "Spear (mounted)",
@@ -22566,7 +23187,7 @@
             "attack": 11,
             "defense": 10,
             "damage": 6,
-            "id": "b2edf41ef610"
+            "id": "c94eaf22e3c4"
           },
           {
             "name": "Spear (on foot)",
@@ -22574,7 +23195,7 @@
             "attack": 8,
             "defense": 7,
             "damage": 6,
-            "id": "9d0a1dc5d7b7"
+            "id": "29f36d97bd5d"
           }
         ],
         "soak": 4,
@@ -22716,7 +23337,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       },
       {
         "id": "mongol_spirit_shaman",
@@ -22897,7 +23519,7 @@
             "attack": 4,
             "defense": 4,
             "damage": 1,
-            "id": "9224d223ccbf"
+            "id": "ce654b437764"
           },
           {
             "name": "Composite bow (mounted)",
@@ -22905,7 +23527,7 @@
             "attack": 12,
             "defense": 10,
             "damage": 5,
-            "id": "028151c50e91"
+            "id": "2c03b96add3e"
           },
           {
             "name": "Composite bow (on foot)",
@@ -22913,7 +23535,7 @@
             "attack": 9,
             "defense": 7,
             "damage": 5,
-            "id": "50065fd53a23"
+            "id": "3d19a21eb31f"
           },
           {
             "name": "Saber (mounted)",
@@ -22921,7 +23543,7 @@
             "attack": 10,
             "defense": 9,
             "damage": 4,
-            "id": "b18ded22820d"
+            "id": "195b26f7f1c8"
           },
           {
             "name": "Saber (on foot)",
@@ -22929,7 +23551,7 @@
             "attack": 7,
             "defense": 6,
             "damage": 4,
-            "id": "5f3a2e1fb879"
+            "id": "3b82f1b79aad"
           },
           {
             "name": "Spear (mounted)",
@@ -22937,7 +23559,7 @@
             "attack": 7,
             "defense": 7,
             "damage": 3,
-            "id": "8962ce1d64e0"
+            "id": "f24738d0581f"
           },
           {
             "name": "Spear (on foot)",
@@ -22945,7 +23567,7 @@
             "attack": 4,
             "defense": 4,
             "damage": 3,
-            "id": "50fb55706038"
+            "id": "32ae27fd2799"
           }
         ],
         "soak": 4,
@@ -23143,7 +23765,8 @@
         "links": [],
         "attitudes": [],
         "favours": [],
-        "secrets": ""
+        "secrets": [],
+        "known": true
       }
     ],
     "enchanted_devices": [],

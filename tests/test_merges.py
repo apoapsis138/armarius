@@ -16,6 +16,8 @@ from ars_magica_manager.models import (
     Neighbour,
     Pin,
     Saga,
+    as_secrets,
+    secret_words,
 )
 
 
@@ -28,7 +30,7 @@ def _saga() -> tuple[Saga, Neighbour, Creature]:
         name="Hush",
         kind="faction",
         summary="A tall figure among the webs.",
-        secrets="It is the Spinner's eyes.",
+        secrets=as_secrets("It is the Spinner's eyes."),
         place_id="hollow",
         attitudes=[Attitude("home", -1)],
         favours=[Favour("A riddle answered")],
@@ -78,7 +80,7 @@ def test_merging_moves_everything_onto_the_creature():
         "Might 15.\n\nA tall figure among the webs.\n\n"
         "Wants: Whatever the Spinner wants\n\nOffers: Questions"
     )
-    assert creature.secrets == "It is the Spinner's eyes."
+    assert secret_words(creature.secrets) == "It is the Spinner's eyes."
     assert creature.place_id == "hollow"
     court, puppet = saga.neighbour("court"), saga.neighbour("puppet")
     assert court is not None and puppet is not None

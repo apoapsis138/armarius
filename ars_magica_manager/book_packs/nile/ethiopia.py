@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from ...models import BodyVis, Character, Neighbour
+from ...models import BodyVis, Character, Neighbour, as_secrets, secret_words
 from ..builder import (
     Builder,
     characteristics,
@@ -104,7 +104,7 @@ def _site(
             inside=_existing(b, within),
         )
     found.summary = paragraphs(found.summary, summary)
-    found.secrets = paragraphs(found.secrets, secrets)
+    found.secrets = as_secrets(paragraphs(secret_words(found.secrets), secrets))
     return found
 
 

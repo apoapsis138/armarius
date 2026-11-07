@@ -64,6 +64,7 @@ from ..forms import library as library_forms
 from ..forms import menu as menu_forms
 from ..forms import possession as possession_forms
 from ..forms import season as season_forms
+from ..forms import secrets as secret_forms
 from ..forms import take_up as take_up_forms
 from ..forms import world as world_forms
 from ..models import (
@@ -293,9 +294,13 @@ class CovenantPage(QWidget):
                 ("Diary", "year", lambda: self._diary(covenant)),
                 ("History", "history", lambda: self._history(covenant)),
             ]
-        if covenant is not None:
+        if covenant is not None and secret_forms.shown(covenant):
             chapters.append(
-                ("Secrets", "secrets", lambda: secrets_chapter(covenant, p, self.run))
+                (
+                    secret_forms.tab_title(covenant),
+                    "secrets",
+                    lambda: secrets_chapter(self.saga, covenant, p, self.run),
+                )
             )
         if covenant is not None and full:
             chapters.append(("Build", "covenant", lambda: self._build(covenant)))

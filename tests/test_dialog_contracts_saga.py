@@ -35,6 +35,13 @@ CONTRACTS: dict[str, Contract] = {
         expected=("Winter", 1225),
         invalid=[{"Year": "-"}, {"Year": ""}],
     ),
+    "hide from the players": Contract(
+        prefill={"Which": "lords", "In the lands of": Select.NULL},
+        edits={"Which": "characters"},
+        saved=lambda s: sorted(c.id for c in s.characters if not c.known),
+        expected=["comp1", "grog9", "mag1", "mag2", "mag_sketch"],
+        live={"#fields-live": "5 records known now would be hidden."},
+    ),
     "create covenant": Contract(
         prefill={"Name": "", "Season": "Spring", "Aura realm": "Magic"},
         edits={

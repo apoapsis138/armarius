@@ -31,11 +31,18 @@ CONTRACTS: dict[str, Contract] = {
         },
     ),
     "edit secrets": Contract(
-        prefill={"Secrets": "He owes the Archbishop more than he can pay."},
-        edits={"Secrets": "He has sold the mill to the Archbishop in secret."},
-        saved=lambda s: s.neighbour("gottfried").secrets,
-        expected="He has sold the mill to the Archbishop in secret.",
-        shown={"#secrets-text": "He has sold the mill to the Archbishop in secret."},
+        prefill={
+            "Title": "",
+            "Secret": "He owes the Archbishop more than he can pay.",
+        },
+        edits={
+            "Title": "The mill",
+            "Secret": "He has sold the mill to the Archbishop in secret.",
+        },
+        saved=lambda s: [(x.title, x.text) for x in s.neighbour("gottfried").secrets],
+        expected=[("The mill", "He has sold the mill to the Archbishop in secret.")],
+        invalid={"Secret": ""},
+        shown={"#secrets-list": "The mill"},
     ),
     "edit neighbour": Contract(
         prefill={

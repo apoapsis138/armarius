@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from .character import Wounds
-from .common import FatigueLevel, known_fields, move_secrets
+from .common import FatigueLevel, Secret, known_fields, move_secrets
 from .traits import (
     Ability,
     Characteristics,
@@ -160,7 +160,11 @@ class Creature:
     favours: list[Favour] = field(default_factory=list)
     #: What only the storyguide should read: the record's Secrets
     #: chapter, hidden from players signed in to a hosted copy.
-    secrets: str = ""
+    secrets: list[Secret] = field(default_factory=list)
+    #: Whether the players know of it (viewing.py): an unknown record is
+    #: left out of everything a player reads until the storyguide reveals
+    #: it. Older saves load known.
+    known: bool = True
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Creature:
