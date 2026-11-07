@@ -15,6 +15,7 @@ from ars_magica_manager.forms import creation as creation_forms
 from ars_magica_manager.forms import importing as import_forms
 from ars_magica_manager.forms import menu as menu_forms
 from ars_magica_manager.models import (
+    Book,
     IncomeSource,
     Inhabitant,
     KnownSpell,
@@ -304,6 +305,56 @@ def test_sharing_an_invented_spell():
     confirm.apply()
     assert spell in saga.spells
     assert spell not in magus.invented_spells
+
+
+def test_sharing_the_known_spell_on_its_row_asks_about_that_one_straight_away():
+    saga = _sample_saga_with_covenant()
+    magus = saga.characters[0]
+    for number in (1, 2):
+        spell = Spell(
+            id=f"own{number}",
+            name=f"Flame {number}",
+            technique="Creo",
+            form="Ignem",
+            level=5,
+        )
+        magus.invented_spells.append(spell)
+        magus.spells_known.append(KnownSpell(spell_id=spell.id))
+    page = _page(saga, NodeKind.CHARACTER, character_id="char1")
+    assert isinstance(menu_forms.command(page, "share_spell"), commands.Choose)
+    row = [known.spell_id for known in magus.spells_known].index("own2")
+    on_row = replace(page, section="section-known-spells", row=row)
+    confirm = menu_forms.command(on_row, "share_spell")
+    assert isinstance(confirm, commands.Confirm)
+    assert "Flame 2" in confirm.question
+
+
+def test_performing_a_ritual_on_the_chosen_text_skips_the_choice():
+    saga = _sample_saga_with_covenant()
+    lab = saga.laboratories[0]
+    magus = saga.characters[0]
+    lab.owner_id = magus.id
+    saga.books += [
+        Book(
+            id=f"ritual{number}",
+            name=f"Longevity {number}",
+            type="Lab Text",
+            text_kind="Longevity Ritual",
+            technique="Creo",
+            form="Corpus",
+            level=20,
+            ritual_subject=f"Subject {number}",
+            owner_kind="laboratory",
+            owner_id=lab.id,
+        )
+        for number in (1, 2)
+    ]
+    assert [b.id for b in menu_forms.ritual_texts(saga, lab)] == ["ritual1", "ritual2"]
+    assert isinstance(menu_forms.perform_ritual(saga, lab), commands.Choose)
+    chosen = menu_forms.perform_ritual(saga, lab, "ritual2")
+    assert isinstance(chosen, commands.Form)
+    # The form is for the text chosen: its first field names it.
+    assert chosen.fields()[0].value == "Longevity 2"
 
 
 def test_lab_texts_read_adds_and_forgets_an_author():

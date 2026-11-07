@@ -26,10 +26,13 @@ class Refresh(NamedTuple):
     tree: bool = False
     #: False for a calculator, which changes nothing and so saves nothing.
     saves: bool = True
+    #: The sheet is built again afterwards: the change adds or removes
+    #: tabs (a tradition's, a sketch's).
+    reshow: bool = False
 
 
-def changes(*sections: str, tree: bool = False) -> Refresh:
-    return Refresh(sections, tree)
+def changes(*sections: str, tree: bool = False, reshow: bool = False) -> Refresh:
+    return Refresh(sections, tree, reshow=reshow)
 
 
 def calculator() -> Refresh:
@@ -38,6 +41,13 @@ def calculator() -> Refresh:
 
 #: Per More action (the keys of menu.MORE_MENU's actions), what it changes.
 REFRESH: dict[str, Refresh] = {
+    "edit_interests": changes("tab-diary"),
+    "edit_traditions": changes("section-char-info", "tab-abilities", reshow=True),
+    # A character's or a covenant's detail level; the other's section is ignored.
+    "promote": changes("section-char-info", "section-cov-info", tree=True, reshow=True),
+    "demote": changes("section-char-info", "section-cov-info", tree=True, reshow=True),
+    "share_spell": changes("section-known-spells", tree=True),
+    "perform_ritual": changes("section-lab-raw-vis", "tab-lab-diary"),
     "impress_agent": changes(AGENTS_SECTION),
     "spend_agency_xp": changes(AGENTS_SECTION),
     "set_agent_task": changes(AGENTS_SECTION),

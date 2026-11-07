@@ -1156,7 +1156,20 @@ class WorkspaceBase(Screen[None]):
             creature=self.selected_creature,
             section=section,
             row=view.section_row(section) if view is not None and section else None,
+            chosen_book=self._chosen_book_id(),
         )
+
+    def _chosen_book_id(self) -> str | None:
+        """The book chosen in the book list on show, if any."""
+        return None
+
+    def _reshow_record(self) -> None:
+        """Build the sheet of the character or covenant on show again, for
+        a change that adds or removes its tabs."""
+        if self.selected_kind == NodeKind.CHARACTER and self.selected_character:
+            self.call_later(self._show_character, self.selected_character)
+        elif self.selected_kind == NodeKind.COVENANT and self.selected_covenant:
+            self.call_later(self._show_covenant_detail, self.selected_covenant)
 
     def _run_more(self, action: str) -> None:
         """Run a More action that needs no handler of its own: the core's
@@ -1168,6 +1181,8 @@ class WorkspaceBase(Screen[None]):
         def finished(end: object) -> None:
             if refresh.saves:
                 self._commit_told(end, *refresh.sections, tree=refresh.tree)
+                if refresh.reshow:
+                    self._reshow_record()
             elif isinstance(end, list) and end:
                 self.notify("\n".join(str(line) for line in end))
 

@@ -11,14 +11,13 @@ from textual.css.query import NoMatches
 from .... import books as bk
 from .... import lab_texts as lt
 from .... import saga_content as sc
-from .... import seasons, storage
+from .... import storage
 from ....form_spec import DialogField
 from ....forms import goods as goods_forms
 from ....forms import importing as import_forms
 from ....forms import saga_content as content_forms
 from ....markup import escape
 from ....models import (
-    TEXT_LONGEVITY,
     Book,
 )
 from ....sections import GOODS_SECTION
@@ -32,7 +31,6 @@ from ..forms import (
 )
 from ..pickers import (
     CatalogEntryPickerScreen,
-    RemovalPickerScreen,
     SourcebookPickerScreen,
 )
 from ..prompts import (
@@ -40,7 +38,6 @@ from ..prompts import (
     _catalog_dialog,
     _hide_entry_dialog,
     _lab_text_filter_dialog,
-    _ritual_again_dialog,
 )
 from ..sheets import (
     BOOK_SECTIONS,
@@ -241,61 +238,10 @@ class LibraryActions(WorkspaceBase):
         )
         return views[0] if views else None
 
-    def _ritual_texts(self) -> list[Book]:
-        """The Longevity Ritual texts the laboratory on show keeps."""
-        lab = self.selected_laboratory
-        if lab is None:
-            return []
-        return [
-            b
-            for b in lt.texts_of(self.saga, "laboratory", lab.id)
-            if lt.kind(b) == TEXT_LONGEVITY
-        ]
-
-    def action_perform_ritual(self) -> None:
-        """More on a laboratory's Lab Texts: perform a Longevity Ritual again
-        from its text -- the chosen one, else the one picked. It
-        takes vis but no season, so it is done at once."""
-        lab = self.selected_laboratory
+    def _chosen_book_id(self) -> str | None:
         view = self._book_view()
-        texts = self._ritual_texts()
-        if lab is None or not texts:
-            return
-        magus = self.saga.character(lab.owner_id)
-        if magus is None:
-            self.notify("The laboratory has no owner to perform the ritual.")
-            return
-
-        def perform(text: Book) -> None:
-            def handle_result(result: tuple[str, str] | None) -> None:
-                if result is None:
-                    return
-                found = seasons.perform_ritual_again(
-                    self.saga, magus, lab, text, *result
-                )
-                if found:
-                    self.notify(found[0], severity="warning")
-                    return
-                self._commit("section-lab-raw-vis", "tab-lab-diary")
-                self.notify(f"{escape(text.ritual_subject)}'s ritual is renewed.")
-
-            self.app.push_screen(
-                _ritual_again_dialog(self.saga, magus, lab, text), handle_result
-            )
-
         chosen = view.selected_book() if view is not None else None
-        if chosen is not None and chosen in texts:
-            perform(chosen)
-        elif len(texts) == 1:
-            perform(texts[0])
-        else:
-            self.app.push_screen(
-                RemovalPickerScreen(
-                    "Perform which Longevity Ritual again?",
-                    [escape(b.name) for b in texts],
-                ),
-                lambda index: perform(texts[index]) if index is not None else None,
-            )
+        return chosen.id if chosen is not None else None
 
     def action_filter_lab_texts(self) -> None:
         """/ on a laboratory's Lab Texts: narrow the list by kind, Art,

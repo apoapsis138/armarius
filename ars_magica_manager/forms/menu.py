@@ -339,6 +339,8 @@ class Page:
     neighbour: Neighbour | None = None
     creature: Creature | None = None
     section: str | None = None
+    #: The book chosen in the Library or Lab Texts list on show, if any.
+    chosen_book: str | None = None
     #: The row chosen in `section`'s list, when the front-end knows it (the
     #: terminal does; the desktop's row buttons act on their own row).
     row: int | None = None
@@ -1360,9 +1362,10 @@ def research_bonuses(saga: Saga, covenant: Covenant) -> Command:
 # ------------------------------------------------------------- the character
 
 
-def share_spell(saga: Saga, character: Character) -> Command:
+def share_spell(saga: Saga, character: Character, row: int | None = None) -> Command:
     """Make one of the magus's invented spells available to the saga: it
-    moves to the saga's Spells, and they still know it."""
+    moves to the saga's Spells, and they still know it. On a Known Spells
+    row (`row`) that is one of his own, that one is asked about."""
     shareable = spl.shareable_spells(character)
     if not shareable:
         return Refuse("Share Spell", "No invented spells to share.")
@@ -1376,12 +1379,24 @@ def share_spell(saga: Saga, character: Character) -> Command:
             yes_label="Share",
         )
 
+    if row is not None and row < len(character.spells_known):
+        spell_id = character.spells_known[row].spell_id
+        own = next((s for s in shareable if s.id == spell_id), None)
+        if own is not None:
+            return confirm(own)
     return _one_of(
         "Share which invented spell?",
         shareable,
         lambda s: f"{escape(s.name)} ({spl.shorthand(s)})",
         confirm,
     )
+
+
+def _share_command(page: Page) -> Command:
+    if page.character is None:
+        return Refuse("More", "That isn't available here.")
+    row = page.row if page.section == "section-known-spells" else None
+    return share_spell(page.saga, page.character, row)
 
 
 #: A traditions form's check for a tradition is keyed by this and its id.
@@ -1659,7 +1674,9 @@ def ritual_again_form(
     )
 
 
-def perform_ritual(saga: Saga, lab: Laboratory) -> Command:
+def perform_ritual(
+    saga: Saga, lab: Laboratory, chosen_book: str | None = None
+) -> Command:
     texts = ritual_texts(saga, lab)
     if not texts:
         return Refuse("Perform Ritual", "No Longevity Ritual texts here.")
@@ -1668,6 +1685,9 @@ def perform_ritual(saga: Saga, lab: Laboratory) -> Command:
         return Refuse(
             "Perform Ritual", "The laboratory has no owner to perform the ritual."
         )
+    chosen = next((b for b in texts if b.id == chosen_book), None)
+    if chosen is not None:
+        return ritual_again_form(saga, magus, lab, chosen)
     return _one_of(
         "Perform which Longevity Ritual again?",
         texts,
@@ -1921,8 +1941,12 @@ def _arms_command(page: Page) -> Command:
 _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "restore": _needs(_covenant, restore),
     "improve": _needs(_covenant, improve),
-    "perform_ritual": _needs(_laboratory, perform_ritual),
-    "share_spell": _needs(_character, share_spell),
+    "perform_ritual": lambda page: (
+        perform_ritual(page.saga, page.laboratory, page.chosen_book)
+        if page.laboratory is not None
+        else Refuse("More", "That isn't available here.")
+    ),
+    "share_spell": _share_command,
     "boost_spell": _needs(_character, boost_forms.boost_form),
     "give_silver": _silver_command,
     "lab_text_access": _needs(_character, lab_text_access),

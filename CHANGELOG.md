@@ -123,6 +123,12 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.85.6 — 2026-11-07
+
+### Fundamenta
+
+- **More actions share one registry, part three**: Traditions, Promote, Demote, Interests, Share a Spell and Perform a Ritual now run through the same registry as the rest. When the chosen row is on one of your own invented spells, Share a Spell asks about that one straight away, and Perform a Ritual does the same for the chosen Lab Text, on the desktop as well as in the terminal.
+
 ## 3.85.5 — 2026-11-07
 
 ### Fundamenta

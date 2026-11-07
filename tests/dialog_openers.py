@@ -886,7 +886,7 @@ def _open_ritual_again(ws) -> None:
     he may use at most his Creo score in Creo vis (DE p. 261)."""
     leandro = next(c for c in ws.saga.characters if c.name == "Leandro")
     leandro.arts["creo"] = ArtScore(xp=15)
-    ws.action_perform_ritual()
+    ws._run_more("perform_ritual")
 
 
 def _core_step(ws, section: str, verb: str, row: int = 0):
@@ -1608,7 +1608,7 @@ OPENERS: dict[str, Opener] = {
     # Character
     "edit character info": Opener("character", lambda ws: ws._edit_character_info()),
     "edit character traditions": Opener(
-        "character", lambda ws: ws.action_edit_traditions()
+        "character", lambda ws: ws._run_more("edit_traditions")
     ),
     "edit characteristics": Opener("character", lambda ws: ws._edit_characteristics()),
     "edit biographical detail": Opener(
@@ -2045,8 +2045,8 @@ OPENERS: dict[str, Opener] = {
     ),
     "invoke god's aid": Opener("character", lambda ws: _open_mystic(ws, "aid")),
     "font of knowledge": Opener("character", lambda ws: _open_mystic(ws, "font")),
-    "interests": Opener("character", lambda ws: ws.action_edit_interests()),
-    "covenant interests": Opener("covenant", lambda ws: ws.action_edit_interests()),
+    "interests": Opener("character", lambda ws: ws._run_more("edit_interests")),
+    "covenant interests": Opener("covenant", lambda ws: ws._run_more("edit_interests")),
     "commanding aura": Opener("character", lambda ws: _open_mystic(ws, "aura")),
     # House Verditius's Hubris and vendettas.
     "hubris": Opener("character", lambda ws: _open_hubris(ws)),
