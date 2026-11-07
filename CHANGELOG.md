@@ -123,6 +123,12 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.85.7 — 2026-11-07
+
+### Fundamenta
+
+- **Why the app is built as it is**: the reasons behind its lasting design choices are now written down, one short note each: one shared core behind both the terminal and the desktop, effects kept as data, scores worked out rather than stored, records linked rather than nested, how a hosted saga merges everyone's saves, one table for every Add, Edit, Delete and More action, Tribunal books imported as packs, and the look each app keeps for itself. Nothing changes on screen.
+
 ## 3.85.6 — 2026-11-07
 
 ### Fundamenta

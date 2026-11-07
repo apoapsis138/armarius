@@ -3,7 +3,8 @@
 How the app is built and the decisions that shape it. What it does, by
 feature and version, is in [CHANGELOG.md](CHANGELOG.md); how to install and
 run it is in [README.md](README.md); the working rules for changing it are
-in [CLAUDE.md](CLAUDE.md).
+in [CLAUDE.md](CLAUDE.md). Why each lasting choice was made is in
+[docs/adr/](docs/adr/), one short record per decision.
 
 ## 1. What it is
 
