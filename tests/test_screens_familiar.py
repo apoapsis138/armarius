@@ -3,7 +3,6 @@
 import asyncio
 
 from screen_helpers import (
-    _choose_in_list,
     _fill,
     _find_node,
     _is_form,
@@ -17,10 +16,9 @@ from screen_helpers import (
     _select,
     _select_character,
     _select_familiar,
-    _wait_for_picker_ready,
     _wait_for_screen,
 )
-from support import build_all_tabs, menu, wait_until
+from support import build_all_tabs, choose, menu, wait_until
 from textual.widgets import Button, Input, Select, Static, Tree
 
 from ars_magica_manager import familiars as fam
@@ -28,13 +26,12 @@ from ars_magica_manager import storage
 from ars_magica_manager.models import VirtueFlawInstance
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import (
-    AbilityPickerScreen,
     ConfirmScreen,
     FieldsDialog,
     SelectableList,
-    VirtueFlawPickerScreen,
     WorkspaceScreen,
 )
+from ars_magica_manager.tui.screens.steps import ChooseScreen
 from ars_magica_manager.tui.screens.widgets import DetailsPanel
 
 
@@ -278,12 +275,9 @@ async def test_familiar_abilities_use_generic_add_edit_remove():
         assert app.screen.check_action("add", ()) is True
 
         await pilot.press("a")
-        await pilot.pause()
-        assert isinstance(app.screen, AbilityPickerScreen)
-        await _wait_for_picker_ready(pilot, app)
-        await _choose_in_list(pilot, app, "ability-picker-list", "ability-ab_athletics")
-        await pilot.pause()
-        assert isinstance(app.screen, FieldsDialog)
+        await choose(pilot, app, "Athletics")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
+        assert await wait_until(pilot, lambda: bool(app.screen.query("#fld-xp")))
         app.screen.query_one("#fld-xp", Input).value = "30"
         app.screen.query_one("#fld-specialty", Input).value = "Running"
         await pilot.click("#btn-save")
@@ -327,8 +321,7 @@ async def test_familiar_virtues_flaws_add_via_a_and_delete_via_d():
         assert app.screen.check_action("add_virtue_flaw", ()) is True
 
         await pilot.press("a")
-        await pilot.pause()
-        assert isinstance(app.screen, VirtueFlawPickerScreen)
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ChooseScreen))
         await pilot.press("escape")
         await pilot.pause()
         assert isinstance(app.screen, WorkspaceScreen)

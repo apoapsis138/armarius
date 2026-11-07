@@ -6,9 +6,8 @@ from screen_helpers import (
     _open_section,
     _saga_with_bare_character,
     _select_character,
-    _select_vf_picker_entry,
 )
-from support import wait_until
+from support import choose, strip_markup, wait_until
 from textual.widgets import Select, Static
 
 from ars_magica_manager import storage
@@ -16,8 +15,8 @@ from ars_magica_manager.models import Character, Saga, VirtueFlawInstance
 from ars_magica_manager.rules import creation_characteristics as cch
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens.fields import FieldsDialog
-from ars_magica_manager.tui.screens.pickers import VirtueFlawPickerScreen
 from ars_magica_manager.tui.screens.prompts import ConfirmScreen
+from ars_magica_manager.tui.screens.steps import ChooseScreen
 from ars_magica_manager.tui.screens.workspace import WorkspaceScreen
 
 
@@ -98,16 +97,13 @@ def _bare_saga(**scores: int) -> Saga:
     return saga
 
 
-async def _open_picker(pilot, app) -> VirtueFlawPickerScreen:
+async def _open_picker(pilot, app) -> ChooseScreen:
     await _select_character(pilot, app)
     await _open_section(pilot, app, "section-vf-virtues")
     await pilot.press("a")
-    assert await wait_until(
-        pilot, lambda: isinstance(app.screen, VirtueFlawPickerScreen)
-    )
+    assert await wait_until(pilot, lambda: isinstance(app.screen, ChooseScreen))
     picker = app.screen
-    assert isinstance(picker, VirtueFlawPickerScreen)
-    await wait_until(pilot, lambda: bool(picker._entries))
+    assert isinstance(picker, ChooseScreen)
     return picker
 
 
@@ -117,8 +113,11 @@ async def test_taking_great_raises_the_score_and_offers_only_scores_at_three():
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 60)) as pilot:
         await _open_picker(pilot, app)
-        await _select_vf_picker_entry(pilot, app, "vf_great_characteristic")
-        assert isinstance(app.screen, FieldsDialog)
+        await choose(pilot, app, "Great (Characteristic)")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
+        assert await wait_until(
+            pilot, lambda: bool(app.screen.query("#fld-characteristic"))
+        )
         select = app.screen.query_one("#fld-characteristic", Select)
         offered = [value for _, value in select._options if isinstance(value, str)]
         assert offered == ["intelligence", "strength"]
@@ -137,9 +136,14 @@ async def test_great_is_ineligible_with_no_score_at_three():
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 60)) as pilot:
         picker = await _open_picker(pilot, app)
-        assert picker._refusals["vf_great_characteristic"] == (
-            "no Characteristic qualifies"
-        )
+        # Not offered, and marked with why.
+        assert not any(c.value.id == "vf_great_characteristic" for c in picker.choices)
+        marked = [
+            strip_markup(c.label)
+            for c in picker.others
+            if c.value.id == "vf_great_characteristic"
+        ]
+        assert marked and "every Characteristic is refused" in marked[0]
 
 
 async def test_removing_great_gives_the_point_back():

@@ -35,12 +35,13 @@ from PySide6.QtGui import (
 from PySide6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
 
 from .. import arms as heraldic
-from .. import conflicts, fights, medallions, sieges
+from .. import conflicts, fights, medallions, section_verbs, sieges
 from ..commands import Command
 from ..models import FATIGUE_LEVELS, WALLS, Fight, Saga, Siege
 from ..rules import fight as fight_rules
 from ..rules import options as rule_options
 from ..rules import siege as siege_rules
+from ..sections import FIGHTS_SECTION, SIEGES_SECTION
 from . import medallions as drawn
 from . import pictures, shields
 from .style import gilding, illumination
@@ -745,7 +746,7 @@ class FightPage(QWidget):
         self.run(conflicts.command(self.saga, action, self.row()))
 
     def edit(self) -> None:
-        edit = fights.ops(self.saga).edit
+        edit = section_verbs.ops_of(self.saga, self.saga)[FIGHTS_SECTION].edit
         if edit is not None:
             self.run(edit(self.row()))
 
@@ -1447,6 +1448,6 @@ class SiegePage(QWidget):
         self.run(conflicts.command(self.saga, action, self.row()))
 
     def edit(self) -> None:
-        edit = sieges.ops(self.saga).edit
+        edit = section_verbs.ops_of(self.saga, self.saga)[SIEGES_SECTION].edit
         if edit is not None:
             self.run(edit(self.row()))

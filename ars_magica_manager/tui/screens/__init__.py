@@ -22,5 +22,4 @@ from .saga_picker import SagaPickerScreen as SagaPickerScreen
 from .sheets import SpellListView as SpellListView
 from .widgets import SelectableList as SelectableList
 from .widgets import ThemeBar as ThemeBar
-from .workspace import _CHARACTER_TRAITS as _CHARACTER_TRAITS
 from .workspace import WorkspaceScreen as WorkspaceScreen

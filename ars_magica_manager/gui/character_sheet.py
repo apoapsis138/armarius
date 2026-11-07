@@ -52,14 +52,13 @@ from .. import (
     casting_text,
     catalog,
     connections,
-    creation,
     deeds,
     giving,
     marriages,
     portraits,
     saga_index,
     seasons,
-    sourcebooks,
+    section_verbs,
     tradition_text,
     traditions,
     vis,
@@ -76,7 +75,6 @@ from .. import spells as spl
 from ..actions import NodeKind
 from ..arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
 from ..commands import Command, Form, SectionOps
-from ..forms import ability as ability_forms
 from ..forms import agents as agent_forms
 from ..forms import character as cf
 from ..forms import church as church_forms
@@ -84,7 +82,6 @@ from ..forms import constant_effect as constant_forms
 from ..forms import covers as cover_forms
 from ..forms import criamon as criamon_forms
 from ..forms import device as device_forms
-from ..forms import diary as diary_forms
 from ..forms import go_to as go_to_forms
 from ..forms import menu as menu_forms
 from ..forms import power as power_forms
@@ -92,11 +89,6 @@ from ..forms import religion as religion_forms
 from ..forms import reveal as reveal_forms
 from ..forms import season as season_forms
 from ..forms import secrets as secret_forms
-from ..forms import spell as spell_forms
-from ..forms import tradition as tradition_forms
-from ..forms import trait as trait_forms
-from ..forms import virtue as virtue_forms
-from ..forms import vis as vis_forms
 from ..forms import whereabouts as whereabouts_forms
 from ..forms import world as world_forms
 from ..markup import escape
@@ -116,10 +108,14 @@ from ..rules import agents as agent_rules
 from ..rules import criamon as criamon_rules
 from ..rules import enchantment, faiths, hybrid_magic, library, sigils
 from ..sections import (
+    AGENTS_SECTION,
     CANON_SECTION,
+    CHAR_AHEAD_SECTION,
+    CONSTANT_EFFECTS_SECTION,
     COVERS_SECTION,
     ORDINATIONS_SECTION,
     PETITIONS_SECTION,
+    POWERS_SECTION,
     SECRETS_SECTION,
     STIGMATA_SECTION,
 )
@@ -469,7 +465,7 @@ def secrets_chapter(
         table_section(
             f"Secrets ({len(record.secrets)})",
             table,
-            secret_forms.secrets_ops(record)[SECRETS_SECTION],
+            section_verbs.ops_of(saga, record)[SECRETS_SECTION],
             p,
             run,
             empty=secret_forms.NONE_YET,
@@ -500,16 +496,16 @@ def connections_section(
 def trait_section(
     title: str,
     traits: list[ScoredTrait],
-    section_id: str,
+    ops: SectionOps,
     p: Palette,
     run: Callable[[Command], None],
     more: Sequence[QWidget] = (),
 ) -> QWidget:
     """A Personality Traits or Reputations section, with Add, Edit and
-    Delete for the row clicked (trait_forms.trait_ops), and `more`: the
-    page's own buttons placed there (Reward or Punish on a grog)."""
+    Delete for the row clicked (`ops`, the section's entry in the core's
+    table), and `more`: the page's own buttons placed there (Reward or
+    Punish on a grog)."""
     chooser = Chooser()
-    ops = trait_forms.trait_ops(traits, section_id)
     # A Reputation marked bad (an Academic one) keeps a positive score.
     rows = [(f"{t.name} (bad)" if t.bad else t.name, t.score) for t in traits]
     return section(
@@ -524,17 +520,17 @@ def device_section(
     saga: Saga,
     kind: str,
     holder_id: str,
+    ops: SectionOps,
     p: Palette,
     run: Callable[[Command], None],
     inspect: Callable[[str, str, str], None],
 ) -> QWidget:
     """The Enchanted Devices a character, laboratory or covenant holds:
     each device and its effects, with Add, Edit and Delete for the row
-    clicked, and Instill an Effect, Use a Charge and Use (an effect) where
-    they can act
+    clicked (`ops`, the sheet's Devices entry in the core's table), and
+    Instill an Effect, Use a Charge and Use (an effect) where they can act
     (device_forms)."""
     chooser = Chooser()
-    ops = device_forms.device_ops(saga, kind, holder_id)
     targets = ed.device_targets(saga, kind, holder_id)
 
     def show(index: int) -> None:
@@ -978,11 +974,12 @@ class CharacterSheet(QWidget):
             parts += self._hermetic_sections(forms)
         # One above the other: side by side, with their buttons, they are
         # wider than the chapter beside the inspector.
+        table = self._table()
         parts.append(
             trait_section(
                 "Personality Traits",
                 c.personality_traits,
-                "section-personality-traits",
+                table[section_verbs.PERSONALITY_TRAITS_SECTION],
                 p,
                 self.run,
                 self._placed("Personality Traits"),
@@ -992,7 +989,7 @@ class CharacterSheet(QWidget):
             trait_section(
                 "Reputations",
                 c.reputations,
-                "section-reputations",
+                table[section_verbs.REPUTATIONS_SECTION],
                 p,
                 self.run,
                 self._placed("Reputations"),
@@ -1118,6 +1115,11 @@ class CharacterSheet(QWidget):
         """The More menu's buttons placed beside `section_name`."""
         return list(self.placer.buttons(section_name)) if self.placer else []
 
+    def _table(self) -> dict[str, SectionOps]:
+        """The core's Add, Edit and Delete for each of the sheet's sections,
+        built once for the page being drawn."""
+        return section_verbs.ops_of(self.saga, self.character)
+
     def _covers(self) -> QWidget:
         """The character's deep covers and personae (HoH:S pp. 87-89)."""
         p, c = self.p, self.character
@@ -1143,7 +1145,7 @@ class CharacterSheet(QWidget):
             else TextBlock(cover_forms.EMPTY, p),
             *([TextBlock(line, p)] if line else []),
             buttons=[
-                *verb_buttons(cover_forms.ops(c), chooser, self.run, p),
+                *verb_buttons(self._table()[COVERS_SECTION], chooser, self.run, p),
                 *self._placed("Covers"),
             ],
         )
@@ -1176,19 +1178,14 @@ class CharacterSheet(QWidget):
             else TextBlock(constant_forms.EMPTY, p),
             *([TextBlock(total, p)] if total else []),
             buttons=verb_buttons(
-                constant_forms.ops(self.saga, c), chooser, self.run, p
+                self._table()[CONSTANT_EFFECTS_SECTION], chooser, self.run, p
             ),
         )
 
     def _abilities(self) -> QWidget:
         p, c = self.p, self.character
         chooser = Chooser()
-        ops = ability_forms.ability_ops(
-            c.abilities,
-            c.virtues_flaws,
-            books=sourcebooks.saga_books(self.saga),
-            note=lambda name: creation.worksheet_note(c, [name]),
-        )
+        ops = self._table()[section_verbs.ABILITIES_SECTION]
 
         def show(index: object) -> None:
             assert isinstance(index, int)
@@ -1236,13 +1233,8 @@ class CharacterSheet(QWidget):
         play, with Add limited to the tradition's own."""
         p, c = self.p, self.character
         chooser = Chooser()
-        ops = ability_forms.ability_ops(
-            c.abilities,
-            c.virtues_flaws,
-            books=sourcebooks.saga_books(self.saga),
-            note=lambda name: creation.worksheet_note(c, [name]),
-            only=tradition.abilities,
-        )
+        verbs = self._table()
+        ops = verbs[traditions.tradition_section(tradition.id)]
         rows = cs.tradition_table(c, tradition)
         table = ability_view(
             rows,
@@ -1277,7 +1269,10 @@ class CharacterSheet(QWidget):
                 if effect_rows.rows
                 else TextBlock("[dim]None recorded.[/]", p),
                 buttons=verb_buttons(
-                    tradition_forms.effect_ops(c, tradition), effects, self.run, p
+                    verbs[traditions.effects_section(tradition.id)],
+                    effects,
+                    self.run,
+                    p,
                 ),
             ),
             section(
@@ -1288,7 +1283,7 @@ class CharacterSheet(QWidget):
                 else TextBlock("[dim]None bound.[/]", p),
                 TextBlock(tradition_text.bonds_text(tradition, c), p),
                 buttons=verb_buttons(
-                    tradition_forms.bond_ops(self.saga, c, tradition),
+                    verbs[traditions.bonds_section(tradition.id)],
                     bonds,
                     self.run,
                     p,
@@ -1328,7 +1323,7 @@ class CharacterSheet(QWidget):
                         p,
                         TextBlock(tradition_text.pools_text(c, tradition), p),
                         buttons=verb_buttons(
-                            tradition_forms.pool_ops(c, tradition),
+                            verbs[traditions.pools_section(tradition.id)],
                             Chooser(),
                             self.run,
                             p,
@@ -1349,9 +1344,14 @@ class CharacterSheet(QWidget):
         placed = self.placer.buttons("Virtues & Flaws") if self.placer else []
         strip = [section("During the Saga", p, buttons=placed)] if placed else []
         columns = []
+        table = self._table()
+        section_of_side = {
+            side: section_id
+            for section_id, side in section_verbs.VIRTUE_FLAW_SIDES[Character].items()
+        }
         for side, tone in (("Virtue", "text-success"), ("Flaw", "text-error")):
             chooser = Chooser()
-            ops = virtue_forms.virtue_flaw_ops(self.saga, c, side)
+            ops = table[section_of_side[side]]
             points = cs.virtue_flaw_points(c, side)
             cards = [
                 self._vf_card(card, p[tone]) for card in cs.virtue_flaw_cards(c, side)
@@ -1403,7 +1403,7 @@ class CharacterSheet(QWidget):
                 p,
             ),
             TextBlock("\n".join(power_forms.budget_lines(c, self.saga)), p),
-            buttons=verb_buttons(power_forms.ops(c), chooser, self.run, p),
+            buttons=verb_buttons(self._table()[POWERS_SECTION], chooser, self.run, p),
         )
 
     def _vf_card(self, card: cs.VirtueFlawCard, colour: str) -> ClickableCard:
@@ -1481,7 +1481,7 @@ class CharacterSheet(QWidget):
                 self._spells(spells),
                 buttons=[
                     *verb_buttons(
-                        spell_forms.known_spell_ops(saga, c),
+                        self._table()[section_verbs.KNOWN_SPELLS_SECTION],
                         spells,
                         self.run,
                         p,
@@ -1661,7 +1661,7 @@ class CharacterSheet(QWidget):
                 *(tables or [TextBlock("[dim]None recorded.[/]", p)]),
                 buttons=[
                     *verb_buttons(
-                        cf.inventory_ops(c, sourcebooks.saga_books(saga)),
+                        self._table()[section_verbs.INVENTORY_SECTION],
                         gear,
                         self.run,
                         p,
@@ -1671,7 +1671,17 @@ class CharacterSheet(QWidget):
                 ],
             )
         )
-        parts.append(device_section(saga, "character", c.id, p, self.run, self.inspect))
+        parts.append(
+            device_section(
+                saga,
+                "character",
+                c.id,
+                self._table()["section-char-devices"],
+                p,
+                self.run,
+                self.inspect,
+            )
+        )
         books = library.books_owned_by(saga, "character", c.id)
         chosen_book = Chooser()
 
@@ -1762,7 +1772,7 @@ class CharacterSheet(QWidget):
                 ),
                 TextBlock(f"[dim]{escape(agent_forms.NOT_AGENTS)}[/]", p),
                 buttons=verb_buttons(
-                    agent_forms.ops(c), chooser, self.run, p, more=more
+                    self._table()[AGENTS_SECTION], chooser, self.run, p, more=more
                 ),
             ),
         )
@@ -1772,7 +1782,8 @@ class CharacterSheet(QWidget):
         while there is someone to give it to."""
         c, p = self.character, self.p
         chooser = Chooser()
-        ops = vis_forms.raw_vis_ops(c.raw_vis)
+        # The Hermetic and Inventory chapters' lists share one set of verbs.
+        ops = self._table()[section_verbs.RAW_VIS_SECTIONS[0]]
         return section(
             "Raw Vis",
             p,
@@ -1793,8 +1804,9 @@ class CharacterSheet(QWidget):
         and Clear (a grog's Yearly Update instead), then A Season's Work
         and the Seasons Ahead."""
         saga, p, c = self.saga, self.p, self.character
+        table = self._table()
         buttons = verb_buttons(
-            season_forms.character_season_ops(saga, c),
+            table[section_verbs.SEASON_SECTION],
             Chooser(),
             self.run,
             p,
@@ -1827,7 +1839,7 @@ class CharacterSheet(QWidget):
             table_view(seasons.ahead_table(saga, c), p, show),
             info,
             buttons=verb_buttons(
-                season_forms.ahead_season_ops(saga, c),
+                table[CHAR_AHEAD_SECTION],
                 chooser,
                 self.run,
                 p,
@@ -1904,9 +1916,7 @@ class CharacterSheet(QWidget):
                 if diary
                 else TextBlock("[dim]None recorded.[/]", p),
                 buttons=verb_buttons(
-                    diary_forms.entry_ops(
-                        saga, diary, diary_forms.character_activities()
-                    ),
+                    self._table()[section_verbs.DIARY_SECTION],
                     entries,
                     self.run,
                     p,
@@ -1942,7 +1952,7 @@ class CharacterSheet(QWidget):
         parts: list[QWidget] = [faith]
         if not religion_forms.church_shown(saga, c):
             return scrolling_page(p, *parts)
-        ops = church_forms.ops(saga, c)
+        ops = self._table()
         career = c.church
         lists = [
             (
@@ -2021,7 +2031,7 @@ def _criamon_chapter(
     """The path (Change Path, Follow an Avenue), its five stations as
     ledger entries, and the stigmata with Add, Edit and Delete; the
     chosen one shows in the inspector."""
-    ops = criamon_forms.ops(saga, c)
+    ops = section_verbs.ops_of(saga, c)
     words = TextBlock(criamon_forms.path_desk_text(saga, c), p)
     words.setFont(serif(12.5))
     notes = c.enigma.notes.strip()
@@ -2397,7 +2407,7 @@ def relations(
 ) -> list[QWidget]:
     """A world record's Attitude toward each player covenant, the favours
     owed and its links (left off when the page draws its own)."""
-    ops = world_forms.record_ops(saga, record)
+    ops = section_verbs.ops_of(saga, record)
     parts: list[QWidget] = []
     if attitude:
         parts.append(

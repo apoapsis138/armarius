@@ -26,7 +26,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import artwork, traditions, viewing
+from .. import artwork, section_verbs, traditions, viewing
 from .. import house_rules as hr
 from .. import players as pl
 from .. import saga_content as sc
@@ -35,6 +35,12 @@ from ..arts import FORMS, TECHNIQUES
 from ..forms import goods as goods_forms
 from ..forms import saga_content as scf
 from ..models import Saga, Spell
+from ..sections import (
+    GOODS_SECTION,
+    HOUSE_RULES_SECTION,
+    PLAYERS_SECTION,
+    SOURCES_SECTION,
+)
 from ..sheets import saga_content as scs
 from . import pictures
 from .character_sheet import TextBlock, section
@@ -206,7 +212,10 @@ class SagaContentPage(QWidget):
                 p,
                 self.sources if saga.sources else _none("None yet.", p),
                 buttons=verb_buttons(
-                    scf.source_ops(saga), sources_chooser, self.run, p
+                    section_verbs.ops_of(saga, saga)[SOURCES_SECTION],
+                    sources_chooser,
+                    self.run,
+                    p,
                 ),
             ),
         )
@@ -463,7 +472,7 @@ class SagaContentPage(QWidget):
                 TextBlock(goods_forms.header(saga, two_lines=True), p),
                 view,
                 buttons=verb_buttons(
-                    goods_forms.ops(saga),
+                    section_verbs.ops_of(saga, saga)[GOODS_SECTION],
                     chooser,
                     self.run,
                     p,
@@ -508,7 +517,12 @@ class SagaContentPage(QWidget):
                 p,
                 card_grid(cards, 2) if cards else _none("None yet.", p),
                 buttons=[
-                    *verb_buttons(scf.house_rule_ops(saga), chooser, self.run, p),
+                    *verb_buttons(
+                        section_verbs.ops_of(saga, saga)[HOUSE_RULES_SECTION],
+                        chooser,
+                        self.run,
+                        p,
+                    ),
                     *(
                         [
                             edit_button(
@@ -726,7 +740,12 @@ class SagaContentPage(QWidget):
                 f"Players ({len(saga.players)})",
                 p,
                 self.players if saga.players else _none("None yet.", p),
-                buttons=verb_buttons(scf.player_ops(saga), chooser, self.run, p),
+                buttons=verb_buttons(
+                    section_verbs.ops_of(saga, saga)[PLAYERS_SECTION],
+                    chooser,
+                    self.run,
+                    p,
+                ),
             ),
             note,
         )

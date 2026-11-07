@@ -3,7 +3,6 @@
 import re
 
 from screen_helpers import (
-    _choose_in_list,
     _find_node,
     _is_form,
     _lab_identity_text,
@@ -20,15 +19,12 @@ from screen_helpers import (
     _select_character,
     _select_covenant,
     _select_laboratory,
-    _wait_for_picker_ready,
     _wait_for_screen,
 )
 from support import (
     build_all_tabs,
     close_worksheet,
     menu,
-    picker_labels,
-    picker_rows,
     quiet,
     strip_markup,
     wait_until,
@@ -46,7 +42,7 @@ from textual.widgets import (
     Tree,
 )
 
-from ars_magica_manager import manors, storage
+from ars_magica_manager import manors, section_verbs, storage
 from ars_magica_manager.models import (
     Character,
     Covenant,
@@ -60,11 +56,11 @@ from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import (
     AdvanceSeasonScreen,
     ConfirmScreen,
-    CovenantBoonHookPickerScreen,
     FieldsDialog,
     SelectableList,
     WorkspaceScreen,
 )
+from ars_magica_manager.tui.screens.steps import ChooseScreen
 
 _COVENANT_TABS = (
     "tab-cov-overview",
@@ -586,8 +582,25 @@ def _catalog_count(kind: str) -> int:
     return sum(e.type == kind for e in _catalog.load_covenant_boon_hook_catalog())
 
 
-def _pick_id(catalog_id: str) -> str:
-    return f"covbhpick-{catalog_id}"
+async def _choose_boon_hook(pilot, app, catalog_id: str) -> None:
+    """In the Add a Boon / Hook chooser, take the entry `catalog_id`."""
+    assert await wait_until(pilot, lambda: isinstance(app.screen, ChooseScreen))
+    picker = app.screen
+    assert await wait_until(pilot, lambda: bool(picker.query("#choose-list")))
+    picker.dismiss(
+        next(
+            i
+            for i, c in enumerate(picker._all())
+            if getattr(c.value, "id", None) == catalog_id
+        )
+    )
+
+
+def _offered(saga, section_id: str):
+    """The labels of the entries the table's Add offers in `section_id`,
+    by catalog id."""
+    ops = section_verbs.section_ops(saga, saga.covenants[0], section_id)
+    return {c.value.id: strip_markup(c.label) for c in ops.add().choices()}
 
 
 async def _add_boon_hook_via_picker(
@@ -602,10 +615,9 @@ async def _add_boon_hook_via_picker(
     before = len(covenant.boons_hooks)
     await _open_cov_section(pilot, app, section_id)
     await pilot.press("a")
-    await pilot.pause()
-    assert isinstance(app.screen, CovenantBoonHookPickerScreen)
-    await _choose_in_list(pilot, app, "covbh-picker-list", _pick_id(catalog_id))
-    assert isinstance(app.screen, FieldsDialog)
+    await _choose_boon_hook(pilot, app, catalog_id)
+    assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
+    assert await wait_until(pilot, lambda: bool(app.screen.query("#fld-detail")))
     app.screen.query_one("#fld-detail", Input).value = detail
     if description:
         app.screen.query_one("#fld-description", TextArea).text = description
@@ -660,34 +672,28 @@ async def test_boon_picker_lists_only_boons_with_notes_and_asks_for_a_blank_deta
         await _select_covenant(pilot, app)
         await _open_cov_section(pilot, app, "section-cov-boons")
         await pilot.press("a")
-        await pilot.pause()
-        picker = app.screen
-        assert isinstance(picker, CovenantBoonHookPickerScreen)
-
-        await _wait_for_picker_ready(pilot, app)
-        labels = picker_labels(picker)
-        assert len(picker_rows(picker)) == _catalog_count("Boon")  # no Hooks
-        assert all("covbh_boon_" in item_id for item_id in labels)
-
-        shell = labels[_pick_id("covbh_boon_minor_shell_keep")]
-        assert "requires: Castle" in shell
-        assert "not with: Road, Urban" in labels[_pick_id("covbh_boon_minor_seclusion")]
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ChooseScreen))
 
         # Choosing one opens the detail prompt, blank by default.
-        await _choose_in_list(
-            pilot, app, "covbh-picker-list", _pick_id("covbh_boon_minor_edifice")
-        )
-        assert isinstance(app.screen, FieldsDialog)
+        await _choose_boon_hook(pilot, app, "covbh_boon_minor_edifice")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
+        assert await wait_until(pilot, lambda: bool(app.screen.query("#fld-detail")))
         assert app.screen.query_one("#fld-detail", Input).value == ""
 
-        # Cancelling the detail prompt goes back to the picker; nothing added.
+        # Cancelling the detail prompt adds nothing.
         await pilot.press("escape")
-        await pilot.pause()
-        assert isinstance(app.screen, CovenantBoonHookPickerScreen)
-        await pilot.press("escape")
-        await pilot.pause()
+        assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
 
     assert storage.load_saga("test_saga").covenants[0].boons_hooks == []
+
+
+def test_the_boon_chooser_lists_only_boons_with_their_notes():
+    saga = _saga_with_configured_covenant()
+    labels = _offered(saga, "section-cov-boons")
+    assert len(labels) == _catalog_count("Boon")  # no Hooks
+    assert all("covbh_boon_" in item_id for item_id in labels)
+    assert "requires: Castle" in labels["covbh_boon_minor_shell_keep"]
+    assert "not with: Road, Urban" in labels["covbh_boon_minor_seclusion"]
 
 
 async def test_boons_and_hooks_totals_details_and_aura():
@@ -763,23 +769,23 @@ async def test_picker_marks_taken_entries_but_still_offers_them():
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 50)) as pilot:
         await _select_covenant(pilot, app)
-        await _open_cov_section(pilot, app, "section-cov-boons")
-        await pilot.press("a")
-        await pilot.pause()
-        await _wait_for_picker_ready(pilot, app)
-        items = picker_labels(app.screen)
+        items = _offered(saga, "section-cov-boons")
         assert len(items) == _catalog_count("Boon")  # nothing is hidden
-        assert "(taken x2)" in items[_pick_id("covbh_boon_minor_edifice")]
-        assert "(taken x1)" in items[_pick_id("covbh_boon_minor_wealth")]
-        assert "taken" not in items[_pick_id("covbh_boon_minor_regio")]
+        assert "(taken x2)" in items["covbh_boon_minor_edifice"]
+        assert "(taken x1)" in items["covbh_boon_minor_wealth"]
+        assert "taken" not in items["covbh_boon_minor_regio"]
 
         # A second Edifice can be taken (your sheet has two).
-        await _choose_in_list(
-            pilot, app, "covbh-picker-list", _pick_id("covbh_boon_minor_edifice")
-        )
+        await _open_cov_section(pilot, app, "section-cov-boons")
+        await pilot.press("a")
+        await _choose_boon_hook(pilot, app, "covbh_boon_minor_edifice")
+        assert await wait_until(pilot, lambda: bool(app.screen.query("#fld-detail")))
         app.screen.query_one("#fld-detail", Input).value = "C"
         app.screen.query_one("#btn-save", Button).press()
-        await pilot.pause()
+        await wait_until(
+            pilot,
+            lambda: len(storage.load_saga("test_saga").covenants[0].boons_hooks) == 4,
+        )
 
     boons = storage.load_saga("test_saga").covenants[0].boons_hooks
     assert [bh.params.get("detail") for bh in boons] == ["A", "B", None, "C"]
@@ -994,9 +1000,8 @@ async def test_boon_list_works_from_the_keyboard_and_keeps_add_remove_dispatch()
         assert "Name:" in str(view.query_one("#cov-bh-info", Static).render())
 
         await pilot.press("a")
-        await pilot.pause()
-        assert isinstance(app.screen, CovenantBoonHookPickerScreen)
-        assert app.screen.kind == "Boon"
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ChooseScreen))
+        assert app.screen.step.title == "Add a Boon"
 
 
 async def test_adding_a_boon_rebuilds_the_list_and_the_panel_follows():

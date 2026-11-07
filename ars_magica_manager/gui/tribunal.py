@@ -22,6 +22,7 @@ from .. import (
     artwork,
     hall,
     meeting,
+    section_verbs,
     tribunal_packages,
     tribunals,
     world,
@@ -94,7 +95,7 @@ class TribunalPage(QWidget):
             with_bookmark(self._header(), controls.bookmark(p) if controls else None)
         )
         self.codex = Codex(p)
-        self.ops = tribunal_forms.tribunal_ops(saga, tribunal)
+        self.ops = section_verbs.ops_of(saga, tribunal)
         self.ops[BUSINESS_SECTION] = self._with_opening_card(self.ops[BUSINESS_SECTION])
         self.codex.add("Roster", "tribunal", self._roster())
         self.codex.add("History", "history", self._history())

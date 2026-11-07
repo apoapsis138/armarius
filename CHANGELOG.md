@@ -123,6 +123,15 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.85.1 — 2026-11-07
+
+### Fundamenta
+
+- **One place decides what a section's Add, Edit and Delete do**: the terminal and the desktop now both read the same table, so the same key or button does the same thing in each. Most of the terminal's own copies of those actions are gone.
+- In the terminal, adding an Ability, Spell, Virtue, Flaw, Boon, Hook, Item kind, Shape & Material bonus or Covenfolk person now opens the same searchable list the desktop uses, and drawing from Wealth to cover a deficit is a choice in that list too.
+- `e` or `d` on an empty list does nothing instead of showing a notice, and `e` on a Hold Tribunal vote with a single row opens its form. In a Seasons list, `a` plans the person chosen.
+- A list you have focused keeps a row chosen when it gains its first row, so `e` and `d` work straight after the first Add.
+
 ## 3.85.0 — 2026-11-07
 
 ### Peregrinatio

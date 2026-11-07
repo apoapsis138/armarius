@@ -18,7 +18,7 @@ from screen_helpers import (
     _wait_for_screen,
     _wait_until_active,
 )
-from support import build_all_tabs, menu, quiet, wait_until
+from support import build_all_tabs, choose, menu, quiet, wait_until
 from textual.widgets import (
     Button,
     Collapsible,
@@ -41,6 +41,7 @@ from ars_magica_manager.tui.screens import (
     SelectableList,
     WorkspaceScreen,
 )
+from ars_magica_manager.tui.screens.steps import ChooseScreen
 
 
 def _saga_for_economics() -> Saga:
@@ -731,14 +732,11 @@ async def test_editing_emergency_savings_offers_to_draw_from_wealth():
     async with app.run_test(size=(140, 60)) as pilot:
         await _select_covenant(pilot, app)
         await _edit_emergency_savings(pilot, app)
-        assert isinstance(app.screen, ConfirmScreen)
-        message = str(app.screen.query_one("#confirm-message", Static).render())
-        assert message.startswith(
-            "Do you wish to draw from Wealth to cover the deficit?"
-        )
-        assert "Deficit: 36    Wealth: 100" in message
-        # No opens the ordinary form instead.
-        await pilot.press("n")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ChooseScreen))
+        assert app.screen.step.title == "Draw from Wealth to cover the deficit?"
+        assert "Deficit: 36    Wealth: 100" in app.screen._all()[0].detail
+        # Editing the row instead opens the ordinary form.
+        await choose(pilot, app, "instead")
         await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
         assert app.screen.query_one("#fld-emergency_savings", Input).value == "0"
         await pilot.press("escape")
@@ -749,8 +747,7 @@ async def test_editing_emergency_savings_offers_to_draw_from_wealth():
         )
 
         await _edit_emergency_savings(pilot, app)
-        assert isinstance(app.screen, ConfirmScreen)
-        await pilot.press("y")
+        await choose(pilot, app, "Draw from Wealth")
         await wait_until(pilot, lambda: _saved_economics().emergency_savings == 36)
         assert _saved_economics().wealth == 64
         rows = app.screen._covenant_sheet_view.query_one(
@@ -766,10 +763,11 @@ async def test_a_short_draw_empties_wealth_and_the_covenant_is_broke():
     async with app.run_test(size=(140, 60)) as pilot:
         await _select_covenant(pilot, app)
         await _edit_emergency_savings(pilot, app)
-        message = str(app.screen.query_one("#confirm-message", Static).render())
-        assert "Wealth only covers 10 of it" in message
-        assert "26 stays uncovered" in message
-        await pilot.press("y")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ChooseScreen))
+        detail = app.screen._all()[0].detail
+        assert "Wealth only covers 10 of it" in detail
+        assert "26 stays uncovered" in detail
+        await choose(pilot, app, "Draw from Wealth")
         await wait_until(pilot, lambda: _saved_economics().wealth == 0)
         assert _saved_economics().emergency_savings == 10
         rows = app.screen._covenant_sheet_view.query_one(

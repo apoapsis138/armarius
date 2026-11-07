@@ -13,11 +13,18 @@ from __future__ import annotations
 
 from PySide6.QtWidgets import QVBoxLayout, QWidget
 
-from .. import attention, seasons, story_chapters, viewing, world_turns
+from .. import (
+    attention,
+    seasons,
+    section_verbs,
+    story_chapters,
+    viewing,
+    world_turns,
+)
 from ..forms import advance as advance_forms
 from ..forms import take_up as take_up_forms
 from ..models import Saga, SeasonRecord
-from ..sections import ATTENTION_SECTION
+from ..sections import ATTENTION_SECTION, WORLD_TURNS_SECTION
 from .ahead import ahead_section, undertakings_section
 from .character_sheet import TextBlock, table_section
 from .editing import Run
@@ -113,7 +120,7 @@ class SeasonsPage(QWidget):
             table_section(
                 world_turns.turns_title(saga),
                 world_turns.turns_grid(saga).table(),
-                world_turns.turn_ops(saga),
+                section_verbs.ops_of(saga, saga)[WORLD_TURNS_SECTION],
                 p,
                 self.run,
                 empty="Nothing yet: each Winter, Advance Season asks what the "
@@ -138,7 +145,7 @@ class SeasonsPage(QWidget):
             table_section(
                 attention.title(saga),
                 attention.grid(saga).table(),
-                attention.ops(saga),
+                section_verbs.ops_of(saga, saga)[ATTENTION_SECTION],
                 self.p,
                 self.run,
                 empty=attention.grid(saga).empty,

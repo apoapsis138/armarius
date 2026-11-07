@@ -39,6 +39,7 @@ from .. import (
     mobile_covenants,
     saga_index,
     seasons,
+    section_verbs,
     story_chapters,
     town_charter,
     vis,
@@ -57,12 +58,10 @@ from ..covenants import boon_hook_problems
 from ..forms import covenant as covenant_forms
 from ..forms import covenant_history
 from ..forms import creation as creation_forms
-from ..forms import diary as diary_forms
 from ..forms import inhabitant as inhabitant_forms
 from ..forms import land_shaping as land_forms
 from ..forms import library as library_forms
 from ..forms import menu as menu_forms
-from ..forms import possession as possession_forms
 from ..forms import season as season_forms
 from ..forms import secrets as secret_forms
 from ..forms import take_up as take_up_forms
@@ -318,6 +317,11 @@ class CovenantPage(QWidget):
     ) -> None:
         self.codex.inspect(title, subtitle, markup, symbol)
 
+    def _table(self, covenant: Covenant) -> dict[str, SectionOps]:
+        """The core's Add, Edit and Delete for each of the covenant sheet's
+        sections, built once for the page being drawn."""
+        return section_verbs.ops_of(self.saga, covenant)
+
     # Above the chapters
 
     def _header(self, covenant: Covenant | None) -> QWidget:
@@ -413,6 +417,11 @@ class CovenantPage(QWidget):
         placed = self.placer.buttons("Hooks") if self.placer else []
         line_height = max((b.sizeHint().height() for b in placed), default=0)
         columns = []
+        table = self._table(covenant)
+        section_of_kind = {
+            kind: section_id
+            for section_id, kind in section_verbs.BOON_HOOK_KINDS.items()
+        }
         for kind, points, tone in (
             ("Boon", boons, "text-success"),
             ("Hook", hooks, "text-error"),
@@ -422,7 +431,7 @@ class CovenantPage(QWidget):
             stack.setContentsMargins(0, 0, 0, 0)
             stack.setSpacing(10)
             chooser = Chooser()
-            ops = covenant_forms.boon_hook_ops(self.saga, covenant, kind)
+            ops = table[section_of_kind[kind]]
             heading = section(
                 f"{kind}s", p, buttons=verb_buttons(ops, chooser, self.run, p)
             )
@@ -462,7 +471,7 @@ class CovenantPage(QWidget):
             trait_section(
                 "Reputations",
                 covenant.reputations,
-                "section-cov-reputations",
+                table[section_verbs.COVENANT_REPUTATIONS_SECTION],
                 p,
                 self.run,
             ),
@@ -506,7 +515,7 @@ class CovenantPage(QWidget):
         found: list[QWidget] = []
         if town_charter.has_boon_hook(covenant, town_charter.CHARTERED_TOWN):
             charter = town_charter.charter_of(covenant)
-            ops = town_charter.covenant_charter_ops(saga, covenant)
+            ops = self._table(covenant)
             grid = town_charter.lords_grid(saga, charter)
             chooser = Chooser()
 
@@ -569,7 +578,7 @@ class CovenantPage(QWidget):
         What Matters, and its attitude to each player covenant, the favours
         owed, its links and its connections. A Line covenant has no magi or What Matters."""
         p, saga = self.p, self.saga
-        ops = world_forms.covenant_ops(saga, covenant)
+        ops = self._table(covenant)
         summary = covenant.summary.strip()
         parts: list[QWidget] = [
             arms_section(covenant, p, self.run),
@@ -783,10 +792,11 @@ class CovenantPage(QWidget):
                 ),
             ]
 
+        table = self._table(covenant)
         parts += self._every_kind(
             cvs.inhabitant_groups(saga, covenant),
             {kind: inh.KIND_TITLES[kind] for kind in INHABITANT_KINDS},
-            lambda kind: inhabitant_forms.inhabitant_ops(saga, covenant, kind),
+            lambda kind: table[f"section-inh-{kind}"],
             more,
         )
         parts.append(self._guests(covenant))
@@ -863,7 +873,7 @@ class CovenantPage(QWidget):
             else _none(grid.empty, p),
             buttons=[
                 *verb_buttons(
-                    mobile_covenants.ops(saga, covenant), chooser, self.run, p
+                    self._table(covenant)[WHEREABOUTS_SECTION], chooser, self.run, p
                 ),
                 edit_button(
                     mobile_covenants.ROUTE_TITLE,
@@ -893,7 +903,7 @@ class CovenantPage(QWidget):
         widget = table_section(
             guest_stays.title(saga, covenant),
             grid.table(),
-            guest_stays.ops(saga, covenant),
+            self._table(covenant)[GUESTS_SECTION],
             self.p,
             self.run,
             empty=grid.empty,
@@ -1033,6 +1043,7 @@ class CovenantPage(QWidget):
                 )
             ]
 
+        table = self._table(covenant)
         return scrolling_page(
             self.p,
             # The ships are ledger entries of their own (gui.ships).
@@ -1048,11 +1059,17 @@ class CovenantPage(QWidget):
                     for kind in POSSESSION_KINDS
                     if kind != "ship"
                 },
-                lambda kind: possession_forms.possession_ops(saga, covenant, kind),
+                lambda kind: table[f"section-pos-{kind}"],
                 more,
             ),
             device_section(
-                saga, "covenant", covenant.id, self.p, self.run, self.inspect
+                saga,
+                "covenant",
+                covenant.id,
+                table["section-cov-devices"],
+                self.p,
+                self.run,
+                self.inspect,
             ),
         )
 
@@ -1123,10 +1140,15 @@ class CovenantPage(QWidget):
             ),
         ]
 
+        table = self._table(covenant)
+        economics_sections = {
+            "income": section_verbs.INCOME_SECTION,
+            "expenditure": section_verbs.EXPENDITURE_SECTION,
+            "savings": section_verbs.SAVINGS_SECTION,
+        }
+
         def ops(kind: str) -> SectionOps:
-            if kind == "income":
-                return covenant_forms.income_ops(covenant)
-            return covenant_forms.economics_row_ops(saga, covenant, kind)
+            return table[economics_sections[kind]]
 
         def more(kind: str) -> list[RowVerb]:
             if kind != "income":
@@ -1198,7 +1220,7 @@ class CovenantPage(QWidget):
             manors.manors_of(covenant),
             self.p,
             self.run,
-            manors.covenant_ops(saga, covenant),
+            self._table(covenant),
             self.codex,
         ).chapter(manors.COVENANT_TAB)
 
@@ -1211,7 +1233,7 @@ class CovenantPage(QWidget):
             manors.manors_of(covenant),
             self.p,
             self.run,
-            hermetic_projects.covenant_ops(saga, covenant),
+            self._table(covenant),
             self.codex,
         ).chapter(hermetic_projects.projects_tab(saga, covenant))
 
@@ -1224,7 +1246,7 @@ class CovenantPage(QWidget):
             manors.manors_of(covenant),
             self.p,
             self.run,
-            covenant_history.covenant_ops(saga, covenant),
+            self._table(covenant),
             self.codex,
         ).chapter(covenant_history.TAB)
 
@@ -1375,7 +1397,7 @@ class CovenantPage(QWidget):
             p,
             table_view(table, p, show) if table.rows else _none("Nobody here.", p),
             buttons=verb_buttons(
-                season_forms.covenant_season_ops(saga, covenant, kind),
+                self._table(covenant)[f"section-cov-seasons-{kind}"],
                 chooser,
                 self.run,
                 p,
@@ -1386,7 +1408,7 @@ class CovenantPage(QWidget):
     def _diary(self, covenant: Covenant) -> QWidget:
         p = self.p
         chooser = Chooser()
-        ops = diary_forms.covenant_diary_ops(self.saga, covenant)
+        ops = self._table(covenant)[section_verbs.COVENANT_DIARY_SECTION]
         cards: list[ClickableCard] = []
         entries = cvs.diary_cards(covenant.diary)
         for entry in entries:

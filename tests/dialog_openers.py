@@ -8,7 +8,7 @@ import random
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 
-from support import NODES, everything_saga, wait_until
+from support import NODES, everything_saga, strip_markup, wait_until
 from textual.screen import ModalScreen
 from textual.widgets import TabbedContent, Tree
 
@@ -24,6 +24,7 @@ from ars_magica_manager import (
     melee_events,
     menagerie,
     neighbour_filter,
+    section_verbs,
     siege_actions,
     staged_projects,
     storage,
@@ -31,6 +32,7 @@ from ars_magica_manager import (
     vis,
 )
 from ars_magica_manager import economics as eco
+from ars_magica_manager import enchanted_devices as ed
 from ars_magica_manager import goods as gd
 from ars_magica_manager import house_rules as hr
 from ars_magica_manager import mystery_cults as cult_core
@@ -120,8 +122,8 @@ from ars_magica_manager.tui import screens as scr
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens.forms import _mastery_dialog
 from ars_magica_manager.tui.screens.prompts import ListFieldScreen
+from ars_magica_manager.tui.screens.steps import ChooseScreen
 from ars_magica_manager.tui.screens.widgets import section_stop
-from ars_magica_manager.tui.screens.workspace import _COVENANT_REPUTATIONS
 
 
 def contract_saga() -> Saga:
@@ -174,7 +176,7 @@ def _add_story_event_with_pools(ws) -> None:
     ):
         if not any(bh.id == bh_id for bh in covenant.boons_hooks):
             covenant.boons_hooks.append(VirtueFlawInstance(vf_id, id=bh_id))
-    ws._add_covenant_diary_entry()
+    ws._core_verb("tab-cov-diary", "add")
 
 
 @dataclass(frozen=True)
@@ -268,11 +270,19 @@ def _found_covenant(ws) -> None:
     ws.action_found_covenant()
 
 
-def _open_saga_source(ws) -> None:
+async def _open_saga_source(ws) -> None:
     """Edit a saga source, made in memory (saved only with the edit)."""
     if not ws.saga.sources:
         ws.saga.sources.append(SagaSource("HR", "House rules"))
-    ws._saga_source_form(ws.saga.sources[0])
+    await _core_edit("section-saga-sources", "content-sources-list")(ws)
+
+
+async def _open_own_spell(ws) -> None:
+    """Edit the saga's first own spell, chosen in the Spells list."""
+    view = ws._current_sheet_view()
+    await view.build_all_tabs()
+    shown = view.query_one(scr.SpellListView).shown
+    await _core_edit("section-spells", "spell-list", shown.index(ws.saga.spells[0]))(ws)
 
 
 def _move_to_source(ws) -> None:
@@ -313,11 +323,7 @@ async def _open_param_prompt(ws, vf_id: str | None = None) -> None:
     await until(lambda: view.query("#section-vf-virtues CollapsibleTitle"))
     section_stop(view.query_one("#section-vf-virtues")).focus()
     await until(lambda: ws._active_section() == "section-vf-virtues")
-    ws.action_add_virtue_flaw()
-    picker = await wait_for_screen(ws.app, scr.VirtueFlawPickerScreen)
-    picker._on_entry_selected(
-        catalog.load_virtue_flaw_catalog_by_id()[vf_id or _param_vf()]
-    )
+    await _pick_virtue_flaw(ws, "section-vf-virtues", vf_id or _param_vf())
 
 
 async def _open_secrets(ws) -> None:
@@ -346,7 +352,7 @@ async def _open_virtue_change(ws) -> None:
     await until(lambda: rows.selected_data_index == index)
     rows.focus()
     await until(lambda: ws._active_section() == "section-vf-virtues")
-    ws.action_edit_virtue_flaw()
+    ws._core_verb("section-vf-virtues", "edit")
 
 
 async def _open_lab_virtue_change(ws) -> None:
@@ -370,7 +376,7 @@ async def _open_lab_virtue_change(ws) -> None:
     await until(lambda: rows.selected_data_index == index)
     rows.focus()
     await until(lambda: ws._active_section() == "section-lab-vf-virtues")
-    ws.action_edit_virtue_flaw()
+    ws._core_verb("section-lab-vf-virtues", "edit")
 
 
 async def _open_lab_choice_prompt(
@@ -385,9 +391,7 @@ async def _open_lab_choice_prompt(
     await until(lambda: view.query(f"#{section} CollapsibleTitle"))
     section_stop(view.query_one(f"#{section}")).focus()
     await until(lambda: ws._active_section() == section)
-    ws.action_add_virtue_flaw()
-    picker = await wait_for_screen(ws.app, scr.LabVirtueFlawPickerScreen)
-    picker._on_entry_selected(catalog.load_lab_virtue_flaw_catalog_by_id()[vf_id])
+    await _pick_virtue_flaw(ws, section, vf_id)
 
 
 def _open_mastery_ability(ws) -> None:
@@ -841,10 +845,38 @@ def _add_purchase(ws) -> None:
 def _economics_row(which: str, key: str):
     """Edit the Yearly Expenditure / Cost Savings row with `key`."""
 
-    def opener(ws) -> None:
+    async def opener(ws) -> None:
         summary = eco.summarize(ws.saga, ws.selected_covenant)
         rows = summary.expenditure if which == "expenditure" else summary.savings
-        ws._economics_row_form(which, next(r for r in rows if r.key == key))
+        row = next(i for i, r in enumerate(rows) if r.key == key)
+        await _core_edit(f"section-eco-{which}", f"eco-{which}-list", row)(ws)
+
+    return opener
+
+
+def _core_add(section: str):
+    """Runs the table's Add for `section`, as its `a` key does."""
+    return lambda ws: ws._core_verb(section, "add")
+
+
+def _core_edit(section: str, list_id: str, index: int = 0):
+    """Runs the table's Edit on row `index` of the list `list_id`, as its
+    `e` key does."""
+    return _pick(lambda ws: ws._core_verb(section, "edit"), list_id, index)
+
+
+def _new_inhabitant(kind: str):
+    """Opens the form for a new inhabitant of `kind` with no sheet behind it."""
+
+    async def opener(ws) -> None:
+        ws._core_verb(f"section-inh-{kind}", "add")
+        # Grogs and sheets on offer come first: the first choice is a new
+        # person, with no sheet.
+        await until(lambda: isinstance(ws.app.screen, ChooseScreen | scr.FieldsDialog))
+        if isinstance(ws.app.screen, ChooseScreen):
+            picker = ws.app.screen
+            await until(lambda: bool(picker.query("#choose-list")), 3.0)
+            picker.dismiss(0)
 
     return opener
 
@@ -857,19 +889,98 @@ def _open_ritual_again(ws) -> None:
     ws.action_perform_ritual()
 
 
+def _core_step(ws, section: str, verb: str, row: int = 0):
+    """The first step of the core table's `verb` on the record on show: the
+    sheet's `row` (its list's index) for Edit and Delete."""
+    record = ws._core_record()
+    ops = section_verbs.section_ops(ws.saga, record, section)
+    if verb == "add":
+        return ops.add()
+    return getattr(ops, verb)(section_verbs.table_row(record, section, row))
+
+
+def _open_device_edit(ws) -> None:
+    """Edit the laboratory's device `dev-lab` (its own row, not an effect's)."""
+    lab = ws.selected_laboratory
+    targets = ed.device_targets(ws.saga, "laboratory", lab.id)
+    row = next(
+        i
+        for i, (d, effect) in enumerate(targets)
+        if d.id == "dev-lab" and effect is None
+    )
+    ops = section_verbs.section_ops(ws.saga, lab, "section-lab-devices")
+    ws._run_steps(ops.edit(row))
+
+
+def _open_lab_feature_details(ws) -> None:
+    """Edit the lab's first Feature: its first form (which Feature, on which
+    Virtue) is accepted as prefilled, which opens the details form."""
+    ops = section_verbs.section_ops(
+        ws.saga, ws.selected_laboratory, "section-lab-features"
+    )
+    first = ops.edit(0)
+    ws._run_steps(first.apply({f.key: f.value for f in first.fields()}))
+
+
+def _open_research_goal(ws) -> None:
+    ws._run_steps(_core_step(ws, "section-research-goals", "add"))
+
+
+def _open_personal_weapon(ws) -> None:
+    """Add a Personal Gear item, the kind chosen: a weapon."""
+    ws._run_steps(_core_step(ws, "section-inventory", "add").apply("weapon"))
+
+
+def _open_plan_season(ws) -> None:
+    """The first step of the section's Plan (a form once planned, else the
+    grog's Yearly Update)."""
+    ops = section_verbs.section_ops(
+        ws.saga, ws.selected_character, "section-char-season"
+    )
+    assert ops is not None
+    ws._run_steps(ops.add() if ops.add is not None else ops.edit(0))
+
+
+async def _pick_virtue_flaw(ws, section: str, vf_id: str) -> None:
+    """Add to a Virtues or Flaws list and choose the entry `vf_id`, which
+    asks for something."""
+    ws._core_verb(section, "add")
+    picker = await wait_for_screen(ws.app, ChooseScreen)
+    await until(lambda: bool(picker.query("#choose-list")), 3.0)
+    picker.dismiss(
+        next(
+            i
+            for i, c in enumerate(picker._all())
+            if getattr(c.value, "id", None) == vf_id
+        )
+    )
+
+
 async def _open_ability_details(ws) -> None:
     """Add an Ability: pick Athletics, which asks for its details."""
-    ws._add_ability()
-    picker = await wait_for_screen(ws.app, scr.AbilityPickerScreen)
-    picker._on_entry_selected(catalog.load_ability_catalog_by_id()["ab_athletics"])
+    ws._run_steps(_core_step(ws, "tab-abilities", "add"))
+    picker = await wait_for_screen(ws.app, ChooseScreen)
+    await until(lambda: bool(picker.query("#choose-list")), 3.0)
+    picker.dismiss(
+        next(
+            i
+            for i, c in enumerate(picker._all())
+            if "Athletics" in strip_markup(c.label)
+        )
+    )
 
 
 async def _open_boon_details(ws) -> None:
     """Add a Boon: pick Edifice, which asks for its detail."""
-    ws._add_boon_hook("Boon")
-    picker = await wait_for_screen(ws.app, scr.CovenantBoonHookPickerScreen)
-    picker._on_entry_selected(
-        catalog.load_covenant_boon_hook_catalog_by_id()["covbh_boon_minor_edifice"]
+    ws._core_verb("section-cov-boons", "add")
+    picker = await wait_for_screen(ws.app, ChooseScreen)
+    await until(lambda: bool(picker.query("#choose-list")), 3.0)
+    picker.dismiss(
+        next(
+            i
+            for i, c in enumerate(picker._all())
+            if getattr(c.value, "id", None) == "covbh_boon_minor_edifice"
+        )
     )
 
 
@@ -1473,26 +1584,26 @@ OPENERS: dict[str, Opener] = {
     "edit covenant description": Opener(
         "covenant", lambda ws: ws._edit_covenant_description()
     ),
-    "edit boon": Opener("covenant", lambda ws: ws._edit_boon_hook_at("Boon", 0)),
+    "edit boon": Opener(
+        "covenant", _core_edit("section-cov-boons", "cov-boons-list", 0)
+    ),
     # The fixture's Hook (Contested Resource) may be Unknown.
-    "edit hook": Opener("covenant", lambda ws: ws._edit_boon_hook_at("Hook", 1)),
+    "edit hook": Opener(
+        "covenant", _core_edit("section-cov-hooks", "cov-hooks-list", 1)
+    ),
     "improve income": Opener(
         "covenant",
         lambda ws: ws._improve_form(ws.selected_covenant.economics.income_sources[0]),
     ),
     "edit personality trait": Opener(
         "character",
-        lambda ws: ws._edit_trait_at(
-            scr._CHARACTER_TRAITS, ws.selected_character.personality_traits, 0
-        ),
+        _core_edit("section-personality-traits", "personality-traits-list"),
     ),
     "edit covenant weapon": Opener(
-        "covenant",
-        lambda ws: ws._possession_form("weapon", ws._possession_entries("weapon")[0]),
+        "covenant", _core_edit("section-pos-weapon", "pos-weapon-list")
     ),
     "edit covenant armor": Opener(
-        "covenant",
-        lambda ws: ws._possession_form("armor", ws._possession_entries("armor")[0]),
+        "covenant", _core_edit("section-pos-armor", "pos-armor-list")
     ),
     # Character
     "edit character info": Opener("character", lambda ws: ws._edit_character_info()),
@@ -1509,8 +1620,13 @@ OPENERS: dict[str, Opener] = {
     "edit hermetic background": Opener(
         "character", lambda ws: ws._edit_hermetic_background()
     ),
-    "edit ability": Opener("character", lambda ws: ws._edit_ability_at(0)),
-    "edit raw vis": Opener("character", lambda ws: ws._edit_raw_vis_at(0)),
+    "edit ability": Opener(
+        "character", lambda ws: ws._run_steps(_core_step(ws, "tab-abilities", "edit"))
+    ),
+    "edit raw vis": Opener(
+        "character",
+        lambda ws: ws._run_steps(_core_step(ws, "section-raw-vis-hermetic", "edit")),
+    ),
     "give raw vis": Opener(
         "character",
         lambda ws: ws._run_steps(
@@ -1522,9 +1638,9 @@ OPENERS: dict[str, Opener] = {
             )
         ),
     ),
-    "add research goal": Opener("character", lambda ws: ws._add_research_goal()),
-    "add integration goal": Opener("character", lambda ws: ws._add_research_goal()),
-    "add secret research goal": Opener("character", lambda ws: ws._add_research_goal()),
+    "add research goal": Opener("character", _open_research_goal),
+    "add integration goal": Opener("character", _open_research_goal),
+    "add secret research goal": Opener("character", _open_research_goal),
     "add tradition effect": Opener("character", _open_tradition_effect),
     "add power": Opener("character", _open_power),
     "add agent": Opener("character", _open_agent),
@@ -1544,10 +1660,11 @@ OPENERS: dict[str, Opener] = {
     ),
     "change virtue choice": Opener("character", _open_virtue_change),
     "add mastery ability": Opener("character", _open_mastery_ability),
-    "edit spell mastery": Opener("character", lambda ws: ws._edit_spell_mastery_at(0)),
-    "add personal weapon": Opener(
-        "character", lambda ws: ws._inventory_item_form("weapon", None)
+    "edit spell mastery": Opener(
+        "character",
+        lambda ws: ws._run_steps(_core_step(ws, "section-known-spells", "edit")),
     ),
+    "add personal weapon": Opener("character", _open_personal_weapon),
     # Familiar
     "edit familiar info": Opener("familiar", lambda ws: ws._edit_familiar_info()),
     "edit familiar binding": Opener("familiar", lambda ws: ws._edit_familiar_binding()),
@@ -1556,7 +1673,12 @@ OPENERS: dict[str, Opener] = {
     ),
     "edit familiar wounds": Opener("familiar", lambda ws: ws._edit_familiar_wounds()),
     "edit natural weapon": Opener(
-        "familiar", lambda ws: ws._familiar_natural_weapon_form(0)
+        "familiar",
+        lambda ws: ws._run_steps(
+            section_verbs.section_ops(
+                ws.saga, ws.selected_familiar, "section-fam-natural-weapons"
+            ).edit(0)
+        ),
     ),
     # Laboratory
     "edit lab identity": Opener("laboratory", lambda ws: ws._edit_lab_identity()),
@@ -1573,7 +1695,7 @@ OPENERS: dict[str, Opener] = {
         "laboratory", lambda ws: ws._edit_lab_characteristics()
     ),
     "add lab specialization source": Opener(
-        "laboratory", lambda ws: ws._add_specialty_entry()
+        "laboratory", lambda ws: ws._core_verb("section-lab-specialties", "add")
     ),
     "add lab magic item points": Opener(
         "laboratory",
@@ -1588,14 +1710,11 @@ OPENERS: dict[str, Opener] = {
     ),
     "edit lab feature": Opener(
         "laboratory",
-        lambda ws: ws._feature_details(
-            ws.saga.laboratories[0],
-            ws.saga.laboratories[0].features[0],
-            "labfeat_window",
-            "labvf1",
-        ),
+        lambda ws: _open_lab_feature_details(ws),
     ),
-    "add lab room": Opener("laboratory", lambda ws: ws._add_named("section-lab-rooms")),
+    "add lab room": Opener(
+        "laboratory", lambda ws: ws._core_verb("section-lab-rooms", "add")
+    ),
     "reward or punish": Opener(
         "character",
         lambda ws: ws._run_steps(
@@ -1613,19 +1732,22 @@ OPENERS: dict[str, Opener] = {
         "character",
         lambda ws: ws._grog_year_for(ws.saga.character("grog9"), "section-char-season"),
     ),
-    "add arcane connection": Opener("laboratory", lambda ws: ws._add_connection()),
-    "add lab diary entry": Opener("laboratory", lambda ws: ws._add_diary_entry()),
+    "add arcane connection": Opener(
+        "laboratory", lambda ws: ws._core_verb("section-lab-connections", "add")
+    ),
+    "add lab diary entry": Opener(
+        "laboratory", lambda ws: ws._core_verb("tab-lab-diary", "add")
+    ),
     # Seasons
-    "plan a season": Opener("character", lambda ws: ws._plan_season()),
-    "plan an initiation": Opener("character", lambda ws: ws._plan_season()),
+    "plan a season": Opener("character", _open_plan_season),
+    "plan an initiation": Opener("character", _open_plan_season),
     "add character diary entry": Opener(
-        "character", lambda ws: ws._add_character_diary_entry()
+        "character",
+        lambda ws: ws._run_steps(_core_step(ws, "tab-diary", "add")),
     ),
-    "add covenant diary entry": Opener(
-        "covenant", lambda ws: ws._add_covenant_diary_entry()
-    ),
+    "add covenant diary entry": Opener("covenant", _core_add("tab-cov-diary")),
     "add story event concerning a character": Opener(
-        "covenant", lambda ws: ws._add_covenant_diary_entry()
+        "covenant", _core_add("tab-cov-diary")
     ),
     "add hidden resources story event": Opener(
         "covenant", lambda ws: _add_story_event_with_pools(ws)
@@ -1634,9 +1756,7 @@ OPENERS: dict[str, Opener] = {
         "covenant", lambda ws: _add_story_event_with_pools(ws)
     ),
     # Enchanted devices
-    "edit enchanted device": Opener(
-        "laboratory", lambda ws: ws._edit_device(_device(ws, "dev-lab"))
-    ),
+    "edit enchanted device": Opener("laboratory", _open_device_edit),
     "instill effect": Opener(
         "laboratory", lambda ws: ws._effect_form(_device(ws, "dev-lab"), None)
     ),
@@ -1649,26 +1769,16 @@ OPENERS: dict[str, Opener] = {
     # Forms that had only bespoke tests
     "edit covenant reputation": Opener(
         "covenant",
-        lambda ws: ws._edit_trait_at(
-            _COVENANT_REPUTATIONS, ws.selected_covenant.reputations, 0
-        ),
+        _core_edit("section-cov-reputations", "cov-reputations-list"),
     ),
     "add boon": Opener("covenant", _open_boon_details),
-    "add property": Opener(
-        "covenant", lambda ws: ws._possession_form("property", None)
-    ),
-    "add sanctum": Opener("covenant", lambda ws: ws._possession_form("sanctum", None)),
-    "add covenant item": Opener(
-        "covenant", lambda ws: ws._possession_form("item", None)
-    ),
-    "add vis source": Opener(
-        "covenant", lambda ws: ws._possession_form("vis_source", None)
-    ),
-    "add vis store": Opener(
-        "covenant", lambda ws: ws._possession_form("vis_store", None)
-    ),
+    "add property": Opener("covenant", _core_add("section-pos-property")),
+    "add sanctum": Opener("covenant", _core_add("section-pos-sanctum")),
+    "add covenant item": Opener("covenant", _core_add("section-pos-item")),
+    "add vis source": Opener("covenant", _core_add("section-pos-vis_source")),
+    "add vis store": Opener("covenant", _core_add("section-pos-vis_store")),
     "edit wealth": Opener("covenant", lambda ws: ws._edit_wealth()),
-    "add income source": Opener("covenant", lambda ws: ws._income_form(None)),
+    "add income source": Opener("covenant", _core_add("section-eco-income")),
     "add covenant manor": Opener(
         "covenant", _built(lambda ws: ws._core_verb("section-manors", "add"))
     ),
@@ -1683,7 +1793,10 @@ OPENERS: dict[str, Opener] = {
         "covenant", _built(lambda ws: ws._core_verb("section-manor-check", "edit"))
     ),
     "edit income source": Opener(
-        "covenant", _pick(lambda ws: ws._edit_income_source(), "eco-income-list")
+        "covenant",
+        _pick(
+            lambda ws: ws._core_verb("section-eco-income", "edit"), "eco-income-list"
+        ),
     ),
     "edit expenditure row": Opener(
         "covenant", _economics_row("expenditure", "buildings")
@@ -1698,19 +1811,11 @@ OPENERS: dict[str, Opener] = {
     "edit loyalty": Opener("covenant", lambda ws: ws._edit_loyalty()),
     "edit population": Opener("covenant", lambda ws: ws._edit_population()),
     "edit miscellaneous": Opener("covenant", lambda ws: ws._edit_miscellaneous()),
-    "add magus": Opener(
-        "covenant", lambda ws: ws._inhabitant_form("magus", None, None)
-    ),
-    "add turb": Opener("covenant", lambda ws: ws._inhabitant_form("turb", None, None)),
-    "add covenfolk member": Opener(
-        "covenant", lambda ws: ws._inhabitant_form("inhabitant", None, None)
-    ),
-    "add craftsperson": Opener(
-        "covenant", lambda ws: ws._inhabitant_form("craftsperson", None, None)
-    ),
-    "add horses": Opener(
-        "covenant", lambda ws: ws._inhabitant_form("horse", None, None)
-    ),
+    "add magus": Opener("covenant", _new_inhabitant("magus")),
+    "add turb": Opener("covenant", _new_inhabitant("turb")),
+    "add covenfolk member": Opener("covenant", _new_inhabitant("inhabitant")),
+    "add craftsperson": Opener("covenant", _new_inhabitant("craftsperson")),
+    "add horses": Opener("covenant", _new_inhabitant("horse")),
     "add book": Opener("covenant", lambda ws: ws._book_form(None)),
     "edit book": Opener(
         "covenant",
@@ -1727,12 +1832,12 @@ OPENERS: dict[str, Opener] = {
     "add lab text": Opener("laboratory", lambda ws: ws._book_form(None)),
     "perform ritual again": Opener("laboratory", _open_ritual_again),
     "lab texts read": Opener("character", lambda ws: ws._edit_lab_text_access()),
-    "add house rule": Opener("saga", lambda ws: ws._house_rule_form(None)),
-    "add player": Opener("saga_content", lambda ws: ws._player_form(None)),
+    "add house rule": Opener("saga_content", _core_add("section-house-rules")),
+    "add player": Opener("saga_content", _core_add("section-players")),
     "edit traditions offered": Opener("saga_content", lambda ws: ws._edit_traditions()),
-    "add spell": Opener("saga_content", lambda ws: ws._spell_form(None)),
-    "edit spell": Opener("saga_content", lambda ws: ws._spell_form(ws.saga.spells[0])),
-    "add saga source": Opener("saga_content", lambda ws: ws._saga_source_form(None)),
+    "add spell": Opener("saga_content", _core_add("section-spells")),
+    "edit spell": Opener("saga_content", _open_own_spell),
+    "add saga source": Opener("saga_content", _core_add("section-saga-sources")),
     "edit saga source": Opener("saga_content", _open_saga_source),
     "move to source": Opener("saga_content", _move_to_source),
     "edit catalog": Opener("saga_content", lambda ws: ws._catalog_form("spells")),
@@ -1742,22 +1847,40 @@ OPENERS: dict[str, Opener] = {
     "add ability": Opener("character", _open_ability_details),
     "edit arts": Opener("character", lambda ws: ws._edit_arts()),
     "edit familiar fatigue": Opener("familiar", lambda ws: ws._edit_familiar_fatigue()),
-    "add bond power": Opener("familiar", lambda ws: ws._familiar_bond_power_form(None)),
-    "edit bond power": Opener("familiar", lambda ws: ws._familiar_bond_power_form(0)),
-    "add lab raw vis": Opener("laboratory", lambda ws: ws._add_lab_raw_vis()),
+    "add bond power": Opener(
+        "familiar", lambda ws: ws._core_verb("tab-fam-powers", "add")
+    ),
+    "edit bond power": Opener(
+        "familiar",
+        lambda ws: ws._run_steps(
+            section_verbs.section_ops(
+                ws.saga, ws.selected_familiar, "tab-fam-powers"
+            ).edit(0)
+        ),
+    ),
+    "add lab raw vis": Opener(
+        "laboratory", lambda ws: ws._core_verb("section-lab-raw-vis", "add")
+    ),
     "edit lab raw vis": Opener(
-        "laboratory", _pick(lambda ws: ws._edit_lab_raw_vis(), "lab-raw-vis-list")
+        "laboratory",
+        _pick(
+            lambda ws: ws._core_verb("section-lab-raw-vis", "edit"), "lab-raw-vis-list"
+        ),
     ),
     "edit lab diary entry": Opener(
-        "laboratory", _pick(lambda ws: ws._edit_diary_entry(), "lab-diary-list")
+        "laboratory",
+        _pick(lambda ws: ws._core_verb("tab-lab-diary", "edit"), "lab-diary-list"),
     ),
     "edit lab specialization source": Opener(
         "laboratory",
-        _pick(lambda ws: ws._edit_specialty_entry(), "lab-specialties-list"),
+        _pick(
+            lambda ws: ws._core_verb("section-lab-specialties", "edit"),
+            "lab-specialties-list",
+        ),
     ),
     "edit lab room": Opener(
         "laboratory",
-        _pick(lambda ws: ws._edit_named("section-lab-rooms"), "lab-rooms-list"),
+        _pick(lambda ws: ws._core_verb("section-lab-rooms", "edit"), "lab-rooms-list"),
     ),
     # Creation Worksheet: the core's steps (worksheet_forms), run by the
     # terminal's step runner.
@@ -1945,9 +2068,7 @@ OPENERS: dict[str, Opener] = {
         "character", lambda ws: ws.action_change_virtues_flaws()
     ),
     # A saga's own Abilities in House Rules (HoH:S pp. 103-106).
-    "add house rule ability": Opener(
-        "saga_content", lambda ws: ws._house_rule_form(None)
-    ),
+    "add house rule ability": Opener("saga_content", _core_add("section-house-rules")),
     "edit house rule ability": Opener("saga_content", lambda ws: _open_own_ability(ws)),
     # A place's Tomb tab (Lands of the Nile).
     "edit tomb": Opener(
@@ -1981,7 +2102,7 @@ OPENERS: dict[str, Opener] = {
     ),
     "trap acts": _tomb_step(lambda ws: tombs.it_acts(_springing(ws, acted=True))),
     # A covenant's ships (Hermetic Projects; City & Guild).
-    "add ship": Opener("covenant", lambda ws: ws._possession_form("ship", None)),
+    "add ship": Opener("covenant", _core_add("section-pos-ship")),
     "ship stress check": Opener("covenant", lambda ws: _open_ship(ws, "stress")),
     "ship combat": Opener("covenant", lambda ws: _open_ship(ws, "combat")),
     "sunk or taken": Opener("covenant", _open_ship_fate),
@@ -2624,7 +2745,7 @@ def _open_great_elixir(ws) -> None:
     ws.action_great_elixir()
 
 
-def _open_own_ability(ws) -> None:
+async def _open_own_ability(ws) -> None:
     """Edit one of the saga's own Abilities in House Rules: Speak with Ravens,
     held by no one."""
     if not ws.saga.custom_abilities:
@@ -2640,7 +2761,8 @@ def _open_own_ability(ws) -> None:
         )
         catalog.use_saga(ws.saga)
     ability = ws.saga.custom_abilities[0]
-    ws._house_rule_form((hr.ABILITY, ability))
+    row = hr.all_entries(ws.saga).index((hr.ABILITY, ability))
+    await _core_edit("section-house-rules", "house-rules-list", row)(ws)
 
 
 async def _open_ship(ws, which: str) -> None:

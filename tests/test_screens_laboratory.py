@@ -16,7 +16,7 @@ from screen_helpers import (
     _select_laboratory,
     _wait_for_screen,
 )
-from support import build_all_tabs, strip_markup, wait_until
+from support import build_all_tabs, choose, strip_markup, wait_until
 from textual.widgets import (
     Button,
     Collapsible,
@@ -46,7 +46,6 @@ from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import (
     ConfirmScreen,
     FieldsDialog,
-    LabVirtueFlawPickerScreen,
     SelectableList,
     WorkspaceScreen,
 )
@@ -630,6 +629,8 @@ async def test_deleting_a_feature_virtue_or_focus_flaw_takes_its_feature_or_focu
 
         # The Greater Feature: the Cauldron goes with it.
         await _choose_lab_row(pilot, view, "lab-vf-virtues-list", 0)
+        view.query_one("#lab-vf-virtues-list").focus()  # d acts on the focused list
+        await pilot.pause()
         await pilot.press("d")
         assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
         assert "Its Feature, Cauldron, goes too" in str(
@@ -655,10 +656,7 @@ async def test_a_new_feature_virtue_is_given_to_a_feature_waiting_for_one():
         view = app.screen._laboratory_sheet_view
         await _open_lab_section(pilot, app, "section-lab-vf-virtues")
         await pilot.press("a")
-        await wait_until(
-            pilot, lambda: isinstance(app.screen, LabVirtueFlawPickerScreen)
-        )
-        app.screen.dismiss(VirtueFlawInstance("labvf_greater_feature"))
+        await choose(pilot, app, "Greater Feature")
         assert await wait_until(
             pilot,
             lambda: (

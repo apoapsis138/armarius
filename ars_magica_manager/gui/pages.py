@@ -32,13 +32,14 @@ from .. import (
     neighbour_filter,
     neighbours,
     open_stories,
+    section_verbs,
     sieges,
     story_chapters,
     troupe,
     world,
 )
 from .. import saga_overview as ov
-from ..commands import Command
+from ..commands import Command, SectionOps
 from ..forms import diary as diary_forms
 from ..forms import menu as menu_forms
 from ..models import Character, Creature, Neighbour, Saga, Tribunal
@@ -745,11 +746,16 @@ def bestiary_chapter(
 
 
 def battle_card(
-    saga: Saga, index: int, p: Palette, run: Callable[[Command], None]
+    saga: Saga,
+    index: int,
+    p: Palette,
+    run: Callable[[Command], None],
+    ops: SectionOps,
 ) -> QWidget:
     """A battle as a card: its armies, their groups and how its events
-    went, with Battle Event, Edit and Delete (a battle has no page of its
-    own: Battle Event plays it)."""
+    went, with Battle Event, and Edit and Delete from `ops`, the Battles
+    list's entry in the core's table (a battle has no page of its own:
+    Battle Event plays it)."""
     entry = saga.battles[index]
     row = battles.grid(saga).rows[index]
     card = Card(p, pad=16)
@@ -777,7 +783,6 @@ def battle_card(
         # A fleet battle: its ships, whose count sets the Weight of Numbers.
         facts.insert(2, Fact("Ships", battles.ships_text(saga, entry)))
     card.column.addWidget(fact_grid(facts, p, 1))
-    ops = conflicts.ops(saga)[CONFLICT_BATTLES_SECTION]
     line = QHBoxLayout()
     line.setSpacing(6)
     line.addWidget(
@@ -848,7 +853,7 @@ def conflicts_chapter(
 ) -> QWidget:
     """Conflicts: its facts, then the battles, the fights and the sieges
     as cards, each list with its Add."""
-    ops = conflicts.ops(saga)
+    ops = section_verbs.ops_of(saga, saga)
     parts: list[QWidget] = [
         chapter_title("Conflicts", p),
         fact_grid(conflicts.header_facts(saga), p, 5),
@@ -857,7 +862,10 @@ def conflicts_chapter(
         (
             battles.title(saga),
             CONFLICT_BATTLES_SECTION,
-            [battle_card(saga, i, p, run) for i in range(len(saga.battles))],
+            [
+                battle_card(saga, i, p, run, ops[CONFLICT_BATTLES_SECTION])
+                for i in range(len(saga.battles))
+            ],
         ),
         (
             fights.title(saga),

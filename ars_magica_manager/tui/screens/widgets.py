@@ -341,9 +341,15 @@ class SelectableList(OptionList):
     def set_rows(self, rows: Sequence[tuple[int | None, str]]) -> None:
         """Replace all rows (synchronous; nothing is checked afterwards).
         Nothing is chosen either, unless the list has focus: a focused list
-        always has a row to act on, so the row at the old position (or the
-        nearest one) is chosen again."""
-        position = self.highlighted if self.has_focus else None
+        always has a row to act on, so the row at the old position is chosen
+        again (the nearest one), or the first when the list had no rows and
+        gains some. A focused list whose row another list took keeps none."""
+        position = None
+        if self.has_focus:
+            if self.highlighted is not None:
+                position = self.highlighted
+            elif not any(index is not None for index, _ in self._rows):
+                position = 0
         self.clear_options()
         self._marked = None
         self._checked = set()

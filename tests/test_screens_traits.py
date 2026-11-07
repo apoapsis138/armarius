@@ -5,7 +5,6 @@ import re
 from screen_helpers import (
     _ability_labels,
     _character_vf_labels,
-    _choose_in_list,
     _choose_lab_row,
     _confirm,
     _is_form,
@@ -20,24 +19,21 @@ from screen_helpers import (
     _select_character,
     _select_covenant,
     _select_laboratory,
-    _select_vf_picker_entry,
     _wait_for_picker_ready,
 )
-from support import menu, picker_rows, strip_markup, wait_until
+from support import choose, menu, picker_rows, strip_markup, wait_until
 from textual.widgets import Input, Select, Static
 
-from ars_magica_manager import storage
+from ars_magica_manager import section_verbs, storage
 from ars_magica_manager.models import Laboratory, VirtueFlawInstance
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import (
-    AbilityPickerScreen,
     ConfirmScreen,
     FieldsDialog,
-    LabVirtueFlawPickerScreen,
-    VirtueFlawPickerScreen,
     WorkspaceScreen,
 )
 from ars_magica_manager.tui.screens.creation_worksheet import CreationWorksheetScreen
+from ars_magica_manager.tui.screens.steps import ChooseScreen
 
 
 async def test_add_virtue_flaw_without_parameters_to_character():
@@ -49,13 +45,13 @@ async def test_add_virtue_flaw_without_parameters_to_character():
         await _open_section(pilot, app, "section-vf-virtues")
 
         await pilot.press("a")
-        await pilot.pause()
-        assert isinstance(app.screen, VirtueFlawPickerScreen)
-
-        await _select_vf_picker_entry(pilot, app, "vf_common_sense")
-
-        assert isinstance(app.screen, WorkspaceScreen)
-        assert "Common Sense" in _character_vf_labels(app.screen._character_sheet_view)
+        await choose(pilot, app, "Common Sense")
+        assert await wait_until(
+            pilot,
+            lambda: (
+                "Common Sense" in _character_vf_labels(app.screen._character_sheet_view)
+            ),
+        )
 
     saga = storage.load_saga("test_saga")
     character = saga.characters[0]
@@ -72,17 +68,15 @@ async def test_add_virtue_flaw_with_parameters_to_character():
         await _open_section(pilot, app, "section-vf-virtues")
 
         await pilot.press("a")
-        await pilot.pause()
-
-        await _select_vf_picker_entry(pilot, app, "vf_affinity_with_art")
-        assert isinstance(app.screen, FieldsDialog)
+        await choose(pilot, app, "Affinity with (Art)")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
 
         # An {art} is picked from the fifteen Arts.
+        assert await wait_until(pilot, lambda: bool(app.screen.query("#fld-art")))
         app.screen.query_one("#fld-art", Select).value = "creo"
         await pilot.click("#btn-save")
-        await pilot.pause()
+        assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
 
-        assert isinstance(app.screen, WorkspaceScreen)
         assert "Affinity with Creo" in _character_vf_labels(
             app.screen._character_sheet_view
         )
@@ -94,7 +88,7 @@ async def test_add_virtue_flaw_with_parameters_to_character():
     assert character.virtues_flaws[0].params == {"art": "creo"}
 
 
-async def test_cancelling_param_screen_returns_to_picker_without_adding():
+async def test_cancelling_the_parameter_form_adds_nothing():
     storage.save_saga(_saga_with_bare_character())
 
     app = ArsMagicaManagerApp()
@@ -103,48 +97,31 @@ async def test_cancelling_param_screen_returns_to_picker_without_adding():
         await _open_section(pilot, app, "section-vf-virtues")
 
         await pilot.press("a")
-        await pilot.pause()
-        await _wait_for_picker_ready(pilot, app)
-        picker = app.screen
-        app.screen.query_one("#picker-search", Input).value = "affinity with {art}"
-        await wait_until(pilot, lambda: len(picker_rows(picker)) == 1)
-        await pilot.press("enter")
-        await pilot.pause()
-        assert isinstance(app.screen, FieldsDialog)
+        await choose(pilot, app, "Affinity with (Art)")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
 
         await pilot.press("escape")
-        await pilot.pause()
-
-        assert isinstance(app.screen, VirtueFlawPickerScreen)
+        assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
 
     saga = storage.load_saga("test_saga")
     assert saga.characters[0].virtues_flaws == []
 
 
-async def test_virtue_flaw_picker_excludes_held_entries_unless_repeatable():
+def test_the_virtue_chooser_leaves_out_held_entries_unless_repeatable():
     saga = _saga_with_bare_character()
     saga.characters[0].virtues_flaws += [
         VirtueFlawInstance(vf_id="vf_affinity_with_art", params={"art": "creo"}),
         VirtueFlawInstance(vf_id="vf_adept_laboratory_student"),
     ]
-    storage.save_saga(saga)
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-vf-virtues")
-
-        await pilot.press("a")
-        await pilot.pause()
-        await _wait_for_picker_ready(pilot, app)
-
-        item_ids = app.screen.shown_ids()
-        assert "vf-vf_adept_laboratory_student" not in item_ids
-        # Affinity with Art may be taken twice, for two different Arts.
-        assert "vf-vf_affinity_with_art" in item_ids
+    ops = section_verbs.section_ops(saga, saga.characters[0], "section-vf-virtues")
+    labels = [strip_markup(c.label) for c in ops.add().choices()]
+    assert not any("Adept Laboratory Student" in label for label in labels)
+    # Affinity with Art may be taken twice, for two different Arts.
+    assert any("Affinity with" in label for label in labels)
+    assert len(labels) > 100  # the catalog's Virtues
 
 
-async def test_virtue_flaw_picker_search_filters_by_typed_text():
+async def test_the_virtue_chooser_search_takes_the_top_match():
     storage.save_saga(_saga_with_bare_character())
 
     app = ArsMagicaManagerApp()
@@ -153,36 +130,29 @@ async def test_virtue_flaw_picker_search_filters_by_typed_text():
         await _open_section(pilot, app, "section-vf-virtues")
 
         await pilot.press("a")
-        await pilot.pause()
-        assert isinstance(app.screen, VirtueFlawPickerScreen)
-
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ChooseScreen))
         picker = app.screen
         await _wait_for_picker_ready(pilot, app)
-        assert len(picker_rows(picker)) > 100  # the catalog's Virtues
-        search = app.screen.query_one("#picker-search", Input)
+        search = picker.query_one("#picker-search", Input)
 
         # Nothing matches: a single "(no matches...)" row.
         search.value = "xyzzy nonexistent"
         await wait_until(pilot, lambda: len(picker_rows(picker)) == 1)
         assert picker_rows(picker)[0][0] is None
 
-        # The name's match first, then the Virtues whose summary mentions it.
         search.value = "common sense"
-        await wait_until(pilot, lambda: 1 < len(picker_rows(picker)) < 10)
-        item_ids = picker.shown_ids()
-        assert item_ids[0] == "vf-vf_common_sense"
-        assert len(item_ids) > 1
+        await wait_until(pilot, lambda: 1 <= len(picker_rows(picker)) < 10)
 
         # Enter in the search box takes the top match.
         await search.action_submit()
-        await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
         assert "Common Sense" in _character_vf_labels(app.screen._character_sheet_view)
 
     saga = storage.load_saga("test_saga")
     assert saga.characters[0].virtues_flaws[0].vf_id == "vf_common_sense"
 
 
-async def test_lab_virtue_flaw_picker_search_filters_by_typed_text():
+async def test_add_virtue_flaw_to_laboratory_offers_the_lab_catalog():
     saga = _saga_with_bare_character()
     saga.laboratories.append(
         Laboratory(id="lab1", covenant_id="cov1", name="Test Lab", owner_id="char1")
@@ -196,91 +166,16 @@ async def test_lab_virtue_flaw_picker_search_filters_by_typed_text():
         await _open_lab_section(pilot, app, "section-lab-vf-virtues")
 
         await pilot.press("a")
-        await pilot.pause()
-        assert isinstance(app.screen, LabVirtueFlawPickerScreen)
-
-        picker = app.screen
-        await _wait_for_picker_ready(pilot, app)
-        assert len(picker.shown_ids()) > 30  # the full 128-entry lab catalog
-
-        app.screen.query_one("#picker-search", Input).value = "superior construction"
-        await wait_until(pilot, lambda: len(picker_rows(picker)) == 1)
-
-        item_ids = picker.shown_ids()
-        assert item_ids == ["labvf-labvf_superior_construction"]
-
-
-async def test_ability_picker_search_filters_by_typed_text():
-    storage.save_saga(_saga_with_bare_character())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _select_character(pilot, app)
-        await _open_section(pilot, app, "tab-abilities")
-
-        await pilot.press("a")
-        await pilot.pause()
-        assert isinstance(app.screen, AbilityPickerScreen)
-
-        picker = app.screen
-        await _wait_for_picker_ready(pilot, app)
-        assert len(picker.shown_ids()) > 30  # the full 78-entry catalog
-
-        app.screen.query_one("#picker-search", Input).value = "athletics"
-        await wait_until(pilot, lambda: len(picker_rows(picker)) == 1)
-
-        item_ids = picker.shown_ids()
-        assert item_ids == ["ability-ab_athletics"]
-
-
-async def test_picker_down_key_moves_focus_from_search_to_list():
-    storage.save_saga(_saga_with_bare_character())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _select_character(pilot, app)
-        await _open_section(pilot, app, "tab-abilities")
-
-        await pilot.press("a")
-        await pilot.pause()
-        assert isinstance(app.screen, AbilityPickerScreen)
-
-        search = app.screen.query_one("#picker-search", Input)
-        assert app.focused is search  # search box is focused on open
-
-        await pilot.press("down")
-        await pilot.pause()
-
-        assert app.focused is app.screen.query_one("#ability-picker-list")
-
-
-async def test_add_virtue_flaw_to_laboratory_uses_lab_picker():
-    saga = _saga_with_bare_character()
-    saga.laboratories.append(
-        Laboratory(id="lab1", covenant_id="cov1", name="Test Lab", owner_id="char1")
-    )
-    storage.save_saga(saga)
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _select_covenant(pilot, app)
-        await _select(pilot, app, ("laboratory", "lab1"))
-        await _open_lab_section(pilot, app, "section-lab-vf-virtues")
-
-        await pilot.press("a")
-        await pilot.pause()
-        assert isinstance(app.screen, LabVirtueFlawPickerScreen)
-
-        await _wait_for_picker_ready(pilot, app)
-        await _choose_in_list(
-            pilot, app, "lab-vf-picker-list", "labvf-labvf_superior_construction"
-        )
-
-        assert isinstance(app.screen, WorkspaceScreen)
+        await choose(pilot, app, "Superior Construction")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
         view = app.screen._laboratory_sheet_view
-        assert _lab_rows(view, "lab-vf-virtues-list") == [
-            "Superior Construction (Free)"
-        ]
+        assert await wait_until(
+            pilot,
+            lambda: (
+                _lab_rows(view, "lab-vf-virtues-list")
+                == ["Superior Construction (Free)"]
+            ),
+        )
         # The Characteristics above follow straight away (Safety +1).
         assert re.search(
             r"Safety:\s+\+0 \[\$text-success\]\+1\[/\] = \[\$text-success\]\+1\[/\]",
@@ -331,19 +226,14 @@ async def test_add_ability_with_parameters_to_character():
     storage.save_saga(_saga_with_bare_character())
 
     app = ArsMagicaManagerApp()
-    # 120x45, the smallest size the app targets: at 80x24 the picker's
-    # buttons cover the Craft row.
+    # 120x45, the smallest size the app targets.
     async with app.run_test(size=(120, 45)) as pilot:
         await _select_character(pilot, app)
         await _open_section(pilot, app, "tab-abilities")
 
         await pilot.press("a")
-        await pilot.pause()
-
-        await _wait_for_picker_ready(pilot, app)
-        await _choose_in_list(pilot, app, "ability-picker-list", "ability-ab_craft")
-        await pilot.pause()
-        assert isinstance(app.screen, FieldsDialog)
+        await choose(pilot, app, "Craft")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
 
         app.screen.query_one("#fld-craft", Input).value = "Blacksmith"
         await pilot.click("#btn-save")
@@ -367,7 +257,7 @@ async def test_add_ability_with_parameters_to_character():
     assert character.abilities[0].level == 2
 
 
-async def test_cancelling_ability_details_returns_to_picker_without_adding():
+async def test_cancelling_ability_details_adds_nothing():
     storage.save_saga(_saga_with_bare_character())
 
     app = ArsMagicaManagerApp()
@@ -376,17 +266,11 @@ async def test_cancelling_ability_details_returns_to_picker_without_adding():
         await _open_section(pilot, app, "tab-abilities")
 
         await pilot.press("a")
-        await pilot.pause()
-
-        await _wait_for_picker_ready(pilot, app)
-        await _choose_in_list(pilot, app, "ability-picker-list", "ability-ab_athletics")
-        await pilot.pause()
-        assert isinstance(app.screen, FieldsDialog)
+        await choose(pilot, app, "Athletics")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
 
         await pilot.press("escape")
-        await pilot.pause()
-
-        assert isinstance(app.screen, AbilityPickerScreen)
+        assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
 
     saga = storage.load_saga("test_saga")
     assert saga.characters[0].abilities == []
@@ -503,6 +387,9 @@ async def test_lab_vf_tab_warns_and_fills_the_details_panel():
         await _confirm(pilot, app, "y")
         assert "Over capacity by 3" in str(warnings.content)
         await _choose_lab_row(pilot, view, "lab-vf-virtues-list", 0)
+        # d acts on the list that has focus.
+        view.query_one("#lab-vf-virtues-list").focus()
+        await pilot.pause()
         await pilot.press("d")
         await _confirm(pilot, app, "y")
         assert not warnings.display

@@ -15,7 +15,6 @@ from ars_magica_manager.tui.screens import (
     FieldsDialog,
     SagaPickerScreen,
     SelectableList,
-    VirtueFlawPickerScreen,
     WorkspaceScreen,
 )
 from ars_magica_manager.tui.screens.prompts import MenuScreen
@@ -295,9 +294,7 @@ async def test_virtues_and_flaws_use_a_e_and_d_like_any_other_list():
         assert workspace.check_action("edit", ())  # e changes what one names
 
         await pilot.press("a")
-        assert await wait_until(
-            pilot, lambda: isinstance(app.screen, VirtueFlawPickerScreen)
-        )
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ChooseScreen))
         await pilot.press("escape")
         assert await wait_until(pilot, lambda: app.screen is workspace)
 

@@ -8,14 +8,11 @@ only where it can act."""
 
 from __future__ import annotations
 
-from collections.abc import Callable
-
 from .... import enchanted_devices as ed
 from ....forms import device as device_forms
 from ....markup import escape
 from ....models import CHARGED, EnchantedDevice, InstilledEffect
-from ..forms import _enchanted_device_dialog, _instilled_effect_dialog
-from ..prompts import ConfirmScreen
+from ..forms import _instilled_effect_dialog
 from ..sheets import DEVICE_SECTIONS
 from ..steps import run_steps
 from .base import (
@@ -47,92 +44,8 @@ class DeviceActions(WorkspaceBase):
             return None
         return section, kind, record.id
 
-    def _devices_or_pick(
-        self,
-        *,
-        empty: str,
-        then: Callable[[Target], object],
-    ) -> None:
-        """Act on the chosen row of the active device list (saying `empty`
-        when it has none)."""
-        holder = self._device_holder()
-        view = self._current_sheet_view()
-        if holder is None or view is None:
-            return
-        section, kind, holder_id = holder
-        targets = ed.device_targets(self.saga, kind, holder_id)
-        labels = ed.target_labels(self.saga, kind, holder_id)
-        chosen = view.selected_device_row(section)
-        if chosen is not None and chosen < len(targets):
-            then(targets[chosen])
-            return
-        self._chosen_or_pick(None, labels, empty=empty, then=lambda i: then(targets[i]))
-
     def _commit_devices(self) -> None:
         self._commit(*_ALL_DEVICE_SECTIONS)
-
-    # -- a / e / A --
-
-    def _add_device(self) -> None:
-        holder = self._device_holder()
-        if holder is None:
-            return
-        _, kind, holder_id = holder
-
-        def handle_result(device: EnchantedDevice | None) -> None:
-            if device is not None:
-                self.saga.enchanted_devices.append(device)
-                self._commit_devices()
-
-        self.app.push_screen(
-            _enchanted_device_dialog(self.saga, None, holder=f"{kind}:{holder_id}"),
-            handle_result,
-        )
-
-    def _edit_device_row(self) -> None:
-        """Edit the chosen device or effect."""
-        self._devices_or_pick(
-            empty="No enchanted devices to edit.",
-            then=self._edit_target,
-        )
-
-    def _edit_target(self, target: Target) -> None:
-        device, effect = target
-        if effect is None:
-            self._edit_device(device)
-        else:
-            self._effect_form(device, effect)
-
-    def _edit_device(self, device: EnchantedDevice) -> None:
-        def handle_result(edited: EnchantedDevice | None) -> None:
-            if edited is None or device not in self.saga.enchanted_devices:
-                return
-            devices = self.saga.enchanted_devices
-            devices[devices.index(device)] = edited
-            self._commit_devices()
-
-        self.app.push_screen(_enchanted_device_dialog(self.saga, device), handle_result)
-
-    def _remove_device_row(self) -> None:
-        """Delete the chosen device (with its effects) or effect, after
-        confirming."""
-        self._devices_or_pick(
-            empty="No enchanted devices to remove.",
-            then=self._confirm_remove,
-        )
-
-    def _confirm_remove(self, target: Target) -> None:
-        device, effect = target
-
-        def handle_confirmed(confirmed: bool | None) -> None:
-            if confirmed:
-                device_forms.remove_target(self.saga, device, effect)
-                self._commit_devices()
-
-        self.app.push_screen(
-            ConfirmScreen(device_forms.remove_question(device, effect)),
-            handle_confirmed,
-        )
 
     # -- i: Instill Effect, u: Use Charge (only where they can act) --
 
@@ -223,9 +136,4 @@ class DeviceActions(WorkspaceBase):
     def _device_section_ops(self) -> dict[str, _SectionOps]:
         """a / d / e on the enchanted-device sections (see
         WorkspaceScreen._section_ops)."""
-        return {
-            section: _SectionOps(
-                self._add_device, self._remove_device_row, self._edit_device_row
-            )
-            for section in DEVICE_SECTIONS
-        }
+        return {section: self._core_ops_of(section) for section in DEVICE_SECTIONS}

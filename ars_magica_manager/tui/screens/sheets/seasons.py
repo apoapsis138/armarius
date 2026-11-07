@@ -9,7 +9,6 @@ from textual.containers import Vertical, VerticalScroll
 from textual.widgets import Button, Static, TabbedContent
 
 from .... import ahead, attention, seasons, world_turns
-from ....forms import ahead as ahead_forms
 from ....markup import aligned, escape
 from ....models import Saga, SeasonRecord
 from ....sections import (
@@ -38,7 +37,6 @@ class SeasonsSheetView(SheetView):
 
     def __init__(self, saga: Saga) -> None:
         super().__init__(saga)
-        self.core_ops = ahead_forms.seasons_ops(saga)
         self._record = 0
         #: The Needs You row the panel shows (None: the record chosen).
         self._need: int | None = None

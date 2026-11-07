@@ -51,7 +51,6 @@ class ConflictsSheetView(SheetView):
 
     def __init__(self, saga: Saga) -> None:
         super().__init__(saga)
-        self.core_ops = conflicts.ops(saga)
         #: The list and row the details panel shows.
         self._chosen: tuple[str, int] | None = None
 

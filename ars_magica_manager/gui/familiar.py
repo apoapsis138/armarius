@@ -17,12 +17,12 @@ from collections.abc import Callable
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
-from .. import artwork
+from .. import artwork, section_verbs
 from .. import familiars as fam
 from .. import sheet_text as st
+from ..commands import SectionOps
 from ..forms import familiar as ff
 from ..forms import trait_roll as trait_roll_forms
-from ..forms import virtue as virtue_forms
 from ..models import Familiar, Saga
 from ..sheets import familiar as fs
 from .bookmark import with_bookmark
@@ -120,6 +120,11 @@ class FamiliarPage(QWidget):
     ) -> None:
         self.codex.inspect(title, subtitle, markup, symbol)
 
+    def _table(self) -> dict[str, SectionOps]:
+        """The core's Add, Edit and Delete for each of the sheet's sections,
+        built once for the page being drawn."""
+        return section_verbs.ops_of(self.saga, self.familiar)
+
     def _edit(self, *names: str, label: str = "Edit") -> dict[str, Callable[[], None]]:
         """Edit buttons for the forms `names`: one called `label`, or one
         per form named for it."""
@@ -202,6 +207,7 @@ class FamiliarPage(QWidget):
                 text(f"{cord.cost} points", p["dim"], serif(10, caps=True))
             )
             cords.append(card)
+        table = self._table()
         return scrolling_page(
             p,
             section(
@@ -216,7 +222,7 @@ class FamiliarPage(QWidget):
             trait_section(
                 "Personality Traits",
                 f.personality_traits,
-                "section-fam-personality-traits",
+                table[section_verbs.FAMILIAR_TRAITS_SECTION],
                 p,
                 self.run,
                 [
@@ -230,7 +236,7 @@ class FamiliarPage(QWidget):
             trait_section(
                 "Reputations",
                 f.reputations,
-                "section-fam-reputations",
+                table[section_verbs.FAMILIAR_REPUTATIONS_SECTION],
                 p,
                 self.run,
             ),
@@ -239,6 +245,11 @@ class FamiliarPage(QWidget):
     def _virtues_flaws(self) -> QWidget:
         p, f = self.p, self.familiar
         columns = []
+        table = self._table()
+        section_of_side = {
+            side: section_id
+            for section_id, side in section_verbs.VIRTUE_FLAW_SIDES[Familiar].items()
+        }
         for side, tone in (("Virtue", "text-success"), ("Flaw", "text-error")):
             column = QWidget()
             stack = QVBoxLayout(column)
@@ -266,7 +277,7 @@ class FamiliarPage(QWidget):
                     p,
                     *cards,
                     buttons=verb_buttons(
-                        virtue_forms.virtue_flaw_ops(self.saga, f, side),
+                        table[section_of_side[side]],
                         chooser,
                         self.run,
                         p,
@@ -308,7 +319,12 @@ class FamiliarPage(QWidget):
                 f"Natural Weapons & Attacks ({len(f.natural_weapons)})",
                 p,
                 self.weapons if f.natural_weapons else _none("None recorded.", p),
-                buttons=verb_buttons(ff.natural_weapon_ops(f), chooser, self.run, p),
+                buttons=verb_buttons(
+                    self._table()[section_verbs.FAMILIAR_WEAPONS_SECTION],
+                    chooser,
+                    self.run,
+                    p,
+                ),
             ),
         )
 
@@ -341,7 +357,10 @@ class FamiliarPage(QWidget):
                 ),
                 self.ability_table,
                 buttons=verb_buttons(
-                    ff.ability_ops(self.saga, f), chooser, self.run, p
+                    self._table()[section_verbs.FAMILIAR_ABILITIES_SECTION],
+                    chooser,
+                    self.run,
+                    p,
                 ),
             ),
         )
@@ -393,6 +412,11 @@ class FamiliarPage(QWidget):
                 f"Bond Powers ({len(cards)})",
                 p,
                 card_grid(cards, 2) if cards else _none("None yet.", p),
-                buttons=verb_buttons(ff.bond_power_ops(f), chooser, self.run, p),
+                buttons=verb_buttons(
+                    self._table()[section_verbs.FAMILIAR_POWERS_SECTION],
+                    chooser,
+                    self.run,
+                    p,
+                ),
             ),
         )

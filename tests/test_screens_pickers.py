@@ -30,6 +30,7 @@ from ars_magica_manager.tui.screens import (
     VirtueFlawPickerScreen,
     WorkspaceScreen,
 )
+from ars_magica_manager.tui.screens.steps import ChooseScreen
 
 
 async def test_overlapping_picker_refills_leave_only_the_newest():
@@ -156,11 +157,10 @@ async def test_vf_picker_opens_on_the_side_of_its_section():
         ):
             await _open_section(pilot, app, section)
             await pilot.press("a")
-            await _wait_for_screen(pilot, app, VirtueFlawPickerScreen)
-            await _wait_for_picker_ready(pilot, app)
+            await _wait_for_screen(pilot, app, ChooseScreen)
             picker = app.screen
-            assert str(picker.query_one("#picker-title", Label).render()) == title
-            assert {entry.side for entry in _vf_listed(picker)} == {side}
+            assert picker.step.title == title
+            assert {c.value.type for c in picker.choices} == {side}
             await pilot.press("escape")
             await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
 
@@ -286,9 +286,8 @@ async def test_familiar_vf_picker_offers_animal_and_magic_being_entries():
         await _select_familiar(pilot, app)
         await _open_familiar_section(pilot, app, "section-fam-vf-virtues")
         await pilot.press("a")
-        await _wait_for_screen(pilot, app, VirtueFlawPickerScreen)
-        await _wait_for_picker_ready(pilot, app)
-        listed = {entry.id for entry in _vf_listed(app.screen)}
+        await _wait_for_screen(pilot, app, ChooseScreen)
+        listed = {c.value.id for c in app.screen.choices}
         assert {"vf_aggressive", "vf_gift_of_speech", "vf_common_sense"} <= listed
         assert not {"vf_faerie_beast", "vf_nephilim", "vf_adept_laboratory_student"} & (
             listed

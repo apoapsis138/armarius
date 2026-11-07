@@ -172,6 +172,7 @@ LAYERS: tuple[tuple[str, frozenset[str]], ...] = (
                 "rhine_meeting",
                 "ruins",
                 "saga_overview",
+                "section_verbs",
                 "sheets",
                 "theban_meeting",
                 "troupe",

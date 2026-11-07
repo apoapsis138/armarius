@@ -20,8 +20,6 @@ from .... import laboratories as lab_text
 from .... import research_text as rt
 from .... import sheet_text as st
 from ....boon_hook_text import counted, points_title
-from ....forms import lab_item as item_forms
-from ....forms import trait as trait_forms
 from ....markup import aligned, escape
 from ....models import (
     LAB_CHARACTERISTICS,
@@ -371,9 +369,6 @@ class LaboratorySheetView(SheetView):
                             group="lab-vf",
                         )
                 traits = self.laboratory.personality_traits
-                self.core_ops[LAB_TRAITS_SECTION] = trait_forms.trait_ops(
-                    traits, LAB_TRAITS_SECTION
-                )
                 with SheetSection(
                     title=self._titled(
                         LAB_TRAITS_SECTION,
@@ -449,9 +444,6 @@ class LaboratorySheetView(SheetView):
                         id="lab-features-list",
                         group="lab-attr",
                     )
-                self.core_ops[LAB_ITEMS_SECTION] = item_forms.item_ops(
-                    self.saga, self.laboratory
-                )
                 with PinnedCollapsible(
                     title=self._titled(
                         (*_LAB_ITEM_SECTIONS, *LAB_VF_SECTIONS),

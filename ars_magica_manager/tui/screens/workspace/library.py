@@ -9,24 +9,17 @@ from typing import Any
 from textual.css.query import NoMatches
 
 from .... import books as bk
-from .... import house_rules as hr
 from .... import lab_texts as lt
-from .... import players as pl
 from .... import saga_content as sc
 from .... import seasons, storage
-from .... import spells as spl
 from ....form_spec import DialogField
 from ....forms import goods as goods_forms
 from ....forms import importing as import_forms
 from ....forms import saga_content as content_forms
-from ....forms.saga_content import spell_live
 from ....markup import escape
 from ....models import (
     TEXT_LONGEVITY,
     Book,
-    Player,
-    SagaSource,
-    Spell,
 )
 from ....sections import GOODS_SECTION
 from ..fields import FieldsDialog
@@ -36,9 +29,6 @@ from ..forms import (
     _book_live,
     _research_fields,
     _research_from_values,
-    _spell_fields,
-    _spell_from_values,
-    _spell_problem,
 )
 from ..pickers import (
     CatalogEntryPickerScreen,
@@ -49,11 +39,8 @@ from ..prompts import (
     ConfirmScreen,
     _catalog_dialog,
     _hide_entry_dialog,
-    _house_rule_dialog,
     _lab_text_filter_dialog,
-    _player_dialog,
     _ritual_again_dialog,
-    _saga_source_dialog,
 )
 from ..sheets import (
     BOOK_SECTIONS,
@@ -70,7 +57,6 @@ from ..sheets import (
     BookListView,
     HouseRulesView,
     LabTextListView,
-    PlayersView,
     SpellListView,
 )
 from ..steps import run_steps
@@ -97,68 +83,6 @@ class LibraryActions(WorkspaceBase):
         if view is not None:
             view.refilter()
 
-    def _chosen_own_spell(self, verb: str) -> Spell | None:
-        """The chosen spell if it's one of the saga's own; otherwise say why
-        not (nothing chosen, or a read-only catalog spell)."""
-        view = self._spell_view()
-        spell = view.selected_spell() if view is not None else None
-        if spell is None:
-            self.notify(f"Choose a spell to {verb} first.")
-            return None
-        if not spl.is_own(self.saga, spell):
-            self.notify(
-                f"{escape(spell.name)} is a catalog spell, so it's read-only. To "
-                "make your own version, add a spell with a."
-            )
-            return None
-        return spell
-
-    def _edit_saga_spell(self) -> None:
-        spell = self._chosen_own_spell("edit")
-        if spell is not None:
-            self._spell_form(spell)
-
-    def _spell_form(self, spell: Spell | None) -> None:
-        saga = self.saga
-        title = "Add a Spell" if spell is None else f"Edit {escape(spell.name)}"
-
-        def handle_result(values: dict[str, Any] | None) -> None:
-            if values is None:
-                return
-            target = spell
-            if target is None:
-                target = spl.add_own_spell(
-                    saga, values["name"], values["technique"], values["form"]
-                )
-            _spell_from_values(target, values)
-            storage.save_saga(saga)
-            self._spells_changed()
-
-        self.app.push_screen(
-            FieldsDialog(
-                title,
-                _spell_fields(spell, self.saga),
-                validate=_spell_problem,
-                live=spell_live,
-            ),
-            handle_result,
-        )
-
-    def _remove_saga_spell(self) -> None:
-        spell = self._chosen_own_spell("delete")
-        if spell is None:
-            return
-
-        def handle_confirmed(confirmed: bool | None) -> None:
-            if confirmed and spell in self.saga.spells:
-                self.saga.spells.remove(spell)
-                storage.save_saga(self.saga)
-                self._spells_changed()
-
-        self.app.push_screen(
-            ConfirmScreen(f"Delete {escape(spell.name)}?"), handle_confirmed
-        )
-
     # -- House Rules: the saga's user-made catalog entries --
 
     def _house_rules_view(self) -> HouseRulesView | None:
@@ -167,137 +91,7 @@ class LibraryActions(WorkspaceBase):
         except NoMatches:
             return None
 
-    def _house_rules_changed(self) -> None:
-        storage.save_saga(self.saga)
-        view = self._house_rules_view()
-        if view is not None:
-            view.rebuild()
-        self._refresh_saga_content(BOOKS_SECTION, SOURCES_SECTION)
-
-    def _pick_house_rule(self, then: Callable[[str, hr.Entry], None]) -> None:
-        """Act on the chosen entry."""
-        view = self._house_rules_view()
-        listed = hr.all_entries(self.saga)
-        chosen = view.selected_entry() if view is not None else None
-        if chosen is not None:
-            then(*chosen)
-            return
-        self._chosen_or_pick(
-            None,
-            [entry.name for _, entry in listed],
-            empty="No House Rules yet: 'a' adds one.",
-            then=lambda index: then(*listed[index]),
-        )
-
-    def _house_rule_form(self, existing: tuple[str, hr.Entry] | None) -> None:
-        saga = self.saga
-
-        def handle_result(values: dict[str, Any] | None) -> None:
-            if values is None:
-                return
-            if existing is None:
-                hr.add(saga, values["kind"], values)
-            else:
-                hr.update(saga, existing[0], existing[1], values)
-            self._house_rules_changed()
-
-        self.app.push_screen(_house_rule_dialog(saga, existing), handle_result)
-
-    def _edit_house_rule(self) -> None:
-        self._pick_house_rule(
-            lambda kind, entry: self._house_rule_form((kind, entry)),
-        )
-
-    def _remove_house_rule(self) -> None:
-        """Delete the chosen entry after confirming -- unless a record
-        still holds it."""
-
-        def confirm(kind: str, entry: hr.Entry) -> None:
-            holders = hr.used_by(self.saga, kind, entry)
-            if holders:
-                self.notify(
-                    f"{escape(entry.name)} is held by {escape(', '.join(holders))}: "
-                    "remove it there first.",
-                    severity="warning",
-                )
-                return
-
-            def handle_confirmed(confirmed: bool | None) -> None:
-                if confirmed and entry in hr.entries_of(self.saga, kind):
-                    hr.remove(self.saga, kind, entry)
-                    self._house_rules_changed()
-
-            self.app.push_screen(
-                ConfirmScreen(f"Delete {escape(entry.name)}?"), handle_confirmed
-            )
-
-        self._pick_house_rule(confirm)
-
     # -- Players: who can sign in from a browser --
-
-    def _players_view(self) -> PlayersView | None:
-        try:
-            return self._detail_pane().query(PlayersView).first()
-        except NoMatches:
-            return None
-
-    def _players_changed(self) -> None:
-        storage.save_saga(self.saga)
-        view = self._players_view()
-        if view is not None:
-            view.rebuild()
-
-    def _pick_player(self, then: Callable[[Player], None]) -> None:
-        """Act on the chosen player."""
-        view = self._players_view()
-        chosen = view.selected_player() if view is not None else None
-        if chosen is not None:
-            then(chosen)
-            return
-        players = list(self.saga.players)
-        self._chosen_or_pick(
-            None,
-            [p.name for p in players],
-            empty="No players yet: 'a' adds one.",
-            then=lambda index: then(players[index]),
-        )
-
-    def _player_form(self, existing: Player | None) -> None:
-        saga = self.saga
-
-        def handle_result(values: dict[str, Any] | None) -> None:
-            if values is None:
-                return
-            if existing is None:
-                pl.add(saga, values)
-            else:
-                pl.update(existing, values)
-            self._players_changed()
-
-        self.app.push_screen(_player_dialog(saga, existing), handle_result)
-
-    def _edit_player(self) -> None:
-        self._pick_player(self._player_form)
-
-    def _remove_player(self) -> None:
-        """Delete the chosen player after confirming: they can no longer
-        sign in (a browser copy they already have open stays open)."""
-
-        def confirm(player: Player) -> None:
-            def handle_confirmed(confirmed: bool | None) -> None:
-                if confirmed and player in self.saga.players:
-                    pl.remove(self.saga, player)
-                    self._players_changed()
-
-            self.app.push_screen(
-                ConfirmScreen(
-                    f"Delete the player {escape(player.name)}?\n\n"
-                    "They will no longer be able to sign in."
-                ),
-                handle_confirmed,
-            )
-
-        self._pick_player(confirm)
 
     # -- Saga Content: books in play, saga sources, hidden catalogs --
 
@@ -343,64 +137,6 @@ class LibraryActions(WorkspaceBase):
             FieldsDialog("Traditions offered", content_forms.traditions_fields(saga)),
             handle_result,
         )
-
-    def _pick_saga_source(self, then: Callable[[SagaSource], None]) -> None:
-        view = self._saga_content_view
-        chosen = view.selected_source() if view is not None else None
-        if chosen is not None:
-            then(chosen)
-            return
-        sources = list(self.saga.sources)
-        self._chosen_or_pick(
-            None,
-            [s.abbreviation for s in sources],
-            empty="No saga sources yet: 'a' adds one.",
-            then=lambda index: then(sources[index]),
-        )
-
-    def _saga_source_form(self, existing: SagaSource | None) -> None:
-        saga = self.saga
-
-        def handle_result(values: dict[str, Any] | None) -> None:
-            if values is None:
-                return
-            if existing is None:
-                sc.add_source(saga, values)
-            else:
-                sc.update_source(saga, existing, values)
-            self._saga_content_changed(BOOKS_SECTION, SOURCES_SECTION)
-
-        self.app.push_screen(_saga_source_dialog(saga, existing), handle_result)
-
-    def _edit_saga_source(self) -> None:
-        self._pick_saga_source(self._saga_source_form)
-
-    def _remove_saga_source(self) -> None:
-        """Delete the chosen source after confirming -- unless an entry
-        still cites it."""
-
-        def confirm(source: SagaSource) -> None:
-            citing = hr.citing(self.saga, source.abbreviation)
-            if citing:
-                self.notify(
-                    f"{escape(source.abbreviation)} is cited by "
-                    f"{escape(', '.join(e.name for e in citing))}: change them "
-                    "first.",
-                    severity="warning",
-                )
-                return
-
-            def handle_confirmed(confirmed: bool | None) -> None:
-                if confirmed and source in self.saga.sources:
-                    sc.remove_source(self.saga, source)
-                    self._saga_content_changed(BOOKS_SECTION, SOURCES_SECTION)
-
-            self.app.push_screen(
-                ConfirmScreen(f"Delete {escape(source.abbreviation)}?"),
-                handle_confirmed,
-            )
-
-        self._pick_saga_source(confirm)
 
     def _edit_catalog(self) -> None:
         view = self._saga_content_view
@@ -815,28 +551,12 @@ class LibraryActions(WorkspaceBase):
         """a / d / e on the saga's own sections and the library's (see
         WorkspaceScreen._section_ops)."""
         ops: dict[str, _SectionOps] = {
-            SPELL_SECTION: _SectionOps(
-                lambda: self._spell_form(None),
-                self._remove_saga_spell,
-                self._edit_saga_spell,
-            ),
-            HOUSE_RULES_SECTION: _SectionOps(
-                lambda: self._house_rule_form(None),
-                self._remove_house_rule,
-                self._edit_house_rule,
-            ),
-            PLAYERS_SECTION: _SectionOps(
-                lambda: self._player_form(None),
-                self._remove_player,
-                self._edit_player,
-            ),
+            SPELL_SECTION: self._core_ops_of(SPELL_SECTION),
+            HOUSE_RULES_SECTION: self._core_ops_of(HOUSE_RULES_SECTION),
+            PLAYERS_SECTION: self._core_ops_of(PLAYERS_SECTION),
             BOOKS_SECTION: _SectionOps(edit=self._edit_books_in_play),
             TRADITIONS_SECTION: _SectionOps(edit=self._edit_traditions),
-            SOURCES_SECTION: _SectionOps(
-                lambda: self._saga_source_form(None),
-                self._remove_saga_source,
-                self._edit_saga_source,
-            ),
+            SOURCES_SECTION: self._core_ops_of(SOURCES_SECTION),
             CATALOGS_SECTION: _SectionOps(edit=self._edit_catalog),
             HIDDEN_SECTION: _SectionOps(
                 add=self._hide_catalog_entry, remove=self._show_catalog_entry

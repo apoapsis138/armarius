@@ -10,9 +10,8 @@ from collections.abc import Callable
 
 from PySide6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
 
-from .. import artwork, creatures
+from .. import artwork, creatures, section_verbs
 from .. import sheet_text as st
-from ..forms import creature as creature_forms
 from ..forms import secrets as secret_forms
 from ..forms import virtue as virtue_forms
 from ..forms import world as world_forms
@@ -84,7 +83,7 @@ class CreaturePage(QWidget):
     ) -> None:
         super().__init__()
         self.saga, self.creature, self.p, self.run = saga, creature, p, run
-        self.ops = creature_forms.creature_ops(saga, creature)
+        self.ops = section_verbs.ops_of(saga, creature)
         outer = QVBoxLayout(self)
         outer.setContentsMargins(18, 12, 12, 8)
         outer.setSpacing(10)
@@ -223,12 +222,16 @@ class CreaturePage(QWidget):
             trait_section(
                 "Personality Traits",
                 c.personality_traits,
-                CREATURE_TRAITS_SECTION,
+                self.ops[CREATURE_TRAITS_SECTION],
                 p,
                 self.run,
             ),
             trait_section(
-                "Reputations", c.reputations, CREATURE_REPUTATIONS_SECTION, p, self.run
+                "Reputations",
+                c.reputations,
+                self.ops[CREATURE_REPUTATIONS_SECTION],
+                p,
+                self.run,
             ),
             section(
                 f"Abilities ({len(c.abilities)})",

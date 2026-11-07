@@ -14,9 +14,8 @@ from collections.abc import Callable, Sequence
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
 
-from .. import mobile_covenants
+from .. import mobile_covenants, section_verbs
 from .. import ships as ship_text
-from ..forms import possession as possession_forms
 from ..forms import ship_build
 from ..forms import ships as ship_forms
 from ..models import Covenant, Possession, Saga
@@ -165,7 +164,7 @@ def ships_section(
         body,
         buttons=[
             *verb_buttons(
-                possession_forms.possession_ops(saga, covenant, "ship"),
+                section_verbs.ops_of(saga, covenant)[SECTION_ID],
                 chooser,
                 run,
                 p,

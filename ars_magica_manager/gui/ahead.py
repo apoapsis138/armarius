@@ -14,12 +14,13 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import ahead, deeds, hermetic_projects
+from .. import ahead, deeds, hermetic_projects, section_verbs
 from ..commands import Act
 from ..forms import ahead as ahead_forms
 from ..forms import hunting as hunting_forms
 from ..forms import travel as travel_forms
 from ..models import SEASONS, Covenant, Saga, season_order
+from ..sections import AHEAD_SECTION, COV_AHEAD_SECTION
 from .character_sheet import section
 from .editing import Chooser, Run, verb_buttons
 from .medallions import Medallion, beside
@@ -140,7 +141,12 @@ def ahead_section(
                 serif(12.5, italic=True),
             )
         )
-    buttons = verb_buttons(ahead_forms.ahead_ops(saga, covenant), chooser, run, p)
+    ops = (
+        section_verbs.ops_of(saga, saga)[AHEAD_SECTION]
+        if covenant is None
+        else section_verbs.ops_of(saga, covenant)[COV_AHEAD_SECTION]
+    )
+    buttons = verb_buttons(ops, chooser, run, p)
     return section(
         ahead.title(saga, covenant),
         p,

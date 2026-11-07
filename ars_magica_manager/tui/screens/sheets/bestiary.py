@@ -14,7 +14,6 @@ from textual.widgets import Button, Collapsible, Static, TabbedContent
 from .... import creatures, viewing
 from .... import sheet_text as st
 from ....boon_hook_text import counted
-from ....forms import creature as creature_forms
 from ....forms import world as world_forms
 from ....markup import aligned, escape, markdown_text
 from ....models import Creature, Saga
@@ -74,7 +73,6 @@ class BestiarySheetView(SheetView):
 
     def __init__(self, saga: Saga) -> None:
         super().__init__(saga)
-        self.core_ops = creature_forms.bestiary_ops(saga)
         self._chosen: Creature | None = None
 
     def compose(self) -> ComposeResult:
@@ -147,7 +145,6 @@ class CreatureSheetView(SheetView):
     def __init__(self, saga: Saga, creature: Creature) -> None:
         super().__init__(saga)
         self.creature = creature
-        self.core_ops = creature_forms.creature_ops(saga, creature)
 
     def compose(self) -> ComposeResult:
         with (

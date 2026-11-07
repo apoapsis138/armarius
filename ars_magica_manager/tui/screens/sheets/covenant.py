@@ -46,12 +46,9 @@ from ....boon_hook_text import (
     counted,
 )
 from ....covenants import boon_hook_problems
-from ....forms import ahead as ahead_forms
-from ....forms import charter as charter_forms
 from ....forms import covenant_history
 from ....forms import land_shaping as land_forms
 from ....forms import world as world_forms
-from ....forms.secrets import secrets_ops
 from ....markup import aligned, escape, markdown_text, problem
 from ....models import (
     FULL,
@@ -115,21 +112,6 @@ class CovenantSheetView(KindTabsView):
         self.sketch = covenant.detail != FULL
         if self.sketch:
             self.INITIAL_TAB = "tab-cov-sketch"
-            self.core_ops = world_forms.covenant_ops(saga, covenant)
-        elif not covenant.played:
-            self.core_ops = world_forms.record_ops(saga, covenant)
-        if not self.sketch:
-            self.core_ops = {
-                **self.core_ops,
-                COV_AHEAD_SECTION: ahead_forms.ahead_ops(saga, covenant),
-                **town_charter.covenant_charter_ops(saga, covenant),
-                **manors.covenant_ops(saga, covenant),
-                **covenant_history.covenant_ops(saga, covenant),
-            }
-        self.core_ops.update(charter_forms.charter_ops(saga, covenant))
-        self.core_ops.update(guest_stays.section_ops(saga, covenant))
-        self.core_ops.update(mobile_covenants.section_ops(saga, covenant))
-        self.core_ops.update(secrets_ops(covenant))
         # A covenant's Hermetic Projects: their tab, once one is begun.
         self.shows_projects = not self.sketch and hermetic_projects.has_projects(
             covenant
@@ -139,8 +121,6 @@ class CovenantSheetView(KindTabsView):
         self._interests_off = deeds.covenant_interests_off(covenant)
         # The shown project's kind picks the tab's sections (a Menagerie's).
         self._projects_kind = hermetic_projects.shown_kind(covenant)
-        if self.shows_projects:
-            self.core_ops.update(hermetic_projects.covenant_ops(saga, covenant))
         self._register_refreshers()
 
     def _register_refreshers(self) -> None:

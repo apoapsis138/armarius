@@ -87,10 +87,20 @@ enforces the line, including that neither front-end imports the other.
   (or notes, `Then`, `Go`, `Refuse`). A front-end only runs the steps,
   saves and redraws.
 - **Dispatch table: section verbs.** `actions.SECTION_VERBS` says which of
-  add / edit / delete each section supports, and `_section_ops` maps a
-  section id to its `SectionOps` (the three commands). A key looks its
-  section up instead of branching on it, which keeps "one verb per key"
-  true everywhere; `tests/test_dispatch_matrix.py` is the golden record.
+  add / edit / delete each section supports, and `section_verbs.py` says
+  what they do: a plain dict of builders keyed by the record's type (a
+  Strategy; Python needs no class for it) gives, per record, each sheet
+  section's id and its `SectionOps` (the three commands). Both front-ends
+  read it, so a key or button does the same in the terminal and on the
+  desktop. A key looks its section up instead of branching on it, which
+  keeps "one verb per key" true everywhere; `tests/test_dispatch_matrix.py`
+  is the golden record. A list whose rows count into what its sheet has
+  chosen (Mystery Cults' cult, the Spells list's filters, a Tribunal's
+  argument) is given by the sheet itself (`state_ops`), ahead of the table.
+  Edit and Delete rows are the section's own list index, except Virtues and
+  Flaws and Boons and Hooks, whose core rows count within a side or kind
+  (`section_verbs.table_row`); `section_verbs.refreshed` says what else a
+  change redraws.
 - **Data-driven content: packs.** A Tribunal or region book is built in
   code once (`book_packs/<book>/`, with the shared `Builder`), written to
   `data/packs/*.amm.json`, and imported like any export. Importing matches
@@ -191,7 +201,7 @@ NOTICE.md. Never art from an image generator, nor its mockups.
 **Both front-ends** (decided in the core, so they can't drift apart)
 
 - **The same verbs in the same places.** Each section's Add / Edit /
-  Delete come from `actions.SECTION_VERBS` and `_section_ops`, and the
+  Delete come from `actions.SECTION_VERBS` and `section_verbs`, and the
   More and New menus from `actions.available`; Delete always confirms,
   and Edit and Delete act on the chosen row. Only how they are reached
   differs (below).

@@ -15,7 +15,7 @@ from PySide6.QtCore import QPointF, QRectF, Qt
 from PySide6.QtGui import QColor, QFont, QPainter, QPaintEvent, QPen
 from PySide6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
 
-from .. import artwork
+from .. import artwork, section_verbs
 from .. import covenant_charter as cc
 from ..forms import charter as charter_forms
 from ..markup import escape
@@ -380,7 +380,11 @@ def clauses_section(
         p,
         body,
         buttons=verb_buttons(
-            charter_forms.clause_ops(saga, covenant), chooser, run, p, more=more
+            section_verbs.ops_of(saga, covenant)[CLAUSES_SECTION],
+            chooser,
+            run,
+            p,
+            more=more,
         ),
     )
     widget.setObjectName(CLAUSES_SECTION)

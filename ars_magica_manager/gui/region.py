@@ -21,6 +21,7 @@ from .. import (
     menagerie,
     neighbours,
     place_events,
+    section_verbs,
     staged_projects,
     tombs,
     town_court,
@@ -146,7 +147,7 @@ class NeighbourPage(QWidget):
             )
         )
         self.codex = Codex(p)
-        self.ops = neighbour_forms.neighbour_ops(saga, neighbour)
+        self.ops = section_verbs.ops_of(saga, neighbour)
         self.kinds = KindChapters(saga, neighbour, p, run, self.ops, self.codex)
         kind = neighbours.kind_of(neighbour)
         if kind.tab is not None:

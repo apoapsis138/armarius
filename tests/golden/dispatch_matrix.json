@@ -65,7 +65,7 @@
     "SheetSection#section-cov-boons": {
       "active": "section-cov-boons",
       "keys": {
-        "a": "CovenantBoonHookPickerScreen: Add a Boon",
+        "a": "ChooseScreen: Add a Boon",
         "e": "FieldsDialog: Boon: Aura",
         "d": "ConfirmScreen",
         "m": "FieldsDialog: Begin Project",
@@ -75,7 +75,7 @@
     "SheetSection#section-cov-hooks": {
       "active": "section-cov-hooks",
       "keys": {
-        "a": "CovenantBoonHookPickerScreen: Add a Hook",
+        "a": "ChooseScreen: Add a Hook",
         "e": "FieldsDialog: Hook: Contested Resource",
         "d": "ConfirmScreen",
         "m": "MenuScreen: Suggest a Story, Begin Project",
@@ -165,7 +165,7 @@
     "SheetSection#section-inh-magus": {
       "active": "section-inh-magus",
       "keys": {
-        "a": "FieldsDialog: Add a Magus",
+        "a": "ChooseScreen: Add a Magus",
         "e": "FieldsDialog: Edit Leandro",
         "d": "ConfirmScreen",
         "m": "(disabled)",
@@ -185,7 +185,7 @@
     "SheetSection#section-inh-specialist": {
       "active": "section-inh-specialist",
       "keys": {
-        "a": "RemovalPickerScreen: Add a Specialist",
+        "a": "FieldsDialog: Add a Specialist",
         "e": "FieldsDialog: Edit A specialist",
         "d": "ConfirmScreen",
         "m": "(disabled)",
@@ -195,7 +195,7 @@
     "SheetSection#section-inh-craftsperson": {
       "active": "section-inh-craftsperson",
       "keys": {
-        "a": "RemovalPickerScreen: Add a Craftsperson",
+        "a": "FieldsDialog: Add a Craftsperson",
         "e": "FieldsDialog: Edit A craftsperson",
         "d": "ConfirmScreen",
         "m": "(disabled)",
@@ -205,7 +205,7 @@
     "SheetSection#section-inh-turb": {
       "active": "section-inh-turb",
       "keys": {
-        "a": "RemovalPickerScreen: Add a Turb Member",
+        "a": "FieldsDialog: Add a Turb Member",
         "e": "FieldsDialog: Edit A turb",
         "d": "ConfirmScreen",
         "m": "(disabled)",
@@ -215,7 +215,7 @@
     "SheetSection#section-inh-inhabitant": {
       "active": "section-inh-inhabitant",
       "keys": {
-        "a": "RemovalPickerScreen: Add a Covenfolk Member",
+        "a": "FieldsDialog: Add a Covenfolk Member",
         "e": "FieldsDialog: Edit A inhabitant",
         "d": "ConfirmScreen",
         "m": "(disabled)",
@@ -236,8 +236,8 @@
       "active": "section-inh-hound",
       "keys": {
         "a": "FieldsDialog: Add a Hound",
-        "e": "notice: No Hounds to edit.",
-        "d": "notice: No Hounds to remove.",
+        "e": "(nothing)",
+        "d": "(nothing)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -295,9 +295,9 @@
     "SheetSection#section-cov-seasons-grog": {
       "active": "section-cov-seasons-grog",
       "keys": {
-        "a": "notice: Nobody to plan for here.",
-        "e": "notice: Nobody to plan for here.",
-        "d": "notice: Nobody to plan for here.",
+        "a": "(nothing)",
+        "e": "(nothing)",
+        "d": "(nothing)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -306,8 +306,8 @@
       "active": "section-pos-ship",
       "keys": {
         "a": "FieldsDialog: Add a Ship",
-        "e": "notice: No Ships to edit.",
-        "d": "notice: No Ships to remove.",
+        "e": "(nothing)",
+        "d": "(nothing)",
         "m": "MenuScreen: Stress Check, Ship Combat, Sunk or Taken, Build a Ship",
         "slash": "(disabled)"
       }
@@ -496,8 +496,8 @@
       "active": "tab-cov-diary",
       "keys": {
         "a": "FieldsDialog: Add a Diary Entry",
-        "e": "notice: No Diary entries to edit.",
-        "d": "notice: No Diary entries to remove.",
+        "e": "(nothing)",
+        "d": "(nothing)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -667,7 +667,7 @@
     "TabPane#tab-abilities": {
       "active": "tab-abilities",
       "keys": {
-        "a": "AbilityPickerScreen: Add an Ability",
+        "a": "ChooseScreen: Add an Ability",
         "e": "FieldsDialog: Latin",
         "d": "ConfirmScreen",
         "m": "(disabled)",
@@ -677,7 +677,7 @@
     "SheetSection#section-vf-virtues": {
       "active": "section-vf-virtues",
       "keys": {
-        "a": "VirtueFlawPickerScreen: Add a Virtue",
+        "a": "ChooseScreen: Add a Virtue",
         "e": "notice: Adept Laboratory Student names nothing to change. To take a different Virtue or Flaw, delete this one and add the other.",
         "d": "ConfirmScreen",
         "m": "FieldsDialog: Gain or Lose in Play: Leandro",
@@ -687,7 +687,7 @@
     "SheetSection#section-vf-flaws": {
       "active": "section-vf-flaws",
       "keys": {
-        "a": "VirtueFlawPickerScreen: Add a Flaw",
+        "a": "ChooseScreen: Add a Flaw",
         "e": "notice: A Deal with the Devil names nothing to change. To take a different Virtue or Flaw, delete this one and add the other.",
         "d": "ConfirmScreen",
         "m": "FieldsDialog: Gain or Lose in Play: Leandro",
@@ -767,7 +767,7 @@
     "SheetSection#section-known-spells": {
       "active": "section-known-spells",
       "keys": {
-        "a": "SpellChooserScreen: Add a spell Leandro knows",
+        "a": "ChooseScreen: Add a spell Leandro knows",
         "e": "FieldsDialog: Mastery: Boundless Wealth of the Oceans",
         "d": "ConfirmScreen",
         "m": "MenuScreen: Craft by Magic, Cast in a Lacuna, Certamen",
@@ -797,7 +797,7 @@
     "SheetSection#section-trad-trad_vitkir": {
       "active": "section-trad-trad_vitkir",
       "keys": {
-        "a": "AbilityPickerScreen: Add an Ability",
+        "a": "ChooseScreen: Add an Ability",
         "e": "FieldsDialog: Fehu",
         "d": "ConfirmScreen",
         "m": "FieldsDialog: An Offer to Faerie: Leandro",
@@ -877,7 +877,7 @@
     "SheetSection#section-inventory": {
       "active": "section-inventory",
       "keys": {
-        "a": "RemovalPickerScreen: Add which kind of item?",
+        "a": "ChooseScreen: Add which kind of item?",
         "e": "FieldsDialog: Edit Staff",
         "d": "ConfirmScreen",
         "m": "FieldsDialog: Give Staff",
@@ -948,8 +948,8 @@
       "active": "tab-diary",
       "keys": {
         "a": "FieldsDialog: Add a Diary Entry",
-        "e": "notice: No Diary entries to edit.",
-        "d": "notice: No Diary entries to remove.",
+        "e": "(nothing)",
+        "d": "(nothing)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -1049,7 +1049,7 @@
     "SheetSection#section-lab-vf-virtues": {
       "active": "section-lab-vf-virtues",
       "keys": {
-        "a": "LabVirtueFlawPickerScreen: Add a Laboratory Virtue or Flaw",
+        "a": "ChooseScreen: Add a Laboratory Virtue",
         "e": "notice: Greater Feature names nothing to change. To take a different Virtue or Flaw, delete this one and add the other.",
         "d": "ConfirmScreen",
         "m": "(disabled)",
@@ -1059,7 +1059,7 @@
     "SheetSection#section-lab-vf-flaws": {
       "active": "section-lab-vf-flaws",
       "keys": {
-        "a": "LabVirtueFlawPickerScreen: Add a Laboratory Virtue or Flaw",
+        "a": "ChooseScreen: Add a Laboratory Flaw",
         "e": "notice: Greater Focus names nothing to change. To take a different Virtue or Flaw, delete this one and add the other.",
         "d": "ConfirmScreen",
         "m": "(disabled)",
@@ -1160,8 +1160,8 @@
       "active": "section-lab-connections",
       "keys": {
         "a": "FieldsDialog: Add an Arcane Connection",
-        "e": "notice: No Arcane Connections to edit.",
-        "d": "notice: No Arcane Connections to remove.",
+        "e": "(nothing)",
+        "d": "(nothing)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -1231,7 +1231,7 @@
     "SheetSection#section-fam-vf-virtues": {
       "active": "section-fam-vf-virtues",
       "keys": {
-        "a": "VirtueFlawPickerScreen: Add a Virtue",
+        "a": "ChooseScreen: Add a Virtue",
         "e": "notice: Adept Laboratory Student names nothing to change. To take a different Virtue or Flaw, delete this one and add the other.",
         "d": "ConfirmScreen",
         "m": "(disabled)",
@@ -1241,9 +1241,9 @@
     "SheetSection#section-fam-vf-flaws": {
       "active": "section-fam-vf-flaws",
       "keys": {
-        "a": "VirtueFlawPickerScreen: Add a Flaw",
-        "e": "notice: Adept Laboratory Student names nothing to change. To take a different Virtue or Flaw, delete this one and add the other.",
-        "d": "ConfirmScreen",
+        "a": "ChooseScreen: Add a Flaw",
+        "e": "(nothing)",
+        "d": "(nothing)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -1301,7 +1301,7 @@
     "TabPane#tab-fam-abilities": {
       "active": "tab-fam-abilities",
       "keys": {
-        "a": "AbilityPickerScreen: Add an Ability",
+        "a": "ChooseScreen: Add an Ability",
         "e": "FieldsDialog: Awareness",
         "d": "ConfirmScreen",
         "m": "(disabled)",
@@ -1346,8 +1346,8 @@
       "active": "section-saga-sources",
       "keys": {
         "a": "FieldsDialog: Add a Saga Source",
-        "e": "notice: No saga sources yet: 'a' adds one.",
-        "d": "notice: No saga sources yet: 'a' adds one.",
+        "e": "(nothing)",
+        "d": "(nothing)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -1396,8 +1396,8 @@
       "active": "section-house-rules",
       "keys": {
         "a": "FieldsDialog: Add a House Rule",
-        "e": "notice: No House Rules yet: 'a' adds one.",
-        "d": "notice: No House Rules yet: 'a' adds one.",
+        "e": "(nothing)",
+        "d": "(nothing)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -1446,8 +1446,8 @@
       "active": "section-spells",
       "keys": {
         "a": "FieldsDialog: Add a Spell",
-        "e": "notice: Boundless Wealth of the Oceans is a catalog spell, so it's read-only. To make your own version, add a spell with a.",
-        "d": "notice: Boundless Wealth of the Oceans is a catalog spell, so it's read-only. To make your own version, add a spell with a.",
+        "e": "notice: Boundless Wealth of the Oceans is a catalog spell, so it's read-only. To make your own version, add a spell.",
+        "d": "notice: Boundless Wealth of the Oceans is a catalog spell, so it's read-only. To make your own version, add a spell.",
         "m": "(disabled)",
         "slash": "(nothing)"
       }
@@ -1456,8 +1456,8 @@
       "active": "section-players",
       "keys": {
         "a": "FieldsDialog: Add a Player",
-        "e": "notice: No players yet: 'a' adds one.",
-        "d": "notice: No players yet: 'a' adds one.",
+        "e": "(nothing)",
+        "d": "(nothing)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -1568,8 +1568,8 @@
       "active": "tab-cov-diary",
       "keys": {
         "a": "FieldsDialog: Add a Diary Entry",
-        "e": "notice: No Diary entries to edit.",
-        "d": "notice: No Diary entries to remove.",
+        "e": "(nothing)",
+        "d": "(nothing)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -3520,7 +3520,7 @@
       "active": "section-meeting-vote",
       "keys": {
         "a": "(disabled)",
-        "e": "(nothing)",
+        "e": "FieldsDialog: Hold Tribunal: Hibernia Tribunal",
         "d": "(disabled)",
         "m": "(disabled)",
         "slash": "(disabled)"

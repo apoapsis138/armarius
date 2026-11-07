@@ -16,8 +16,8 @@ from PySide6.QtGui import QColor, QPainter, QPaintEvent, QPen
 from PySide6.QtWidgets import QHBoxLayout, QWidget
 
 from .. import research_text as rt
+from .. import section_verbs
 from ..commands import Command
-from ..forms import character as cf
 from ..markup import escape
 from ..models import Breakthrough, Character, ResearchAttempt, Saga
 from ..rules import research
@@ -269,7 +269,14 @@ def research_chapter(
             p,
             *goal_body,
             buttons=(
-                verb_buttons(cf.research_goal_ops(character), goals, run, p)
+                verb_buttons(
+                    section_verbs.ops_of(saga, character)[
+                        section_verbs.RESEARCH_GOALS_SECTION
+                    ],
+                    goals,
+                    run,
+                    p,
+                )
                 if run is not None
                 else ()
             ),

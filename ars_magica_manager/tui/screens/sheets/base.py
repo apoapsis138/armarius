@@ -146,7 +146,7 @@ class SheetView(Vertical):
         self.tab_ids: list[str] = []
         #: The core's Add, Edit and Delete (commands.SectionOps) for each
         #: section in sections.CORE_SECTIONS this sheet shows.
-        self.core_ops: dict[str, SectionOps] = {}
+        self.state_ops: dict[str, SectionOps] = {}
 
     def section_row(self, section_id: str) -> int | None:
         """The chosen row of `section_id`'s list, by its data index; 0 for a

@@ -41,7 +41,20 @@ def failures(output: str) -> str:
 
 def main() -> int:
     steps = [
-        ("slice tests", [*UV, "python", "tools/slice_tests.py", "-q"], failures),
+        (
+            "slice tests",
+            [
+                *UV,
+                "python",
+                "tools/slice_tests.py",
+                "-q",
+                "-n",
+                "auto",
+                "--dist",
+                "worksteal",
+            ],
+            failures,
+        ),
         ("ruff format", [*UV, "ruff", "format", "."], lambda o: o.strip()[-400:]),
         ("ruff check", [*UV, "ruff", "check", "."], lambda o: o.strip()[-800:]),
         ("pyright", [*UV, "pyright"], lambda o: o.strip()[-800:]),

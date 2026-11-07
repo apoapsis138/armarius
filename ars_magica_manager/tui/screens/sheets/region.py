@@ -15,7 +15,6 @@ from textual.containers import Vertical, VerticalScroll
 from textual.widgets import Button, Collapsible, Static, TabbedContent
 
 from .... import arms, neighbour_filter, neighbours, open_stories, viewing
-from ....forms import neighbour as neighbour_forms
 from ....markup import aligned, escape, markdown_text
 from ....models import Covenant, Neighbour, Saga
 from ....neighbour_lists import KindTab
@@ -70,7 +69,6 @@ class RegionSheetView(SheetView):
 
     def __init__(self, saga: Saga, group: str | None = None) -> None:
         super().__init__(saga)
-        self.core_ops = neighbour_forms.region_ops(saga)
         #: The group the sheet was opened on, whose list takes focus.
         self.group = group
         self._chosen: Neighbour | Covenant | None = None
@@ -223,7 +221,6 @@ class NeighbourSheetView(KindTabsView):
     def __init__(self, saga: Saga, neighbour: Neighbour) -> None:
         super().__init__(saga)
         self.neighbour = neighbour
-        self.core_ops = neighbour_forms.neighbour_ops(saga, neighbour)
         #: The kind the sheet was built for: its tab is theirs.
         self.kind = neighbours.kind_of(neighbour)
         if self.kind.tab is not None:

@@ -5,49 +5,28 @@ Stores and Diary."""
 from __future__ import annotations
 
 from dataclasses import dataclass
-from functools import partial
 from typing import Any
 
 from .... import laboratories as lab_text
 from .... import seasons
 from ....forms import lab_plan as lab_plan_forms
 from ....forms import laboratory as lf
-from ....markup import escape
 from ....models import (
     LAB_SPECIALIZATIONS,
-    ArcaneConnection,
     Character,
-    DiaryEntry,
     LabCharacteristics,
-    LabFeature,
     Laboratory,
-    LabSpecialtyEntry,
-    NamedDescription,
     SeasonPlan,
-    add_raw_vis,
-    replace_raw_vis,
 )
 from ....rules import lab_seasons
 from ..fields import (
     FieldsDialog,
 )
 from ..forms import (
-    NEW_FEATURE_VIRTUE,
     _lab_characteristics_fields,
-    _lab_feature_dialog,
-    _lab_feature_type_dialog,
     _lab_identity_fields,
 )
 from ..invent_spell import InventSpellScreen
-from ..prompts import (
-    ConfirmScreen,
-    _arcane_connection_dialog,
-    _diary_entry_dialog,
-    _lab_specialty_entry_dialog,
-    _named_description_dialog,
-    _raw_vis_dialog,
-)
-from ..sheets import LAB_FEATURE_SECTIONS
 from ..steps import run_steps
 from ..widgets import ToggleList
 from .base import (
@@ -149,198 +128,6 @@ class LaboratoryActions(WorkspaceBase):
             return
         self._commit("section-lab-specializations")
 
-    def _add_specialty_entry(self) -> None:
-        lab = self.selected_laboratory
-        if lab is None:
-            return
-
-        def handle_result(entry: LabSpecialtyEntry | None) -> None:
-            if entry is not None:
-                counted = lab_text.counted_specializations(self.saga, lab)
-                lab.specialties.append(entry)
-                self._commit_specialties(counted)
-
-        self.app.push_screen(_lab_specialty_entry_dialog(), handle_result)
-
-    def _edit_specialty_entry(self) -> None:
-        """Edit the chosen Specialization source."""
-        lab = self.selected_laboratory
-        if lab is None:
-            return
-
-        def edit(index: int) -> None:
-            def handle_result(entry: LabSpecialtyEntry | None) -> None:
-                if entry is not None:
-                    counted = lab_text.counted_specializations(self.saga, lab)
-                    lab.specialties[index] = entry
-                    self._commit_specialties(counted)
-
-            self.app.push_screen(
-                _lab_specialty_entry_dialog(lab.specialties[index]), handle_result
-            )
-
-        self._chosen_or_pick(
-            self._lab_view_selection("selected_specialty_entry"),
-            [label for _, label in lab_text.specialty_entry_rows(lab)],
-            empty="No Specialization sources to edit.",
-            then=edit,
-        )
-
-    def _remove_specialty_entry(self) -> None:
-        """Delete the chosen Specialization source (after confirming)."""
-        lab = self.selected_laboratory
-        if lab is None:
-            return
-
-        def confirm(index: int) -> None:
-            entry = lab.specialties[index]
-            name = " ".join(
-                part
-                for part in (
-                    entry.specialization,
-                    f"{entry.points:+d}" if entry.specialization else "",
-                    f"({entry.source})" if entry.source else "",
-                )
-                if part
-            )
-
-            def handle_confirmed(confirmed: bool | None) -> None:
-                if confirmed:
-                    counted = lab_text.counted_specializations(self.saga, lab)
-                    del lab.specialties[index]
-                    self._commit_specialties(counted)
-
-            self.app.push_screen(
-                ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed
-            )
-
-        self._chosen_or_pick(
-            self._lab_view_selection("selected_specialty_entry"),
-            [label for _, label in lab_text.specialty_entry_rows(lab)],
-            empty="No Specialization sources to remove.",
-            then=confirm,
-        )
-
-    def _commit_specialties(self, previously_counted: set[str]) -> None:
-        """Save a change to the Specialization sources: a Specialization it
-        newly makes count arrives turned off if it would break a cap."""
-        lab = self.selected_laboratory
-        if lab is None:
-            return
-        lab_text.reconcile_dropped(self.saga, lab, previously_counted)
-        self._commit("section-lab-specialties")
-
-    # -- Laboratory: Features --
-
-    def _add_feature(self) -> None:
-        lab = self.selected_laboratory
-        if lab is not None:
-            self._feature_flow(lab, None)
-
-    def _edit_feature(self) -> None:
-        """Edit the chosen Feature (type and Virtue, then name, points and
-        Focus)."""
-        lab = self.selected_laboratory
-        if lab is None:
-            return
-        self._chosen_or_pick(
-            self._lab_view_selection("selected_feature"),
-            [escape(f.name) for f in lab.features],
-            empty="No Features to edit.",
-            then=lambda index: self._feature_flow(lab, lab.features[index]),
-        )
-
-    def _feature_flow(self, lab: Laboratory, feature: LabFeature | None) -> None:
-        """Add (`feature` None) or edit a Feature in two steps: which Feature
-        and the Virtue it's built on -- confirming first if that means adding
-        a new Feature Virtue -- then its name, points and Focus. Nothing
-        changes until the second step is saved."""
-
-        def handle_type(result: tuple[str | None, str] | None) -> None:
-            if result is None:
-                return
-            feature_id, virtue_choice = result
-            if not virtue_choice.startswith(NEW_FEATURE_VIRTUE):
-                self._feature_details(lab, feature, feature_id, virtue_choice)
-                return
-            vf_id = virtue_choice.removeprefix(NEW_FEATURE_VIRTUE)
-
-            def handle_confirmed(confirmed: bool | None) -> None:
-                if confirmed:
-                    self._feature_details(lab, feature, feature_id, virtue_choice)
-
-            self.app.push_screen(
-                ConfirmScreen(lf.new_feature_virtue_question(lab, vf_id)),
-                handle_confirmed,
-            )
-
-        self.app.push_screen(_lab_feature_type_dialog(lab, feature), handle_type)
-
-    def _feature_details(
-        self,
-        lab: Laboratory,
-        feature: LabFeature | None,
-        feature_id: str | None,
-        virtue_choice: str,
-    ) -> None:
-        """The second step of _feature_flow: the Feature's name, points and
-        Focus, for a `feature_id` Feature (None: Custom) on the Virtue
-        `virtue_choice` (an instance id, or NEW_FEATURE_VIRTUE + a catalog
-        id to add one with it); saving adds or updates the Feature."""
-        if virtue_choice.startswith(NEW_FEATURE_VIRTUE):
-            virtue_vf_id = virtue_choice.removeprefix(NEW_FEATURE_VIRTUE)
-        else:
-            virtue_vf_id = next(
-                vf.vf_id for vf in lab.virtues_flaws if vf.id == virtue_choice
-            )
-
-        def handle_result(values: dict[str, Any] | None) -> None:
-            if values is None:
-                return
-            lf.save_feature(self.saga, lab, feature, feature_id, virtue_choice, values)
-            self._commit(*LAB_FEATURE_SECTIONS)
-
-        self.app.push_screen(
-            _lab_feature_dialog(lab, feature_id, virtue_vf_id, feature),
-            handle_result,
-        )
-
-    def _remove_feature(self) -> None:
-        """Delete the chosen Feature (after confirming; its Feature Virtue
-        stays, free for another)."""
-        lab = self.selected_laboratory
-        if lab is None:
-            return
-
-        def confirm(index: int) -> None:
-            feature = lab.features[index]
-            virtue = lab_text.feature_virtue(lab, feature)
-            keeps = (
-                f" Its {lab_text.tier_word(virtue.vf_id)} Feature Virtue stays, "
-                "free for another Feature."
-                if virtue
-                else ""
-            )
-
-            def handle_confirmed(confirmed: bool | None) -> None:
-                if confirmed:
-                    counted = lab_text.counted_specializations(self.saga, lab)
-                    del lab.features[index]
-                    lab_text.reconcile_dropped(self.saga, lab, counted)
-                    self._commit(*LAB_FEATURE_SECTIONS)
-
-            self.app.push_screen(
-                ConfirmScreen(f"Delete {escape(feature.name)}?{keeps}"),
-                handle_confirmed,
-            )
-
-        self._chosen_or_pick(
-            self._lab_view_selection("selected_feature"),
-            [escape(f.name) for f in lab.features],
-            empty="No Features to remove.",
-            then=confirm,
-        )
-
     # -- Laboratory: the selectable lists --
 
     def _lab_view_selection(self, method: str) -> int | None:
@@ -348,198 +135,6 @@ class LaboratoryActions(WorkspaceBase):
         "selected_room"), or None with no lab sheet on show."""
         view = self._laboratory_sheet_view
         return getattr(view, method)() if view is not None else None
-
-    # -- Laboratory: Rooms / Equipment & Stores (name + description lists) --
-
-    def _add_named(self, section: str) -> None:
-        lab = self.selected_laboratory
-        if lab is None:
-            return
-        spec = _NAMED_LISTS[section]
-        entries: list[NamedDescription] = getattr(lab, spec.attr)
-
-        def handle_result(entry: NamedDescription | None) -> None:
-            if entry is not None:
-                entries.append(entry)
-                self._commit(section)
-
-        self.app.push_screen(
-            _named_description_dialog(f"Add {spec.article}", spec.example),
-            handle_result,
-        )
-
-    def _edit_named(self, section: str) -> None:
-        """Edit the chosen entry."""
-        lab = self.selected_laboratory
-        if lab is None:
-            return
-        spec = _NAMED_LISTS[section]
-        entries: list[NamedDescription] = getattr(lab, spec.attr)
-
-        def edit(index: int) -> None:
-            def handle_result(entry: NamedDescription | None) -> None:
-                if entry is not None:
-                    entries[index] = entry
-                    self._commit(section)
-
-            self.app.push_screen(
-                _named_description_dialog(
-                    f"Edit {spec.article}", spec.example, existing=entries[index]
-                ),
-                handle_result,
-            )
-
-        self._chosen_or_pick(
-            self._lab_view_selection(spec.selected),
-            [label for _, label in lab_text.named_rows(entries)],
-            empty=f"No {spec.plural} to edit.",
-            then=edit,
-        )
-
-    def _remove_named(self, section: str) -> None:
-        """Delete the chosen entry (after confirming)."""
-        lab = self.selected_laboratory
-        if lab is None:
-            return
-        spec = _NAMED_LISTS[section]
-        entries: list[NamedDescription] = getattr(lab, spec.attr)
-        self._chosen_or_pick(
-            self._lab_view_selection(spec.selected),
-            [label for _, label in lab_text.named_rows(entries)],
-            empty=f"No {spec.plural} to remove.",
-            then=lambda index: self._confirm_delete(
-                entries, index, entries[index].name, section
-            ),
-        )
-
-    # -- Laboratory: Arcane Connections --
-
-    def _add_connection(self) -> None:
-        lab = self.selected_laboratory
-        if lab is None:
-            return
-
-        def handle_result(connection: ArcaneConnection | None) -> None:
-            if connection is not None:
-                lab.arcane_connections.append(connection)
-                self._commit("section-lab-connections")
-
-        self.app.push_screen(
-            _arcane_connection_dialog("Add an Arcane Connection"), handle_result
-        )
-
-    def _edit_connection(self) -> None:
-        """Edit the chosen Arcane Connection."""
-        lab = self.selected_laboratory
-        if lab is None:
-            return
-
-        def edit(index: int) -> None:
-            def handle_result(connection: ArcaneConnection | None) -> None:
-                if connection is not None:
-                    lab.arcane_connections[index] = connection
-                    self._commit("section-lab-connections")
-
-            self.app.push_screen(
-                _arcane_connection_dialog(
-                    "Edit an Arcane Connection", lab.arcane_connections[index]
-                ),
-                handle_result,
-            )
-
-        self._chosen_or_pick(
-            self._lab_view_selection("selected_connection"),
-            [c.to for c in lab.arcane_connections],
-            empty="No Arcane Connections to edit.",
-            then=edit,
-        )
-
-    def _remove_connection(self) -> None:
-        """Delete the chosen Arcane Connection (after confirming)."""
-        lab = self.selected_laboratory
-        if lab is None:
-            return
-        entries = lab.arcane_connections
-        self._chosen_or_pick(
-            self._lab_view_selection("selected_connection"),
-            [c.to for c in entries],
-            empty="No Arcane Connections to remove.",
-            then=lambda index: self._confirm_delete(
-                entries,
-                index,
-                f"the Arcane Connection to {entries[index].to}",
-                "section-lab-connections",
-            ),
-        )
-
-    # -- Laboratory: Raw Vis --
-
-    def _add_lab_raw_vis(self) -> None:
-        lab = self.selected_laboratory
-        if lab is None:
-            return
-
-        def handle_result(result: tuple[str, int] | None) -> None:
-            if result is not None:
-                art, pawns = result
-                add_raw_vis(lab.raw_vis, art, pawns)
-                self._commit("section-lab-raw-vis")
-
-        self.app.push_screen(_raw_vis_dialog(), handle_result)
-
-    def _edit_lab_raw_vis(self) -> None:
-        """Edit the chosen Raw Vis entry."""
-        lab = self.selected_laboratory
-        if lab is None:
-            return
-        arts = sorted(lab.raw_vis)
-
-        def edit(index: int) -> None:
-            old_art = arts[index]
-
-            def handle_result(result: tuple[str, int] | None) -> None:
-                if result is not None:
-                    art, pawns = result
-                    replace_raw_vis(lab.raw_vis, old_art, art, pawns)
-                    self._commit("section-lab-raw-vis")
-
-            self.app.push_screen(
-                _raw_vis_dialog(existing=(old_art, lab.raw_vis[old_art])),
-                handle_result,
-            )
-
-        self._chosen_or_pick(
-            self._lab_view_selection("selected_raw_vis"),
-            [label for _, label in lab_text.raw_vis_rows(lab)],
-            empty="No Raw Vis to edit.",
-            then=edit,
-        )
-
-    def _remove_lab_raw_vis(self) -> None:
-        """Delete the chosen Raw Vis entry (after confirming)."""
-        lab = self.selected_laboratory
-        if lab is None:
-            return
-        arts = sorted(lab.raw_vis)
-
-        def confirm(index: int) -> None:
-            art = arts[index]
-
-            def handle_confirmed(confirmed: bool | None) -> None:
-                if confirmed:
-                    del lab.raw_vis[art]
-                    self._commit("section-lab-raw-vis")
-
-            self.app.push_screen(
-                ConfirmScreen(f"Delete {escape(art.title())} vis?"), handle_confirmed
-            )
-
-        self._chosen_or_pick(
-            self._lab_view_selection("selected_raw_vis"),
-            [label for _, label in lab_text.raw_vis_rows(lab)],
-            empty="No Raw Vis to remove.",
-            then=confirm,
-        )
 
     # -- Laboratory: Planning --
 
@@ -612,63 +207,6 @@ class LaboratoryActions(WorkspaceBase):
             notify=lambda _title, why: self.notify(why),
         )
 
-    # -- Laboratory: Diary --
-
-    def _add_diary_entry(self) -> None:
-        lab = self.selected_laboratory
-        if lab is None:
-            return
-
-        def handle_result(entry: DiaryEntry | None) -> None:
-            if entry is not None:
-                lab.diary.append(entry)
-                self._commit("tab-lab-diary")
-
-        self.app.push_screen(
-            _diary_entry_dialog(
-                self.saga.current_year, default_season=self.saga.current_season
-            ),
-            handle_result,
-        )
-
-    def _edit_diary_entry(self) -> None:
-        """Edit the chosen Diary entry."""
-        lab = self.selected_laboratory
-        if lab is None:
-            return
-
-        def edit(index: int) -> None:
-            def handle_result(entry: DiaryEntry | None) -> None:
-                if entry is not None:
-                    lab.diary[index] = entry
-                    self._commit("tab-lab-diary")
-
-            self.app.push_screen(
-                _diary_entry_dialog(self.saga.current_year, existing=lab.diary[index]),
-                handle_result,
-            )
-
-        self._chosen_or_pick(
-            self._lab_view_selection("selected_diary_entry"),
-            [label for _, label in lab_text.diary_rows(lab.diary)],
-            empty="No Diary entries to edit.",
-            then=edit,
-        )
-
-    def _remove_diary_entry(self) -> None:
-        """Delete the chosen Diary entry (after confirming)."""
-        lab = self.selected_laboratory
-        if lab is None:
-            return
-        self._chosen_or_pick(
-            self._lab_view_selection("selected_diary_entry"),
-            [label for _, label in lab_text.diary_rows(lab.diary)],
-            empty="No Diary entries to remove.",
-            then=lambda index: self._confirm_delete(
-                lab.diary, index, lab.diary[index].name, "tab-lab-diary"
-            ),
-        )
-
     def _laboratory_section_ops(self) -> dict[str, _SectionOps]:
         """a / d / e on the laboratory sheet (see
         WorkspaceScreen._section_ops)."""
@@ -677,31 +215,15 @@ class LaboratoryActions(WorkspaceBase):
             "section-lab-characteristics": _SectionOps(
                 edit=self._edit_lab_characteristics
             ),
-            "section-lab-specialties": _SectionOps(
-                self._add_specialty_entry,
-                self._remove_specialty_entry,
-                self._edit_specialty_entry,
-            ),
-            "section-lab-features": _SectionOps(
-                self._add_feature, self._remove_feature, self._edit_feature
-            ),
-            "section-lab-raw-vis": _SectionOps(
-                self._add_lab_raw_vis, self._remove_lab_raw_vis, self._edit_lab_raw_vis
-            ),
+            "section-lab-specialties": self._core_ops_of("section-lab-specialties"),
+            "section-lab-features": self._core_ops_of("section-lab-features"),
+            "section-lab-raw-vis": self._core_ops_of("section-lab-raw-vis"),
             "tab-lab-planning": _SectionOps(
                 self._new_lab_design, self._clear_lab_season, self._plan_lab_season
             ),
-            "tab-lab-diary": _SectionOps(
-                self._add_diary_entry, self._remove_diary_entry, self._edit_diary_entry
-            ),
-            "section-lab-connections": _SectionOps(
-                self._add_connection, self._remove_connection, self._edit_connection
-            ),
+            "tab-lab-diary": self._core_ops_of("tab-lab-diary"),
+            "section-lab-connections": self._core_ops_of("section-lab-connections"),
         }
         for section in ("section-lab-rooms", "section-lab-items"):
-            ops[section] = _SectionOps(
-                partial(self._add_named, section),
-                partial(self._remove_named, section),
-                partial(self._edit_named, section),
-            )
+            ops[section] = self._core_ops_of(section)
         return ops

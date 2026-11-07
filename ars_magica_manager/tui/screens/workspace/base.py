@@ -9,8 +9,7 @@ import asyncio
 import re
 import uuid
 from collections.abc import Callable, Sequence
-from dataclasses import dataclass, replace
-from dataclasses import field as dataclass_field
+from dataclasses import replace
 from functools import cached_property, partial
 from typing import TYPE_CHECKING, Any, ClassVar, NamedTuple, cast
 
@@ -48,6 +47,7 @@ from .... import (
     presence,
     saga_index,
     seasons,
+    section_verbs,
     sourcebooks,
     storage,
     transfer,
@@ -63,6 +63,7 @@ from ....actions import (
     MORE_MENU,
     NEW_MENU,
     RECORD_SECTION,
+    SECTION_VERBS,
     MenuItem,
     NodeKind,
 )
@@ -82,7 +83,6 @@ from ....models import (
     Neighbour,
     Player,
     Saga,
-    ScoredTrait,
     Tribunal,
 )
 from ....references import Ref
@@ -118,7 +118,6 @@ from ..help import HelpContext, HelpScreen, shown_keys
 from ..prompts import (
     ConfirmScreen,
     MenuScreen,
-    _scored_trait_dialog,
     terminal_fields,
 )
 from ..sheets import (
@@ -169,81 +168,6 @@ class _SectionOps(NamedTuple):
     remove: Callable[[], None] | None = None
     edit: Callable[[], None] | None = None
     restore: Callable[[], None] | None = None
-
-
-@dataclass(frozen=True)
-class _TraitList:
-    """One of the sheets' scored-trait lists -- a record's Personality Traits
-    or Reputations -- for WorkspaceScreen's shared add/edit/remove."""
-
-    owner: str  # the WorkspaceScreen attribute holding the record
-    attr: str  # the record's list: "personality_traits" or "reputations"
-    section: str
-    noun: str  # "Personality Trait" or "Reputation"
-    example: str
-    selected: str  # the WorkspaceScreen method giving the chosen row's index
-    prompt_options: dict[str, Any] = dataclass_field(default_factory=dict)
-
-
-_CHARACTER_TRAITS = _TraitList(
-    "selected_character",
-    "personality_traits",
-    "section-personality-traits",
-    "Personality Trait",
-    "e.g. Brave",
-    "_selected_personality_trait",
-    prompt_options={"include_sympathy": True},
-)
-
-
-_CHARACTER_REPUTATIONS = _TraitList(
-    "selected_character",
-    "reputations",
-    "section-reputations",
-    "Reputation",
-    "e.g. Skilled Enchanter",
-    "_selected_character_reputation",
-    prompt_options={"include_reach": True},
-)
-
-
-_FAMILIAR_TRAITS = _TraitList(
-    "selected_familiar",
-    "personality_traits",
-    "section-fam-personality-traits",
-    "Personality Trait",
-    "e.g. Loyal",
-    "_selected_familiar_personality_trait",
-)
-
-
-_FAMILIAR_REPUTATIONS = _TraitList(
-    "selected_familiar",
-    "reputations",
-    "section-fam-reputations",
-    "Reputation",
-    "e.g. Fierce Protector",
-    "_selected_familiar_reputation",
-    prompt_options={"include_reach": True},
-)
-
-
-_COVENANT_REPUTATIONS = _TraitList(
-    "selected_covenant",
-    "reputations",
-    "section-cov-reputations",
-    "Reputation",
-    "e.g. Feared by the local nobility",
-    "_selected_reputation",
-    prompt_options={
-        "include_known": True,
-        "include_reach": True,
-    },
-)
-
-
-#: Which sheet section each covenant Boon/Hook kind lives in.
-_BOON_HOOK_SECTION = {"Boon": "section-cov-boons", "Hook": "section-cov-hooks"}
 
 
 #: Each tree node's help page (help/*.md), by the kind of node selected.
@@ -1727,72 +1651,6 @@ class WorkspaceBase(Screen[None]):
 
     # -- scored-trait lists (Personality Traits, Reputations) --
 
-    def _traits(self, spec: _TraitList) -> list[ScoredTrait] | None:
-        owner = getattr(self, spec.owner)
-        return None if owner is None else getattr(owner, spec.attr)
-
-    def _trait_prompt(
-        self, spec: _TraitList, title: str, existing: ScoredTrait | None = None
-    ) -> FieldsDialog[ScoredTrait]:
-        return _scored_trait_dialog(
-            title, spec.example, existing, **spec.prompt_options
-        )
-
-    def _add_trait(self, spec: _TraitList) -> None:
-        traits = self._traits(spec)
-        if traits is None:
-            return
-
-        def handle_result(trait: ScoredTrait | None) -> None:
-            if trait is not None:
-                traits.append(trait)
-                self._commit(spec.section)
-
-        self.app.push_screen(
-            self._trait_prompt(spec, f"Add a {spec.noun}"), handle_result
-        )
-
-    def _edit_trait(self, spec: _TraitList) -> None:
-        """Edit the chosen entry."""
-        traits = self._traits(spec)
-        if traits is None:
-            return
-        self._chosen_or_pick(
-            getattr(self, spec.selected)(),
-            [label for _, label in st.trait_rows(traits)],
-            empty=f"No {spec.noun}s to edit.",
-            then=lambda index: self._edit_trait_at(spec, traits, index),
-        )
-
-    def _edit_trait_at(
-        self, spec: _TraitList, traits: list[ScoredTrait], index: int
-    ) -> None:
-        def handle_result(trait: ScoredTrait | None) -> None:
-            if trait is not None:
-                traits[index] = trait
-                self._commit(spec.section)
-
-        self.app.push_screen(
-            self._trait_prompt(spec, f"Edit a {spec.noun}", traits[index]),
-            handle_result,
-        )
-
-    def _remove_trait(self, spec: _TraitList) -> None:
-        """Delete the chosen entry, after confirming."""
-        traits = self._traits(spec)
-        if traits is None:
-            return
-
-        def remove(index: int) -> None:
-            self._confirm_delete(traits, index, traits[index].name, spec.section)
-
-        self._chosen_or_pick(
-            getattr(self, spec.selected)(),
-            [label for _, label in st.trait_rows(traits)],
-            empty=f"No {spec.noun}s to remove.",
-            then=remove,
-        )
-
     def _chosen_or_pick(
         self,
         selected: int | None,
@@ -2037,11 +1895,28 @@ class WorkspaceBase(Screen[None]):
         }
     )
 
+    def _core_ops_of(
+        self, section: str, restore: Callable[[], None] | None = None
+    ) -> _SectionOps:
+        """a / d / e on `section` as the core table defines them, and
+        More's Restore where the section has one (a sheet's own)."""
+        verbs = SECTION_VERBS.get(section, frozenset({"add", "remove", "edit"}))
+
+        def run(verb: str) -> Callable[[], None] | None:
+            return partial(self._core_verb, section, verb) if verb in verbs else None
+
+        return _SectionOps(run("add"), run("remove"), run("edit"), restore)
+
     def _core_verb(self, section: str, verb: str) -> None:
         """Run the sheet's core Add, Edit or Delete (commands.SectionOps)
         for `section` on its chosen row, then save and redraw it."""
         view = self._current_sheet_view()
-        ops = view.core_ops.get(section) if view is not None else None
+        # The sheet's own first: its lists that count into what it has chosen.
+        ops = view.state_ops.get(section) if view is not None else None
+        record = self._core_record()
+        in_table = ops is None and record is not None
+        if in_table:
+            ops = section_verbs.section_ops(self.saga, record, section)
         step_of = getattr(ops, verb, None) if ops is not None else None
         if view is None or step_of is None:
             return
@@ -2050,8 +1925,16 @@ class WorkspaceBase(Screen[None]):
         else:
             row = view.section_row(section)
             if row is None:
-                return
-            step = step_of(row)
+                # No row chosen (the section is collapsed): act on the only
+                # entry there is, else say to choose one.
+                count = len(ops.rows()) if ops and ops.rows else 0
+                if count > 1:
+                    self.notify(CHOOSE_FIRST)
+                if count != 1:
+                    return
+            else:
+                row = section_verbs.table_row(record, section, row)
+            step = step_of(0 if row is None else row)
 
         def finished(end: object) -> None:
             if isinstance(end, Go):
@@ -2060,9 +1943,38 @@ class WorkspaceBase(Screen[None]):
                     self.run_action, f"open_ref({end.ref.kind!r}, {end.ref.id!r})"
                 )
                 return
-            self._commit_told(end, section, tree=section in self._TREE_SECTIONS)
+            self._commit_told(
+                end, *self._core_refreshed(section), tree=section in self._TREE_SECTIONS
+            )
 
         run_steps(self.app, step, finished)
+
+    def _core_refreshed(self, section: str) -> tuple[str, ...]:
+        """The sections to redraw after `section`'s Add, Edit or Delete: it
+        and any other that shows the same rows."""
+        return section_verbs.refreshed(self._core_record(), section)
+
+    def _core_record(self) -> object:
+        """The record the sheet on show is of."""
+        whole_saga = (
+            NodeKind.SAGA_CONTENT,
+            NodeKind.REGION,
+            NodeKind.NEIGHBOUR_GROUP,
+            NodeKind.BESTIARY,
+            NodeKind.CONFLICTS,
+            NodeKind.SEASONS,
+        )
+        if self.selected_kind in whole_saga:
+            return self.saga
+        return {
+            NodeKind.CHARACTER: self.selected_character,
+            NodeKind.FAMILIAR: self.selected_familiar,
+            NodeKind.LABORATORY: self.selected_laboratory,
+            NodeKind.COVENANT: self.selected_covenant,
+            NodeKind.TRIBUNAL: self.selected_tribunal,
+            NodeKind.NEIGHBOUR: self.selected_neighbour,
+            NodeKind.CREATURE: self.selected_creature,
+        }.get(self.selected_kind)
 
     def action_add(self) -> None:
         if (handler := self._section_op("add")) is not None:
@@ -2238,18 +2150,14 @@ class WorkspaceBase(Screen[None]):
         and the core sections (see
         WorkspaceScreen._section_ops)."""
         ops: dict[str, _SectionOps] = {}
-        for spec in (
-            _CHARACTER_TRAITS,
-            _CHARACTER_REPUTATIONS,
-            _FAMILIAR_TRAITS,
-            _FAMILIAR_REPUTATIONS,
-            _COVENANT_REPUTATIONS,
+        for section in (
+            section_verbs.PERSONALITY_TRAITS_SECTION,
+            section_verbs.REPUTATIONS_SECTION,
+            section_verbs.FAMILIAR_TRAITS_SECTION,
+            section_verbs.FAMILIAR_REPUTATIONS_SECTION,
         ):
-            ops[spec.section] = _SectionOps(
-                partial(self._add_trait, spec),
-                partial(self._remove_trait, spec),
-                partial(self._edit_trait, spec),
-            )
+            ops[section] = self._core_ops_of(section)
+        ops["section-cov-reputations"] = self._core_ops_of("section-cov-reputations")
         for section, verbs in CORE_SECTIONS.items():
             ops[section] = _SectionOps(
                 *(

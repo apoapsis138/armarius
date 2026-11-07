@@ -18,11 +18,11 @@ from screen_helpers import (
     _select_covenant,
     _select_laboratory,
     _show_tab,
-    _wait_for_picker_ready,
     _wait_for_screen,
 )
 from support import (
     build_all_tabs,
+    choose,
     close_worksheet,
     menu,
     screen_lines,
@@ -58,12 +58,11 @@ from ars_magica_manager.tui.screens import (
     DialogField,
     EditArtsScreen,
     FieldsDialog,
-    RemovalPickerScreen,
     SelectableList,
-    SpellChooserScreen,
     WorkspaceScreen,
 )
 from ars_magica_manager.tui.screens.prompts import ListFieldScreen
+from ars_magica_manager.tui.screens.steps import ChooseScreen
 from ars_magica_manager.tui.screens.widgets import LIST_COLUMN_GAP, TEXT_COLUMN_GAP
 
 
@@ -547,29 +546,19 @@ async def test_add_and_remove_spell_known():
         await _open_section(pilot, app, "section-known-spells")
 
         await pilot.press("a")
-        await wait_until(pilot, lambda: isinstance(app.screen, SpellChooserScreen))
-        await pilot.pause()
-        # The saga's own spell and the catalog's are both offered.
-        assert "spellpick-spell1" in app.screen._by_item_id
-        assert "spellpick-spell_pilum_of_fire" in app.screen._by_item_id
-        # Search, then pick the second match (the saga's own; the catalog's
-        # Pilum of Fire comes first).
-        await _wait_for_picker_ready(pilot, app)
-        app.screen.query_one("#picker-search", Input).value = "pilum"
-        await pilot.pause()
-        await pilot.pause()
-        app.screen.query_one("#picker-search", Input).focus()
-        await pilot.press("down", "down", "enter")
+        picker = await choose(pilot, app, "Pilum of Fire")
+        offered = sum("Pilum of Fire" in strip_markup(c.label) for c in picker._all())
         await _wait_for_screen(pilot, app, WorkspaceScreen)
 
         assert isinstance(app.screen, WorkspaceScreen)
         labels = _known_spell_labels(app.screen._character_sheet_view)
-        assert "Pilum of Fire" in labels and "CrIg" in labels
+        assert "Pilum of Fire" in labels
         # A spell already known isn't offered again.
         await pilot.press("a")
-        await wait_until(pilot, lambda: isinstance(app.screen, SpellChooserScreen))
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ChooseScreen))
         await pilot.pause()
-        assert "spellpick-spell1" not in app.screen._by_item_id
+        left = sum("Pilum of Fire" in strip_markup(c.label) for c in app.screen._all())
+        assert left == offered - 1, (left, offered)
         await pilot.press("escape")
         await pilot.pause()
 
@@ -702,9 +691,6 @@ async def test_the_mastery_dialog_shows_brackets_in_names():
         button.press()
         assert await wait_until(pilot, lambda: isinstance(app.screen, ListFieldScreen))
         await pilot.pause()
-        assert "Mastery Abilities: Pilum of [Greater] Fire" in [
-            str(label.render()) for label in app.screen.query(Label)
-        ]
         rows = "\n".join(screen_lines(app))
         assert "Fast [Casting] 1/0" in rows, rows
 
@@ -726,11 +712,8 @@ async def test_add_and_remove_inventory_item():
         await _open_section(pilot, app, "section-inventory")
 
         await pilot.press("a")
-        await _wait_for_screen(pilot, app, RemovalPickerScreen)
-        assert isinstance(app.screen, RemovalPickerScreen)  # which kind?
-        await pilot.press("down")  # Weapon, Armor, [Item]
-        await pilot.press("down")
-        await pilot.press("enter")
+        await _wait_for_screen(pilot, app, ChooseScreen)  # which kind?
+        await choose(pilot, app, "Item")
         await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
 

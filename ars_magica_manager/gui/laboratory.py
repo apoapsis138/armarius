@@ -34,6 +34,7 @@ from .. import (
     research_text,
     saga_index,
     seasons,
+    section_verbs,
     vis,
 )
 from .. import books as bk
@@ -43,17 +44,13 @@ from .. import saga_overview as ov
 from ..actions import NodeKind
 from ..arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
 from ..commands import SectionOps
-from ..forms import diary as diary_forms
-from ..forms import lab_item as item_forms
 from ..forms import lab_plan as lab_plan_forms
 from ..forms import laboratory as lf
 from ..forms import library as library_forms
 from ..forms import menu as menu_forms
-from ..forms import virtue as virtue_forms
-from ..forms import vis as vis_forms
 from ..markup import escape, markdown_text
 from ..models import LAB_TEXT_KINDS, Book, Laboratory, Saga
-from ..sections import LAB_TRAITS_SECTION
+from ..sections import LAB_ITEMS_SECTION, LAB_TRAITS_SECTION
 from ..sheets import laboratory as ls
 from . import pictures
 from .bookmark import with_bookmark
@@ -388,9 +385,19 @@ class LaboratoryPage(QWidget):
             side_by_side(base, by_activity, spacing=14),
         )
 
+    def _table(self) -> dict[str, SectionOps]:
+        """The core's Add, Edit and Delete for each of the sheet's sections,
+        built once for the page being drawn."""
+        return section_verbs.ops_of(self.saga, self.lab)
+
     def _virtues_flaws(self) -> QWidget:
         p, lab = self.p, self.lab
         columns = []
+        table = self._table()
+        section_of_side = {
+            side: section_id
+            for section_id, side in section_verbs.VIRTUE_FLAW_SIDES[Laboratory].items()
+        }
         for side, tone in (("Virtue", "text-success"), ("Flaw", "text-error")):
             column = QWidget()
             stack = QVBoxLayout(column)
@@ -412,7 +419,7 @@ class LaboratoryPage(QWidget):
                         or [text(f"No {side}s.", p["dim"], serif(12.5, italic=True))]
                     ),
                     buttons=verb_buttons(
-                        virtue_forms.virtue_flaw_ops(self.saga, lab, side),
+                        table[section_of_side[side]],
                         chooser,
                         self.run,
                         p,
@@ -431,7 +438,7 @@ class LaboratoryPage(QWidget):
             trait_section(
                 "Personality Traits",
                 lab.personality_traits,
-                LAB_TRAITS_SECTION,
+                table[LAB_TRAITS_SECTION],
                 p,
                 self.run,
             ),
@@ -526,7 +533,10 @@ class LaboratoryPage(QWidget):
             p,
             trait_list(rows, p, chooser.choose),
             buttons=verb_buttons(
-                lf.specialty_ops(self.saga, lab), chooser, self.run, p
+                self._table()[section_verbs.LAB_SPECIALTIES_SECTION],
+                chooser,
+                self.run,
+                p,
             ),
         )
 
@@ -551,7 +561,7 @@ class LaboratoryPage(QWidget):
         return self._card_section(
             f"Features ({len(features)})",
             cards,
-            lf.feature_ops(self.saga, lab),
+            self._table()[section_verbs.LAB_FEATURES_SECTION],
             "None yet.",
         )
 
@@ -578,7 +588,7 @@ class LaboratoryPage(QWidget):
         return self._card_section(
             f"Magic Items ({len(items)})",
             cards,
-            item_forms.item_ops(saga, lab),
+            self._table()[LAB_ITEMS_SECTION],
             "None yet.",
         )
 
@@ -621,7 +631,7 @@ class LaboratoryPage(QWidget):
         return self._card_section(
             f"{title} ({len(entries)})",
             cards,
-            lf.named_ops(self.lab, section_id),
+            self._table()[section_id],
             "None recorded.",
         )
 
@@ -693,6 +703,7 @@ class LaboratoryPage(QWidget):
         none = "None recorded."
         chooser = Chooser()
         choose_cards(phials, chooser)
+        table = self._table()
         return scrolling_page(
             p,
             section(
@@ -702,7 +713,7 @@ class LaboratoryPage(QWidget):
                 if phials
                 else text(none, p["dim"], serif(12.5, italic=True)),
                 buttons=verb_buttons(
-                    vis_forms.raw_vis_ops(lab.raw_vis),
+                    table[section_verbs.LAB_RAW_VIS_SECTION],
                     chooser,
                     self.run,
                     p,
@@ -713,10 +724,18 @@ class LaboratoryPage(QWidget):
             self._card_section(
                 f"Arcane Connections ({len(connections)})",
                 connections,
-                lf.connection_ops(lab),
+                table[section_verbs.LAB_CONNECTIONS_SECTION],
                 none,
             ),
-            device_section(saga, "laboratory", lab.id, p, self.run, self.inspect),
+            device_section(
+                saga,
+                "laboratory",
+                lab.id,
+                table["section-lab-devices"],
+                p,
+                self.run,
+                self.inspect,
+            ),
             self._lab_texts(),
             section(
                 f"Books ({len(books)})",
@@ -869,7 +888,10 @@ class LaboratoryPage(QWidget):
                 if entries
                 else text("Nothing written yet.", p["dim"], serif(12.5, italic=True)),
                 buttons=verb_buttons(
-                    diary_forms.entry_ops(saga, lab.diary), diary, self.run, p
+                    self._table()[section_verbs.LAB_DIARY_SECTION],
+                    diary,
+                    self.run,
+                    p,
                 ),
             ),
         )

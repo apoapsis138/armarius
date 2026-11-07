@@ -41,9 +41,6 @@ from ....forms import covers as cover_forms
 from ....forms import criamon as criamon_forms
 from ....forms import power as power_forms
 from ....forms import religion as religion_forms
-from ....forms import tradition as tradition_forms
-from ....forms import world as world_forms
-from ....forms.secrets import secrets_ops
 from ....models import (
     LINE,
     Character,
@@ -232,7 +229,6 @@ class CharacterSheetView(SheetView):
     def __init__(self, saga: Saga, character: Character) -> None:
         super().__init__(saga)
         self.character = character
-        self.core_ops = secrets_ops(character)
         #: What the Religion tab was built with (_religion_layout), and the
         #: row chosen in one of its Church lists (its section and the row's
         #: index).
@@ -361,9 +357,6 @@ class CharacterSheetView(SheetView):
                         id=tradition_list(tradition.id),
                     )
                 effects = traditions.effects_section(tradition.id)
-                self.core_ops[effects] = tradition_forms.effect_ops(
-                    self.character, tradition
-                )
                 with SheetSection(title="Effects and Items", id=effects):
                     yield self._list(
                         (effects, *sources),
@@ -373,9 +366,6 @@ class CharacterSheetView(SheetView):
                         id=traditions.effects_list(tradition.id),
                     )
                 bonds = traditions.bonds_section(tradition.id)
-                self.core_ops[bonds] = tradition_forms.bond_ops(
-                    self.saga, self.character, tradition
-                )
                 with SheetSection(title="Bound Beings", id=bonds):
                     yield self._list(
                         bonds,
@@ -428,9 +418,6 @@ class CharacterSheetView(SheetView):
                     )
                 if tradition.pools:
                     pools = traditions.pools_section(tradition.id)
-                    self.core_ops[pools] = tradition_forms.pool_ops(
-                        self.character, tradition
-                    )
                     with SheetSection(title="Pools", id=pools):
                         yield self._static(
                             pools,
@@ -654,7 +641,6 @@ class CharacterSheetView(SheetView):
                         id="character-reputations-list",
                     )
             if world.holds_standing(self.saga, character):
-                self.core_ops.update(world_forms.standing_ops(self.saga, character))
                 yield from self._relations(character, links=False)
             yield from self._connections(character)
             if lineage.shown(self.saga, character):
@@ -677,9 +663,6 @@ class CharacterSheetView(SheetView):
                     self._aging_text,
                     id="aging-content",
                 )
-            self.core_ops[CONSTANT_EFFECTS_SECTION] = constant_forms.ops(
-                self.saga, self.character
-            )
             with SheetSection(
                 title=self._titled(
                     CONSTANT_EFFECTS_SECTION,
@@ -694,7 +677,6 @@ class CharacterSheetView(SheetView):
                     id="char-constant-effects-list",
                 )
             if cover_forms.shown(character):
-                self.core_ops[COVERS_SECTION] = cover_forms.ops(self.character)
                 with SheetSection(
                     title=self._titled(
                         COVERS_SECTION,
@@ -765,7 +747,6 @@ class CharacterSheetView(SheetView):
                             id="vf-flaws-list",
                             group="vf",
                         )
-                self.core_ops[POWERS_SECTION] = power_forms.ops(self.character)
                 with SheetSection(
                     title=self._titled(
                         POWERS_SECTION,
@@ -981,8 +962,6 @@ class CharacterSheetView(SheetView):
     def _agents_tab(self) -> ComposeResult:
         """The agents he controls through personal bonds: the limit and
         the Agency experience, the list, and the chosen agent's details."""
-        character = self.character
-        self.core_ops[AGENTS_SECTION] = agent_forms.ops(character)
         with Vertical(classes="panel-body"):
             with (
                 VerticalScroll(),
@@ -1045,8 +1024,7 @@ class CharacterSheetView(SheetView):
         Orders and the Ordinations for one who may hold orders, the
         Petitions and the Canon Court, with one details panel for the
         chosen ordination, petition or case."""
-        saga, character = self.saga, self.character
-        self.core_ops.update(religion_forms.ops(saga, character))
+        character = self.character
         _, church, orders = self._religion_shown
         career = character.church
         lists = [
@@ -1076,8 +1054,6 @@ class CharacterSheetView(SheetView):
                     lambda: church_forms.ordination_rows(self.character),
                 ),
             )
-        if church:
-            self.core_ops.update(church_forms.ops(saga, character))
         with Vertical(classes="panel-body"):
             with VerticalScroll():
                 with SheetSection(title="Faith", id=FAITH_SECTION):
@@ -1118,8 +1094,6 @@ class CharacterSheetView(SheetView):
     def _criamon_tab(self) -> ComposeResult:
         """The path, its stations and the stigmata, with one details panel
         for the chosen station or stigma."""
-        saga, character = self.saga, self.character
-        self.core_ops.update(criamon_forms.ops(saga, character))
         with Vertical(classes="panel-body"):
             with VerticalScroll():
                 with SheetSection(

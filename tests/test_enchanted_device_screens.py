@@ -23,8 +23,8 @@ from ars_magica_manager.tui.screens import (
     SelectableList,
     WorkspaceScreen,
 )
-from ars_magica_manager.tui.screens.pickers import ShapeMaterialPickerScreen
 from ars_magica_manager.tui.screens.prompts import ListFieldScreen
+from ars_magica_manager.tui.screens.steps import ChooseScreen
 from ars_magica_manager.tui.screens.widgets import section_stop
 
 SECTIONS = {
@@ -322,11 +322,17 @@ async def test_a_bonus_is_picked_from_des_table():
         editor.action_add()
         bonus = await _wait_for(pilot, app, FieldsDialog, not_=dialog)
         bonus.query_one("#fld-catalog", Button).press()
-        picker = await _wait_for(pilot, app, ShapeMaterialPickerScreen)
-        picker.query_one("#picker-search", Input).value = "Agate protection from s"
-        assert await wait_until(pilot, lambda: len(picker._by_item_id) == 1)
-        await pilot.press("enter")
-        assert await wait_until(pilot, lambda: app.screen is bonus)
+        picker = await _wait_for(pilot, app, ChooseScreen)
+        assert await wait_until(pilot, lambda: bool(picker.query("#choose-list")))
+        picker.dismiss(
+            next(
+                i
+                for i, c in enumerate(picker._all())
+                if (c.value.shape, c.value.applies_to)
+                == ("Agate", "protection from storms")
+            )
+        )
+        assert await wait_until(pilot, lambda: app.screen is bonus), repr(app.screen)
         await pilot.pause()
         assert bonus.query_one("#fld-bonus", Input).value == "5"
         assert (

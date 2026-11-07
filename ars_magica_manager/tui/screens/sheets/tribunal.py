@@ -14,7 +14,6 @@ from textual.widgets import Button, Collapsible, Static, TabbedContent
 
 from .... import meeting, tribunal_packages
 from ....forms import polemic as polemic_forms
-from ....forms import tribunal as tribunal_forms
 from ....markup import aligned, escape, markdown_text
 from ....models import Case, Saga, Tribunal
 from ....sections import (
@@ -70,7 +69,6 @@ class TribunalSheetView(SheetView):
     def __init__(self, saga: Saga, tribunal: Tribunal) -> None:
         super().__init__(saga)
         self.tribunal = tribunal
-        self.core_ops = tribunal_forms.tribunal_ops(saga, tribunal)
         #: The customs the sheet was built for: its tabs are theirs.
         self.package = tribunal_packages.of(tribunal)
         #: The case the Docket's details panel shows.
@@ -86,11 +84,11 @@ class TribunalSheetView(SheetView):
         self.arguments_shown = polemic_forms.tab_offered(saga)
         self.argument_index: int | None = None
         self._argument_panel: tuple[str, int | None] = (ARGUMENT_TEXTS_SECTION, None)
-        self.core_ops[ARGUMENTS_SECTION] = polemic_forms.arguments_ops(saga, tribunal)
-        self.core_ops[ARGUMENT_SECTION] = polemic_forms.argument_ops(
+        self.state_ops[ARGUMENTS_SECTION] = polemic_forms.arguments_ops(saga, tribunal)
+        self.state_ops[ARGUMENT_SECTION] = polemic_forms.argument_ops(
             saga, tribunal, self.chosen_argument
         )
-        self.core_ops[ARGUMENT_TEXTS_SECTION] = polemic_forms.texts_ops(
+        self.state_ops[ARGUMENT_TEXTS_SECTION] = polemic_forms.texts_ops(
             saga, tribunal, self.chosen_argument
         )
 

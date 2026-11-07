@@ -15,8 +15,8 @@ from screen_helpers import (
     _wait_for_screen,
     _wait_until_active,
 )
-from support import menu, wait_until
-from textual.widgets import Button, Collapsible, Input, Label, ListView, Select, Static
+from support import choose, menu, strip_markup, wait_until
+from textual.widgets import Button, Collapsible, Input, Select, Static
 
 from ars_magica_manager import inhabitants as inh
 from ars_magica_manager import storage
@@ -31,6 +31,7 @@ from ars_magica_manager.tui.screens import (
     SelectableList,
     WorkspaceScreen,
 )
+from ars_magica_manager.tui.screens.steps import ChooseScreen
 
 
 async def _select_inh_row(pilot, app, kind: str, row: int) -> None:
@@ -245,6 +246,11 @@ async def test_restoring_a_departed_magus_makes_them_count_again():
     assert record.description == "Trusted."  # covenant-side extras kept
 
 
+def _offered_people(app) -> list[str]:
+    """The labels the Add chooser lists, markup removed."""
+    return [strip_markup(c.label) for c in app.screen._all()]
+
+
 async def test_specialist_from_an_unassigned_grog_prefills_and_marks_it_assigned():
     storage.save_saga(_saga_with_people())
 
@@ -254,18 +260,13 @@ async def test_specialist_from_an_unassigned_grog_prefills_and_marks_it_assigned
         await _open_inh_section(pilot, app, "section-inh-specialist")
 
         await pilot.press("a")
-        await _wait_for_screen(pilot, app, RemovalPickerScreen)
-        assert isinstance(app.screen, RemovalPickerScreen)
-        labels = [
-            str(item.query_one(Label).render())
-            for item in app.screen.query_one("#removal-picker-list", ListView).children
-        ]
+        await _wait_for_screen(pilot, app, ChooseScreen)
+        labels = _offered_people(app)
         # New person first, then only THIS covenant's unassigned grogs.
         assert labels[0].startswith("(New person")
         assert [l.split("  ")[0] for l in labels[1:]] == ["Old Thomae", "Dieter"]
 
-        await pilot.press("down")  # Old Thomae
-        await pilot.press("enter")
+        await choose(pilot, app, "Old Thomae")
         await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
         assert app.screen.query_one("#fld-name", Input).value == "Old Thomae"
@@ -279,11 +280,8 @@ async def test_specialist_from_an_unassigned_grog_prefills_and_marks_it_assigned
 
         # Now assigned, so he's no longer offered.
         await pilot.press("a")
-        await pilot.pause()
-        labels = [
-            str(item.query_one(Label).render())
-            for item in app.screen.query_one("#removal-picker-list", ListView).children
-        ]
+        await _wait_for_screen(pilot, app, ChooseScreen)
+        labels = _offered_people(app)
         assert [l.split("  ")[0] for l in labels[1:]] == ["Dieter"]
 
     [record] = _records("specialist")
@@ -325,9 +323,7 @@ async def test_a_grog_without_a_year_born_is_assigned_with_it_unknown():
         await _select_covenant(pilot, app)
         await _open_inh_section(pilot, app, "section-inh-turb")
         await pilot.press("a")
-        await pilot.pause()
-        await pilot.press("down", "down")  # Dieter: no year on his sheet
-        await pilot.press("enter")
+        await choose(pilot, app, "Dieter")  # no year on his sheet
         await _wait_for_screen(pilot, app, FieldsDialog)
         assert app.screen.query_one("#fld-name", Input).value == "Dieter"
         assert app.screen.query_one("#fld-year_born", Input).value == ""
@@ -344,9 +340,8 @@ async def test_other_covenfolk_requires_a_covenant_role_and_suppresses_it_when_r
         await _select_covenant(pilot, app)
         await _open_inh_section(pilot, app, "section-inh-inhabitant")
         await pilot.press("a")
-        await _wait_for_screen(pilot, app, RemovalPickerScreen)
-        assert isinstance(app.screen, RemovalPickerScreen)  # a GROG_KINDS section
-        await pilot.press("enter")
+        await _wait_for_screen(pilot, app, ChooseScreen)  # a GROG_KINDS section
+        await choose(pilot, app, "(New person")
         await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
 
@@ -393,9 +388,7 @@ async def test_craftsperson_links_one_of_the_grogs_abilities_and_stores_craft_fi
         await _select_covenant(pilot, app)
         await _open_inh_section(pilot, app, "section-inh-craftsperson")
         await pilot.press("a")
-        await pilot.pause()
-        await pilot.press("down")
-        await pilot.press("enter")  # Old Thomae
+        await choose(pilot, app, "Old Thomae")
         await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
 

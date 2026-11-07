@@ -8,6 +8,7 @@ from typing import Any
 
 from textual.app import ComposeResult
 from textual.containers import Vertical, VerticalScroll
+from textual.css.query import NoMatches
 from textual.widget import Widget
 from textual.widgets import Static, TabbedContent, TabPane
 
@@ -15,7 +16,8 @@ from .... import saga_content as sc
 from ....boon_hook_text import counted
 from ....forms import goods as goods_forms
 from ....forms import mystery_cults as cult_forms
-from ....models import Saga, SagaSource
+from ....forms import saga_content as scf
+from ....models import Saga, SagaSource, Spell
 from ....sections import (
     BOOKS_SECTION,
     CATALOGS_SECTION,
@@ -84,6 +86,29 @@ class SagaContentSheetView(SheetView):
         self.cult_index: int | None = None
         self.degree_index: int | None = None
         self._cult_panel: tuple[str, int | None] = (CULTS_SECTION, None)
+        # The Spells list counts into the spells it shows now (its filters).
+        self.state_ops[SPELL_SECTION] = scf.spell_ops(saga, self._shown_spells)
+        # The three list views are rebuilt from the saga after a change.
+        self._on_refresh(HOUSE_RULES_SECTION, lambda: self._rebuild(HouseRulesView))
+        self._on_refresh(PLAYERS_SECTION, lambda: self._rebuild(PlayersView))
+        self._on_refresh(SPELL_SECTION, lambda: self._rebuild(SpellListView))
+
+    def _shown_spells(self) -> list[Spell]:
+        try:
+            return self.query_one(SpellListView).shown
+        except NoMatches:
+            return []
+
+    def _rebuild(
+        self, view: type[HouseRulesView | PlayersView | SpellListView]
+    ) -> None:
+        """Re-read the saga into the list view `view` (NoMatches: its tab is
+        not built yet, which is built from the current data)."""
+        found = self.query_one(view)
+        if isinstance(found, SpellListView):
+            found.refilter()
+        else:
+            found.rebuild()
 
     def compose(self) -> ComposeResult:
         with TabbedContent(initial=self.INITIAL_TAB):
@@ -265,7 +290,6 @@ class SagaContentSheetView(SheetView):
         """The Goods catalog and the saga's own goods, with the chosen
         good's details under them."""
         saga = self.saga
-        self.core_ops[GOODS_SECTION] = goods_forms.ops(saga)
         #: What the list follows: its own changes, and a good hidden,
         #: offered again or the whole catalog switched off on Catalogs.
         follows = (GOODS_SECTION, CATALOGS_SECTION, HIDDEN_SECTION)
@@ -308,10 +332,10 @@ class SagaContentSheetView(SheetView):
         them (forms/mystery_cults.py)."""
         saga = self.saga
         cult, degree = self.chosen_cult, self.chosen_degree
-        self.core_ops[CULTS_SECTION] = cult_forms.cults_ops(saga)
-        self.core_ops[CULT_SECTION] = cult_forms.cult_ops(saga, cult)
-        self.core_ops[CULT_DEGREES_SECTION] = cult_forms.degree_ops(saga, cult)
-        self.core_ops[CULT_SCRIPT_SECTION] = cult_forms.script_ops(saga, cult, degree)
+        self.state_ops[CULTS_SECTION] = cult_forms.cults_ops(saga)
+        self.state_ops[CULT_SECTION] = cult_forms.cult_ops(saga, cult)
+        self.state_ops[CULT_DEGREES_SECTION] = cult_forms.degree_ops(saga, cult)
+        self.state_ops[CULT_SCRIPT_SECTION] = cult_forms.script_ops(saga, cult, degree)
         follows = CULT_SECTIONS
         on_cult = (*follows, _CULT_CHOSEN)
         on_degree = (*on_cult, _DEGREE_CHOSEN)
