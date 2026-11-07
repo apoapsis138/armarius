@@ -8,64 +8,29 @@ from collections.abc import Callable
 from functools import partial
 from typing import Any
 
-from .... import baraka as baraka_forms
 from .... import (
     creation,
     section_verbs,
-    selling,
     traditions,
     world,
 )
-from .... import devotion as devotion_forms
-from .... import mystic_paths as mystic_forms
 from .... import spells as spl
-from .... import theban_customs as byzantine
 from ....arts import ARTS
-from ....commands import Command
-from ....forms import acclaim as acclaim_forms
-from ....forms import agents as agent_forms
-from ....forms import apothecary as apothecary_forms
-from ....forms import careers as career_forms
-from ....forms import certamen_duel as certamen_forms
 from ....forms import character as character_forms
-from ....forms import church as church_forms
-from ....forms import craft_magic as craft_forms
-from ....forms import criamon as criamon_forms
-from ....forms import faerie_dealings as faerie_forms
-from ....forms import gauntlet as gauntlet_forms
-from ....forms import goetic as goetic_forms
-from ....forms import grogs as grog_forms
-from ....forms import holy_influence as holy_influence_forms
-from ....forms import hubris as hubris_forms
 from ....forms import interests as interests_forms
-from ....forms import lacuna as lacuna_forms
 from ....forms import menu as menu_forms
-from ....forms import mystery_cults as cult_forms
-from ....forms import pilgrimage as pilgrimage_forms
-from ....forms import season as season_forms
-from ....forms import sin as sin_forms
-from ....forms import tmre_alchemy as tmre_alchemy_forms
-from ....forms import tmre_divination as tmre_divination_forms
-from ....forms import tmre_dreams as tmre_dream_forms
-from ....forms import tmre_spirits as tmre_spirit_forms
-from ....forms import tunnel as tunnel_forms
-from ....forms import turbulence as turbulence_forms
-from ....forms import vf_change as vf_change_forms
 from ....markup import escape
 from ....models import (
     Character,
     Covenant,
     HermeticBackground,
     LabTextAccess,
-    Saga,
     Spell,
 )
 from ....rules import disease
 from ....sections import (
-    AGENTS_SECTION,
     CHAR_AHEAD_SECTION,
     CONSTANT_EFFECTS_SECTION,
-    FAITH_SECTION,
     POWERS_SECTION,
 )
 from ..fields import (
@@ -141,246 +106,7 @@ class CharacterActions(WorkspaceBase):
 
         run_steps(self.app, menu_forms.character_traditions(self.saga, character), done)
 
-    def _agent_step(
-        self, build: Callable[[Character, int], Any], *sections: str
-    ) -> None:
-        """Run a More command on the Agents list's chosen agent, then save,
-        redraw the list (and `sections`) and say what it did."""
-        character = self.selected_character
-        view = self._current_sheet_view()
-        row = view.section_row(AGENTS_SECTION) if view is not None else None
-        if character is None or row is None:
-            return
-
-        def done(end: object) -> None:
-            self._commit(AGENTS_SECTION, *sections)
-            if isinstance(end, list) and end:
-                self.notify("\n".join(str(line) for line in end))
-
-        run_steps(self.app, build(character, row), done)
-
-    def action_impress_agent(self) -> None:
-        """More's Impress on the chosen potential agent."""
-        self._agent_step(partial(agent_forms.impress, self.saga))
-
-    def action_spend_agency_xp(self) -> None:
-        """More's Spend Agency Experience on the chosen agent."""
-        self._agent_step(agent_forms.spend)
-
-    def action_set_agent_task(self) -> None:
-        """More's Set a Task for the chosen agent."""
-        self._agent_step(partial(agent_forms.set_task, self.saga))
-
-    def action_resolve_agent_task(self) -> None:
-        """More's Resolve the Task for the chosen agent: his own roll, kept
-        in the Diary."""
-        self._agent_step(partial(agent_forms.resolve, self.saga), "tab-diary")
-
-    def action_plan_copying(self) -> None:
-        """More's Plan Copying on a grog's This Season: a season of copying
-        a book or Lab Texts, planned like anyone's."""
-        self._grog_copying(season_forms.copying_form)
-
-    def action_clear_copying(self) -> None:
-        """More's Clear Copying: drop a grog's season of copying."""
-        self._grog_copying(season_forms.clear_copying_form)
-
-    def _grog_copying(self, build: Callable[[Saga, Character | None], Command]) -> None:
-        character = self.selected_character
-        if character is None:
-            return
-        run_steps(
-            self.app,
-            build(self.saga, character),
-            lambda _end: self._commit("section-char-season"),
-        )
-
-    def action_sell_goods(self) -> None:
-        """More's Sell Finished Goods on This Season: the haggling roll for
-        a craftsman's sale, kept in the Diary."""
-        character = self.selected_character
-        if character is None:
-            return
-
-        def done(end: object) -> None:
-            self._commit("section-char-season", "tab-diary")
-            if isinstance(end, list) and end:
-                self.notify("\n".join(str(line) for line in end))
-
-        run_steps(self.app, selling.sell_form(self.saga, character), done)
-
-    def action_make_ligature(self) -> None:
-        """More's Make a Ligature beside Abilities: a scholar's ligature
-        roll, kept in the Diary."""
-        self._apothecary_step(apothecary_forms.ligature_form, "section-char-season")
-
-    def action_apothecary_store(self) -> None:
-        """More's Apothecary's Store on This Season: a search for an
-        ingredient or preserving one, kept in the Diary."""
-        self._apothecary_step(apothecary_forms.store_form, "section-char-season")
-
-    def action_artist_career(self) -> None:
-        """More's An Artist's Career beside Abilities: a sponsor sought or
-        kept, a performance, an Artist Reputation deed, kept in the Diary."""
-        self._apothecary_step(career_forms.artist_form, "section-char-season")
-
-    def action_scholar_career(self) -> None:
-        """More's A Scholar's Career beside Abilities: a place at a school
-        sought, or an Academic Reputation deed, kept in the Diary."""
-        self._apothecary_step(career_forms.scholar_form, "section-char-season")
-
-    def _apothecary_step(self, form: Callable[..., Any], section: str) -> None:
-        character = self.selected_character
-        if character is None:
-            return
-
-        def done(end: object) -> None:
-            self._commit(section, "tab-diary")
-            if isinstance(end, list) and end:
-                self.notify("\n".join(str(line) for line in end))
-
-        run_steps(self.app, form(self.saga, character), done)
-
-    def _covenfolk_step(self, build: Callable[..., Any], *sections: str) -> None:
-        """Run a More command on the grog on show, then save, redraw and
-        say what it did."""
-        character = self.selected_character
-        if character is None:
-            return
-
-        def done(end: object) -> None:
-            self._commit(*sections, tree=True)
-            if isinstance(end, list) and end:
-                self.notify("\n".join(str(line) for line in end))
-
-        run_steps(self.app, build(self.saga, character), done)
-
-    def action_discipline_grog(self) -> None:
-        """More's Reward or Punish on a grog: his record and Diary, wounds
-        and Fatigue, and the covenant's Loyalty."""
-        self._covenfolk_step(
-            grog_forms.discipline_form,
-            "section-personality-traits",
-            "section-char-health",
-            "section-char-info",
-        )
-
-    def action_grog_pension(self) -> None:
-        """More's Pension on a grog: he retires, or his widow is pensioned."""
-        self._covenfolk_step(grog_forms.pension_form, "section-char-info")
-
-    def action_craft_by_magic(self) -> None:
-        """More's Craft by Magic on Known Spells: the calculator, and a roll
-        of it; nothing is kept."""
-        character = self.selected_character
-        if character is None:
-            return
-
-        def done(end: object) -> None:
-            if isinstance(end, list) and end:
-                self.notify("\n".join(str(line) for line in end))
-
-        run_steps(self.app, craft_forms.craft_form(self.saga, character), done)
-
-    def action_indulge_sin(self) -> None:
-        """More's Confidence through Sin on Personality Traits: the point
-        kept, and a ceremony's Warping Point."""
-        character = self.selected_character
-        if character is None:
-            return
-
-        def done(end: object) -> None:
-            self._commit("section-char-info", "section-aging", "tab-diary")
-            if isinstance(end, list) and end:
-                self.notify("\n".join(str(line) for line in end))
-
-        run_steps(self.app, sin_forms.sin_form(self.saga, character), done)
-
-    def action_infernal_influence(self) -> None:
-        """More's Infernal Influence on Personality Traits: the roll, kept
-        in the Diary."""
-        character = self.selected_character
-        if character is None:
-            return
-
-        def done(end: object) -> None:
-            self._commit("section-char-info", "tab-diary")
-            if isinstance(end, list) and end:
-                self.notify("\n".join(str(line) for line in end))
-
-        run_steps(self.app, sin_forms.influence_form(self.saga, character), done)
-
-    def action_ars_goetia(self) -> None:
-        """More's Ars Goetia: a Goetic Art's total and a roll of it; nothing
-        is kept."""
-        character = self.selected_character
-        if character is None:
-            return
-
-        def done(end: object) -> None:
-            if isinstance(end, list) and end:
-                self.notify("\n".join(str(line) for line in end))
-
-        run_steps(self.app, goetic_forms.goetic_form(self.saga, character), done)
-
     # -- an apprentice's magic and the Gauntlet (Apprentices) --
-
-    def _apprentice_step(
-        self, form: Command, *sections: str, tree: bool = False
-    ) -> None:
-        def done(end: object) -> None:
-            self._commit(*sections, "tab-diary", tree=tree)
-            if isinstance(end, list) and end:
-                self.notify("\n".join(str(line) for line in end))
-
-        run_steps(self.app, form, done)
-
-    def action_turbulence(self) -> None:
-        """More's Turbulence: the rolls to incur and control one, kept in
-        the Diary (and on a laboratory season's Assist plan)."""
-        character = self.selected_character
-        if character is None:
-            return
-        self._apprentice_step(
-            turbulence_forms.turbulence_form(self.saga, character),
-            "section-char-info",
-            "section-char-season",
-        )
-
-    def action_gauntlet(self) -> None:
-        """More's Gauntlet on an apprentice; passed, he becomes a magus."""
-        character = self.selected_character
-        if character is None:
-            return
-        self._apprentice_step(
-            gauntlet_forms.gauntlet_form(self.saga, character),
-            "section-char-info",
-            "section-vf-virtues",
-            "section-vf-flaws",
-            tree=True,
-        )
-
-    def action_lose_the_gift(self) -> None:
-        """More's Lose the Gift: lost for good, or suppressed."""
-        character = self.selected_character
-        if character is None:
-            return
-        self._apprentice_step(
-            gauntlet_forms.lose_gift_form(self.saga, character),
-            "section-char-info",
-            "section-vf-virtues",
-            "section-vf-flaws",
-        )
-
-    def action_learn_cantation(self) -> None:
-        """More's Learn a Cantation on Known Spells (a saga option)."""
-        character = self.selected_character
-        if character is None:
-            return
-        self._apprentice_step(
-            gauntlet_forms.cantation_form(self.saga, character),
-            "section-known-spells",
-        )
 
     # -- Character Info / Characteristics --
 
@@ -743,174 +469,15 @@ class CharacterActions(WorkspaceBase):
 
         run_steps(self.app, build(self.saga, character), done)
 
-    def action_theban_letter(self) -> None:
-        """More's Hermetic Letter: composing or reading a rhetorical letter."""
-        self._byzantine_step(byzantine.letter_form)
-
-    def action_invoke_oath(self) -> None:
-        """More's Invoke a Broken Oath: the Oath Invocation roll, and the
-        malediction it lays."""
-        self._byzantine_step(
-            byzantine.oath_form, "section-vf-virtues", "section-vf-flaws"
-        )
-
-    def action_make_greek_fire(self) -> None:
-        """More's Make Greek Fire: a season's botch roll."""
-        self._byzantine_step(byzantine.greek_fire_form)
-
-    def action_paint_icon(self) -> None:
-        """More's Paint an Icon: an eikon for a church's Relics."""
-        self._byzantine_step(byzantine.icon_form)
-
-    def action_venerate_icon(self) -> None:
-        """More's Venerate an Icon: its bonus, and in an emergency a roll
-        and a Fatigue level."""
-        self._byzantine_step(byzantine.venerate_form, "section-char-health")
-
-    def action_mothers_curse(self) -> None:
-        """More's A Mother's Curse: a Lesser Malediction on the sheet."""
-        self._byzantine_step(
-            byzantine.curse_form, "section-vf-virtues", "section-vf-flaws"
-        )
-
     # -- dealing with faeries (RoP: Faerie) --
-
-    def action_ars_fabulosa(self) -> None:
-        """More's Ars Fabulosa: a bargaining power's roll, kept in the
-        Diary, its Fatigue level and the Traits' experience on the sheet."""
-        self._byzantine_step(
-            faerie_forms.ars_fabulosa_form,
-            "section-char-health",
-            "section-personality-traits",
-        )
-
-    def action_faerie_bargain(self) -> None:
-        """More's A Faerie Bargain: how it ended, kept in the Diary, and
-        the Sympathy Trait it moves or the -3 one it gives."""
-        self._byzantine_step(
-            faerie_forms.faerie_bargain_form, "section-personality-traits"
-        )
-
-    def action_faerie_offer(self) -> None:
-        """More's An Offer to Faerie: the roll, kept in the Diary, and its
-        Long-Term Fatigue level."""
-        self._byzantine_step(faerie_forms.faerie_offer_form, "section-char-health")
 
     # -- the lacuna and the pilgrim (HoH:S, The Church) --
 
-    def action_cast_in_lacuna(self) -> None:
-        """More's Cast in a Lacuna on Known Spells: the calculator, and a
-        roll of it; nothing is kept."""
-        character = self.selected_character
-        if character is None:
-            return
-
-        def done(end: object) -> None:
-            if isinstance(end, list) and end:
-                self.notify("\n".join(str(line) for line in end))
-
-        run_steps(self.app, lacuna_forms.lacuna_form(self.saga, character), done)
-
-    def action_pilgrimage(self) -> None:
-        """More's Pilgrimage on This Season: a pilgrimage begun, an element
-        overcome or failed, or its aim claimed, kept in the Diary."""
-        self._byzantine_step(
-            pilgrimage_forms.pilgrimage_form,
-            "section-char-season",
-            "section-vf-virtues",
-            "section-vf-flaws",
-            "section-personality-traits",
-        )
-
     # -- devotion and the saints (The Church, RoP: The Divine) --
-
-    def action_invoke_saint(self) -> None:
-        """More's Invoke a Saint: the roll, kept in the Diary."""
-        self._byzantine_step(devotion_forms.invoke_form, FAITH_SECTION)
-
-    def action_threaten_saint(self) -> None:
-        """More's Threaten a Saint: the roll and the Confidence spent."""
-        self._byzantine_step(
-            devotion_forms.threaten_form, FAITH_SECTION, "section-personality-traits"
-        )
-
-    def action_invoke_baraka(self) -> None:
-        """More's Invoke Baraka: the roll, kept in the Diary."""
-        self._byzantine_step(baraka_forms.baraka_form)
-
-    def action_hajj(self) -> None:
-        """More's The Hajj: Pious +3 and 3 Faith Points."""
-        self._byzantine_step(
-            baraka_forms.hajj_form,
-            FAITH_SECTION,
-            "section-personality-traits",
-            "section-char-info",
-        )
-
-    def action_patron_saint(self) -> None:
-        """More's Patron Saint: the saint he calls on as his own."""
-        self._byzantine_step(devotion_forms.patron_form, FAITH_SECTION)
-
-    def action_devotion_points(self) -> None:
-        """More's Devotion Points: a Devotion begun or raised."""
-        self._byzantine_step(
-            devotion_forms.points_form, FAITH_SECTION, "section-char-season"
-        )
-
-    def action_act_of_piety(self) -> None:
-        """More's Indulgence, Vigil or Fast: the Faith, Confidence, Piety
-        and Fatigue each brings."""
-        self._byzantine_step(
-            devotion_forms.piety_form,
-            "section-char-health",
-            "section-personality-traits",
-            "section-reputations",
-        )
 
     # -- holy influence and tempers (RoP: The Divine) --
 
-    def action_holy_influence(self) -> None:
-        """More's Holy Influence in the Faith section: the roll, kept in
-        the Diary."""
-        self._byzantine_step(
-            holy_influence_forms.holy_influence_form, "section-char-info"
-        )
-
     # -- mystic paths, God's aid, the Font and the Commanding Aura --
-
-    def action_mystic_path(self) -> None:
-        """More's Mystic Path: the path followed or left, in the Diary."""
-        self._byzantine_step(
-            mystic_forms.mystic_path_form, FAITH_SECTION, "section-char-season"
-        )
-
-    def action_spiritual_path(self) -> None:
-        """More's Spiritual Path: a path begun, a Quest Component counted,
-        or its Revelation claimed."""
-        self._byzantine_step(
-            mystic_forms.spiritual_path_form,
-            "section-char-season",
-            "section-char-info",
-            "section-vf-virtues",
-            "section-vf-flaws",
-        )
-
-    def action_monistic_revelation(self) -> None:
-        """More's Monistic Revelation: the integration roll and what it
-        brings."""
-        self._byzantine_step(
-            mystic_forms.monistic_revelation_form,
-            "section-vf-virtues",
-            "section-char-season",
-        )
-
-    def action_gods_aid(self) -> None:
-        """More's Invoke God's Aid: the prayer's roll and the point spent."""
-        self._byzantine_step(mystic_forms.gods_aid_form, "section-char-info")
-
-    def action_experiment_script(self) -> None:
-        """More's Experiment on a Script on a Mystagogue's record."""
-        self._byzantine_step(cult_forms.mystagogue_experiment)
 
     def action_edit_interests(self) -> None:
         """More's Interests: the kinds of deed a person's More offers, or
@@ -925,129 +492,22 @@ class CharacterActions(WorkspaceBase):
             return
         self._byzantine_step(interests_forms.interests_form)
 
-    def action_font_of_knowledge(self) -> None:
-        """More's Font of Knowledge: the roll, kept in the Diary."""
-        self._byzantine_step(mystic_forms.font_form)
-
-    def action_commanding_aura(self) -> None:
-        """More's Commanding Aura: withdrawn until penance, or restored."""
-        self._byzantine_step(mystic_forms.commanding_aura_form, "section-char-health")
-
     # -- House Verditius's Hubris and vendettas --
-
-    def action_verditius_hubris(self) -> None:
-        """More's Hubris: its experience, a vendetta refused or resisted."""
-        self._byzantine_step(
-            hubris_forms.hubris_form,
-            "section-personality-traits",
-            "section-reputations",
-        )
 
     # -- Hermetic spirit magic and theurgy (The Mysteries Revised Edition) --
 
-    def action_spirits_and_names(self) -> None:
-        """More's Spirits and Names: a working's totals and a roll of it;
-        nothing is kept."""
-        character = self.selected_character
-        if character is None:
-            return
-
-        def done(end: object) -> None:
-            if isinstance(end, list) and end:
-                self.notify("\n".join(str(line) for line in end))
-
-        run_steps(self.app, tmre_spirit_forms.spirits_form(self.saga, character), done)
-
     # -- Dream magic and Hermetic sacrifice (The Mysteries Revised Edition) --
-
-    def action_dream_working(self) -> None:
-        """More's Dream Working: a dream traveler's roll, kept in the Diary."""
-        self._byzantine_step(tmre_dream_forms.dream_form, "section-known-spells")
-
-    def action_certamen_duel(self) -> None:
-        """More's Certamen: a duel with another magus, played out."""
-        self._byzantine_step(certamen_forms.duel_form, "section-known-spells")
-
-    def action_hermetic_sacrifice(self) -> None:
-        """More's Hermetic Sacrifice: the vis a sacrifice stands in for, kept
-        in the Diary."""
-        self._byzantine_step(tmre_dream_forms.sacrifice_form, "section-known-spells")
 
     # -- Divination and Hermetic astrology (The Mysteries Revised Edition) --
 
-    def action_tmre_divination(self) -> None:
-        """More's Divination: a divination rolled, kept in the Diary."""
-        self._byzantine_step(tmre_divination_forms.divination_form)
-
-    def action_tmre_astrology(self) -> None:
-        """More's Astrology: a horoscope or reckoning rolled, kept in the
-        Diary."""
-        self._byzantine_step(tmre_divination_forms.astrology_form)
-
     # -- House Acclaim and Reputation rolls (HoH:TL, HoH:S, LoH, DE) --
-
-    def action_house_acclaim(self) -> None:
-        """More's House Acclaim: an award or a roll, kept in the Diary."""
-        self._byzantine_step(acclaim_forms.acclaim_form, "section-reputations")
-
-    def action_reputation_roll(self) -> None:
-        """More's Reputation Roll: has someone heard of it, kept in the
-        Diary."""
-        self._byzantine_step(acclaim_forms.roll_form)
 
     # -- Philosophic Alchemy's digestions (The Mysteries Revised Edition) --
 
-    def action_philosophic_alchemy(self) -> None:
-        """More's Philosophic Alchemy on This Season: a digestion settled
-        beside his other work, or abandoned; kept in the Diary."""
-        self._apothecary_step(tmre_alchemy_forms.digestion_form, "section-char-season")
-
     # -- The Great Elixir's test (The Mysteries Revised Edition) --
-
-    def action_great_elixir(self) -> None:
-        """More's Test the Great Elixir on Aging & Warping: the potion
-        drunk and tested, kept in the Diary."""
-        self._apothecary_step(tmre_alchemy_forms.great_elixir_form, "section-aging")
 
     # -- Gaining and losing Virtues and Flaws in play (Grogs pp. 61-64) --
 
-    def action_change_virtues_flaws(self) -> None:
-        """More's Gain or Lose in Play on Virtues & Flaws: a Virtue or Flaw
-        gained, lost, or exchanged, kept in the Diary."""
-        self._byzantine_step(
-            vf_change_forms.change_form,
-            "section-vf-virtues",
-            "section-vf-flaws",
-            "section-char-characteristics",
-        )
-
     # -- A cleric's career (The Church) --
 
-    def action_perform_exorcism(self) -> None:
-        """More's Perform an Exorcism on Holy Orders: the roll, said."""
-        self._byzantine_step(church_forms.exorcism_step)
-
     # -- A Criamon magus's path (Houses of Hermes: Mystery Cults) --
-
-    def action_follow_avenue(self) -> None:
-        """More's Follow an Avenue on the path: the Initiation season that
-        follows it, planned."""
-        self._byzantine_step(
-            criamon_forms.avenue_step,
-            "section-char-criamon-path",
-            "section-char-ahead",
-            "tab-planning",
-        )
-
-    def action_open_tunnel(self) -> None:
-        """More's Open a Tunnel on Known Spells (Hermetic Projects): the
-        calculator, and Cast's roll of the tunnel; nothing is kept."""
-        character = self.selected_character
-        if character is None:
-            return
-
-        def done(end: object) -> None:
-            if isinstance(end, list) and end:
-                self.notify("\n".join(str(line) for line in end))
-
-        run_steps(self.app, tunnel_forms.tunnel_form(self.saga, character), done)

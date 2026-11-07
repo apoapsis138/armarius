@@ -102,6 +102,7 @@ from ..rules import creation_covenant as cov_creation
 from ..rules import hedge_casting as hc
 from ..sections import FAITH_SECTION, LAB_TEXTS_SECTION
 from . import acclaim as acclaim_forms
+from . import agents as agent_forms
 from . import apothecary as apothecary_forms
 from . import beast as beast_forms
 from . import boost as boost_forms
@@ -1853,6 +1854,19 @@ def _character(page: Page) -> Character | None:
     return page.character
 
 
+def _on_agent(
+    build: Callable[[Page, Character, int], Command],
+) -> Callable[[Page], Command]:
+    """A More command on the Agents list's chosen agent (`page.row`)."""
+
+    def run(page: Page) -> Command:
+        if page.character is None or page.row is None:
+            return Refuse("More", "Choose an agent first.")
+        return build(page, page.character, page.row)
+
+    return run
+
+
 def _interests_command(page: Page) -> Command:
     if page.character is not None:
         return interests_forms.interests_form(page.saga, page.character)
@@ -1942,6 +1956,19 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "build_ship": _needs(_covenant, ship_build_forms.build_form),
     "cross_threshold": _needs(_neighbour, threshold_forms.threshold_form),
     "trait_roll": _needs(_character, trait_roll_forms.roll_form),
+    # The Agents list's chosen agent.
+    "impress_agent": _on_agent(
+        lambda page, character, row: agent_forms.impress(page.saga, character, row)
+    ),
+    "spend_agency_xp": _on_agent(
+        lambda _page, character, row: agent_forms.spend(character, row)
+    ),
+    "set_agent_task": _on_agent(
+        lambda page, character, row: agent_forms.set_task(page.saga, character, row)
+    ),
+    "resolve_agent_task": _on_agent(
+        lambda page, character, row: agent_forms.resolve(page.saga, character, row)
+    ),
     "import_data": _import_command,
     "research_bonuses": _needs(_covenant, research_bonuses),
     "export_record": _export_command,

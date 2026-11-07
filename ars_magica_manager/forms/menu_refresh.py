@@ -15,7 +15,7 @@ from typing import NamedTuple
 
 from .. import traditions
 from ..rules import galdor
-from ..sections import WHEREABOUTS_SECTION
+from ..sections import AGENTS_SECTION, FAITH_SECTION, WHEREABOUTS_SECTION
 
 
 class Refresh(NamedTuple):
@@ -38,6 +38,113 @@ def calculator() -> Refresh:
 
 #: Per More action (the keys of menu.MORE_MENU's actions), what it changes.
 REFRESH: dict[str, Refresh] = {
+    "impress_agent": changes(AGENTS_SECTION),
+    "spend_agency_xp": changes(AGENTS_SECTION),
+    "set_agent_task": changes(AGENTS_SECTION),
+    "resolve_agent_task": changes(AGENTS_SECTION, "tab-diary"),
+    "plan_copying": changes("section-char-season"),
+    "clear_copying": changes("section-char-season"),
+    "sell_goods": changes("section-char-season", "tab-diary"),
+    "make_ligature": changes("section-char-season", "tab-diary"),
+    "apothecary_store": changes("section-char-season", "tab-diary"),
+    "artist_career": changes("section-char-season", "tab-diary"),
+    "scholar_career": changes("section-char-season", "tab-diary"),
+    "discipline_grog": changes(
+        "section-personality-traits",
+        "section-char-health",
+        "section-char-info",
+        tree=True,
+    ),
+    "grog_pension": changes("section-char-info", tree=True),
+    "craft_by_magic": calculator(),
+    "indulge_sin": changes("section-char-info", "section-aging", "tab-diary"),
+    "infernal_influence": changes("section-char-info", "tab-diary"),
+    "ars_goetia": calculator(),
+    "turbulence": changes("section-char-info", "section-char-season", "tab-diary"),
+    "gauntlet": changes(
+        "section-char-info",
+        "section-vf-virtues",
+        "section-vf-flaws",
+        "tab-diary",
+        tree=True,
+    ),
+    "lose_the_gift": changes(
+        "section-char-info", "section-vf-virtues", "section-vf-flaws", "tab-diary"
+    ),
+    "learn_cantation": changes("section-known-spells", "tab-diary"),
+    "theban_letter": changes("tab-diary"),
+    "invoke_oath": changes("section-vf-virtues", "section-vf-flaws", "tab-diary"),
+    "make_greek_fire": changes("tab-diary"),
+    "paint_icon": changes("tab-diary"),
+    "venerate_icon": changes("section-char-health", "tab-diary"),
+    "mothers_curse": changes("section-vf-virtues", "section-vf-flaws", "tab-diary"),
+    "ars_fabulosa": changes(
+        "section-char-health", "section-personality-traits", "tab-diary"
+    ),
+    "faerie_bargain": changes("section-personality-traits", "tab-diary"),
+    "faerie_offer": changes("section-char-health", "tab-diary"),
+    "cast_in_lacuna": calculator(),
+    "pilgrimage": changes(
+        "section-char-season",
+        "section-vf-virtues",
+        "section-vf-flaws",
+        "section-personality-traits",
+        "tab-diary",
+    ),
+    "invoke_saint": changes(FAITH_SECTION, "tab-diary"),
+    "threaten_saint": changes(FAITH_SECTION, "section-personality-traits", "tab-diary"),
+    "invoke_baraka": changes("tab-diary"),
+    "hajj": changes(
+        FAITH_SECTION, "section-personality-traits", "section-char-info", "tab-diary"
+    ),
+    "patron_saint": changes(FAITH_SECTION, "tab-diary"),
+    "devotion_points": changes(FAITH_SECTION, "section-char-season", "tab-diary"),
+    "act_of_piety": changes(
+        "section-char-health",
+        "section-personality-traits",
+        "section-reputations",
+        "tab-diary",
+    ),
+    "holy_influence": changes("section-char-info", "tab-diary"),
+    "mystic_path": changes(FAITH_SECTION, "section-char-season", "tab-diary"),
+    "spiritual_path": changes(
+        "section-char-season",
+        "section-char-info",
+        "section-vf-virtues",
+        "section-vf-flaws",
+        "tab-diary",
+    ),
+    "monistic_revelation": changes(
+        "section-vf-virtues", "section-char-season", "tab-diary"
+    ),
+    "gods_aid": changes("section-char-info", "tab-diary"),
+    "experiment_script": changes("tab-diary"),
+    "font_of_knowledge": changes("tab-diary"),
+    "commanding_aura": changes("section-char-health", "tab-diary"),
+    "verditius_hubris": changes(
+        "section-personality-traits", "section-reputations", "tab-diary"
+    ),
+    "spirits_and_names": calculator(),
+    "dream_working": changes("section-known-spells", "tab-diary"),
+    "certamen_duel": changes("section-known-spells", "tab-diary"),
+    "hermetic_sacrifice": changes("section-known-spells", "tab-diary"),
+    "tmre_divination": changes("tab-diary"),
+    "tmre_astrology": changes("tab-diary"),
+    "house_acclaim": changes("section-reputations", "tab-diary"),
+    "reputation_roll": changes("tab-diary"),
+    "philosophic_alchemy": changes("section-char-season", "tab-diary"),
+    "great_elixir": changes("section-aging", "tab-diary"),
+    "change_virtues_flaws": changes(
+        "section-vf-virtues",
+        "section-vf-flaws",
+        "section-char-characteristics",
+        "tab-diary",
+    ),
+    "perform_exorcism": changes("tab-diary"),
+    "follow_avenue": changes(
+        "section-char-criamon-path", "section-char-ahead", "tab-planning", "tab-diary"
+    ),
+    "open_tunnel": calculator(),
     "take_harm": changes("section-char-health"),
     "place_aging_points": changes("section-aging", "section-char-characteristics"),
     "boost_spell": calculator(),

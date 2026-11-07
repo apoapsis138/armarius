@@ -191,7 +191,7 @@ def _refused_then_threaten(ws) -> None:
     """Threaten a Saint, once The Magi have refused his invocation: only
     then is it offered (RoP: The Divine p. 87)."""
     devotion_rules.note_answer(ws.selected_character, "The Magi", False, "Spring", 1220)
-    ws.action_threaten_saint()
+    ws._run_more("threaten_saint")
 
 
 def _built(open_editor):
@@ -689,7 +689,7 @@ async def _open_sell_goods(ws) -> None:
     character = ws.selected_character
     if not any(a.name == "Craft: Smith" for a in character.abilities):
         character.abilities.append(Ability("Craft: Smith", xp=75))
-    ws.action_sell_goods()
+    ws._run_more("sell_goods")
 
 
 async def _open_apothecary(ws, which: str) -> None:
@@ -700,9 +700,9 @@ async def _open_apothecary(ws, which: str) -> None:
         if not any(a.name == name for a in character.abilities):
             character.abilities.append(Ability(name, xp=15))
     if which == "ligature":
-        ws.action_make_ligature()
+        ws._run_more("make_ligature")
     else:
-        ws.action_apothecary_store()
+        ws._run_more("apothecary_store")
 
 
 def _on_conflict_row(list_id: str, step):
@@ -1729,7 +1729,7 @@ OPENERS: dict[str, Opener] = {
             grog_forms.pension_form(ws.saga, ws.saga.character("grog9"))
         ),
     ),
-    "craft by magic": Opener("character", lambda ws: ws.action_craft_by_magic()),
+    "craft by magic": Opener("character", lambda ws: ws._run_more("craft_by_magic")),
     "grog yearly update": Opener(
         "character",
         lambda ws: ws._grog_year_for(ws.saga.character("grog9"), "section-char-season"),
@@ -2018,25 +2018,25 @@ OPENERS: dict[str, Opener] = {
     "a faerie bargain": Opener("character", lambda ws: _open_faerie(ws, "bargain")),
     "an offer to faerie": Opener("character", lambda ws: _open_faerie(ws, "offer")),
     # The lacuna and the pilgrim (HoH:S, The Church).
-    "cast in a lacuna": Opener("character", lambda ws: ws.action_cast_in_lacuna()),
-    "pilgrimage": Opener("character", lambda ws: ws.action_pilgrimage()),
+    "cast in a lacuna": Opener("character", lambda ws: ws._run_more("cast_in_lacuna")),
+    "pilgrimage": Opener("character", lambda ws: ws._run_more("pilgrimage")),
     # Hermetic law on the docket (HoH:S, HoH:TL).
     "add wizard's war": Opener(
         "tribunal",
         _pick(lambda ws: ws._core_verb("section-trib-cases", "add"), "trib-cases"),
     ),
     # Devotion and the saints (The Church, RoP: The Divine).
-    "invoke a saint": Opener("character", lambda ws: ws.action_invoke_saint()),
+    "invoke a saint": Opener("character", lambda ws: ws._run_more("invoke_saint")),
     "threaten a saint": Opener("character", lambda ws: _refused_then_threaten(ws)),
-    "patron saint": Opener("character", lambda ws: ws.action_patron_saint()),
-    "invoke baraka": Opener("character", lambda ws: ws.action_invoke_baraka()),
-    "the hajj": Opener("character", lambda ws: ws.action_hajj()),
-    "devotion points": Opener("character", lambda ws: ws.action_devotion_points()),
+    "patron saint": Opener("character", lambda ws: ws._run_more("patron_saint")),
+    "invoke baraka": Opener("character", lambda ws: ws._run_more("invoke_baraka")),
+    "the hajj": Opener("character", lambda ws: ws._run_more("hajj")),
+    "devotion points": Opener("character", lambda ws: ws._run_more("devotion_points")),
     "indulgence, vigil or fast": Opener(
-        "character", lambda ws: ws.action_act_of_piety()
+        "character", lambda ws: ws._run_more("act_of_piety")
     ),
     # Holy influence and tempers (RoP: The Divine).
-    "holy influence": Opener("character", lambda ws: ws.action_holy_influence()),
+    "holy influence": Opener("character", lambda ws: ws._run_more("holy_influence")),
     # Mystic paths, God's aid, the Font and the Commanding Aura.
     "mystic path": Opener("character", lambda ws: _open_mystic(ws, "path")),
     "spiritual path": Opener("character", lambda ws: _open_mystic(ws, "spiritual")),
@@ -2067,7 +2067,7 @@ OPENERS: dict[str, Opener] = {
     "test the great elixir": Opener("character", lambda ws: _open_great_elixir(ws)),
     # Gaining and losing Virtues and Flaws in play (Grogs pp. 61-64).
     "gain or lose in play": Opener(
-        "character", lambda ws: ws.action_change_virtues_flaws()
+        "character", lambda ws: ws._run_more("change_virtues_flaws")
     ),
     # A saga's own Abilities in House Rules (HoH:S pp. 103-106).
     "add house rule ability": Opener("saga_content", _core_add("section-house-rules")),
@@ -2250,7 +2250,8 @@ OPENERS: dict[str, Opener] = {
         lambda ws: _open_criamon(ws, lambda: ws._core_verb(CRIAMON_PATH, "edit")),
     ),
     "follow an avenue": Opener(
-        "character", lambda ws: _open_criamon(ws, ws.action_follow_avenue)
+        "character",
+        lambda ws: _open_criamon(ws, (lambda: ws._run_more("follow_avenue"))),
     ),
     "add stigma": Opener(
         "character",
@@ -2491,12 +2492,12 @@ def _open_byzantine(ws, which: str) -> None:
             }
         )
     {
-        "letter": ws.action_theban_letter,
-        "oath": ws.action_invoke_oath,
-        "fire": ws.action_make_greek_fire,
-        "paint": ws.action_paint_icon,
-        "venerate": ws.action_venerate_icon,
-        "curse": ws.action_mothers_curse,
+        "letter": (lambda: ws._run_more("theban_letter")),
+        "oath": (lambda: ws._run_more("invoke_oath")),
+        "fire": (lambda: ws._run_more("make_greek_fire")),
+        "paint": (lambda: ws._run_more("paint_icon")),
+        "venerate": (lambda: ws._run_more("venerate_icon")),
+        "curse": (lambda: ws._run_more("mothers_curse")),
     }[which]()
 
 
@@ -2509,11 +2510,11 @@ def _open_sin(ws, which: str) -> None:
     if not any(a.name == "Summoning" for a in character.abilities):
         character.abilities.append(Ability("Summoning", xp=55, xp_table="art"))
     if which == "sin":
-        ws.action_indulge_sin()
+        ws._run_more("indulge_sin")
     elif which == "influence":
-        ws.action_infernal_influence()
+        ws._run_more("infernal_influence")
     else:
-        ws.action_ars_goetia()
+        ws._run_more("ars_goetia")
 
 
 def _open_treasury_kind(ws, kind: str) -> None:
@@ -2547,14 +2548,14 @@ def _open_apprentice(ws, which: str) -> None:
     ):
         character.virtues_flaws.append(VirtueFlawInstance("vf_apprentice"))
     if which == "turbulence":
-        ws.action_turbulence()
+        ws._run_more("turbulence")
     elif which == "gauntlet":
-        ws.action_gauntlet()
+        ws._run_more("gauntlet")
     elif which == "lose":
-        ws.action_lose_the_gift()
+        ws._run_more("lose_the_gift")
     else:
         ws.saga.rule_options["cantations_in_play"] = True
-        ws.action_learn_cantation()
+        ws._run_more("learn_cantation")
 
 
 def _open_career(ws, which: str) -> None:
@@ -2564,9 +2565,9 @@ def _open_career(ws, which: str) -> None:
     if which == "artist":
         if not any(a.name == "Craft: Painting" for a in character.abilities):
             character.abilities.append(Ability("Craft: Painting", xp=15))
-        ws.action_artist_career()
+        ws._run_more("artist_career")
     else:
-        ws.action_scholar_career()
+        ws._run_more("scholar_career")
 
 
 def _open_galdor(ws, which: str) -> None:
@@ -2604,11 +2605,11 @@ def _open_faerie(ws, which: str) -> None:
     if not any(t.name == "Oak" for t in character.personality_traits):
         character.personality_traits.append(ScoredTrait("Oak", 2, type="Sympathy"))
     if which == "ars":
-        ws.action_ars_fabulosa()
+        ws._run_more("ars_fabulosa")
     elif which == "bargain":
-        ws.action_faerie_bargain()
+        ws._run_more("faerie_bargain")
     else:
-        ws.action_faerie_offer()
+        ws._run_more("faerie_offer")
 
 
 def _open_mystic(ws, which: str) -> None:
@@ -2627,28 +2628,28 @@ def _open_mystic(ws, which: str) -> None:
         3, character.background.confidence_points
     )
     if which == "path":
-        ws.action_mystic_path()
+        ws._run_more("mystic_path")
     elif which == "spiritual":
         ds.set_path(character, my.CONTEMPLATIVE)
         if my.find_path(character, "Premonitions") is None:
             my.begin(character, "Premonitions", "minor_holy")
-        ws.action_spiritual_path()
+        ws._run_more("spiritual_path")
     elif which == "revelation":
         ds.set_path(character, my.MONISTIC)
         if not ds.ascents(character):
             ds.note_ascent(character)
-        ws.action_monistic_revelation()
+        ws._run_more("monistic_revelation")
     elif which == "aid":
-        ws.action_gods_aid()
+        ws._run_more("gods_aid")
     elif which == "font":
         if not any(a.name == "Font of Knowledge" for a in character.abilities):
             character.abilities.append(
                 Ability("Font of Knowledge", "Supernatural", xp=5)
             )
-        ws.action_font_of_knowledge()
+        ws._run_more("font_of_knowledge")
     else:
         character.background.church_rank = "Archbishop"
-        ws.action_commanding_aura()
+        ws._run_more("commanding_aura")
 
 
 def _open_hubris(ws) -> None:
@@ -2658,7 +2659,7 @@ def _open_hubris(ws) -> None:
         character.virtues_flaws.append(VirtueFlawInstance("vf_hubris"))
     if not any(t.name == "Hubris" for t in character.personality_traits):
         character.personality_traits.append(ScoredTrait("Hubris", 1))
-    ws.action_verditius_hubris()
+    ws._run_more("verditius_hubris")
 
 
 def _open_spirits(ws) -> None:
@@ -2667,7 +2668,7 @@ def _open_spirits(ws) -> None:
     character = ws.selected_character
     if VirtueFlawInstance("vf_hermetic_theurgy") not in character.virtues_flaws:
         character.virtues_flaws.append(VirtueFlawInstance("vf_hermetic_theurgy"))
-    ws.action_spirits_and_names()
+    ws._run_more("spirits_and_names")
 
 
 def _open_dreams(ws, which: str) -> None:
@@ -2678,14 +2679,14 @@ def _open_dreams(ws, which: str) -> None:
     if VirtueFlawInstance(vf_id) not in character.virtues_flaws:
         character.virtues_flaws.append(VirtueFlawInstance(vf_id))
     if which == "dream":
-        ws.action_dream_working()
+        ws._run_more("dream_working")
         return
     if not any(s.id == "sp_summon_mercury" for s in ws.saga.spells):
         ws.saga.spells.append(
             Spell("sp_summon_mercury", "Call Mercury", "Rego", "Vim", 30, ritual=True)
         )
         character.spells_known.insert(0, KnownSpell("sp_summon_mercury"))
-    ws.action_hermetic_sacrifice()
+    ws._run_more("hermetic_sacrifice")
 
 
 def _open_acclaim(ws) -> None:
@@ -2696,7 +2697,7 @@ def _open_acclaim(ws) -> None:
     character.reputations = [
         r for r in character.reputations if not r.name.startswith("House Acclaim")
     ]
-    ws.action_house_acclaim()
+    ws._run_more("house_acclaim")
 
 
 def _open_reputation_roll(ws) -> None:
@@ -2704,7 +2705,7 @@ def _open_reputation_roll(ws) -> None:
     character = ws.selected_character
     if not character.reputations:
         character.reputations.append(ScoredTrait("Dragon-slayer", 3, type="Local"))
-    ws.action_reputation_roll()
+    ws._run_more("reputation_roll")
 
 
 def _open_tmre_divination(ws, which: str) -> None:
@@ -2718,11 +2719,11 @@ def _open_tmre_divination(ws, which: str) -> None:
             character.virtues_flaws.append(augury)
         if not any(a.name == "Divination" for a in character.abilities):
             character.abilities.append(Ability("Divination", "Supernatural", xp=15))
-        ws.action_tmre_divination()
+        ws._run_more("tmre_divination")
         return
     if VirtueFlawInstance("vf_planetary_magic") not in character.virtues_flaws:
         character.virtues_flaws.append(VirtueFlawInstance("vf_planetary_magic"))
-    ws.action_tmre_astrology()
+    ws._run_more("tmre_astrology")
 
 
 def _open_alchemy(ws) -> None:
@@ -2733,7 +2734,7 @@ def _open_alchemy(ws) -> None:
         if VirtueFlawInstance(vf_id) not in character.virtues_flaws:
             character.virtues_flaws.append(VirtueFlawInstance(vf_id))
     character.assigned_lab_id = character.assigned_lab_id or "lab1"
-    ws.action_philosophic_alchemy()
+    ws._run_more("philosophic_alchemy")
 
 
 def _open_great_elixir(ws) -> None:
@@ -2744,7 +2745,7 @@ def _open_great_elixir(ws) -> None:
         if VirtueFlawInstance(vf_id) not in character.virtues_flaws:
             character.virtues_flaws.append(VirtueFlawInstance(vf_id))
     character.background.year_born = ws.saga.current_year - 60
-    ws.action_great_elixir()
+    ws._run_more("great_elixir")
 
 
 async def _open_own_ability(ws) -> None:
@@ -2864,7 +2865,7 @@ async def _open_church(ws, which: str) -> None:
     view = ws._current_sheet_view()
     await view.build_all_tabs()
     if which == "exorcism":
-        ws.action_perform_exorcism()
+        ws._run_more("perform_exorcism")
         return
     section, verb = {
         "petition": ("section-char-petitions", "add"),
@@ -2971,14 +2972,14 @@ def _open_tunnel(ws) -> None:
     magus = ws.selected_character
     if not any(k.spell_id == "spell_the_curs_d_day" for k in magus.spells_known):
         magus.spells_known.append(KnownSpell("spell_the_curs_d_day"))
-    ws.action_open_tunnel()
+    ws._run_more("open_tunnel")
 
 
 def _open_temporary(ws) -> None:
     """Gain or Lose in Play for Leandro, whose Virtue is marked temporary
     (in memory, saved only with the form)."""
     ws.selected_character.virtues_flaws[0].temporary = True
-    ws.action_change_virtues_flaws()
+    ws._run_more("change_virtues_flaws")
 
 
 async def _open_fleet(ws, open_editor) -> None:

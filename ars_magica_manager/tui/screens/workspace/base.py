@@ -1168,6 +1168,8 @@ class WorkspaceBase(Screen[None]):
         def finished(end: object) -> None:
             if refresh.saves:
                 self._commit_told(end, *refresh.sections, tree=refresh.tree)
+            elif isinstance(end, list) and end:
+                self.notify("\n".join(str(line) for line in end))
 
         run_steps(self.app, step, finished)
 

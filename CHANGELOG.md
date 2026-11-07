@@ -123,6 +123,12 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.85.5 — 2026-11-07
+
+### Fundamenta
+
+- **More actions share one registry, part two**: sixty-two more of the terminal's More handlers are replaced by registry entries, including the Byzantine customs, the covenfolk, apothecary and apprentice commands, the faith and devotion actions, and an agent's Impress, Spend, Task and Resolve. They work as before; the calculators (Craft by Magic, Ars Goetia, Cast in a Lacuna) now show the notes their steps end with.
+
 ## 3.85.4 — 2026-11-07
 
 ### Fundamenta
