@@ -338,6 +338,9 @@ class Page:
     neighbour: Neighbour | None = None
     creature: Creature | None = None
     section: str | None = None
+    #: The row chosen in `section`'s list, when the front-end knows it (the
+    #: terminal does; the desktop's row buttons act on their own row).
+    row: int | None = None
 
     # -- actions.ActionFacts --
 
@@ -402,7 +405,7 @@ class Page:
 
     def chosen_row(self, section: str) -> int | None:
         # The desktop's row buttons act on their own list's chosen row.
-        return None
+        return self.row if section == self.section else None
 
 
 def page_for(

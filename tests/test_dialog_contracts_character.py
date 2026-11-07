@@ -1632,7 +1632,7 @@ async def test_a_galdor_form_with_nothing_to_choose_opens(action):
         magus = base.selected_character
         magus.abilities = []
         magus.bound_beings = []
-        getattr(base, f"action_galdor_{action}")()
+        base._run_more(f"galdor_{action}")
         assert await wait_until(pilot, lambda: app.screen is not base)
         await pilot.pause()
         form = app.screen

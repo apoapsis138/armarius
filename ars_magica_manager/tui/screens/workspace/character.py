@@ -8,22 +8,14 @@ from collections.abc import Callable
 from functools import partial
 from typing import Any
 
+from .... import baraka as baraka_forms
 from .... import (
-    aging_due,
     creation,
-    disputations,
-    guest_stays,
-    health,
-    labor,
-    melee_events,
     section_verbs,
     selling,
-    session_end,
-    tourney_season,
     traditions,
     world,
 )
-from .... import baraka as baraka_forms
 from .... import devotion as devotion_forms
 from .... import mystic_paths as mystic_forms
 from .... import spells as spl
@@ -33,22 +25,16 @@ from ....commands import Command
 from ....forms import acclaim as acclaim_forms
 from ....forms import agents as agent_forms
 from ....forms import apothecary as apothecary_forms
-from ....forms import beast as beast_forms
-from ....forms import boost as boost_forms
 from ....forms import careers as career_forms
 from ....forms import certamen_duel as certamen_forms
 from ....forms import character as character_forms
 from ....forms import church as church_forms
-from ....forms import covers as cover_forms
 from ....forms import craft_magic as craft_forms
 from ....forms import criamon as criamon_forms
 from ....forms import faerie_dealings as faerie_forms
-from ....forms import galdor as galdor_forms
 from ....forms import gauntlet as gauntlet_forms
 from ....forms import goetic as goetic_forms
-from ....forms import grog_story as grog_story_forms
 from ....forms import grogs as grog_forms
-from ....forms import hedge_cast as hedge_cast_forms
 from ....forms import holy_influence as holy_influence_forms
 from ....forms import hubris as hubris_forms
 from ....forms import interests as interests_forms
@@ -62,12 +48,9 @@ from ....forms import tmre_alchemy as tmre_alchemy_forms
 from ....forms import tmre_divination as tmre_divination_forms
 from ....forms import tmre_dreams as tmre_dream_forms
 from ....forms import tmre_spirits as tmre_spirit_forms
-from ....forms import trait_roll as trait_roll_forms
 from ....forms import tunnel as tunnel_forms
 from ....forms import turbulence as turbulence_forms
-from ....forms import twilight as twilight_forms
 from ....forms import vf_change as vf_change_forms
-from ....forms import whereabouts as whereabouts_forms
 from ....markup import escape
 from ....models import (
     Character,
@@ -77,7 +60,7 @@ from ....models import (
     Saga,
     Spell,
 )
-from ....rules import disease, galdor
+from ....rules import disease
 from ....sections import (
     AGENTS_SECTION,
     CHAR_AHEAD_SECTION,
@@ -193,190 +176,6 @@ class CharacterActions(WorkspaceBase):
         in the Diary."""
         self._agent_step(partial(agent_forms.resolve, self.saga), "tab-diary")
 
-    def action_take_harm(self) -> None:
-        """More's Take Harm on Health: an injury, poison, disease or
-        deprivation, rolled and kept in the Diary."""
-        character = self.selected_character
-        if character is None:
-            return
-        run_steps(
-            self.app,
-            health.take_harm_form(self.saga, character),
-            lambda _end: self._commit("section-char-health"),
-        )
-
-    def action_place_aging_points(self) -> None:
-        """More's Place Aging Points on Aging & Warping: those a disease
-        Crisis left, each in a Characteristic chosen."""
-        character = self.selected_character
-        if character is None:
-            return
-        run_steps(
-            self.app,
-            aging_due.character_form(self.saga, character),
-            lambda _end: self._commit("section-aging", "section-char-characteristics"),
-        )
-
-    def action_boost_spell(self) -> None:
-        """More's Boost a Spell on Known Spells: the pawns and botch dice a
-        boost takes, worked out (a calculator: it changes nothing)."""
-        character = self.selected_character
-        if character is None:
-            return
-        run_steps(
-            self.app, boost_forms.boost_form(self.saga, character), lambda _e: None
-        )
-
-    def action_hedge_cast(self) -> None:
-        """More's Cast a Power: a hedge tradition's casting rolled, kept in
-        the Diary."""
-        character = self.selected_character
-        if character is None:
-            return
-        run_steps(
-            self.app,
-            hedge_cast_forms.cast_form(self.saga, character),
-            lambda end: self._commit_told(end, "section-aging", "tab-diary"),
-        )
-
-    def action_galdor_conjure(self) -> None:
-        """More's Conjure a Spirit: a song rolled, kept in the Diary."""
-        character = self.selected_character
-        if character is None:
-            return
-        run_steps(
-            self.app,
-            galdor_forms.conjure_form(self.saga, character),
-            lambda end: self._commit_told(
-                end, "section-aging", "section-char-health", "tab-diary"
-            ),
-        )
-
-    def action_galdor_bargain(self) -> None:
-        """More's Bargain with a Lord: a deal kept with the tradition's
-        bound beings."""
-        character = self.selected_character
-        if character is None:
-            return
-        run_steps(
-            self.app,
-            galdor_forms.bargain_form(self.saga, character),
-            lambda end: self._commit_told(
-                end, traditions.bonds_section(galdor.TRADITION_ID), "tab-diary"
-            ),
-        )
-
-    def action_galdor_bind(self) -> None:
-        """More's Bind an Item: a spirit bound, the item kept with the
-        tradition's effects."""
-        character = self.selected_character
-        if character is None:
-            return
-        run_steps(
-            self.app,
-            galdor_forms.bind_form(self.saga, character),
-            lambda end: self._commit_told(
-                end,
-                traditions.effects_section(galdor.TRADITION_ID),
-                "section-aging",
-                "tab-diary",
-            ),
-        )
-
-    def action_trait_roll(self) -> None:
-        """More's Roll on Personality Traits: a trait roll, resisting
-        mental influence or the familiar's rescue, with the Silver Cord."""
-        character = self.selected_character
-        if character is None:
-            return
-        run_steps(
-            self.app, trait_roll_forms.roll_form(self.saga, character), lambda _e: None
-        )
-
-    def action_disguise_roll(self) -> None:
-        """More's Disguise Roll on Covers: a cover's Disguise roll worked
-        out and rolled (shown, not kept)."""
-        character = self.selected_character
-        if character is None:
-            return
-        run_steps(
-            self.app,
-            cover_forms.disguise_form(self.saga, character),
-            lambda _e: None,
-        )
-
-    def action_resolve_twilight(self) -> None:
-        """More's Resolve Twilight on Aging & Warping: the storyguide's
-        choice of its effects, applied and kept in the Diary."""
-        character = self.selected_character
-        if character is None:
-            return
-        run_steps(
-            self.app,
-            twilight_forms.resolve_twilight_form(self.saga, character),
-            lambda _end: self._commit("section-aging"),
-        )
-
-    def action_end_session(self) -> None:
-        """More's End of Session on Reputations: Confidence Points and
-        Reputation deeds, kept in the Diary."""
-        character = self.selected_character
-        if character is None:
-            return
-        run_steps(
-            self.app,
-            session_end.end_session_form(self.saga, character),
-            lambda _end: self._commit("section-reputations", "section-char-info"),
-        )
-
-    def action_tourney_season(self) -> None:
-        """More's Tournament on Reputations: a season on the tourney circuit
-        counted toward his Prudhomme Reputation, kept in the Diary."""
-        character = self.selected_character
-        if character is None:
-            return
-        run_steps(
-            self.app,
-            tourney_season.tourney_form(self.saga, character),
-            lambda _end: self._commit("section-reputations", "tab-diary"),
-        )
-
-    def action_melee_event(self) -> None:
-        """More's Melee Event on Reputations: a roll on the Melee Events
-        Table, and the ransom fair from the knight it presents."""
-        character = self.selected_character
-        if character is None:
-            return
-        run_steps(
-            self.app,
-            melee_events.melee_form(self.saga, character),
-            lambda _end: self._commit("section-reputations", "tab-diary"),
-        )
-
-    def action_labor_story(self) -> None:
-        """More's Labor Points from a Story on This Season: a story's award
-        in seasons' worth of Labor Points, kept in the Diary."""
-        character = self.selected_character
-        if character is None:
-            return
-        run_steps(
-            self.app,
-            labor.story_form(self.saga, character),
-            lambda _end: self._commit("section-char-season", "tab-diary"),
-        )
-
-    def action_grog_story_xp(self) -> None:
-        """More's Story Experience on a grog's This Season: the story's
-        xp at once, counted against the yearly update."""
-        character = self.selected_character
-        if character is None:
-            return
-        run_steps(
-            self.app,
-            grog_story_forms.story_form(self.saga, character),
-            lambda _end: self._commit("section-char-season", "tab-diary"),
-        )
-
     def action_plan_copying(self) -> None:
         """More's Plan Copying on a grog's This Season: a season of copying
         a book or Lab Texts, planned like anyone's."""
@@ -394,23 +193,6 @@ class CharacterActions(WorkspaceBase):
             self.app,
             build(self.saga, character),
             lambda _end: self._commit("section-char-season"),
-        )
-
-    def action_invest_labor(self) -> None:
-        """More's Invest Time or Money on This Season: a merchant's
-        investment of Labor Points or money, kept in the Diary."""
-        character = self.selected_character
-        if character is None:
-            return
-        run_steps(
-            self.app,
-            labor.invest_form(self.saga, character),
-            lambda _end: self._commit(
-                "section-char-season",
-                "section-reputations",
-                "section-inventory",
-                "tab-diary",
-            ),
         )
 
     def action_sell_goods(self) -> None:
@@ -458,18 +240,6 @@ class CharacterActions(WorkspaceBase):
                 self.notify("\n".join(str(line) for line in end))
 
         run_steps(self.app, form(self.saga, character), done)
-
-    def action_command_beast(self) -> None:
-        """More's Command the Beast on a tamed animal's Personality Traits:
-        the command's roll and any Loyalty test."""
-        character = self.selected_character
-        if character is None:
-            return
-        run_steps(
-            self.app,
-            beast_forms.command_form(self.saga, character),
-            lambda _end: self._commit("section-personality-traits"),
-        )
 
     def _covenfolk_step(self, build: Callable[..., Any], *sections: str) -> None:
         """Run a More command on the grog on show, then save, redraw and
@@ -610,29 +380,6 @@ class CharacterActions(WorkspaceBase):
         self._apprentice_step(
             gauntlet_forms.cantation_form(self.saga, character),
             "section-known-spells",
-        )
-
-    def action_recovery_roll(self) -> None:
-        """More's Recovery Roll on Health: a roll for each wound now."""
-        character = self.selected_character
-        if character is None:
-            return
-        run_steps(
-            self.app,
-            health.recovery_form(self.saga, character),
-            lambda _end: self._commit("section-char-health"),
-        )
-
-    def action_disputatio(self) -> None:
-        """More's Disputatio: a schoolmen's debate with another character,
-        kept in both Diaries."""
-        character = self.selected_character
-        if character is None:
-            return
-        run_steps(
-            self.app,
-            disputations.disputatio_form(self.saga, character),
-            lambda _end: self._commit("section-char-info"),
         )
 
     # -- Character Info / Characteristics --
@@ -1216,29 +963,6 @@ class CharacterActions(WorkspaceBase):
     def action_dream_working(self) -> None:
         """More's Dream Working: a dream traveler's roll, kept in the Diary."""
         self._byzantine_step(tmre_dream_forms.dream_form, "section-known-spells")
-
-    def action_whereabouts(self) -> None:
-        """More's Current Location on Casting Scores: the aura he is in now."""
-        character = self.selected_character
-        if character is None:
-            return
-        run_steps(
-            self.app,
-            whereabouts_forms.where_form(self.saga, character),
-            lambda _end: self._commit("section-casting"),
-        )
-
-    def action_guest_stay(self) -> None:
-        """More's Stay as Guest on Casting Scores: a stay at another
-        covenant."""
-        character = self.selected_character
-        if character is None:
-            return
-        run_steps(
-            self.app,
-            guest_stays.stay_form(self.saga, character),
-            lambda _end: self._commit("section-casting"),
-        )
 
     def action_certamen_duel(self) -> None:
         """More's Certamen: a duel with another magus, played out."""

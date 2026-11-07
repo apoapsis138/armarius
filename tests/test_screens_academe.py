@@ -23,7 +23,7 @@ async def test_more_s_disputatio_is_rolled_and_kept_in_both_diaries():
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(120, 45)) as pilot:
         await _select_character(pilot, app)
-        app.screen.action_disputatio()  # type: ignore[attr-defined]
+        app.screen._run_more("disputatio")  # type: ignore[attr-defined]
         await _wait_for_screen(pilot, app, FieldsDialog)
         assert "Hugh" in str(app.screen.query_one("#fields-live").render())
         await pilot.click("#btn-save")

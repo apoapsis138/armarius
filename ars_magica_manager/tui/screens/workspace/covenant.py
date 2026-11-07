@@ -20,10 +20,7 @@ from .... import inhabitants as inh
 from ....commands import Command, Form
 from ....forms import charter as charter_forms
 from ....forms import covenant as covenant_forms
-from ....forms import hook_stories as hook_story_forms
 from ....forms import inhabitant as inhabitant_forms
-from ....forms import land_shaping as land_forms
-from ....forms import ship_build as ship_build_forms
 from ....forms import ships as ship_forms
 from ....forms import world as world_forms
 from ....markup import escape
@@ -253,29 +250,6 @@ class CovenantActions(WorkspaceBase):
             ),
         )
 
-    def action_build_ship(self) -> None:
-        """More's Build a Ship on the Ships list."""
-        covenant = self.selected_covenant
-        if covenant is None:
-            return
-        run_steps(
-            self.app,
-            ship_build_forms.build_form(self.saga, covenant),
-            lambda _end: self._commit("section-pos-ship", "tab-cov-diary"),
-        )
-
-    def action_suggest_story(self) -> None:
-        """More's Suggest a Story on Hooks: a Hook's story, accepted as a
-        Story Event and an entry on Ahead."""
-        covenant = self.selected_covenant
-        if covenant is None:
-            return
-        run_steps(
-            self.app,
-            hook_story_forms.story_form(self.saga, covenant),
-            lambda _end: self._commit("section-cov-hooks", "tab-cov-diary"),
-        )
-
     def action_detach_ship(self) -> None:
         """More's Detach for the chosen ship."""
         self._on_ship(mobile_covenants.detach_form)
@@ -283,17 +257,6 @@ class CovenantActions(WorkspaceBase):
     def action_rejoin_ship(self) -> None:
         """More's Rejoin for the chosen ship."""
         self._on_ship(mobile_covenants.rejoin_form)
-
-    def action_add_stop(self) -> None:
-        """More's Add a Stop, on any covenant."""
-        covenant = self.selected_covenant
-        if covenant is None:
-            return
-        run_steps(
-            self.app,
-            mobile_covenants.add_stop(self.saga, covenant),
-            lambda end: self._commit_told(end, WHEREABOUTS_SECTION),
-        )
 
     def action_plan_route(self) -> None:
         """More's Plan Route on Whereabouts."""
@@ -319,17 +282,6 @@ class CovenantActions(WorkspaceBase):
         self._on_ship(ship_forms.mark_fate, tree=True)
 
     # -- Covenant: shaping the land (Transforming Mythic Europe) --
-
-    def action_shape_land(self) -> None:
-        """More's Shape the Land on Income: plan an island, or settle it."""
-        covenant = self.selected_covenant
-        if covenant is None:
-            return
-        run_steps(
-            self.app,
-            land_forms.shape_form(self.saga, covenant),
-            lambda _end: self._commit("section-eco-income", "tab-cov-diary"),
-        )
 
     # -- Covenant: Charter tab --
 

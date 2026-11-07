@@ -675,13 +675,13 @@ def _as_merchant(ws) -> Character:
 async def _open_labor_story(ws) -> None:
     """More's Labor Points from a Story on Leandro's This Season."""
     _as_merchant(ws)
-    ws.action_labor_story()
+    ws._run_more("labor_story")
 
 
 async def _open_invest_labor(ws) -> None:
     """More's Invest Time or Money on Leandro's This Season."""
     _as_merchant(ws)
-    ws.action_invest_labor()
+    ws._run_more("invest_labor")
 
 
 async def _open_sell_goods(ws) -> None:
@@ -740,7 +740,7 @@ def _with_harbour(ws) -> None:
 def _open_add_stop(ws) -> None:
     """More's Add a Stop, on any covenant."""
     _with_harbour(ws)
-    ws.action_add_stop()
+    ws._run_more("add_stop")
 
 
 def _open_plan_route(ws) -> None:
@@ -1651,8 +1651,10 @@ OPENERS: dict[str, Opener] = {
     "invest time or money": Opener("character", _open_invest_labor),
     "add constant effect": Opener("character", _open_constant_effect),
     "add cover": Opener("character", _open_cover),
-    "resolve twilight": Opener("character", lambda ws: ws.action_resolve_twilight()),
-    "cast a power": Opener("character", lambda ws: ws.action_hedge_cast()),
+    "resolve twilight": Opener(
+        "character", lambda ws: ws._run_more("resolve_twilight")
+    ),
+    "cast a power": Opener("character", lambda ws: ws._run_more("hedge_cast")),
     "add bound being": Opener("character", _open_bound_being),
     "virtue parameters": Opener("character", _open_param_prompt),
     "virtue ability choice": Opener(
@@ -2110,7 +2112,7 @@ OPENERS: dict[str, Opener] = {
     "add a stop": Opener("covenant", _open_add_stop),
     "plan route": Opener("covenant", _open_plan_route),
     # Shaping the land by magic (Transforming Mythic Europe).
-    "shape land": Opener("covenant", lambda ws: ws.action_shape_land()),
+    "shape land": Opener("covenant", lambda ws: ws._run_more("shape_land")),
     "settle new land": Opener("covenant", lambda ws: _open_settle_land(ws)),
     # The Rhine's Great Library at Durenmar (Guardians of the Forests).
     "search the great library": Opener(
@@ -2587,9 +2589,9 @@ def _open_galdor(ws, which: str) -> None:
             BoundBeing("The Ol lord", "trad_galdramen", "Deal with a lord")
         )
     {
-        "conjure": ws.action_galdor_conjure,
-        "bargain": ws.action_galdor_bargain,
-        "bind": ws.action_galdor_bind,
+        "conjure": (lambda: ws._run_more("galdor_conjure")),
+        "bargain": (lambda: ws._run_more("galdor_bargain")),
+        "bind": (lambda: ws._run_more("galdor_bind")),
     }[which]()
 
 

@@ -123,6 +123,12 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.85.4 — 2026-11-07
+
+### Fundamenta
+
+- **More actions share one registry**: for each More action the terminal and the desktop's core table now agree on what the action changes, so the terminal runs the core's first step and redraws the sections it names, instead of having a handler of its own for each. Twenty-five of the terminal's handlers are gone (Take Harm, Cast a Power, End of Session, Build a Ship and others); they work as before, and any notes a step ends with are now shown.
+
 ## 3.85.3 — 2026-11-07
 
 ### Fundamenta

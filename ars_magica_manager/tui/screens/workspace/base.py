@@ -68,6 +68,8 @@ from ....actions import (
     NodeKind,
 )
 from ....commands import Go
+from ....forms import menu as menu_forms
+from ....forms import menu_refresh
 from ....forms import neighbour as neighbour_forms
 from ....forms import season as season_forms
 from ....markup import escape
@@ -1130,7 +1132,44 @@ class WorkspaceBase(Screen[None]):
         )
 
     def _run_menu_item(self, item: MenuItem) -> None:
-        getattr(self, _MENU_HANDLERS.get(item.action, f"action_{item.action}"))()
+        handler = getattr(
+            self, _MENU_HANDLERS.get(item.action, f"action_{item.action}"), None
+        )
+        if handler is not None:
+            handler()
+        else:
+            self._run_more(item.action)
+
+    def _more_page(self) -> menu_forms.Page:
+        """The page on show as the core's More commands ask about it."""
+        view = self._current_sheet_view()
+        section = self._active_section()
+        return menu_forms.Page(
+            self.saga,
+            self.selected_kind,
+            covenant=self.selected_covenant,
+            character=self.selected_character,
+            laboratory=self.selected_laboratory,
+            familiar=self.selected_familiar,
+            tribunal=self.selected_tribunal,
+            neighbour=self.selected_neighbour,
+            creature=self.selected_creature,
+            section=section,
+            row=view.section_row(section) if view is not None and section else None,
+        )
+
+    def _run_more(self, action: str) -> None:
+        """Run a More action that needs no handler of its own: the core's
+        first step for it on this page, then save and redraw what
+        menu_refresh says it changes."""
+        refresh = menu_refresh.REFRESH[action]
+        step = menu_forms.command(self._more_page(), action)
+
+        def finished(end: object) -> None:
+            if refresh.saves:
+                self._commit_told(end, *refresh.sections, tree=refresh.tree)
+
+        run_steps(self.app, step, finished)
 
     def _run_menu(self, title: str, items: list[MenuItem]) -> None:
         """Run the only item directly; with several, ask which."""
