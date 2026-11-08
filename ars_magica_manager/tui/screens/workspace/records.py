@@ -38,7 +38,7 @@ from .... import tombs as tomb_rules
 from ....actions import (
     NodeKind,
 )
-from ....commands import Command, Go
+from ....commands import Command
 from ....forms import charter_strength as charter_strength_forms
 from ....forms import choice_templates as choice_forms
 from ....forms import creation as creation_forms
@@ -223,10 +223,8 @@ class RecordActions(WorkspaceBase):
         row = view.section_row(CASES_SECTION) if view is not None else None
         if view is None or row is None:
             return
-        run_steps(
-            self.app,
-            wizards_war.end_form(self.saga, view.tribunal, row),
-            lambda _end: self._commit(CASES_SECTION),
+        self._run_commit(
+            wizards_war.end_form(self.saga, view.tribunal, row), CASES_SECTION
         )
 
     def _package_verb(self, action: str, section: str, *also: str) -> None:
@@ -239,11 +237,7 @@ class RecordActions(WorkspaceBase):
         verb = tribunal_packages.package_verb(view.tribunal, action)
         if verb is None:
             return
-        run_steps(
-            self.app,
-            verb.build(self.saga, view.tribunal, row),
-            lambda _end: self._commit(section, *also),
-        )
+        self._run_commit(verb.build(self.saga, view.tribunal, row), section, *also)
 
     def action_neutralize_shard(self) -> None:
         """More's Neutralize a Shard on the Theban tokens' chosen magus."""
@@ -284,11 +278,7 @@ class RecordActions(WorkspaceBase):
         row = view.section_row(FAIRS_SECTION) if view is not None else None
         if view is None or row is None:
             return
-        run_steps(
-            self.app,
-            towns.roll_fair(self.saga, view.neighbour, row),
-            lambda _end: self._commit(FAIRS_SECTION),
-        )
+        self._run_commit(towns.roll_fair(self.saga, view.neighbour, row), FAIRS_SECTION)
 
     def action_court_roll(self) -> None:
         """More's Court Roll on a town's chosen case."""
@@ -296,10 +286,8 @@ class RecordActions(WorkspaceBase):
         row = view.section_row(COURT_CASES_SECTION) if view is not None else None
         if view is None or row is None:
             return
-        run_steps(
-            self.app,
-            town_court.court_roll(self.saga, view.neighbour, row),
-            lambda _end: self._commit(COURT_CASES_SECTION),
+        self._run_commit(
+            town_court.court_roll(self.saga, view.neighbour, row), COURT_CASES_SECTION
         )
 
     def action_redeem_gratitude(self) -> None:
@@ -308,10 +296,10 @@ class RecordActions(WorkspaceBase):
         row = view.section_row(GRATITUDE_SECTION) if view is not None else None
         if view is None or row is None:
             return
-        run_steps(
-            self.app,
+        self._run_commit(
             lords.redeem_form(self.saga, view.neighbour, row),
-            lambda _end: self._commit(GRATITUDE_SECTION, DIARY_SECTION),
+            GRATITUDE_SECTION,
+            DIARY_SECTION,
         )
 
     def _manors_holder(self) -> tuple[SheetView, Neighbour] | None:
@@ -330,10 +318,8 @@ class RecordActions(WorkspaceBase):
         found = self._manors_holder()
         if found is None:
             return
-        run_steps(
-            self.app,
-            manors.buy_form(self.saga, found[1]),
-            lambda _end: self._commit(MANORS_SECTION, DIARY_SECTION),
+        self._run_commit(
+            manors.buy_form(self.saga, found[1]), MANORS_SECTION, DIARY_SECTION
         )
 
     def action_assart(self) -> None:
@@ -342,10 +328,8 @@ class RecordActions(WorkspaceBase):
         row = found[0].section_row(MANORS_SECTION) if found is not None else None
         if found is None or row is None:
             return
-        run_steps(
-            self.app,
-            manors.assart_form(self.saga, found[1], row),
-            lambda _end: self._commit(MANORS_SECTION, DIARY_SECTION),
+        self._run_commit(
+            manors.assart_form(self.saga, found[1], row), MANORS_SECTION, DIARY_SECTION
         )
 
     def action_winter_roll(self) -> None:
@@ -356,10 +340,8 @@ class RecordActions(WorkspaceBase):
         )
         if found is None or row is None:
             return
-        run_steps(
-            self.app,
-            manors.winter_roll(self.saga, found[1], row),
-            lambda _end: self._commit(ESTABLISHMENTS_SECTION),
+        self._run_commit(
+            manors.winter_roll(self.saga, found[1], row), ESTABLISHMENTS_SECTION
         )
 
     def action_settle_inheritance(self) -> None:
@@ -367,12 +349,11 @@ class RecordActions(WorkspaceBase):
         view = self._neighbour_sheet_view
         if view is None:
             return
-        run_steps(
-            self.app,
+        self._run_commit(
             manors.settle_form(self.saga, view.neighbour),
-            lambda _end: self._commit(
-                HOUSEHOLD_SECTION, NEIGHBOUR_INFO_SECTION, DIARY_SECTION
-            ),
+            HOUSEHOLD_SECTION,
+            NEIGHBOUR_INFO_SECTION,
+            DIARY_SECTION,
         )
 
     def action_battle_event(self) -> None:
@@ -381,10 +362,8 @@ class RecordActions(WorkspaceBase):
         row = view.section_row(BATTLES_SECTION) if view is not None else None
         if view is None or row is None:
             return
-        run_steps(
-            self.app,
-            battles.event_for(self.saga, view.neighbour, row),
-            lambda _end: self._commit(BATTLES_SECTION),
+        self._run_commit(
+            battles.event_for(self.saga, view.neighbour, row), BATTLES_SECTION
         )
 
     def _conflict_command(self, action: str) -> None:
@@ -395,11 +374,7 @@ class RecordActions(WorkspaceBase):
         row = view.section_row(section) if view is not None else None
         if view is None or row is None:
             return
-        run_steps(
-            self.app,
-            conflicts.command(self.saga, action, row),
-            lambda _end: self._commit(section),
-        )
+        self._run_commit(conflicts.command(self.saga, action, row), section)
 
     def action_conflict_battle_event(self) -> None:
         """More's Battle Event on Conflicts' chosen battle."""
@@ -471,10 +446,10 @@ class RecordActions(WorkspaceBase):
         row = view.section_row(TABLES_SECTION) if view is not None else None
         if view is None or row is None:
             return
-        run_steps(
-            self.app,
+        self._run_commit(
             place_events.roll_table(self.saga, view.neighbour, row),
-            lambda _end: self._commit(TABLES_SECTION, DIARY_SECTION),
+            TABLES_SECTION,
+            DIARY_SECTION,
         )
 
     def action_create_character(self) -> None:
@@ -683,11 +658,7 @@ class RecordActions(WorkspaceBase):
         if record is None:
             return
 
-        def follow(end: object) -> None:
-            if isinstance(end, Go):
-                self.action_open_ref(end.ref.kind, end.ref.id)
-
-        run_steps(self.app, go_to_forms.go_to(self.saga, record), follow)
+        self._run(go_to_forms.go_to(self.saga, record), lambda _end: None)
 
     def action_find(self) -> None:
         """Ctrl+F: Find a record by name, and open it: a book, device or
@@ -773,27 +744,15 @@ class RecordActions(WorkspaceBase):
         row = view.section_row(SECRETS_SECTION) if view is not None else None
         if record is None or row is None:
             return
-        run_steps(
-            self.app,
-            step(self.saga, record, row),
-            lambda end: self._commit_told(end, SECRETS_SECTION),
-        )
+        self._run_commit(step(self.saga, record, row), SECRETS_SECTION, told=True)
 
     def action_mark_unknown(self) -> None:
         """More's Hide from the Players on the saga or the Region: many at once."""
-        run_steps(
-            self.app,
-            reveal_forms.mark_unknown(self.saga),
-            lambda end: self._commit_told(end, tree=True),
-        )
+        self._run_commit(reveal_forms.mark_unknown(self.saga), tree=True, told=True)
 
     def action_merge_doubles(self) -> None:
         """More's Merge Doubled Records on the saga or the Region."""
-        run_steps(
-            self.app,
-            merges.merge_form(self.saga),
-            lambda end: self._commit_told(end, tree=True),
-        )
+        self._run_commit(merges.merge_form(self.saga), tree=True, told=True)
 
     def action_grow_story(self) -> None:
         """More's Grow into a Threat on the Region's chosen open story."""
@@ -826,10 +785,10 @@ class RecordActions(WorkspaceBase):
         section = self._active_section() or ""
         view = self._current_sheet_view()
         row = view.section_row(section) if view is not None else None
-        run_steps(
-            self.app,
+        self._run_commit(
             take_up_forms.command(self.saga, section, row, self.selected_covenant),
-            lambda end: self._commit_told(end, section),
+            section,
+            told=True,
         )
 
     def action_delay_threat(self) -> None:
@@ -852,11 +811,7 @@ class RecordActions(WorkspaceBase):
         row = found[0].section_row(MANORS_SECTION) if found is not None else None
         if found is None or row is None:
             return
-        run_steps(
-            self.app,
-            build(self.saga, found[1], row),
-            lambda _end: self._commit(MANORS_SECTION, DIARY_SECTION),
-        )
+        self._run_commit(build(self.saga, found[1], row), MANORS_SECTION, DIARY_SECTION)
 
     def action_hunt_on_manor(self) -> None:
         """More's The Hunt on the chosen manor."""
@@ -873,10 +828,10 @@ class RecordActions(WorkspaceBase):
         view = self._neighbour_sheet_view
         if view is None:
             return
-        run_steps(
-            self.app,
+        self._run_commit(
             threshold_forms.threshold_form(self.saga, view.neighbour),
-            lambda _end: self._commit(NEIGHBOUR_INFO_SECTION, DIARY_SECTION),
+            NEIGHBOUR_INFO_SECTION,
+            DIARY_SECTION,
         )
 
     def action_overcome_trap(self) -> None:
@@ -897,10 +852,11 @@ class RecordActions(WorkspaceBase):
         row = view.section_row(TOMB_WARDS_SECTION) if view is not None else None
         if view is None or row is None:
             return
-        run_steps(
-            self.app,
+        self._run_commit(
             tomb_rules.overcome_ward(self.saga, view.neighbour, row),
-            lambda end: self._commit_told(end, TOMB_WARDS_SECTION, DIARY_SECTION),
+            TOMB_WARDS_SECTION,
+            DIARY_SECTION,
+            told=True,
         )
 
     # -- a lord's marriages --
@@ -931,15 +887,14 @@ class RecordActions(WorkspaceBase):
         view = self._tribunal_sheet_view
         if view is None:
             return
-        run_steps(
-            self.app,
+        self._run_commit(
             polemic_forms.circulate_form(
                 self.saga,
                 view.tribunal,
                 view.chosen_argument,
                 view.section_row(ARGUMENT_TEXTS_SECTION),
             ),
-            lambda _end: self._commit(ARGUMENT_TEXTS_SECTION),
+            ARGUMENT_TEXTS_SECTION,
         )
 
     def _charter_lords(self) -> tuple[Neighbour, str, int] | None:
@@ -966,10 +921,8 @@ class RecordActions(WorkspaceBase):
         if found is None:
             return
         charter, section, row = found
-        run_steps(
-            self.app,
-            charter_strength_forms.draft_form(self.saga, charter, row),
-            lambda _end: self._commit(section),
+        self._run_commit(
+            charter_strength_forms.draft_form(self.saga, charter, row), section
         )
 
     def action_seek_loophole(self) -> None:
@@ -978,8 +931,6 @@ class RecordActions(WorkspaceBase):
         if found is None:
             return
         charter, section, row = found
-        run_steps(
-            self.app,
-            charter_strength_forms.loophole_form(self.saga, charter, row),
-            lambda _end: self._commit(section),
+        self._run_commit(
+            charter_strength_forms.loophole_form(self.saga, charter, row), section
         )

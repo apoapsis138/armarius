@@ -184,20 +184,15 @@ class LibraryActions(WorkspaceBase):
         view = self._saga_content_view
         if view is None:
             return
-        run_steps(
-            self.app,
+        self._run_commit(
             goods_forms.add_purity(self.saga, view.section_row(GOODS_SECTION)),
-            lambda _end: self._commit(GOODS_SECTION),
+            GOODS_SECTION,
         )
 
     def action_move_to_source(self) -> None:
         """More's Move to Source on House Rules: several entries into one of
         the saga's sources at once."""
-        run_steps(
-            self.app,
-            content_forms.move_to_source(self.saga),
-            lambda _end: self._commit(HOUSE_RULES_SECTION),
-        )
+        self._run_commit(content_forms.move_to_source(self.saga), HOUSE_RULES_SECTION)
 
     def _show_catalog_entry(self) -> None:
         """Offer the chosen hidden entry again, after confirming."""

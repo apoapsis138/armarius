@@ -242,12 +242,12 @@ class CovenantActions(WorkspaceBase):
         if covenant is None or row is None:
             self.notify("Choose a ship first.", severity="warning")
             return
-        run_steps(
-            self.app,
+        self._run_commit(
             build(self.saga, covenant, row),
-            lambda end: self._commit_told(
-                end, "section-pos-ship", "tab-cov-diary", tree=tree
-            ),
+            "section-pos-ship",
+            "tab-cov-diary",
+            tree=tree,
+            told=True,
         )
 
     def action_detach_ship(self) -> None:
@@ -263,10 +263,10 @@ class CovenantActions(WorkspaceBase):
         covenant = self.selected_covenant
         if covenant is None:
             return
-        run_steps(
-            self.app,
+        self._run_commit(
             mobile_covenants.plan_route(self.saga, covenant),
-            lambda end: self._commit_told(end, WHEREABOUTS_SECTION),
+            WHEREABOUTS_SECTION,
+            told=True,
         )
 
     def action_ship_stress(self) -> None:
@@ -302,12 +302,11 @@ class CovenantActions(WorkspaceBase):
         view = self._covenant_sheet_view
         if covenant is None or view is None:
             return
-        run_steps(
-            self.app,
+        self._run_commit(
             charter_forms.break_clause(
                 self.saga, covenant, view.section_row(CLAUSES_SECTION)
             ),
-            lambda _end: self._commit(CLAUSES_SECTION),
+            CLAUSES_SECTION,
         )
 
     def _on_clause(self, build: Callable[[Saga, Covenant, int | None], Any]) -> None:
@@ -364,10 +363,10 @@ class CovenantActions(WorkspaceBase):
         view = self._covenant_sheet_view
         if covenant is None or view is None:
             return
-        run_steps(
-            self.app,
+        self._run_commit(
             guest_stays.pay_form(self.saga, covenant, view.section_row(GUESTS_SECTION)),
-            lambda _end: self._commit(GUESTS_SECTION, "tab-cov-diary"),
+            GUESTS_SECTION,
+            "tab-cov-diary",
         )
 
     # -- Covenant: Diary --

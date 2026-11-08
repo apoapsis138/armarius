@@ -123,6 +123,12 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.85.9 — 2026-11-07
+
+### Fundamenta
+
+- **One way a run of steps ends**: whether a form, list or question is shown in the terminal or on the desktop, the rules for how it ends are now written once: backing out, an empty list, a refusal and opening another record change nothing and save nothing; finishing or going on to a next step saves. Both front-ends only draw the dialogs. Nothing changes on screen.
+
 ## 3.85.8 — 2026-11-07
 
 ### Fundamenta

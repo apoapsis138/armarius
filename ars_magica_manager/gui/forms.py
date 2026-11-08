@@ -53,16 +53,21 @@ from PySide6.QtWidgets import (
 
 from .. import form_spec
 from ..commands import (
+    CANCELLED,
     RECENT,
-    Act,
+    Cancelled,
     Choice,
     Choose,
     ChooseFile,
     Confirm,
+    Empty,
+    Finished,
     Form,
     FormCard,
     Picked,
+    Question,
     Refuse,
+    drive,
     filter_values,
     heading,
     passes,
@@ -1133,7 +1138,7 @@ class NoticeDialog(_Sheet):
 # -- running steps --
 
 
-Step = Form | Choose | Confirm | ChooseFile
+Step = Question
 
 
 def step_dialog(
@@ -1194,19 +1199,40 @@ def step_dialog(
     )
 
 
+def reply(step: Step, dialog: QDialog) -> Any:
+    """What an (accepted) dialog holds, as commands.steps wants the answer:
+    the form's values, the chosen value, the file's path, or True."""
+    if isinstance(step, Form):
+        assert isinstance(dialog, FieldsDialog | CardsDialog)
+        return dialog.values
+    if isinstance(step, Choose):
+        assert isinstance(dialog, ChooseDialog)
+        return dialog.chosen
+    if isinstance(step, ChooseFile):
+        assert isinstance(dialog, QFileDialog)
+        return Path(dialog.selectedFiles()[0])
+    return True
+
+
 def answer(step: Step, dialog: QDialog) -> object:
     """Run `step`'s apply with what its (accepted) dialog holds: the next
     step, or what the steps end with."""
-    if isinstance(step, Form):
-        assert isinstance(dialog, FieldsDialog | CardsDialog)
-        return step.apply(dialog.values)
-    if isinstance(step, Choose):
-        assert isinstance(dialog, ChooseDialog)
-        return step.apply(dialog.chosen)
-    if isinstance(step, ChooseFile):
-        assert isinstance(dialog, QFileDialog)
-        return step.apply(Path(dialog.selectedFiles()[0]))
-    return step.apply()
+    given = reply(step, dialog)
+    if isinstance(step, Confirm):
+        return step.apply()
+    return step.apply(given)
+
+
+def ask_question(
+    question: Question, p: Palette, parent: QWidget | None, ask: Ask
+) -> object:
+    """Show one step as a window: the answer commands.steps wants, or
+    CANCELLED when the user backs out."""
+    dialog = step_dialog(question, p, parent, ask=ask)
+    assert dialog is not None  # commands.steps ends an empty Choose itself
+    if ask(dialog) != QDialog.DialogCode.Accepted:
+        return CANCELLED
+    return reply(question, dialog)
 
 
 def file_dialog(step: ChooseFile, parent: QWidget | None) -> QFileDialog:
@@ -1235,16 +1261,10 @@ def run_steps(
     """Run `step` and the steps it leads to, each as a window; whether
     every one was answered, and what the last led to (a Picked value, a
     Refuse...)."""
-    while isinstance(step, Form | Choose | Confirm | ChooseFile | Act):
-        if isinstance(step, Act):
-            step = step.apply()
-            continue
-        dialog = step_dialog(step, p, parent, ask=ask)
-        if dialog is None:
-            assert isinstance(step, Choose)
-            NoticeDialog(step.title, step.empty, p, parent).exec()
-            return False, None
-        if ask(dialog) != QDialog.DialogCode.Accepted:
-            return False, None
-        step = answer(step, dialog)
-    return True, step
+    outcome = drive(step, lambda question: ask_question(question, p, parent, ask))
+    if isinstance(outcome, Cancelled):
+        return False, None
+    if isinstance(outcome, Empty):
+        NoticeDialog(outcome.title, outcome.why, p, parent).exec()
+        return False, None
+    return True, outcome.end if isinstance(outcome, Finished) else outcome

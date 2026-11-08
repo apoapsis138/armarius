@@ -21,7 +21,7 @@ index in the section's list).
 
 from __future__ import annotations
 
-from collections.abc import Callable, MutableSequence, Sequence
+from collections.abc import Callable, Generator, MutableSequence, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -239,6 +239,85 @@ class Then:
 
 
 Command = Form | Choose | Confirm | Act | Refuse | ChooseFile
+
+#: The steps a front-end shows: each is answered, or the whole run cancelled.
+Question = Form | Choose | Confirm | ChooseFile
+
+
+@dataclass(frozen=True)
+class Cancelled:
+    """The answer to a step when the user backs out, and the outcome of a
+    run that was backed out of: nothing more is asked or saved."""
+
+
+CANCELLED = Cancelled()
+
+
+@dataclass(frozen=True)
+class Empty:
+    """The outcome of a run whose list had nothing to choose from: the
+    front-end tells the user `why` under `title`. Nothing is saved."""
+
+    title: str
+    why: str
+
+
+@dataclass(frozen=True)
+class Finished:
+    """The outcome of a run that ended: `end` is what the last step
+    returned (a list of notes, a Picked value, or None). The saga was
+    changed, so the front-end saves it."""
+
+    end: object
+
+
+#: How a run ended. Only Finished and Then change the saga, and so are
+#: saved (`saves`); Refuse, Go, Empty and Cancelled change nothing.
+Outcome = Cancelled | Empty | Refuse | Go | Then | Finished
+
+
+def saves(outcome: Outcome) -> bool:
+    """Whether a front-end saves the saga (and shows it again) after a run
+    that ended as `outcome`: the one place the rule is written."""
+    return isinstance(outcome, Finished | Then)
+
+
+def steps(first: object) -> Generator[Question, object, Outcome]:
+    """Run `first` and each step it leads to: yields every step that needs
+    an answer (a Form, Choose, Confirm or ChooseFile) and is sent the
+    answer (the form's values, the chosen value, True, the file's path) or
+    CANCELLED; an Act runs at once. Returns the Outcome. Drawing the steps,
+    saving and redrawing are the front-end's."""
+    step = first
+    while True:
+        if isinstance(step, Act):
+            step = step.apply()
+        elif isinstance(step, Choose) and not step.choices() and step.others is None:
+            return Empty(step.title, step.empty)
+        elif isinstance(step, Form | Choose | Confirm | ChooseFile):
+            given: Any = yield step
+            if isinstance(given, Cancelled):
+                return CANCELLED
+            if isinstance(step, Form | Choose | ChooseFile):
+                step = step.apply(given)
+            else:
+                step = step.apply()
+        elif isinstance(step, Refuse | Go | Then):
+            return step
+        else:
+            return Finished(step)
+
+
+def drive(first: object, ask: Callable[[Question], object]) -> Outcome:
+    """Run `first` to its Outcome, `ask` answering each step (or giving
+    CANCELLED): the loop a blocking front-end, or a test, uses."""
+    run = steps(first)
+    try:
+        question = next(run)
+        while True:
+            question = run.send(ask(question))
+    except StopIteration as stop:
+        return stop.value
 
 
 def picked(form: Callable[[dict[str, Any]], Any]) -> Callable[[dict[str, Any]], Picked]:

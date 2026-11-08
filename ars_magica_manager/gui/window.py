@@ -59,16 +59,17 @@ from .. import familiars as fam
 from .. import print_layout as pl
 from ..actions import NodeKind
 from ..commands import (
-    Act,
-    Choose,
+    Cancelled,
     ChooseFile,
     Command,
     Confirm,
-    Form,
+    Empty,
     Go,
     Picked,
+    Question,
     Refuse,
     Then,
+    drive,
 )
 from ..forms import advance as advance_forms
 from ..forms import creation as creation_forms
@@ -96,7 +97,7 @@ from .conflicts import FightPage, SiegePage
 from .covenant import CovenantPage
 from .familiar import FamiliarPage
 from .finder import FinderPanel, eye_icon, magnifier_icon
-from .forms import NoticeDialog, answer, run_steps, step_dialog
+from .forms import NoticeDialog, ask_question, run_steps
 from .help import HelpPage
 from .icon import app_icon
 from .laboratory import LaboratoryPage
@@ -950,29 +951,26 @@ class MainWindow(QMainWindow):
             return
         title = _title(command)
         page = self.page()
-        step: object = command
-        while isinstance(step, Form | Choose | Confirm | ChooseFile | Act):
-            if isinstance(step, Act):
-                step = step.apply()
-                continue
-            answered, step = self._answer(step)
-            if not answered:
-                return
-        if isinstance(step, Go):
-            # Opening another record changes nothing, so nothing is saved.
-            self.open_ref(step.ref)
+        outcome = drive(command, self._answer)
+        if isinstance(outcome, Cancelled):
             return
-        if isinstance(step, Refuse):
-            # A refusal changes nothing, so there is nothing to save.
+        if isinstance(outcome, Empty):
+            self.tell(outcome.title, outcome.why)
+            return
+        if isinstance(outcome, Go):
+            self.open_ref(outcome.ref)
+            return
+        if isinstance(outcome, Refuse):
             sounds.play("tock")
-            self.tell(step.title, step.why)
+            self.tell(outcome.title, outcome.why)
             return
         storage.save_saga(self.saga)
-        if isinstance(step, Then):
+        if isinstance(outcome, Then):
             # Kept and saved; the page is drawn again before the next step.
             self.redraw()
-            self.run(step.step, then, ended=ended)
+            self.run(outcome.step, then, ended=ended)
             return
+        step = outcome.end
         if ended is not None:
             ended(step)
             return
@@ -992,23 +990,11 @@ class MainWindow(QMainWindow):
             "coins" if chapter is not None and chapter.text() == "Treasury" else "quill"
         )
 
-    def _answer(
-        self, step: Form | Choose | Confirm | ChooseFile
-    ) -> tuple[bool, object]:
-        """Show one step; whether it was answered, and what it led to."""
-        dialog = step_dialog(
-            step,
-            self.palette_,
-            self,
-            ask=lambda shown: self.ask(shown),
+    def _answer(self, question: Question) -> object:
+        """Show one step as a window: its answer, or CANCELLED."""
+        return ask_question(
+            question, self.palette_, self, lambda shown: self.ask(shown)
         )
-        if dialog is None:
-            assert isinstance(step, Choose)
-            self.tell(step.title, step.empty)
-            return False, None
-        if self.ask(dialog) != QDialog.DialogCode.Accepted:
-            return False, None
-        return True, answer(step, dialog)
 
     def tell(self, title: str, words: str) -> None:
         """Show a message (markup): what a step refused, or the notes

@@ -18,17 +18,21 @@ from textual.widgets import Input, Select, Static
 
 from ...commands import (
     RECENT,
-    Act,
     Choice,
     Choose,
     ChooseFile,
-    Confirm,
+    Empty,
+    Finished,
     Form,
+    Go,
+    Outcome,
+    Question,
     Refuse,
     Then,
     filter_values,
     heading,
     passes,
+    steps,
 )
 from ...markup import escape
 from ..heraldry import beside
@@ -178,13 +182,16 @@ def run_steps(
     step: object,
     done: Callable[[object], None],
     notify: Callable[[str, str], None] | None = None,
+    opened: Callable[[Any], None] | None = None,
 ) -> None:
-    """Show `step` and each step it leads to; once the last is answered,
-    `done(what it ended with)`: a list of notes, a commands.Picked value,
-    or None. A commands.Then calls `done(None)` and goes on to its step.
-    Cancelling any step stops there (`done` isn't called); a
-    Refuse is told with `notify(title, why)` (a warning by default) and
-    stops too, as it changed nothing."""
+    """Show `step` and each step it leads to (commands.steps); once the
+    last is answered, `done(what it ended with)`: a list of notes, a
+    commands.Picked value, or None. A commands.Then calls `done(None)` and
+    goes on to its step. Cancelling any step stops there (`done` isn't
+    called); a Refuse or an empty list is told with `notify(title, why)` (a
+    warning by default) and stops too, as it changed nothing; a Go calls
+    `opened(ref)` (nothing, by default). Only a run that changed the saga
+    calls `done` (commands.saves)."""
 
     def warn(title: str, why: str) -> None:
         if notify is not None:
@@ -192,17 +199,42 @@ def run_steps(
         else:
             app.notify(why, title=title, severity="warning")
 
-    while isinstance(step, Act):
-        step = step.apply()
-    if isinstance(step, Refuse):
-        warn(step.title, step.why)
-        return
+    session = steps(step)
+
+    def resume(given: object) -> None:
+        try:
+            question = session.send(given)
+        except StopIteration as stop:
+            outcome: Outcome = stop.value
+            if isinstance(outcome, Refuse | Empty):
+                warn(
+                    outcome.title,
+                    outcome.why,
+                )
+            elif isinstance(outcome, Go):
+                if opened is not None:
+                    opened(outcome.ref)
+            elif isinstance(outcome, Then):
+                # The steps so far are kept (saved and redrawn), then the next.
+                done(None)
+                run_steps(app, outcome.step, done, notify, opened)
+            elif isinstance(outcome, Finished):
+                done(outcome.end)
+            return
+        _show(app, question, resume)
+
+    resume(None)
+
+
+def _show(app: App[Any], step: Question, answer: Callable[[object], None]) -> None:
+    """Push the screen that asks `step`; its answer goes to `answer`, and
+    backing out sends nothing (the run is dropped)."""
     if isinstance(step, Form):
         form = step
 
         def handle_values(values: dict[str, Any] | None) -> None:
             if values is not None:
-                run_steps(app, form.apply(values), done, notify)
+                answer(values)
 
         dialog = FieldsDialog(
             form.title,
@@ -215,55 +247,37 @@ def run_steps(
         )
         dialog.help_id = form.help_id or None
         app.push_screen(dialog, handle_values)
-        return
-    if isinstance(step, Choose):
+    elif isinstance(step, Choose):
         choose = step
-        choices = choose.choices()
-        if not choices and choose.others is None:
-            warn(choose.title, choose.empty)
-            return
-        screen = ChooseScreen(choose, choices)
+        screen = ChooseScreen(choose, choose.choices())
         screen.help_id = choose.help_id or None
 
         def handle_index(index: int | None) -> None:
             if index is not None:
-                run_steps(app, choose.apply(screen.value_of(index)), done, notify)
+                answer(screen.value_of(index))
 
         app.push_screen(screen, handle_index)
-        return
-    if isinstance(step, ChooseFile):
-        choose_file = step
+    elif isinstance(step, ChooseFile):
 
         def handle_path(path: Path | None) -> None:
             if path is not None:
-                run_steps(app, choose_file.apply(path), done, notify)
+                answer(path)
 
         app.push_screen(
             CsvFilePickerScreen(step.title, step.start, suffix=step.suffixes),
             handle_path,
         )
-        return
-    if isinstance(step, Confirm):
-        confirm = step
+    else:
 
         def handle_confirmed(confirmed: bool | None) -> None:
             if confirmed:
-                run_steps(app, confirm.apply(), done, notify)
+                answer(True)
 
-        variant = "error" if confirm.yes_label in ("Delete", "Remove") else "primary"
+        variant = "error" if step.yes_label in ("Delete", "Remove") else "primary"
         app.push_screen(
-            ConfirmScreen(
-                confirm.question, yes_label=confirm.yes_label, yes_variant=variant
-            ),
+            ConfirmScreen(step.question, yes_label=step.yes_label, yes_variant=variant),
             handle_confirmed,
         )
-        return
-    if isinstance(step, Then):
-        # The steps so far are kept (saved and redrawn), then the next.
-        done(None)
-        run_steps(app, step.step, done, notify)
-        return
-    done(step)
 
 
 def _with_picture(form: Form) -> Callable[[dict[str, Any]], str] | None:

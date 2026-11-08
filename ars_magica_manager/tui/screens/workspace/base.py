@@ -67,7 +67,6 @@ from ....actions import (
     MenuItem,
     NodeKind,
 )
-from ....commands import Go
 from ....forms import menu as menu_forms
 from ....forms import menu_refresh
 from ....forms import neighbour as neighbour_forms
@@ -1694,6 +1693,29 @@ class WorkspaceBase(Screen[None]):
         """After a change that may touch books (the library's actions
         redraw the book lists and the tree's Unassigned Books)."""
 
+    def _open_ref_later(self, ref: Any) -> None:
+        """Show the page of `ref` (a Go step) once the dialog has closed."""
+        self.call_later(self.run_action, f"open_ref({ref.kind!r}, {ref.id!r})")
+
+    def _run(self, step: object, done: Callable[[object], None]) -> None:
+        """Run a core step here: `done(end)` once it changed the saga, the
+        page of a Go opened, a refusal told (steps.run_steps)."""
+        run_steps(self.app, step, done, opened=self._open_ref_later)
+
+    def _run_commit(
+        self,
+        step: object,
+        *sections: str,
+        tree: bool = False,
+        told: bool = False,
+    ) -> None:
+        """Run a core step; once it changed the saga, save it and refresh
+        `sections` (_commit), showing the notes it ended with if `told`."""
+        if told:
+            self._run(step, lambda end: self._commit_told(end, *sections, tree=tree))
+        else:
+            self._run(step, lambda _end: self._commit(*sections, tree=tree))
+
     def _commit_told(self, end: object, *sections: str, tree: bool = False) -> None:
         """_commit, then show the notes a step ended with."""
         self._commit(*sections, tree=tree)
@@ -1897,18 +1919,12 @@ class WorkspaceBase(Screen[None]):
                 row = section_verbs.table_row(record, section, row)
             step = step_of(0 if row is None else row)
 
-        def finished(end: object) -> None:
-            if isinstance(end, Go):
-                # Opening another record changes nothing, so nothing is saved.
-                self.call_later(
-                    self.run_action, f"open_ref({end.ref.kind!r}, {end.ref.id!r})"
-                )
-                return
-            self._commit_told(
-                end, *self._core_refreshed(section), tree=section in self._TREE_SECTIONS
-            )
-
-        run_steps(self.app, step, finished)
+        self._run_commit(
+            step,
+            *self._core_refreshed(section),
+            tree=section in self._TREE_SECTIONS,
+            told=True,
+        )
 
     def _core_refreshed(self, section: str) -> tuple[str, ...]:
         """The sections to redraw after `section`'s Add, Edit or Delete: it
