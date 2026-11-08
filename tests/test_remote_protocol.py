@@ -6,6 +6,7 @@ import json
 
 import pytest
 
+from ars_magica_manager import __version__
 from ars_magica_manager.remote.limits import ConnectionGate, RateLimiter
 from ars_magica_manager.remote.protocol import (
     PROTOCOL_VERSION,
@@ -50,7 +51,7 @@ def test_hello_is_answered() -> None:
         Session(), message("hello", {"protocol": 1})
     )
     assert ok
-    assert reply == Reply("welcome", {"protocol": PROTOCOL_VERSION})
+    assert reply == Reply("welcome", {"protocol": PROTOCOL_VERSION, "app": __version__})
 
 
 def test_the_public_registry_holds_only_hello() -> None:

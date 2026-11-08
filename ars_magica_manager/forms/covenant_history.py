@@ -27,6 +27,7 @@ from collections.abc import Iterator
 from dataclasses import dataclass
 from typing import Any, cast
 
+from .. import viewing
 from ..commands import Command, Confirm, Form, Refuse, SectionOps
 from ..form_spec import DialogField
 from ..grids import Grid
@@ -121,6 +122,8 @@ class Row:
 def _diary_rows(covenant: Covenant) -> Iterator[tuple[int | None, str, str, Source]]:
     label = f"{covenant.name}'s Diary"
     for index, entry in enumerate(covenant.diary):
+        if not viewing.shows_entry(entry):
+            continue  # about a record the reader doesn't know of
         text = entry.name or entry.details.strip() or "(unnamed)"
         yield entry.year, entry.season, text, Source(DIARY, covenant.id, index, label)
 
@@ -145,10 +148,10 @@ def kept_by(saga: Saga, covenant: Covenant) -> list[Neighbour]:
 def _place_rows(
     saga: Saga, covenant: Covenant
 ) -> Iterator[tuple[int | None, str, str, Source]]:
-    for record in kept_by(saga, covenant):
+    for record in viewing.shown(kept_by(saga, covenant)):
         for index, entry in enumerate(place_diary(record)):
             text = str(entry.get("text") or "").strip()
-            if not text:
+            if not text or not viewing.shows_line(dict(entry)):
                 continue
             year = entry.get("year")
             yield (

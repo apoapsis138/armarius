@@ -63,6 +63,7 @@ from .models import (
     Tribunal,
 )
 from .rules import sites
+from .seat_view import seat_view
 
 FORMAT = "armarius-export"
 #: The labels an import accepts: exports made before the app was Armarius
@@ -139,7 +140,18 @@ def export_data(
     saga: Saga, record: Record, *, with_members: bool = False
 ) -> dict[str, Any]:
     """The export of `record` as JSON-ready data. `with_members` (a covenant
-    only) adds its laboratories and characters."""
+    only) adds its laboratories and characters. Anyone but the storyguide
+    exports from their seat view, so a file carries no more than the
+    screen shows them."""
+    if not viewing.storyguide_reads():
+        saga = seat_view(saga, viewing.current())
+        listed: list[Record] = [*saga.characters, *saga.laboratories, *saga.covenants]
+        found = next(
+            (r for r in listed if type(r) is type(record) and r.id == record.id), None
+        )
+        if found is None:
+            raise LookupError(f"{record.name} is not one the reader may export.")
+        record = found
     covenants = [record] if isinstance(record, Covenant) else []
     characters = [record] if isinstance(record, Character) else []
     labs = [record] if isinstance(record, Laboratory) else []
@@ -490,7 +502,10 @@ def saga_file_name(saga: Saga) -> str:
 
 def export_saga_data(saga: Saga) -> dict[str, Any]:
     """The export of the whole saga as JSON-ready data: every record and
-    what they hold, so nothing it points at is left outside it."""
+    what they hold, so nothing it points at is left outside it. Anyone but
+    the storyguide exports their seat view."""
+    if not viewing.storyguide_reads():
+        saga = seat_view(saga, viewing.current())
     return {
         "format": FORMAT,
         "app_version": __version__,

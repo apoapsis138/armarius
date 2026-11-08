@@ -30,8 +30,14 @@ DEVICE_LOCKED = "device_locked"
 DEVICE_REVOKED = "device_revoked"
 DEVICE_EXPIRED = "device_expired"
 HOST_KEY_ROTATED = "host_key_rotated"
+RECORDS_READ = "records_read"
+RECORD_CHANGED = "record_changed"
+CHANGE_REFUSED = "change_refused"
 EVENTS = frozenset(
     {
+        RECORDS_READ,
+        RECORD_CHANGED,
+        CHANGE_REFUSED,
         INVITE_ISSUED,
         INVITE_REDEEMED,
         REQUEST_APPROVED,
@@ -53,6 +59,8 @@ class AuditEntry:
     event: str
     player_id: str = ""
     device_id: str = ""
+    #: The record an event is about, as "kind:id" (a change).
+    record: str = ""
 
 
 class AuditLog:
@@ -63,10 +71,12 @@ class AuditLog:
         self._clock = clock
         self._prune()
 
-    def record(self, event: str, *, player_id: str = "", device_id: str = "") -> None:
+    def record(
+        self, event: str, *, player_id: str = "", device_id: str = "", record: str = ""
+    ) -> None:
         if event not in EVENTS:
             raise ValueError(f"Unknown audit event {event!r}.")
-        entry = AuditEntry(self._clock(), event, player_id, device_id)
+        entry = AuditEntry(self._clock(), event, player_id, device_id, record[:250])
         self._path.parent.mkdir(parents=True, exist_ok=True)
         with self._path.open("a", encoding="utf-8") as handle:
             handle.write(json.dumps(entry.__dict__, separators=(",", ":")) + "\n")
@@ -86,6 +96,7 @@ class AuditLog:
                         str(data["event"]),
                         str(data.get("player_id", "")),
                         str(data.get("device_id", "")),
+                        str(data.get("record", "")),
                     )
                 )
             except ValueError, KeyError, TypeError:

@@ -558,7 +558,9 @@ def diary(place: Neighbour) -> list[PlaceDiaryEntry]:
 
 
 def diary_title(_saga: Saga, place: Neighbour) -> str:
-    return f"Diary ({len(diary(place))})"
+    """The count the reader may read: a hidden line is not counted either."""
+    shown = [e for e in diary(place) if viewing.shows_line(dict(e))]
+    return f"Diary ({len(shown)})"
 
 
 def diary_grid(_saga: Saga, place: Neighbour) -> Grid:

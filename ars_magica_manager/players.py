@@ -206,18 +206,31 @@ def detail_text(saga: Saga, player: Player | None) -> str:
 
 
 #: Parts of a saga anyone signed in may change: the libraries and spells
-#: their characters use, their season plans and lab work, enchanted items.
-#: Each still sits on a sheet only its owner can change.
+#: their characters use, enchanted items. Each still sits on a sheet only
+#: its owner can change. Season plans and lab work are each a character's,
+#: so only that character's player may change them.
 _SHARED_PARTS = frozenset(
     {
         "books",
         "spells",
-        "season_plans",
-        "lab_projects",
         "enchanted_devices",
         "app_version",
     }
 )
+
+#: How a record of each list is named, where it has no id: a season plan
+#: by its character and season, a lab project by its character and spell.
+_NATURAL_KEYS: dict[str, tuple[str, ...]] = {
+    "season_plans": ("character_id", "year", "season"),
+    "lab_projects": ("character_id", "spell_id"),
+}
+
+
+def _key_of(key: str) -> Any:
+    fields = _NATURAL_KEYS.get(key)
+    if fields is None:
+        return lambda r: r["id"]
+    return lambda r: tuple(r.get(f) for f in fields)
 
 
 def guard_changes(
@@ -239,6 +252,8 @@ def guard_changes(
         "laboratories": lambda r: r.get("owner_id") in mine,
         "familiars": lambda r: r.get("character_id") in mine,
         "covenants": lambda r: player.covenant_rights,
+        "season_plans": lambda r: r.get("character_id") in mine,
+        "lab_projects": lambda r: r.get("character_id") in mine,
     }
     kept = dict(after)
     refused: list[str] = []
@@ -258,24 +273,27 @@ def guard_changes(
 def _guard_records(
     key: str, old: list, new: list, may: Any, refused: list[str]
 ) -> list:
-    """`new` records with each change to one `may` refuses undone."""
-    old_by_id = {r["id"]: r for r in old}
+    """`new` records with each change to one `may` refuses undone: a record
+    is the player's to change while it is theirs before and after (a lab
+    can't be handed to another's magus)."""
+    key_of = _key_of(key)
+    old_by_id = {key_of(r): r for r in old}
     kept = []
     for record in new:
-        before = old_by_id.get(record["id"])
+        before = old_by_id.get(key_of(record))
         if before is None:
             if may(record):
                 kept.append(record)
             else:
-                refused.append(f"{key}[{record['id']}]")
-        elif record == before or may(before):
+                refused.append(f"{key}[{key_of(record)}]")
+        elif record == before or (may(before) and may(record)):
             kept.append(record)
         else:
             kept.append(before)
-            refused.append(f"{key}[{record['id']}]")
-    new_ids = {r["id"] for r in new}
+            refused.append(f"{key}[{key_of(record)}]")
+    new_ids = {key_of(r) for r in new}
     for record in old:
-        if record["id"] not in new_ids and not may(record):
+        if key_of(record) not in new_ids and not may(record):
             kept.append(record)
-            refused.append(f"{key}[{record['id']}]")
+            refused.append(f"{key}[{key_of(record)}]")
     return kept

@@ -1494,6 +1494,16 @@ aloud on your group's call, and three tabs: Requests, Seats and Log. The
 window looks for new requests every few seconds; the title counts those
 waiting.
 
+While the saga has players, your own window picks up what they save every
+few seconds: the page is drawn again, with a note at its foot such as
+"Anna changed Leandro; reloaded." It waits while you have a form or
+question open, so nothing you are typing is touched. A player's change
+reaches only what is theirs to change (their characters, those
+characters' labs, familiars and season plans, and the covenants if you
+gave them covenant rights), and it never removes anything hidden from
+them, such as a Secret. Where you and a player changed the same thing,
+the later save is kept.
+
 ### Host for Remote Seats
 <!-- help: host-remote-seats; gui -->
 
@@ -1554,6 +1564,7 @@ last used, and when it expires if unused (or when it ended).
 
 What happened to Remote seats, newest first: Invites issued and redeemed,
 requests approved or rejected, sign-ins, wrong passcodes and lock-outs,
+reads of the saga, each record a player changed (and each change refused),
 revoked and expired seats, and new host keys. **Show** narrows it to one
 player. The log records who and when, never a passcode or a code, and keeps
 a year. It is kept outside the saga file, so players never receive it.

@@ -17,7 +17,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any
 
-from .. import hosting, players
+from .. import hosting, players, references
 from ..commands import Command, Confirm, Form, Picked, Refuse, notes
 from ..form_spec import DialogField
 from ..markup import escape
@@ -50,6 +50,9 @@ EVENT_LABELS: dict[str, str] = {
     audit.DEVICE_REVOKED: "Seat revoked",
     audit.DEVICE_EXPIRED: "Seat expired (unused)",
     audit.HOST_KEY_ROTATED: "Host key rotated",
+    audit.RECORDS_READ: "Read the saga",
+    audit.RECORD_CHANGED: "Changed",
+    audit.CHANGE_REFUSED: "Change refused",
 }
 
 
@@ -154,12 +157,21 @@ class SeatsDesk:
             rows.append(
                 LogRow(
                     when(entry.when),
-                    EVENT_LABELS.get(entry.event, entry.event),
+                    self._event_text(entry.event, entry.record),
                     self.name_of(entry.player_id) if entry.player_id else "",
                     devices.get(entry.device_id, "") if entry.device_id else "",
                 )
             )
         return rows
+
+    def _event_text(self, event: str, record: str) -> str:
+        """What happened, and to which record: "Changed: Leandro"."""
+        label = EVENT_LABELS.get(event, event)
+        if not record:
+            return label
+        kind, _, record_id = record.partition(":")
+        found = references.find(self.saga, kind, record_id)
+        return f"{label}: {found.name if found is not None else record_id}"
 
     def log_players(self) -> list[tuple[str, str]]:
         """The players the Log can be narrowed to: (name, id)."""

@@ -100,6 +100,11 @@ def current() -> Viewer:
     return _in_use
 
 
+def in_use_saga() -> Saga | None:
+    """The saga `use` was last given."""
+    return _saga
+
+
 def storyguide_reads() -> bool:
     """Whether whoever is looking now reads everything."""
     return _in_use.is_storyguide

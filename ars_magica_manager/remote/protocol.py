@@ -23,6 +23,8 @@ import json
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 
+from .. import __version__
+
 #: Bumped when a message changes in a way an older app cannot read.
 PROTOCOL_VERSION = 1
 
@@ -39,10 +41,14 @@ class Refused(Exception):
 
 @dataclass(frozen=True)
 class Reply:
-    """What a handler sends back."""
+    """What a handler sends back. `then` are further replies sent straight
+    after it, unasked: the parts of something too large for one message
+    (a snapshot of the saga), so the player's app needn't ask for each and
+    run into the limit on messages a minute."""
 
     type: str
     body: Body = field(default_factory=dict)
+    then: tuple[Reply, ...] = ()
 
 
 @dataclass
@@ -62,6 +68,10 @@ class Session:
     #: to; used once.
     challenge: bytes = b""
     challenged: str = ""
+    #: Whether this sign-in's first read of the saga has been logged.
+    read_logged: bool = False
+    #: A change arriving in parts (changes.Upload), until its last part.
+    upload: object = None
 
 
 @dataclass(frozen=True)
@@ -199,14 +209,25 @@ def decode_reply(raw: bytes) -> Reply:
 
 
 def _hello(session: Session, body: Body) -> Reply:
-    return Reply("welcome", {"protocol": PROTOCOL_VERSION})
+    return Reply("welcome", {"protocol": PROTOCOL_VERSION, "app": __version__})
 
 
 HELLO = MessageSpec(
     name="hello",
-    fields={"protocol": Field(int, low=0, high=1000)},
+    fields={
+        "protocol": Field(int, low=0, high=1000),
+        # The player's app version; each side refuses another major one.
+        "app": Field(str, max_length=32, required=False),
+    },
     handler=_hello,
 )
+
+
+def major(version: str) -> int | None:
+    """The major number of an app version ("3.89.0" -> 3), or None for
+    text that isn't one."""
+    head = version.split(".", 1)[0]
+    return int(head) if head.isdigit() else None
 
 
 def _ping(session: Session, body: Body) -> Reply:

@@ -10,15 +10,31 @@ host may be hostile (see the threat model).
 from __future__ import annotations
 
 import asyncio
+import base64
+import binascii
+import hashlib
+import json
 import secrets
-from typing import Self, cast
+import zlib
+from typing import Any, Self, cast
 
 import aiohttp
 
-from .. import players
+from .. import __version__, players, storage
+from ..models import Saga
+from .changes import change_messages
 from .identity import normalise_pin
 from .proof import make_proof
-from .protocol import Body, Refused, Reply, decode_reply, encode_request
+from .protocol import (
+    PROTOCOL_VERSION,
+    Body,
+    Refused,
+    Reply,
+    decode_reply,
+    encode_request,
+    major,
+)
+from .records import MAX_PICTURE, MAX_SNAPSHOT, PART_BYTES, REVISION_LENGTH
 from .secure import MAX_FRAME, ChannelClosed, ChannelError, SecureChannel
 from .vault import DeviceVault
 
@@ -46,6 +62,48 @@ class SignInError(Exception):
 def _seconds(reply: Reply) -> int:
     value = reply.body.get("seconds", 0)
     return value if isinstance(value, int) and not isinstance(value, bool) else 0
+
+
+class UnreadableReply(ChannelError):
+    """The host sent something this app can't read: the conversation ends."""
+
+    def __init__(self) -> None:
+        super().__init__("The host sent something this app can't read.")
+
+
+class ChangeNotSaved(Exception):
+    """The host refused a change: not the Player's to make, or the record
+    is gone."""
+
+    def __init__(self) -> None:
+        super().__init__("The host didn't save that change.")
+
+
+class VersionMismatch(ChannelError):
+    """The host runs another major version of the app."""
+
+    def __init__(self, ours: str, theirs: str) -> None:
+        older = (
+            "this app" if (major(ours) or 0) < (major(theirs) or 0) else "the host's"
+        )
+        super().__init__(
+            f"The host runs Armarius {theirs} and this is {ours}: update {older} "
+            "to the same major version."
+        )
+        self.ours, self.theirs = ours, theirs
+
+
+def _unpacked(packed: bytes) -> bytes:
+    """A snapshot's JSON, decompressed, refused past MAX_SNAPSHOT however
+    small it was packed (a "zip bomb" ends here)."""
+    unpacker = zlib.decompressobj()
+    try:
+        text = unpacker.decompress(packed, MAX_SNAPSHOT)
+    except zlib.error:
+        raise UnreadableReply from None
+    if unpacker.unconsumed_tail or not unpacker.eof:
+        raise UnreadableReply
+    return text
 
 
 class _ClientWire:
@@ -167,6 +225,123 @@ class RemoteClient:
         if reply.type in ("denied", "locked"):
             raise SignInError(reply.type, _seconds(reply))
         raise SignInError("refused")
+
+    async def hello(self) -> str:
+        """Greet the host; its app version. Raises VersionMismatch when the
+        two apps' major versions differ, saying which should update."""
+        reply = await self.request(
+            "hello", {"protocol": PROTOCOL_VERSION, "app": __version__}
+        )
+        theirs = str(reply.body.get("app", ""))
+        if reply.type != "welcome":
+            raise ChannelError("The host did not answer as expected.")
+        ours_major, their_major = major(__version__), major(theirs)
+        if (
+            their_major is not None
+            and ours_major is not None
+            and their_major != ours_major
+        ):
+            raise VersionMismatch(__version__, theirs)
+        return theirs
+
+    async def _parts(self, head: Reply, cap: int) -> bytes:
+        """What follows `head`: its parts, joined, checked against the size
+        and SHA-256 it announced. A hostile host's lies end the
+        conversation, not the app."""
+        size, count, digest = (head.body.get(k) for k in ("size", "parts", "sha256"))
+        if (
+            not isinstance(size, int)
+            or isinstance(size, bool)
+            or not 0 <= size <= cap
+            or not isinstance(count, int)
+            or isinstance(count, bool)
+            or count != max(1, -(-size // PART_BYTES))
+            or not isinstance(digest, str)
+        ):
+            raise UnreadableReply
+        blob = bytearray()
+        for index in range(count):
+            part = await self._receive()
+            data = part.body.get("data")
+            if part.type != "part" or part.body.get("index") != index:
+                raise UnreadableReply
+            if not isinstance(data, str) or len(data) > 2 * PART_BYTES:
+                raise UnreadableReply
+            try:
+                blob += base64.b64decode(data, validate=True)
+            except binascii.Error:
+                raise UnreadableReply from None
+            if len(blob) > size:
+                raise UnreadableReply
+        if len(blob) != size or hashlib.sha256(blob).hexdigest() != digest:
+            raise UnreadableReply
+        return bytes(blob)
+
+    async def _receive(self) -> Reply:
+        try:
+            return decode_reply(await self._channel.receive())
+        except Refused:
+            raise UnreadableReply from None
+
+    async def read_saga(self, since: str = "") -> tuple[str, Saga | None]:
+        """The saga as this seat may read it: its revision, and the saga
+        itself, or None when it hasn't changed since `since`. Loaded as a
+        saga file is, read-only and in memory only. Raises UnreadableReply
+        if the host sends anything this app can't read."""
+        body: Body = {"since": since} if since else {}
+        head = await self.request("snapshot", body)
+        revision = head.body.get("revision")
+        if not isinstance(revision, str) or len(revision) != REVISION_LENGTH:
+            raise UnreadableReply
+        if head.type == "unchanged":
+            return revision, None
+        if head.type != "snapshot":
+            raise UnreadableReply
+        text = _unpacked(await self._parts(head, MAX_SNAPSHOT))
+        if hashlib.sha256(text).hexdigest() != revision:
+            raise UnreadableReply
+        try:
+            data = json.loads(text)
+            if not isinstance(data, dict):
+                raise ValueError("not a saga")
+            # The host's data, unchecked until here: a field of the wrong
+            # kind fails in the models' constructors as TypeError.
+            return revision, storage.saga_from_data(cast(dict[str, Any], data))
+        except ValueError, KeyError, TypeError, RecursionError:
+            raise UnreadableReply from None
+
+    async def picture(self, folder: str, name: str) -> bytes | None:
+        """A portrait or map the seat's saga names, or None if the host
+        hasn't it (or won't send it)."""
+        head = await self.request("picture", {"folder": folder, "name": name})
+        if head.type == "refused":
+            return None
+        if head.type != "picture":
+            raise UnreadableReply
+        return await self._parts(head, MAX_PICTURE)
+
+    async def send_change(
+        self,
+        kind: str,
+        key: str,
+        before: dict[str, Any] | None,
+        after: dict[str, Any] | None,
+    ) -> list[str]:
+        """Send one change: the record (`kind`, named `key`) as the seat
+        view had it and as the Player left it (None: added, or deleted).
+        Returns where it overlapped a change made meanwhile (the Player's
+        was kept). Raises ChangeNotSaved when the host refused it."""
+        messages = change_messages(kind, key, before, after)
+        reply = Reply("refused")
+        for index, (name, body) in enumerate(messages):
+            reply = await self.request(name, body)
+            last = index == len(messages) - 1
+            if reply.type == "refused" or (not last and reply.type != "more"):
+                raise ChangeNotSaved
+        if reply.type != "saved":
+            raise UnreadableReply
+        overlaps = str(reply.body.get("overlaps", ""))
+        return [o for o in overlaps.split("; ") if o]
 
     async def close(self) -> None:
         try:

@@ -20,7 +20,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import shiboken6
 from PySide6.QtCore import QByteArray, QEvent, Qt, QTimer
@@ -104,6 +104,11 @@ from . import (
 from .bestiary import CreaturePage
 from .character_sheet import CharacterSheet
 from .closing import confirm_close_while_hosting
+from .note import NoteStrip
+
+#: How often the window looks for another copy's save (ms), as the
+#: terminal does.
+SHARED_TICK_MS = 2000
 from .conflicts import FightPage, SiegePage
 from .covenant import CovenantPage
 from .familiar import FamiliarPage
@@ -351,6 +356,15 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.stack)
         self.title: TitleScreen | None = None
         self.grips = Grips(self)
+
+        #: What another copy of a hosted saga just saved, said at the foot.
+        self.note = NoteStrip(self)
+        #: Every few seconds, while the saga has players: pick up what
+        #: another copy (a browser player, a Remote seat) saved.
+        self.shared_timer = QTimer(self)
+        self.shared_timer.setInterval(SHARED_TICK_MS)
+        self.shared_timer.timeout.connect(self.shared_tick)
+        self._unreadable = False
 
         self._apply_theme()
         if len(self.saga_ids) == 1:
@@ -665,6 +679,63 @@ class MainWindow(QMainWindow):
         catalog.use_saga(saga)
         title_page.remember_saga(saga.id)
         self.go([Place(SHELF), Place(SAGA)])
+        if saga.players:
+            self.shared_timer.start()
+        else:
+            self.shared_timer.stop()
+
+    def shared_tick(self) -> None:
+        """Pick up another copy's save, as the terminal does: the page
+        drawn again with a note saying who changed what. Waits while a
+        form or question is open, so nothing being typed is touched."""
+        saga = self.saga
+        if saga is None or self._step_open():
+            return
+        try:
+            changed = storage.reload_into(saga)
+        except ValueError as problem:
+            if not self._unreadable:
+                self.note.say(
+                    f"Another copy's save couldn't be read ({problem}); yours is kept.",
+                    self.palette_,
+                )
+            self._unreadable = True
+            return
+        self._unreadable = False
+        if not changed:
+            return
+        who = saga.saved_by or "The storyguide"
+        place = self.trail[-1] if self.trail else None
+        open_record = self._shown_record(place)
+        if place is not None and place.id and open_record is None:
+            self.go(self._up_to(SAGA))
+            self.note.say(f"{who} deleted what you had open.", self.palette_)
+            return
+        self.redraw()
+        names = {record_id for _kind, record_id in changed}
+        if open_record is not None and open_record.id in names:
+            self.note.say(f"{who} changed {open_record.name}; reloaded.", self.palette_)
+        else:
+            self.note.say(f"Updated by {who}.", self.palette_)
+
+    def _shown_record(self, place: Place | None) -> Any:
+        """The record a place shows, if it shows one and it is still there."""
+        saga = self.saga
+        if saga is None or place is None or not place.id:
+            return None
+        for records in (
+            saga.characters,
+            saga.covenants,
+            saga.laboratories,
+            saga.familiars,
+            saga.tribunals,
+            saga.neighbours,
+            saga.creatures,
+        ):
+            found = next((r for r in records if r.id == place.id), None)
+            if found is not None:
+                return found
+        return None
 
     def _use_viewer(self) -> None:
         """Seat whoever reads the saga open (seat.py): the storyguide, the
@@ -946,15 +1017,22 @@ class MainWindow(QMainWindow):
         saga = self.saga
         if saga is None:
             return
-        shown = self._hosting
-        if shown is None or not shiboken6.isValid(shown) or shown.desk.saga is not saga:
-            shown = self._hosting = HostingWindow(
-                SeatsDesk(saga),
-                self.palette_,
-                self,
-                ask=lambda dialog: self.ask(dialog),
-                changed=self.redraw,
-            )
+        old = self._hosting
+        if old is not None and shiboken6.isValid(old):
+            if old.desk.saga is saga and old.p == self.palette_:
+                old.show()
+                old.raise_()
+                old.activateWindow()
+                return
+            # Drawn afresh in the theme on show now (the light or dark one).
+            old.close()
+        shown = self._hosting = HostingWindow(
+            SeatsDesk(saga),
+            self.palette_,
+            self,
+            ask=lambda dialog: self.ask(dialog),
+            changed=self.redraw,
+        )
         shown.show()
         shown.raise_()
         shown.activateWindow()
@@ -1701,6 +1779,14 @@ class MainWindow(QMainWindow):
             app.setStyleSheet(style_sheet(p, pictures.SERIF))
             gilding.gild_application(app, p)
             choices.ink_choices(app, p)
+        hosting_open = self._hosting
+        if (
+            hosting_open is not None
+            and shiboken6.isValid(hosting_open)
+            and hosting_open.isVisible()
+            and hosting_open.p != p
+        ):
+            self.open_hosting()  # drawn again in the new theme
         other = PALETTES[(self.palette_index + 1) % len(PALETTES)]
         theme = self.settings_entries[THEME]
         theme.setText(f"Switch to {other.name}")

@@ -162,6 +162,8 @@ class RemoteHost:
             if session.player_id:
                 self._live.setdefault(session.device_id, set()).add(ws)
             await channel.send(encode(reply))
+            for part in reply.then:
+                await channel.send(encode(part))
             if not acceptable:
                 strikes += 1
                 if strikes >= limits.max_strikes:

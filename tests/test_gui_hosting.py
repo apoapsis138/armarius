@@ -99,6 +99,23 @@ def test_saga_management_has_one_host_for_players_row_that_opens_the_window() ->
 
 
 @pytest.mark.usefixtures("app")
+def test_the_window_follows_the_theme() -> None:
+    """Opened again after the theme changed, it is drawn in the new one."""
+    desk = _desk()
+    storage.save_saga(desk.saga)
+    main = MainWindow(saga_ids=[desk.saga.id])
+    main.show()
+    main.open_saga(desk.saga.id)
+    main.open_hosting()
+    first = main._hosting
+    assert first is not None and first.p == main.palette_
+    main.palette_index = (main.palette_index + 1) % len(PALETTES)
+    main._apply_theme()
+    assert main._hosting is not first  # drawn again, as it was open
+    assert main._hosting is not None and main._hosting.p == main.palette_
+
+
+@pytest.mark.usefixtures("app")
 def test_the_window_shows_the_six_words_and_waits_for_requests() -> None:
     desk = _desk()
     window = _window(desk, Answers())

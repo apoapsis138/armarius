@@ -10,6 +10,7 @@ import aiohttp
 import pytest
 import pytest_asyncio
 
+from ars_magica_manager import __version__
 from ars_magica_manager.remote import identity as ident
 from ars_magica_manager.remote.client import RemoteClient
 from ars_magica_manager.remote.host import PATH, RemoteHost
@@ -56,7 +57,10 @@ async def test_a_player_says_hello_and_is_welcomed(start: Start) -> None:
     address = await start()
     async with await RemoteClient.connect(url(address), IDENTITY.pin) as client:
         reply = await client.request("hello", HELLO)
-    assert (reply.type, reply.body) == ("welcome", {"protocol": 1})
+    assert (reply.type, reply.body) == (
+        "welcome",
+        {"protocol": 1, "app": __version__},
+    )
 
 
 async def test_a_wrong_pin_is_refused(start: Start) -> None:

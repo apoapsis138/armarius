@@ -244,6 +244,7 @@ def test_the_audit_log_takes_events_and_ids_only(tmp_path: Path, clock: Clock) -
     assert set(json.loads((tmp_path / "audit.jsonl").read_text())) == {
         "when",
         "event",
+        "record",
         "player_id",
         "device_id",
     }

@@ -210,7 +210,8 @@ def link_target(saga: Saga, link: Link) -> Any | None:
                 if possession.id == link.target_id:
                     return possession
         return None
-    records = getattr(saga, link.kind, None)
+    # A place is a neighbour of the place kind, kept with the others.
+    records = getattr(saga, "neighbours" if link.kind == "places" else link.kind, None)
     if not isinstance(records, list):
         return None
     return next((r for r in records if getattr(r, "id", None) == link.target_id), None)

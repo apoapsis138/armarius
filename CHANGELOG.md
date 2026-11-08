@@ -123,6 +123,17 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.90.0 — 2026-11-08
+
+### Sodales
+
+- **Reading the saga from a Remote seat, without what's hidden**: a player connected over the internet reads the saga as they may see it. Everything the screens hide from a player is now taken out of what leaves your computer, not just hidden when drawn: records they don't know of, Secrets not revealed, a threat's stages still to come, Roll Tables, Diary lines about unknown records, and a hidden research target. Their copy stays in memory only, checked on arrival, and they learn of a change only when it is something they can see. Portraits and maps are sent only if their copy names them.
+- **Changing their own records from a Remote seat**: a player changes one record at a time, and the change is merged onto your full record, so nothing hidden from them is lost and Secrets they send are ignored. Where you both changed the same thing, the later save is kept and they are told. Changes they may not make are refused and logged; every saved change is logged by record.
+- **Your window shows the players' changes**: while the saga has players, the desktop picks up what other copies save every few seconds and says so at its foot ("Anna changed Leandro; reloaded."), waiting while you have a form open.
+- **Season plans are each player's own**: a player now changes only their own characters' season plans and lab projects, from a browser too.
+- **A player's export carries only what they may see**.
+- **Fixed**: the covenant History showed players Diary lines about records they don't know of; a Diary's count counted hidden lines; links to places showed as gone; the Host for Players window kept the colours it was first opened in after the theme changed.
+
 ## 3.89.0 — 2026-11-08
 
 ### Sodales

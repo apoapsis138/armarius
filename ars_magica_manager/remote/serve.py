@@ -25,6 +25,7 @@ from collections.abc import Callable
 from .. import players, storage
 from ..models import Player
 from .audit import AuditLog, audit_path
+from .changes import SeatChanges
 from .devices import DeviceBook, devices_path
 from .host import RemoteHost
 from .identity import KeychainStore, KeyStore, NoKeychainError, load_or_create
@@ -32,6 +33,7 @@ from .invites import InviteBook, book_path
 from .limits import Limits
 from .passcodes import RemotePasscodes, passcodes_path
 from .plan import CLOUDFLARE, DEFAULT_PORT, LISTEN_ADDRESS, TUNNELS, identity_name
+from .records import SeatSnapshots, picture_from_disk, seat_registry
 from .redemption import door_registry
 
 #: How often the listener looks for devices the window has revoked.
@@ -85,10 +87,12 @@ def build(
         lambda: identity.pin,
         passcodes,
     )
+    snapshots = SeatSnapshots(saga_id, log)
     host = RemoteHost(
         identity,
         registry,
         limits,
+        members=seat_registry(snapshots, picture_from_disk, SeatChanges(saga_id, log)),
         # Only the tunnel, on this computer, can reach the listener, so the
         # address it passes on is the player's own (threat model, section 4).
         trust_forwarded_address=True,

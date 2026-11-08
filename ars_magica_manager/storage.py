@@ -345,6 +345,13 @@ def load_saga(saga_id: str) -> Saga:
     return saga
 
 
+def saga_from_data(data: dict[str, Any]) -> Saga:
+    """A saga from its saved data, as a file is opened (migrations
+    included), without reading or remembering any file: a Remote seat's
+    copy, sent by the host."""
+    return _from_data(data)
+
+
 def _from_data(data: dict[str, Any]) -> Saga:
     saga = Saga.from_dict(data, lab_feature_names=catalog.lab_feature_names())
     for lab in saga.laboratories:

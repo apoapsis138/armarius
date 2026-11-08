@@ -59,6 +59,12 @@ The key a redeemed Invite becomes, kept on that Player's computer and
 revocable by the storyguide without touching any other Player's.
 _Avoid_: Session key, login
 
+**Seat view**:
+The saga as one reader may have it: everything that reader may see and
+nothing hidden from them, the copy a Remote seat holds and what a Player's
+export carries.
+_Avoid_: Filtered saga, player copy, snapshot (that is how it travels)
+
 ### The table
 
 **Session**:
