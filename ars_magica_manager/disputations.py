@@ -7,6 +7,7 @@ from __future__ import annotations
 import random
 from typing import Any
 
+from . import viewing
 from .commands import Command, Confirm, Form, Refuse
 from .form_spec import DialogField, pairs
 from .markup import escape
@@ -25,7 +26,7 @@ def _subject(character: Character) -> str:
 
 
 def fields(saga: Saga, character: Character) -> list[DialogField]:
-    others = [c for c in saga.characters if c.id != character.id]
+    others = [c for c in viewing.shown(saga.characters) if c.id != character.id]
     return [
         DialogField(
             "against",

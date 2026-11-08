@@ -22,7 +22,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from . import giving, tribunals, vis
+from . import giving, tribunals, viewing, vis
 from .commands import Command, Form, Refuse, SectionOps, notes
 from .form_spec import DialogField, pairs
 from .grids import Grid
@@ -74,7 +74,7 @@ def host_terms(saga: Saga, covenant: Covenant | None) -> Terms | None:
 
 def hosts(saga: Saga, character: Character) -> list[Covenant]:
     """The covenants he could stay at: every one but his own."""
-    return [c for c in saga.covenants if c.id != character.covenant_id]
+    return [c for c in viewing.shown(saga.covenants) if c.id != character.covenant_id]
 
 
 def host_of(saga: Saga, character: Character) -> Covenant | None:

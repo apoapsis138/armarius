@@ -19,7 +19,7 @@ import uuid
 from collections.abc import Callable
 from typing import Any
 
-from .. import catalog, seasons, staged_projects
+from .. import catalog, seasons, staged_projects, viewing
 from .. import lab_texts as lt
 from .. import spell_parameters as sp
 from .. import spells as spl
@@ -618,7 +618,7 @@ class LabPlanForm:
         """Who could teach spells: any other magus who knows some."""
         return [
             (escape(c.name), c.id)
-            for c in self.saga.characters
+            for c in viewing.shown(self.saga.characters)
             if c is not self.magus and c.type == "magus" and c.spells_known
         ]
 
@@ -626,7 +626,7 @@ class LabPlanForm:
         """Every spell another magus knows and this one doesn't."""
         known = {k.spell_id for k in self.magus.spells_known}
         found: dict[str, str] = {}
-        for teacher in self.saga.characters:
+        for teacher in viewing.shown(self.saga.characters):
             if teacher is self.magus:
                 continue
             for k in teacher.spells_known:
@@ -1162,7 +1162,7 @@ class LabPlanForm:
         """Who could assist: anyone else with The Gift and Magic Theory."""
         return [
             (escape(c.name), c.id)
-            for c in self.saga.characters
+            for c in viewing.shown(self.saga.characters)
             if c is not self.magus and ls.can_assist(c)
         ]
 
@@ -1459,7 +1459,7 @@ class LabPlanForm:
         """Who a Longevity Ritual can be for: the magus first, then everyone
         else in the saga."""
         others = sorted(
-            (c for c in self.saga.characters if c.id != self.magus.id),
+            (c for c in viewing.shown(self.saga.characters) if c.id != self.magus.id),
             key=lambda c: c.name.lower(),
         )
         return [(f"{escape(self.magus.name)} (own)", self.magus.id)] + [

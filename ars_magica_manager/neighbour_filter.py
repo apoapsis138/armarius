@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from . import neighbours, places
+from . import neighbours, places, viewing
 from .models import Neighbour, Saga, Tribunal
 from .rules import sites
 
@@ -38,7 +38,7 @@ def regions(saga: Saga) -> list[Neighbour]:
     that sits inside no other and holds something."""
     held = {
         outer.id
-        for record in saga.neighbours
+        for record in viewing.shown(saga.neighbours)
         for outer in places.inside_of(saga, record)
     }
     return [p for p in sites.all_places(saga) if not p.place_id and p.id in held]
@@ -52,7 +52,7 @@ def tribunals(saga: Saga) -> list[Tribunal]:
 
 def kinds(saga: Saga) -> list[neighbours.NeighbourKind]:
     """The kinds the saga has neighbours of, in New Neighbour's order."""
-    present = {neighbours.kind_of(n).key for n in saga.neighbours}
+    present = {neighbours.kind_of(n).key for n in viewing.shown(saga.neighbours)}
     return [k for k in neighbours.KINDS.values() if k.key in present]
 
 

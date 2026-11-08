@@ -19,7 +19,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from . import diaries, manors
+from . import diaries, manors, viewing
 from .commands import Command, Confirm, Form, Refuse, SectionOps, Then, notes
 from .form_spec import DialogField, pairs
 from .grids import Grid
@@ -212,11 +212,11 @@ def _spouse_options(saga: Saga) -> list[tuple[str, str]]:
     return [
         *(
             (f"{escape(c.name)} ({c.type})", CHARACTER_REF + c.id)
-            for c in saga.characters
+            for c in viewing.shown(saga.characters)
         ),
         *(
             (f"{escape(_lord_name(n))} ({escape(n.name)})", NEIGHBOUR_REF + n.id)
-            for n in saga.neighbours
+            for n in viewing.shown(saga.neighbours)
             if n.kind == LORD
         ),
         ("Someone typed in", ""),
@@ -224,7 +224,9 @@ def _spouse_options(saga: Saga) -> list[tuple[str, str]]:
 
 
 def _house_options(saga: Saga) -> list[tuple[str, str]]:
-    return [(escape(n.name), n.id) for n in saga.neighbours if n.kind == LORD]
+    return [
+        (escape(n.name), n.id) for n in viewing.shown(saga.neighbours) if n.kind == LORD
+    ]
 
 
 def _family_has(key: str) -> Any:

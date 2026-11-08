@@ -16,7 +16,7 @@ from collections.abc import Callable
 from typing import Any
 
 from .. import polemic as pl
-from .. import sourcebooks
+from .. import sourcebooks, viewing
 from ..commands import Command, Confirm, Form, Refuse, SectionOps
 from ..form_spec import DialogField, attr, pairs
 from ..grids import Grid
@@ -464,8 +464,9 @@ def text_cards(saga: Saga, tribunal: Tribunal, chosen: Chosen) -> list[LedgerCar
 
 
 def _magi_options(saga: Saga) -> list[tuple[str, str]]:
-    magi = [c for c in saga.characters if c.type == "magus"]
-    others = [c for c in saga.characters if c.type != "magus"]
+    known = viewing.shown(saga.characters)
+    magi = [c for c in known if c.type == "magus"]
+    others = [c for c in known if c.type != "magus"]
     return [(escape(c.name), c.id) for c in (*magi, *others)]
 
 
@@ -917,7 +918,7 @@ def _circulator_options(saga: Saga, text: PolemicText) -> list[tuple[str, str]]:
     Reputation he would roll."""
     author = pl.author(saga, text)
     people = [author] if author is not None else []
-    people += [c for c in saga.characters if c is not author]
+    people += [c for c in viewing.shown(saga.characters) if c is not author]
     found = []
     for person in people:
         reputation = rules.circulation_reputation(person)

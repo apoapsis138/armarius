@@ -13,7 +13,7 @@ from __future__ import annotations
 import random
 from typing import Any
 
-from .. import diaries
+from .. import diaries, viewing
 from ..arts import FORMS, TECHNIQUES
 from ..commands import Command, Form, Refuse, notes
 from ..form_spec import DialogField, pairs
@@ -38,7 +38,11 @@ def offers(saga: Saga, character: Character) -> bool:
 
 
 def _rivals(saga: Saga, magus: Character) -> list[Character]:
-    return [c for c in saga.characters if c.type == "magus" and c is not magus]
+    return [
+        c
+        for c in viewing.shown(saga.characters)
+        if c.type == "magus" and c is not magus
+    ]
 
 
 def _side_fields(prefix: str, who: str) -> list[DialogField]:

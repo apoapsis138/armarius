@@ -14,7 +14,7 @@ from collections.abc import Callable
 from dataclasses import replace
 from typing import Any
 
-from .. import catalog, storage
+from .. import catalog, storage, viewing
 from .. import enchanted_devices as ed
 from ..arts import FORMS, TECHNIQUES
 from ..commands import (
@@ -265,18 +265,27 @@ def bonus_form(
 # -- a device --
 
 
-def holder_options(saga: Saga) -> list[tuple[str, str]]:
-    """Every character, laboratory and covenant, as "kind:id" values."""
+def holder_options(saga: Saga, keep: str = "") -> list[tuple[str, str]]:
+    """Every character, laboratory and covenant the reader knows of, as
+    "kind:id" values (and `keep`, the holder a device already has)."""
+    kind, _, kept = keep.partition(":")
     return [
         *(
             (f"{escape(c.name)} (character)", f"character:{c.id}")
-            for c in saga.characters
+            for c in viewing.shown(
+                saga.characters, keep=kept if kind == "character" else None
+            )
         ),
         *(
             (f"{escape(lab.name)} (laboratory)", f"laboratory:{lab.id}")
             for lab in saga.laboratories
         ),
-        *((f"{escape(c.name)} (covenant)", f"covenant:{c.id}") for c in saga.covenants),
+        *(
+            (f"{escape(c.name)} (covenant)", f"covenant:{c.id}")
+            for c in viewing.shown(
+                saga.covenants, keep=kept if kind == "covenant" else None
+            )
+        ),
     ]
 
 
@@ -440,9 +449,10 @@ def _device_holder_fields(
     """Who holds the device and who made it (one of the saga's characters,
     or a typed name). `holder` is a new device's default holder."""
     base = device or EnchantedDevice(id="", name="")
-    maker_options = [(escape(c.name), c.id) for c in saga.characters] + [
-        ("Someone else (type the name)", OTHER_MAKER)
-    ]
+    maker_options = [
+        (escape(c.name), c.id)
+        for c in viewing.shown(saga.characters, keep=base.maker_id)
+    ] + [("Someone else (type the name)", OTHER_MAKER)]
     if device is None:
         maker_value: str | None = None
         holder_value = holder
@@ -457,7 +467,7 @@ def _device_holder_fields(
             "Holder",
             "select",
             holder_value,
-            options=holder_options(saga),
+            options=holder_options(saga, holder_value or ""),
             required=True,
             allow_blank=True,
             placeholder="(choose who holds it)",

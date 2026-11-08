@@ -789,7 +789,7 @@ def character_info_fields(saga: Saga, character: Character) -> list[DialogField]
             "Covenant",
             "select",
             character.covenant_id,
-            options=covenant_options(saga),
+            options=covenant_options(saga, keep=character.covenant_id),
             allow_blank=True,
             placeholder="(unassigned)",
         )

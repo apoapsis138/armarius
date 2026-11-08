@@ -197,77 +197,6 @@ _HELP_PAGES: dict[NodeKind, str] = {
 #: and say who has which record open.
 _SHARED_TICK = 2.0
 
-#: What only the storyguide may do, whatever a player owns:
-#: making records, the saga's calendar, reading files on the host's disk,
-#: writing out the whole saga, and moving vis or spells between characters.
-_STORYGUIDE_ACTIONS = frozenset(
-    {
-        "new",
-        "create_covenant",
-        "create_tribunal",
-        "create_neighbour",
-        "create_creature",
-        "roll_fair",
-        "court_roll",
-        "roll_table",
-        "battle_event",
-        "redeem_gratitude",
-        "buy_manor",
-        "assart",
-        "winter_roll",
-        "settle_inheritance",
-        "conflict_battle_event",
-        "battle_muster",
-        "next_blow",
-        "next_round",
-        "add_combatant",
-        "edit_combatant",
-        "remove_combatant",
-        "form_group",
-        "break_group",
-        "restart_fight",
-        "fight_options",
-        "group_morale",
-        "rally_group",
-        "next_siege_event",
-        "siege_actions",
-        "found_covenant",
-        "begin_story",
-        "delay_threat",
-        "grow_story",
-        "merge_doubles",
-        "reveal",
-        "conceal",
-        "mark_unknown",
-        "player_view",
-        "take_up_tale",
-        "take_up_story",
-        "create_character",
-        "create_laboratory",
-        "create_familiar",
-        "advance_season",
-        "set_date",
-        "import_data",
-        "give",
-        "give_silver",
-        "share_spell",
-        "update_record",
-        "export_saga",
-        "export_cult",
-        "export_pack",
-        "host_saga",
-        "stop_hosting",
-        # The Byzantine customs that lay a curse on a sheet.
-        "invoke_oath",
-        "mothers_curse",
-        # A hunt on a lord's or covenant's manor.
-        "hunt_on_manor",
-        "area_lore_on_manor",
-        # A lord's marriages: ending one.
-        "end_marriage",
-    }
-)
-
 #: The section each page lists a Find Spot's records in, by the page's
 #: Ref kind and the Spot's list.
 SPOT_SECTIONS: dict[tuple[str, str], str] = {
@@ -279,30 +208,6 @@ SPOT_SECTIONS: dict[tuple[str, str], str] = {
     ("characters", saga_index.DEVICES): "section-char-devices",
     ("characters", saga_index.SPELLS): "section-known-spells",
 }
-
-#: What anyone signed in may do anywhere: move around, read, and export
-#: (which only reads the saga).
-_LOOKING_ACTIONS = frozenset(
-    {
-        "filter",
-        "toggle_section",
-        "show_tab",
-        "help",
-        "step_out",
-        "quit",
-        "more",
-        "export_record",
-        "go_to",
-        "find",
-        # A calculator: it records nothing.
-        "plan_journey",
-        "craft_by_magic",
-        # A calculator too (HoH:S): casting in a lacuna.
-        "cast_in_lacuna",
-        # Wizard's War's tunnel (Hermetic Projects): a calculator too.
-        "open_tunnel",
-    }
-)
 
 #: The More commands whose handler isn't `action_<action>`.
 _MENU_HANDLERS: dict[str, str] = {
@@ -2063,9 +1968,9 @@ class WorkspaceBase(Screen[None]):
         and changes only what they may change (players.may_change)."""
         if self._is_storyguide():
             return True
-        if action in _STORYGUIDE_ACTIONS:
+        if not viewing.may_do(viewing.current(), action):
             return False
-        return action in _LOOKING_ACTIONS or self._may_change_here()
+        return viewing.is_looking(action) or self._may_change_here()
 
     def _may_change_here(self) -> bool:
         """Whether whoever is signed in may change the record on show."""

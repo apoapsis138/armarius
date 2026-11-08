@@ -16,7 +16,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
-from .. import catalog, places
+from .. import catalog, places, viewing
 from .. import laboratories as lab_rules
 from ..commands import Act, Command, Confirm, Form, Refuse, SectionOps, delete
 from ..form_spec import DialogField, attr, covenant_options, description_field, pairs
@@ -59,7 +59,7 @@ def identity_fields(saga: Saga, lab: Laboratory) -> list[DialogField]:
             "Covenant",
             "select",
             lab.covenant_id,
-            options=covenant_options(saga),
+            options=covenant_options(saga, keep=lab.covenant_id),
             allow_blank=True,
             placeholder="(unassigned)",
         ),
@@ -84,7 +84,11 @@ def identity_fields(saga: Saga, lab: Laboratory) -> list[DialogField]:
 def owner_options(saga: Saga, owner_id: str | None) -> list[tuple[str, str]]:
     """The magi, plus the current owner if they aren't one (any more): they
     stay the owner unless changed."""
-    options = [(escape(c.name), c.id) for c in saga.characters if c.type == "magus"]
+    options = [
+        (escape(c.name), c.id)
+        for c in viewing.shown(saga.characters, keep=owner_id)
+        if c.type == "magus"
+    ]
     owner = saga.character(owner_id)
     if owner is not None and owner.type != "magus":
         options.append((f"{escape(owner.name)} ({owner.type})", owner.id))

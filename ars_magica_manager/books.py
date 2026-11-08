@@ -13,7 +13,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-from . import book_kinds, book_value, casting_text, catalog, storage
+from . import book_kinds, book_value, casting_text, catalog, storage, viewing
 from . import enchanted_devices as ed
 from . import spells as spl
 from .arts import ART_LOOKUP
@@ -237,11 +237,18 @@ def parse_owner_value(value: str | None) -> tuple[str | None, str | None]:
     return kind, owner_id
 
 
-def owner_options(saga: Saga) -> list[tuple[str, str]]:
-    """(label, value) for every possible owner: each covenant, laboratory and
-    character of the saga, then nobody."""
+def owner_options(saga: Saga, keep: str = "") -> list[tuple[str, str]]:
+    """(label, value) for every possible owner the reader knows of: each
+    covenant, laboratory and character of the saga, then nobody. `keep` is
+    the owner value a book already has."""
+    kept_kind, kept_id = parse_owner_value(keep)
+
+    def keeping(kind: str) -> str | None:
+        return kept_id if kept_kind == kind else None
+
     options = [
-        (f"Covenant: {c.name}", owner_value("covenant", c.id)) for c in saga.covenants
+        (f"Covenant: {c.name}", owner_value("covenant", c.id))
+        for c in viewing.shown(saga.covenants, keep=keeping("covenant"))
     ]
     options += [
         (f"Laboratory: {lab.name}", owner_value("laboratory", lab.id))
@@ -249,7 +256,7 @@ def owner_options(saga: Saga) -> list[tuple[str, str]]:
     ]
     options += [
         (f"Character: {c.name}", owner_value("character", c.id))
-        for c in saga.characters
+        for c in viewing.shown(saga.characters, keep=keeping("character"))
     ]
     options.append(("(none - unassigned)", ""))
     return options

@@ -266,3 +266,28 @@ def test_the_terminal_marks_a_records_name_known_or_hidden():
     assert marked_title(home) == "Home"
     _as_table(saga)
     assert marked_title(lord) == "Lord Odo"
+
+
+def test_the_barred_and_looking_actions_name_real_actions_and_do_not_overlap():
+    from textual.app import App
+
+    from ars_magica_manager.forms.menu import _COMMANDS
+    from ars_magica_manager.tui.screens.workspace.screen import WorkspaceScreen
+
+    def real(name: str) -> bool:
+        return (
+            name in _COMMANDS
+            or hasattr(WorkspaceScreen, f"action_{name}")
+            or hasattr(App, f"action_{name}")
+            or any(
+                b.action == name
+                for b in WorkspaceScreen.BINDINGS
+                if hasattr(b, "action")
+            )
+        )
+
+    named = viewing.PLAYER_BARRED_ACTIONS | viewing.LOOKING_ACTIONS
+    gone = sorted(n for n in named if not real(n))
+    assert not gone, f"no such action: {gone}"
+    both = viewing.PLAYER_BARRED_ACTIONS & viewing.LOOKING_ACTIONS
+    assert not both, f"barred and looking: {sorted(both)}"

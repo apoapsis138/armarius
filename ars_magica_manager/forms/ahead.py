@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from .. import ahead, attention, world_turns
+from .. import ahead, attention, viewing, world_turns
 from ..commands import Command, Confirm, Form, Refuse, SectionOps
 from ..form_spec import DialogField, pairs
 from ..markup import escape
@@ -90,7 +90,10 @@ def calendar_fields(saga: Saga, entry: CalendarEntry | None) -> list[DialogField
             "For",
             "select",
             e.covenant_id,
-            options=[(c.name, c.id) for c in saga.covenants],
+            options=[
+                (c.name, c.id)
+                for c in viewing.shown(saga.covenants, keep=e.covenant_id)
+            ],
             allow_blank=True,
             placeholder="(the whole saga)",
             hint="A covenant's own entries show on its Seasons too.",

@@ -161,6 +161,104 @@ STORYGUIDE_ONLY_ACTIONS: frozenset[str] = frozenset(
 )
 
 
+#: What only the storyguide may do, whatever a player owns: making records,
+#: the saga's calendar, reading files on the host's disk, writing out the
+#: whole saga, and moving vis or spells between characters. A signed-in
+#: player is refused these; Player view leaves off only
+#: STORYGUIDE_ONLY_ACTIONS, which hide what the players must not read.
+PLAYER_BARRED_ACTIONS: frozenset[str] = frozenset(
+    {
+        "new",
+        "create_covenant",
+        "create_tribunal",
+        "create_neighbour",
+        "create_creature",
+        "roll_fair",
+        "court_roll",
+        "roll_table",
+        "battle_event",
+        "redeem_gratitude",
+        "buy_manor",
+        "assart",
+        "winter_roll",
+        "settle_inheritance",
+        "conflict_battle_event",
+        "battle_muster",
+        "next_blow",
+        "next_round",
+        "add_combatant",
+        "edit_combatant",
+        "remove_combatant",
+        "form_group",
+        "break_group",
+        "restart_fight",
+        "fight_options",
+        "group_morale",
+        "rally_group",
+        "next_siege_event",
+        "siege_actions",
+        "found_covenant",
+        "begin_story",
+        "delay_threat",
+        "grow_story",
+        "merge_doubles",
+        "reveal",
+        "conceal",
+        "mark_unknown",
+        "player_view",
+        "take_up_tale",
+        "take_up_story",
+        "create_character",
+        "create_laboratory",
+        "create_familiar",
+        "advance_season",
+        "set_date",
+        "import_data",
+        "give",
+        "give_silver",
+        "share_spell",
+        "update_record",
+        "export_saga",
+        "export_cult",
+        "export_pack",
+        "host_saga",
+        "stop_hosting",
+        # The Byzantine customs that lay a curse on a sheet.
+        "invoke_oath",
+        "mothers_curse",
+        # A hunt on a lord's or covenant's manor.
+        "hunt_on_manor",
+        "area_lore_on_manor",
+        # A lord's marriages: ending one.
+        "end_marriage",
+    }
+)
+
+#: What anyone signed in may do anywhere: move around, read, and export
+#: (which only reads the saga).
+LOOKING_ACTIONS: frozenset[str] = frozenset(
+    {
+        "filter",
+        "toggle_section",
+        "show_tab",
+        "help",
+        "step_out",
+        "quit",
+        "more",
+        "export_record",
+        "go_to",
+        "find",
+        # A calculator: it records nothing.
+        "plan_journey",
+        "craft_by_magic",
+        # A calculator too (HoH:S): casting in a lacuna.
+        "cast_in_lacuna",
+        # Wizard's War's tunnel (Hermetic Projects): a calculator too.
+        "open_tunnel",
+    }
+)
+
+
 def may_read(viewer: Viewer, record: Any = None, part: str = "") -> bool:
     """Whether `viewer` may read `record` (None: something of the whole
     saga) and, on its page, the part `part` (a section, tab or chapter id;
@@ -174,8 +272,21 @@ def may_read(viewer: Viewer, record: Any = None, part: str = "") -> bool:
 
 
 def may_do(viewer: Viewer, action: str) -> bool:
-    """Whether `viewer`'s copy offers `action` at all."""
-    return viewer.is_storyguide or action not in STORYGUIDE_ONLY_ACTIONS
+    """Whether `viewer`'s copy offers `action` at all: the storyguide
+    anything; the table (Player view) all but STORYGUIDE_ONLY_ACTIONS; a
+    player signed in also not PLAYER_BARRED_ACTIONS. Whether a player may
+    change the record on show is players.may_change."""
+    if viewer.is_storyguide:
+        return True
+    if action in STORYGUIDE_ONLY_ACTIONS:
+        return False
+    return viewer.kind != PLAYER or action not in PLAYER_BARRED_ACTIONS
+
+
+def is_looking(action: str) -> bool:
+    """Whether `action` only moves around or reads, so anyone signed in may
+    run it on any record."""
+    return action in LOOKING_ACTIONS
 
 
 def reads(record: Any = None, part: str = "") -> bool:
@@ -219,13 +330,19 @@ def is_known(record: Any) -> bool:
     return not can_be_unknown(record) or bool(getattr(record, "known", True))
 
 
-def shown[R](records: Iterable[R], viewer: Viewer | None = None) -> list[R]:
+def shown[R](
+    records: Iterable[R], viewer: Viewer | None = None, *, keep: str | None = None
+) -> list[R]:
     """The records of `records` the viewer (by default whoever is
-    looking) may read, in order."""
+    looking) may read, in order. `keep` is the id of a record to list
+    anyway: the one a form already holds, so opening it never loses its
+    value."""
     looking = viewer or _in_use
     if looking.is_storyguide:
         return list(records)
-    return [r for r in records if is_known(r)]
+    return [
+        r for r in records if is_known(r) or (keep and getattr(r, "id", None) == keep)
+    ]
 
 
 def unknown_names(saga: Saga) -> set[str]:

@@ -123,6 +123,12 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.85.8 — 2026-11-07
+
+### Fundamenta
+
+- **One policy for who may do what**: the lists of actions a signed-in player may not do, and of those anyone may do, now live with the rest of the reading rules instead of inside the terminal. The pickers in forms (owners, holders, covenants, spouses, rivals, hosts, authors and kinds of neighbour) no longer name people, covenants or lords the players don't know of; an edit form still shows the value it already holds.
+
 ## 3.85.7 — 2026-11-07
 
 ### Fundamenta

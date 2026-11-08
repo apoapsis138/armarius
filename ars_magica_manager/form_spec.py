@@ -15,6 +15,7 @@ from dataclasses import dataclass
 from dataclasses import field as dataclass_field
 from typing import Any
 
+from . import viewing
 from .markup import escape
 from .models import Saga
 
@@ -221,9 +222,10 @@ def pairs(values: Iterable[str]) -> list[tuple[str, str]]:
     return [(value, value) for value in values]
 
 
-def covenant_options(saga: Saga) -> list[tuple[str, str]]:
-    """Select options for choosing one of the saga's covenants."""
-    return [(escape(c.name), c.id) for c in saga.covenants]
+def covenant_options(saga: Saga, keep: str | None = None) -> list[tuple[str, str]]:
+    """Select options for choosing one of the saga's covenants that the
+    reader knows of (and `keep`, the one a form already holds)."""
+    return [(escape(c.name), c.id) for c in viewing.shown(saga.covenants, keep=keep)]
 
 
 def description_field(value: str) -> DialogField:

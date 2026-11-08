@@ -611,7 +611,7 @@ def _book_keeper_fields(
             "Owner",
             "select",
             owner,
-            options=bk.owner_options(saga),
+            options=bk.owner_options(saga, keep=owner),
             hint="The books bound in its codex move with it.",
         ),
         DialogField(
