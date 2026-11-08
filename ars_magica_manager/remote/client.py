@@ -10,12 +10,18 @@ host may be hostile (see the threat model).
 from __future__ import annotations
 
 import asyncio
+import secrets
 from typing import Self, cast
 
 import aiohttp
 
 from .protocol import Body, Refused, Reply, decode_reply, encode_request
 from .secure import MAX_FRAME, ChannelClosed, ChannelError, SecureChannel
+
+
+def new_device_secret() -> str:
+    """A fresh 128-bit secret for one request, as 32 hex digits."""
+    return secrets.token_hex(16)
 
 
 class _ClientWire:
@@ -82,6 +88,18 @@ class RemoteClient:
             raise ChannelError(
                 "The host sent something that was not understood."
             ) from None
+
+    async def redeem(self, code: str, device: str, secret: str) -> Reply:
+        """Ask for a Remote seat with an Invite's code. `secret` is made
+        by this app for the request (`new_device_secret`) and kept to ask
+        how it went. Sent only inside the private session."""
+        return await self.request(
+            "redeem", {"code": code, "device": device, "secret": secret}
+        )
+
+    async def request_status(self, secret: str) -> Reply:
+        """How the request made with `secret` stands."""
+        return await self.request("request_status", {"secret": secret})
 
     async def close(self) -> None:
         try:

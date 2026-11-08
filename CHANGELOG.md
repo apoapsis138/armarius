@@ -123,6 +123,14 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.88.0 — 2026-11-08
+
+### Sodales
+
+- **Invites for players joining from the internet, built but not yet on a screen**: the storyguide can make a one-time invite for one player, good for a day and usable once. The host keeps only a scrambled copy, so a copied file gives nothing away. The invite is one line of plain text that is safe to paste into a chat, because chat apps cannot turn it into a link and fetch it. When a player uses it, the storyguide must approve the request before anything opens, after checking that three words on the storyguide's screen match the three on the player's.
+- **Checking you have the right host**: a host's key fingerprint can now be shown as six short words, to read out on the voice call the group is already using, so an invite changed on its way is noticed. The word list is the 2,048 words of BIP-39's English list, used under its MIT licence and credited in the notices.
+- **Nothing secret in the web address**: the code a player redeems is sent only inside the private connection, so the tunnel's logs never see it. Wrong, used and expired codes all get the same answer.
+
 ## 3.87.0 — 2026-11-08
 
 ### Sodales

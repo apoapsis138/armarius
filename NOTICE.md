@@ -161,6 +161,12 @@ Font License, version 1.1, with each font's licence beside it: EB Garamond,
 Bonislawsky DBA Astigmatic (AOETI), Reserved Font Name "Uncial Antiqua";
 Manufacturing Consent, © 2019 The Manufacturing Consent Project Authors.
 
+**The word list** in `ars_magica_manager/assets/words/english.txt` is the
+English list of [BIP-39](https://github.com/bitcoin/bips/blob/master/bip-0039/english.txt)
+(2,048 common words), under the MIT licence
+(`assets/words/LICENSE.txt`). The app uses it to show a host's key
+fingerprint as words that can be read aloud.
+
 ## Trademarks
 
 Ars Magica Open License Logo ©2024 Trident, Inc. The Ars Magica Open
