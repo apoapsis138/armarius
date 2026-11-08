@@ -34,7 +34,7 @@ from ..rules import living as living_rules
 from ..rules import warping as warping_rules
 from ..rules import xp as xp_rules
 from ..rules.realms import home_aura
-from .plans import _cite, _gain_line, book_text, plan_subject, spell_names, work_text
+from .plans import _cite, _gain_line, effect_lines, plan_subject, spell_names
 
 
 def _add_xp(character: Character, subject: str, amount: int) -> None:
@@ -75,11 +75,7 @@ def diary_entry(saga: Saga, character: Character, worked: rules.Outcome) -> Diar
         name += " (default)"
     lines = [_gain_line(g, names) for g in worked.gains]
     lines += worked.notes
-    if worked.lab_work is not None:
-        lines.append(work_text(worked.lab_work, plan) + ".")
-    book = worked.effect_of(rules.BookEffect)
-    if book is not None:
-        lines.append(book_text(book.work, plan) + ".")
+    lines += [f"{line}." for line in effect_lines(worked)]
     if plan.days_away:
         lines.append(f"{plan.days_away} days away from the laboratory.")
     if plan.months_lost and activity and activity.distractable:

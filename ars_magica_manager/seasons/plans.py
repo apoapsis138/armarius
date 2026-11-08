@@ -8,6 +8,7 @@ import re
 from collections.abc import Callable
 from dataclasses import replace
 from functools import partial
+from typing import Any
 
 from .. import catalog
 from .. import spells as spl
@@ -624,8 +625,7 @@ def _plan_text(
     names = spell_names(saga, character)
     lines += [f"  {escape(_gain_line(g, names))}" for g in worked.gains]
     lines += [f"  {escape(n)}" for n in worked.notes]
-    if worked.lab_work is not None:
-        lines.append(f"  {escape(work_text(worked.lab_work, plan))}")
+    lines += [f"  {escape(t)}" for t in effect_lines(worked, (rules.LabEffect,))]
     if plan.lab_id:
         lab = saga.laboratory(plan.lab_id)
         where = escape(lab.name) if lab else "the laboratory"
@@ -664,13 +664,9 @@ def live_text(saga: Saga, character: Character, plan: SeasonPlan) -> str:
     if worked.problems:
         return problem(escape(worked.problems[0]))
     names = spell_names(saga, character)
-    lines = [escape(_gain_line(g, names)) for g in worked.gains]
+    lines = [escape(line) for line in effect_lines(worked)]
+    lines += [escape(_gain_line(g, names)) for g in worked.gains]
     lines += [escape(n) for n in worked.notes]
-    if worked.lab_work is not None:
-        lines.insert(0, escape(work_text(worked.lab_work, plan)))
-    book = worked.effect_of(rules.BookEffect)
-    if book is not None:
-        lines.insert(0, escape(book_text(book.work, plan)))
     if worked.pending_roll:
         lines.append("[dim]The die is rolled when the season is applied.[/]")
     note = working_seasons_note(character, plan)
@@ -864,6 +860,31 @@ _WORK_TEXT: dict[str, Callable[[lab_seasons.LabWork, SeasonPlan], str]] = {
         f"{work.level} levels of spells taught this season"
     ),
 }
+
+
+#: How each kind of effect reads, in plain text (Strategy, as a table next to
+#: advance.EFFECT_APPLIERS). A kind not listed has nothing to say.
+EFFECT_TEXT: dict[type, Callable[[Any, SeasonPlan], str]] = {
+    rules.LabEffect: lambda effect, plan: work_text(effect.work, plan),
+    rules.BookEffect: lambda effect, plan: book_text(effect.work, plan),
+}
+
+
+def effect_lines(
+    worked: rules.Outcome, kinds: tuple[type, ...] = rules.EFFECT_ORDER
+) -> list[str]:
+    """What the season's effects of these `kinds` say, one plain line each, in
+    rules.EFFECT_ORDER (the preview, the Diary and the season record read
+    them here)."""
+    lines: list[str] = []
+    for kind in kinds:
+        effect = worked.effect_of(kind)
+        text = EFFECT_TEXT.get(kind)
+        if effect is None or text is None:
+            continue
+        if line := text(effect, worked.plan):
+            lines.append(line)
+    return lines
 
 
 def livelihood_text(character: Character, year: int | None = None) -> str:

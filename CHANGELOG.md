@@ -123,6 +123,12 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.85.10 — 2026-11-07
+
+### Fundamenta
+
+- **A season's effects describe themselves**: what lab work and book work say in the plan preview, the Diary entry and the season record now comes from one table beside the one that applies them, instead of being rebuilt in each place. Nothing changes on screen.
+
 ## 3.85.9 — 2026-11-07
 
 ### Fundamenta

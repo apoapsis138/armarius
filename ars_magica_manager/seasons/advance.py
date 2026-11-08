@@ -68,11 +68,11 @@ from .lab_apply import (
 from .plans import (
     _cite,
     due_plans,
+    effect_lines,
     grog_year_gains,
     plan_subject,
     spell_names,
     unplanned,
-    work_text,
 )
 from .repeat import reforecast
 
@@ -669,8 +669,8 @@ def make_record(saga: Saga, worked: Sequence[rules.Outcome]) -> SeasonRecord:
                 f"{rules.subject_label(g.subject, names)} +{g.result.xp} xp"
                 for g in outcome.gains
             )
-            if outcome.lab_work is not None:
-                result = f"{work_text(outcome.lab_work, outcome.plan)}; {result}"
+            if work := effect_lines(outcome, (rules.LabEffect,)):
+                result = f"{work[0]}; {result}"
         else:
             result = f"not carried out: {outcome.problems[0]}"
         lines.append(
