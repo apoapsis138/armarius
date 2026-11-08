@@ -62,8 +62,8 @@ from .polemic import ArgumentsChapter
 from .themes import Palette
 from .widgets import (
     Codex,
+    changing_button,
     display_name,
-    edit_button,
     scrolling_page,
     serif,
     table_view,
@@ -322,7 +322,7 @@ class TribunalPage(QWidget):
         ]
         row.addWidget(fact_grid(facts, p, 2))
         # The record's own Edit, as on a character's or covenant's page.
-        self.edit_tribunal = edit_button("Edit", p, self._edit)
+        self.edit_tribunal = changing_button("Edit", p, self._edit)
         self.edit_tribunal.setToolTip("Edit Tribunal")
         row.addWidget(self.edit_tribunal, 0, Qt.AlignmentFlag.AlignTop)
         return box

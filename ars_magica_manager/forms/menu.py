@@ -43,6 +43,7 @@ from .. import (
     places,
     ruins,
     seasons,
+    seat,
     selling,
     session_end,
     storage,
@@ -52,6 +53,7 @@ from .. import (
     traditions,
     transfer,
     tribunals,
+    viewing,
     world,
 )
 from .. import baraka as baraka_forms
@@ -367,8 +369,11 @@ class Page:
         return self.section
 
     def player_may(self, action: str) -> bool:
-        # The desktop is the storyguide's own copy.
-        return True
+        # The storyguide's own window anything; a player seated here
+        # (seat.py) what they may do to the record on show.
+        return seat.may_act(
+            self.saga, viewing.current().player, action, self.record_to_delete()
+        )
 
     def on_record(self) -> bool:
         return True
@@ -881,7 +886,12 @@ def placed(page: Page, spot: str) -> list[MenuItem]:
         for action, places in PLACES.items()
         if (page.kind, spot) in places
         and (
-            _PLACED_CHECKS[action](page)
+            # A check of its own still answers to who sits here.
+            (
+                viewing.offers(action)
+                and page.player_may(action)
+                and _PLACED_CHECKS[action](page)
+            )
             if action in _PLACED_CHECKS
             else _offered_at(page, spot, action, offered)
         )

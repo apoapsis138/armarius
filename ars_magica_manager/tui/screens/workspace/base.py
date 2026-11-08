@@ -47,6 +47,7 @@ from .... import (
     presence,
     saga_index,
     seasons,
+    seat,
     section_verbs,
     sourcebooks,
     storage,
@@ -557,10 +558,12 @@ class WorkspaceBase(Screen[None]):
         self._use_viewer()
         self._update_saga_clock()
         self._rebuild_tree()
-        if not self._is_storyguide():
-            storage.guard = self._guard_save
-        player = self._signed_in()
-        storage.saved_by = player.name if player is not None else ""
+        seat.sign_in(
+            self.saga,
+            self._signed_in(),
+            player_view=self._player_view,
+            on_refused=self._told_refused,
+        )
         if self.saga.players:
             # Others may have the saga open (a hosted saga).
             self._session = uuid.uuid4().hex
@@ -575,8 +578,7 @@ class WorkspaceBase(Screen[None]):
     def on_unmount(self) -> None:
         # Back to the saga list: whoever signed in to this saga is signed out.
         cast("ArsMagicaManagerApp", self.app).player = None
-        storage.guard = None
-        storage.saved_by = ""
+        seat.sign_out()
         if self._session is not None:
             presence.leave(self._session)
 
@@ -693,19 +695,13 @@ class WorkspaceBase(Screen[None]):
         listed, record = records.get(self.selected_kind, ([], None))
         return record is None or any(r is record for r in listed)
 
-    def _guard_save(
-        self, before: dict[str, Any], after: dict[str, Any]
-    ) -> tuple[dict[str, Any], list[str]]:
-        """The last check before a signed-in player's save:
-        what they may not change isn't saved, and they're told."""
-        kept, refused = pl.guard_changes(self._signed_in(), before, after)
-        if refused:
-            self.notify(
-                "Not saved: only the storyguide can change "
-                + escape(", ".join(refused)),
-                severity="warning",
-            )
-        return kept, refused
+    def _told_refused(self, refused: list[str]) -> None:
+        """Tell a signed-in player what their save took back (seat.sign_in's
+        last check): what they may not change isn't saved."""
+        self.notify(
+            "Not saved: only the storyguide can change " + escape(", ".join(refused)),
+            severity="warning",
+        )
 
     def _update_saga_clock(self) -> None:
         """Shows the saga's current date in the Header, on every screen of
@@ -1984,13 +1980,17 @@ class WorkspaceBase(Screen[None]):
         and changes only what they may change (players.may_change)."""
         if self._is_storyguide():
             return True
-        if not viewing.may_do(viewing.current(), action):
-            return False
-        return viewing.is_looking(action) or self._may_change_here()
+        return seat.may_act(
+            self.saga, self._signed_in(), action, self._record_on_show()
+        )
 
     def _may_change_here(self) -> bool:
         """Whether whoever is signed in may change the record on show."""
-        record = {
+        return pl.may_change(self.saga, self._signed_in(), self._record_on_show())
+
+    def _record_on_show(self) -> Any:
+        """The record the open page is of (None: the saga's own page)."""
+        return {
             NodeKind.CHARACTER: self.selected_character,
             NodeKind.FAMILIAR: self.selected_familiar,
             NodeKind.LABORATORY: self.selected_laboratory,
@@ -1999,7 +1999,6 @@ class WorkspaceBase(Screen[None]):
             NodeKind.NEIGHBOUR: self.selected_neighbour,
             NodeKind.CREATURE: self.selected_creature,
         }.get(self.selected_kind)
-        return pl.may_change(self.saga, self._signed_in(), record)
 
     def _use_viewer(self) -> None:
         """Tell the core who is reading this copy (viewing.use)."""

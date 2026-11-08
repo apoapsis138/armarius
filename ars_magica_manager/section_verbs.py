@@ -15,6 +15,7 @@ only a single Edit form is not in the table.
 from __future__ import annotations
 
 from collections.abc import Callable, Collection
+from dataclasses import replace
 from typing import Any
 
 from . import (
@@ -24,6 +25,7 @@ from . import (
     hermetic_projects,
     manors,
     mobile_covenants,
+    seat,
     sourcebooks,
     town_charter,
     traditions,
@@ -386,9 +388,20 @@ BUILDERS: dict[type, OpsBuilder] = {
 def ops_of(saga: Saga, record: object) -> dict[str, SectionOps]:
     """Every section of `record`'s sheet that has Add, Edit and Delete, by
     the section's id (empty for a kind of record the table does not hold).
-    A sheet that looks up many sections builds this once."""
+    A sheet that looks up many sections builds this once. For a record
+    whoever sits in this copy may not change (seat.may_change) every
+    section keeps its rows but has no verbs: a player's page of another's
+    character has no Add, Edit or Delete."""
     build = BUILDERS.get(type(record))
-    return build(saga, record) if build is not None else {}
+    if build is None:
+        return {}
+    table = build(saga, record)
+    if seat.may_change(saga, record):
+        return table
+    return {
+        section: replace(ops, add=None, edit=None, remove=None)
+        for section, ops in table.items()
+    }
 
 
 def section_ops(saga: Saga, record: object, section: str) -> SectionOps | None:

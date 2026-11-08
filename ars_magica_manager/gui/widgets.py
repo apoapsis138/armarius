@@ -61,7 +61,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import artwork, viewing
+from .. import artwork, seat, viewing
 from ..arts import ART_ABBREVIATIONS, ARTS, FORMS, TECHNIQUES
 from ..tables import Table
 from ..tribunal_packages.rhine import gild_tree
@@ -122,6 +122,17 @@ def edit_button(
     button.setObjectName("edit")
     button.setCursor(Qt.CursorShape.PointingHandCursor)
     button.clicked.connect(lambda _checked=False: on_click())
+    return button
+
+
+def changing_button(
+    words: str, p: Palette, on_click: Callable[[], None], concept: str = "edit"
+) -> QPushButton:
+    """An edit_button that changes the record its page is of: not shown
+    where whoever sits here may not change that record (seat.read_only)."""
+    button = edit_button(words, p, on_click, concept)
+    if seat.read_only():
+        button.hide()
     return button
 
 

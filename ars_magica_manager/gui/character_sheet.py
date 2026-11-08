@@ -58,9 +58,11 @@ from .. import (
     portraits,
     saga_index,
     seasons,
+    seat,
     section_verbs,
     tradition_text,
     traditions,
+    viewing,
     vis,
     world,
 )
@@ -166,6 +168,7 @@ from .widgets import (
     TallRows,
     XpBarDelegate,
     arts_heat_grid,
+    changing_button,
     chapter_title,
     chip,
     choose_key,
@@ -370,6 +373,8 @@ def section(
     the title, and the buttons then stay level with the title's words."""
     box = Section()
     column = box.column
+    if seat.read_only():
+        edits, buttons = None, ()
     controls = [
         edit_button(words, p, on_click) for words, on_click in (edits or {}).items()
     ] + list(buttons)
@@ -878,7 +883,7 @@ class CharacterSheet(QWidget):
         self.sanctum_button = self._sanctum_button()
         if self.sanctum_button is not None:
             row.addWidget(self.sanctum_button, 0, Qt.AlignmentFlag.AlignTop)
-        self.info_edit = edit_button(
+        self.info_edit = changing_button(
             "Edit",
             p,
             lambda: self.run(cf.character_info_form(self.saga, c)),
@@ -894,6 +899,8 @@ class CharacterSheet(QWidget):
         if c.type != "magus" or open_sanctum is None:
             return None
         lab = labs_sheet.sanctum(self.saga, c)
+        if lab is None and not viewing.offers("create_laboratory"):
+            return None
         button = edit_button(
             "Sanctum" if lab is not None else "New Sanctum",
             self.p,
@@ -917,7 +924,7 @@ class CharacterSheet(QWidget):
         row.addWidget(
             characteristic_cards(self.character.characteristics, self.p, captions), 1
         )
-        self.characteristics_edit = edit_button(
+        self.characteristics_edit = changing_button(
             "Edit",
             self.p,
             lambda: self.run(cf.characteristics_form(self.saga, self.character)),

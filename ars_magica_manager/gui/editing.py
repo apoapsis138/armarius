@@ -22,7 +22,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import giving
+from .. import giving, seat, viewing
 from ..commands import Act, Command, Go, SectionOps
 from ..models import Saga
 from ..references import Ref
@@ -60,7 +60,11 @@ def give_verb(
 
     def can(row: int) -> bool:
         found = gift(row)
-        return found is not None and giving.blocked(saga, *found) is None
+        return (
+            viewing.offers("give")
+            and found is not None
+            and giving.blocked(saga, *found) is None
+        )
 
     return ("Give", "give", lambda row: giving.give_gift(saga, gift(row)), can)
 
@@ -101,6 +105,8 @@ def verb_buttons(
     one whose row isn't chosen yet is greyed out."""
     add, edit, remove = nouns
     buttons: list[QPushButton] = []
+    if seat.read_only():
+        return buttons
     if ops.add is not None:
         start = ops.add
         buttons.append(edit_button(add, p, lambda: run(start()), "add"))

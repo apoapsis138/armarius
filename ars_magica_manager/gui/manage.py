@@ -23,7 +23,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import atlas, viewing, world
+from .. import atlas, seat, viewing, world
 from ..actions import NodeKind
 from ..commands import Command
 from ..forms import menu as menu_forms
@@ -125,6 +125,9 @@ class RecordControls:
     def mode(self, p: Palette) -> QWidget | None:
         record = self.page.creation_record()
         if record is None or getattr(record, "detail", FULL) != FULL:
+            return None
+        if seat.read_only():
+            # In Creation / In Play changes the record.
             return None
         return ModeToggle(record, p, self.toggle_mode, self.worksheet)
 

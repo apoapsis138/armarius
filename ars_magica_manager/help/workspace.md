@@ -1118,6 +1118,10 @@ Choose who plays a character with **Played by** in the character's Biographical 
 
 Only the storyguide (your own window, or someone signed in as Storyguide) can make new records (New), advance or set the season, import, give things between records, share spells, or change the saga itself, its content and its players. Keys a player can't use there don't appear, and if a change slips through anyway, the app doesn't save it and says so.
 
+<!-- gui -->
+**On the desktop** a player's window opens on **Your Characters**, then the troupe's other characters, the troupe's covenants and the rest of what the players know. Their own characters show every button; any other record is read only, with no Add, Edit or Delete, and Advance Season and Player view are not there. To see it as a player does, click the **Play as** icon (two people) in the title bar, which appears once the saga has players, and pick a player; it then reads "Playing as" and their name. Pick **Storyguide** from it to come back.
+<!-- /gui -->
+
 **See also:** [Signing in](help:sign-in), [How to host a saga](help:guide-hosting), [The saga](help:saga)
 
 # A record's Secrets

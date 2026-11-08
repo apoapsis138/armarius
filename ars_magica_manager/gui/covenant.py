@@ -146,6 +146,7 @@ from .widgets import (
     Codex,
     Symbol,
     badge,
+    changing_button,
     chapter_title,
     display_name,
     edit_button,
@@ -394,7 +395,7 @@ class CovenantPage(QWidget):
 
     def _edit_button(self, form: Callable[[], Form]) -> QPushButton:
         """The header's Edit, opening Edit Covenant."""
-        button = edit_button("Edit", self.p, lambda: self.run(form()))
+        button = changing_button("Edit", self.p, lambda: self.run(form()))
         button.setToolTip("Edit Covenant")
         return button
 

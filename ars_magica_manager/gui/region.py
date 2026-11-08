@@ -77,6 +77,7 @@ from .themes import Palette
 from .widgets import (
     Codex,
     badge,
+    changing_button,
     chip_row,
     edit_button,
     scrolling_page,
@@ -130,7 +131,7 @@ class NeighbourPage(QWidget):
             neighbours.icon_concept(neighbour),
         )
         # The record's own Edit, as on a character's or covenant's page.
-        self.edit_neighbour = edit_button("Edit", p, self._edit)
+        self.edit_neighbour = changing_button("Edit", p, self._edit)
         self.edit_neighbour.setToolTip("Edit Neighbour")
         layout = header.layout()
         assert layout is not None

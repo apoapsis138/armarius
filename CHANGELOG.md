@@ -123,6 +123,14 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.86.0 — 2026-11-07
+
+### Sodales
+
+- **A player's desktop**: a player seated at the desktop opens on **Your Characters**, then the troupe's other characters, the troupe's covenants and what the players know. Their own characters have every button; any other record is read only, with no Add, Edit or Delete. New records, Advance Season, Give, Player view and the other storyguide-only actions are not offered to them.
+- **Play as**: once a saga has players, a two-people icon beside Find lets the storyguide sit in a player's seat to see their desktop, and choose Storyguide to come back. It stands in for signing in on the desktop, which comes next.
+- A change a player's seat may not make is still taken back before it is saved, and they are told.
+
 ## 3.85.10 — 2026-11-07
 
 ### Fundamenta

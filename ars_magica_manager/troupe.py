@@ -79,10 +79,15 @@ def set_bookmarked(saga_id: str, kind: str, record_id: str, on: bool) -> None:
     save_bookmarks(saga_id, [*marks, mark] if on else marks)
 
 
-def player_characters(saga: Saga) -> list[tuple[Covenant | None, list[Character]]]:
+def player_characters(
+    saga: Saga, apart: frozenset[str] | set[str] = frozenset()
+) -> list[tuple[Covenant | None, list[Character]]]:
     """The characters a Player plays, by covenant: the troupe's covenants
-    first, then the others, then those who belong to none (None)."""
-    played = [c for c in saga.characters if is_player_character(c)]
+    first, then the others, then those who belong to none (None). `apart`
+    names (by id) characters left out, shown elsewhere."""
+    played = [
+        c for c in saga.characters if is_player_character(c) and c.id not in apart
+    ]
     groups: list[tuple[Covenant | None, list[Character]]] = []
     for covenant in world.troupe_first(saga.covenants):
         members = [c for c in played if c.covenant_id == covenant.id]

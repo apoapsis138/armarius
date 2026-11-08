@@ -85,6 +85,7 @@ from .widgets import (
     Codex,
     Symbol,
     arts_heat_grid,
+    changing_button,
     chapter_title,
     display_name,
     edit_button,
@@ -280,7 +281,7 @@ class LaboratoryPage(QWidget):
             self.owner_button = edit_button(magus.name, p, self.open_owner, "character")
             self.owner_button.setToolTip(f"Open {magus.name}'s sheet")
             row.addWidget(self.owner_button, 0, Qt.AlignmentFlag.AlignTop)
-        self.identity_button = edit_button(
+        self.identity_button = changing_button(
             "Edit", p, lambda: self.run(lf.identity_form(saga, lab))
         )
         self.identity_button.setToolTip("Edit the laboratory's Identity")

@@ -51,6 +51,7 @@ from .. import (
     paths,
     references,
     saga_index,
+    seat,
     storage,
     title_page,
     viewing,
@@ -77,7 +78,7 @@ from ..forms import menu as menu_forms
 from ..forms import printing as print_forms
 from ..forms import saga as saga_forms
 from ..markup import escape
-from ..models import Character, Covenant, Familiar, Laboratory, Saga
+from ..models import Character, Covenant, Familiar, Laboratory, Player, Saga
 from ..paths import APP_NAME
 from ..sheets import laboratory as ls
 from . import atlas as atlas_page
@@ -298,6 +299,9 @@ class MainWindow(QMainWindow):
         self._applied = PALETTES[self.palette_index]
         self.saga_ids = storage.list_sagas() if saga_ids is None else saga_ids
         self.saga: Saga | None = None
+        #: The player seated at the open saga (seat.py); None is the
+        #: storyguide's own window.
+        self.player: Player | None = None
         self.trail: list[Place] = []
         #: The chapter each page was last left on, to open it there again
         #: (for this sitting only).
@@ -366,6 +370,13 @@ class MainWindow(QMainWindow):
         self.view_button.setAccessibleName("Player view")
         self.view_button.clicked.connect(self.toggle_player_view)
         bar.addWidget(self.view_button)
+        #: Play as, while a saga with players is open: the storyguide sits
+        #: in a player's seat to see their desktop (choose_seat).
+        self.seat_button = QPushButton()
+        self.seat_button.setFlat(True)
+        self.seat_button.setAccessibleName("Play as")
+        self.seat_button.clicked.connect(self.choose_seat)
+        bar.addWidget(self.seat_button)
         self.help = QPushButton("  Help")
         self.help.setFlat(True)
         self.help.setToolTip("Help on this page (? or F1)")
@@ -548,6 +559,7 @@ class MainWindow(QMainWindow):
             return
         self.saga_ids = storage.list_sagas()
         self.saga = None
+        self.player = None
         self._use_viewer()
         self.go([Place(SHELF)])
         if key == title_page.NEW:
@@ -573,6 +585,7 @@ class MainWindow(QMainWindow):
         """Read the sagas again and show the shelf."""
         self.saga_ids = storage.list_sagas()
         self.saga = None
+        self.player = None
         self._use_viewer()
         self.go([Place(SHELF)])
 
@@ -631,6 +644,7 @@ class MainWindow(QMainWindow):
         """Open `saga` at its page of covenants, in Player view if it was
         left in it on this computer."""
         self.saga = saga
+        self.player = None
         self._use_viewer()
         # Its user-made entries join the shared catalogs, as in the terminal.
         catalog.use_saga(saga)
@@ -638,11 +652,64 @@ class MainWindow(QMainWindow):
         self.go([Place(SHELF), Place(SAGA)])
 
     def _use_viewer(self) -> None:
-        """Tell the core who reads the saga open: the storyguide, or the
-        table while Player view is on (viewing.use)."""
+        """Seat whoever reads the saga open (seat.py): the storyguide, the
+        table while Player view is on, or the player seated by Play as."""
         saga = self.saga
-        on = saga is not None and viewing.player_view_on(saga.id)
-        viewing.use(viewing.viewer_for(None, player_view=on), saga)
+        if saga is None:
+            seat.sign_out()
+            return
+        seat.sign_in(
+            saga,
+            self.player,
+            player_view=viewing.player_view_on(saga.id),
+            on_refused=lambda refused: self.tell(
+                "Not saved",
+                "Only the storyguide can change " + escape(", ".join(refused)) + ".",
+            ),
+        )
+
+    def sit_as(self, player: Player | None) -> None:
+        """Seat `player` at the open saga, or the storyguide again (None):
+        the page on show is drawn again for its reader. A stand-in for
+        signing in, which the storyguide uses to see a player's desktop."""
+        if self.saga is None:
+            return
+        self.player = player
+        self._use_viewer()
+        if self.finder is not None and shiboken6.isValid(self.finder):
+            self.finder.close()
+        self.redraw()
+
+    def choose_seat(self) -> None:
+        """The title bar's Play as: a menu of the storyguide and each
+        player."""
+        saga = self.saga
+        if saga is None:
+            return
+        menu = QMenu(self.seat_button)
+        menu.addAction("Storyguide").triggered.connect(lambda: self.sit_as(None))
+        for player in saga.players:
+            if seat.runs_the_saga(player):
+                continue
+            menu.addAction(player.name).triggered.connect(
+                lambda _checked=False, who=player: self.sit_as(who)
+            )
+        menu.exec(self.seat_button.mapToGlobal(self.seat_button.rect().bottomLeft()))
+
+    def _draw_seat_button(self) -> None:
+        saga = self.saga
+        has_players = saga is not None and any(
+            not seat.runs_the_saga(p) for p in saga.players
+        )
+        self.seat_button.setVisible(has_players)
+        self.seat_button.setText(
+            f"  Playing as {self.player.name}" if self.player is not None else ""
+        )
+        self.seat_button.setToolTip(
+            "See the saga as this player does. Click to choose another seat."
+            if self.player is not None
+            else "Play as: see the saga from a player's seat"
+        )
 
     def _draw_view_button(self) -> None:
         on = viewing.current().kind == viewing.TABLE
@@ -1093,6 +1160,10 @@ class MainWindow(QMainWindow):
         record = self._place_record(place)
         if record is not None and not viewing.reads(record):
             return QLabel("The players don't know of this yet (Player view).")
+        if self.saga is not None:
+            # The page, and the chapters built as they are turned to, draw
+            # no Add, Edit or Delete for a record the seat may not change.
+            seat.show(self.saga, record)
         return self._build_page(place)
 
     def _build_page(self, place: Place) -> QWidget:
@@ -1447,8 +1518,12 @@ class MainWindow(QMainWindow):
         saga = self.saga
         shown = saga is not None and bool(self.trail) and self.trail[-1].kind != SHELF
         self.find_button.setVisible(shown)
-        self.view_button.setVisible(shown)
+        # Player view is the storyguide's own screen: a player has no eye.
+        self.view_button.setVisible(shown and self.player is None)
         self._draw_view_button()
+        self._draw_seat_button()
+        if not shown:
+            self.seat_button.setVisible(False)
         # The headpiece carries the present season while a saga's page is on show.
         self.headpiece.saga = saga if shown else None
         self.headpiece.update()
@@ -1458,6 +1533,7 @@ class MainWindow(QMainWindow):
             and shown
             and isinstance(codex, Codex)
             and self.trail[-1].kind != WORKSHEET
+            and viewing.offers("advance_season")
         ):
             self.season_panel = SeasonPanel(saga, self.palette_, self.advance_season)
             codex.set_foot(self.season_panel)
@@ -1579,5 +1655,6 @@ class MainWindow(QMainWindow):
         self.help.setIcon(pictures.icon("help", p["label"]))
         self.find_button.setIcon(magnifier_icon(p["label"]))
         self.view_button.setIcon(eye_icon(p["label"]))
+        self.seat_button.setIcon(pictures.icon("players", p["label"]))
         self._draw_sound()
         self._draw_motion()

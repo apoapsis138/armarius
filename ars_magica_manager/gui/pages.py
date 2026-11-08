@@ -32,10 +32,12 @@ from .. import (
     neighbour_filter,
     neighbours,
     open_stories,
+    players,
     section_verbs,
     sieges,
     story_chapters,
     troupe,
+    viewing,
     world,
 )
 from .. import saga_overview as ov
@@ -961,9 +963,22 @@ def troupe_chapter(
     def quiet(words: str) -> QWidget:
         return text(words, p["dim"], serif(12.5, italic=True), wrap=True)
 
-    groups = troupe.player_characters(saga)
+    # A player seated here (seat.py) is met by their own characters first,
+    # then the rest of the troupe's.
+    me = viewing.current().player
+    mine = players.characters_of(saga, me) if me is not None else []
+    groups = troupe.player_characters(saga, apart={c.id for c in mine})
     played = sum(len(members) for _, members in groups)
-    parts: list[QWidget] = [chapter_title(f"Player Characters ({played})", p)]
+    parts: list[QWidget] = []
+    if me is not None:
+        parts.append(chapter_title(f"Your Characters ({len(mine)})", p))
+        parts.append(
+            card_grid([cards["character"](c) for c in mine])
+            if mine
+            else quiet("None yet. The storyguide gives you a character to play.")
+        )
+    heading = "Player Characters" if me is None else "The Troupe's Characters"
+    parts.append(chapter_title(f"{heading} ({played})", p))
     for covenant, members in groups:
         if len(groups) > 1:
             parts.append(
