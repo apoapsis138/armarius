@@ -123,6 +123,13 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.87.0 — 2026-11-08
+
+### Sodales
+
+- **The door for players joining from the internet, built but not yet opened**: the part of the app that will let players connect over the internet now exists, with nothing in the app turning it on yet. It listens only on the storyguide's own computer, so only the storyguide's tunnel can reach it. Everything that passes through is sealed in a second layer that the tunnel provider cannot read, and a player's app refuses a host whose key is not the one on their invite. The host's key is kept in the computer's keychain, and with no keychain the app declines to offer internet play. The host answers only a short list of known messages and refuses anything else the same way, closes connections that send too many bad messages, too many messages, or go quiet, and limits how many can connect at once.
+- **Notes on the design**: the threat model now covers invites passed along by chat, why the host's key fingerprint is not a secret, and what must never be put in a link.
+
 ## 3.86.1 — 2026-11-07
 
 ### Sodales
