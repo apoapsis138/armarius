@@ -1,6 +1,6 @@
 [project]
 name = "ars-magica-manager"
-version = "3.90.0"
+version = "3.90.1"
 description = "Armarius, a saga manager for Ars Magica: a GM-facing tool for Ars Magica 5th Edition covenants, characters, laboratories, and libraries."
 readme = "README.md"
 license = "GPL-3.0-only"
@@ -45,6 +45,7 @@ dev = [
     "pytest-asyncio>=0.24.0",
     "pyright>=1.1.414",
     "pytest-xdist>=3.8.0",
+    "pytest-timeout>=2.3",
     # The desktop version is type-checked and tested with the rest.
     {include-group = "gui"},
 ]
@@ -69,3 +70,7 @@ pythonVersion = "3.14"
 [tool.pytest.ini_options]
 pythonpath = [".", "tools"]
 asyncio_mode = "auto"
+# A test that hangs fails after this long, with every thread's stack, instead
+# of holding the run (a deadlock between two threads shows where each waits).
+timeout = 300
+timeout_method = "thread"

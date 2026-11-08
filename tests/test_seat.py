@@ -127,6 +127,19 @@ def test_section_buttons_follow_who_may_change_the_record() -> None:
     )
 
 
+def test_a_save_for_another_saver_leaves_this_copys_reader_alone() -> None:
+    saga, ana, _, _, _ = _troupe()
+    storage.save_saga(saga)
+    seat.sign_in(saga, ana)
+    year = saga.current_year
+    saga.current_year = year + 1
+    storage.save_saga(saga, storage.Saver("Host's listener"))
+    saved = storage.load_saga(saga.id)
+    assert saved.current_year == year + 1  # not taken back by Ana's guard
+    assert saved.saved_by == "Host's listener"
+    assert storage.guard is not None and storage.saved_by == "Ana"
+
+
 def test_the_guard_takes_back_a_change_and_says_so() -> None:
     saga, ana, _, _, _ = _troupe()
     told: list[list[str]] = []

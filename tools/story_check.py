@@ -4,14 +4,16 @@
     uv run python tools/story_check.py --full   # once per story
 
 Runs, in order: the tests (the slice's from `slice_tests.py`, or with
---full the whole suite), `ruff format`, `ruff check` and `pyright`. Each
+--full the whole suite), ruff's import sorting (applied), `ruff format`,
+`ruff check` and `pyright`. Each
 prints one line (ok, or the failing test names / the first lines of the
 tool's output), and the exit code is nonzero if any failed.
 
 A test that fails in the parallel run is run again once, alone. One that
 then passes is reported as flaky, not failed, and noted (with the date) in
 FLAKY_LOG, so the worst offenders can be found and their waits fixed; one
-that fails again is real.
+that fails again is real, and printed with why (its first `E ` line: a
+broken help file or a failed assertion, in full).
 """
 
 from __future__ import annotations
@@ -46,6 +48,15 @@ def failed_tests(output: str) -> list[str]:
     return re.findall(r"^(?:FAILED|ERROR) (\S+)", output, flags=re.MULTILINE)
 
 
+def reason(output: str) -> str:
+    """Why a test failed, from its run alone: the first `E ` line (an
+    assertion or the error raised), else the last line of output."""
+    for line in output.splitlines():
+        if line.startswith("E "):
+            return line[1:].strip()[:300]
+    return summary(output)
+
+
 def summary(output: str) -> str:
     return output.strip().splitlines()[-1] if output.strip() else ""
 
@@ -58,17 +69,21 @@ def tests_step(command: list[str]) -> tuple[bool, str]:
     failed = failed_tests(output)
     if not failed:
         return False, summary(output)
-    real, flaky = [], []
+    real: list[tuple[str, str]] = []
+    flaky: list[str] = []
     for test in failed:
-        again, _ = run([*UV, "python", "-m", "pytest", "-q", "-p", "no:xdist", test])
-        (flaky if again == 0 else real).append(test)
+        again, said = run([*UV, "python", "-m", "pytest", "-q", "-p", "no:xdist", test])
+        if again == 0:
+            flaky.append(test)
+        else:
+            real.append((test, reason(said)))
     if flaky:
         FLAKY_LOG.parent.mkdir(parents=True, exist_ok=True)
         today = datetime.datetime.now(datetime.UTC).date().isoformat()
         with FLAKY_LOG.open("a", encoding="utf-8") as log:
             log.writelines(f"{today} {test}\n" for test in flaky)
     lines = [f"flaky (passed alone): {test}" for test in flaky]
-    lines += [f"FAILED {test}" for test in real[:20]]
+    lines += [f"FAILED {test}\n      {why}" for test, why in real[:20]]
     lines.append(summary(output))
     return not real, "\n".join(lines)
 
@@ -88,6 +103,13 @@ def main(argv: list[str]) -> int:
         bad += 1
         print(f"FAIL  {label}\n{said}")
     tools = [
+        # Sorting imports is ruff's one fix applied here: always safe, and
+        # otherwise the commonest reason to run the checks twice.
+        (
+            "ruff sort imports",
+            [*UV, "ruff", "check", "--select", "I", "--fix", "."],
+            400,
+        ),
         ("ruff format", [*UV, "ruff", "format", "."], 400),
         ("ruff check", [*UV, "ruff", "check", "."], 800),
         ("pyright", [*UV, "pyright"], 800),

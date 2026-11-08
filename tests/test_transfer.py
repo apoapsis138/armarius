@@ -573,7 +573,7 @@ async def test_x_exports_a_character_and_the_saga_imports_it():  # noqa: PLR0915
         box = dialog.query_one("#fld-file", Input)
         # Offered in the exports folder, named for the character.
         target = storage.exports_dir() / "leandro.amm.json"
-        assert box.value == str(target)
+        assert await wait_until(pilot, lambda: box.value == str(target))
         dialog.query_one("#btn-save").press()
         assert await wait_until(pilot, lambda: target.is_file())
         assert await wait_until(pilot, lambda: app.screen is workspace)
@@ -601,16 +601,20 @@ async def test_x_exports_a_character_and_the_saga_imports_it():  # noqa: PLR0915
         )
         picker = app.screen
         # The explorer opens in the exports folder, showing .json files.
-        assert picker.query_one("#picker-path", Input).value == str(
-            storage.exports_dir()
-        )
         path_box = picker.query_one("#picker-path", Input)
+        exports = str(storage.exports_dir())
+        assert await wait_until(pilot, lambda: path_box.value == exports)
         path_box.value = str(target)
         path_box.focus()
         await pilot.press("enter")
         assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
-        message = str(app.screen.query_one(Static).render())
-        assert "Import Character: Leandro" in message
+        confirm = app.screen
+        assert await wait_until(
+            pilot,
+            lambda: (
+                "Import Character: Leandro" in str(confirm.query_one(Static).render())
+            ),
+        )
         await pilot.press("y")
         assert await wait_until(
             pilot,

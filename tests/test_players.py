@@ -137,7 +137,8 @@ async def test_a_browser_copy_signs_in_before_opening_a_saga(in_a_browser):
         await _open_first_saga(pilot, app)
         dialog = await _sign_in(pilot, app, "Ana", "wrong")
         assert app.screen is dialog  # refused: still asking
-        assert "don't match" in str(dialog.query_one("#fields-error", Static).render())
+        error = dialog.query_one("#fields-error", Static)
+        assert await wait_until(pilot, lambda: "don't match" in str(error.render()))
 
         await _sign_in(pilot, app, "ana", "rosemary")
         assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
@@ -272,7 +273,11 @@ async def _has_players_tab(pilot, workspace) -> bool:
     only)."""
     await _show(pilot, workspace, (NodeKind.SAGA_CONTENT,))
     assert await wait_until(pilot, lambda: workspace._saga_content_view is not None)
-    return bool(workspace._saga_content_view.query("#tab-content-players"))
+    view = workspace._saga_content_view
+    # Composed once the tab before Players is there; asked any sooner, the
+    # Players tab would be missing for the storyguide too.
+    assert await wait_until(pilot, lambda: bool(view.query("#tab-content-spells")))
+    return bool(view.query("#tab-content-players"))
 
 
 _CHANGES = ("add", "edit", "delete", "new", "advance_season")

@@ -190,6 +190,16 @@ from .worksheet import WorksheetPage
 #: The settings gear's entries.
 THEME, SOUNDS, MOTION = "theme", "sounds", "motion"
 
+
+def dress_application(app: QApplication, p: Palette) -> None:
+    """Give the whole app the theme `p`: its font, style sheet, gilding and
+    choice marks (the window does it on every theme change; a probe that
+    draws a window does it too, so its pictures match the app)."""
+    app.setFont(QFont(pictures.UI, 10))
+    app.setStyleSheet(style_sheet(p, pictures.SERIF))
+    gilding.gild_application(app, p)
+    choices.ink_choices(app, p)
+
 #: Each page's help topic (help_text: a page's id), most specific first.
 _HELP_IDS = {
     SHELF: ["saga-picker"],
@@ -1775,10 +1785,7 @@ class MainWindow(QMainWindow):
         self.controls.set_palette(p)
         app = QApplication.instance()
         if isinstance(app, QApplication):
-            app.setFont(QFont(pictures.UI, 10))
-            app.setStyleSheet(style_sheet(p, pictures.SERIF))
-            gilding.gild_application(app, p)
-            choices.ink_choices(app, p)
+            dress_application(app, p)
         hosting_open = self._hosting
         if (
             hosting_open is not None

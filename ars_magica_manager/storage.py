@@ -86,17 +86,26 @@ _last_seen: dict[str, tuple[str, dict[str, Any], dict[str, Any]]] = {}
 #: opening a saga in an older copy never loses what a newer one added.
 _newer_data: dict[str, dict[str, Any]] = {}
 
+#: (a saga as last seen, as now) -> (as it may be saved, what was taken back).
+Guard = Callable[[dict[str, Any], dict[str, Any]], tuple[dict[str, Any], list[str]]]
+
 #: Takes back, before a save, the changes whoever is signed in to this copy
-#: may not make (players.guard_changes, set while a player is signed
-#: in): (this copy's saga as last seen, as now) -> (as it may be
-#: saved, what was taken back).
-guard: (
-    Callable[[dict[str, Any], dict[str, Any]], tuple[dict[str, Any], list[str]]] | None
-) = None
+#: may not make (players.guard_changes, set while a player is signed in).
+guard: Guard | None = None
 
 #: Who is saving from this copy (a signed-in player's name; "" for the
 #: storyguide's own window), recorded in the saga as Saga.saved_by.
 saved_by: str = ""
+
+
+@dataclass(frozen=True)
+class Saver:
+    """Who a save is made for, and what may be taken back from it, when
+    that isn't this copy's own reader (guard and saved_by above): the
+    host's listener saving a Remote seat's change it has already checked."""
+
+    name: str
+    guard: Guard | None = None
 
 
 @dataclass(frozen=True)
@@ -108,15 +117,17 @@ class Saved:
     conflicts: list[str]
 
 
-def save_saga(saga: Saga) -> Saved:
-    """Save `saga`. Other copies of the app may share the file (a hosted saga): under a
-    lock, the file is re-read and only what this copy changed since it last loaded or
-    saved the saga is written into it, so another copy's changes stay. Where both
-    changed the same value, this save's wins (listed in the result's conflicts)."""
+def save_saga(saga: Saga, saver: Saver | None = None) -> Saved:
+    """Save `saga`, for `saver` (this copy's own reader by default). Other copies of
+    the app may share the file (a hosted saga): under a lock, the file is re-read and
+    only what this copy changed since it last loaded or saved the saga is written
+    into it, so another copy's changes stay. Where both changed the same value, this
+    save's wins (listed in the result's conflicts)."""
+    saver = saver or Saver(saved_by, guard)
     path = saga_path(saga.id)
     newer = _newer_data.get(str(path))
     saga.app_version = __version__ if newer is None else newer["app_version"]
-    saga.saved_by = saved_by
+    saga.saved_by = saver.name
     ours = _with_newer(asdict(saga), newer)
     with _saga_lock(saga.id):
         seen = _last_seen.get(str(path))
@@ -126,8 +137,8 @@ def save_saga(saga: Saga) -> Saved:
             on_disk = _read_text(path)
             # The file as this copy left it needn't be read again.
             theirs = file_data if on_disk == text else _normalized(on_disk)
-        if guard is not None and base is not None:
-            ours, _ = guard(base, ours)
+        if saver.guard is not None and base is not None:
+            ours, _ = saver.guard(base, ours)
         if base is None or theirs is None:
             data, conflicts = ours, []
         else:

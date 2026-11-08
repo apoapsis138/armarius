@@ -123,6 +123,14 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.90.1 — 2026-11-08
+
+### Fundamenta
+
+- **Sturdier checks, nothing new to see.** A test that hangs now fails after five minutes and shows where every part of it was waiting, instead of holding up the whole run. Two tests that sometimes failed for no reason now wait for what they check. The checks sort imports themselves, and a failure says why in full.
+- **A player's change is saved in their name, whatever else is open.** The host's listener now names who each change is saved for, instead of borrowing the window's own setting, so the two can never mix.
+- **Pictures of the desktop drawn for checking match the app**, in either theme.
+
 ## 3.90.0 — 2026-11-08
 
 ### Sodales

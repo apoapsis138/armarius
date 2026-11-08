@@ -114,11 +114,10 @@ class SeatChanges:
         except Refused, ChangeRefused, OSError, ValueError:
             self._note(audit.CHANGE_REFUSED, session, record)
             raise Refused from None
-        who, storage.saved_by = storage.saved_by, player.name
-        try:
-            storage.save_saga(applied.saga)
-        finally:
-            storage.saved_by = who
+        # Saved in the Player's name, with no further guard: the change was
+        # checked above (apply_change). Named here rather than taken from
+        # this process's own reader, which isn't the listener's to use.
+        storage.save_saga(applied.saga, storage.Saver(player.name))
         self._note(audit.RECORD_CHANGED, session, record)
         return applied.overlaps
 
