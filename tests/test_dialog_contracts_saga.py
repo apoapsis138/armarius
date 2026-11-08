@@ -317,19 +317,23 @@ CONTRACTS: dict[str, Contract] = {
     # Players who sign in from a browser
     "add player": Contract(
         prefill={"Name": "", "Role": "player", "Passcode": ""},
-        edits={"Name": "Ana", "Role": "storyguide", "Passcode": "rosemary"},
+        edits={"Name": "Ana", "Role": "storyguide", "Passcode": "rosemary and thyme"},
         saved=lambda s: [
             (
                 p.id,
                 p.name,
                 p.role,
-                pl.passcode_matches(p, "rosemary"),
-                p.passcode_hash != "rosemary",
+                pl.passcode_matches(p, "rosemary and thyme"),
+                p.passcode_hash != "rosemary and thyme",
             )
             for p in s.players
         ],
         expected=[("ana", "Ana", "storyguide", True, True)],
-        invalid=[{"Name": ""}, {"Name": "Ana", "Passcode": ""}],
+        invalid=[
+            {"Name": ""},
+            {"Name": "Ana", "Passcode": ""},
+            {"Name": "Ana", "Passcode": "rosemary"},
+        ],
         shown={"#section-players": "Players (1)"},
     ),
     "add spell": Contract(

@@ -123,6 +123,17 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.89.0 — 2026-11-08
+
+### Sodales
+
+- **Host for Players is one window**: on the desktop, Saga Management's Host for Players opens a window that stays open beside the game. Choose how players join, with Armarius on their own computers over the internet (Remote seats) or in a browser on your private network, then Host or Stop Hosting. Closing the app while hosting now asks first.
+- **Remote seats, managed by the storyguide**: issue a player a one-time invite (a line to paste into a chat, shown once with a Copy button, and six words to read on the call); approve or reject each device that uses one after checking its three words; see every seat, revoke one (it is cut off within a second), set how long an unused seat lasts (90 days unless changed), and give the host a new key, which ends every invite and seat. A log shows who signed in, failed or was revoked, and when; it never holds a passcode or code.
+- **Signing in from a Remote seat**: a device the storyguide approved signs in with the player's passcode, which never crosses the connection; repeated wrong passcodes slow that device down, from 30 seconds up to an hour. A passcode now needs at least 14 characters; older shorter ones still work at the table and in a browser, and must be set again before a Remote seat can use them.
+- **Your tunnel, your choice**: the window asks for your tunnel's address (Cloudflare Tunnel or another) and says what to point it at. The part of the app that answers players runs on its own, apart from the window you play in.
+- **Players stay in the saga**: no export or pack carries the saga's Players, nor which player plays a character.
+- **Fixed**: a yes-or-no window now grows to fit its question; long ones used to cut off their last paragraph.
+
 ## 3.88.0 — 2026-11-08
 
 ### Sodales

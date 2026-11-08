@@ -647,6 +647,25 @@ def test_a_whole_saga_exports_and_imports_every_record(tmp_path):
     assert len(target.familiars) == len(source.familiars)
 
 
+def test_a_whole_saga_export_carries_no_players(tmp_path):
+    from ars_magica_manager import players
+
+    source = _source()
+    anna = players.add(source, {"name": "Anna", "passcode": "a long enough passcode"})
+    source.characters[0].background.player_id = anna.id
+    path = transfer.export_saga_to(tmp_path / "all.amm.json", source)
+    text = path.read_text(encoding="utf-8")
+    data = transfer.read(path)
+    assert data["saga"]["players"] == []
+    assert all(not c["background"]["player_id"] for c in data["saga"]["characters"])
+    assert "Anna" not in text and "scrypt$" not in text and anna.id not in text
+    # A single character's export leaves the link out too.
+    one = transfer.export_to(tmp_path / "one.amm.json", source, source.characters[0])
+    assert anna.id not in one.read_text(encoding="utf-8")
+    assert source.characters[0].background.player_id == anna.id  # the saga keeps it
+    assert [p.name for p in source.players] == ["Anna"]  # the saga keeps them
+
+
 def test_import_names_the_entry_a_wrong_file_belongs_under(tmp_path):
     from ars_magica_manager.commands import Refuse
     from ars_magica_manager.forms import importing as import_forms

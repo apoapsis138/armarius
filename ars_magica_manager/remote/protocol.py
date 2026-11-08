@@ -51,6 +51,17 @@ class Session:
 
     #: An opaque label for log lines (never an address or a name).
     label: str = ""
+    #: Set once the player has proved their passcode: who, and from which
+    #: device. Until then the connection can reach only the public door.
+    player_id: str = ""
+    device_id: str = ""
+    #: A fresh check of whether this sign-in still stands (not revoked or
+    #: expired); the host asks before every message.
+    still_allowed: Callable[[], bool] = lambda: True
+    #: The nonce of an open sign-in challenge, and the device it was sent
+    #: to; used once.
+    challenge: bytes = b""
+    challenged: str = ""
 
 
 @dataclass(frozen=True)
@@ -196,6 +207,22 @@ HELLO = MessageSpec(
     fields={"protocol": Field(int, low=0, high=1000)},
     handler=_hello,
 )
+
+
+def _ping(session: Session, body: Body) -> Reply:
+    return Reply("pong")
+
+
+PING = MessageSpec(name="ping", fields={}, handler=_ping)
+
+
+def member_registry(max_bytes: int) -> Registry:
+    """What a signed-in connection answers. Records join it in later
+    stories; for now `hello` and `ping`."""
+    registry = Registry(max_bytes)
+    registry.register(HELLO)
+    registry.register(PING)
+    return registry
 
 
 def public_registry(max_bytes: int) -> Registry:

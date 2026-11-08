@@ -27,9 +27,9 @@ import tempfile
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import IO
+from typing import IO, ClassVar, Protocol
 
-from . import settings
+from . import paths, settings
 
 #: How a hosted copy is reached, told to it in this environment variable:
 #: "web" (a browser) or "ssh".
@@ -66,6 +66,24 @@ def is_hosted_copy() -> bool:
     return bool(transport())
 
 
+class Hosting(Protocol):
+    """A way of hosting the saga (Strategy): the process HOST starts, the
+    address and ports it listens on, and how it remembers itself for next
+    time. Plan is the browser and SSH host; remote.plan.RemotePlan the
+    listener for Remote seats."""
+
+    module: ClassVar[str]
+
+    @property
+    def address(self) -> str: ...
+
+    def arguments(self) -> list[str]: ...
+
+    def ports(self) -> list[int]: ...
+
+    def remember(self) -> None: ...
+
+
 @dataclass(frozen=True)
 class Plan:
     """Where a host listens: `address`, its browser `port`, and an SSH
@@ -74,6 +92,20 @@ class Plan:
     address: str = LOCALHOST
     port: int = DEFAULT_PORT
     ssh_port: int | None = None
+
+    module: ClassVar[str] = SERVER_MODULE
+
+    def ports(self) -> list[int]:
+        return [self.port] + ([self.ssh_port] if self.ssh_port is not None else [])
+
+    def remember(self) -> None:
+        settings.update_settings(
+            hosting={
+                "address": self.address,
+                "port": self.port,
+                "ssh_port": self.ssh_port,
+            }
+        )
 
     def browser_url(self) -> str:
         return f"http://{self.address}:{self.port}"
@@ -187,7 +219,7 @@ class Host:
     def __init__(self) -> None:
         self._process: subprocess.Popen[bytes] | None = None
         self._errors: IO[bytes] | None = None
-        self.plan: Plan | None = None
+        self.plan: Hosting | None = None
 
     @property
     def running(self) -> bool:
@@ -196,14 +228,14 @@ class Host:
             self._forget()
         return self._process is not None
 
-    def start(self, plan: Plan) -> str | None:
+    def start(self, plan: Hosting) -> str | None:
         """Start hosting as `plan` says, waiting until the host listens.
         Returns why it couldn't (plain text), or None once it does."""
         if self.running:
             return "The saga is already hosted. Stop Hosting first."
         if is_hosted_copy():
             return "Only the storyguide's own window can host."
-        ports = [plan.port] + ([plan.ssh_port] if plan.ssh_port is not None else [])
+        ports = plan.ports()
         if len(set(ports)) < len(ports):
             return "The browser port and the SSH port must differ."
         for port in ports:
@@ -213,13 +245,15 @@ class Host:
         errors = tempfile.TemporaryFile()  # noqa: SIM115 (kept while the host runs)
         try:
             process = subprocess.Popen(
-                [_python(), "-m", SERVER_MODULE, *plan.arguments()],
+                [_python(), "-m", plan.module, *plan.arguments()],
                 cwd=_PACKAGE_PARENT,
                 stdin=subprocess.DEVNULL,
                 stdout=subprocess.DEVNULL,
                 stderr=errors,
                 creationflags=_CREATION_FLAGS,
                 start_new_session=sys.platform != "win32",
+                # The host uses the data folder this copy uses.
+                env={**os.environ, paths.ENV_VAR: str(paths.data_dir())},
             )
         except OSError as error:
             errors.close()
@@ -231,14 +265,8 @@ class Host:
                 said = self._said()
                 self._forget()
                 return said or "The host stopped as it started."
-            if _listening(plan.address, plan.port):
-                settings.update_settings(
-                    hosting={
-                        "address": plan.address,
-                        "port": plan.port,
-                        "ssh_port": plan.ssh_port,
-                    }
-                )
+            if _listening(plan.address, ports[0]):
+                plan.remember()
                 return None
             time.sleep(0.1)
         self.stop()

@@ -23,11 +23,12 @@ from aiohttp import web
 
 from .identity import HostIdentity
 from .limits import ConnectionGate, Limits, RateLimiter
-from .protocol import Registry, Session, encode, public_registry
+from .plan import PATH
+from .protocol import Registry, Session, encode, member_registry, public_registry
 from .secure import MAX_FRAME, ChannelClosed, ChannelError, SecureChannel
 
-#: The one path that speaks the protocol.
-PATH = "/remote"
+__all__ = ["FORWARDED_HEADER", "PATH", "RemoteHost"]
+
 #: A tunnel puts the player's real address here; trusted only when told to.
 FORWARDED_HEADER = "CF-Connecting-IP"
 
@@ -57,12 +58,18 @@ class RemoteHost:
         registry: Registry | None = None,
         limits: Limits | None = None,
         *,
+        members: Registry | None = None,
         trust_forwarded_address: bool = False,
+        forwarded_header: str = FORWARDED_HEADER,
     ) -> None:
         self._identity = identity
         self._limits = limits or Limits()
         self._registry = registry or public_registry(self._limits.max_message)
+        self._members = members or member_registry(self._limits.max_message)
+        #: Signed-in connections by device, so a revoke can cut them.
+        self._live: dict[str, set[web.WebSocketResponse]] = {}
         self._trust_forwarded = trust_forwarded_address
+        self._forwarded_header = forwarded_header
         self._connects = RateLimiter(
             self._limits.connects_per_window, self._limits.window
         )
@@ -90,11 +97,28 @@ class RemoteHost:
             await self._runner.cleanup()
             self._runner = None
 
+    async def disconnect(self, device_id: str) -> None:
+        """Close every live connection a device has, at once."""
+        for ws in list(self._live.get(device_id, ())):
+            await ws.close()
+
+    def connected(self) -> list[str]:
+        """The devices with a signed-in connection open now."""
+        return [device_id for device_id, open_ in self._live.items() if open_]
+
+    async def disconnect_all(self) -> None:
+        """Close every signed-in connection."""
+        for device_id in list(self._live):
+            await self.disconnect(device_id)
+
     def _address(self, request: web.Request) -> str:
         if self._trust_forwarded:
-            forwarded = request.headers.get(FORWARDED_HEADER, "")
-            if forwarded:
-                return forwarded[:64]
+            # A list header (X-Forwarded-For) may carry hops the player
+            # wrote themselves; the last is the one the tunnel added.
+            forwarded = request.headers.get(self._forwarded_header, "")
+            last = forwarded.rsplit(",", 1)[-1].strip()
+            if last:
+                return last[:64]
         return request.remote or "unknown"
 
     async def _serve(self, request: web.Request) -> web.StreamResponse:
@@ -113,6 +137,8 @@ class RemoteHost:
             except ConnectionError, TimeoutError:
                 pass  # the connection ended or stalled; nothing more to say
             finally:
+                if session.device_id:
+                    self._live.get(session.device_id, set()).discard(ws)
                 await ws.close()
             return ws
         finally:
@@ -129,7 +155,12 @@ class RemoteHost:
                 raw = await channel.receive()
             if not pace.allow("messages"):
                 raise ChannelError("Too many messages.")
-            reply, acceptable = self._registry.handle(session, raw)
+            if session.player_id and not session.still_allowed():
+                raise ChannelError("This sign-in has ended.")
+            registry = self._members if session.player_id else self._registry
+            reply, acceptable = registry.handle(session, raw)
+            if session.player_id:
+                self._live.setdefault(session.device_id, set()).add(ws)
             await channel.send(encode(reply))
             if not acceptable:
                 strikes += 1

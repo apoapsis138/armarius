@@ -30,9 +30,11 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from urllib.parse import urlsplit
 
-from .. import paths, players
+from .. import players
 from ..files import write_atomic
 from ..models import Saga
+from . import audit
+from .folder import SharedFile, remote_file
 from .identity import normalise_pin
 from .words import device_words
 
@@ -68,6 +70,8 @@ class Request:
     created: float
     state: str = PENDING
     decided: float = 0.0
+    #: Whether the player's app has been handed its Device credential.
+    collected: bool = False
 
 
 def _hash(text: str) -> str:
@@ -84,12 +88,19 @@ def new_code() -> str:
     return "-".join(raw[i : i + 4] for i in range(0, len(raw), 4))
 
 
-class InviteBook:
-    """The Invites issued and the requests made, kept in one file."""
+class InviteBook(SharedFile):
+    """The Invites issued and the requests made, kept in one file that the
+    Storyguide's window and the listener both change (folder.SharedFile)."""
 
-    def __init__(self, path: Path, clock: Callable[[], float] = time.time) -> None:
+    def __init__(
+        self,
+        path: Path,
+        clock: Callable[[], float] = time.time,
+        log: audit.AuditLog | None = None,
+    ) -> None:
         self._path = path
         self._clock = clock
+        self._log = log
         self._invites: dict[str, dict[str, object]] = {}
         self._requests: dict[str, Request] = {}
         self._load()
@@ -97,6 +108,7 @@ class InviteBook:
     # -- the file ---------------------------------------------------------
 
     def _load(self) -> None:
+        self._invites, self._requests = {}, {}
         if not self._path.exists():
             return
         try:
@@ -136,18 +148,40 @@ class InviteBook:
             if now - (r.decided or r.created) < DECIDED_KEEP
         }
 
+    def _note(self, event: str, player_id: str, device_id: str = "") -> None:
+        if self._log is not None:
+            self._log.record(event, player_id=player_id, device_id=device_id)
+
+    def clear(self) -> None:
+        """Forget every Invite and request (the host key was rotated)."""
+        with self._fresh():
+            self._invites = {}
+            self._requests = {}
+            self._save()
+
     # -- the Storyguide issues ---------------------------------------------
 
     def issue(self, player_id: str) -> str:
         """A new Invite for `player_id`: the code to send them, shown once."""
         code = new_code()
-        self._invites[_hash(_clean_code(code))] = {
-            "player_id": player_id,
-            "expires": self._clock() + INVITE_TTL,
-            "used": False,
-        }
-        self._save()
+        with self._fresh():
+            self._invites[_hash(_clean_code(code))] = {
+                "player_id": player_id,
+                "expires": self._clock() + INVITE_TTL,
+                "used": False,
+            }
+            self._save()
+        self._note(audit.INVITE_ISSUED, player_id)
         return code
+
+    def expires(self, code: str) -> float:
+        """When an Invite issued here stops working (its clock time), or
+        LookupError if there is no such Invite."""
+        with self._fresh():
+            invite = self._invites.get(_hash(_clean_code(code)))
+        if invite is None:
+            raise LookupError("No such Invite.")
+        return float(invite["expires"])  # pyright: ignore[reportArgumentType]
 
     # -- the player redeems ------------------------------------------------
 
@@ -157,31 +191,34 @@ class InviteBook:
             c not in string.hexdigits for c in secret
         ):
             raise InviteError("secret is not the expected shape")
-        invite = self._invites.get(_hash(_clean_code(code)))
-        if invite is None:
-            raise InviteError("unknown code")
-        if invite["used"]:
-            raise InviteError("code already used")
-        if float(invite["expires"]) <= self._clock():  # pyright: ignore[reportArgumentType]
-            raise InviteError("code expired")
-        request_id = _hash(secret)
-        if request_id in self._requests:
-            raise InviteError("secret already used")
-        invite["used"] = True
-        request = Request(
-            id=request_id,
-            player_id=str(invite["player_id"]),
-            device=device,
-            words=" ".join(device_words(secret)),
-            created=self._clock(),
-        )
-        self._requests[request_id] = request
-        self._save()
+        with self._fresh():
+            invite = self._invites.get(_hash(_clean_code(code)))
+            if invite is None:
+                raise InviteError("unknown code")
+            if invite["used"]:
+                raise InviteError("code already used")
+            if float(invite["expires"]) <= self._clock():  # pyright: ignore[reportArgumentType]
+                raise InviteError("code expired")
+            request_id = _hash(secret)
+            if request_id in self._requests:
+                raise InviteError("secret already used")
+            invite["used"] = True
+            request = Request(
+                id=request_id,
+                player_id=str(invite["player_id"]),
+                device=device,
+                words=" ".join(device_words(secret)),
+                created=self._clock(),
+            )
+            self._requests[request_id] = request
+            self._save()
+        self._note(audit.INVITE_REDEEMED, request.player_id, request.id)
         return request
 
     def status(self, secret: str) -> Request:
         """The request this secret made, or InviteError."""
-        request = self._requests.get(_hash(secret))
+        with self._fresh():
+            request = self._requests.get(_hash(secret))
         if request is None:
             raise InviteError("unknown request")
         if request.state == PENDING and self._lapsed(request):
@@ -195,20 +232,27 @@ class InviteBook:
 
     def pending(self) -> list[Request]:
         """Requests waiting for the Storyguide, oldest first."""
-        waiting = [
-            r
-            for r in self._requests.values()
-            if r.state == PENDING and not self._lapsed(r)
-        ]
+        with self._fresh():
+            waiting = [
+                r
+                for r in self._requests.values()
+                if r.state == PENDING and not self._lapsed(r)
+            ]
         return sorted(waiting, key=lambda r: r.created)
 
     def _decide(self, request_id: str, state: str) -> Request:
-        request = self._requests.get(request_id)
-        if request is None or request.state != PENDING or self._lapsed(request):
-            raise InviteError("no such pending request")
-        request.state = state
-        request.decided = self._clock()
-        self._save()
+        with self._fresh():
+            request = self._requests.get(request_id)
+            if request is None or request.state != PENDING or self._lapsed(request):
+                raise InviteError("no such pending request")
+            request.state = state
+            request.decided = self._clock()
+            self._save()
+        self._note(
+            audit.REQUEST_APPROVED if state == APPROVED else audit.REQUEST_REJECTED,
+            request.player_id,
+            request.id,
+        )
         return request
 
     def approve(self, request_id: str) -> Request:
@@ -217,14 +261,25 @@ class InviteBook:
     def reject(self, request_id: str) -> Request:
         return self._decide(request_id, REJECTED)
 
+    def collect(self, secret: str) -> Request | None:
+        """The approved request `secret` made, marked as handed over, if its
+        credential has not been collected yet; else None. A credential is
+        handed over once."""
+        with self._fresh():
+            request = self.status(secret)
+            if request.state != APPROVED or request.collected:
+                return None
+            request.collected = True
+            self._save()
+        return request
+
 
 # -- helpers that need the saga -----------------------------------------------
 
 
 def book_path(saga_name: str) -> Path:
     """Where a saga's book lives: the host's data folder, not the saga file."""
-    safe = "".join(c if c.isalnum() or c in "-_" else "_" for c in saga_name)
-    return paths.data_dir() / "remote" / f"{safe}-invites.json"
+    return remote_file(saga_name, "invites.json")
 
 
 def issue_for(book: InviteBook, saga: Saga, player_name: str) -> str:

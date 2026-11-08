@@ -1083,10 +1083,12 @@ They become the saga's own spells. See [Import Spells](help:import-spells).
 Who can sign in to this saga when you host it, so that players open it in a web browser from their own computers. Each player signs in with their name and the passcode you give them. Your own window, the app run on your computer, never asks.
 <!-- gui -->
 
-Host the saga with **Host for Players**, in the saga page's Saga Management (see [How to host a saga](help:guide-hosting)); the players you add here are the ones it lets in.
+Host the saga with **Host for Players**, in the saga page's Saga Management (see [How to host a saga](help:guide-hosting)); the players you add here are the ones it lets in. To join from their own copy of Armarius over the internet (a Remote seat), a player's passcode needs at least 14 characters, set here; see [Issue Invite](help:issue-invite).
 <!-- /gui -->
 
 Only the storyguide sees this tab: your own window, or someone signed in with the Storyguide role.
+
+Players stay in this saga: no export or pack carries them, nor which player plays a character (a character keeps the Player named on its sheet).
 
 <!-- tui -->
 **You type:** with `a` and `e`: the player's Name (what they type to sign in; no two players may share one), their Role (Player or Storyguide), for a player whether they May change covenants, and a Passcode. When editing, leave New passcode blank to keep the one they have. `d` deletes a player after a confirmation; they can no longer sign in.
@@ -1299,11 +1301,13 @@ troupe learns of it.
 <!-- help: saga-management; gui -->
 
 A chapter of the saga's page: Import, Export Saga, Export a Cult, Export
-Pack and Host for Players (or Stop Hosting), each with a line on what it
-does. It is the storyguide's alone: [Player view](help:player-view)
+Pack and Host for Players, each with a line on what it does. Host for
+Players opens the [Host for Players](help:host-for-players-window) window,
+where you host the saga and manage Remote seats; while the saga is hosted,
+its line says how. It is the storyguide's alone: [Player view](help:player-view)
 leaves it out.
 
-**See also:** [Import Data](help:import-data), [How to host a saga](help:guide-hosting)
+**See also:** [Import Data](help:import-data), [How to host a saga](help:guide-hosting), [Host for Players](help:host-for-players-window)
 
 # Signing in
 <!-- help: sign-in -->

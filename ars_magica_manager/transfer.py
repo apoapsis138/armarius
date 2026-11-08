@@ -248,8 +248,28 @@ def for_reader(data: dict[str, Any]) -> dict[str, Any]:
     storyguide's whole; anyone else's (a player, or Player view) without
     Secrets or the records the players don't know of."""
     if viewing.storyguide_reads():
+        return without_players(data)
+    return without_players(without_unknown(without_secrets(data)))
+
+
+def without_players(data: dict[str, Any]) -> dict[str, Any]:
+    """An export with nothing of who may sign in to the saga: no Players,
+    and no character's link to the Player who plays them (its id is made
+    from their name). The free-text "Player" a character sheet names stays,
+    as part of the character."""
+    saga = data.get("saga")
+    if not isinstance(saga, dict):
         return data
-    return without_unknown(without_secrets(data))
+    kept_saga = dict(saga)
+    kept_saga["players"] = []
+    characters = []
+    for character in saga.get("characters") or []:
+        background = character.get("background")
+        if isinstance(background, dict) and background.get("player_id"):
+            character = {**character, "background": {**background, "player_id": None}}
+        characters.append(character)
+    kept_saga["characters"] = characters
+    return {**data, "saga": kept_saga}
 
 
 def bundle_data(
@@ -429,6 +449,7 @@ def write_export(path: Path, data: dict[str, Any]) -> Path:
     """Write an export to `path`: the JSON file alone, or, when its
     records name pictures this computer has, a zip of it and them, named
     with ZIP_SUFFIX in place of the JSON one. The file written."""
+    data = without_players(data)
     pictures = [
         (folder, name, found)
         for folder, name in pictures_named(data)
@@ -477,8 +498,14 @@ def export_saga_data(saga: Saga) -> dict[str, Any]:
         "name": saga.name,
         "from_saga": saga.name,
         "links": {kind: {} for kind in LINKED_KINDS},
+        # Players (names, passcode hashes) stay in the saga: an export carries
+        # the saga's records, never who may sign in to it.
         "saga": asdict(
-            replace(saga, tribunals=[replace(t, meeting=None) for t in saga.tribunals])
+            replace(
+                saga,
+                players=[],
+                tribunals=[replace(t, meeting=None) for t in saga.tribunals],
+            )
         ),
     }
 

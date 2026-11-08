@@ -260,6 +260,11 @@ class _Sheet(QDialog):
         self.error.show()
 
 
+#: The paper window the forms are built on, for a window of another kind
+#: (the Host for Players window) to share its look and title bar.
+Sheet = _Sheet
+
+
 #: The widest a form opened as a window grows to fit its labels, and the
 #: tallest it grows to fit its fields.
 WIDEST_WINDOW, TALLEST_WINDOW = 1100, 820
@@ -1058,6 +1063,10 @@ def _scrolled_if_long(label: QLabel, words: str) -> QWidget:
     return area
 
 
+#: How wide a yes-or-no question's window is.
+CONFIRM_WIDTH = 460
+
+
 class ConfirmDialog(_Sheet):
     """A yes-or-no question; Accepted means yes."""
 
@@ -1084,7 +1093,11 @@ class ConfirmDialog(_Sheet):
         self.save.setDefault(False)
         self.cancel.setDefault(True)
         self.finish()
-        self.resize(460, 200)
+        # Tall enough for every line of the question at this width: a
+        # wrapped question doesn't make its window grow by itself.
+        outer = self.layout()
+        tall = outer.totalHeightForWidth(CONFIRM_WIDTH) if outer is not None else 0
+        self.resize(CONFIRM_WIDTH, max(200, tall))
 
 
 #: The longest notice title kept on one line.

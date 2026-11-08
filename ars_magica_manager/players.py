@@ -42,24 +42,51 @@ _NAME_WIDTH = 30
 _ROLE_WIDTH = 12
 
 
+#: The shortest passcode a new one may be. A Remote seat's host sends the
+#: stored salt, so a fake host can guess a weak passcode offline; length is
+#: the defence.
+MIN_PASSCODE = 14
+
+
+def passcode_problem(passcode: str) -> str | None:
+    """Why `passcode` is too weak to set, or None if it is long enough."""
+    if len(passcode) < MIN_PASSCODE:
+        return f"A passcode needs at least {MIN_PASSCODE} characters."
+    return None
+
+
+def passcode_digest(passcode: str, salt: bytes) -> bytes:
+    """The scrypt digest of `passcode` under `salt`."""
+    return hashlib.scrypt(passcode.encode("utf-8"), salt=salt, **_SCRYPT)
+
+
 def hash_passcode(passcode: str) -> str:
     """`passcode` as it is stored: "scrypt$<salt>$<hash>", both in hex."""
     salt = secrets.token_bytes(16)
-    digest = hashlib.scrypt(passcode.encode("utf-8"), salt=salt, **_SCRYPT)
-    return f"scrypt${salt.hex()}${digest.hex()}"
+    return f"scrypt${salt.hex()}${passcode_digest(passcode, salt).hex()}"
+
+
+def stored_parts(stored: str) -> tuple[bytes, bytes]:
+    """The salt and digest inside a stored hash, or ValueError."""
+    scheme, salt, digest = stored.split("$")
+    if scheme != "scrypt":
+        raise ValueError("Unknown passcode scheme.")
+    return bytes.fromhex(salt), bytes.fromhex(digest)
 
 
 def passcode_matches(player: Player, passcode: str) -> bool:
     """Whether `passcode` is `player`'s."""
     try:
-        scheme, salt, digest = player.passcode_hash.split("$")
-        salt_bytes = bytes.fromhex(salt)
+        salt, digest = stored_parts(player.passcode_hash)
     except ValueError:
         return False
-    if scheme != "scrypt":
-        return False
-    tried = hashlib.scrypt(passcode.encode("utf-8"), salt=salt_bytes, **_SCRYPT)
-    return hmac.compare_digest(tried.hex(), digest)
+    return hmac.compare_digest(passcode_digest(passcode, salt), digest)
+
+
+def set_passcode(player: Player, passcode: str) -> None:
+    """Store `passcode` for `player`. Whether it may be used from a Remote
+    seat is noted by the host, outside the saga (remote/passcodes.py)."""
+    player.passcode_hash = hash_passcode(passcode)
 
 
 def find(saga: Saga, name: str) -> Player | None:
@@ -92,9 +119,9 @@ def add(saga: Saga, values: dict[str, Any]) -> Player:
         id=storage.generate_unique_id(name, [p.id for p in saga.players]),
         name=name,
         role=values.get("role") or PLAYER,
-        passcode_hash=hash_passcode(values["passcode"]),
         covenant_rights=bool(values.get("covenant_rights")),
     )
+    set_passcode(player, values["passcode"])
     saga.players.append(player)
     return player
 
@@ -105,7 +132,7 @@ def update(player: Player, values: dict[str, Any]) -> None:
     player.role = values.get("role") or player.role
     player.covenant_rights = bool(values.get("covenant_rights"))
     if values.get("passcode"):
-        player.passcode_hash = hash_passcode(values["passcode"])
+        set_passcode(player, values["passcode"])
 
 
 def remove(saga: Saga, player: Player) -> None:

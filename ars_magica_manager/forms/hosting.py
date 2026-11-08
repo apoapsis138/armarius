@@ -9,6 +9,7 @@ from .. import hosting
 from ..commands import Command, Confirm, Form, Refuse, notes
 from ..form_spec import DialogField
 from ..markup import escape
+from ..remote.plan import RemotePlan
 
 #: The address choice that opens a field to type one in.
 OTHER = "other"
@@ -147,7 +148,12 @@ def hosting_note() -> str:
     """What Saga Management says beside Stop Hosting (plain text): where
     it is hosted."""
     plan = hosting.HOST.plan
-    if plan is None:
+    if isinstance(plan, RemotePlan):
+        return (
+            f"Hosted now for Remote seats, through your tunnel at {plan.public_url}. "
+            "Stopping ends every player's connection."
+        )
+    if not isinstance(plan, hosting.Plan):
         return "End the host, and every player's copy of the app with it."
     return f"Hosted now. {reached_at(plan, markup=False)} Stopping ends every player's copy."
 

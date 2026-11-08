@@ -17,6 +17,7 @@ from ars_magica_manager.models import (
     SagaSource,
     VirtueFlawInstance,
 )
+from ars_magica_manager.remote.passcodes import RemotePasscodes, passcodes_path
 
 
 def _answer(form: commands.Command, typed: dict[str, Any]):
@@ -152,19 +153,25 @@ def test_a_player_is_added_edited_and_deleted():
     assert ops.add is not None and ops.edit is not None and ops.remove is not None
     _, problem = _answer(ops.add(), {"name": "Jo"})
     assert problem == "Passcode is required."
-    _save(ops.add(), {"name": "Jo", "passcode": "secret"})
+    _, problem = _answer(ops.add(), {"name": "Jo", "passcode": "secret"})
+    assert problem == "A passcode needs at least 14 characters."
+    _save(ops.add(), {"name": "Jo", "passcode": "secret passcode phrase"})
     [player] = saga.players
-    assert pl.passcode_matches(player, "secret")
-    _, problem = _answer(ops.add(), {"name": "Jo", "passcode": "x"})
+    remote = RemotePasscodes(passcodes_path(saga.name))
+    assert pl.passcode_matches(player, "secret passcode phrase")
+    assert remote.allows(player)
+    _, problem = _answer(ops.add(), {"name": "Jo", "passcode": "x" * 14})
     assert problem == "There is already a player called Jo."
     # A blank passcode keeps theirs.
     _save(ops.edit(0), {"role": pl.STORYGUIDE})
-    assert player.role == pl.STORYGUIDE and pl.passcode_matches(player, "secret")
+    assert player.role == pl.STORYGUIDE
+    assert pl.passcode_matches(player, "secret passcode phrase")
     confirm = ops.remove(0)
     assert isinstance(confirm, commands.Confirm)
     assert confirm.question.startswith("Delete the player Jo?")
     confirm.apply()
     assert saga.players == []
+    assert not remote.allows(player)
 
 
 def test_a_saga_source_is_added_renamed_and_refused_while_cited():

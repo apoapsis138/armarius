@@ -20,10 +20,18 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import shiboken6
 from PySide6.QtCore import QByteArray, QEvent, Qt, QTimer
-from PySide6.QtGui import QAction, QFont, QKeySequence, QShortcut, QShowEvent
+from PySide6.QtGui import (
+    QAction,
+    QCloseEvent,
+    QFont,
+    QKeySequence,
+    QShortcut,
+    QShowEvent,
+)
 from PySide6.QtWidgets import (
     QAbstractSpinBox,
     QApplication,
@@ -47,6 +55,7 @@ from PySide6.QtWidgets import (
 from .. import (
     catalog,
     help_text,
+    hosting,
     hotkeys,
     paths,
     references,
@@ -94,12 +103,16 @@ from . import (
 )
 from .bestiary import CreaturePage
 from .character_sheet import CharacterSheet
+from .closing import confirm_close_while_hosting
 from .conflicts import FightPage, SiegePage
 from .covenant import CovenantPage
 from .familiar import FamiliarPage
 from .finder import FinderPanel, eye_icon, magnifier_icon
 from .forms import NoticeDialog, ask_question, run_steps
 from .help import HelpPage
+
+if TYPE_CHECKING:
+    from .hosting import HostingWindow
 from .icon import app_icon
 from .laboratory import LaboratoryPage
 from .manage import Moded, RecordControls
@@ -313,6 +326,8 @@ class MainWindow(QMainWindow):
         self.ask: Callable[[QDialog], int] = self._present
         #: The step open now.
         self._open: QDialog | None = None
+        #: The Host for Players window, once opened.
+        self._hosting: HostingWindow | None = None
         self._help_from: QWidget | None = None
         #: The season just advanced, for the Seasons page to show first.
         self._played: advance_forms.Played | None = None
@@ -920,6 +935,40 @@ class MainWindow(QMainWindow):
         """Open the saga's Seasons, below the saga."""
         self.go([Place(SHELF), Place(SAGA), Place(SEASONS)])
 
+    def open_hosting(self) -> None:
+        """Open the Host for Players window beside the page (or bring it
+        forward): it stays open while the game goes on."""
+        # start-up: Remote seats bring the network and keychain libraries,
+        # about a third of the window's import time, loaded when first used.
+        from ..forms.remote_seats import SeatsDesk
+        from .hosting import HostingWindow  # start-up: as above
+
+        saga = self.saga
+        if saga is None:
+            return
+        shown = self._hosting
+        if shown is None or not shiboken6.isValid(shown) or shown.desk.saga is not saga:
+            shown = self._hosting = HostingWindow(
+                SeatsDesk(saga),
+                self.palette_,
+                self,
+                ask=lambda dialog: self.ask(dialog),
+                changed=self.redraw,
+            )
+        shown.show()
+        shown.raise_()
+        shown.activateWindow()
+
+    def closeEvent(self, event: QCloseEvent) -> None:
+        """Closing while the saga is hosted asks first: it ends every
+        player's connection."""
+        if hosting.HOST.running and not confirm_close_while_hosting(
+            self.palette_, self, self.ask
+        ):
+            event.ignore()
+            return
+        super().closeEvent(event)
+
     def advance_season(self) -> None:
         """Advance the saga by one season (advance_forms), then show the
         season's results on the Seasons page when it did anything."""
@@ -1182,24 +1231,7 @@ class MainWindow(QMainWindow):
                 str(paths.data_dir()),
             )
         if place.kind == SAGA:
-            return SagaPage(
-                saga,
-                p,
-                self.open_covenant,
-                open_content=self.open_content,
-                open_seasons=self.open_seasons,
-                placer=self._placer(),
-                open_character=self.show_character,
-                open_laboratory=self.open_laboratory,
-                open_tribunal=self.open_tribunal,
-                open_neighbour=self.open_neighbour,
-                open_creature=self.open_creature,
-                open_familiar=self.open_familiar,
-                run=self.run,
-                run_ended=lambda command, ended: self.run(command, ended=ended),
-                open_fight=self.open_fight,
-                open_siege=self.open_siege,
-            )
+            return self._saga_page(saga, p)
         if place.kind == FIGHT:
             fight = next((f for f in saga.fights if f.id == place.id), None)
             if fight is None:
@@ -1564,6 +1596,28 @@ class MainWindow(QMainWindow):
         name = self._chapters.get(place)
         if codex is not None and name in codex.chapters():
             codex.open_chapter(name)
+
+    def _saga_page(self, saga: Saga, p: Palette) -> SagaPage:
+        """The saga's own page, every card and button wired to the window."""
+        return SagaPage(
+            saga,
+            p,
+            self.open_covenant,
+            open_content=self.open_content,
+            open_seasons=self.open_seasons,
+            placer=self._placer(),
+            open_character=self.show_character,
+            open_laboratory=self.open_laboratory,
+            open_tribunal=self.open_tribunal,
+            open_neighbour=self.open_neighbour,
+            open_creature=self.open_creature,
+            open_familiar=self.open_familiar,
+            run=self.run,
+            run_ended=lambda command, ended: self.run(command, ended=ended),
+            open_fight=self.open_fight,
+            open_siege=self.open_siege,
+            open_hosting=self.open_hosting,
+        )
 
     def _placer(self) -> Placer:
         """What the page on show sets out itself (menu_forms.PLACES)."""

@@ -8,7 +8,7 @@ from contextlib import contextmanager
 
 import pytest
 
-from ars_magica_manager import storage
+from ars_magica_manager import files, storage
 from ars_magica_manager.merge import merge
 from ars_magica_manager.models import Book, Character, Saga
 
@@ -168,7 +168,7 @@ def test_a_lock_left_by_a_copy_that_died_is_taken_over(monkeypatch):
     lock = storage.sagas_dir() / ".dammerstein.lock"
     lock.parent.mkdir(parents=True, exist_ok=True)
     lock.write_text("")
-    monkeypatch.setattr(storage, "_LOCK_WAIT", 0.1)
+    monkeypatch.setattr(files, "LOCK_WAIT", 0.1)
     storage.save_saga(_saga())  # waits briefly, then takes it over
     assert storage.load_saga("dammerstein").name == "Dammerstein"
     assert not lock.exists()

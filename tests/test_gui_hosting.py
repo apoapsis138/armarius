@@ -1,92 +1,173 @@
-"""Hosting from the desktop: Host for Players and Stop Hosting in the saga
-page's Saga Management start and stop the core's host (hosting.HOST)."""
+"""The desktop's Host for Players window (gui/hosting.py): one place to host
+the saga either way, and to issue Invites, approve requests and revoke
+seats for Remote seats."""
 
 from __future__ import annotations
 
 import os
-import socket
-import urllib.request
 
 import pytest
 
 pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from gui_steps import answering
-from PySide6.QtWidgets import QApplication, QLabel, QPushButton
-from screen_helpers import _sample_saga_with_covenant
+from PySide6.QtWidgets import QApplication, QDialog, QPushButton
 
-from ars_magica_manager import hosting, storage
+from ars_magica_manager import hosting, players, storage
+from ars_magica_manager.forms.remote_seats import SeatsDesk
 from ars_magica_manager.gui import pictures
+from ars_magica_manager.gui.forms import ConfirmDialog, FieldsDialog, NoticeDialog
+from ars_magica_manager.gui.hosting import HostingWindow, InviteDialog
+from ars_magica_manager.gui.pages import SagaPage
+from ars_magica_manager.gui.themes import PALETTES
 from ars_magica_manager.gui.window import MainWindow
+from ars_magica_manager.models import Saga
+from ars_magica_manager.remote.client import new_device_secret
+from ars_magica_manager.remote.identity import MemoryStore
+from ars_magica_manager.remote.invites import decode_invite
+from ars_magica_manager.remote.plan import RemotePlan
+
+LONG = "a passcode long enough"
 
 
 @pytest.fixture(scope="module")
-def app():
+def app() -> QApplication:
     application = QApplication.instance() or QApplication([])
     assert pictures.register_fonts() == []
-    return application
+    return application  # pyright: ignore[reportReturnType]
 
 
-@pytest.fixture
-def host(monkeypatch):
-    monkeypatch.delenv(hosting.TRANSPORT_VAR, raising=False)
-    monkeypatch.delenv(hosting.OLD_TRANSPORT_VAR, raising=False)
+@pytest.fixture(autouse=True)
+def fresh_host(monkeypatch: pytest.MonkeyPatch) -> hosting.Host:
     fresh = hosting.Host()
     monkeypatch.setattr(hosting, "HOST", fresh)
-    yield fresh
-    fresh.stop()
+    return fresh
 
 
-def _free_port() -> int:
-    with socket.socket() as probe:
-        probe.bind(("localhost", 0))
-        return probe.getsockname()[1]
+def _desk() -> SeatsDesk:
+    saga = Saga(id="host_saga", name="Host Saga")
+    desk = SeatsDesk(saga, MemoryStore())
+    for name, passcode in (("Anna", LONG), ("Bruno", "short")):
+        player = players.add(saga, {"name": name, "passcode": passcode})
+        desk.passcodes().note(player, passcode)
+    RemotePlan(saga.id, saga.name, "https://saga.example.com").remember()
+    return desk
 
 
-def _management(window: MainWindow) -> dict[str, QPushButton]:
-    page = window.page()
-    assert page is not None
-    page.codex.open_chapter("Saga Management")  # type: ignore[attr-defined]
-    page = window.page()
-    assert page is not None
-    return {
-        b.text().strip(): b
-        for b in page.findChildren(QPushButton)
-        if b.objectName() == "edit" and b.isVisibleTo(page)
-    }
+class Answers:
+    """Answers each window the Host for Players window opens: saves a form
+    as it stands, says yes to a question, and keeps what it was shown."""
+
+    def __init__(self) -> None:
+        self.shown: list[QDialog] = []
+
+    def __call__(self, dialog: QDialog) -> int:
+        self.shown.append(dialog)
+        if isinstance(dialog, FieldsDialog):
+            dialog.try_save()
+            return dialog.result()
+        return QDialog.DialogCode.Accepted
+
+    def last(self, kind: type[QDialog]) -> QDialog:
+        return next(d for d in reversed(self.shown) if isinstance(d, kind))
 
 
-def _lines(window: MainWindow) -> list[str]:
-    page = window.page()
-    assert page is not None
-    return [label.text() for label in page.findChildren(QLabel)]
-
-
-def test_saga_management_hosts_the_saga_and_stops_hosting(app, host):
-    saga = _sample_saga_with_covenant()
-    storage.save_saga(saga)
-    window = MainWindow(saga_ids=[saga.id])
+def _window(desk: SeatsDesk, answers: Answers) -> HostingWindow:
+    window = HostingWindow(desk, PALETTES[0], ask=answers)
     window.show()
-    buttons = _management(window)
-    assert "Host for Players" in buttons and "Stop Hosting" not in buttons
+    return window
 
-    port = _free_port()
-    asked = answering(window, {"address": "localhost", "port": str(port)})
-    buttons["Host for Players"].click()
-    assert asked[0].windowTitle() == "Host for Players"
-    assert host.running
-    title, words = window.told[0]
-    assert title == "Host for Players" and f"http://localhost:{port}" in words
-    with urllib.request.urlopen(f"http://localhost:{port}", timeout=5) as reply:
-        assert reply.status == 200
 
-    # The page now offers Stop Hosting, beside where players reach it.
-    buttons = _management(window)
-    assert "Stop Hosting" in buttons and "Host for Players" not in buttons
-    assert any(f"http://localhost:{port}" in line for line in _lines(window))
+@pytest.mark.usefixtures("app")
+def test_saga_management_has_one_host_for_players_row_that_opens_the_window() -> None:
+    desk = _desk()
+    storage.save_saga(desk.saga)
+    main = MainWindow(saga_ids=[desk.saga.id])
+    main.show()
+    main.open_saga(desk.saga.id)
+    page = main.page()
+    assert isinstance(page, SagaPage)
+    page.codex.open_chapter("Saga Management")
+    rows = [
+        b
+        for b in page.findChildren(QPushButton)
+        if b.text().strip() in ("Host for Players", "Stop Hosting")
+    ]
+    assert [b.text().strip() for b in rows] == ["Host for Players"]
+    rows[0].click()
+    assert main._hosting is not None and main._hosting.isVisible()
 
-    answering(window, True)
-    buttons["Stop Hosting"].click()
-    assert not host.running
-    assert "Host for Players" in _management(window)
+
+@pytest.mark.usefixtures("app")
+def test_the_window_shows_the_six_words_and_waits_for_requests() -> None:
+    desk = _desk()
+    window = _window(desk, Answers())
+    assert window.remote_choice.isChecked()
+    assert len(window.words.text().split()) == 6
+    assert window.no_requests.isVisible() and not window.requests.isVisible()
+    assert window.start.isVisible() and not window.stop.isVisible()
+    window.browser_choice.setChecked(True)
+    assert not window.remote.isVisible()
+
+
+@pytest.mark.usefixtures("app")
+def test_issuing_an_invite_shows_the_line_once_with_the_words() -> None:
+    desk = _desk()
+    answers = Answers()
+    window = _window(desk, answers)
+    window.issue.click()
+    shown = answers.last(InviteDialog)
+    assert isinstance(shown, InviteDialog)
+    assert (
+        decode_invite(shown.line.toPlainText()).url == "wss://saga.example.com/remote"
+    )
+    assert answers.last(FieldsDialog).windowTitle() == "Issue Invite"
+    shown.copy.click()
+    assert QApplication.clipboard().text() == shown.issued.line
+
+
+@pytest.mark.usefixtures("app")
+def test_a_request_is_approved_after_the_words_are_asked_about() -> None:
+    desk = _desk()
+    anna = players.find(desk.saga, "Anna")
+    assert anna is not None
+    book = desk.invites()
+    book.redeem(book.issue(anna.id), "Anna's laptop", new_device_secret())
+    answers = Answers()
+    window = _window(desk, answers)
+    assert window.requests.rowCount() == 1 and "1 waiting" in window.windowTitle()
+    window.approve_button.click()
+    question = answers.last(ConfirmDialog)
+    assert isinstance(question, ConfirmDialog)
+    assert "Approve only if Anna read you these words" in question.question
+    assert window.requests.rowCount() == 0
+    assert isinstance(answers.shown[-1], NoticeDialog)
+
+
+@pytest.mark.usefixtures("app")
+def test_a_seat_is_revoked_from_the_seats_tab() -> None:
+    desk = _desk()
+    anna = players.find(desk.saga, "Anna")
+    assert anna is not None
+    book = desk.invites()
+    request = book.redeem(book.issue(anna.id), "Anna's laptop", new_device_secret())
+    desk.devices().enrol(book.approve(request.id))
+    answers = Answers()
+    window = _window(desk, answers)
+    assert window.seats.rowCount() == 1 and window.revoke.isEnabled()
+    window.revoke.click()
+    assert not desk.seats()[0].live
+    assert not window.revoke.isEnabled()
+    assert window.log.rowCount() >= 4  # issued, redeemed, approved, enrolled, revoked
+
+
+@pytest.mark.usefixtures("app")
+@pytest.mark.parametrize("width", [820, 560])
+def test_the_window_fits_at_its_size_and_at_its_narrowest(width: int) -> None:
+    desk = _desk()
+    window = _window(desk, Answers())
+    window.resize(width, 680)
+    QApplication.processEvents()
+    assert window.width() == width
+    for button in (window.issue, window.approve_button, window.reject_button):
+        assert button.geometry().right() <= window.tabs.width()

@@ -84,6 +84,9 @@ DIALOG_CONTRACT_TESTS = (
 )
 
 AREA_TESTS: dict[str, tuple[str, ...]] = {
+    # Remote seats: the desktop's Host for Players window draws them.
+    "ars_magica_manager/forms/remote_seats.py": ("test_gui_hosting.py",),
+    "ars_magica_manager/remote/": ("test_gui_hosting.py",),
     # A faction's members: its Members list, the sheets' Member of.
     "ars_magica_manager/memberships.py": (
         "test_dialog_contracts_tribunal.py",

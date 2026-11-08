@@ -29,6 +29,7 @@ from .. import (
     conflicts,
     creatures,
     fights,
+    hosting,
     neighbour_filter,
     neighbours,
     open_stories,
@@ -56,6 +57,7 @@ from ..sheets import tribunal as tribunal_sheet
 from . import pictures
 from .atlas import AtlasChapter
 from .figures import fact_grid
+from .menus import ICONS as menu_icons
 from .menus import Placer
 from .saga_settings import SettingsChapter
 from .style.ornaments import FleuronButton, ShortRule
@@ -103,6 +105,17 @@ class SagaHooks(TypedDict, total=False):
     run_ended: Callable[[Command, Callable[[object], None]], None]
     open_fight: Open
     open_siege: Open
+    #: Opens the Host for Players window.
+    open_hosting: Callable[[], None]
+
+
+#: Saga Management's hosting entries, drawn as one Host for Players row.
+HOSTING_ACTIONS = frozenset({"host_saga", "stop_hosting"})
+HOSTING_NOTE = (
+    "Let the players join the saga: with Armarius on their own computers, over "
+    "the internet (Remote seats), or in a browser on your private network. "
+    "Issue their invites and manage their seats there."
+)
 
 
 def divider(words: str, p: Palette) -> QWidget:
@@ -1046,6 +1059,7 @@ class SagaPage(QWidget):
         open_creature = hooks.get("open_creature", _ignore)
         open_familiar = hooks.get("open_familiar", _ignore)
         run = hooks.get("run", lambda _command: None)
+        self.open_hosting = hooks.get("open_hosting", lambda: None)
         open_fight = hooks.get("open_fight", _ignore)
         open_siege = hooks.get("open_siege", _ignore)
         self.saga, self.p = saga, p
@@ -1224,9 +1238,15 @@ class SagaPage(QWidget):
     def _management(self) -> QWidget:
         p = self.p
         placed = self.placer.placed_buttons("Saga Management") if self.placer else []
-        rows = [
-            (button, menu_forms.management_note(item.action)) for item, button in placed
-        ]
+        rows: list[tuple[QPushButton, str]] = []
+        for item, button in placed:
+            if item.action in HOSTING_ACTIONS:
+                # One Host for Players window starts, stops and manages
+                # hosting either way (gui/hosting.py).
+                if not any(row[0].objectName() == "hosting" for row in rows):
+                    rows.append(self._hosting_row())
+                continue
+            rows.append((button, menu_forms.management_note(item.action)))
         return scrolling_page(
             p,
             chapter_title("Saga Management", p),
@@ -1234,3 +1254,13 @@ class SagaPage(QWidget):
             if rows
             else text("Nothing to manage.", p["dim"], serif(12.5, italic=True)),
         )
+
+    def _hosting_row(self) -> tuple[QPushButton, str]:
+        """Host for Players, opening the window that hosts and manages."""
+        button = edit_button(
+            "Host for Players", self.p, self.open_hosting, menu_icons["host_saga"]
+        )
+        button.setObjectName("hosting")
+        if hosting.HOST.running:
+            return button, menu_forms.management_note("stop_hosting")
+        return button, HOSTING_NOTE

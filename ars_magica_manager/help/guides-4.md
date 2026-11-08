@@ -421,16 +421,18 @@ but never in the Diary line it writes.
 1. Open the saga, select the saga node and choose **Host for Players** from More (`m`, then `h`). Choose your **Address** on the private network (the Tailscale one is marked; **Another address...** lets you type one), and the **Browser port** (8000 unless another program has it). Tick **Also over SSH** to take SSH clients too (see below). The line under the fields says what players will open. Press **Host**.
 <!-- /tui -->
 <!-- gui -->
-1. Open the saga and, in its **Saga Management** chapter, click **Host for Players**. Choose your **Address** on the private network (the Tailscale one is marked; **Another address...** lets you type one), and the **Browser port** (8000 unless another program has it). Tick **Also over SSH** to take SSH clients too (see below). The line under the fields says what players will open. Click **Host**.
+1. Open the saga and, in its **Saga Management** chapter, click **Host for Players**. In the [Host for Players](help:host-for-players-window) window, choose **A browser or terminal, on your private network**, then click **Host**. Choose your **Address** on the private network (the Tailscale one is marked; **Another address...** lets you type one), and the **Browser port** (8000 unless another program has it). Tick **Also over SSH** to take SSH clients too (see below). The line under the fields says what players will open. Click **Host**.
 <!-- /gui -->
 2. The first time, Windows asks whether to let Python through the firewall: allow it on **private** networks.
-3. Players open `http://ADDRESS:8000` in their browser, choose the saga and sign in. Saga Management says the address for as long as you host. The form remembers what you chose for next time.
+3. Players open `http://ADDRESS:8000` in their browser, choose the saga and sign in. Saga Management (and, on the desktop, the Host for Players window) says the address for as long as you host. The form remembers what you chose for next time.
 4. Keep your computer awake while people play: nobody can reach the saga while it sleeps.
 <!-- tui -->
 5. To stop, choose **Stop Hosting** from More on the saga node. Every player's copy closes at once; what they saved is kept. Quitting the app stops hosting too.
 <!-- /tui -->
 <!-- gui -->
-5. To stop, click **Stop Hosting** in Saga Management. Every player's copy closes at once; what they saved is kept. Closing the window stops hosting too.
+5. To stop, click **Stop Hosting** in the Host for Players window. Every player's copy closes at once; what they saved is kept. Closing the app stops hosting too, after asking.
+
+Players with Armarius on their own computers can join over the internet instead: choose **Remote seats** in the same window (see [Host for Players](help:host-for-players-window)).
 <!-- /gui -->
 
 If you choose an address the computer doesn't have, or a port another program is using, the app says so and nothing starts.

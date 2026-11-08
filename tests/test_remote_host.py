@@ -27,7 +27,7 @@ async def start() -> AsyncIterator[Start]:
     """Starts a host with the given limits and returns its address."""
     hosts: list[RemoteHost] = []
 
-    async def _start(limits: Limits | None = None, **options: bool) -> str:
+    async def _start(limits: Limits | None = None, **options: bool | str) -> str:
         host = RemoteHost(IDENTITY, limits=limits, **options)
         hosts.append(host)
         port = await host.start()
@@ -209,3 +209,24 @@ async def test_a_forwarded_address_counts_when_the_tunnel_is_trusted(
             await _held(http, address, "1.1.1.1")  # the same player twice
         await first.close()
         await second.close()
+
+
+async def test_a_list_header_counts_the_hop_the_tunnel_added(start: Start) -> None:
+    """X-Forwarded-For may carry addresses the player wrote; the tunnel adds
+    the real one last, so that one counts."""
+    address = await start(
+        small(max_per_address=1, handshake_timeout=5),
+        trust_forwarded_address=True,
+        forwarded_header="X-Forwarded-For",  # pyright: ignore[reportArgumentType]
+    )
+
+    async def held(
+        http: aiohttp.ClientSession, chain: str
+    ) -> aiohttp.ClientWebSocketResponse:
+        return await http.ws_connect(url(address), headers={"X-Forwarded-For": chain})
+
+    async with aiohttp.ClientSession() as http:
+        first = await held(http, "9.9.9.9, 1.1.1.1")
+        with pytest.raises(aiohttp.WSServerHandshakeError):
+            await held(http, "8.8.8.8, 1.1.1.1")  # a forged first hop changes nothing
+        await first.close()

@@ -1468,3 +1468,94 @@ link to the covenant whose Diary kept the story; the story is marked
 Diary says where it came from. Add its stages on its page.
 
 **See also:** [Open Stories](help:section-region-stories), [How to follow a story from its start to a threat](help:guide-story-hook)
+
+# Host for Players
+<!-- help: host-for-players-window; gui -->
+
+Open it from **Host for Players** in the saga page's **Saga Management**
+chapter. It is the one place you host the saga and manage who joins, and
+it stays open beside the game: you can keep playing while it is open.
+
+At the top, choose how **players join**:
+
+- **Armarius on their own computers, over the internet (Remote seats).**
+  Each player runs the app; it connects through a tunnel you set up
+  yourself, such as Cloudflare Tunnel.
+- **A browser or terminal, on your private network.** The older way, over
+  Tailscale or ZeroTier: see [How to host a saga](help:guide-hosting).
+
+Under it, the window says whether the saga is hosted, with **Host** or
+**Stop Hosting**. To switch the way players join, stop hosting first.
+Closing the app while the saga is hosted asks first, as it ends every
+player's connection.
+
+For Remote seats it also shows the host's **six words**, which you read
+aloud on your group's call, and three tabs: Requests, Seats and Log. The
+window looks for new requests every few seconds; the title counts those
+waiting.
+
+### Host for Remote Seats
+<!-- help: host-remote-seats; gui -->
+
+**Host**, with Remote seats chosen, asks:
+
+- **Tunnel address:** the https address your tunnel gives you, such as
+  `https://saga.example.com`, with nothing after the name.
+- **Tunnel:** Cloudflare Tunnel, or another (ngrok, Tailscale Funnel...).
+  It tells the app where the tunnel says each player's own address is, so
+  the limits on connections count each player apart.
+- **Port:** the port on this computer the tunnel points at (8790 unless
+  another program has it).
+
+The line under the fields says what to point the tunnel at
+(`http://localhost:PORT`) and the address the Invites will carry. The app
+listens on this computer alone; only the tunnel reaches it. The choices are
+kept for the saga, outside the saga file.
+
+### Issue Invite
+<!-- help: issue-invite; gui -->
+
+On the **Requests** tab, **Issue Invite** asks which Player to invite. Only
+Players whose passcode has at least 14 characters, set on
+[Players](help:tab-content-players) since this rule began, are offered; the
+others are listed with the reason. A storyguide's sign-in is not offered.
+
+The window then shows the line to send the player by chat or email, with a
+**Copy** button, and the host's six words to read them on the call. The
+line works once, on one device, for 24 hours. It is shown only then: the
+app keeps no copy of the code, so if you close it unsent, issue another.
+
+### Requests
+<!-- help: remote-seats-requests; gui -->
+
+When a player's app uses an Invite, their device waits here: the player,
+the device's name, its **three words** and when it asked. Ask the player to
+read you the three words their screen shows; **Approve** asks whether they
+match before it gives the device a seat. **Reject** turns it away; its
+Invite is spent. A request not decided within an hour lapses.
+
+### Seats
+<!-- help: remote-seats-list; gui -->
+
+Each device given a seat: the player, the device, its words, when it was
+last used, and when it expires if unused (or when it ended).
+
+- **Revoke** ends the chosen seat. Its connection is cut within a second,
+  and the device needs a new Invite to come back.
+- **Idle Expiry** sets how many days a seat may go unused before it stops
+  working (90 unless changed), for this saga.
+- **Rotate Host Key** gives the host a new key. Every Invite, waiting
+  request and seat ends at once, and each player needs a new Invite and
+  hears the new six words. If the saga is hosted, it starts again with the
+  new key.
+
+### Log
+<!-- help: remote-seats-log; gui -->
+
+What happened to Remote seats, newest first: Invites issued and redeemed,
+requests approved or rejected, sign-ins, wrong passcodes and lock-outs,
+revoked and expired seats, and new host keys. **Show** narrows it to one
+player. The log records who and when, never a passcode or a code, and keeps
+a year. It is kept outside the saga file, so players never receive it.
+
+**See also:** [How to host a saga](help:guide-hosting), [Players](help:tab-content-players)

@@ -65,6 +65,32 @@ enforces the line, including that neither front-end imports the other.
 | `data/` | The shared catalogs (`*_catalog.json`) and the shipped packs (`packs/`) |
 | `tools/` | Catalog and pack builders, the host launcher, the perf probe, the test slicer |
 
+### How a desktop page runs a command
+
+A button never changes the saga itself. It asks the core for a command
+(`commands.py`: a `Form`, `Choose`, `Confirm`, `Act` or `Refuse`) and hands
+it to `MainWindow.run` (`gui/window.py`). `run` steps through it with
+`commands.drive`, showing each question as a window through
+`gui/forms.py`'s `ask_question` (`step_dialog` picks `FieldsDialog`,
+`ChooseDialog` or `ConfirmDialog`). Each window is shown with
+`MainWindow.ask`, which tests replace to answer without showing anything.
+When the steps finish, `run` saves the saga and redraws the page.
+
+- **Where buttons appear.** A New or More action is placed on a page by
+  `forms/menu.py`'s `PLACES` (a chapter or section by name); `gui/menus.py`'s
+  `Placer` turns each into a button, and the page asks for the buttons of
+  a spot with `placer.placed_buttons(spot)`. Section verbs (Add, Edit,
+  Delete) come from `actions.SECTION_VERBS` and each sheet's `_section_ops`.
+- **How a page reaches the window.** A page is built with hooks (for
+  the saga page, `gui/pages.py`'s `SagaHooks`: `run`, `open_*`, `placer`);
+  the window wires them in its page builders (`MainWindow._saga_page` and
+  its neighbours).
+- **A window of its own.** A window that runs commands without saving the
+  saga (the Host for Players window, `gui/hosting.py`) calls `drive` and
+  `ask_question` itself, and is built on `gui/forms.py`'s `Sheet` for the
+  app's paper and title bar. Lists that refill as data changes use
+  `widgets.ledger_table`; the core's fixed tables use `widgets.table_view`.
+
 ## 3. Design patterns in use
 
 - **Strategy, as a registry: seasonal activities.** `rules/activities.ACTIVITIES`

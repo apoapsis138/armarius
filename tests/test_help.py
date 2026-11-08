@@ -1,6 +1,9 @@
 """Help: the help files are well formed, every tab and section
 of every sheet has help, and ? / F1 open Help on what has focus."""
 
+import re
+from pathlib import Path
+
 import pytest
 from screen_helpers import _show_tab
 from support import NODES, build_all_tabs, everything_saga, screen_lines, wait_until
@@ -265,6 +268,35 @@ def test_parse_puts_level_three_topics_on_the_page_above():
         ("part", "tab"),
     ]
     assert "<!--" not in ht.display_text(topics[3].text)
+
+
+#: A help id written in the source as text: help_id="...".
+_WRITTEN_HELP_ID = re.compile(r"help_id\s*(?::\s*\w+\s*)?=\s*\"([\w-]+)\"")
+
+
+def test_every_help_id_written_in_the_source_has_its_topic():
+    """A desktop file's help ids are topics of the desktop's Help, a
+    terminal file's of the terminal's, and the core's of either (a step
+    only one front-end shows is written for that one)."""
+    root = Path(ht.__file__).parent
+    missing = []
+    for path in sorted(root.rglob("*.py")):
+        where = path.relative_to(root).as_posix()
+        books = (
+            [GUI_BOOK]
+            if where.startswith("gui/")
+            else [BOOK]
+            if where.startswith("tui/")
+            else [BOOK, GUI_BOOK]
+        )
+        for found in _WRITTEN_HELP_ID.finditer(path.read_text(encoding="utf-8")):
+            if not any(found.group(1) in book.topics for book in books):
+                missing.append(f"{where}: {found.group(1)}")
+    assert not missing, "help ids with no Help topic: " + "; ".join(missing)
+
+
+def test_the_desktops_host_for_players_window_has_its_page():
+    assert "host-for-players-window" in GUI_BOOK.pages
 
 
 def test_every_tree_node_and_process_dialog_has_a_page():

@@ -15,13 +15,37 @@ from typing import Self, cast
 
 import aiohttp
 
+from .. import players
+from .identity import normalise_pin
+from .proof import make_proof
 from .protocol import Body, Refused, Reply, decode_reply, encode_request
 from .secure import MAX_FRAME, ChannelClosed, ChannelError, SecureChannel
+from .vault import DeviceVault
 
 
 def new_device_secret() -> str:
     """A fresh 128-bit secret for one request, as 32 hex digits."""
     return secrets.token_hex(16)
+
+
+class NoCredential(Exception):
+    """This device holds no credential for the host: it needs an Invite."""
+
+
+class SignInError(Exception):
+    """Signing in did not succeed. `kind` is "denied" (wrong passcode),
+    "locked" (wait `seconds`), "short_passcode" (the Storyguide must set a
+    longer one) or "refused"."""
+
+    def __init__(self, kind: str, seconds: int = 0) -> None:
+        super().__init__(kind)
+        self.kind = kind
+        self.seconds = seconds
+
+
+def _seconds(reply: Reply) -> int:
+    value = reply.body.get("seconds", 0)
+    return value if isinstance(value, int) and not isinstance(value, bool) else 0
 
 
 class _ClientWire:
@@ -48,10 +72,12 @@ class RemoteClient:
         http: aiohttp.ClientSession,
         ws: aiohttp.ClientWebSocketResponse,
         channel: SecureChannel,
+        pin: str,
     ) -> None:
         self._http = http
         self._ws = ws
         self._channel = channel
+        self._pin = pin
 
     @classmethod
     async def connect(cls, url: str, pin: str, timeout: float = 15.0) -> RemoteClient:
@@ -77,7 +103,7 @@ class RemoteClient:
         except BaseException:
             await http.close()
             raise
-        return cls(http, ws, channel)
+        return cls(http, ws, channel, normalise_pin(pin))  # valid: it matched
 
     async def request(self, name: str, body: Body | None = None) -> Reply:
         """Send one message and return the host's reply."""
@@ -89,17 +115,58 @@ class RemoteClient:
                 "The host sent something that was not understood."
             ) from None
 
-    async def redeem(self, code: str, device: str, secret: str) -> Reply:
+    async def redeem(
+        self, code: str, device: str, secret: str, vault: DeviceVault
+    ) -> Reply:
         """Ask for a Remote seat with an Invite's code. `secret` is made
         by this app for the request (`new_device_secret`) and kept to ask
-        how it went. Sent only inside the private session."""
+        how it went. Sent only inside the private session.
+
+        Raises NoKeychainError, before the Invite is spent, if `vault` has
+        nowhere safe to keep the credential."""
+        vault.ensure_available()
         return await self.request(
             "redeem", {"code": code, "device": device, "secret": secret}
         )
 
-    async def request_status(self, secret: str) -> Reply:
-        """How the request made with `secret` stands."""
-        return await self.request("request_status", {"secret": secret})
+    async def request_status(self, secret: str, vault: DeviceVault) -> Reply:
+        """How the request made with `secret` stands. When the Storyguide
+        has approved it, the reply carries the Device credential (once),
+        and it goes straight into `vault`."""
+        reply = await self.request("request_status", {"secret": secret})
+        credential = reply.body.get("credential")
+        if isinstance(credential, str) and credential:
+            vault.save(self._pin, credential)
+        return reply
+
+    async def sign_in(self, passcode: str, vault: DeviceVault) -> str:
+        """Sign in as the player this device was approved for, proving the
+        passcode without sending it. Returns the player's name.
+
+        Raises NoCredential, SignInError (wrong passcode, locked out, or a
+        passcode too short for a Remote seat) or ChannelError."""
+        credential = vault.load(self._pin)
+        if not credential:
+            raise NoCredential("This device has not been approved by the host.")
+        challenge = await self.request("begin_signin", {"credential": credential})
+        if challenge.type == "locked":
+            raise SignInError("locked", _seconds(challenge))
+        if challenge.type == "short_passcode":
+            raise SignInError("short_passcode")
+        salt, nonce = challenge.body.get("salt"), challenge.body.get("nonce")
+        if challenge.type != "challenge" or not isinstance(salt, str):
+            raise SignInError("refused")
+        try:
+            digest = players.passcode_digest(passcode, bytes.fromhex(salt))
+            proof = make_proof(digest, bytes.fromhex(str(nonce)), self._pin)
+        except ValueError:
+            raise SignInError("refused") from None
+        reply = await self.request("prove", {"proof": proof})
+        if reply.type == "signed_in":
+            return str(reply.body.get("player", ""))
+        if reply.type in ("denied", "locked"):
+            raise SignInError(reply.type, _seconds(reply))
+        raise SignInError("refused")
 
     async def close(self) -> None:
         try:

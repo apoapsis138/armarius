@@ -37,6 +37,7 @@ from ..models import (
     SagaSource,
     Spell,
 )
+from ..remote.passcodes import RemotePasscodes, passcodes_path
 from ..rules import spell_levels
 
 # ------------------------------------------------------------------ spells
@@ -686,7 +687,8 @@ def player_fields(existing: Player | None) -> list[DialogField]:
             "Passcode" if existing is None else "New passcode",
             "secret",
             "",
-            hint="Give it to them yourself; it is stored only scrambled."
+            hint="At least 14 characters. Give it to them yourself; it is "
+            "stored only scrambled."
             if existing is None
             else "Blank keeps the one they have.",
         ),
@@ -698,6 +700,8 @@ def player_problem(
 ) -> str | None:
     if existing is None and not values.get("passcode"):
         return "Passcode is required."
+    if values.get("passcode") and (weak := pl.passcode_problem(values["passcode"])):
+        return weak
     return pl.name_problem(saga, values.get("name") or "", existing)
 
 
@@ -707,9 +711,14 @@ def player_ops(saga: Saga) -> SectionOps:
     def form(existing: Player | None) -> Form:
         def apply(values: dict[str, Any]) -> None:
             if existing is None:
-                pl.add(saga, values)
+                player = pl.add(saga, values)
             else:
+                player = existing
                 pl.update(existing, values)
+            if values.get("passcode"):
+                RemotePasscodes(passcodes_path(saga.name)).note(
+                    player, values["passcode"]
+                )
 
         return Form(
             player_title(existing),
@@ -720,10 +729,15 @@ def player_ops(saga: Saga) -> SectionOps:
 
     def remove(index: int) -> Confirm:
         player = saga.players[index]
+
+        def apply() -> None:
+            pl.remove(saga, player)
+            RemotePasscodes(passcodes_path(saga.name)).forget(player.id)
+
         return Confirm(
             f"Delete the player {escape(player.name)}?\n\n"
             "They will no longer be able to sign in.",
-            lambda: pl.remove(saga, player),
+            apply,
         )
 
     return SectionOps(

@@ -57,6 +57,8 @@ from PySide6.QtWidgets import (
     QStyledItemDelegate,
     QStyleOptionViewItem,
     QTableView,
+    QTableWidget,
+    QTableWidgetItem,
     QVBoxLayout,
     QWidget,
 )
@@ -1175,3 +1177,47 @@ def level_box(prefix: str) -> QSpinBox:
     spin.setSpecialValueText(f"{prefix}: any")
     spin.setPrefix(f"{prefix}: ")
     return spin
+
+
+def ledger_table(columns: list[str], p: Palette) -> QTableWidget:
+    """A ledger whose rows are refilled as data changes (fill_ledger) and
+    chosen one at a time by id (ledger_choice), in the body serif: the
+    app's style sheet sets a bare table in its display face. The core's
+    fixed tables are table_view's instead."""
+    table = QTableWidget(0, len(columns))
+    table.setHorizontalHeaderLabels(columns)
+    table.verticalHeader().hide()
+    table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+    table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+    table.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+    # The columns share the window's width and a long entry wraps, so a
+    # narrow window never scrolls sideways.
+    table.setWordWrap(True)
+    table.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+    table.setFont(serif(13))
+    table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+    table.verticalHeader().setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
+    table_style(table, p)
+    return table
+
+
+def fill_ledger(table: QTableWidget, rows: list[tuple[str, list[str]]]) -> None:
+    """Put `rows` (an id, then each column's words) in `table`, keeping the
+    chosen row chosen when it is still there, else choosing the first."""
+    chosen = ledger_choice(table)
+    table.setRowCount(len(rows))
+    for row, (row_id, cells) in enumerate(rows):
+        for column, words in enumerate(cells):
+            item = QTableWidgetItem(words)
+            item.setData(Qt.ItemDataRole.UserRole, row_id)
+            table.setItem(row, column, item)
+    ids = [row_id for row_id, _ in rows]
+    if ids:
+        table.selectRow(ids.index(chosen) if chosen in ids else 0)
+
+
+def ledger_choice(table: QTableWidget) -> str | None:
+    """The id of the row chosen, if any."""
+    row = table.currentRow()
+    item = table.item(row, 0) if row >= 0 else None
+    return None if item is None else str(item.data(Qt.ItemDataRole.UserRole))

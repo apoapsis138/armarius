@@ -225,7 +225,9 @@ def test_an_export_for_the_table_leaves_out_secrets_and_unknown_records():
     assert lord is not None
     lord.secrets = as_secrets("A werewolf")
     data = transfer.export_saga_data(saga)
-    assert transfer.for_reader(data) is data
+    # The storyguide's: everything but who signs in.
+    assert transfer.for_reader(data) == transfer.without_players(data)
+    assert transfer.for_reader(data)["saga"]["neighbours"][0]["secrets"]
     _as_table(saga)
     kept = transfer.for_reader(data)["saga"]
     assert [n["id"] for n in kept["neighbours"]] == ["lord"]

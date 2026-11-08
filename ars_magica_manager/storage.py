@@ -4,9 +4,7 @@ user's data folder (paths.data_dir())."""
 from __future__ import annotations
 
 import json
-import os
 import re
-import time
 from collections.abc import Callable, Iterable, Iterator
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass, is_dataclass
@@ -15,7 +13,7 @@ from pathlib import Path
 from typing import Any
 
 from . import __version__, catalog, laboratories, paths
-from .files import write_atomic
+from .files import held_lock, write_atomic
 from .merge import merge
 from .models import Saga
 from .rules import siege as siege_rules
@@ -299,36 +297,12 @@ def newer_save_note(saga: Saga) -> str | None:
     )
 
 
-#: How long save_saga waits for another copy's save to finish, and after
-#: how long a lock is taken to be left over from a copy that died mid-save.
-_LOCK_WAIT = 10.0
-_LOCK_STALE = 30.0
-
-
 @contextmanager
 def _saga_lock(saga_id: str) -> Iterator[None]:
     """Hold the saga's lock file (".<id>.lock" beside it) while saving, so two
     copies never merge into the file at once."""
-    lock = sagas_dir() / f".{saga_id}.lock"
-    lock.parent.mkdir(parents=True, exist_ok=True)
-    deadline = time.monotonic() + _LOCK_WAIT
-    while True:
-        try:
-            os.close(os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY))
-            break
-        except FileExistsError:
-            try:
-                stale = time.time() - lock.stat().st_mtime > _LOCK_STALE
-            except OSError:
-                continue  # just released: try again
-            if stale or time.monotonic() > deadline:
-                lock.unlink(missing_ok=True)
-                continue
-            time.sleep(0.02)
-    try:
+    with held_lock(sagas_dir() / f".{saga_id}.lock"):
         yield
-    finally:
-        lock.unlink(missing_ok=True)
 
 
 #: How many backups backup_saga() keeps of each saga: the newest, plus older
