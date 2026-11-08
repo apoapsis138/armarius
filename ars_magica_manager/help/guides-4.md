@@ -360,6 +360,7 @@ Each saga is saved as one file, the saga's id followed by `.json`, in the `sagas
 - Before a season with plans is applied, the app copies the saga to `sagas/backups`, keeping the last five (the newest has the saga's own file name; older ones end `.1.json` to `.4.json`). To undo that season, copy the backup over the saga's file with the app closed.
 - That is the only backup the app keeps, so for anything older, copy the saga's file yourself from time to time.
 - To keep a single character, laboratory or covenant safe before a big change, export it as above.
+- Every saga file, export and pack is checked as it is read: a field holding the wrong kind of thing (a file edited by hand, or damaged) is named, and the saga isn't opened, nor changed. Copy a backup over its file to go back to before the damage.
 
 **See also:** [Import Data](help:import-data), [Import Spells](help:import-spells), [Unassigned Books](help:unassigned-books), [Library tab](help:tab-cov-library), [House Rules](help:tab-content-house-rules), [The saga](help:saga), [Advancing a season](help:advance-season)
 
@@ -432,7 +433,7 @@ but never in the Diary line it writes.
 <!-- gui -->
 5. To stop, click **Stop Hosting** in the Host for Players window. Every player's copy closes at once; what they saved is kept. Closing the app stops hosting too, after asking.
 
-Players with Armarius on their own computers can join over the internet instead: choose **Remote seats** in the same window (see [Host for Players](help:host-for-players-window)).
+Players with Armarius on their own computers can join over the internet instead: choose **Remote seats** in the same window (see [Host for Players](help:host-for-players-window) and [Remote seats](help:guide-hosting-remote)).
 <!-- /gui -->
 
 If you choose an address the computer doesn't have, or a port another program is using, the app says so and nothing starts.
@@ -440,6 +441,11 @@ If you choose an address the computer doesn't have, or a port another program is
 Every few seconds each player's copy picks up what the others saved. If it finds the saga file damaged (edited by hand, or cut short by another program), it says so once and goes on with its own data; its next save writes the whole file again.
 
 **From a terminal instead.** The same host runs in a terminal in the app's folder with `uv run python tools/serve.py --host ADDRESS` (add `--port 8001` for another port, `--ssh-port 2222` for SSH). It hosts until you press Ctrl+C there, whichever window of the app you have open.
+
+### Remote seats: players with their own Armarius
+<!-- help: guide-hosting-remote; gui -->
+
+With your own tunnel (Cloudflare Tunnel, or another) pointed at this computer, host for **Remote seats** in the Host for Players window and **Issue Invite** to each player. They paste it into **Join a Saga** on their title page or Sagas shelf, check your six words on the call, read you their device's three words, and you **Approve**. Their steps are in [Join a Saga](help:join-game), and what they can expect of you in [What a host can and can't see or do](help:what-a-host-sees).
 
 ### Tailscale
 <!-- help: guide-hosting-tailscale -->

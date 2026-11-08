@@ -1570,3 +1570,74 @@ player. The log records who and when, never a passcode or a code, and keeps
 a year. It is kept outside the saga file, so players never receive it.
 
 **See also:** [How to host a saga](help:guide-hosting), [Players](help:tab-content-players)
+
+# Join a Saga
+<!-- help: join-game; gui -->
+
+Join a saga your storyguide hosts on their own computer, from your own
+copy of Armarius, over the internet. Click **Join a Saga** on the title
+page or the Sagas shelf. The first time takes a few steps; after that you sign in with your
+passcode.
+
+### The first time
+<!-- help: join-game-first; gui -->
+
+1. **Paste the invite** your storyguide sent you (a line that begins
+   `ARM1`). It works once, on one computer, for a day.
+2. **Check the six words.** Your storyguide reads six words out on your
+   call. If they match the six on your screen, click **They match**. If
+   they don't, click **They don't match**: the invite may have been
+   changed on its way to you, so nothing is sent, and you should ask for
+   a new one, by another way if you can.
+3. **Name this computer** (its own name to start with), so your
+   storyguide knows which device is asking, then **Ask for a Seat**.
+4. **Read your three words** to your storyguide. When they match what
+   their screen shows, they let you in; the window moves on by itself.
+5. **Your passcode**, the one your storyguide gave you (at least 14
+   characters). The saga opens.
+
+The saga then stays on your shelf, marked **Hosted elsewhere**.
+
+### Coming back, and leaving
+<!-- help: join-game-again; gui -->
+
+Click the saga on the shelf and type your passcode. If the connection
+drops while you play, the app connects again by itself; changes you made
+meanwhile are sent once it's back (closing the app before then asks
+first). If your seat has ended (your storyguide revoked it, you didn't use
+it for a long while, or they gave their host a new key), the app says so:
+ask for a new invite. **Leave Saga** on the saga's card forgets this
+computer's seat; to come back you'll need a new invite.
+
+While you play, your pages show what you may see, and you change only
+what's yours (your characters, their laboratories, familiars and season
+plans, and the covenants if your storyguide gave you covenant rights).
+Every few seconds your pages pick up what others saved, with a note at
+the window's foot.
+
+### What a host can and can't see or do
+<!-- help: what-a-host-sees; gui -->
+
+- **Your saga, as you may see it, is all you receive.** Secrets you
+  haven't been told, places and people you don't know of, and other
+  things your storyguide keeps to themselves never leave their computer.
+- **Nothing is stored on your computer** but this device's seat, kept in
+  your computer's own keychain (Windows Credential Manager, macOS
+  Keychain or a Linux Secret Service). The saga stays in memory while
+  it's open and is gone when you close it.
+- **Your passcode never crosses the internet**, not even scrambled: your
+  app proves it knows it, in a way that is useless to anyone who
+  overhears, and to anyone pretending to be the host.
+- **The six words are your check that you reached your storyguide**, not
+  someone in the middle. Compare them on your call each time you join
+  from a new invite.
+- **What your storyguide's computer sees:** your internet address (as any
+  website does), when you play, and the changes you make, each recorded
+  in their log by which record it touched (never what you typed). Their
+  tunnel company sees that you connected, not what passed.
+- **What it can't do:** reach anything on your computer. The app takes
+  only saga records from it and runs nothing it sends. Every record is
+  checked against the form the app's records have before it is used:
+  anything else is refused, and the app names the field it couldn't read.
+
+**See also:** [How to host a saga](help:guide-hosting)

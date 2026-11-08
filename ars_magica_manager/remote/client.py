@@ -16,6 +16,7 @@ import hashlib
 import json
 import secrets
 import zlib
+from collections.abc import Callable
 from typing import Any, Self, cast
 
 import aiohttp
@@ -67,8 +68,12 @@ def _seconds(reply: Reply) -> int:
 class UnreadableReply(ChannelError):
     """The host sent something this app can't read: the conversation ends."""
 
-    def __init__(self) -> None:
-        super().__init__("The host sent something this app can't read.")
+    def __init__(self, field: str = "") -> None:
+        super().__init__(
+            f"The host sent a saga this app can't read ({field})."
+            if field
+            else "The host sent something this app can't read."
+        )
 
 
 class ChangeNotSaved(Exception):
@@ -203,6 +208,16 @@ class RemoteClient:
 
         Raises NoCredential, SignInError (wrong passcode, locked out, or a
         passcode too short for a Remote seat) or ChannelError."""
+        return await self.sign_in_with(
+            lambda salt: players.passcode_digest(passcode, salt), vault
+        )
+
+    async def sign_in_with(
+        self, digest_for: Callable[[bytes], bytes], vault: DeviceVault
+    ) -> str:
+        """sign_in, with the passcode's derived key worked out by
+        `digest_for` from the host's salt: a reconnect gives the key kept
+        in memory for the session, so the passcode isn't asked again."""
         credential = vault.load(self._pin)
         if not credential:
             raise NoCredential("This device has not been approved by the host.")
@@ -215,7 +230,7 @@ class RemoteClient:
         if challenge.type != "challenge" or not isinstance(salt, str):
             raise SignInError("refused")
         try:
-            digest = players.passcode_digest(passcode, bytes.fromhex(salt))
+            digest = digest_for(bytes.fromhex(salt))
             proof = make_proof(digest, bytes.fromhex(str(nonce)), self._pin)
         except ValueError:
             raise SignInError("refused") from None
@@ -302,13 +317,14 @@ class RemoteClient:
             raise UnreadableReply
         try:
             data = json.loads(text)
-            if not isinstance(data, dict):
-                raise ValueError("not a saga")
-            # The host's data, unchecked until here: a field of the wrong
-            # kind fails in the models' constructors as TypeError.
-            return revision, storage.saga_from_data(cast(dict[str, Any], data))
-        except ValueError, KeyError, TypeError, RecursionError:
+        except ValueError, RecursionError:
             raise UnreadableReply from None
+        try:
+            # The host's data: its shape checked before and after building
+            # (shapes.py), strictly, as this app's own version wrote it.
+            return revision, storage.saga_from_data(data, strict=True)
+        except (ValueError, KeyError, RecursionError) as problem:
+            raise UnreadableReply(str(problem)[:200]) from None
 
     async def picture(self, folder: str, name: str) -> bytes | None:
         """A portrait or map the seat's saga names, or None if the host

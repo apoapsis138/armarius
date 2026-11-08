@@ -15,6 +15,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
+from .. import shapes
 from .folder import remote_file
 
 KEEP = 365 * 24 * 3600.0
@@ -89,17 +90,8 @@ class AuditLog:
         found: list[AuditEntry] = []
         for line in self._path.read_text(encoding="utf-8").splitlines():
             try:
-                data = json.loads(line)
-                found.append(
-                    AuditEntry(
-                        float(data["when"]),
-                        str(data["event"]),
-                        str(data.get("player_id", "")),
-                        str(data.get("device_id", "")),
-                        str(data.get("record", "")),
-                    )
-                )
-            except ValueError, KeyError, TypeError:
+                found.append(shapes.build(AuditEntry, json.loads(line)))
+            except ValueError:
                 continue
         return found
 

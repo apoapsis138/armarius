@@ -86,6 +86,12 @@ def test_with_no_sagas_it_offers_to_begin_one():
     assert page.saga_id is None
 
 
+def test_a_front_end_that_joins_offers_join_a_saga_in_new_sagas_place():
+    page = tp.title_page([], joining=True)
+    assert _keys(page) == [tp.SAGAS, tp.JOIN, tp.HELP]
+    assert page.choices[1].label == "Join a Saga"
+
+
 def test_open_saga_opens_the_saga_opened_last():
     first, second = everything_saga(), everything_saga()
     second.id, second.name = "second", "The Second Saga"

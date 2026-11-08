@@ -10,9 +10,9 @@ from contextlib import contextmanager
 from dataclasses import asdict, dataclass, is_dataclass
 from dataclasses import fields as dataclass_fields
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
-from . import __version__, catalog, laboratories, paths
+from . import __version__, catalog, laboratories, paths, shapes
 from .files import held_lock, write_atomic
 from .merge import merge
 from .models import Saga
@@ -166,7 +166,7 @@ def reload_into(saga: Saga) -> list[tuple[str, str]] | None:
     try:
         raw = json.loads(text)
         fresh = _from_data(raw)
-    except (ValueError, TypeError, KeyError) as problem:
+    except (ValueError, KeyError) as problem:
         raise ValueError(f"the saga file can't be read ({problem})") from problem
     changed = _update_in_place(saga, fresh)
     data = _with_newer(asdict(saga), _remember_newer(path, raw))
@@ -229,7 +229,7 @@ def _normalized(text: str | None) -> dict[str, Any] | None:
     try:
         raw = json.loads(text)
         return _with_newer(asdict(_from_data(raw)), raw if _is_newer(raw) else None)
-    except ValueError, TypeError, KeyError:
+    except ValueError, KeyError:
         return None
 
 
@@ -356,15 +356,34 @@ def load_saga(saga_id: str) -> Saga:
     return saga
 
 
-def saga_from_data(data: dict[str, Any]) -> Saga:
-    """A saga from its saved data, as a file is opened (migrations
-    included), without reading or remembering any file: a Remote seat's
-    copy, sent by the host."""
-    return _from_data(data)
+def unreadable_note(saga_id: str, problem: Exception) -> str:
+    """What to tell the storyguide when the saga `saga_id` can't be opened
+    (OSError, or ValueError naming the field): why, and where its earlier
+    copies are."""
+    return (
+        f"{saga_id} can't be opened: {problem}. It isn't changed. Its earlier "
+        "copies are in sagas/backups in your data folder: with the app closed, "
+        "copy one over the saga's file in sagas."
+    )
 
 
-def _from_data(data: dict[str, Any]) -> Saga:
-    saga = Saga.from_dict(data, lab_feature_names=catalog.lab_feature_names())
+def saga_from_data(data: object, *, strict: bool = False) -> Saga:
+    """A saga from its saved data, as a file is opened (migrations and the
+    shape check included), without reading or remembering any file: a
+    Remote seat's copy, sent by the host, or a change a seat sent. With
+    `strict` (data from the network), older shapes and keys the app doesn't
+    know are refused too. Raises ValueError naming the field."""
+    return _from_data(data, strict=strict)
+
+
+def _from_data(data: object, *, strict: bool = False) -> Saga:
+    """Built from `data`, after and before the shape check (shapes.py):
+    ValueError, naming the field, for data of the wrong shape."""
+    shapes.check_raw(data, Saga, strict=strict)
+    assert isinstance(data, dict)  # check_raw refuses anything else
+    saga = Saga.from_dict(
+        cast(dict[str, Any], data), lab_feature_names=catalog.lab_feature_names()
+    )
     for lab in saga.laboratories:
         # Specialization grants typed in before the catalog carried them.
         laboratories.migrate_specialty_stand_ins(lab)
@@ -372,6 +391,7 @@ def _from_data(data: dict[str, Any]) -> Saga:
         # A whole wall's measure and the next supplies roll's day, for
         # sieges saved before either was kept.
         siege_rules.migrate(siege)
+    shapes.check_built(saga)
     return saga
 
 

@@ -19,7 +19,7 @@ TAGLINE = "A saga manager for Ars Magica"
 LAST_SAGA = "last_saga"
 
 #: The ways on, by key.
-OPEN, SAGAS, NEW, HELP = "open", "sagas", "new", "help"
+OPEN, SAGAS, NEW, JOIN, HELP = "open", "sagas", "new", "join", "help"
 
 
 @dataclass(frozen=True)
@@ -68,13 +68,17 @@ def last_saga(saga_ids: list[str]) -> str | None:
 def _saga_name(saga_id: str) -> str | None:
     try:
         return storage.load_saga(saga_id).name
-    except OSError, ValueError, TypeError, KeyError:
+    except OSError, ValueError, KeyError:
         return None
 
 
-def title_page(saga_ids: list[str] | None = None) -> TitlePage:
+def title_page(
+    saga_ids: list[str] | None = None, *, joining: bool = False
+) -> TitlePage:
     """The title page for the sagas `saga_ids` (all saved ones by
-    default). Only the storyguide's own window opens on it: a player's
+    default). A front-end that can join a saga hosted elsewhere (`joining`)
+    offers Join a Saga in New Saga's place, which stays on the sagas'
+    shelf. Only the storyguide's own window opens on it: a player's
     copy of a hosted saga goes straight to the sagas, to sign in."""
     saga_ids = storage.list_sagas() if saga_ids is None else saga_ids
     release = release_name()
@@ -97,6 +101,9 @@ def title_page(saga_ids: list[str] | None = None) -> TitlePage:
             "Choose one to open" if saga_ids else "None saved yet",
         )
     )
-    choices.append(TitleChoice(NEW, "New Saga", "Begin a saga of your own"))
+    if joining:
+        choices.append(TitleChoice(JOIN, "Join a Saga", "Hosted by your storyguide"))
+    else:
+        choices.append(TitleChoice(NEW, "New Saga", "Begin a saga of your own"))
     choices.append(TitleChoice(HELP, "Help", "The guides and rules"))
     return TitlePage(NAME, TAGLINE, edition, tuple(choices), saga_id)

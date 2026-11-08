@@ -34,7 +34,9 @@ if TYPE_CHECKING:
 
 _SAGA_ITEM_ID_PREFIX = "saga-"
 #: What loading a damaged or hand-edited saga file can raise.
-_UNREADABLE = (OSError, ValueError, TypeError, KeyError)
+#: A saga file that can't be read: shapes.py names a field of the wrong
+#: shape as ValueError.
+_UNREADABLE = (OSError, ValueError, KeyError)
 
 
 class SagaPickerScreen(Screen[None]):
@@ -235,8 +237,9 @@ class SagaPickerScreen(Screen[None]):
             saga = storage.load_saga(saga_id)
         except _UNREADABLE as problem:
             self.notify(
-                f"Couldn't open {escape(saga_id)}: {escape(str(problem))}",
+                escape(storage.unreadable_note(saga_id, problem)),
                 severity="error",
+                timeout=20,
             )
             return
         if not self.app.is_web:

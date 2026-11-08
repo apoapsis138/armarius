@@ -57,6 +57,7 @@ from .. import (
     help_text,
     hosting,
     hotkeys,
+    joined_games,
     paths,
     references,
     saga_index,
@@ -86,13 +87,16 @@ from ..forms import creation as creation_forms
 from ..forms import menu as menu_forms
 from ..forms import printing as print_forms
 from ..forms import saga as saga_forms
+from ..joined_games import JoinedGame
 from ..markup import escape
 from ..models import Character, Covenant, Familiar, Laboratory, Player, Saga
 from ..paths import APP_NAME
+from ..saga_store import LocalStore, SagaStore
 from ..sheets import laboratory as ls
 from . import atlas as atlas_page
 from . import (
     choices,
+    joined,
     medallions,
     motion,
     pictures,
@@ -107,16 +111,18 @@ from .closing import confirm_close_while_hosting
 from .note import NoteStrip
 
 #: How often the window looks for another copy's save (ms), as the
-#: terminal does.
+#: terminal does; for a Joined game, how often it asks the host.
 SHARED_TICK_MS = 2000
+REMOTE_TICK_MS = 5000
 from .conflicts import FightPage, SiegePage
 from .covenant import CovenantPage
 from .familiar import FamiliarPage
 from .finder import FinderPanel, eye_icon, magnifier_icon
-from .forms import NoticeDialog, ask_question, run_steps
+from .forms import ConfirmDialog, NoticeDialog, ask_question, run_steps
 from .help import HelpPage
 
 if TYPE_CHECKING:
+    from ..remote.seat_session import SeatSession
     from .hosting import HostingWindow
 from .icon import app_icon
 from .laboratory import LaboratoryPage
@@ -124,7 +130,7 @@ from .manage import Moded, RecordControls
 from .markup_html import plain
 from .medallions import SeasonHeadpiece
 from .menus import Placer
-from .pages import SagaPage, SagaShelf
+from .pages import JoinedShelf, SagaPage, SagaShelf
 from .region import NeighbourPage
 from .saga_content import SagaContentPage
 from .season_panel import SeasonPanel
@@ -199,6 +205,7 @@ def dress_application(app: QApplication, p: Palette) -> None:
     app.setStyleSheet(style_sheet(p, pictures.SERIF))
     gilding.gild_application(app, p)
     choices.ink_choices(app, p)
+
 
 #: Each page's help topic (help_text: a page's id), most specific first.
 _HELP_IDS = {
@@ -367,6 +374,13 @@ class MainWindow(QMainWindow):
         self.title: TitleScreen | None = None
         self.grips = Grips(self)
 
+        #: Where the saga on show loads and saves (ADR 0011): the data
+        #: folder, or a Joined game's host.
+        self.store: SagaStore = LocalStore()
+        #: A Joined game's conversation with its host, while one is open.
+        self.session: SeatSession | None = None
+        #: Changes made while a Joined game's host couldn't be reached.
+        self.unsent = False
         #: What another copy of a hosted saga just saved, said at the foot.
         self.note = NoteStrip(self)
         #: Every few seconds, while the saga has players: pick up what
@@ -575,7 +589,7 @@ class MainWindow(QMainWindow):
 
     def show_title(self) -> None:
         """Show the title page over the whole window, fading in."""
-        page = title_page.title_page(self.saga_ids)
+        page = title_page.title_page(self.saga_ids, joining=True)
         self.title = TitleScreen(page, self.palette_, self.leave_title)
         TopStrip(self.title, self, self.palette_)
         self.stack.addWidget(self.title)
@@ -585,7 +599,7 @@ class MainWindow(QMainWindow):
 
     def leave_title(self, key: str) -> None:
         """Go on from the title page by the way chosen (title_page.OPEN,
-        SAGAS, NEW or HELP). New Saga goes by the shelf, so cancelling its
+        SAGAS, NEW, JOIN or HELP). New Saga goes by the shelf, so cancelling its
         form leaves the shelf on show."""
         title, self.title = self.title, None
         if title is None:
@@ -603,6 +617,8 @@ class MainWindow(QMainWindow):
         self.go([Place(SHELF)])
         if key == title_page.NEW:
             self.new_saga()
+        elif key == title_page.JOIN:
+            self.join_game()
         elif key == title_page.HELP:
             self.open_help()
 
@@ -622,6 +638,7 @@ class MainWindow(QMainWindow):
 
     def _shelf_again(self) -> None:
         """Read the sagas again and show the shelf."""
+        self.end_joined()
         self.saga_ids = storage.list_sagas()
         self.saga = None
         self.player = None
@@ -671,7 +688,12 @@ class MainWindow(QMainWindow):
         )
 
     def open_saga(self, saga_id: str) -> None:
-        saga = storage.load_saga(saga_id)
+        try:
+            saga = storage.load_saga(saga_id)
+        except (OSError, ValueError) as problem:
+            self.tell("Can't Open the Saga", storage.unreadable_note(saga_id, problem))
+            return
+        self.end_joined()
         self.load(saga)
         note = storage.newer_save_note(saga)
         if note is not None:
@@ -679,41 +701,112 @@ class MainWindow(QMainWindow):
             # when only one saga is on the shelf).
             QTimer.singleShot(0, lambda: self.tell("Saved by a newer Armarius", note))
 
-    def load(self, saga: Saga) -> None:
+    def load(self, saga: Saga, player: Player | None = None) -> None:
         """Open `saga` at its page of covenants, in Player view if it was
-        left in it on this computer."""
+        left in it on this computer; read as `player` (a Joined game's
+        Player), or as its storyguide."""
         self.saga = saga
-        self.player = None
+        self.player = player
         self._use_viewer()
         # Its user-made entries join the shared catalogs, as in the terminal.
         catalog.use_saga(saga)
         title_page.remember_saga(saga.id)
         self.go([Place(SHELF), Place(SAGA)])
-        if saga.players:
+        self.shared_timer.setInterval(
+            REMOTE_TICK_MS if self.store.remote else SHARED_TICK_MS
+        )
+        if saga.players or self.store.remote:
             self.shared_timer.start()
         else:
             self.shared_timer.stop()
+
+    # -- Joined games (gui/joined.py) --
+
+    def join_game(self) -> None:
+        joined.join_game(self)
+
+    def rejoin(self, game: JoinedGame) -> None:
+        joined.rejoin(self, game)
+
+    def leave_game(self, game: JoinedGame) -> None:
+        joined.leave_game(self, game)
+
+    def end_joined(self) -> None:
+        joined.end_joined(self)
+
+    def reconnect(self) -> None:
+        joined.reconnect(self)
+
+    def shelf_again(self) -> None:
+        self._shelf_again()
+
+    def save_saga(self) -> None:
+        """Save the saga where it came from (self.store). A Joined game's
+        changes go to the host one record at a time; what the host refused
+        is said, and the page shows the host's saga again."""
+        saga = self.saga
+        if saga is None:
+            return
+        try:
+            saved = self.store.save(saga)
+        except ConnectionError, TimeoutError:
+            self.unsent = True
+            self.note.say(
+                "Not sent yet: the host can't be reached. It goes when the "
+                "connection is back.",
+                self.palette_,
+            )
+            return
+        self.unsent = False
+        if not self.store.remote:
+            return
+        if saved.refused:
+            self.tell(
+                "Not Saved",
+                "The host didn't take your change to "
+                + escape(", ".join(saved.refused))
+                + ": it isn't yours to change. The page shows the host's saga again.",
+            )
+        self.pick_up()
 
     def shared_tick(self) -> None:
         """Pick up another copy's save, as the terminal does: the page
         drawn again with a note saying who changed what. Waits while a
         form or question is open, so nothing being typed is touched."""
+        if self.saga is None or self._step_open():
+            return
+        if self.store.remote and self.unsent:
+            self.save_saga()
+        self.pick_up()
+
+    def pick_up(self) -> None:
+        """Bring in what another copy (or the host) saved, and say so."""
         saga = self.saga
-        if saga is None or self._step_open():
+        if saga is None:
             return
         try:
-            changed = storage.reload_into(saga)
+            found = self.store.refresh(saga)
         except ValueError as problem:
             if not self._unreadable:
-                self.note.say(
-                    f"Another copy's save couldn't be read ({problem}); yours is kept.",
-                    self.palette_,
+                said = (
+                    f"{problem} Yours is kept."
+                    if self.store.remote
+                    else f"Another copy's save couldn't be read ({problem}); yours is kept."
                 )
+                self.note.say(said, self.palette_)
             self._unreadable = True
             return
-        self._unreadable = False
-        if not changed:
+        except ConnectionError, TimeoutError:
+            self.reconnect()
             return
+        self._unreadable = False
+        if found is None:
+            return
+        if found.saga is not saga:
+            saga = self.saga = found.saga
+            catalog.use_saga(saga)
+            self._use_viewer()
+        changed = found.changed
         who = saga.saved_by or "The storyguide"
         place = self.trail[-1] if self.trail else None
         open_record = self._shown_record(place)
@@ -797,7 +890,8 @@ class MainWindow(QMainWindow):
         has_players = saga is not None and any(
             not seat.runs_the_saga(p) for p in saga.players
         )
-        self.seat_button.setVisible(has_players)
+        # A Joined game's reader is the Player: no one else's seat to take.
+        self.seat_button.setVisible(has_players and not self.store.remote)
         self.seat_button.setText(
             f"  Playing as {self.player.name}" if self.player is not None else ""
         )
@@ -1049,13 +1143,29 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, event: QCloseEvent) -> None:
         """Closing while the saga is hosted asks first: it ends every
-        player's connection."""
+        player's connection. So does closing a Joined game with changes the
+        host hasn't had yet."""
         if hosting.HOST.running and not confirm_close_while_hosting(
             self.palette_, self, self.ask
         ):
             event.ignore()
             return
+        if self.unsent and not self._lose_unsent():
+            event.ignore()
+            return
+        self.end_joined()
         super().closeEvent(event)
+
+    def _lose_unsent(self) -> bool:
+        question = ConfirmDialog(
+            "Some of your changes haven't reached the host yet: the connection "
+            "is down. Close anyway and lose them?",
+            self.palette_,
+            self,
+            yes_label="Close and Lose Them",
+            title="Changes Not Sent",
+        )
+        return self.ask(question) == QDialog.DialogCode.Accepted
 
     def advance_season(self) -> None:
         """Advance the saga by one season (advance_forms), then show the
@@ -1168,7 +1278,7 @@ class MainWindow(QMainWindow):
             sounds.play("tock")
             self.tell(outcome.title, outcome.why)
             return
-        storage.save_saga(self.saga)
+        self.save_saga()
         if isinstance(outcome, Then):
             # Kept and saved; the page is drawn again before the next step.
             self.redraw()
@@ -1308,7 +1418,16 @@ class MainWindow(QMainWindow):
         if place.kind == HELP:
             return self._help_page()
         if place.kind == SHELF or saga is None:
-            sagas = [storage.load_saga(saga_id) for saga_id in self.saga_ids]
+            sagas, unreadable = [], []
+            for saga_id in self.saga_ids:
+                try:
+                    sagas.append(storage.load_saga(saga_id))
+                except (OSError, ValueError) as problem:
+                    unreadable.append(storage.unreadable_note(saga_id, problem))
+            if unreadable:
+                # Said once the shelf is on show; the rest are listed.
+                said = "\n\n".join(unreadable)
+                QTimer.singleShot(0, lambda: self.tell("A Saga Can't Be Opened", said))
             return SagaShelf(
                 sagas,
                 p,
@@ -1317,6 +1436,9 @@ class MainWindow(QMainWindow):
                 self.delete_saga,
                 self.change_save_folder,
                 str(paths.data_dir()),
+                joined=JoinedShelf(
+                    joined_games.listed(), self.join_game, self.rejoin, self.leave_game
+                ),
             )
         if place.kind == SAGA:
             return self._saga_page(saga, p)

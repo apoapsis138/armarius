@@ -29,7 +29,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import IO, ClassVar, Protocol
 
-from . import paths, settings
+from . import paths, settings, shapes
 
 #: How a hosted copy is reached, told to it in this environment variable:
 #: "web" (a browser) or "ssh".
@@ -151,15 +151,12 @@ def last_plan() -> Plan:
     Tailscale if this computer has one, else localhost."""
     saved = settings.load_settings().get("hosting")
     if isinstance(saved, dict):
-        try:
-            ssh = saved.get("ssh_port")
-            return Plan(
-                str(saved.get("address") or LOCALHOST),
-                int(saved.get("port") or DEFAULT_PORT),
-                int(ssh) if ssh else None,
-            )
-        except TypeError, ValueError:
-            pass
+        ssh = shapes.whole(saved.get("ssh_port"))
+        return Plan(
+            str(saved.get("address") or LOCALHOST),
+            shapes.whole(saved.get("port"), DEFAULT_PORT),
+            ssh or None,
+        )
     tailscale = [a for a in addresses() if ipaddress.ip_address(a) in _TAILSCALE]
     return Plan(tailscale[0] if tailscale else LOCALHOST)
 

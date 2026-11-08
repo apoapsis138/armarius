@@ -106,7 +106,7 @@ class Arms:
             known["count"] = 1
         return cls(**known)
 
-    def to_dict(self) -> dict[str, str]:
+    def to_dict(self) -> dict[str, str | int]:
         return asdict(self)
 
     @property

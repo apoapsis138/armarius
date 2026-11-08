@@ -111,7 +111,13 @@ class SeatChanges:
             if player is None:
                 raise ChangeRefused("The Player is gone.")
             applied = apply_change(saga, player, kind, key, before, after)
-        except Refused, ChangeRefused, OSError, ValueError:
+        except ChangeRefused as refused:
+            # Which field, for a change of the wrong shape: the record's
+            # structure, never what it held.
+            shape = f" {refused.field}" if refused.field else ""
+            self._note(audit.CHANGE_REFUSED, session, record + shape)
+            raise Refused from None
+        except Refused, OSError, ValueError:
             self._note(audit.CHANGE_REFUSED, session, record)
             raise Refused from None
         # Saved in the Player's name, with no further guard: the change was

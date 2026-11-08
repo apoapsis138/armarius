@@ -91,15 +91,15 @@ S spoofing, T tampering, R repudiation, I information disclosure, D denial of se
 | Boundary | | Threat | Control |
 |---|---|---|---|
 | B1 player to tunnel | S | A fake host (E, D) | Host public key from the Invite; handshake fails on a mismatch |
-| | S | An Invite altered in transit, sending the player to a fake host (C, D) | Host fingerprint shown as words and read aloud on the group's voice call; passcode sent only as a proof bound to the host's pin |
+| | S | An Invite altered in transit, sending the player to a fake host (C, D) | Host fingerprint shown as words and read aloud on the group's voice call; if they differ the app sends nothing (no redemption, no device key, no passcode proof); passcode sent only as a proof bound to the host's pin |
 | | T, I | Eavesdrop or alter (D) | End-to-end authenticated encryption, forward secrecy |
-| | D | Tunnel drops | Client reconnects; accepted, availability is last |
+| | D | Tunnel drops | Client reconnects by itself with the passcode's derived key, held in memory for the session only; changes made meanwhile wait in memory and closing first asks; a refused device is not retried |
 | B2 tunnel to listener | S | An outsider reaches the address (B) | Listener answers only the handshake and redemption |
 | | T | Replay (D) | Ephemeral session keys, message counter |
 | | I | Metadata: IP, timing, size | Accepted and documented; payload unreadable to the provider |
 | | D | Floods (B) | Connection caps, rate limits, provider's own protection |
 | B3 listener to core | S | Stolen Invite or credential (C) | Single use, 24 h, Storyguide approval; passcode as well; Device credential in keychain; revoke; idle expiry |
-| | T | Malformed or oversized messages (A, B) | Registry of allowed types; type, shape and size checks; no deserialiser that runs code |
+| | T | Malformed or oversized messages (A, B) | Registry of allowed types; type, shape and size checks; no deserialiser that runs code; a change's records checked field by field against the app's own record types, strictly (unknown keys and older shapes refused), the field named in the log (`shapes.py`, ADR 0012) |
 | | E | A seat asks for more than its rights (A) | Seat checked on every message; `viewing.py` and `players.guard_changes` |
 | | I | Learning that a hidden record exists (A) | An unreadable record is treated as not existing; one uniform error |
 | | R | "I never did that" | Audit log of invites, approvals, sign-ins, revocations and changes |
@@ -108,7 +108,7 @@ S spoofing, T tampering, R repudiation, I information disclosure, D denial of se
 | | T | Bulk overwrite (A) | Per-record changes only, merged per ADR 0005 |
 | | I, E | Reaching other files on the PC | Separate process, saga access only through the core; residual risk stated above |
 | | D | Disk fill | Size caps on records and portraits |
-| Host to player | all | A malicious host (E) | Client converts and checks everything once on load, caps sizes, executes nothing, writes only to its own folder; bookmarks and local files never sent |
+| Host to player | all | A malicious host (E) | Client converts and checks everything once on load (the snapshot shape-checked strictly, field by field, ADR 0012), caps sizes, executes nothing; a Joined game's saga and pictures stay in memory, and only the game's address, pinned fingerprint and name are written (settings) and its Device credential (keychain); bookmarks and local files never sent |
 | Player's own computer | all | Malware (F) | Not defended from inside the app; the credential sits in the keychain and the Storyguide can revoke |
 
 ## 6. Alternative transport considered: WebRTC (not now)

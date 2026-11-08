@@ -26,6 +26,7 @@ from collections.abc import Callable
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
+from .. import shapes
 from ..files import write_atomic
 from . import audit
 from .folder import SharedFile, remote_file
@@ -59,6 +60,14 @@ class Device:
     end_reason: str = ""
 
 
+@dataclass
+class DevicesFile:
+    """The devices file's shape, checked as it is read (shapes.build)."""
+
+    idle_days: int
+    devices: list[Device]
+
+
 def _hash(text: str) -> str:
     return hashlib.sha256(text.encode()).hexdigest()
 
@@ -90,12 +99,13 @@ class DeviceBook(SharedFile):
             return
         try:
             data = json.loads(self._path.read_text(encoding="utf-8"))
-            self._idle_days = _valid_days(int(data["idle_days"]))
-            self._devices = {str(d["id"]): Device(**d) for d in data["devices"]}
-        except (OSError, ValueError, KeyError, TypeError) as exc:
+            book = shapes.build(DevicesFile, data)
+            self._idle_days = _valid_days(book.idle_days)
+        except (OSError, ValueError) as exc:
             raise ValueError(
-                f"The devices file {self._path.name} cannot be read."
+                f"The devices file {self._path.name} cannot be read ({exc})."
             ) from exc
+        self._devices = {d.id: d for d in book.devices}
 
     def _save(self) -> None:
         data = {

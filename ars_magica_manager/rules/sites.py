@@ -11,6 +11,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, TypedDict, cast
 
+from .. import shapes
 from ..models import (
     Character,
     Covenant,
@@ -179,10 +180,7 @@ def effects(place: Neighbour) -> list[AuraEffect]:
 def whole_number(value: Any) -> int:
     """A number typed into a place's details (0 for blank or not a
     number)."""
-    try:
-        return int(value or 0)
-    except TypeError, ValueError:
-        return 0
+    return shapes.whole(value)
 
 
 def realm_of(value: Any, fallback: str = "Magic") -> str:

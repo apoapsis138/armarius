@@ -141,7 +141,7 @@ class Neighbour:
     links: list[Link] = field(default_factory=list)
     #: A lord's, town's or faction's arms (arms.Arms.to_dict); empty for
     #: none.
-    arms: dict[str, str] = field(default_factory=dict)
+    arms: dict[str, str | int] = field(default_factory=dict)
     #: What only the storyguide should read: the record's Secrets
     #: chapter, hidden from players signed in to a hosted copy.
     secrets: list[Secret] = field(default_factory=list)

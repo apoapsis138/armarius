@@ -40,7 +40,7 @@ from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
 from typing import Any, TypedDict, cast
 
-from . import __version__, catalog, places, portraits, storage, viewing
+from . import __version__, catalog, places, portraits, shapes, storage, viewing
 from .atlas import maps as atlas_maps
 from .files import write_atomic
 from .models import (
@@ -563,6 +563,11 @@ def read(path: Path) -> dict[str, Any]:
         )
     if data.get("kind") not in KIND_LABELS or not isinstance(data.get("saga"), dict):
         raise ValueError("the export is incomplete")
+    # Its records' shape, before any is built (shapes.py): older shapes
+    # allowed, as an export may come from an older version of the app. An
+    # overlay's saga is never built whole: it is laid over a saga's own.
+    if "overlay" not in data:
+        shapes.check_raw(data["saga"], Saga)
     introduction = data.get(INTRODUCTION)
     if introduction is not None and not isinstance(introduction, str):
         raise ValueError(
@@ -1508,6 +1513,7 @@ def plan_import(
     is where the file's maps and portraits are read from."""
     # Runs the load-time migrations.
     source = Saga.from_dict(data["saga"], lab_feature_names=catalog.lab_feature_names())
+    shapes.check_built(source)
     job = _Import(
         source=source,
         target=target,

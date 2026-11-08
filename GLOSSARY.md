@@ -65,6 +65,11 @@ nothing hidden from them, the copy a Remote seat holds and what a Player's
 export carries.
 _Avoid_: Filtered saga, player copy, snapshot (that is how it travels)
 
+**Joined game**:
+A hosted saga a Player's desktop holds a Remote seat in, listed on their
+shelf beside their own sagas.
+_Avoid_: Remote saga, connection
+
 ### The table
 
 **Session**:
@@ -149,6 +154,12 @@ _Avoid_: Book pack, package, module
 A record, or a group of them, written out of one saga so another can import
 it; a content pack is one too.
 _Avoid_: Backup (which is the whole saga)
+
+**Shape check**:
+The check that data coming in (a saga file, an export, a Remote seat's
+change or snapshot) has the form its records expect, refusing it by field
+otherwise.
+_Avoid_: Validation (too broad: a form's own checks are not this)
 
 **Saga Content**:
 The one place listing what a saga's pickers offer: its books in play and

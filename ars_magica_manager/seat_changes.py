@@ -52,7 +52,13 @@ Record = dict[str, Any]
 
 
 class ChangeRefused(Exception):
-    """The Player may not make this change (or it names nothing)."""
+    """The Player may not make this change (or it names nothing).
+    `field`: for a change of the wrong shape, which field and why
+    ("characters[mag1].background: expected a record"), for the host's log."""
+
+    def __init__(self, why: str, *, field: str = "") -> None:
+        super().__init__(why)
+        self.field = field
 
 
 @dataclass(frozen=True)
@@ -122,14 +128,14 @@ def apply_change(
     if refused:
         raise ChangeRefused(f"Not the Player's to change: {', '.join(refused)}.")
     try:
-        changed_saga = storage.saga_from_data(kept)
-    except (TypeError, AttributeError, KeyError, ValueError) as unreadable:
-        # The Player's record, from another computer, unchecked until here:
-        # a field of the wrong kind fails in the models' constructors. Our
-        # own records were read the same way when the saga was opened.
-        raise ChangeRefused("The change isn't a record this app can read.") from (
-            unreadable
-        )
+        # The Player's record, from another computer: its shape is checked
+        # before and after building (shapes.py), strictly, as this app's
+        # own version wrote it.
+        changed_saga = storage.saga_from_data(kept, strict=True)
+    except (KeyError, ValueError) as unreadable:
+        raise ChangeRefused(
+            "The change isn't a record this app can read.", field=str(unreadable)[:200]
+        ) from unreadable
     return Applied(changed_saga, [f"{kind}.{o}" for o in overlaps])
 
 

@@ -108,7 +108,7 @@ class GiltTitle(QLabel):
 
 class TitleScreen(Paper):
     """The title page, calling `choose` with the key of the way on
-    chosen (title_page.OPEN, SAGAS, NEW or HELP)."""
+    chosen (title_page.OPEN, SAGAS, NEW, JOIN or HELP)."""
 
     def __init__(
         self, page: tp.TitlePage, p: Palette, choose: Callable[[str], None]

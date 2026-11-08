@@ -245,7 +245,7 @@ def _import_record(saga: Saga, kind: str, path: Path) -> Command:
         if kind == transfer.PACK:
             return _import_pack(saga, data, pictures)
         plan = transfer.plan_import(saga, data, pictures=pictures)
-    except (OSError, ValueError, KeyError, TypeError) as problem:
+    except (OSError, ValueError, KeyError) as problem:
         return Refuse(
             TITLE, f"Couldn't import {escape(path.name)}: {escape(str(problem))}"
         )
@@ -338,7 +338,7 @@ def _import_pack(
                     (chosen, pictures),
                 )
             plan = transfer.plan_import(saga, chosen, pictures=pictures)
-        except (ValueError, KeyError, TypeError) as problem:
+        except (ValueError, KeyError) as problem:
             return Refuse(TITLE, f"Couldn't import the pack: {escape(str(problem))}")
         warning = (
             f"Built on {base.get('name')}, which this saga hasn't: its roll "
@@ -394,7 +394,7 @@ def update_record(saga: Saga, record: transfer.Record) -> Command:
     def read(path: Path) -> Command:
         try:
             plan = record_update.plan_update(saga, record, transfer.read(path))
-        except (OSError, ValueError, KeyError, TypeError, IndexError) as problem:
+        except (OSError, ValueError, KeyError, IndexError) as problem:
             return Refuse(
                 title, f"Couldn't read {escape(path.name)}: {escape(str(problem))}"
             )

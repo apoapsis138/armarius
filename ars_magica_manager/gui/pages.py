@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import html
 from collections.abc import Callable, Sequence
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, TypedDict, Unpack
 
@@ -45,6 +46,7 @@ from .. import saga_overview as ov
 from ..commands import Command, SectionOps
 from ..forms import diary as diary_forms
 from ..forms import menu as menu_forms
+from ..joined_games import JoinedGame
 from ..models import Character, Creature, Neighbour, Saga, Tribunal
 from ..references import Fact, Ref
 from ..sections import CONFLICT_BATTLES_SECTION, FIGHTS_SECTION, SIEGES_SECTION
@@ -201,10 +203,41 @@ def familiar_card(
     return card
 
 
+@dataclass(frozen=True)
+class JoinedShelf:
+    """The shelf's Joined games (hosted sagas this computer holds a Remote
+    seat in) and what the window does with them."""
+
+    games: Sequence[JoinedGame]
+    join: Callable[[], None]
+    rejoin: Callable[[JoinedGame], None]
+    leave: Callable[[JoinedGame], None]
+
+
+def _joined_card(game: JoinedGame, p: Palette, joined: JoinedShelf) -> ClickableCard:
+    """A Joined game as a card: its name, marked hosted elsewhere, with Leave
+    Game; choosing it signs in again."""
+    card = ClickableCard(p, pad=16)
+    card_title(
+        card,
+        game.saga_name,
+        "Hosted elsewhere · join with your passcode",
+        p,
+        symbol_label(artwork.icon("players"), p),
+    )
+    leave = edit_button(
+        "Leave Saga", p, lambda _checked=False: joined.leave(game), "delete"
+    )
+    card.column.addWidget(leave, 0, Qt.AlignmentFlag.AlignRight)
+    card.clicked = lambda: joined.rejoin(game)
+    return card
+
+
 class SagaShelf(QWidget):
-    """Every saga as a card; choosing one opens it. Above them, New Saga
-    and Change Save Folder with the folder the saves are in; each card has
-    a Delete."""
+    """Every saga as a card; choosing one opens it. Above them, New Saga,
+    Join a Saga and Change Save Folder with the folder the saves are in;
+    each card has a Delete. Joined games follow the sagas, each with Leave
+    Game."""
 
     def __init__(
         self,
@@ -215,6 +248,8 @@ class SagaShelf(QWidget):
         delete_saga: Open = lambda _saga_id: None,
         change_folder: Callable[[], None] = lambda: None,
         folder: str = "",
+        *,
+        joined: JoinedShelf | None = None,
     ) -> None:
         super().__init__()
         cards = []
@@ -247,11 +282,21 @@ class SagaShelf(QWidget):
             card.column.addWidget(delete, 0, Qt.AlignmentFlag.AlignRight)
             card.clicked = lambda saga_id=figures.id: open_saga(saga_id)
             cards.append(card)
+        if joined is not None:
+            cards += [_joined_card(game, p, joined) for game in joined.games]
         self.new_saga = edit_button("New Saga", p, new_saga, "add")
+        self.join_game = edit_button(
+            "Join a Saga",
+            p,
+            joined.join if joined is not None else (lambda: None),
+            "players",
+        )
+        self.join_game.setVisible(joined is not None)
         self.change_folder = edit_button("Change Save Folder", p, change_folder, "edit")
         buttons = QHBoxLayout()
         buttons.setContentsMargins(0, 0, 0, 0)
         buttons.addWidget(self.new_saga)
+        buttons.addWidget(self.join_game)
         buttons.addWidget(self.change_folder)
         buttons.addStretch(1)
         actions = QWidget()

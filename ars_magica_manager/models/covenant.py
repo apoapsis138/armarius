@@ -500,7 +500,7 @@ class Covenant:
     #: library, Boons and Hooks), each optionally "Label: what".
     what_matters: str = ""
     #: Its arms (arms.Arms.to_dict); empty for none.
-    arms: dict[str, str] = field(default_factory=dict)
+    arms: dict[str, str | int] = field(default_factory=dict)
     #: Its own town charter, for the Chartered Town Boon: its lords and
     #: terms, kept as a town neighbour keeps them (town_charter.py); empty
     #: for none.

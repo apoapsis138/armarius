@@ -22,7 +22,7 @@ from dataclasses import fields as dataclass_fields
 from dataclasses import replace
 from typing import Any
 
-from .. import diaries, storage
+from .. import diaries, shapes, storage
 from .. import ships as ship_text
 from ..commands import Command, Form, Refuse, notes
 from ..form_spec import DialogField, attr, description_field, pairs
@@ -51,17 +51,11 @@ AIMS: dict[str, str] = {
 def _int(values: dict[str, Any], key: str, default: int = 0) -> int:
     """A number field's value as the user has it so far (0 while it
     doesn't parse)."""
-    try:
-        return int(values.get(key) or default)
-    except TypeError, ValueError:
-        return default
+    return shapes.whole(values.get(key), default)
 
 
 def _float(values: dict[str, Any], key: str) -> float:
-    try:
-        return float(values.get(key) or 0)
-    except TypeError, ValueError:
-        return 0.0
+    return shapes.real(values.get(key))
 
 
 def ship_from(values: dict[str, Any], base: Ship | None = None) -> Ship:

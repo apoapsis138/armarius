@@ -144,7 +144,10 @@ def test_the_check_catches_one_front_end_importing_the_other():
 LAYERS: tuple[tuple[str, frozenset[str]], ...] = (
     (
         "models",
-        frozenset({"", "arts", "markup", "models", "paths", "totals", "rules.xp"}),
+        # shapes: the shape check, which imports nothing of the app's.
+        frozenset(
+            {"", "arts", "markup", "models", "paths", "shapes", "totals", "rules.xp"}
+        ),
     ),
     # The catalogs and the books they come from: data the rules look up.
     ("data", frozenset({"book_kinds", "catalog", "sourcebooks"})),

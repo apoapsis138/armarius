@@ -30,7 +30,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from urllib.parse import urlsplit
 
-from .. import players
+from .. import players, shapes
 from ..files import write_atomic
 from ..models import Saga
 from . import audit
@@ -74,6 +74,23 @@ class Request:
     collected: bool = False
 
 
+@dataclass
+class Invite:
+    """An Invite as the file keeps it (by its code's hash)."""
+
+    player_id: str
+    expires: float
+    used: bool
+
+
+@dataclass
+class InvitesFile:
+    """The invites file's shape, checked as it is read (shapes.build)."""
+
+    invites: dict[str, Invite]
+    requests: dict[str, Request]
+
+
 def _hash(text: str) -> str:
     return hashlib.sha256(text.encode()).hexdigest()
 
@@ -113,19 +130,13 @@ class InviteBook(SharedFile):
             return
         try:
             data = json.loads(self._path.read_text(encoding="utf-8"))
-            self._invites = {
-                str(k): {
-                    "player_id": str(v["player_id"]),
-                    "expires": float(v["expires"]),
-                    "used": bool(v["used"]),
-                }
-                for k, v in data["invites"].items()
-            }
-            self._requests = {str(k): Request(**v) for k, v in data["requests"].items()}
-        except (OSError, ValueError, KeyError, TypeError, AttributeError) as exc:
+            book = shapes.build(InvitesFile, data)
+        except (OSError, ValueError) as exc:
             raise ValueError(
-                f"The invites file {self._path.name} cannot be read."
+                f"The invites file {self._path.name} cannot be read ({exc})."
             ) from exc
+        self._invites = {k: asdict(v) for k, v in book.invites.items()}
+        self._requests = book.requests
 
     def _save(self) -> None:
         self._forget_old()

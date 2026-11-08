@@ -52,22 +52,18 @@ def test_the_title_page_offers_the_ways_on(app):
     window = _titled([])
     title = window.title
     assert title is not None
-    assert list(title.buttons) == [tp.SAGAS, tp.NEW, tp.HELP]
+    # New Saga stays on the shelf; Join a Saga takes its place here.
+    assert list(title.buttons) == [tp.SAGAS, tp.JOIN, tp.HELP]
 
 
-def test_new_saga_opens_the_new_saga_form_on_the_shelf(app):
+def test_join_a_game_opens_the_join_window_over_the_shelf(app, monkeypatch):
     window = _titled([])
-    asked: list[object] = []
-
-    def cancel(step: object) -> None:
-        asked.append(step)
-
-    window.ask = cancel  # type: ignore[method-assign]
+    opened: list[object] = []
+    monkeypatch.setattr(window, "join_game", lambda: opened.append(True))
     assert window.title is not None
-    window.title.buttons[tp.NEW].click()
-    assert window.title is None
-    assert isinstance(window.page(), SagaShelf)
-    assert asked, "the New Saga form was not asked"
+    window.title.buttons[tp.JOIN].click()
+    assert window.title is None and isinstance(window.page(), SagaShelf)
+    assert opened
 
 
 def test_open_saga_opens_the_saga_opened_last(app):
@@ -79,6 +75,7 @@ def test_open_saga_opens_the_saga_opened_last(app):
     window = _titled([saga.id, other.id])
     title = window.title
     assert title is not None
+    assert list(title.buttons) == [tp.OPEN, tp.SAGAS, tp.JOIN, tp.HELP]
     title.buttons[tp.OPEN].click()
     assert window.title is None
     assert window.stack.currentIndex() == 0

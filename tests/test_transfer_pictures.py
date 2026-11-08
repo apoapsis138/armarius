@@ -36,7 +36,7 @@ def _saga(tmp_path: Path) -> Saga:
         "home",
         "Home",
         tribunals=[Tribunal("rhine", "The Rhine")],
-        characters=[Character("leandro", "Leandro", "Magus")],
+        characters=[Character("leandro", "Leandro", "magus")],
     )
     name, width, height = atlas.store_picture(_picture(tmp_path, "rhine.png", PNG))
     atlas.add_map(saga, "The Rhine", "rhine", picture=name, width=width, height=height)
@@ -70,7 +70,7 @@ def test_a_whole_saga_with_pictures_is_written_as_a_zip(tmp_path):
 
 
 def test_an_export_with_no_pictures_stays_a_json_file(tmp_path):
-    saga = Saga("bare", "Bare", characters=[Character("c", "Cara", "Companion")])
+    saga = Saga("bare", "Bare", characters=[Character("c", "Cara", "companion")])
     written = transfer.export_to(tmp_path / "cara.amm.json", saga, saga.characters[0])
     assert written == tmp_path / "cara.amm.json"
     assert json.loads(written.read_text(encoding="utf-8"))["kind"] == "character"

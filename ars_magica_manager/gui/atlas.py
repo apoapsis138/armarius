@@ -54,7 +54,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import artwork, viewing
+from .. import artwork, picture_files, viewing
 from .. import atlas as at
 from ..arms import Arms
 from ..commands import Act, Choose, Command, Go, Picked
@@ -385,8 +385,10 @@ class MapView(QGraphicsView):
 
     def _draw_picture(self) -> None:
         scene = self.scene()
-        found = at.picture_path(self.map)
-        picture = QPixmap(str(found)) if found is not None else QPixmap()
+        picture = QPixmap()
+        found = picture_files.picture(picture_files.MAPS, self.map.picture)
+        if found is not None:
+            picture.loadFromData(found)
         if not picture.isNull():
             scene.addPixmap(picture)
             self.size_ = (picture.width(), picture.height())

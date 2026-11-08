@@ -123,6 +123,19 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.91.0 — 2026-11-08
+
+### Sodales
+
+- **Join a saga from the desktop**: a player with Armarius on their own computer clicks **Join a Saga** on the title page or the Sagas shelf, pastes the invite their storyguide sent, checks the host's six words on the call (if they differ, nothing is sent), names their computer, reads its three words back while the storyguide approves, and types their passcode. The saga opens on their own desktop, showing what they may see. It stays on their shelf as hosted elsewhere, and rejoining takes only the passcode.
+- **Playing a joined saga**: every change a player makes goes back to the host record by record, and every few seconds their pages pick up what others saved. If the connection drops, the app connects again by itself and sends what was changed meanwhile; closing before then asks first. An ended seat says so, and **Leave Saga** forgets it. The saga and its pictures stay in memory only.
+- **Help for players**: Join a Saga, and what a host can and can't see or do; the hosting guide points to them.
+- **Everything a player sends, and everything a host sends back, is checked field by field** before it is used, and refused by name if it isn't what the app's records hold.
+
+### Fundamenta
+
+- **Damaged saga files are named, not opened**: every saga file, export and pack is checked as it is read. A field holding the wrong kind of thing (a file edited by hand, or cut short) is named, the saga isn't opened or changed, and the app says where its backups are. A damaged file no longer stops the desktop's shelf from showing the others.
+
 ## 3.90.1 — 2026-11-08
 
 ### Fundamenta

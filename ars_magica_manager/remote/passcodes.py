@@ -15,12 +15,21 @@ travels with the saga or an export of it.
 from __future__ import annotations
 
 import json
+from dataclasses import dataclass
 from pathlib import Path
 
-from .. import players
+from .. import players, shapes
 from ..files import write_atomic
 from ..models import Player
 from .folder import SharedFile, remote_file
+
+
+@dataclass
+class PasscodesFile:
+    """The passcodes file's shape, checked as it is read (shapes.build):
+    player id to the salt noted."""
+
+    salts: dict[str, str]
 
 
 class RemotePasscodes(SharedFile):
@@ -38,13 +47,10 @@ class RemotePasscodes(SharedFile):
             return
         try:
             data = json.loads(self._path.read_text(encoding="utf-8"))
-            salts = data["salts"]
-            if not isinstance(salts, dict):
-                raise ValueError("salts is not a table")
-            self._salts = {str(k): str(v) for k, v in salts.items()}
-        except (OSError, ValueError, KeyError, TypeError) as exc:
+            self._salts = shapes.build(PasscodesFile, data).salts
+        except (OSError, ValueError) as exc:
             raise ValueError(
-                f"The passcodes file {self._path.name} cannot be read."
+                f"The passcodes file {self._path.name} cannot be read ({exc})."
             ) from exc
 
     def _save(self) -> None:
