@@ -123,6 +123,12 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.86.1 — 2026-11-07
+
+### Sodales
+
+- **Planning how players will join from the internet**: a written threat model and a design for letting players connect their desktop app to a storyguide's game without extra software. Players only ever connect out to the host, never to each other. Each player gets a one-time invite that the storyguide approves, and the traffic stays private even from the tunnel carrying it. Nothing in the app changes yet.
+
 ## 3.86.0 — 2026-11-07
 
 ### Sodales

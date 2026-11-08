@@ -43,6 +43,22 @@ A saga the storyguide opens to the troupe, so each player reads and changes
 it from their own computer while everyone's changes are kept.
 _Avoid_: Server, shared saga
 
+**Remote seat**:
+A Player's desktop app connected to a hosted saga over the internet, seeing
+and changing only what that Player may.
+_Avoid_: Remote session, client
+
+**Invite**:
+A single-use code, good for a short time, that the storyguide gives one Player
+so their desktop app can ask for a Remote seat; the storyguide approves the
+request before the seat opens.
+_Avoid_: Link, token, password
+
+**Device credential**:
+The key a redeemed Invite becomes, kept on that Player's computer and
+revocable by the storyguide without touching any other Player's.
+_Avoid_: Session key, login
+
 ### The table
 
 **Session**:
