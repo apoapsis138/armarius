@@ -341,7 +341,7 @@ class PasscodeWindow(Sheet):
         super().__init__(f"Rejoin {game_name}", p, "Sign In", parent)
         self.session = session
         self.column.addWidget(
-            text("Your passcode for this game.", p["foreground"], serif(13), wrap=True)
+            text("Your passcode for this saga.", p["foreground"], serif(13), wrap=True)
         )
         self.passcode = QLineEdit()
         self.passcode.setEchoMode(QLineEdit.EchoMode.Password)

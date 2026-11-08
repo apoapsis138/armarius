@@ -11,6 +11,8 @@ the repo and tests/ on sys.path.
 * `temp_saga(saga_id=None, saga=None)` -- a context manager that points the
   data folder at a temp dir holding a copy of the real save (the first, or
   `saga_id`) or an in-memory `Saga`, so the real files are never written.
+* `real_saves()` -- each real save's id and parsed data, read-only, for a
+  scan over every save (`for saga_id, data in real_saves(): ...`).
 * `await tui_dump(app, pilot, label, out)` -- appends `===== label` and the
   screen's lines to the UTF-8 file `out`; slice it afterwards with
   `awk '/=====/{keep=($0 ~ /label/)} keep'`.
@@ -79,6 +81,15 @@ def temp_saga(saga_id: str | None = None, saga: Saga | None = None) -> Generator
                 yield saga_id
         finally:
             paths.use_data_dir(None)
+
+
+def real_saves() -> Generator[tuple[str, dict[str, Any]]]:
+    """Each real save's id and data, read-only: for a scan over every save
+    (a new check refusing none of them). Hands out parsed data, never a
+    path, so nothing here can write a real file. Call it before temp_saga()
+    points the data folder elsewhere."""
+    for path in sorted(storage.sagas_dir().glob("*.json")):
+        yield path.stem, json.loads(path.read_text(encoding="utf-8"))
 
 
 async def tui_dump(app: Any, pilot: Any, label: str, out: Path) -> None:

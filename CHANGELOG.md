@@ -123,6 +123,12 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.91.1 — 2026-11-08
+
+### Sodales
+
+- **Host for Players looks like the rest of the app**: how players join is now two cards, the chosen one framed and marked "✓ Chosen" (so it never rests on colour alone, and is clear in the dark theme too), and the chosen tab of Requests, Seats and Log is in bold as well as underlined. Rejoining a saga asks for "your passcode for this saga".
+
 ## 3.91.0 — 2026-11-08
 
 ### Sodales

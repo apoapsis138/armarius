@@ -33,7 +33,6 @@ from PySide6.QtWidgets import (
     QLabel,
     QPlainTextEdit,
     QPushButton,
-    QRadioButton,
     QTabWidget,
     QVBoxLayout,
     QWidget,
@@ -48,7 +47,7 @@ from ..remote.plan import RemotePlan
 from . import sounds
 from .forms import Ask, NoticeDialog, Sheet, ask_question
 from .pictures import SERIF
-from .themes import Palette
+from .themes import Palette, wash_style
 from .widgets import (
     edit_button,
     fill_ledger,
@@ -64,6 +63,53 @@ REMOTE, BROWSER = "remote", "browser"
 REFRESH_EVERY = 2000
 #: The narrowest the window may be drawn.
 NARROWEST = 560
+
+
+class ModeCard(QPushButton):
+    """One way players join, as a card like the title page's ways on: its
+    name over a line saying what it is. The chosen one is edged in the
+    rubric colour and says "✓ Chosen", so it never rests on colour alone."""
+
+    def __init__(self, name: str, detail: str, p: Palette) -> None:
+        super().__init__()
+        self.p = p
+        self.setObjectName("modeCard")
+        self.setCheckable(True)
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.setAccessibleName(name)
+        self.setFixedHeight(80)
+        self.setStyleSheet(
+            f"""
+            QPushButton#modeCard {{
+                background: {p["surface"]};
+                border: 1px solid {p["accent"]};
+                border-radius: 3px;
+            }}
+            QPushButton#modeCard:checked {{
+                border: 2px solid {p["heading"]};
+                background: {wash_style(p)};
+            }}
+            QPushButton#modeCard:hover, QPushButton#modeCard:focus {{
+                border: 2px solid {p["accent"]};
+            }}
+            """
+        )
+        column = QVBoxLayout(self)
+        column.setContentsMargins(12, 8, 12, 8)
+        column.setSpacing(1)
+        self.name = text(name, p["heading"], serif(14))
+        # One line each (short enough at the narrowest window): a button
+        # doesn't grow for a label that wraps.
+        self.detail = text(detail, p["label"], serif(11.5, italic=True))
+        self.mark = text("✓ Chosen", p["heading"], serif(11.5, bold=True))
+        for label in (self.name, self.detail, self.mark):
+            label.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
+            column.addWidget(label)
+        self.toggled.connect(self._marked)
+        self._marked(False)
+
+    def _marked(self, on: bool) -> None:
+        self.mark.setVisible(on)
 
 
 class InviteDialog(Sheet):
@@ -149,17 +195,20 @@ class HostingWindow(Sheet):
             text("Players join with", p["label"], serif(12.5, italic=True))
         )
         self.modes = QButtonGroup(self)
-        self.remote_choice = QRadioButton(
-            "Armarius on their own computers, over the internet (Remote seats)"
+        self.modes.setExclusive(True)
+        self.remote_choice = ModeCard(
+            "Remote seats", "Their own Armarius, over the internet", p
         )
-        self.browser_choice = QRadioButton(
-            "A browser or terminal, on your private network"
+        self.browser_choice = ModeCard(
+            "Browser or terminal", "On your private network", p
         )
+        cards = QHBoxLayout()
+        cards.setSpacing(12)
         for choice in (self.remote_choice, self.browser_choice):
-            choice.setFont(serif(13))
             self.modes.addButton(choice)
-            self.column.addWidget(choice)
+            cards.addWidget(choice, 1)
             choice.toggled.connect(lambda _on: self.refresh())
+        self.column.addLayout(cards)
         status_row = QHBoxLayout()
         self.status = text("", p["foreground"], serif(13), wrap=True)
         status_row.addWidget(self.status, 1)
@@ -207,6 +256,9 @@ class HostingWindow(Sheet):
         self.pin.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
         column.addWidget(self.pin)
         self.tabs = QTabWidget()
+        # The chosen tab in bold as well as underlined: marked by weight
+        # and place, not by colour alone.
+        self.tabs.setStyleSheet("QTabBar::tab:selected { font-weight: bold; }")
         self.tabs.addTab(self._requests_tab(), "Requests")
         self.tabs.addTab(self._seats_tab(), "Seats")
         self.tabs.addTab(self._log_tab(), "Log")
