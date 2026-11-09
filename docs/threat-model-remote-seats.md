@@ -93,7 +93,7 @@ S spoofing, T tampering, R repudiation, I information disclosure, D denial of se
 | B1 player to tunnel | S | A fake host (E, D) | Host public key from the Invite; handshake fails on a mismatch |
 | | S | An Invite altered in transit, sending the player to a fake host (C, D) | Host fingerprint shown as words and read aloud on the group's voice call; if they differ the app sends nothing (no redemption, no device key, no passcode proof); passcode sent only as a proof bound to the host's pin |
 | | T, I | Eavesdrop or alter (D) | End-to-end authenticated encryption, forward secrecy |
-| | D | Tunnel drops | Client reconnects by itself with the passcode's derived key, held in memory for the session only; changes made meanwhile wait in memory and closing first asks; a refused device is not retried |
+| | D | Tunnel drops | Client reconnects by itself with the passcode's derived key, held in memory only, until the app closes, the game is left or the seat ends (going back to the shelf keeps the game signed in, so reopening it asks nothing); changes made meanwhile wait in memory and closing first asks; a refused device is not retried |
 | B2 tunnel to listener | S | An outsider reaches the address (B) | Listener answers only the handshake and redemption |
 | | T | Replay (D) | Ephemeral session keys, message counter |
 | | I | Metadata: IP, timing, size | Accepted and documented; payload unreadable to the provider |

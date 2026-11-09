@@ -95,11 +95,22 @@ def join_game(window: MainWindow) -> None:
 
 
 def rejoin(window: MainWindow, game: JoinedGame) -> None:
-    """Sign in again to a Joined game with the passcode, and open it."""
+    """Open a Joined game: at once if this window is still signed in to it
+    (back from the shelf: the seat stays signed in until the app closes,
+    the game is left, or the seat ends), else after the passcode."""
     # start-up: as join_game.
     from ..remote.seat_session import SeatSession
     from .join import PasscodeWindow
 
+    still = window.session
+    if (
+        still is not None
+        and still.pin == game.pin
+        and window.saga is not None
+        and window.saga.id == game.saga_id
+    ):
+        window.load(window.saga, window.player)
+        return
     session = SeatSession(game.url, game.pin)
     if not session.has_credential():
         session.close()

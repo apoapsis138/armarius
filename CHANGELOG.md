@@ -123,6 +123,14 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.95.0 — 2026-11-09
+
+### Sodales
+
+- **Open a joined saga from the title page**: when the saga you played last is one you joined, Open Saga on the title page opens it, as it does a saga of your own.
+- **Stay signed in**: going back to the Sagas shelf no longer signs you out of a joined saga, so opening it again doesn't ask for your passcode. You're signed out when you close the app, leave the saga, or your seat ends.
+- **The cursor starts in the field**: each step of Join a Saga, and the passcode when you rejoin, opens with the cursor where you type.
+
 ## 3.94.0 — 2026-11-09
 
 ### Sodales

@@ -8,6 +8,7 @@ Enter) can go straight back to it.
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
 
 from . import ROOT, __version__, changelog, settings, storage
@@ -73,22 +74,31 @@ def _saga_name(saga_id: str) -> str | None:
 
 
 def title_page(
-    saga_ids: list[str] | None = None, *, joining: bool = False
+    saga_ids: list[str] | None = None,
+    *,
+    joining: bool = False,
+    joined: Mapping[str, str] | None = None,
 ) -> TitlePage:
     """The title page for the sagas `saga_ids` (all saved ones by
     default). A front-end that can join a saga hosted elsewhere (`joining`)
     offers Join a Saga in New Saga's place, which stays on the sagas'
-    shelf. Only the storyguide's own window opens on it: a player's
-    copy of a hosted saga goes straight to the sagas, to sign in."""
+    shelf; `joined` (saga id -> name) are the sagas this computer has a
+    seat in, which Open Saga offers when one was played last. Only the
+    storyguide's own window opens on it: a player's copy of a hosted saga
+    goes straight to the sagas, to sign in."""
     saga_ids = storage.list_sagas() if saga_ids is None else saga_ids
+    joined = joined or {}
     release = release_name()
     edition = " · ".join(
         part
         for part in (f"Version {__version__}", release, "for Ars Magica Fifth Edition")
         if part
     )
-    saga_id = last_saga(saga_ids)
-    name = _saga_name(saga_id) if saga_id else None
+    saga_id = last_saga([*saga_ids, *joined])
+    if saga_id is not None and saga_id in joined and saga_id not in saga_ids:
+        name: str | None = joined[saga_id]
+    else:
+        name = _saga_name(saga_id) if saga_id else None
     if name is None:
         saga_id = None
     choices = []
@@ -98,7 +108,7 @@ def title_page(
         TitleChoice(
             SAGAS,
             "All Sagas",
-            "Choose one to open" if saga_ids else "None saved yet",
+            "Choose one to open" if saga_ids or joined else "None saved yet",
         )
     )
     if joining:

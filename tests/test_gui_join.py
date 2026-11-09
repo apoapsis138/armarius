@@ -232,6 +232,52 @@ def _goes_quiet_then_back(
 
 
 @pytest.mark.usefixtures("app")
+def test_back_from_the_shelf_the_saga_opens_without_the_passcode(
+    running: Running,
+) -> None:
+    main, dialog = _joined_window(running)
+    assert dialog.session is not None
+    joined.open_joined(main, dialog.session)
+    [game] = joined_games.listed()
+    main.go([main.trail[0]])  # the Sagas crumb
+    asked: list[object] = []
+    main.ask = lambda d: asked.append(d) or QDialog.DialogCode.Rejected
+    main.rejoin(game)
+    assert asked == [] and main.session is dialog.session
+    assert main.saga is not None and main.saga.id == game.saga_id
+    main.end_joined()
+
+
+@pytest.mark.usefixtures("app")
+def test_the_title_page_opens_the_joined_saga_played_last(running: Running) -> None:
+    from ars_magica_manager import title_page as tp
+
+    main, dialog = _joined_window(running)
+    assert dialog.session is not None
+    joined.open_joined(main, dialog.session)
+    [game] = joined_games.listed()
+    main.end_joined()
+    page = tp.title_page(
+        [], joining=True, joined={g.saga_id: g.saga_name for g in joined_games.listed()}
+    )
+    assert page.choices[0].key == tp.OPEN and page.saga_id == game.saga_id
+    assert page.choices[0].detail == game.saga_name
+
+
+@pytest.mark.usefixtures("app")
+def test_each_step_starts_in_its_field(running: Running) -> None:
+    main = MainWindow(saga_ids=[])
+    dialog = JoinWindow(PALETTES[0], main, make_session=running.session)
+    assert dialog.field() is dialog.invite
+    dialog.invite.setPlainText(running.invite())
+    dialog._read_invite()
+    assert dialog.field() is None  # the words: a choice, not a field
+    dialog._words_match()
+    assert dialog.field() is dialog.device
+    dialog.close()
+
+
+@pytest.mark.usefixtures("app")
 def test_words_that_dont_match_send_nothing(running: Running) -> None:
     main = MainWindow(saga_ids=[])
     dialog = JoinWindow(PALETTES[0], main, make_session=running.session)

@@ -22,7 +22,7 @@ import socket
 from collections.abc import Callable
 
 from PySide6.QtCore import Qt, QTimer
-from PySide6.QtGui import QGuiApplication
+from PySide6.QtGui import QGuiApplication, QShowEvent
 from PySide6.QtWidgets import (
     QHBoxLayout,
     QLineEdit,
@@ -133,6 +133,24 @@ class JoinWindow(Sheet):
         self.setMinimumWidth(NARROWEST)
         self.resize(640, 460)
 
+    def field(self) -> QWidget | None:
+        """The field to type in at the step on show, if it has one."""
+        return {0: self.invite, 2: self.device, 4: self.passcode}.get(
+            self.steps.currentIndex()
+        )
+
+    def _focus_field(self) -> None:
+        """The cursor in the step's field, so nothing needs clicking first."""
+        found = self.field()
+        if found is not None:
+            found.setFocus()
+            if isinstance(found, QLineEdit):
+                found.selectAll()
+
+    def showEvent(self, event: QShowEvent) -> None:
+        super().showEvent(event)
+        QTimer.singleShot(0, self._focus_field)
+
     # -- the pages ---------------------------------------------------------------
 
     def _page(self, *widgets: QWidget) -> QWidget:
@@ -223,6 +241,7 @@ class JoinWindow(Sheet):
         self.save.setVisible(button is not None)
         if button is not None:
             self.save.setText(button)
+        self._focus_field()
 
     def _next(self) -> None:
         handlers = {
@@ -349,6 +368,11 @@ class PasscodeWindow(Sheet):
         self.save.clicked.connect(self._sign_in)
         self.finish()
         self.setMinimumWidth(NARROWEST)
+
+    def showEvent(self, event: QShowEvent) -> None:
+        super().showEvent(event)
+        # The cursor in the passcode, so nothing needs clicking first.
+        QTimer.singleShot(0, self.passcode.setFocus)
 
     def _sign_in(self) -> None:
         try:

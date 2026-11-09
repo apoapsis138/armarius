@@ -1614,7 +1614,11 @@ The saga then stays on your shelf, marked **Hosted elsewhere**.
 ### Coming back, and leaving
 <!-- help: join-game-again; gui -->
 
-Click the saga on the shelf and type your passcode. If the connection
+When the saga you played last is a joined one, **Open Saga** on the title
+page opens it, as it does a saga of your own. Otherwise click the saga on
+the shelf and type your passcode. You stay signed in until you close the
+app, leave the saga, or your seat ends: going back to the Sagas shelf and
+opening it again doesn't ask for the passcode. If the connection
 drops while you play, the app connects again by itself; changes you made
 meanwhile are sent once it's back (closing the app before then asks
 first). If your seat has ended (your storyguide revoked it, you didn't use

@@ -608,7 +608,11 @@ class MainWindow(QMainWindow):
 
     def show_title(self) -> None:
         """Show the title page over the whole window, fading in."""
-        page = title_page.title_page(self.saga_ids, joining=True)
+        page = title_page.title_page(
+            self.saga_ids,
+            joining=True,
+            joined={g.saga_id: g.saga_name for g in joined_games.listed()},
+        )
         self.title = TitleScreen(page, self.palette_, self.leave_title)
         TopStrip(self.title, self, self.palette_)
         self.stack.addWidget(self.title)
@@ -626,15 +630,19 @@ class MainWindow(QMainWindow):
         self.stack.setCurrentIndex(0)
         self.stack.removeWidget(title)
         title.deleteLater()
-        if key == title_page.OPEN and title.page.saga_id is not None:
-            self.open_saga(title.page.saga_id)
+        opening = title.page.saga_id if key == title_page.OPEN else None
+        game = next((g for g in joined_games.listed() if g.saga_id == opening), None)
+        if opening is not None and game is None:
+            self.open_saga(opening)
             return
         self.saga_ids = storage.list_sagas()
         self.saga = None
         self.player = None
         self._use_viewer()
         self.go([Place(SHELF)])
-        if key == title_page.NEW:
+        if game is not None:
+            self.rejoin(game)  # a saga played from a seat: its passcode
+        elif key == title_page.NEW:
             self.new_saga()
         elif key == title_page.JOIN:
             self.join_game()
