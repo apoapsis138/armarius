@@ -591,6 +591,29 @@ def ahead_info(
     return "\n".join(lines)
 
 
+def waiting_text(
+    saga: Saga, character: Character, season: str | None = None, year: int | None = None
+) -> str:
+    """The student's ask for a teacher that season (teaching.py): "Waiting
+    for Bruno to teach Latin.", or the teacher's no; "" for none."""
+    season = season or saga.current_season
+    year = saga.current_year if year is None else year
+    for request in saga.teach_requests:
+        if request.student_id != character.id or (request.season, request.year) != (
+            season,
+            year,
+        ):
+            continue
+        teacher = saga.character(request.teacher_id)
+        name = teacher.name if teacher else "the teacher"
+        subject = rules.subject_label(request.subject, {})
+        if request.status == "declined":
+            note = f" ({request.note})" if request.note else ""
+            return f"{name} declined to teach {subject}{note}."
+        return f"Waiting for {name} to teach {subject}."
+    return ""
+
+
 def plan_text(
     saga: Saga, character: Character, how: str = "Press e to plan the season."
 ) -> str:
@@ -601,6 +624,9 @@ def plan_text(
         return grog_year_text(saga, character)
     extra = livelihood_text(character, saga.current_year)
     text = _plan_text(saga, character, how)
+    waits = waiting_text(saga, character)
+    if waits:
+        text = f"{text}\n\n[i]{escape(waits)}[/]"
     return f"{text}\n\n{extra}" if extra else text
 
 

@@ -140,6 +140,7 @@ from .sections import (
     PLAYERS_SECTION,
     REGION_STORIES_SECTION,
     SECRETS_SECTION,
+    SESSIONS_SECTION,
     SIEGES_SECTION,
     SILVER_SECTIONS,
     SOURCES_SECTION,
@@ -195,6 +196,7 @@ def _section_verbs() -> dict[str, frozenset[str]]:
         SPELL_SECTION: _ALL3,
         HOUSE_RULES_SECTION: _ALL3,
         PLAYERS_SECTION: _ALL3,
+        SESSIONS_SECTION: _ALL3,
         BOOKS_SECTION: _EDIT,
         TRADITIONS_SECTION: _EDIT,
         SOURCES_SECTION: _ALL3,
@@ -343,6 +345,10 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("h", "take_harm", "Take Harm"),
     MenuItem("y", "recovery_roll", "Recovery Roll"),
     MenuItem("e", "end_session", "End of Session"),
+    MenuItem("w", "what_changed", "What Changed Since the Last Session"),
+    MenuItem("g", "cast_glance", "Cast at a Glance"),
+    MenuItem("q", "teaching_requests", "Teaching Requests"),
+    MenuItem("y", "study_path", "Study Path"),
     MenuItem("t", "tourney_season", "Tournament"),
     MenuItem("v", "melee_event", "Melee Event"),
     MenuItem("c", "command_beast", "Command the Beast"),
@@ -368,6 +374,8 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("o", "demote", "Demote"),
     MenuItem("w", "creation_worksheet", "Creation Worksheet"),
     MenuItem("t", "set_date", "Set Date"),
+    MenuItem("o", "downtime_run", "Run Downtime"),
+    MenuItem("u", "previously_on", "Previously On"),
     MenuItem("a", "edit_arms", "Arms"),
     MenuItem("w", "withdraw_case", "Withdraw"),
     MenuItem("e", "war_end", "War's End"),
@@ -592,6 +600,10 @@ MORE_SECTIONS: dict[str, str] = {
     "take_harm": "section-char-health",
     "recovery_roll": "section-char-health",
     "end_session": "section-reputations",
+    "what_changed": "section-reputations",
+    "cast_glance": SESSIONS_SECTION,
+    "teaching_requests": "section-char-season",
+    "study_path": "section-char-season",
     "tourney_season": "section-reputations",
     "melee_event": "section-reputations",
     "command_beast": "section-personality-traits",
@@ -1490,8 +1502,19 @@ def _begins_project(facts: ActionFacts) -> bool:
     )
 
 
+def _has_asks(facts: ActionFacts) -> bool:
+    """A character asked to teach, or asking (teaching.py)."""
+    character = facts.selected_character
+    return character is not None and any(
+        character.id in (r.student_id, r.teacher_id) for r in facts.saga.teach_requests
+    )
+
+
 _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
+    "teaching_requests": _has_asks,
     "set_date": _on_saga,
+    "downtime_run": _on_saga,
+    "previously_on": _on_saga,
     "export_saga": _exports_saga,
     "export_cult": _exports_cult,
     "export_pack": _exports_saga,

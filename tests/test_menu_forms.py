@@ -52,6 +52,8 @@ def test_each_page_offers_what_applies_there():
         "Export Pack",
         "Host for Players",
         "Set Date",
+        "Run Downtime",
+        "Previously On",
         "Hide from the Players",
     ]
     assert _labels(menu_forms.new_items(page)) == [
@@ -493,7 +495,7 @@ def test_places_sets_out_where_each_action_is_offered():
         "Covenants": ["New Covenant"],
         "Unassigned Characters": ["New Character"],
         "Unassigned Laboratories": ["New Laboratory"],
-        "Seasons": ["Set Date"],
+        "Seasons": ["Set Date", "Run Downtime", "Previously On"],
         "Saga Settings": ["Edit Saga"],
         "Saga Management": [
             "Import",

@@ -57,6 +57,7 @@ INTERESTS: tuple[str, ...] = (
 #: season-long ones kept on This Season alike.
 INTEREST_OF: dict[str, str] = {
     "end_session": SESSION,
+    "what_changed": SESSION,
     "reputation_roll": SESSION,
     "house_acclaim": SESSION,
     "melee_event": KNIGHTLY,
@@ -121,6 +122,8 @@ INTEREST_OF: dict[str, str] = {
 NOTES: dict[str, str] = {
     "end_session": "Confidence Points for a session of play, and its "
     "noteworthy deeds as experience in his Reputations.",
+    "what_changed": "His scores, spells, Virtues, Warping, wounds and holdings "
+    "since the last Session played.",
     "reputation_roll": "Whether someone has heard of him: a stress die and "
     "a Reputation against how far away they are.",
     "house_acclaim": "An award of House Acclaim, or a roll with it, for a "

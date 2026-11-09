@@ -82,7 +82,7 @@ _Avoid_: Remote saga, connection
 ### The table
 
 **Session**:
-One evening of play at the table, with its storyguide, who came, who is away and which character each player played. It need not sit inside one season (DE p. 528: a pulsed saga may play many Sessions in one season, or years between Sessions).
+One evening of play at the table, with its storyguide, who came, who is away and which character each player played. A character may have several Players, but on any one evening it is played by one person at most; a Player may play several characters that evening. It need not sit inside one season (DE p. 528: a pulsed saga may play many Sessions in one season, or years between Sessions).
 _Avoid_: game, meeting, sitting
 
 **App session**:
@@ -90,7 +90,7 @@ One run of the program, or one sign-in to the hosted app. Not a Session.
 _Avoid_: session (alone)
 
 **Steward**:
-The Player who keeps a character between Sessions and decides what it does in its downtime. Any character without a Player of its own may have one (DE p. 529 describes this for pooled grogs, and the word "steward" is the app's own).
+The Player who keeps a character between Sessions and decides what it does in its downtime. Any character with no Players named on it may have one, including one everyone in the troupe plays, as pooled grogs often are (DE p. 529 describes this for pooled grogs, and the word "steward" is the app's own). A character with named Players never has a Steward.
 _Avoid_: owner, handler
 
 **Player**:

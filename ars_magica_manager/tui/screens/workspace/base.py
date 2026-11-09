@@ -1979,8 +1979,14 @@ class WorkspaceBase(Screen[None]):
         and changes only what they may change (players.may_change)."""
         if self._is_storyguide():
             return True
-        return seat.may_act(
-            self.saga, self._signed_in(), action, self._record_on_show()
+        record = self._record_on_show()
+        if seat.may_act(self.saga, self._signed_in(), action, record):
+            return True
+        # A Steward plans the character's seasons, and changes nothing else.
+        return (
+            action in ("add", "edit", "delete")
+            and self._active_section() == seat.PLANS_PART
+            and seat.may_plan(self.saga, record)
         )
 
     def _may_change_here(self) -> bool:

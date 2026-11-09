@@ -14,6 +14,7 @@ from ....sections import LAB_TEXTS_SECTION as LAB_TEXTS_SECTION
 from ....sections import LAB_VF_SECTIONS as LAB_VF_SECTIONS
 from ....sections import LIBRARY_SECTIONS as LIBRARY_SECTIONS
 from ....sections import PLAYERS_SECTION as PLAYERS_SECTION
+from ....sections import SESSIONS_SECTION as SESSIONS_SECTION
 from ....sections import SOURCES_SECTION as SOURCES_SECTION
 from ....sections import SPELL_SECTION as SPELL_SECTION
 from ....sections import TRADITIONS_SECTION as TRADITIONS_SECTION

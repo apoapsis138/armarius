@@ -715,6 +715,17 @@ def _saga_with_every_record() -> Saga:  # noqa: PLR0915
     saga.marriages.append(
         models.Marriage(bride="Adelheid", groom_ref="neighbour:gottfried", lands=2)
     )
+    # A Session with who played whom.
+    saga.sessions.append(
+        models.Session(
+            "s1",
+            castings=[models.Casting(player_id="p1", character_id=magus.id)],
+        )
+    )
+    # An ask for a teacher's season.
+    saga.teach_requests.append(
+        models.TeachRequest("t1", magus.id, magus.id, "ability:Latin", "Spring", 1220)
+    )
     # The Atlas: a map of its own and a pin on it.
     saga.maps, saga.pins = (
         [models.AtlasMap("rhine", "The Rhine", "ab.png", 30, 20)],

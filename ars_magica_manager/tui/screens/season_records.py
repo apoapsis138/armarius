@@ -8,9 +8,10 @@ from typing import ClassVar
 from textual.app import ComposeResult
 from textual.binding import BindingType
 from textual.containers import Horizontal, Vertical, VerticalScroll
-from textual.widgets import Button, Label, Static
+from textual.widgets import Button, Collapsible, Label, Static
 
 from ... import seasons
+from ...markup import escape
 from ...models import Saga, SeasonRecord
 from .fields import ModalDialog
 
@@ -61,10 +62,17 @@ class SeasonSummaryScreen(ModalDialog[None]):
     }
     """
 
-    def __init__(self, saga: Saga, record: SeasonRecord) -> None:
+    def __init__(
+        self,
+        saga: Saga,
+        record: SeasonRecord,
+        changed: tuple[tuple[str, tuple[str, ...]], ...] = (),
+    ) -> None:
         super().__init__()
         self.saga = saga
         self.record = record
+        #: What changed in each player character over the season.
+        self.changed = changed
 
     def compose(self) -> ComposeResult:
         with Vertical(id="summary-dialog", classes="dialog-box"):
@@ -75,6 +83,18 @@ class SeasonSummaryScreen(ModalDialog[None]):
                 yield Static(
                     seasons.record_text(self.saga, self.record), id="summary-text"
                 )
+                if self.changed:
+                    with Collapsible(
+                        title=f"What changed ({len(self.changed)})",
+                        collapsed=True,
+                        id="summary-changed",
+                    ):
+                        yield Static(
+                            "\n".join(
+                                f"[b]{escape(name)}:[/] {escape('; '.join(lines))}."
+                                for name, lines in self.changed
+                            )
+                        )
             yield Static(
                 "Kept under Seasons in the tree."
                 if self.saga.keep_season_records

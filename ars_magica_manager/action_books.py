@@ -107,6 +107,10 @@ NO_BOOK: frozenset[str] = frozenset(
         "take_harm",
         "recovery_roll",
         "end_session",
+        "what_changed",
+        # The app's own planning aids.
+        "teaching_requests",
+        "study_path",
         "reputation_roll",
         "plan_copying",
         "clear_copying",

@@ -21,6 +21,7 @@ from .... import books as bk
 from .... import house_rules as hr
 from .... import lab_texts as lt
 from .... import players as pl
+from .... import sessions as ss
 from .... import spells as spl
 from ....arts import FORMS, TECHNIQUES
 from ....boon_hook_text import counted
@@ -32,7 +33,12 @@ from ....models import (
     Saga,
     Spell,
 )
-from ....sections import HOUSE_RULES_SECTION, PLAYERS_SECTION, SPELL_SECTION
+from ....sections import (
+    HOUSE_RULES_SECTION,
+    PLAYERS_SECTION,
+    SESSIONS_SECTION,
+    SPELL_SECTION,
+)
 from ..widgets import (
     DETAILS_PANEL_MAX_HEIGHT,
     DETAILS_PANEL_MIN_HEIGHT,
@@ -408,6 +414,62 @@ class PlayersView(Vertical):
             self.query_one("#players-list", SelectableList).set_rows(self._rows())
             self.query_one("#players-panel", Static).update(
                 pl.detail_text(self.saga, None)
+            )
+        except NoMatches:
+            return  # the view is being replaced
+
+
+class SessionsView(Vertical):
+    """The evenings of play, planned (soonest first) then played (newest
+    first), in one list stretching down to the chosen Session's details."""
+
+    DEFAULT_CSS = """
+    SessionsView {
+        height: 1fr;
+    }
+
+    SessionsView .sessions-body {
+        height: 1fr;
+    }
+    """
+
+    def __init__(self, saga: Saga) -> None:
+        super().__init__()
+        self.saga = saga
+
+    def _title(self) -> str:
+        return counted("Sessions", len(self.saga.sessions))
+
+    def _rows(self) -> list[tuple[int, str]]:
+        return [
+            (i, ss.row_label(self.saga, s))
+            for i, s in enumerate(ss.in_order(self.saga))
+        ]
+
+    def compose(self) -> ComposeResult:
+        with (
+            Vertical(classes="sessions-body"),
+            SheetSection(title=self._title(), id=SESSIONS_SECTION),
+        ):
+            yield TableHeader("  " + ss.table_header())
+            yield SelectableList(self._rows(), id="sessions-list")
+        yield DetailsPanel(ss.detail_text(self.saga, None), id="sessions-panel")
+
+    def on_selectable_list_chosen(self, event: SelectableList.Chosen) -> None:
+        event.stop()
+        shown = ss.in_order(self.saga)
+        chosen = shown[event.data_index] if event.data_index < len(shown) else None
+        self.query_one("#sessions-panel", Static).update(
+            ss.detail_text(self.saga, chosen)
+        )
+
+    def rebuild(self) -> None:
+        """Re-read the Sessions after an add, edit or delete."""
+        try:
+            self.query_one(f"#{SESSIONS_SECTION}", Collapsible).title = self._title()
+            self.query_one("#sessions-list", SelectableList).set_rows(self._rows())
+            self.query_one("#sessions-panel", Static).update(
+                ss.detail_text(self.saga, None)
             )
         except NoMatches:
             return  # the view is being replaced

@@ -97,15 +97,18 @@ def verb_buttons(
     *,
     nouns: tuple[str, str, str] = ("Add", "Edit", "Delete"),
     more: Sequence[RowVerb] = (),
+    part: str = "",
 ) -> list[QPushButton]:
     """The section's buttons, for character_sheet.section(buttons=...):
+    none on a page whoever sits here may not change (seat.read_only, asked
+    for the section `part`).
     one per verb `ops` has, named `nouns` (Add, Edit, Delete), then the
     `more` that act on the chosen row. A verb with no row it could act on
     (an empty list, or Give with nobody to take any of it) isn't shown;
     one whose row isn't chosen yet is greyed out."""
     add, edit, remove = nouns
     buttons: list[QPushButton] = []
-    if seat.read_only():
+    if seat.read_only(part):
         return buttons
     if ops.add is not None:
         start = ops.add

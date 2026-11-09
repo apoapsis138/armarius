@@ -437,6 +437,8 @@ async def test_more_on_the_saga_offers_import_export_and_set_date():
             "Export Pack",
             "Host for Players",
             "Set Date",
+            "Run Downtime",
+            "Previously On",
             "Hide from the Players",
             "Player View",
         ]

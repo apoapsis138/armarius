@@ -21,7 +21,16 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass
 
-from . import open_stories, references, story_chapters, threats
+from . import (
+    open_stories,
+    references,
+    sessions,
+    spotlight,
+    story_aftermath,
+    story_chapters,
+    teaching,
+    threats,
+)
 from .commands import Act, Command, Go, Refuse, SectionOps
 from .grids import Grid
 from .markup import escape
@@ -41,6 +50,10 @@ REVISIT = "Revisit"
 STORY = "Open story"
 EFFECT = "Describe"
 OVERDUE = "Overdue"
+AWAY = "Away"
+CLOSE = "Close"
+SPOTLIGHT = "Spotlight"
+ASK = "Teach?"
 
 OPEN_TITLE = "Open"
 
@@ -113,6 +126,106 @@ def _stories(saga: Saga) -> list[Item]:
         _story(saga, s, STORY)
         for s in open_stories.stories(saga)
         if not _revisit_due(saga, s)
+    ]
+
+
+@register
+def _away(saga: Saga) -> list[Item]:
+    """Each open story's character none of whose Players is coming to the
+    next planned Session (advisory: the story may wait). Not in a Solo saga,
+    not before attendance is recorded, and never a character everyone in
+    the troupe plays."""
+    session = sessions.next_planned(saga)
+    if session is None or session.solo or not (session.coming or session.away):
+        return []
+    found = []
+    for story in open_stories.stories(saga):
+        character = open_stories.concerned(saga, story.entry)
+        if not isinstance(character, Character):
+            continue
+        background = character.background
+        if background.everyone_plays or not background.player_ids:
+            continue
+        if any(i in session.coming for i in background.player_ids):
+            continue
+        found.append(
+            Item(
+                AWAY,
+                f"{character.name}: {story.entry.name or '(unnamed)'}",
+                references.ref(story.covenant),
+                f"{story.covenant.name}'s Diary",
+                f"None of {character.name}'s Players is coming to the next "
+                f"Session ({sessions.when(session)}), and this open story "
+                "concerns them. Keep it for another evening, or play them "
+                "another way.",
+            )
+        )
+    return found
+
+
+@register
+def _spotlight(saga: Saga) -> list[Item]:
+    """Player characters whose Story or Major Personality Flaw has waited
+    the saga's span for a story (spotlight.py; DE p. 66)."""
+    found = []
+    for waiting in spotlight.waiting(saga):
+        when = (
+            f"no told story has concerned them since {waiting.last}"
+            if waiting.last is not None
+            else "no told story has concerned them yet"
+        )
+        found.append(
+            Item(
+                SPOTLIGHT,
+                f"{waiting.character.name}: {', '.join(waiting.flaws)}",
+                references.ref(waiting.character),
+                f"{waiting.character.name}'s Virtues & Flaws",
+                f"{when.capitalize()}. A Flaw like this is a promise of "
+                "stories (DE p. 66): give them one, or change the span in "
+                "Saga Settings.",
+            )
+        )
+    return found
+
+
+@register
+def _teaching(saga: Saga) -> list[Item]:
+    """Open asks for a teacher's season (teaching.py)."""
+    found = []
+    for request in saga.teach_requests:
+        teacher = saga.character(request.teacher_id)
+        if request.status != teaching.ASKED or teacher is None:
+            continue
+        found.append(
+            Item(
+                ASK,
+                teaching.line(saga, request),
+                references.ref(teacher),
+                f"{teacher.name}'s Teaching Requests (More on This Season)",
+                "A student asks for this teacher's season: their Player (or "
+                "you) accepts, which plans both, or declines.",
+            )
+        )
+    return found
+
+
+@register
+def _chapters(saga: Saga) -> list[Item]:
+    """Chapters whose aftermath hasn't been asked: Close the Chapter asks
+    it (story_aftermath.py)."""
+    return [
+        Item(
+            CLOSE,
+            f"{entry.name or '(unnamed)'} ({entry.season} {entry.year})",
+            references.ref(covenant),
+            f"{covenant.name}'s Diary",
+            "A chapter with a cast whose aftermath hasn't been asked: the "
+            "Adventure's Source Quality and who takes it.",
+            lambda covenant=covenant, entry=entry: story_aftermath.close_chapter(
+                saga, covenant, entry
+            ),
+        )
+        for covenant, entry in story_aftermath.open_chapters(saga)
     ]
 
 

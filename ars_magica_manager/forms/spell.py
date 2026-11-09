@@ -90,6 +90,13 @@ def mastery_fields(
         DialogField("mastery_score", "Score", "int", known.mastery_score),
         DialogField("mastery_xp", "XP", "int", known.mastery_xp),
         abilities,
+        DialogField(
+            "favourite",
+            "Favourite",
+            "check",
+            known.favourite,
+            hint="Shown on the cast at a glance, beside the mastered spells.",
+        ),
     ]
 
 
@@ -101,6 +108,7 @@ def known_spell_from(known: KnownSpell, values: dict[str, Any]) -> KnownSpell:
         mastery_abilities=list(
             values.get("mastery_abilities", known.mastery_abilities)
         ),
+        favourite=bool(values.get("favourite", known.favourite)),
     )
 
 

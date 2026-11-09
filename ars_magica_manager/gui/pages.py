@@ -36,8 +36,10 @@ from .. import (
     open_stories,
     players,
     section_verbs,
+    sessions,
     sieges,
     story_chapters,
+    teaching,
     troupe,
     viewing,
     world,
@@ -47,7 +49,7 @@ from ..commands import Command, SectionOps
 from ..forms import diary as diary_forms
 from ..forms import menu as menu_forms
 from ..joined_games import JoinedGame
-from ..models import Character, Creature, Neighbour, Saga, Tribunal
+from ..models import Character, Creature, Neighbour, Saga, Session, Tribunal
 from ..references import Fact, Ref
 from ..sections import CONFLICT_BATTLES_SECTION, FIGHTS_SECTION, SIEGES_SECTION
 from ..sheets import character as cs
@@ -109,6 +111,9 @@ class SagaHooks(TypedDict, total=False):
     open_siege: Open
     #: Opens the Host for Players window.
     open_hosting: Callable[[], None]
+    #: Draws Saga Management's Sessions section, given the inspector
+    #: (gui/sessions_section.py).
+    sessions: Callable[[Callable[[str, str, str], None]], QWidget]
 
 
 #: Saga Management's hosting entries, drawn as one Host for Players row.
@@ -1006,6 +1011,85 @@ def tribunal_card(
     return card
 
 
+#: How many played Sessions The Troupe shows; the rest are in Saga
+#: Content's Sessions.
+RECENT_SESSIONS = 3
+
+
+def session_card(saga: Saga, session: Session, p: Palette) -> Card:
+    """A Session as a card: its date, game date and storyguide, then who
+    is coming and who played whom."""
+    card = Card(p, pad=12)
+    game = sessions.game_date(session)
+    card_title(
+        card,
+        sessions.when(session),
+        " · ".join(
+            part
+            for part in (
+                sessions.status(session),
+                game,
+                f"Storyguide: {sessions.storyguide_name(saga, session)}",
+            )
+            if part
+        ),
+        p,
+        symbol_label(artwork.icon("year"), p, 32),
+    )
+    for line in (
+        sessions.attendance_line(saga, session),
+        sessions.castings_line(saga, session),
+    ):
+        if line:
+            card.column.addWidget(text(line, p["foreground"], serif(12.5), wrap=True))
+    return card
+
+
+def _sessions_part(saga: Saga, p: Palette) -> list[QWidget]:
+    """The Troupe's Next Session, then the other planned ones and the most
+    recent played."""
+
+    def quiet(words: str) -> QWidget:
+        return text(words, p["dim"], serif(12.5, italic=True), wrap=True)
+
+    coming = sessions.next_planned(saga)
+    parts: list[QWidget] = [chapter_title("Next Session", p)]
+    parts.append(
+        card_grid([session_card(saga, coming, p)], 2)
+        if coming is not None
+        else quiet("None planned. Saga Content's Sessions adds one.")
+    )
+    others = [s for s in sessions.planned(saga) if s is not coming]
+    others += sessions.played(saga)[:RECENT_SESSIONS]
+    if others:
+        parts.append(chapter_title(f"Sessions ({len(saga.sessions)})", p))
+        parts.append(card_grid([session_card(saga, s, p) for s in others], 2))
+    return parts
+
+
+def _stewards_part(saga: Saga, p: Palette) -> list[QWidget]:
+    """Each Player's stewarded characters, and whether each has a plan for
+    the current season; nothing in a Solo saga."""
+    if sessions.is_solo(saga):
+        return []
+    rows = []
+    for player in saga.players:
+        kept = sessions.stewarded(saga, player)
+        if not kept:
+            continue
+        names = ", ".join(
+            f"{c.name} ({'planned' if sessions.has_current_plan(saga, c) else 'no plan yet'})"
+            for c in kept
+        )
+        rows.append(
+            text(f"{player.name}: {names}", p["foreground"], serif(12.5), wrap=True)
+        )
+    if not rows:
+        return []
+    count = sum(len(sessions.stewarded(saga, x)) for x in saga.players)
+    return [chapter_title(f"Stewards ({count})", p), *rows]
+
+
 def troupe_chapter(
     saga: Saga, p: Palette, opens: dict[str, Callable[[Any], None]]
 ) -> QWidget:
@@ -1041,13 +1125,24 @@ def troupe_chapter(
     mine = players.characters_of(saga, me) if me is not None else []
     groups = troupe.player_characters(saga, apart={c.id for c in mine})
     played = sum(len(members) for _, members in groups)
-    parts: list[QWidget] = []
+    parts: list[QWidget] = _sessions_part(saga, p)
     if me is not None:
         parts.append(chapter_title(f"Your Characters ({len(mine)})", p))
         parts.append(
             card_grid([cards["character"](c) for c in mine])
             if mine
             else quiet("None yet. The storyguide gives you a character to play.")
+        )
+        asks = [r for c in mine for r in teaching.asked_of(saga, c)]
+        parts.extend(
+            text(
+                f"{teaching.line(saga, r)}: answer it in Teaching Requests on "
+                "This Season.",
+                p["foreground"],
+                serif(12.5, italic=True),
+                wrap=True,
+            )
+            for r in asks
         )
     heading = "Player Characters" if me is None else "The Troupe's Characters"
     parts.append(chapter_title(f"{heading} ({played})", p))
@@ -1066,6 +1161,7 @@ def troupe_chapter(
                 "Player is a player character, and is gathered here."
             )
         )
+    parts.extend(_stewards_part(saga, p))
     homes = troupe.troupe_covenants(saga)
     parts.append(chapter_title(f"Troupe Covenants ({len(homes)})", p))
     parts.append(
@@ -1191,7 +1287,10 @@ class SagaPage(QWidget):
         )
         self.codex.add("Saga Settings", "edit", self.settings.page, "saga-settings")
         self.codex.add(
-            "Saga Management", "manage", self._management(), "saga-management"
+            "Saga Management",
+            "manage",
+            self._management(hooks.get("sessions")),
+            "saga-management",
         )
         column.addWidget(self.codex, 1)
 
@@ -1294,7 +1393,9 @@ class SagaPage(QWidget):
             p, chapter_title("Rules and Content", p), card_grid([content], 2)
         )
 
-    def _management(self) -> QWidget:
+    def _management(
+        self, sessions: Callable[[Callable[[str, str, str], None]], QWidget] | None
+    ) -> QWidget:
         p = self.p
         placed = self.placer.placed_buttons("Saga Management") if self.placer else []
         rows: list[tuple[QPushButton, str]] = []
@@ -1311,6 +1412,8 @@ class SagaPage(QWidget):
             if rows
             else text("Nothing to manage.", p["dim"], serif(12.5, italic=True))
         ]
+        if sessions is not None:
+            parts.append(sessions(self.codex.inspect))
         if not viewing.current().hosts:
             # A storyguide joined from a Remote seat (ADR 0014).
             parts.append(

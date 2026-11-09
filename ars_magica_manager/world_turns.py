@@ -744,11 +744,16 @@ def entry_title(turn: WorldTurn) -> str:
     return f"The world turns, {turn.season} {turn.year}"
 
 
-def review(saga: Saga, found: list[Proposal], then: Any) -> Form:
+def review(
+    saga: Saga,
+    found: list[Proposal],
+    then: Any,
+    when: tuple[int, str] | None = None,
+) -> Form:
     """The review of `found`: Apply applies the ticked lines into one
     entry of the saga's record, then runs `then()` (the season played
-    out)."""
-    year, season = saga.current_year, saga.current_season
+    out). `when` dates a review kept for later (a downtime run's)."""
+    year, season = when or (saga.current_year, saga.current_season)
     entry = entry_title(WorldTurn(year, season))
 
     def live(values: dict[str, Any]) -> str:
@@ -760,7 +765,7 @@ def review(saga: Saga, found: list[Proposal], then: Any) -> Form:
         )
 
     def apply(values: dict[str, Any]) -> Any:
-        record(saga, _chosen(saga, found, values))
+        record(saga, _chosen(saga, found, values), (year, season))
         return then()
 
     return Form(
@@ -774,12 +779,17 @@ def review(saga: Saga, found: list[Proposal], then: Any) -> Form:
     )
 
 
-def record(saga: Saga, chosen: list[tuple[str, list[Change]]]) -> WorldTurn | None:
+def record(
+    saga: Saga,
+    chosen: list[tuple[str, list[Change]]],
+    when: tuple[int, str] | None = None,
+) -> WorldTurn | None:
     """Apply the chosen lines and keep them as one entry (None: nothing
-    chosen)."""
+    chosen), dated `when` (year, season), else the saga's date."""
     if not chosen:
         return None
-    turn = WorldTurn(saga.current_year, saga.current_season)
+    year, season = when or (saga.current_year, saga.current_season)
+    turn = WorldTurn(year, season)
     for text, changes in chosen:
         for change in changes:
             apply_change(saga, change)

@@ -692,7 +692,8 @@ def player_fields(existing: Player | None) -> list[DialogField]:
             "",
             hint="At least 14 characters: a few words they'll remember, "
             "such as 'grey owl over the mill', are easiest. Give it to them "
-            "yourself; it is stored only scrambled."
+            "yourself; it is stored only scrambled. Blank makes a "
+            "table-only Player, who can't sign in until given one."
             if existing is None
             else "Blank keeps the one they have.",
         ),
@@ -738,8 +739,6 @@ def apply_plays(saga: Saga, player: Player, values: dict[str, Any]) -> None:
 def player_problem(
     saga: Saga, existing: Player | None, values: dict[str, Any]
 ) -> str | None:
-    if existing is None and not values.get("passcode"):
-        return "Passcode is required."
     if values.get("passcode") and (weak := pl.passcode_problem(values["passcode"])):
         return weak
     return pl.name_problem(saga, values.get("name") or "", existing)

@@ -78,6 +78,9 @@ class Background:
     #: Played by everyone in the troupe (a shared grog): every player may
     #: change it, whoever joins later too.
     everyone_plays: bool = False
+    #: The Player who keeps the character between Sessions and plans its
+    #: downtime, by id (sessions.py); only where no Player is named.
+    steward_id: str = ""
     setting: str = ""
     size: int = 0
     confidence_score: int = 0

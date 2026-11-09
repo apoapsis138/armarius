@@ -24,6 +24,7 @@ UNPLANNED = (
     ("unplanned_grogs", "Idle Grogs"),
 )
 MEDALLIONS = "medallions"
+STORY_FLAW_YEARS = "story_flaw_years"
 RULING_TEMPLATES = "ruling_templates"
 THE_SAGA = "Saga Details"
 
@@ -117,6 +118,21 @@ def season_cards(saga: Saga) -> list[SettingCard]:
             "seasonal activity, and asks about each.\n\nOff: it names only "
             "player characters; the others take the default for their kind.",
             on=saga.notify_npc_unplanned,
+        ),
+        SettingCard(
+            STORY_FLAW_YEARS,
+            "Story Flaw Spotlight",
+            "Needs You",
+            "Names a character whose Story Flaw has waited too long for a story.",
+            "Needs You names a player character whose Story Flaw or Major "
+            "Personality Flaw no told story has concerned in this many years "
+            "(DE p. 66: such a Flaw is a promise of stories). 0 turns it off.",
+            choice=(
+                f"{saga.story_flaw_years} year"
+                f"{'' if saga.story_flaw_years == 1 else 's'}"
+                if saga.story_flaw_years
+                else "Off"
+            ),
         ),
         SettingCard(
             MEDALLIONS,

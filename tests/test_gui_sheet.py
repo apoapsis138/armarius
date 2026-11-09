@@ -910,3 +910,17 @@ def test_a_covenants_history_chips_hide_and_show_a_records_entries(app):
     app.processEvents()
     page = page.window_.page()
     assert "not showing The Old Keep" in _texts(_chapter(page, "History"))
+
+
+def test_sessions_are_managed_in_saga_management(app):
+    from ars_magica_manager.models import Session
+
+    saga = _sample_saga_with_covenant()
+    saga.sessions = [Session("s1", real_date="2026-11-14")]
+    storage.save_saga(saga)
+    window = MainWindow(saga_ids=[saga.id])
+    window.open_saga(saga.id)
+    page = window.page()
+    page.codex.open_chapter("Saga Management")
+    titles = [label.text() for label in page.findChildren(QLabel)]
+    assert any("Sessions (1)" in t for t in titles)

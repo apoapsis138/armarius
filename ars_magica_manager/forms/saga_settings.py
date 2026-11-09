@@ -41,6 +41,24 @@ def choice_form(saga: Saga, key: str) -> Form:
             lambda: [ruling_templates.saga_field(saga)],
             _setter(saga, key),
         )
+    if key == sss.STORY_FLAW_YEARS:
+        return Form(
+            "Story Flaw Spotlight",
+            lambda: [
+                DialogField(
+                    key,
+                    "Years",
+                    "int",
+                    saga.story_flaw_years,
+                    hint="How long a Story or Major Personality Flaw may wait for "
+                    "a story before Needs You names it; 0 turns it off.",
+                )
+            ],
+            _setter(saga, key),
+            validate=lambda values: (
+                "The span is 0 or more years." if (values.get(key) or 0) < 0 else None
+            ),
+        )
     if key == sss.MEDALLIONS:
         title, value, options = (
             "Medallion Style",

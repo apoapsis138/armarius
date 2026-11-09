@@ -3368,8 +3368,9 @@ and both sides' Diaries record it.
 <!-- tui -->
 The spells the magus knows, chosen with `a` from the spell catalog and the
 saga's own spells. The picker shows the highlighted spell's details under the
-list, description included, so you can compare spells before choosing. `e` edits the spell's Mastery, its score and XP and the
-Mastery Abilities. The details panel shows the spell and what the magus
+list, description included, so you can compare spells before choosing. `e` edits the spell's Mastery, its score and XP, the
+Mastery Abilities and **Favourite** (shown on the [cast at a
+glance](help:cast-glance)). The details panel shows the spell and what the magus
 casts it at. Share Spell in More (`m`) makes a spell the magus invented
 available to the whole saga.
 <!-- /tui -->
@@ -3377,7 +3378,8 @@ available to the whole saga.
 The spells the magus knows, chosen with **Add** from the spell catalog and
 the saga's own spells. The list shows the chosen spell's details beside it,
 description included, so you can compare spells before choosing. **Edit**
-edits the spell's Mastery, its score and XP and the Mastery Abilities.
+edits the spell's Mastery, its score and XP, the Mastery Abilities and
+**Favourite** (shown on the [cast at a glance](help:cast-glance)).
 Clicking a spell shows it in the inspector, with what the magus casts it
 at. The table sorts by any column you click, and the box above it filters
 the spells by name. A spell the magus invented has a **Shared** tick in its
@@ -4685,6 +4687,54 @@ a grog, `e` sets up the yearly update (Grogs, Chapter 5).
 <!-- gui -->
 a grog, **Yearly Update** sets up the yearly update (Grogs, Chapter 5).
 <!-- /gui -->
+
+A book is one reader's at a time: a plan to read (or copy) a book another
+character has planned for the same season is refused, saying who holds it
+and until when. Being taught by a character whose Player isn't yours
+becomes an ask of that Player instead of a plan: the season then says
+"Waiting for Bruno to teach Latin" (see
+[Teaching Requests](help:teaching-requests)). A character's **Steward**
+plans their seasons here too.
+
+**Study Path** (More) plans the way to a score: see
+[Study Path](help:study-path).
+
+### Study Path
+<!-- help: study-path -->
+
+How a character reaches a score in an Art or Ability by a year, season by
+season, with what is to hand.
+
+**You type:** the Art or Ability, the score wanted, and the year to reach
+it by. **Find** shows the path; **Plan These Seasons** plans it.
+
+**The app works out:** each season not yet planned, from now to the end
+of that year, takes whichever source gives the most experience then: a
+book they may read (their covenant's or their own, a summa only to its
+Level, a tractatus once, never one another character holds that season),
+vis study for an Art (a magus with the pawns to hand; its Source Quality
+counted at 6 plus the aura, a stress die's usual worth), practice for an
+Ability, or a teacher of their covenant with a higher score (only to the
+teacher's own score). It says whether the goal is reached, and with what
+score otherwise. Seasons already planned stay as they are. A season with a
+teacher whose Player isn't yours becomes an ask (see
+[Teaching Requests](help:teaching-requests)); a storyguide, or the Player
+of both, plans both seasons at once.
+
+### Teaching Requests
+<!-- help: teaching-requests -->
+
+Asks for another Player's character to teach. A student's plan to be
+taught by a character their Player doesn't play or steward becomes an
+ask: the student's This Season says "Waiting for Bruno to teach Latin",
+the teacher's Player sees it on The Troupe (desktop) and in the teacher's
+**Teaching Requests** (More on This Season), and storyguides see it on
+[Needs You](help:section-attention).
+
+**You type:** on the teacher, choose the ask, then **Accept** (both
+seasons are planned: the student is taught, the teacher teaches) or
+**Decline**, with a note the student sees. On the student, choosing their
+own ask clears it.
 
 Below the Labor Points line it says what they are worth in money to the
 business: 9 Labor Points are about a quarter of a year's income (City & Guild

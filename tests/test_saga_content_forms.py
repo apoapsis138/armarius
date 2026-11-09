@@ -151,8 +151,6 @@ def test_a_player_is_added_edited_and_deleted():
     saga = _saga()
     ops = scf.player_ops(saga)
     assert ops.add is not None and ops.edit is not None and ops.remove is not None
-    _, problem = _answer(ops.add(), {"name": "Jo"})
-    assert problem == "Passcode is required."
     _, problem = _answer(ops.add(), {"name": "Jo", "passcode": "secret"})
     assert problem == "A passcode needs at least 14 characters."
     _save(ops.add(), {"name": "Jo", "passcode": "secret passcode phrase"})
@@ -172,6 +170,15 @@ def test_a_player_is_added_edited_and_deleted():
     confirm.apply()
     assert saga.players == []
     assert not remote.allows(player)
+
+
+def test_a_blank_passcode_makes_a_table_only_player():
+    saga = _saga()
+    _save(scf.player_ops(saga).add(), {"name": "Mo"})
+    [player] = saga.players
+    assert player.passcode_hash == ""
+    assert pl.sign_in(saga, "Mo", "") is None
+    assert "table-only" in pl.detail_text(saga, player)
 
 
 def test_a_saga_source_is_added_renamed_and_refused_while_cited():

@@ -331,10 +331,18 @@ CONTRACTS: dict[str, Contract] = {
         expected=[("ana", "Ana", "storyguide", True, True)],
         invalid=[
             {"Name": ""},
-            {"Name": "Ana", "Passcode": ""},
             {"Name": "Ana", "Passcode": "rosemary"},
         ],
         shown={"#section-players": "Players (1)"},
+    ),
+    # An evening of play, in a saga with no players yet (Solo: one step).
+    "add session": Contract(
+        prefill={"Date": "", "Game year": ""},
+        edits={"Date": "2026-11-14", "Game season": "Spring", "Game year": "1221"},
+        saved=lambda s: [(x.real_date, x.season, x.year, x.solo) for x in s.sessions],
+        expected=[("2026-11-14", "Spring", 1221, True)],
+        invalid={"Date": "14 November"},
+        shown={"#section-sessions": "Sessions (1)"},
     ),
     "add spell": Contract(
         prefill={"Name": "", "Technique": Select.NULL, "Level": ""},

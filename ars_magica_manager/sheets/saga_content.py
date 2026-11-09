@@ -17,6 +17,7 @@ from .. import house_rules as hr
 from .. import own_abilities as oa
 from .. import players as pl
 from .. import saga_content as sc
+from .. import sessions as ss
 from .. import spells as spl
 from ..markup import escape
 from ..models import AbilityDef, Saga, Spell
@@ -469,4 +470,13 @@ def players_table(saga: Saga) -> Table:
             ]
             for player in saga.players
         ],
+    )
+
+
+def sessions_table(saga: Saga) -> Table:
+    """The Sessions as the list shows them: planned soonest first, then
+    played newest first."""
+    return Table(
+        ["Date", "Game date", "Status", "Storyguide"],
+        [ss.row_cells(saga, s) for s in ss.in_order(saga)],
     )

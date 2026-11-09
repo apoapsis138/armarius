@@ -19,10 +19,11 @@ for Resolve's last chapter."""
 from __future__ import annotations
 
 import uuid
+from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
-from . import place_events, threats, world
+from . import place_events, sessions, threats, world
 from .commands import Choice, Choose, Command, Form, Refuse, notes
 from .form_spec import DialogField, pairs
 from .markup import escape
@@ -35,6 +36,7 @@ from .models import (
     CovenantDiaryEntry,
     Neighbour,
     Saga,
+    Session,
     season_order,
 )
 from .neighbour_lists import KindList, KindTab
@@ -54,6 +56,8 @@ class Chapter:
     year: int | None
     season: str
     words: str
+    #: Who went, by id (a story's chapter; a threat's has none).
+    cast: tuple[str, ...] = ()
 
     @property
     def when(self) -> str:
@@ -87,7 +91,7 @@ def story_chapters(covenant: Covenant, entry: CovenantDiaryEntry) -> list[Chapte
     if not entry.id:
         return []
     found = [
-        Chapter(e.year, e.season, e.details.strip())
+        Chapter(e.year, e.season, e.details.strip(), tuple(e.cast))
         for e in covenant.diary
         if e.category == CHAPTER and e.story_id == entry.id
     ]
@@ -124,10 +128,16 @@ def grew_into(saga: Saga, entry: CovenantDiaryEntry) -> Neighbour | None:
 # -- the thread --
 
 
-def _chapter_lines(chapters: list[Chapter]) -> list[str]:
-    return [
-        f"[$label]{escape(c.when or 'Undated')}:[/] {escape(c.words)}" for c in chapters
-    ]
+def _chapter_lines(chapters: list[Chapter], saga: Saga | None = None) -> list[str]:
+    """Each chapter (markup): when, what the troupe did, and who went."""
+    lines = []
+    for c in chapters:
+        line = f"[$label]{escape(c.when or 'Undated')}:[/] {escape(c.words)}"
+        went = [x.name for i in c.cast if saga and (x := saga.character(i))]
+        if went:
+            line += f" [$label](went: {escape(', '.join(went))})[/]"
+        lines.append(line)
+    return lines
 
 
 def story_thread(
@@ -135,7 +145,7 @@ def story_thread(
 ) -> list[str]:
     """A story's thread (markup lines): its chapters, then the threat it
     grew into and the threat's chapters; [] for none."""
-    lines = _chapter_lines(story_chapters(covenant, entry))
+    lines = _chapter_lines(story_chapters(covenant, entry), saga)
     threat = grew_into(saga, entry)
     if threat is not None:
         lines.append(f"[$label]Grew into[/] [b]{escape(threat.name)}[/]")
@@ -242,7 +252,9 @@ def delete_story(covenant: Covenant, entry: CovenantDiaryEntry) -> Choose:
 # -- writing them --
 
 
-def _fields(saga: Saga, words_label: str, hint: str) -> list[DialogField]:
+def _fields(
+    saga: Saga, words_label: str, hint: str, *, cast: bool = True
+) -> list[DialogField]:
     return [
         DialogField("year", "Year", "int", saga.current_year, required=True),
         DialogField(
@@ -254,13 +266,68 @@ def _fields(saga: Saga, words_label: str, hint: str) -> list[DialogField]:
             required=True,
         ),
         DialogField("words", words_label, "area", "", required=True, hint=hint),
+        *(cast_fields(saga) if cast else []),
     ]
 
 
+#: The key of a "Went" tick, before the character's id.
+WENT = "went_"
+
+
+def session_at_hand(saga: Saga) -> Session | None:
+    """The evening a chapter is being written at: the next planned
+    Session, else the last played."""
+    return sessions.next_planned(saga) or sessions.last_played(saga)
+
+
+def cast_fields(saga: Saga) -> list[DialogField]:
+    """Who went (a tick per troupe character, filled in from who plays
+    whom at the Session at hand) and how many days the chapter took."""
+    session = session_at_hand(saga)
+    played = {c.character_id for c in session.castings} if session else set()
+    offered = [
+        c
+        for c in saga.characters
+        if c.id in played
+        or c.covenant_id in {v.id for v in world.player_covenants(saga)}
+    ]
+    return [
+        *(
+            DialogField(
+                f"{WENT}{c.id}",
+                f"Went: {escape(c.name)}",
+                "check",
+                c.id in played,
+            )
+            for c in offered
+        ),
+        DialogField(
+            "days",
+            "Days it took",
+            "optint",
+            None,
+            hint="Days away from the laboratory for a magus who keeps his "
+            "season's work (DE p. 265).",
+        ),
+    ]
+
+
+def cast_from(saga: Saga, values: dict[str, Any]) -> list[str]:
+    return [c.id for c in saga.characters if values.get(f"{WENT}{c.id}")]
+
+
 def write_story_chapter(
-    covenant: Covenant, entry: CovenantDiaryEntry, year: int, season: str, words: str
+    covenant: Covenant,
+    entry: CovenantDiaryEntry,
+    year: int,
+    season: str,
+    words: str,
+    cast: list[str] | None = None,
+    days: int | None = None,
+    session_id: str = "",
 ) -> CovenantDiaryEntry:
-    """A chapter of the story `entry` in the covenant's Diary."""
+    """A chapter of the story `entry` in the covenant's Diary, with who
+    went, the days it took and the Session it was played at."""
     chapter = CovenantDiaryEntry(
         year,
         season,
@@ -268,9 +335,44 @@ def write_story_chapter(
         words.strip(),
         category=CHAPTER,
         story_id=story_id(entry),
+        cast=list(cast or []),
+        days=days,
+        session_id=session_id,
     )
     covenant.diary.append(chapter)
     return chapter
+
+
+def _write(
+    saga: Saga, covenant: Covenant, entry: CovenantDiaryEntry, values: dict[str, Any]
+) -> CovenantDiaryEntry:
+    session = session_at_hand(saga)
+    return write_story_chapter(
+        covenant,
+        entry,
+        values["year"],
+        values["season"],
+        values["words"],
+        cast_from(saga, values),
+        values.get("days"),
+        session.id if session is not None else "",
+    )
+
+
+#: What follows writing a chapter with a cast: its aftermath's first step
+#: (story_aftermath.close_chapter, which registers itself; it sits above
+#: the seasons, which sit above this module). Observer, as a list.
+AFTERMATH: list[Callable[[Saga, Covenant, CovenantDiaryEntry], Command]] = []
+
+
+def _then_close(
+    saga: Saga, covenant: Covenant, chapter: CovenantDiaryEntry, said: str
+) -> Command | list[str]:
+    """After writing a chapter with a cast: its aftermath (Cancel leaves it
+    open, to close later)."""
+    if not chapter.cast or not AFTERMATH:
+        return notes(said)
+    return AFTERMATH[0](saga, covenant, chapter)
 
 
 def take_up_story(saga: Saga, covenant: Covenant, entry: CovenantDiaryEntry) -> Command:
@@ -290,11 +392,14 @@ def take_up_story(saga: Saga, covenant: Covenant, entry: CovenantDiaryEntry) -> 
     if not is_open(entry):
         return Refuse(TAKE_UP, f"{escape(entry.name)} is already told.")
 
-    def apply(values: dict[str, Any]) -> list[str]:
-        write_story_chapter(
-            covenant, entry, values["year"], values["season"], values["words"]
+    def apply(values: dict[str, Any]) -> Command | list[str]:
+        chapter = _write(saga, covenant, entry, values)
+        return _then_close(
+            saga,
+            covenant,
+            chapter,
+            escape(f"A chapter of {entry.name}, in {covenant.name}'s Diary."),
         )
-        return notes(escape(f"A chapter of {entry.name}, in {covenant.name}'s Diary."))
 
     return Form(
         f"{TAKE_UP}: {escape(entry.name)}",
@@ -313,11 +418,11 @@ def ending_form(saga: Saga, covenant: Covenant, entry: CovenantDiaryEntry) -> Fo
     """Resolve's last chapter: how the tale ended (Cancel leaves the story
     resolved, with none)."""
 
-    def apply(values: dict[str, Any]) -> list[str]:
-        write_story_chapter(
-            covenant, entry, values["year"], values["season"], values["words"]
+    def apply(values: dict[str, Any]) -> Command | list[str]:
+        chapter = _write(saga, covenant, entry, values)
+        return _then_close(
+            saga, covenant, chapter, escape(f"{entry.name}: its last chapter written.")
         )
-        return notes(escape(f"{entry.name}: its last chapter written."))
 
     return Form(
         f"{ENDING}: {escape(entry.name)}",
@@ -361,6 +466,7 @@ def take_up_threat(saga: Saga, threat: Neighbour) -> Command:
             "What the troupe did",
             "What was done, met or avoided; written in the threat's Diary and "
             "the troupe's covenants'.",
+            cast=False,
         ),
         apply,
         save_label="Write",

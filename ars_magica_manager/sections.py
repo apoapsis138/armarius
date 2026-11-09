@@ -16,6 +16,9 @@ HOUSE_RULES_SECTION = "section-house-rules"
 #: The Players view's list section (a / e / d act on the saga's players).
 PLAYERS_SECTION = "section-players"
 
+#: The Sessions list (a / e / d act on the evenings of play).
+SESSIONS_SECTION = "section-sessions"
+
 #: The Saga Content sheet's sections.
 BOOKS_SECTION = "section-books-in-play"
 SOURCES_SECTION = "section-saga-sources"

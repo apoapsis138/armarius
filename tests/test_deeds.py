@@ -53,7 +53,10 @@ def test_deeds_wait_while_the_character_is_in_creation():
     reputations = replace(page, section="section-reputations")
     assert not available("end_session", reputations)
     page = menu_forms.page_for(_knight(False), NodeKind.CHARACTER, character_id="k")
-    assert [i.action for i in menu_forms.placed(page, deeds.SESSION)] == ["end_session"]
+    assert [i.action for i in menu_forms.placed(page, deeds.SESSION)] == [
+        "end_session",
+        "what_changed",
+    ]
 
 
 def test_the_reputations_section_keeps_only_its_own_buttons():
@@ -73,7 +76,10 @@ def test_an_unticked_interest_hides_its_actions_but_never_the_session():
     assert "tourney_season" not in {
         i.action for i in menu_forms.placed(page, deeds.SEASON_WORK)
     }
-    assert [i.action for i in menu_forms.placed(page, deeds.SESSION)] == ["end_session"]
+    assert [i.action for i in menu_forms.placed(page, deeds.SESSION)] == [
+        "end_session",
+        "what_changed",
+    ]
 
 
 def test_the_interests_form_turns_interests_off_and_on():

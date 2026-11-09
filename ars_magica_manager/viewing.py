@@ -151,7 +151,11 @@ STORYGUIDE_ONLY: frozenset[str] = frozenset(
 HOST_ONLY: frozenset[str] = frozenset({"tab-content-players", "section-players"})
 #: What only the host's own copy does: hosting (and with it Host for
 #: Players: invites, approvals, seats, the log).
-HOST_ONLY_ACTIONS: frozenset[str] = frozenset({"host_saga", "stop_hosting"})
+#: A downtime run is the host's too: it plays many seasons at once,
+#: each kept as it goes.
+HOST_ONLY_ACTIONS: frozenset[str] = frozenset(
+    {"host_saga", "stop_hosting", "downtime_run"}
+)
 
 #: What only the storyguide may do, so Player view leaves it off the
 #: storyguide's own window too (a signed-in player is refused much more:
@@ -233,6 +237,7 @@ PLAYER_BARRED_ACTIONS: frozenset[str] = frozenset(
         "create_familiar",
         "advance_season",
         "set_date",
+        "downtime_run",
         "import_data",
         "give",
         "give_silver",
@@ -268,6 +273,10 @@ LOOKING_ACTIONS: frozenset[str] = frozenset(
         "export_record",
         "go_to",
         "find",
+        # A character's changes since the last Session: it only reads.
+        "what_changed",
+        "cast_glance",
+        "previously_on",
         # A calculator: it records nothing.
         "plan_journey",
         "craft_by_magic",

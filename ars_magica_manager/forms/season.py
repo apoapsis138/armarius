@@ -15,7 +15,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import Any
 
-from .. import book_kinds, catalog, seasons, sourcebooks
+from .. import book_holds, book_kinds, catalog, seasons, seat, sourcebooks, teaching
 from .. import books as bk
 from .. import lab_texts as lt
 from .. import spells as spl
@@ -131,6 +131,16 @@ def save_season(
     replaces the later seasons of the plan it changes; for this season
     only, it stays one of them. Returns the plans added after the first."""
     plan = season_plan_from(saga, character, values, existing, when)
+    teacher = saga.character(plan.teacher_id) if plan.teacher_id else None
+    if (
+        plan.activity == season_rules.TAUGHT
+        and teacher is not None
+        and not seat.may_plan(saga, teacher)
+    ):
+        # Not this seat's to plan: the teacher's Player is asked instead.
+        subject = plan.allocations[0].subject if plan.allocations else ""
+        teaching.ask(saga, character, teacher, subject, plan.season, plan.year)
+        return []
     choice = values.get(repeat.FOR) or repeat.ONCE
     if existing is not None:
         pairs.drop_pairs(saga, existing)
@@ -2090,6 +2100,9 @@ def season_plan_problem(
     paired = pairs.pair_problem(saga, character, plan)
     if paired is not None:
         return paired
+    held = book_holds.problem(saga, plan)
+    if held is not None:
+        return held
     with pairs.in_place(saga, character, plan):
         found = season_rules.problems(character, plan, saga)
     if not found and plan.activity == season_rules.OTHER and not plan.details:

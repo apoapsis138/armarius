@@ -1474,3 +1474,37 @@ The troupe meets Gottfried of Arnsberg again, and you need his page now.
    for Edit or More.
 
 **See also:** [Find](help:find)
+
+# How to plan and record a Session
+<!-- help: guide-sessions -->
+
+Friday's game is set: Ana and Bruno are coming, Clara is away.
+
+<!-- tui -->
+1. **Add the Session.** Open **Saga Content**, its
+   [Sessions tab](help:tab-content-sessions), and press `a`. Type the
+   Date (2026-11-14), leave Played unticked, and set Clara to **Away**.
+   The game season and year are optional: a Session may span seasons.
+<!-- /tui -->
+<!-- gui -->
+1. **Add the Session.** Open the saga page's **Saga Management**
+   chapter, its [Sessions](help:tab-content-sessions) section, and click
+   **Add**. Type the Date (2026-11-14), leave Played unticked,
+   and set Clara to **Away**. The game season and year are optional: a
+   Session may span seasons.
+<!-- /gui -->
+2. **Check who plays whom.** **Next** shows Who Played Whom, filled in
+   from who usually plays each character. A character two coming
+   Players share is left for you: pick who plays it tonight.
+3. **Look at Needs You.** An open story about a character only Clara
+   plays is named there as **Away**: keep it for another evening.
+<!-- gui -->
+   The Troupe shows the Session as Next Session.
+<!-- /gui -->
+4. **After the game,** edit the Session and tick **Played**, changing
+   Who Played Whom if the evening went differently.
+5. **Pooled grogs.** In a grog's Biographical Detail, choose a
+   **Steward**: the Player who keeps them between Sessions and plans
+   their seasons, even from their own computer.
+
+**See also:** [Sessions](help:tab-content-sessions), [Players](help:tab-content-players)

@@ -326,9 +326,12 @@ from .polemic import POLEMIC as POLEMIC
 from .polemic import TEXT_KINDS as TEXT_KINDS
 from .polemic import Argument as Argument
 from .polemic import PolemicText as PolemicText
+from .saga import Casting as Casting
 from .saga import Player as Player
 from .saga import Saga as Saga
 from .saga import SagaSource as SagaSource
+from .saga import Session as Session
+from .saga import TeachRequest as TeachRequest
 from .saga import _key_lab_text_access_by_author as _key_lab_text_access_by_author
 from .saga import _link_vis_store_locations as _link_vis_store_locations
 from .saga import add_raw_vis as add_raw_vis

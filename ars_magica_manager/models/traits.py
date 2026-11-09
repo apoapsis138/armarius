@@ -190,6 +190,9 @@ class KnownSpell:
     mastery_score: int = 0
     mastery_xp: int = 0
     mastery_abilities: list[MasteryAbility] = field(default_factory=list)
+    #: Marked to show on the cast at a glance (cast_sheet.py), beside the
+    #: mastered spells.
+    favourite: bool = False
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> KnownSpell:

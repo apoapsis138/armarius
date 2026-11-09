@@ -58,6 +58,84 @@ class Player:
 
 
 @dataclass
+class Casting:
+    """Who played whom at a Session: a Player and the character they played
+    that evening, with both names as they were written, so a played
+    Session still reads right after either is renamed or deleted."""
+
+    player_id: str
+    character_id: str
+    player_name: str = ""
+    character_name: str = ""
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> Casting:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
+class Session:
+    """One evening of play at the table (sessions.py): when it is or was,
+    its storyguide, who is coming and who is Away, and who played whom."""
+
+    id: str
+    #: The real-world day, "YYYY-MM-DD", or "" when not set.
+    real_date: str = ""
+    played: bool = False
+    #: The game date it is set in, if any: a season and a year.
+    season: str = ""
+    year: int | None = None
+    #: The Player who storyguides it, by id; "" is the saga's own.
+    storyguide_id: str = ""
+    #: The Players coming and those Away, by id; a Player in neither was
+    #: added after the Session was made.
+    coming: list[str] = field(default_factory=list)
+    away: list[str] = field(default_factory=list)
+    castings: list[Casting] = field(default_factory=list)
+    #: Each named Player's name as written, by id, so a played Session
+    #: keeps the names of Players since deleted.
+    names: dict[str, str] = field(default_factory=dict)
+    #: Made while the saga was solo: its attendance was never asked.
+    solo: bool = False
+    notes: str = ""
+    #: The player characters as they stood when it was marked Played
+    #: (what_changed.keep), by character id: what "since the last Session"
+    #: is read against. Only the latest two played Sessions keep theirs.
+    kept: dict[str, dict[str, Any]] = field(default_factory=dict)
+    #: The saga's date (season, year) when it was marked Played: Previously
+    #: On reads what came after it.
+    played_season: str = ""
+    played_year: int | None = None
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> Session:
+        d = dict(data)
+        d["castings"] = [Casting.from_dict(c) for c in d.get("castings", [])]
+        return cls(**known_fields(cls, d))
+
+
+@dataclass
+class TeachRequest:
+    """A student's ask for another Player's character to teach them in a
+    season (teaching.py): asked, then accepted (both plans written, the
+    ask gone) or declined, with a note to the student."""
+
+    id: str
+    student_id: str
+    teacher_id: str
+    #: The Art or Ability, as a plan's subject ("ability:Latin").
+    subject: str
+    season: str
+    year: int
+    status: str = "asked"
+    note: str = ""
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> TeachRequest:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
 class SagaSource:
     """A source of the saga's own, cited by its user-made entries like a
     book (a house-rules list, a fan supplement): put in or out of play like
@@ -104,6 +182,15 @@ def _rosters_from_older_saves(neighbours: list[Neighbour]) -> None:
                 roster.append({"who": f"neighbours:{other.id}", "role": ""})
                 other.answers_to = None
         faction.details["roster"] = roster
+
+
+def _table_records(d: dict[str, Any]) -> None:
+    """The records of play at the table, built in place: the Sessions and
+    the asks to teach."""
+    d["sessions"] = [Session.from_dict(x) for x in d.get("sessions", [])]
+    d["teach_requests"] = [
+        TeachRequest.from_dict(x) for x in d.get("teach_requests", [])
+    ]
 
 
 @dataclass
@@ -214,6 +301,15 @@ class Saga:
     #: Who can sign in to the saga from a browser when it is hosted;
     #: the storyguide's own window needs no sign-in.
     players: list[Player] = field(default_factory=list)
+    #: Story Flaw spotlight (spotlight.py): Needs You names a player
+    #: character whose Story or Major Personality Flaw no told story has
+    #: concerned in this many years; 0 turns it off.
+    story_flaw_years: int = 3
+    #: Asks for another Player's character to teach (teaching.py).
+    teach_requests: list[TeachRequest] = field(default_factory=list)
+    #: The evenings of play, planned and played (sessions.py), in the order
+    #: they were added.
+    sessions: list[Session] = field(default_factory=list)
     #: The app version that last saved this saga (storage.save_saga sets it;
     #: "" for a save older than versioning), for upgrading old saves later.
     app_version: str = ""
@@ -321,6 +417,7 @@ class Saga:
             MysteryCult.from_dict(c) for c in d.get("custom_cults", [])
         ]
         d["players"] = [Player.from_dict(p) for p in d.get("players", [])]
+        _table_records(d)
         d["sources"] = [SagaSource.from_dict(s) for s in d.get("sources", [])]
         spell_names = {s.id: s.name for s in d["spells"]}
         d["books"] = [Book.from_dict(b, spell_names) for b in d.get("books", [])]

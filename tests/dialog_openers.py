@@ -1836,6 +1836,7 @@ OPENERS: dict[str, Opener] = {
     "lab texts read": Opener("character", lambda ws: ws._edit_lab_text_access()),
     "add house rule": Opener("saga_content", _core_add("section-house-rules")),
     "add player": Opener("saga_content", _core_add("section-players")),
+    "add session": Opener("saga_content", _core_add("section-sessions")),
     "edit traditions offered": Opener("saga_content", lambda ws: ws._edit_traditions()),
     "add spell": Opener("saga_content", _core_add("section-spells")),
     "edit spell": Opener("saga_content", _open_own_spell),

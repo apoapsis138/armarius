@@ -1,6 +1,6 @@
 ===== tab-content-books
 
-   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Players
+   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Session
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -43,7 +43,7 @@
 
 ===== tab-content-catalogs
 
-   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Players
+   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Session
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -86,7 +86,7 @@
 
 ===== tab-content-goods
 
-   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Players
+   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Session
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -129,7 +129,7 @@
 
 ===== tab-content-house-rules
 
-   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Players
+   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Session
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -172,7 +172,7 @@
 
 ===== tab-content-cults
 
-  1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Players
+  atalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Players
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -215,7 +215,7 @@
 
 ===== tab-content-spells
 
-  1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Players
+  atalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Players
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
     Search spell names and descriptions...                     Source: any      ▼
@@ -256,9 +256,52 @@
   ▌
 
 
+===== tab-content-sessions
+
+  atalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Players
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Sessions (0)
+
+        Date          Game date      Status   Storyguide
+      (none recorded)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ▌
+  ▌  Choose a Session to see who came and who played whom.
+  ▌
+
+
 ===== tab-content-players
 
-  1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Players
+  atalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Players
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔

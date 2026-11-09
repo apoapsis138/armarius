@@ -80,6 +80,8 @@ ICONS: dict[str, str] = {
     "edit_saga": "edit",
     "import_data": "update",
     "set_date": "season",
+    "downtime_run": "season",
+    "previously_on": "season",
     "lab_text_access": "lab_text",
     "perform_ritual": "magic",
     "research_bonuses": "library",

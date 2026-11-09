@@ -29,6 +29,7 @@ from ....sections import (
     HIDDEN_SECTION,
     HOUSE_RULES_SECTION,
     PLAYERS_SECTION,
+    SESSIONS_SECTION,
     SOURCES_SECTION,
     SPELL_SECTION,
     TRADITIONS_SECTION,
@@ -36,7 +37,7 @@ from ....sections import (
 from ....sheets import saga_content as scs
 from ..widgets import SelectableList, SheetSection, TableHeader
 from .base import SheetView
-from .lists import HouseRulesView, PlayersView, SpellListView
+from .lists import HouseRulesView, PlayersView, SessionsView, SpellListView
 
 #: Each tab's list section: what a / e / d act on when focus is elsewhere
 #: in the tab (the Spells tab's filter bar).
@@ -47,6 +48,7 @@ TAB_SECTIONS: dict[str, str] = {
     "tab-content-house-rules": HOUSE_RULES_SECTION,
     "tab-content-spells": SPELL_SECTION,
     "tab-content-players": PLAYERS_SECTION,
+    "tab-content-sessions": SESSIONS_SECTION,
     "tab-content-cults": CULTS_SECTION,
 }
 
@@ -91,6 +93,7 @@ class SagaContentSheetView(SheetView):
         # The three list views are rebuilt from the saga after a change.
         self._on_refresh(HOUSE_RULES_SECTION, lambda: self._rebuild(HouseRulesView))
         self._on_refresh(PLAYERS_SECTION, lambda: self._rebuild(PlayersView))
+        self._on_refresh(SESSIONS_SECTION, lambda: self._rebuild(SessionsView))
         self._on_refresh(SPELL_SECTION, lambda: self._rebuild(SpellListView))
 
     def _shown_spells(self) -> list[Spell]:
@@ -100,7 +103,8 @@ class SagaContentSheetView(SheetView):
             return []
 
     def _rebuild(
-        self, view: type[HouseRulesView | PlayersView | SpellListView]
+        self,
+        view: type[HouseRulesView | PlayersView | SessionsView | SpellListView],
     ) -> None:
         """Re-read the saga into the list view `view` (NoMatches: its tab is
         not built yet, which is built from the current data)."""
@@ -123,6 +127,11 @@ class SagaContentSheetView(SheetView):
             yield self._tab("Mystery Cults", "tab-content-cults", self._cults_tab)
             yield self._tab(
                 "Spells", "tab-content-spells", lambda: iter([SpellListView(self.saga)])
+            )
+            yield self._tab(
+                "Sessions",
+                "tab-content-sessions",
+                lambda: iter([SessionsView(self.saga)]),
             )
             if self.players:
                 yield self._tab(

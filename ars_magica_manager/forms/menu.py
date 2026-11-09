@@ -46,8 +46,11 @@ from .. import (
     seat,
     selling,
     session_end,
+    sessions,
     storage,
     story_chapters,
+    study_path,
+    teaching,
     threats,
     tourney_season,
     traditions,
@@ -108,7 +111,7 @@ from . import agents as agent_forms
 from . import apothecary as apothecary_forms
 from . import beast as beast_forms
 from . import boost as boost_forms
-from . import careers
+from . import careers, downtime
 from . import certamen_duel as certamen_forms
 from . import church as church_forms
 from . import covers as cover_forms
@@ -137,6 +140,7 @@ from . import neighbour as neighbour_forms
 from . import pilgrimage as pilgrimage_forms
 from . import reveal as reveal_forms
 from . import season as season_forms
+from . import sessions as session_forms
 from . import ship_build as ship_build_forms
 from . import sin as sin_forms
 from . import threshold as threshold_forms
@@ -167,6 +171,8 @@ NOT_ON_PAGES = frozenset(
     {
         # The desktop's eye in the title bar.
         "player_view",
+        # Saga Content's Sessions draws it as a row button.
+        "cast_glance",
         # The Secrets list's own row buttons.
         "reveal_secret",
         "conceal_secret",
@@ -612,6 +618,8 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "host_saga": ((NodeKind.SAGA, "Saga Management"),),
     "stop_hosting": ((NodeKind.SAGA, "Saga Management"),),
     "set_date": ((NodeKind.SAGA, "Seasons"),),
+    "downtime_run": ((NodeKind.SAGA, "Seasons"),),
+    "previously_on": ((NodeKind.SAGA, "Seasons"),),
     "create_covenant": ((NodeKind.SAGA, "Covenants"),),
     "create_tribunal": ((NodeKind.SAGA, "Tribunals"),),
     "create_neighbour": ((NodeKind.SAGA, "Neighbours"),),
@@ -649,6 +657,9 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     # The Deeds chapter's headers (deeds.INTERESTS), and This Season for
     # the season-long ones.
     "end_session": ((NodeKind.CHARACTER, deeds.SESSION),),
+    "what_changed": ((NodeKind.CHARACTER, deeds.SESSION),),
+    "teaching_requests": ((NodeKind.CHARACTER, "This Season"),),
+    "study_path": ((NodeKind.CHARACTER, "This Season"),),
     "tourney_season": ((NodeKind.CHARACTER, deeds.SEASON_WORK),),
     "melee_event": ((NodeKind.CHARACTER, deeds.KNIGHTLY),),
     # Beside This Season's Plan, Edit and Clear.
@@ -1969,6 +1980,14 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "take_harm": _needs(_character, health.take_harm_form),
     "recovery_roll": _needs(_character, health.recovery_form),
     "end_session": _needs(_character, session_end.end_session_form),
+    "what_changed": _needs(_character, session_forms.since_last_session),
+    "teaching_requests": _needs(_character, teaching.requests_command),
+    "study_path": _needs(_character, study_path.study_path_form),
+    "cast_glance": lambda page: (
+        session_forms.cast_glance(page.saga, sessions.in_order(page.saga)[page.row])
+        if page.row is not None and page.row < len(page.saga.sessions)
+        else Refuse("Cast at a Glance", "Choose a Session first.")
+    ),
     "tourney_season": _needs(_character, tourney_season.tourney_form),
     "melee_event": _needs(_character, melee_events.melee_form),
     "labor_story": _needs(_character, labor.story_form),
@@ -2016,6 +2035,8 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "promote": _detail_command("promote"),
     "demote": _detail_command("demote"),
     "set_date": lambda page: set_date(page.saga),
+    "downtime_run": lambda page: downtime.downtime_form(page.saga, storage.backup_saga),
+    "previously_on": lambda page: session_forms.previously_on(page.saga),
     "edit_arms": _arms_command,
     "found_covenant": _found_command,
     "begin_story": _begin_command,

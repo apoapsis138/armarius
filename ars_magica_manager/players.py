@@ -17,7 +17,7 @@ import secrets
 from collections.abc import Sequence
 from typing import Any, cast
 
-from . import storage
+from . import sessions, storage
 from .markup import escape, fit
 from .models import (
     Background,
@@ -115,7 +115,8 @@ def name_problem(saga: Saga, name: str, existing: Player | None) -> str | None:
 
 
 def add(saga: Saga, values: dict[str, Any]) -> Player:
-    """A new player from a form's values (name, role, passcode)."""
+    """A new player from a form's values (name, role, passcode). A blank
+    passcode stores none: a Table-only Player, who can't sign in."""
     name = values["name"].strip()
     player = Player(
         id=storage.generate_unique_id(name, [p.id for p in saga.players]),
@@ -123,7 +124,8 @@ def add(saga: Saga, values: dict[str, Any]) -> Player:
         role=values.get("role") or PLAYER,
         covenant_rights=bool(values.get("covenant_rights")),
     )
-    set_passcode(player, values["passcode"])
+    if values.get("passcode"):
+        set_passcode(player, values["passcode"])
     saga.players.append(player)
     return player
 
@@ -138,8 +140,10 @@ def update(player: Player, values: dict[str, Any]) -> None:
 
 
 def remove(saga: Saga, player: Player) -> None:
-    """Delete `player`; they no longer play any character."""
+    """Delete `player`; they no longer play or steward any character, and
+    the planned Sessions forget them (sessions.forget_player)."""
     saga.players.remove(player)
+    sessions.forget_player(saga, player.id)
     for character in saga.characters:
         ids = character.background.player_ids
         if player.id in ids:
@@ -232,6 +236,14 @@ def may_change(
     return False
 
 
+def may_plan(saga: Saga, player: Player | None, character: Character) -> bool:
+    """Whether `player` may change `character`'s season plans: whoever may
+    change the character, and its Steward."""
+    if may_change(saga, player, character):
+        return True
+    return player is not None and character in sessions.stewarded(saga, player)
+
+
 def table_header() -> str:
     """The column titles; the two-character indent is the selector marker."""
     return f"  {'Name':<{_NAME_WIDTH}} {'Role':<{_ROLE_WIDTH}}"
@@ -250,13 +262,20 @@ def detail_text(saga: Saga, player: Player | None) -> str:
     if player is None:
         return "[dim]Choose a player to see what they play; a adds one.[/]"
     role = ROLE_LABELS.get(player.role, player.role)
-    return "\n".join(
-        [
-            f"[b]{escape(player.name)}[/]",
-            f"[b]Role:[/] {role}",
-            "[b]Passcode:[/] set (edit the player to give them a new one)",
-        ]
+    passcode = (
+        "set (edit the player to give them a new one)"
+        if player.passcode_hash
+        else "none: a table-only Player, who can't sign in (edit to give one)"
     )
+    lines = [
+        f"[b]{escape(player.name)}[/]",
+        f"[b]Role:[/] {role}",
+        f"[b]Passcode:[/] {passcode}",
+    ]
+    kept = sessions.stewarded(saga, player)
+    if kept:
+        lines.append("[b]Steward of:[/] " + ", ".join(escape(c.name) for c in kept))
+    return "\n".join(lines)
 
 
 #: Parts of a saga anyone signed in may change: the libraries and spells
@@ -301,12 +320,36 @@ def guard_changes(
         for c in before.get("characters", [])
         if plays(c.get("background"), player)
     }
+    steward_of = {
+        c["id"]
+        for c in before.get("characters", [])
+        if _stewards(c.get("background"), player)
+    }
+    # A teacher's Player accepting an ask writes the student's Taught plan.
+    asked = {
+        (r.get("student_id"), r.get("season"), r.get("year"))
+        for r in before.get("teach_requests", [])
+        if isinstance(r, dict) and r.get("teacher_id") in mine
+    }
+
+    def plan_is_mine(r: dict[str, Any]) -> bool:
+        if r.get("character_id") in mine | steward_of:
+            return True
+        return (
+            r.get("activity") == "taught"
+            and r.get("teacher_id") in mine
+            and (r.get("character_id"), r.get("season"), r.get("year")) in asked
+        )
+
     owner_of = {
         "characters": lambda r: r.get("id") in mine,
         "laboratories": lambda r: r.get("owner_id") in mine,
         "familiars": lambda r: r.get("character_id") in mine,
         "covenants": lambda r: player.covenant_rights,
-        "season_plans": lambda r: r.get("character_id") in mine,
+        "season_plans": plan_is_mine,
+        "teach_requests": lambda r: (
+            r.get("student_id") in mine | steward_of or r.get("teacher_id") in mine
+        ),
         "lab_projects": lambda r: r.get("character_id") in mine,
     }
     kept = dict(after)
@@ -328,7 +371,16 @@ def guard_changes(
     return kept, refused
 
 
-_WHO_PLAYS = ("player_ids", "everyone_plays")
+def _stewards(background: object, player: Player) -> bool:
+    """Whether `player` is the Steward on this Biographical Detail (plain
+    data): named as it, with no Players named."""
+    if not isinstance(background, dict):
+        return False
+    found = cast(dict[str, Any], background)
+    return found.get("steward_id") == player.id and not found.get("player_ids")
+
+
+_WHO_PLAYS = ("player_ids", "everyone_plays", "steward_id")
 
 
 def _same_players(

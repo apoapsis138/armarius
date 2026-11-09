@@ -20,7 +20,7 @@ from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from typing import Any
 
-from . import catalog
+from . import cast_sheet, catalog, recap
 from .arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
 from .models import Character, Saga
 from .rules import combat, derived
@@ -835,6 +835,53 @@ def character_document(
         blocks += _grimoire(saga, character, options)
     blocks += _story(saga, character)
     return Document(character.name, subtitle, blocks)
+
+
+def cast_document(saga: Saga, title: str, cast: list[Character]) -> Document:
+    """The cast at a glance on one page (cast_sheet.py): a table of each
+    one's figures, then each one's traits and chosen spells."""
+    found = cast_sheet.rows(saga, cast)
+    columns = (
+        Column("Character", 0.22),
+        Column("Weapon", 0.14),
+        *(
+            Column(t, 0.08 if t in ("Wounds", "Fatigue") else 0.0533, "c")
+            for t in cast_sheet.COLUMNS
+        ),
+    )
+    blocks: list[Block] = [
+        Title(title, "The cast at a glance"),
+        Table(
+            columns,
+            tuple(
+                (Cell(r.name, "bold"), Cell(r.weapon, "italic"), *map(Cell, r.figures))
+                for r in found
+            ),
+        ),
+    ]
+    for r in found:
+        if not (r.traits or r.spells):
+            continue
+        blocks.append(Heading(r.name, 2))
+        if r.traits:
+            blocks.append(Paragraph(f"Traits: {r.traits}"))
+        if r.spells:
+            blocks.append(Paragraph(f"Spells: {r.spells}"))
+    return Document(title, saga.name, blocks)
+
+
+def recap_document(saga: Saga, players: bool = False) -> Document:
+    """Previously On (recap.py) for paper, to read aloud."""
+    blocks: list[Block] = [
+        Title(recap.TITLE, recap.lead(saga, players)),
+    ]
+    found = recap.parts(saga, players)
+    if not found:
+        blocks.append(Paragraph("Nothing recorded since."))
+    for part in found:
+        blocks.append(Heading(part.heading, 2))
+        blocks.extend(Paragraph(line) for line in part.lines)
+    return Document(recap.TITLE, saga.name, blocks)
 
 
 #: Each record kind's printed sheet, by transfer's kind names.

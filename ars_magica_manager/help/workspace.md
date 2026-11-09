@@ -317,7 +317,9 @@ Everything about the saga that can be set, on one chapter of its page, as cards 
 
 The saga page's first chapter, so the characters you play are a click away rather than inside their covenant's People.
 
+- **Next Session**: the next evening of play, with its storyguide, who is coming and who is Away, and who plays whom; then the other planned [Sessions](help:tab-content-sessions) and the three played most recently. Saga Management's Sessions adds and changes them.
 - **Player Characters**: every character whose Biographical Detail, in their Description chapter, names their **Player** (or who is **Played by** one of the saga's [players](help:players-access)), by covenant: the troupe's covenants first, then the others, then those who belong to none. Click one to open their sheet.
+- **Stewards**: each Player's stewarded characters (a [Steward](help:players-access) keeps a character with no Player of its own between Sessions), and whether each has a plan for the current season. Not shown while the saga has no players.
 - **Troupe Covenants**: the covenants the troupe plays, marked ✦ as on The Covenants.
 - **Bookmarked**: anything else you bookmarked, by kind: characters, covenants, laboratories, familiars, Tribunals, neighbours and creatures. A bookmarked page that is a player character or a troupe covenant is shown once, above.
 
@@ -625,6 +627,22 @@ when the list is shown, so a row goes as soon as you deal with it.
 - **Overdue**: a dated stage of a threat still Pending after its season
   has passed (marked): record what became of it on the threat's Stages,
   or [Delay or Hasten](help:threat-delay) the threat.
+- **Spotlight**: a player character with a Story Flaw or a Major
+  Personality Flaw that no told (Resolved) story has concerned for the
+  saga's **Story Flaw spotlight** span, 3 years unless changed in the
+  saga's settings (0 turns it off). Such a Flaw is a promise of stories
+  (DE p. 66): any story about the character counts, whichever Flaw it
+  drew on. A character no told story has concerned yet is counted from
+  the first season the saga recorded.
+- **Teach?**: a student's open ask for another Player's character to
+  teach them (see [Teaching Requests](help:teaching-requests)).
+- **Close**: a chapter with a cast whose aftermath hasn't been asked;
+  its Take Up step opens [Close the Chapter](help:close-chapter).
+- **Away**: an open story about a character none of whose Players is
+  coming to the next planned [Session](help:tab-content-sessions). It is
+  only advice: keep the story for another evening, or play the
+  character another way. A character everyone in the troupe plays is
+  never named, and nothing shows until the Session says who is coming.
 
 **You type:** nothing here. Choose a row to read what it needs and
 where;
@@ -1077,6 +1095,94 @@ They become the saga's own spells. See [Import Spells](help:import-spells).
 
 **See also:** [Import Spells](help:import-spells), [How to import and export](help:guide-import-export)
 
+## Sessions
+<!-- help: tab-content-sessions -->
+
+The evenings of play at the table: planned ones first, the soonest at the top (those with no date yet after the dated ones), then the ones played, newest first. A Session need not sit in one season: a slow saga plays several in one season, a fast one a year or more in one (DE p. 528).
+
+<!-- tui -->
+In Saga Content's Sessions tab. Everyone can read them; only a storyguide adds, changes or deletes them.
+<!-- /tui -->
+<!-- gui -->
+In the saga page's **Saga Management** chapter, the storyguide's; players see the next Session and the recent ones on The Troupe.
+<!-- /gui -->
+
+<!-- tui -->
+**You type:** with `a` and `e`, in two steps. First the real Date (year-month-day, or blank), whether it was Played, the Game season and year it is set in (both optional), its Storyguide (any Player; blank is the saga's own) and, for each Player, whether they are Coming or Away. Then **Who Played Whom**: for each character, the Player playing them that evening, or no one. `d` deletes a Session after a confirmation.
+<!-- /tui -->
+<!-- gui -->
+**You type:** with **Add** and **Edit**, in two steps. First the real Date (year-month-day, or blank), whether it was Played, the Game season and year it is set in (both optional), its Storyguide (any Player; blank is the saga's own) and, for each Player, whether they are Coming or Away. Then **Who Played Whom**: for each character, the Player playing them that evening, or no one. **Delete** deletes a Session after a confirmation.
+<!-- /gui -->
+
+A character is played by one person at most each evening, though it may have several Players and a Player may play several characters. Who Played Whom comes filled in from who usually plays whom: a character goes to its Player when exactly one of its Players is coming, and is left for you to choose when two or more are (a shared character, or one everyone plays). The characters of the Players coming are listed first.
+
+In a solo saga (no one in the Player role) no attendance or Who Played Whom is asked. A Session made then shows **Attendance not recorded** if the saga gains players later.
+
+Marking a Session **Played** keeps a copy of each player character as they stand, so a character's More offers **What Changed Since the Last Session**: their scores, spells, Virtues and Flaws, Warping, wounds, Confidence, traits and what they hold, then and now. The latest two played Sessions keep their copies; untick Played to drop one.
+
+**The app works out:** which Session is next; the names as written, so a played Session still reads right after a Player or character is deleted (deleting one takes them out of the planned Sessions only); and, on [Needs You](help:section-attention), an open story about a character none of whose Players is coming.
+
+**See also:** [How to plan and record a Session](help:guide-sessions), [Players](help:tab-content-players)
+
+### Previously On
+<!-- help: previously-on -->
+
+A page to read aloud before the next Session: what happened since the
+last one. Its chapters (with who went), the seasons played since, what
+the world did each year (The World Turns), the threats' stages that came,
+were stopped or turned, and each player character's What changed. It runs
+from the saga's date when the last Session was marked Played; with no
+played Session, over the last four seasons.
+
+<!-- tui -->
+More on the saga, **Previously On**.
+<!-- /tui -->
+<!-- gui -->
+**Previously On** in the saga page's Seasons chapter, or on Saga
+Management's Sessions; **Print Previously On** there makes a PDF in the
+Scriptorum style, read as the Player view.
+<!-- /gui -->
+
+Players see it too, as the [Player view](help:player-view): without what
+the world did (its lines name neighbours they may not know of), unknown
+threats, or non-player characters' seasons. A storyguide sees all of it;
+switch to the Player view to read it aloud safely.
+
+**See also:** [Sessions](help:tab-content-sessions)
+
+### Cast at a Glance
+<!-- help: cast-glance -->
+
+One page of the figures the storyguide reaches for during play, for each
+character playing at a Session (who played whom): Initiative, Attack and
+Defence with their first weapon (bare hands if none), Soak, Magic
+Resistance (a magus with Parma Magica, against his weakest Form), Wounds,
+Fatigue and Confidence (score and points), then their Personality Traits
+and chosen spells: those with a Mastery score, and those ticked
+**Favourite** in their Known Spells' Mastery form.
+
+<!-- tui -->
+Choose a Session in the Sessions list and press `m` for More, then
+**Cast at a Glance**.
+<!-- /tui -->
+<!-- gui -->
+Choose a Session in Saga Management's Sessions and click **Cast at a
+Glance**, or **Print the Cast** for a PDF in the Scriptorum style (the
+paper first, then where to save it).
+<!-- /gui -->
+
+**See also:** [Sessions](help:tab-content-sessions)
+
+### The Sessions list
+<!-- help: section-sessions -->
+
+<!-- tui -->
+The list of Sessions, with the details panel below it: when, its game date, storyguide, who is coming and who is Away, and who played whom.
+<!-- /tui -->
+<!-- gui -->
+The list of Sessions; the Inspector shows the one last clicked: when, its game date, storyguide, who is coming and who is Away, and who played whom.
+<!-- /gui -->
+
 ## Players tab
 <!-- help: tab-content-players -->
 
@@ -1097,7 +1203,9 @@ Players stay in this saga: no export or pack carries them, nor which player play
 **You type:** with **Add** and **Edit**: the player's Name (what they type to sign in; no two players may share one), their Role (Player or Storyguide), for a player whether they May change covenants, and a Passcode. When editing, leave New passcode blank to keep the one they have. **Delete** deletes a player after a confirmation; they can no longer sign in.
 <!-- /gui -->
 
-**The app works out:** in their details, the characters each plays and what they may change. Passcodes are stored only scrambled (a salted hash), so the app can check one but no one can read it back from the saga file: if a player forgets theirs, give them a new one.
+Leave the Passcode blank when adding someone who only sits at the table: a **table-only Player**, named on Sessions and as a Steward but never able to sign in. Give them a passcode later, by editing them, if they are to join from their own computer.
+
+**The app works out:** in their details, the characters each plays, the characters each stewards, and what they may change. Passcodes are stored only scrambled (a salted hash), so the app can check one but no one can read it back from the saga file: if a player forgets theirs, give them a new one.
 
 ### Players
 <!-- help: section-players -->
@@ -1115,6 +1223,7 @@ The list of players; the Inspector shows the one last clicked.
 Choose who plays a character in the character's Biographical Detail (only the storyguide can): tick **Played by** each player who plays them (several, in troupe-style play), or **Played by everyone in the troupe** for a character the troupe shares, such as a grog. Any of a character's players may change it; if two change the same thing at once, the later save is kept and the other is told. A signed-in player can then:
 
 - change the characters they play, with those characters' familiars, laboratories and books, and their season plans;
+- plan the seasons of the characters they are **Steward** of, and change nothing else on those sheets. A Steward is chosen in the Biographical Detail of a character no Player is named on (a pooled grog, even one everyone in the troupe plays): they keep it between Sessions and decide its downtime;
 - change the covenants too, if you ticked May change covenants for them;
 - look at everything else but each record's [Secrets](help:tab-secrets), which they never see, and the records they don't know of (see [Player view](help:player-view)), and Export a character, laboratory or covenant (the file downloads in their browser, without its secrets or the records they don't know of).
 

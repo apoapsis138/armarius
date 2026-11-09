@@ -22,7 +22,14 @@ from collections.abc import Callable
 from dataclasses import dataclass, replace
 from typing import Any
 
-from .. import aging_due, mobile_covenants, seasons, tribunal_terms, world_turns
+from .. import (
+    aging_due,
+    mobile_covenants,
+    seasons,
+    tribunal_terms,
+    what_changed,
+    world_turns,
+)
 from .. import economics as eco
 from ..commands import Command, Confirm, Form
 from ..form_spec import DialogField
@@ -42,6 +49,29 @@ Backup = Callable[[Saga], object] | None
 
 
 @dataclass(frozen=True)
+class Deferred:
+    """A year's World Turns review a downtime run kept for its end: the
+    season it was rolled in and its lines."""
+
+    year: int
+    season: str
+    found: tuple[world_turns.Proposal, ...]
+
+
+class Deferring:
+    """The dice of a downtime run (downtime.py): a Random as Advance
+    Season's `rng` gives one, which also keeps each Winter's World Turns
+    review for the run's end instead of asking it then."""
+
+    def __init__(self, make: Callable[[], random.Random] = random.Random) -> None:
+        self._make = make
+        self.deferred: list[Deferred] = []
+
+    def __call__(self) -> random.Random:
+        return self._make()
+
+
+@dataclass(frozen=True)
 class Played:
     """What advancing did: the season played out and the line telling
     the new date, whose seasons were applied and what Wealth gained."""
@@ -51,6 +81,10 @@ class Played:
     #: Whether there is anything to show: a plan worked out, or the
     #: year's or the covenants' lines.
     results: bool
+    #: What changed in each player character over the season
+    #: (what_changed.py): their name and a line per change; only those
+    #: with any.
+    changed: tuple[tuple[str, tuple[str, ...]], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -605,6 +639,12 @@ def _world_turns(
     found = world_turns.season_proposals(saga, rng())
     if not found:
         return played()
+    if isinstance(rng, Deferring) and saga.current_season == SEASONS[-1]:
+        # A downtime run keeps the year's review, rolled now, for its end.
+        rng.deferred.append(
+            Deferred(saga.current_year, saga.current_season, tuple(found))
+        )
+        return played()
     return world_turns.review(saga, found, played)
 
 
@@ -626,7 +666,14 @@ def _finish(
         for p in lost
         if (c := saga.character(p.character_id)) is not None
     ]
+    played = [c for c in saga.characters if defaults.is_player_character(c)]
+    kept = what_changed.keep_all(saga, played)
     done = seasons.finish_season(saga, worked, secured, rng(), backup=backup, lost=lost)
+    changed = tuple(
+        (c.name, tuple(lines))
+        for c in played
+        if (lines := what_changed.changes(saga, kept[c.id], c))
+    )
     message = f"It is now {saga.current_season} {saga.current_year}."
     moved = mobile_covenants.log_moves(saga, moves)
     if done.applied:
@@ -660,7 +707,7 @@ def _finish(
             "Point (More on Aging & Warping, or asked before the next season)."
         )
     said = " ".join((escape(message), *moved))
-    return Played(done, said, bool(worked or done.year_end))
+    return Played(done, said, bool(worked or done.year_end or changed), changed)
 
 
 def records_note(saga: Saga) -> str:

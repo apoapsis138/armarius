@@ -12,6 +12,7 @@ from ....actions import (
 )
 from ....commands import Command
 from ....forms import advance as advance_forms
+from ....forms import downtime as downtime_forms
 from ....forms import hunting as hunting_forms
 from ....forms import travel as travel_forms
 from ....sections import AHEAD_SECTION, COV_AHEAD_SECTION
@@ -86,7 +87,9 @@ class SeasonActions(WorkspaceBase):
         if saga.keep_season_records and played.results:
             self._rebuild_tree()
         if played.results:
-            self.app.push_screen(SeasonSummaryScreen(saga, played.advanced.record))
+            self.app.push_screen(
+                SeasonSummaryScreen(saga, played.advanced.record, played.changed)
+            )
         self.notify(played.message)
 
     def action_plan_journey(self) -> None:
@@ -102,6 +105,34 @@ class SeasonActions(WorkspaceBase):
                 self.notify("\n".join(str(line) for line in end))
 
         run_steps(self.app, travel_forms.travel(self.saga, covenant), done)
+
+    def action_downtime_run(self) -> None:
+        """Run Downtime: several seasons at once (forms/downtime.py), each
+        kept as it is played; the end tells what the run did."""
+        saga = self.saga
+
+        def done(end: object) -> None:
+            storage.save_saga(saga)
+            self.run_worker(self._downtime_kept(end))
+
+        run_steps(
+            self.app, downtime_forms.downtime_form(saga, storage.backup_saga), done
+        )
+
+    async def _downtime_kept(self, end: object) -> None:
+        """Redraw what a season of the run changed; at the run's end, tell
+        what it did."""
+        saga = self.saga
+        await self._apply_saga_date(saga.current_season, saga.current_year)
+        for section in _SEASON_SECTIONS:
+            self._refresh_character_section(section)
+        self._refresh_laboratory_section("tab-lab-planning")
+        self._refresh_covenant_section("tab-cov-seasons")
+        if self._seasons_view is not None:
+            self._seasons_view.refresh_all()
+        self._rebuild_tree()
+        if isinstance(end, list) and end:
+            self.notify("\n".join(str(line) for line in end), timeout=30)
 
     def action_set_date(self) -> None:
         saga = self.saga

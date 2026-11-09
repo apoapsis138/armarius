@@ -97,16 +97,25 @@ def played_by_field(
     players, and only the storyguide may change it."""
     if not players:
         return []
+    keeper = next((p for p in players if p.id == background.steward_id), None)
     if not may_assign:
-        return [
+        shown = [
             DialogField(
                 "_played_by", "Played by", "info", pl.played_by(background, players)
             )
         ]
+        if keeper is not None and not background.player_ids:
+            shown.append(DialogField("_steward", "Steward", "info", keeper.name))
+        return shown
     roster = [p for p in players if p.role == pl.PLAYER]
 
     def one_by_one(values: dict[str, Any]) -> bool:
         return not values.get("everyone_plays")
+
+    def no_one_named(values: dict[str, Any]) -> bool:
+        return values.get("everyone_plays") or not any(
+            values.get(f"{PLAYS}{p.id}") for p in roster
+        )
 
     return [
         DialogField(
@@ -125,6 +134,15 @@ def played_by_field(
                 show_if=one_by_one,
             )
             for p in roster
+        ),
+        DialogField(
+            "steward_id",
+            "Steward",
+            "select",
+            background.steward_id if not background.player_ids else "",
+            options=[("(none)", "")] + [(escape(p.name), p.id) for p in players],
+            show_if=no_one_named,
+            hint="Keeps the character between Sessions and plans its seasons.",
         ),
     ]
 
@@ -239,6 +257,11 @@ def apply_biographical(character: Character, result: dict[str, Any]) -> None:
         # Players not offered (a storyguide) keep their place.
         kept = [i for i in character.background.player_ids if i not in ticks]
         character.background.player_ids = kept + [i for i, on in ticks.items() if on]
+    if character.background.player_ids:
+        # A character with named Players has no Steward.
+        character.background.steward_id = ""
+    elif "steward_id" in result:
+        character.background.steward_id = str(result["steward_id"] or "")
     if "religion" in result:
         character.background.religion = str(result["religion"] or "")
     old = character.description

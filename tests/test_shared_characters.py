@@ -95,7 +95,12 @@ def test_the_biographical_form_ticks_players_and_everyone() -> None:
     character = saga.characters[2]
     fields = character_forms.played_by_field(character.background, saga.players, True)
     keys = [f.key for f in fields]
-    assert keys == ["everyone_plays", f"plays_{ana.id}", f"plays_{ben.id}"]
+    assert keys == [
+        "everyone_plays",
+        f"plays_{ana.id}",
+        f"plays_{ben.id}",
+        "steward_id",
+    ]
     character_forms.apply_biographical(
         character, {"everyone_plays": False, "plays_ana": True, "plays_ben": True}
     )

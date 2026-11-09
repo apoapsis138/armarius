@@ -146,7 +146,17 @@ LAYERS: tuple[tuple[str, frozenset[str]], ...] = (
         "models",
         # shapes: the shape check, which imports nothing of the app's.
         frozenset(
-            {"", "arts", "markup", "models", "paths", "shapes", "totals", "rules.xp"}
+            {
+                "",
+                "arts",
+                "markup",
+                "models",
+                "paths",
+                "sessions",
+                "shapes",
+                "totals",
+                "rules.xp",
+            }
         ),
     ),
     # The catalogs and the books they come from: data the rules look up.
@@ -154,7 +164,12 @@ LAYERS: tuple[tuple[str, frozenset[str]], ...] = (
     # The rules, and the top-level modules that are rules too (a covenant's
     # Boons and Hooks, what a book is worth, raw vis): they keep to the
     # layers below.
-    ("rules", frozenset({"rules", "book_value", "covenants", "vis"})),
+    (
+        "rules",
+        frozenset(
+            {"rules", "book_value", "cast_sheet", "covenants", "vis", "what_changed"}
+        ),
+    ),
     ("app", frozenset()),  # every other top-level module and package
     # What a page shows and does: the sheets and forms, and the pages
     # built from them (the hall and the meeting held in it, Ahead, the

@@ -123,6 +123,29 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.98.0 — 2026-11-09
+
+### Sodales
+
+- **Sessions**: the evenings of play, kept on the saga, with a real date, a game date, whether it was played, its storyguide (any Player), who is coming and who is Away, and who played whom (one person per character each evening, filled in from who usually plays them). On the desktop they live in Saga Management, and The Troupe shows the next Session and the recent ones; in the terminal they are a tab of Saga Content. A saga with no players records no attendance.
+- **Table-only Players**: a Player added with no passcode sits at the table and on Sessions but can't sign in until given one.
+- **Stewards**: a character with no Players named (a pooled grog, even one everyone plays) can have a Steward, who keeps them between Sessions and plans their seasons from their own seat. The Troupe lists each Player's stewarded characters and whether they have a plan.
+- **Cast at a Glance**: each cast member's Initiative, Attack, Defence, Soak, Magic Resistance, Wounds, Fatigue, Confidence, traits and chosen spells (mastered, or marked Favourite) on one page, printable in the Scriptorum style.
+- **Previously On**: a page to read aloud before the next Session: its chapters, the seasons since, what the world did, the threats' stages and what changed in each character. Players see it without what they may not know.
+- **Teaching requests**: being taught by another Player's character asks that Player, who accepts (both seasons are planned) or declines with a note.
+
+### Orbis
+
+- **A story's cast and its aftermath**: a chapter records who went and the days it took; closing it asks once for the Adventure's Source Quality and who takes it (a magus may keep his lab work with the days away), then each one's subjects, written as Adventure plans (a second chapter in the season updates them) or, for a grog, as story experience (DE pp. 376-377; Grogs p. 67).
+- **Story Flaw spotlight**: Needs You names a player character whose Story or Major Personality Flaw no told story has concerned in three years (a saga setting; DE p. 66). Needs You also lists an open story whose character's Players are all Away from the next Session, chapters still to close, and open teaching requests.
+
+### Book of Hours
+
+- **What changed**: after Advance Season, each player character's new scores, spells, Virtues and Flaws, Warping, wounds, Confidence, traits and holdings; and on a character, What Changed Since the Last Session.
+- **Downtime runs**: Run Downtime plays seasons to a chosen one or the next Tribunal, each kept as it goes; questions stop it at their season, Winter's World Turns reviews wait for the end, and a player character whose plans run out is asked for new ones (DE p. 528).
+- **Study path**: the way to a score by a year, season by season, from books, vis, practice and teachers, planned in one go.
+- **Book holds**: a book another character has planned that season is refused, naming who holds it and until when.
+
 ## 3.97.0 — 2026-11-09
 
 ### Sodales

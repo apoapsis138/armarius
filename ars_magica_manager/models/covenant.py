@@ -87,6 +87,13 @@ class CovenantDiaryEntry:
     #: (references.KINDS): hidden from players while one is unknown
     #: (viewing.py). A line typed in names none.
     about: list[str] = field(default_factory=list)
+    #: A Chapter's cast (the characters who went, by id), how many days it
+    #: took, the Session it was played at ("" for none), and whether its
+    #: aftermath has been asked (story_aftermath.py).
+    cast: list[str] = field(default_factory=list)
+    days: int | None = None
+    session_id: str = ""
+    closed: bool = False
 
 
 class HistoryEra(TypedDict):

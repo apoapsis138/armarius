@@ -170,6 +170,13 @@ REFRESH: dict[str, Refresh] = {
     "disguise_roll": calculator(),
     "resolve_twilight": changes("section-aging"),
     "end_session": changes("section-reputations", "section-char-info"),
+    "what_changed": calculator(),
+    "cast_glance": calculator(),
+    "previously_on": calculator(),
+    "teaching_requests": changes(
+        "section-char-season", "section-char-ahead", "tab-planning"
+    ),
+    "study_path": changes("section-char-season", "section-char-ahead", "tab-planning"),
     "tourney_season": changes("section-reputations", "tab-diary"),
     "melee_event": changes("section-reputations", "tab-diary"),
     "labor_story": changes("section-char-season", "tab-diary"),

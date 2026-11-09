@@ -23,6 +23,7 @@ from .. import (
 )
 from ..forms import advance as advance_forms
 from ..forms import take_up as take_up_forms
+from ..markup import escape
 from ..models import Saga, SeasonRecord
 from ..sections import ATTENTION_SECTION, WORLD_TURNS_SECTION
 from .ahead import ahead_section, undertakings_section
@@ -35,6 +36,8 @@ from .widgets import Codex, scrolling_page, serif, table_view, text
 
 #: The chapter of the season just played out.
 RESULTS = "Just played"
+#: What changed in each player character over the season just played.
+CHANGED = "What changed"
 
 #: The chapter of what is coming.
 AHEAD = "Ahead"
@@ -81,6 +84,8 @@ class SeasonsPage(QWidget):
             )
             if records and records[0] is record:
                 records = records[1:]
+            if played.changed:
+                self.codex.add(CHANGED, "season", self._changed(played.changed))
         self.codex.add(AHEAD, "season", self._ahead())
         if viewing.reads(part="section-attention"):
             self.codex.add(NEEDS_YOU, "season", self._needs_you())
@@ -168,6 +173,18 @@ class SeasonsPage(QWidget):
 
     def chapters(self) -> list[str]:
         return self.codex.chapters()
+
+    def _changed(self, changed: tuple[tuple[str, tuple[str, ...]], ...]) -> QWidget:
+        """What changed in each player character over the season just
+        played, one paragraph each."""
+        p = self.p
+        return scrolling_page(
+            p,
+            *(
+                TextBlock(f"[b]{escape(name)}:[/] {escape('; '.join(lines))}.", p)
+                for name, lines in changed
+            ),
+        )
 
     def _record(
         self, record: SeasonRecord, message: str = "", *, results: bool = False

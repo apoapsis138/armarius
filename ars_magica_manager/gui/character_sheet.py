@@ -365,6 +365,7 @@ def section(
     edits: dict[str, Callable[[], None]] | None = None,
     buttons: Sequence[QWidget] = (),
     emblem: QWidget | None = None,
+    part: str = "",
 ) -> Section:
     """A titled part of a chapter; `edits` (label -> what clicking it
     does) and `buttons` sit beside the title, and their steps open as
@@ -374,7 +375,7 @@ def section(
     the title, and the buttons then stay level with the title's words."""
     box = Section()
     column = box.column
-    if seat.read_only():
+    if seat.read_only(part):
         edits, buttons = None, ()
     controls = [
         edit_button(words, p, on_click) for words, on_click in (edits or {}).items()
@@ -1819,6 +1820,7 @@ class CharacterSheet(QWidget):
             self.run,
             p,
             nouns=season_forms.season_nouns(c),
+            part=seat.PLANS_PART,
         )
         # Plan Copying and Clear Copying.
         buttons += self.placer.buttons("This Season") if self.placer else []
@@ -1830,6 +1832,7 @@ class CharacterSheet(QWidget):
             emblem=Medallion(
                 saga, saga.current_season, saga.current_year, p, radius=20, now=True
             ),
+            part=seat.PLANS_PART,
         )
         work = self._season_work()
         if not season_rules.is_planned(c):

@@ -339,6 +339,38 @@ After you choose Advance, the app may ask:
 
 Cancelling any of these leaves the date and the saga as they were.
 
+### Run Downtime
+<!-- help: downtime-run -->
+
+Several seasons at once, for a pulsed saga that plays a burst of stories
+and then lets years of downtime pass (DE p. 528).
+<!-- tui -->
+More on the saga, **Run Downtime**.
+<!-- /tui -->
+<!-- gui -->
+**Run Downtime** in the saga page's Seasons chapter.
+<!-- /gui -->
+Only on the host's own copy: a storyguide at a Remote seat advances
+season by season.
+
+**You type:** where the run stops: **A season I choose** (it stops when
+the saga reaches that season, before playing it) or **The next
+Tribunal** (the meeting of a troupe covenant's Tribunal, so you can hold
+it). A run of more than ten years asks first.
+
+**The app works out:** one backup first, then each season as Advance
+Season plays it, the plans repeating, each season kept (saved) before the
+next. Any question Advance Season would ask (see [Questions along the
+way](help:advance-season-questions)) stops the run at its season for
+your answer, and it goes on after it, except each Winter's World Turns
+review: that is rolled in its year and kept, and every one is asked at
+the end, oldest first, each dated its own Winter. A player character
+whose plans have run out stops the run with their Plan Season form; the
+run goes on once it is saved. Anyone else with nothing planned takes the
+saga's default, and the end says who. The end also says, for each player
+character, what changed over the whole run. Cancelling a question stops
+the run there: the seasons already played stay played.
+
 ### A new laboratory
 <!-- help: advance-new-lab -->
 
@@ -874,6 +906,15 @@ Shown after a season has been advanced, when anything happened: the **Just playe
 <!-- /gui -->
 
 **The app works out:** one line per person: the activity, what it was on and its result (for example the xp gained). A plan that couldn't be carried out shows why; a magus or companion with nothing planned is shown as "nothing planned". In Winter it also lists aging rolls, grogs' yearly updates and business upkeep, and in any season the covenants' vis harvests.
+
+**What changed** follows, for each player character the season changed:
+<!-- tui -->
+folded shut under the results (open it with Enter on its title):
+<!-- /tui -->
+<!-- gui -->
+its own chapter after Just played:
+<!-- /gui -->
+their Arts and Abilities as new scores ("Creo 12 to 13"), spells learned, Virtues and Flaws gained or lost, Warping, Decrepitude, wounds and Fatigue, Confidence, Personality Traits and Reputations, raw vis, silver, and books and enchanted items gained or given up. The xp itself is in the lines above. To see what changed since the last evening of play, use **What Changed Since the Last Session** in a character's More (see [Sessions](help:tab-content-sessions)).
 
 The note at the bottom says whether the season is kept
 <!-- tui -->
@@ -1443,13 +1484,47 @@ avoided, dated by season, so the Diary keeps a record of each time.
   last chapter, the same form; Cancel leaves it resolved with none.
 
 **You type:** the year and season (this one, unless you change it) and
-what the troupe did.
+what the troupe did. On a story, also who **Went** (ticked for you from
+who played whom at the [Session](help:tab-content-sessions) at hand) and
+the **Days it took**. A threat's chapter asks for neither.
 
 **The app works out:** the chapter's Diary entry; the story's (or the
-threat's) details then list its chapters, oldest first, a grown story's
-going on into its threat's.
+threat's) details then list its chapters, oldest first, with who went
+each time, a grown story's going on into its threat's. A chapter with a
+cast goes on to its aftermath, [Close the Chapter](help:close-chapter);
+Cancel there leaves it open, to close later from Needs You.
 
-**See also:** [How to follow a story from its start to a threat](help:guide-story-hook), [Diary tab](help:tab-cov-diary)
+**See also:** [How to follow a story from its start to a threat](help:guide-story-hook), [Diary tab](help:tab-cov-diary), [Close the Chapter](help:close-chapter)
+
+# Close the Chapter
+<!-- help: close-chapter -->
+
+What a chapter of a story gave the characters who went (DE pp. 376-377,
+Adventure; p. 265; Grogs p. 67), asked once for the whole cast after
+Take Up the Tale or How the Tale Ended, or later from the chapter's
+**Close** row on [Needs You](help:section-attention).
+
+**You type:** first the Adventure's **Source Quality** (5 to 10, as the
+storyguide judges how much the story taught; one for the season, however
+many adventures it held) and, for each of the cast, whether they take
+it: a magus who plans seasons chooses between the Adventure and keeping
+his laboratory work with the chapter's days away; anyone else takes it
+or not. Then, for each who takes it, up to four **Subjects** from their
+Arts and Abilities and the **Points** each gets: at most 5 to one, and
+no more than the Source Quality in all. An Art counts only if it was used
+on stage, which the app leaves to you.
+
+**The app works out:** an Adventure plan for the chapter's season for
+each character who plans seasons, checked like one made by hand; a
+second chapter in the same season updates that plan, raising its Source
+Quality and adding subjects, and never doubles it. A magus keeping his
+work has the days added to his plan's days away. A grog gets the
+experience at once, as Story Experience gives it, counted against the
+year's update. Confidence and noteworthy deeds stay with each
+character's End of Session. Marking a Session Played reminds you of its
+chapters not yet closed.
+
+**See also:** [Take Up the Tale](help:take-up-tale), [Sessions](help:tab-content-sessions)
 
 # Grow into a Threat
 <!-- help: grow-story -->

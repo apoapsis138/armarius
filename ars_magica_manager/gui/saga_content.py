@@ -26,7 +26,12 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import artwork, section_verbs, traditions, viewing
+from .. import (
+    artwork,
+    section_verbs,
+    traditions,
+    viewing,
+)
 from .. import house_rules as hr
 from .. import players as pl
 from .. import saga_content as sc

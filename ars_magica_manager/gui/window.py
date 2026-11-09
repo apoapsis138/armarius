@@ -137,6 +137,7 @@ from .region import NeighbourPage
 from .saga_content import SagaContentPage
 from .season_panel import SeasonPanel
 from .seasons import SeasonsPage
+from .sessions_section import sessions_section
 from .style import gilding, snapping
 from .style.frame import (
     MAXIMISE,
@@ -1968,6 +1969,7 @@ class MainWindow(QMainWindow):
             open_fight=self.open_fight,
             open_siege=self.open_siege,
             open_hosting=self.open_hosting,
+            sessions=lambda inspect: sessions_section(saga, p, self.run, inspect),
         )
 
     def _placer(self) -> Placer:

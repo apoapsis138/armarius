@@ -56,6 +56,7 @@ from .forms import power as power_forms
 from .forms import religion as religion_forms
 from .forms import saga_content as content_forms
 from .forms import season as season_forms
+from .forms import sessions as session_forms
 from .forms import spell as spell_forms
 from .forms import tradition as tradition_forms
 from .forms import trait as trait_forms
@@ -91,6 +92,7 @@ from .sections import (
     LAB_VF_SECTIONS,
     PLAYERS_SECTION,
     POWERS_SECTION,
+    SESSIONS_SECTION,
     SOURCES_SECTION,
     SPELL_SECTION,
 )
@@ -265,6 +267,7 @@ def saga_ops(saga: Saga, record: Saga) -> dict[str, SectionOps]:
         SOURCES_SECTION: content_forms.source_ops(saga),
         HOUSE_RULES_SECTION: content_forms.house_rule_ops(saga),
         PLAYERS_SECTION: content_forms.player_ops(saga),
+        SESSIONS_SECTION: session_forms.session_ops(saga),
     }
 
 
@@ -399,7 +402,9 @@ def ops_of(saga: Saga, record: object) -> dict[str, SectionOps]:
     if seat.may_change(saga, record):
         return table
     return {
-        section: replace(ops, add=None, edit=None, remove=None)
+        section: ops
+        if section == seat.PLANS_PART and seat.may_plan(saga, record)
+        else replace(ops, add=None, edit=None, remove=None)
         for section, ops in table.items()
     }
 

@@ -174,6 +174,17 @@ def saga_fields(saga: Saga | None) -> list[DialogField]:
                 "nothing planned; the others take the default above.",
             )
         )
+        fields.append(
+            DialogField(
+                "story_flaw_years",
+                "Story Flaw spotlight (years)",
+                "int",
+                saga.story_flaw_years,
+                hint="Needs You names a player character whose Story or Major "
+                "Personality Flaw no told story has concerned in this many "
+                "years (DE p. 66); 0 turns it off.",
+            )
+        )
         fields += [
             DialogField(
                 RULE_OPTION_PREFIX + option.key,

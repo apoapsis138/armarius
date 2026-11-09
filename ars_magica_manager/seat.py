@@ -19,7 +19,7 @@ from collections.abc import Callable
 from typing import Any
 
 from . import players, storage, viewing
-from .models import Player, Saga
+from .models import Character, Player, Saga
 
 
 def runs_the_saga(player: Player | None) -> bool:
@@ -80,10 +80,19 @@ def show(saga: Saga, record: Any = None) -> None:
     _on_show = (saga, record)
 
 
-def read_only() -> bool:
+#: A character's This Season section: its Steward may change its plans
+#: there, though not the rest of the sheet.
+PLANS_PART = "section-char-season"
+
+
+def read_only(part: str = "") -> bool:
     """Whether the page on show is one whoever sits here may not change: a
-    page draws no Add, Edit or Delete for it, whatever its sections hold."""
-    return _on_show is not None and not may_change(*_on_show)
+    page draws no Add, Edit or Delete for it, whatever its sections hold.
+    `part` names the section asking: a character's This Season is open to
+    its Steward too."""
+    if _on_show is None or may_change(*_on_show):
+        return False
+    return not (part == PLANS_PART and may_plan(*_on_show))
 
 
 def may_change(saga: Saga, record: Any = None) -> bool:
@@ -91,6 +100,15 @@ def may_change(saga: Saga, record: Any = None) -> bool:
     saga itself)."""
     player = viewing.current().player
     return runs_the_saga(player) or players.may_change(saga, player, record)
+
+
+def may_plan(saga: Saga, record: Any) -> bool:
+    """Whether whoever sits here may change `record`'s season plans: a
+    character's Players, and its Steward."""
+    player = viewing.current().player
+    if runs_the_saga(player):
+        return True
+    return isinstance(record, Character) and players.may_plan(saga, player, record)
 
 
 def may_act(saga: Saga, player: Player | None, action: str, record: Any = None) -> bool:

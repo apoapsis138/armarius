@@ -20,7 +20,7 @@ confirmation prompt; each `delete_*` does it. Nothing here saves."""
 
 from __future__ import annotations
 
-from . import catalog, references
+from . import catalog, references, sessions
 from . import familiars as fam
 from .models import (
     Character,
@@ -167,6 +167,7 @@ def delete_character(saga: Saga, character: Character) -> None:
     _rehome_devices(saga, "character", character.id, character.covenant_id)
     _forget_maker(saga, character)
     references.forget_ruler(saga, character)
+    sessions.forget_character(saga, character.id)
     saga.characters = [c for c in saga.characters if c is not character]
 
 

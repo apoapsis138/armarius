@@ -6,7 +6,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Saga",
         "d": "(disabled)",
-        "m": "MenuScreen: Import, Export Saga, Export Pack, Host for Players, Set Date, Hide from the Players, Player View",
+        "m": "MenuScreen: Import, Export Saga, Export Pack, Host for Players, Set Date, Run Downtime, Previously On, Hide from the Players, Player View",
         "slash": "(disabled)"
       }
     }
@@ -620,7 +620,7 @@
         "a": "FieldsDialog: Add a Reputation",
         "e": "FieldsDialog: Edit a Reputation",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Session & Reputation, End of Session, Reputation Roll, Knightly, Tournament, Melee Event",
+        "m": "MenuScreen: Session & Reputation, End of Session, What Changed Since the Last Session, Reputation Roll, Knightly, Tournament, Melee Event",
         "slash": "(disabled)"
       }
     },
@@ -920,7 +920,7 @@
         "a": "FieldsDialog: Plan Leandro's Season (Spring 1220)",
         "e": "FieldsDialog: Plan Leandro's Season (Spring 1220)",
         "d": "notice: Nothing is planned for Leandro in Spring 1220.",
-        "m": "MenuScreen: Religion, Pilgrimage, Apprenticeship, Turbulence",
+        "m": "MenuScreen: Study Path, Religion, Pilgrimage, Apprenticeship, Turbulence",
         "slash": "(disabled)"
       }
     },
@@ -1450,6 +1450,16 @@
         "d": "notice: Boundless Wealth of the Oceans is a catalog spell, so it's read-only. To make your own version, add a spell.",
         "m": "(disabled)",
         "slash": "(nothing)"
+      }
+    },
+    "SheetSection#section-sessions": {
+      "active": "section-sessions",
+      "keys": {
+        "a": "FieldsDialog: Add a Session",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "notice: Choose a Session first.",
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-players": {
