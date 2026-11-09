@@ -29,4 +29,6 @@ data/app_settings.json
 # AI-session handoff notes -- internal project/dev notes, not meant for
 # the public repo (same convention as Ars-Magica-Solo).
 HANDOFF.md
+# Rules notes and source PDFs live outside the repo; tools/build_spell_catalog.py
+# and tools/build_shape_material_catalog.py still read their inputs from here.
 reference/

@@ -217,8 +217,8 @@ Moving it **In Play** puts the values on its sheet. A book's "must" warns
 
 ## 8. UI conventions
 
-The standing decisions; terminal detail in
-[reference/UI_Conventions.md](reference/UI_Conventions.md).
+The standing decisions; terminal detail in UI_Conventions.md, kept in the
+project's notes (Reference/), outside the repo.
 
 **No generative-AI art.** Every image, icon, symbol, texture or font the
 app ships or draws, in either front-end, is drawn in code or taken from a
