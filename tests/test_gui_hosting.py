@@ -121,6 +121,8 @@ def test_the_window_shows_the_six_words_and_waits_for_requests() -> None:
     window = _window(desk, Answers())
     assert window.remote_choice.isChecked()
     assert len(window.words.text().split()) == 6
+    assert window.tabs.currentIndex() == 0  # Players first
+    window.tabs.setCurrentIndex(1)
     assert window.no_requests.isVisible() and not window.requests.isVisible()
     assert window.start.isVisible() and not window.stop.isVisible()
     window.browser_choice.setChecked(True)
@@ -179,12 +181,18 @@ def test_a_seat_is_revoked_from_the_seats_tab() -> None:
 
 
 @pytest.mark.usefixtures("app")
-@pytest.mark.parametrize("width", [820, 560])
+@pytest.mark.parametrize("width", [820, 680])
 def test_the_window_fits_at_its_size_and_at_its_narrowest(width: int) -> None:
     desk = _desk()
     window = _window(desk, Answers())
     window.resize(width, 680)
     QApplication.processEvents()
     assert window.width() == width
-    for button in (window.issue, window.approve_button, window.reject_button):
-        assert button.geometry().right() <= window.tabs.width()
+    buttons = (
+        window.add_player,
+        window.edit_player,
+        window.delete_player,
+        window.invite_player,
+    )
+    for button in buttons:
+        assert button.geometry().right() <= window.tabs.pages.width()

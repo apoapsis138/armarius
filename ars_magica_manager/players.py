@@ -189,6 +189,20 @@ def players_of(saga: Saga, character: Character) -> list[Player]:
     return [p for p in saga.players if plays(character.background, p)]
 
 
+def troupe_characters(saga: Saga) -> list[Character]:
+    """The characters a player might play, for a list to tick: those
+    already played (or naming a Player), and the magi and companions of the
+    troupe's covenants."""
+    played = {c.id for c in saga.covenants if c.played}
+    return [
+        c
+        for c in saga.characters
+        if has_players(c.background)
+        or c.background.player.strip()
+        or (c.covenant_id in played and c.type != "grog")
+    ]
+
+
 def characters_of(saga: Saga, player: Player) -> list[Character]:
     """The characters `player` plays."""
     return [c for c in saga.characters if plays(c.background, player)]

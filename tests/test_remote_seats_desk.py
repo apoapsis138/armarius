@@ -56,6 +56,43 @@ def _enrol(desk: rs.SeatsDesk) -> str:
     return request.id
 
 
+def test_players_are_listed_with_whether_they_can_use_a_remote_seat(
+    desk: rs.SeatsDesk,
+) -> None:
+    rows = {r.name: r for r in desk.player_rows()}
+    assert rows["Anna"].remote == "✓ Ready"
+    assert rows["Bruno"].remote.startswith("✗")
+    assert rows["Sg"].role == "Storyguide"
+
+
+def test_a_player_added_here_is_saved_and_can_be_invited_at_once(
+    desk: rs.SeatsDesk,
+) -> None:
+    from ars_magica_manager import storage
+    from ars_magica_manager.models import Character
+
+    desk.saga.characters.append(Character(id="c1", name="Cara", type="companion"))
+    desk.saga.characters[0].background.player = "someone"  # a troupe character
+    form = desk.add_player()
+    assert isinstance(form, Form)
+    keys = [f.key for f in form.fields()]
+    assert "plays_character_c1" in keys
+    form.apply(
+        {
+            "name": "Dora",
+            "role": players.PLAYER,
+            "passcode": LONG,
+            "plays_character_c1": True,
+        }
+    )
+    saved = storage.load_saga("s")
+    dora = players.find(saved, "Dora")
+    assert dora is not None and dora.id in saved.characters[0].background.player_ids
+    invite = desk.issue_invite(dora.id)
+    assert isinstance(invite, Form)
+    assert {f.key: f for f in invite.fields()}["player"].value == dora.id
+
+
 def test_an_invite_needs_the_tunnel_address_first(desk: rs.SeatsDesk) -> None:
     desk.saga.name = "Elsewhere"  # no plan remembered for this name
     refused = desk.issue_invite()

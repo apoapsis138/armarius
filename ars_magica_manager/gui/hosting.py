@@ -19,7 +19,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from PySide6.QtCore import Qt, QTimer
+from PySide6.QtCore import QSize, Qt, QTimer
 from PySide6.QtGui import (
     QGuiApplication,
     QHideEvent,
@@ -31,9 +31,11 @@ from PySide6.QtWidgets import (
     QComboBox,
     QHBoxLayout,
     QLabel,
+    QListWidget,
+    QListWidgetItem,
     QPlainTextEdit,
     QPushButton,
-    QTabWidget,
+    QStackedWidget,
     QVBoxLayout,
     QWidget,
 )
@@ -44,11 +46,12 @@ from ..forms import hosting as hosting_forms
 from ..forms.remote_seats import IssuedInvite, SeatsDesk
 from ..remote.identity import NoKeychainError
 from ..remote.plan import RemotePlan
-from . import sounds
+from . import pictures, sounds
 from .forms import Ask, NoticeDialog, Sheet, ask_question
 from .pictures import SERIF
 from .themes import Palette, wash_style
 from .widgets import (
+    RailRows,
     edit_button,
     fill_ledger,
     ledger_choice,
@@ -61,8 +64,8 @@ TITLE = "Host for Players"
 REMOTE, BROWSER = "remote", "browser"
 #: How often the window looks for new requests while it is shown (ms).
 REFRESH_EVERY = 2000
-#: The narrowest the window may be drawn.
-NARROWEST = 560
+#: The narrowest the window may be drawn: the rail and a table beside it.
+NARROWEST = 680
 
 
 class ModeCard(QPushButton):
@@ -110,6 +113,58 @@ class ModeCard(QPushButton):
 
     def _marked(self, on: bool) -> None:
         self.mark.setVisible(on)
+
+
+class RailPages(QWidget):
+    """Pages beside a slim rail of their names, drawn as a record page's
+    chapters are (widgets.Codex): the chosen one in the heading colour with
+    a bar at its edge, so it is marked by place as well as colour. Answers
+    as a tab widget does (setCurrentIndex, setTabText), so the window's
+    callers read alike."""
+
+    WIDTH = 150
+
+    def __init__(self, p: Palette) -> None:
+        super().__init__()
+        row = QHBoxLayout(self)
+        row.setContentsMargins(0, 0, 0, 0)
+        row.setSpacing(10)
+        self.rail = QListWidget()
+        self.rail.setObjectName("rail")
+        self.rail.setIconSize(QSize(18, 18))
+        self.rail.setFixedWidth(self.WIDTH)
+        self.rail.setFont(serif(13))
+        self.rail.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.rail.setStyleSheet(
+            "QListWidget#rail { background:transparent; border:none; }"
+            f" QListWidget#rail::item {{ padding:7px 6px; color:{p['label']};"
+            " border:none; }"
+            " QListWidget#rail::item:selected { background:transparent;"
+            f" color:{p['heading']}; border-left:3px solid {p['heading']}; }}"
+        )
+        self.rail.setItemDelegate(RailRows(self.rail, p))
+        self.pages = QStackedWidget()
+        self.rail.currentRowChanged.connect(self.pages.setCurrentIndex)
+        row.addWidget(self.rail)
+        row.addWidget(self.pages, 1)
+        self.p = p
+
+    def addTab(self, page: QWidget, name: str, concept: str = "players") -> None:
+        self.pages.addWidget(page)
+        QListWidgetItem(pictures.icon(concept, self.p["label"], 18), name, self.rail)
+        if self.rail.count() == 1:
+            self.rail.setCurrentRow(0)
+
+    def setCurrentIndex(self, index: int) -> None:
+        self.rail.setCurrentRow(index)
+
+    def currentIndex(self) -> int:
+        return self.rail.currentRow()
+
+    def setTabText(self, index: int, name: str) -> None:
+        item = self.rail.item(index)
+        if item is not None:
+            item.setText(name)
 
 
 class InviteDialog(Sheet):
@@ -255,13 +310,11 @@ class HostingWindow(Sheet):
         self.pin = text("", p["dim"], serif(11), wrap=True)
         self.pin.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
         column.addWidget(self.pin)
-        self.tabs = QTabWidget()
-        # The chosen tab in bold as well as underlined: marked by weight
-        # and place, not by colour alone.
-        self.tabs.setStyleSheet("QTabBar::tab:selected { font-weight: bold; }")
-        self.tabs.addTab(self._requests_tab(), "Requests")
-        self.tabs.addTab(self._seats_tab(), "Seats")
-        self.tabs.addTab(self._log_tab(), "Log")
+        self.tabs = RailPages(p)
+        self.tabs.addTab(self._players_tab(), "Players", "players")
+        self.tabs.addTab(self._requests_tab(), "Requests", "new")
+        self.tabs.addTab(self._seats_tab(), "Seats", "character")
+        self.tabs.addTab(self._log_tab(), "Log", "history")
         column.addWidget(self.tabs, 1)
         return panel
 
@@ -291,6 +344,29 @@ class HostingWindow(Sheet):
             row.addWidget(button)
         row.addStretch(1)
         return row
+
+    def _players_tab(self) -> QWidget:
+        """Who may sign in: add, edit or delete them, and invite one."""
+        p = self.p
+        tab = QWidget()
+        column = QVBoxLayout(tab)
+        self.add_player = edit_button("Add", p, self._add_player, "add")
+        self.edit_player = edit_button("Edit", p, self._edit_player, "edit")
+        self.delete_player = edit_button("Delete", p, self._delete_player, "delete")
+        self.invite_player = edit_button(
+            "Issue Invite", p, self._invite_player, "players"
+        )
+        column.addLayout(
+            self._buttons(
+                self.add_player,
+                self.edit_player,
+                self.delete_player,
+                self.invite_player,
+            )
+        )
+        self.players = ledger_table(["Player", "Role", "Plays", "Remote seat"], p)
+        column.addWidget(self.players, 1)
+        return tab
 
     def _requests_tab(self) -> QWidget:
         p = self.p
@@ -391,6 +467,12 @@ class HostingWindow(Sheet):
         self.tabs.setEnabled(True)
         self.words.setText(words)
         self.pin.setText(f"Fingerprint: {pin}")
+        rows = self.desk.player_rows()
+        fill_ledger(
+            self.players, [(r.id, [r.name, r.role, r.plays, r.remote]) for r in rows]
+        )
+        for button in (self.edit_player, self.delete_player, self.invite_player):
+            button.setEnabled(bool(rows))
         requests = self.desk.requests()
         fill_ledger(
             self.requests,
@@ -402,7 +484,9 @@ class HostingWindow(Sheet):
         self.reject_button.setEnabled(bool(requests))
         waiting = f" ({len(requests)} waiting)" if requests else ""
         self.setWindowTitle(TITLE + waiting)
-        self.tabs.setTabText(0, "Requests" + waiting)
+        self.tabs.setTabText(
+            1, f"Requests ({len(requests)})" if requests else "Requests"
+        )
         seats = self.desk.seats()
         self.live_seats = {s.id for s in seats if s.live}
         fill_ledger(
@@ -482,6 +566,22 @@ class HostingWindow(Sheet):
 
     def _issue(self) -> None:
         self.run(self.desk.issue_invite())
+
+    def _add_player(self) -> None:
+        self.run(self.desk.add_player())
+
+    def _edit_player(self) -> None:
+        chosen = ledger_choice(self.players)
+        if chosen is not None:
+            self.run(self.desk.edit_player(chosen))
+
+    def _delete_player(self) -> None:
+        chosen = ledger_choice(self.players)
+        if chosen is not None:
+            self.run(self.desk.delete_player(chosen))
+
+    def _invite_player(self) -> None:
+        self.run(self.desk.issue_invite(ledger_choice(self.players)))
 
     def _approve(self) -> None:
         chosen = ledger_choice(self.requests)

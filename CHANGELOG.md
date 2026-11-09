@@ -123,6 +123,13 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.94.0 — 2026-11-09
+
+### Sodales
+
+- **Manage players where you host**: Host for Players has a rail at its left, as a record's chapters do (Players, Requests, Seats, Log). Players comes first: each player's role, the characters they play, and whether they can sign in from a Remote seat yet. Add, edit or delete players there, tick the characters each plays, and invite the one chosen.
+- **Passcodes as a few words**: the passcode hint suggests a few words a player will remember, such as "grey owl over the mill" (still at least 14 characters).
+
 ## 3.93.0 — 2026-11-09
 
 ### Sodales

@@ -14,10 +14,10 @@ from __future__ import annotations
 
 import time
 from collections.abc import Callable
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Any
 
-from .. import hosting, players, references
+from .. import hosting, players, references, storage
 from ..commands import Command, Confirm, Form, Picked, Refuse, notes
 from ..form_spec import DialogField
 from ..markup import escape
@@ -36,6 +36,7 @@ from ..remote.invites import InviteBook, InviteError, book_path, encode_invite
 from ..remote.passcodes import RemotePasscodes, passcodes_path
 from ..remote.plan import TUNNELS, RemotePlan, identity_name, last_plan, url_problem
 from ..remote.words import host_words, two_lines
+from .saga_content import delete_player, player_form
 
 #: What each audit event is called in the Log.
 EVENT_LABELS: dict[str, str] = {
@@ -173,6 +174,32 @@ class SeatsDesk:
         found = references.find(self.saga, kind, record_id)
         return f"{label}: {found.name if found is not None else record_id}"
 
+    def player_rows(self) -> list[PlayerRow]:
+        """Everyone who may sign in: their role, whom they play, and
+        whether their passcode works from a Remote seat."""
+        rows = []
+        for p in self.saga.players:
+            plays = ", ".join(c.name for c in players.characters_of(self.saga, p))
+            problem = remote_problem(self, p) if p.role == players.PLAYER else None
+            if p.role != players.PLAYER:
+                ready = "Storyguide: no Remote seat yet"
+            elif problem is None:
+                ready = "✓ Ready"
+            elif not p.passcode_hash:
+                ready = "✗ No passcode yet"
+            else:
+                ready = "✗ Too short, or set elsewhere: set a new one"
+            rows.append(
+                PlayerRow(
+                    p.id,
+                    p.name,
+                    players.ROLE_LABELS.get(p.role, p.role),
+                    plays or "(no one)",
+                    ready,
+                )
+            )
+        return rows
+
     def log_players(self) -> list[tuple[str, str]]:
         """The players the Log can be narrowed to: (name, id)."""
         return [(p.name, p.id) for p in self.saga.players if p.role == players.PLAYER]
@@ -185,8 +212,23 @@ class SeatsDesk:
     def host_form(self) -> Form:
         return remote_host_form(self)
 
-    def issue_invite(self) -> Command:
-        return issue_invite(self)
+    def issue_invite(self, player_id: str | None = None) -> Command:
+        return issue_invite(self, player_id)
+
+    def add_player(self) -> Command:
+        return _saving(self, player_form(self.saga, None))
+
+    def edit_player(self, player_id: str) -> Command:
+        player = players.player_by_id(self.saga, player_id)
+        if player is None:
+            return Refuse("Edit Player", "That player is gone.")
+        return _saving(self, player_form(self.saga, player))
+
+    def delete_player(self, player_id: str) -> Command:
+        player = players.player_by_id(self.saga, player_id)
+        if player is None:
+            return Refuse("Delete Player", "That player is gone.")
+        return _saving(self, delete_player(self.saga, player))
 
     def approve(self, request_id: str) -> Command:
         return _decide(self, request_id, approve=True)
@@ -205,6 +247,40 @@ class SeatsDesk:
 
 
 _ENDED = {"revoked": "Revoked", "expired": "Expired"}
+
+
+@dataclass(frozen=True)
+class PlayerRow:
+    id: str
+    name: str
+    role: str
+    plays: str
+    remote: str
+
+
+def _saving(desk: SeatsDesk, command: Command) -> Command:
+    """`command` (a players form or confirmation), with the saga saved once
+    it is applied: Host for Players runs it outside the window's own
+    save."""
+    if isinstance(command, Form):
+        apply = command.apply
+
+        def save_form(values: dict[str, Any]) -> Any:
+            done = apply(values)
+            storage.save_saga(desk.saga)
+            return done
+
+        return replace(command, apply=save_form)
+    if isinstance(command, Confirm):
+        confirmed = command.apply
+
+        def save_confirmed() -> Any:
+            done = confirmed()
+            storage.save_saga(desk.saga)
+            return done
+
+        return replace(command, apply=save_confirmed)
+    return command
 
 
 @dataclass(frozen=True)
@@ -356,9 +432,10 @@ def remote_problem(desk: SeatsDesk, player: Player) -> str | None:
     return None
 
 
-def issue_invite(desk: SeatsDesk) -> Command:
-    """Issue Invite: choose a Player, then see the line to send them and the
-    host's six words to read out on the call."""
+def issue_invite(desk: SeatsDesk, player_id: str | None = None) -> Command:
+    """Issue Invite: choose a Player (`player_id` chosen already, if they
+    can have one), then see the line to send them and the host's six words
+    to read out on the call."""
     plan = desk.plan()
     if not plan.public_url:
         return Refuse(
@@ -368,9 +445,7 @@ def issue_invite(desk: SeatsDesk) -> Command:
         )
     seats = [p for p in desk.saga.players if p.role == players.PLAYER]
     if not seats:
-        return Refuse(
-            "Issue Invite", "Add the players first, on Saga Content's Players."
-        )
+        return Refuse("Issue Invite", "Add the players first, under Players.")
     able = [p for p in seats if remote_problem(desk, p) is None]
     unable = [p for p in seats if remote_problem(desk, p) is not None]
     if not able:
@@ -405,7 +480,7 @@ def issue_invite(desk: SeatsDesk) -> Command:
             "player",
             "Player",
             "select",
-            able[0].id,
+            player_id if player_id in {p.id for p in able} else able[0].id,
             options=[(p.name, p.id) for p in able],
             hint="Each Invite works once, for one device, for 24 hours.",
         )

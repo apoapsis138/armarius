@@ -687,12 +687,49 @@ def player_fields(existing: Player | None) -> list[DialogField]:
             "Passcode" if existing is None else "New passcode",
             "secret",
             "",
-            hint="At least 14 characters. Give it to them yourself; it is "
-            "stored only scrambled."
+            hint="At least 14 characters: a few words they'll remember, "
+            "such as 'grey owl over the mill', are easiest. Give it to them "
+            "yourself; it is stored only scrambled."
             if existing is None
             else "Blank keeps the one they have.",
         ),
     ]
+
+
+#: The key of a "Plays <character>" tick, before the character's id.
+PLAYS = "plays_character_"
+
+
+def plays_fields(saga: Saga, existing: Player | None) -> list[DialogField]:
+    """A "Plays" tick for each of the troupe's characters (several players
+    may tick the same one); for a player, not a storyguide."""
+
+    def a_player(values: dict[str, Any]) -> bool:
+        return values.get("role") == pl.PLAYER
+
+    return [
+        DialogField(
+            f"{PLAYS}{c.id}",
+            f"Plays {escape(c.name)}",
+            "check",
+            existing is not None and existing.id in c.background.player_ids,
+            show_if=a_player,
+        )
+        for c in pl.troupe_characters(saga)
+    ]
+
+
+def apply_plays(saga: Saga, player: Player, values: dict[str, Any]) -> None:
+    """Who `player` plays, from the form's Plays ticks."""
+    for c in saga.characters:
+        key = f"{PLAYS}{c.id}"
+        if key not in values:
+            continue
+        ids = c.background.player_ids
+        if values[key] and player.role == pl.PLAYER and player.id not in ids:
+            ids.append(player.id)
+        elif not (values[key] and player.role == pl.PLAYER) and player.id in ids:
+            ids.remove(player.id)
 
 
 def player_problem(
@@ -705,45 +742,48 @@ def player_problem(
     return pl.name_problem(saga, values.get("name") or "", existing)
 
 
+def player_form(saga: Saga, existing: Player | None) -> Form:
+    """Add (None) or Edit a player: name, role, passcode and whom they play.
+    Saga Content's Players and Host for Players both run it."""
+
+    def apply(values: dict[str, Any]) -> None:
+        if existing is None:
+            player = pl.add(saga, values)
+        else:
+            player = existing
+            pl.update(existing, values)
+        apply_plays(saga, player, values)
+        if values.get("passcode"):
+            RemotePasscodes(passcodes_path(saga.name)).note(player, values["passcode"])
+
+    return Form(
+        player_title(existing),
+        lambda: [*player_fields(existing), *plays_fields(saga, existing)],
+        apply,
+        validate=lambda values: player_problem(saga, existing, values),
+    )
+
+
+def delete_player(saga: Saga, player: Player) -> Confirm:
+    """Delete a player, after asking."""
+
+    def apply() -> None:
+        pl.remove(saga, player)
+        RemotePasscodes(passcodes_path(saga.name)).forget(player.id)
+
+    return Confirm(
+        f"Delete the player {escape(player.name)}?\n\n"
+        "They will no longer be able to sign in.",
+        apply,
+    )
+
+
 def player_ops(saga: Saga) -> SectionOps:
     """Add, Edit and Delete for the saga's players."""
-
-    def form(existing: Player | None) -> Form:
-        def apply(values: dict[str, Any]) -> None:
-            if existing is None:
-                player = pl.add(saga, values)
-            else:
-                player = existing
-                pl.update(existing, values)
-            if values.get("passcode"):
-                RemotePasscodes(passcodes_path(saga.name)).note(
-                    player, values["passcode"]
-                )
-
-        return Form(
-            player_title(existing),
-            lambda: player_fields(existing),
-            apply,
-            validate=lambda values: player_problem(saga, existing, values),
-        )
-
-    def remove(index: int) -> Confirm:
-        player = saga.players[index]
-
-        def apply() -> None:
-            pl.remove(saga, player)
-            RemotePasscodes(passcodes_path(saga.name)).forget(player.id)
-
-        return Confirm(
-            f"Delete the player {escape(player.name)}?\n\n"
-            "They will no longer be able to sign in.",
-            apply,
-        )
-
     return SectionOps(
-        add=lambda: form(None),
-        edit=lambda index: form(saga.players[index]),
-        remove=remove,
+        add=lambda: player_form(saga, None),
+        edit=lambda index: player_form(saga, saga.players[index]),
+        remove=lambda index: delete_player(saga, saga.players[index]),
         rows=lambda: [player.name for player in saga.players],
     )
 

@@ -1490,9 +1490,22 @@ Closing the app while the saga is hosted asks first, as it ends every
 player's connection.
 
 For Remote seats it also shows the host's **six words**, which you read
-aloud on your group's call, and three tabs: Requests, Seats and Log. The
-window looks for new requests every few seconds; the title counts those
+aloud on your group's call, and four pages, chosen on the rail at the
+left: Players, Requests, Seats and Log. The window looks for new requests
+every few seconds; the title, and Requests on the rail, count those
 waiting.
+
+### Players
+<!-- help: remote-seats-players; gui -->
+
+Everyone who may sign in to the saga, with their role, the characters
+they play, and whether they can sign in from a Remote seat (**✓ Ready**,
+or why not). **Add**, **Edit** and **Delete** work as on Saga Content's
+[Players](help:tab-content-players): a player's form has a **Plays** tick
+for each of the troupe's characters (several players may tick the same
+one). A passcode needs at least 14 characters: a few words they'll
+remember, such as "grey owl over the mill", are easiest. Choose a player
+and **Issue Invite** to invite them.
 
 While the saga has players, your own window picks up what they save every
 few seconds: the page is drawn again, with a note at its foot such as
@@ -1525,10 +1538,10 @@ kept for the saga, outside the saga file.
 ### Issue Invite
 <!-- help: issue-invite; gui -->
 
-On the **Requests** tab, **Issue Invite** asks which Player to invite. Only
-Players whose passcode has at least 14 characters, set on
-[Players](help:tab-content-players) since this rule began, are offered; the
-others are listed with the reason. A storyguide's sign-in is not offered.
+On **Players** (with the player chosen) or **Requests**, **Issue Invite**
+asks which Player to invite. Only Players whose passcode has at least 14
+characters, set since this rule began, are offered; the others are listed
+with the reason. A storyguide's sign-in is not offered.
 
 The window then shows the line to send the player by chat or email, with a
 **Copy** button, and the host's six words to read them on the call. The
