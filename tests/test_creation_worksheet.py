@@ -22,6 +22,7 @@ from ars_magica_manager.rules import creation as rules
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import (
     ConfirmScreen,
+    FieldsDialog,
     SelectableList,
     WorkspaceScreen,
 )
@@ -275,30 +276,33 @@ async def test_virtues_and_flaws_step_opens_the_picker_on_each_side():
         assert await wait_until(pilot, lambda: app.screen is screen)
 
 
-async def test_characteristics_step_fills_a_grog_from_a_grogs_array():
-    saga = _saga("grog")
-    saga.books_in_play = ["Grogs"]
-    storage.save_saga(saga)
+async def test_characteristics_step_fills_a_companion_from_an_array_placed():
+    # No books in play: the arrays are open to every character.
+    storage.save_saga(_saga("companion"))
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(120, 45)) as pilot:
         screen = await _open_worksheet(pilot, app)
         await pilot.press("down", "down")
         assert await wait_until(pilot, lambda: screen.step == "characteristics")
         assert "Points:        0 of 7" in _text(screen, "#ws-budget")
-        await _press_button(pilot, screen, "Fill from a Grogs array")
+        await _press_button(pilot, screen, "Fill from an array")
         picker = await _wait_for(pilot, app, ChooseScreen)
         picker.dismiss(0)
+        dialog = await _wait_for(pilot, app, FieldsDialog)
+        assert dialog.query_one("#fld-intelligence", Select).value == "2"
+        assert dialog.query_one("#fld-quickness", Select).value == "-3"
+        dialog.query_one("#fld-quickness", Select).value = "2"
+        dialog.query_one("#fld-intelligence", Select).value = "-3"
+        dialog.query_one("#btn-save", Button).press()
         assert await wait_until(
             pilot,
             lambda: (
-                storage.load_saga("test_saga")
-                .characters[0]
-                .characteristics.intelligence
+                storage.load_saga("test_saga").characters[0].characteristics.quickness
                 == 2
             ),
         )
         c = storage.load_saga("test_saga").characters[0].characteristics
-        assert (c.dexterity, c.quickness) == (-1, -3)
+        assert (c.intelligence, c.dexterity) == (-3, -1)
         assert await wait_until(pilot, lambda: app.screen is screen)
         assert "Points:        7 of 7" in _text(screen, "#ws-budget")
 

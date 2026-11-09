@@ -992,6 +992,8 @@ Each step is marked by how its checks stand:
 - **☞** advice: something the book says should be done isn't, such as too many or too few of something;
 - **○** the step has no checks.
 
+On Characteristics, **Fill from an array** spends the 7 points in one go: choose an array, then place each of its scores on the Characteristic you want. It is offered to every character while the budget is the standard 7 points.
+
 A companion may take The Gift (it is free) and then Hermetic Virtues and Flaws. The Definitive Edition says this should be extremely unusual, mainly to play through a magus's apprenticeship, since without magical training The Gift is almost entirely a Flaw (Chapter 3, page 45), so Virtues and Flaws gives that as advice. A Mythic Companion has no Gift, and a grog never has it.
 
 <!-- tui -->

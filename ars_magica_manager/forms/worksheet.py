@@ -547,23 +547,60 @@ def add_house_virtue(character: Character) -> Command:
     )
 
 
-def grog_array(character: Character) -> Choose:
-    """Set the Characteristics from one of the Grogs book's arrays, in
-    order (an animal's Size added after); the user then moves the scores
-    where they belong."""
-
-    def chosen(array: tuple[int, ...]) -> None:
-        for (key, _), score in zip(cch.CHARACTERISTICS, array, strict=True):
-            score += cch.size_adjustment(character, key)
-            setattr(character.characteristics, key, score)
-
+def characteristic_array(character: Character) -> Choose:
+    """Choose one of the pre-bought arrays of 7 points, then place its
+    scores on the Characteristics (array_placement)."""
     return Choose(
-        "Fill from a Grogs array (Int, Per, Str, Sta, Pre, Com, Dex, Qik)",
+        "Fill from an array",
         lambda: [
-            Choice(" ".join(f"{n:+d}" for n in array), array)
+            Choice(
+                " ".join(f"{n:+d}" for n in array),
+                array,
+                "Each array spends the standard 7 points; you place its "
+                f"scores next.\n[dim]From {escape(cch.GROGS_SOURCE)}[/]",
+            )
             for array in cch.GROG_ARRAYS
         ],
-        chosen,
+        lambda array: array_placement(character, array),
+    )
+
+
+def array_placement_fields(
+    character: Character, array: tuple[int, ...]
+) -> list[DialogField]:
+    """One select per Characteristic offering the array's values, the
+    highest prefilled on the currently highest Characteristic."""
+    prefill = cch.placed_by_rank(character, array)
+    options = [(f"{n:+d}", str(n)) for n in sorted(set(array), reverse=True)]
+    return [
+        DialogField(key, name, "select", str(prefill[key]), options=options)
+        for key, name in cch.CHARACTERISTICS
+    ]
+
+
+def array_placement(character: Character, array: tuple[int, ...]) -> Form:
+    """Place an array's scores on the Characteristics, each value used
+    once (an animal's Size added after)."""
+
+    def placed(values: dict[str, Any]) -> dict[str, int]:
+        return {key: int(values[key]) for key, _ in cch.CHARACTERISTICS}
+
+    def apply(values: dict[str, Any]) -> None:
+        for key, score in placed(values).items():
+            setattr(
+                character.characteristics,
+                key,
+                score + cch.size_adjustment(character, key),
+            )
+
+    return Form(
+        "Place the array's scores",
+        lambda: array_placement_fields(character, array),
+        apply,
+        validate=lambda values: cch.placement_problem(array, placed(values)),
+        live=lambda _values: (
+            "Array: " + " ".join(f"{n:+d}" for n in array) + ", each value once"
+        ),
     )
 
 

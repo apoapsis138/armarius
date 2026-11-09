@@ -104,6 +104,7 @@ from ars_magica_manager.models import (
 from ars_magica_manager.models.criamon import Stigma
 from ars_magica_manager.models.menagerie import Beast, Breeding
 from ars_magica_manager.rules import covenfolk, creation_xp, hermetic_law
+from ars_magica_manager.rules import creation_characteristics as cch
 from ars_magica_manager.rules import devotion as devotion_rules
 from ars_magica_manager.rules import divine_state as ds
 from ars_magica_manager.rules import mysticism as my
@@ -177,6 +178,14 @@ def _add_story_event_with_pools(ws) -> None:
         if not any(bh.id == bh_id for bh in covenant.boons_hooks):
             covenant.boons_hooks.append(VirtueFlawInstance(vf_id, id=bh_id))
     ws._core_verb("tab-cov-diary", "add")
+
+
+def _dexterous_hugo(saga: Saga) -> Character:
+    """The fixture's grog, his Dexterity +1 and the rest 0."""
+    hugo = saga.character("grog9")
+    assert hugo is not None
+    hugo.characteristics.dexterity = 1
+    return hugo
 
 
 @dataclass(frozen=True)
@@ -1904,6 +1913,13 @@ OPENERS: dict[str, Opener] = {
     "native language": Opener(
         "character",
         lambda ws: ws._run_steps(wf.native_language(ws.selected_character)),
+    ),
+    # The first array placed on Hugo, whose Dexterity is highest now.
+    "array placement": Opener(
+        "character",
+        lambda ws: ws._run_steps(
+            wf.array_placement(_dexterous_hugo(ws.saga), cch.GROG_ARRAYS[0])
+        ),
     ),
     # The fixture's grog, Hugo, made a dog.
     "animal form": Opener(

@@ -23,6 +23,7 @@ from textual.widgets import Select
 
 from ars_magica_manager import catalog
 from ars_magica_manager.models import AnimalForm, VirtueFlawInstance
+from ars_magica_manager.rules import creation_characteristics as cch
 from ars_magica_manager.rules import divine_state as ds
 from ars_magica_manager.rules import merchants
 
@@ -116,6 +117,26 @@ CONTRACTS: dict[str, Contract] = {
         ),
         expected=("harsh", 1, 44, 6),
         live={"#fields-live": "Total: 6 Aging Point(s)."},
+    ),
+    # Hugo's Dexterity is highest, so the array's first +2 starts there.
+    "array placement": Contract(
+        prefill={
+            "Intelligence": "2",
+            "Perception": "2",
+            "Strength": "2",
+            "Stamina": "1",
+            "Presence": "1",
+            "Communication": "-1",
+            "Dexterity": "2",
+            "Quickness": "-3",
+        },
+        edits={"Dexterity": "-3", "Quickness": "2"},
+        saved=lambda s: tuple(
+            getattr(s.character("grog9").characteristics, key)
+            for key, _ in cch.CHARACTERISTICS
+        ),
+        expected=(2, 2, 2, 1, 1, -1, -3, 2),
+        invalid={"Quickness": "2"},
     ),
     "native language": Contract(
         prefill={"Language": ""},

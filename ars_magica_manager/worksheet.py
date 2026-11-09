@@ -446,6 +446,9 @@ def _characteristics_budget(saga: Saga, record: Record) -> str:
         for line in found
     ]
     rows.append(("Points", f"{spent} of {cch.budget(character)}"))
+    withheld = cch.arrays_withheld(character)
+    if withheld:
+        rows.append(("Arrays", f"not offered: {withheld}"))
     return aligned(rows)
 
 
@@ -454,9 +457,9 @@ def _characteristics_actions(saga: Saga, record: Record) -> list[Action]:
     actions = [
         Action("Edit Characteristics", lambda: cf.characteristics_form(saga, character))
     ]
-    if cch.grog_arrays_offered(saga, character):
+    if cch.arrays_offered(character):
         actions.append(
-            Action("Fill from a Grogs array", lambda: wf.grog_array(character))
+            Action("Fill from an array", lambda: wf.characteristic_array(character))
         )
     return actions
 

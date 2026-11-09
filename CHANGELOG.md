@@ -125,6 +125,12 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 4.2.0 — 2026-11-09
+
+### Gauntlet
+
+- **Characteristic arrays, placed where you choose.** The worksheet's Characteristics step offers Fill from an array to every character, magus, companion or grog, whatever books are in play, while the budget is the standard 7 points. After choosing an array you place each of its scores on the Characteristic you want: the highest start on the Characteristics that are highest now, and Save names any value used twice or left out. With Improved or Weak Characteristics the arrays aren't offered, and the step says why.
+
 ## 4.1.0 — 2026-11-09
 
 ### Sodales

@@ -20,10 +20,10 @@ characters; §5 Great (Characteristic), Improved Characteristics.
 
 from __future__ import annotations
 
+from collections import Counter
 from collections.abc import Mapping
 from dataclasses import dataclass
 
-from .. import sourcebooks
 from ..markup import todo
 from ..models import Character, Saga, VirtueFlawInstance
 from . import animal_grogs
@@ -116,7 +116,9 @@ def heritage_cap(character: Character, found: Heritage) -> int:
     return found.cap + legacy
 
 
-#: The Grogs book's pre-bought arrays, each spending the standard 7 points.
+#: Pre-bought arrays of scores, each spending the standard 7 points. They
+#: were printed in the Grogs book, but they are only a quick way to spend
+#: the usual points, so any character may use one.
 GROG_ARRAYS: tuple[tuple[int, ...], ...] = (
     (2, 2, 2, 2, 1, 1, -1, -3),
     (3, 2, 2, 1, 1, 0, -1, -3),
@@ -475,8 +477,60 @@ def characteristic_checks(saga: Saga, record: Record) -> list[Check]:
     return found
 
 
-def grog_arrays_offered(saga: Saga, character: Character) -> bool:
-    """A grog may take a pre-bought array when the Grogs book is in play."""
-    return character.type == "grog" and sourcebooks.in_play(
-        "Grogs", sourcebooks.saga_books(saga)
+def arrays_offered(character: Character) -> bool:
+    """Whether a pre-bought array fits: each spends exactly the standard
+    7 points, so only while the budget is 7 (no Improved or Weak
+    Characteristics)."""
+    return budget(character) == BUDGET
+
+
+def arrays_withheld(character: Character) -> str:
+    """Why the arrays aren't offered ("" when they are)."""
+    if arrays_offered(character):
+        return ""
+    return (
+        f"each array spends {BUDGET} points, and this character has {budget(character)}"
     )
+
+
+def ranked(character: Character) -> list[str]:
+    """The Characteristics' keys from the highest bought score to the
+    lowest (an animal's Size taken off), ties in book order."""
+    keys = [key for key, _ in CHARACTERISTICS]
+    return sorted(
+        keys,
+        key=lambda key: (
+            -(getattr(character.characteristics, key) - size_adjustment(character, key))
+        ),
+    )
+
+
+def placed_by_rank(character: Character, array: tuple[int, ...]) -> dict[str, int]:
+    """The array's values placed so the highest lands on the currently
+    highest Characteristic, and so on down (ties in book order)."""
+    return dict(zip(ranked(character), sorted(array, reverse=True), strict=True))
+
+
+def _values_text(counts: Counter[int]) -> str:
+    return ", ".join(
+        f"{value:+d}" + (f" ({n} times)" if n > 1 else "")
+        for value, n in sorted(counts.items(), reverse=True)
+    )
+
+
+def placement_problem(array: tuple[int, ...], placed: Mapping[str, int]) -> str | None:
+    """None when `placed` (Characteristic -> score) uses each of the
+    array's values exactly once; otherwise which value is used too often
+    and which is left out."""
+    have = Counter(placed.values())
+    want = Counter(array)
+    extra = have - want
+    missing = want - have
+    if not extra and not missing:
+        return None
+    parts = []
+    if extra:
+        parts.append(f"used too often: {_values_text(extra)}")
+    if missing:
+        parts.append(f"left out: {_values_text(missing)}")
+    return "Each of the array's values goes on one Characteristic; " + "; ".join(parts)
