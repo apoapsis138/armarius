@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import asyncio
 import ipaddress
+import time
 from typing import cast
 
 import aiohttp
@@ -118,8 +119,8 @@ class RemoteHost:
             forwarded = request.headers.get(self._forwarded_header, "")
             last = forwarded.rsplit(",", 1)[-1].strip()
             if last:
-                return last[:64]
-        return request.remote or "unknown"
+                return _bucket(last[:64])
+        return _bucket(request.remote or "unknown")
 
     async def _serve(self, request: web.Request) -> web.StreamResponse:
         if not web.WebSocketResponse().can_prepare(request).ok:
@@ -150,6 +151,7 @@ class RemoteHost:
             channel = await SecureChannel.accept(_ServerWire(ws), self._identity)
         pace = RateLimiter(limits.messages_per_window, limits.window)
         strikes = 0
+        session.opened = time.monotonic()
         while True:
             async with asyncio.timeout(limits.idle_timeout):
                 raw = await channel.receive()
@@ -157,8 +159,19 @@ class RemoteHost:
                 raise ChannelError("Too many messages.")
             if session.player_id and not session.still_allowed():
                 raise ChannelError("This sign-in has ended.")
-            registry = self._members if session.player_id else self._registry
+            if (
+                not session.player_id
+                and time.monotonic() - session.opened > limits.sign_in_deadline
+            ):
+                # A connection that never signs in can't hold a place for
+                # ever (redeeming and waiting for approval fit well inside).
+                raise ChannelError("Too long without signing in.")
+            signed_in = bool(session.player_id)
+            registry = self._members if signed_in else self._registry
+            proved = session.just_proved
             reply, acceptable = registry.handle(session, raw)
+            if signed_in and proved:
+                session.just_proved = False  # it lasts one message only
             if session.player_id:
                 self._live.setdefault(session.device_id, set()).add(ws)
             await channel.send(encode(reply))
@@ -168,6 +181,19 @@ class RemoteHost:
                 strikes += 1
                 if strikes >= limits.max_strikes:
                     raise ChannelError("Too many refused messages.")
+
+
+def _bucket(address: str) -> str:
+    """The key the limits count `address` under: an IPv6 address by its
+    /64 network, which one person's connection hands out by the billion,
+    so they can't take a fresh place with each; anything else as it is."""
+    try:
+        found = ipaddress.ip_address(address)
+    except ValueError:
+        return address
+    if isinstance(found, ipaddress.IPv6Address) and not found.is_loopback:
+        return str(ipaddress.ip_network(f"{found}/64", strict=False))
+    return address
 
 
 def _is_loopback(host: str) -> bool:

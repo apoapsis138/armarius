@@ -23,14 +23,15 @@ SALT_HEX = 32
 DIGEST_HEX = 128
 
 
+_HEX = frozenset("0123456789abcdef")
+
+
 def _hex(text: str, length: int) -> str:
-    try:
-        bytes.fromhex(text)
-    except ValueError:
-        raise Refused from None
-    if len(text) != length:
+    """`text` if it is exactly `length` lower-case hex digits (no spaces,
+    which bytes.fromhex would skip), else Refused."""
+    if len(text) != length or not set(text) <= _HEX:
         raise Refused
-    return text.lower()
+    return text
 
 
 def passcode_specs(
@@ -39,6 +40,11 @@ def passcode_specs(
     """`change_passcode`, for a signed-in seat of the saga `saga_id`."""
 
     def change(session: Session, body: Body) -> Reply:
+        # Only straight after a fresh passcode proof on this connection: a
+        # seat signed in earlier (a borrowed computer, say) can't take the
+        # passcode over.
+        if not session.just_proved:
+            raise Refused
         salt = _hex(str(body["salt"]), SALT_HEX)
         digest = _hex(str(body["digest"]), DIGEST_HEX)
         try:

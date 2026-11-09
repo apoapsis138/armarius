@@ -116,12 +116,21 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | 1 | Folio | Phase 1 finished: the core tracker, the rules and the seasons |
 | 2 | Codex | Phase 4, creation by the book, and the app that became Armarius |
 | 3 | Nomen Novum | Phase 5, the Saga World, and the desktop at parity with the terminal |
+| 4 | Sodalis | Remote seats: players and troupe storyguides join from their own Armarius, over the internet |
 
 ## Milestones
 
 | Milestone | Version | What it marked |
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
+
+## 4.0.0 — 2026-11-09
+
+### Sodales
+
+- **Sodalis: Remote seats, reviewed.** Every threat in the Remote seats threat model now has a control, a test and a line in Help, and the encryption and handshake had an independent review. Its fixes: changing a passcode is taken only straight after signing in with the old one, and a changed or reset passcode ends every seat still signed in with the old one; a connection must sign in within ten minutes; and a player's app checks the host's sign-in challenge more strictly.
+- **Hosting safely**: a new guide for the storyguide on choosing and setting up a tunnel (Cloudflare Tunnel, Tailscale Funnel, ngrok, your own server), issuing and revoking seats, and what the Log records.
+- **What keeps you safe**: a new page for players on what protects them when they join, in plain words; both ask that all six words be compared.
 
 ## 3.100.0 — 2026-11-09
 

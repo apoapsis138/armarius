@@ -1706,7 +1706,9 @@ passcode.
 1. **Paste the invite** your storyguide sent you (a line that begins
    `ARM1`). It works once, on one computer, for a day.
 2. **Check the six words.** Your storyguide reads six words out on your
-   call. If they match the six on your screen, click **They match**. If
+   call. If all six match the six on your screen (compare every one: the
+   first two or three alone are far easier to fake), click **They
+   match**. If
    they don't, click **They don't match**: the invite may have been
    changed on its way to you, so nothing is sent, and you should ask for
    a new one, by another way if you can.
@@ -1786,7 +1788,7 @@ changes your role, your window follows within seconds and says so.
   one's scrambled form is sent, inside the encrypted connection: the form
   the host keeps, from which the passcode can't be read back.
 - **The six words are your check that you reached your storyguide**, not
-  someone in the middle. Compare them on your call each time you join
+  someone in the middle. Compare all six on your call each time you join
   from a new invite.
 - **What your storyguide's computer sees:** your internet address (as any
   website does), when you play, and the changes you make, each recorded
@@ -1796,5 +1798,34 @@ changes your role, your window follows within seconds and says so.
   only saga records from it and runs nothing it sends. Every record is
   checked against the form the app's records have before it is used:
   anything else is refused, and the app names the field it couldn't read.
+
+### What keeps you safe
+<!-- help: join-game-safety; gui -->
+
+In plain words, what happens when you join and play:
+
+- **The handshake.** Before anything else, your app and your
+  storyguide's set up a private, encrypted connection of their own,
+  inside the one the tunnel carries. Nobody on the way (your network,
+  the internet, the tunnel company) can read it or change a word of it
+  unnoticed: a changed message ends the connection. Each connection has
+  fresh keys, so a recording of an old one is no use later.
+- **The pin.** Your Invite carries a fingerprint of your storyguide's
+  computer, its pin. Your app checks the host it reaches against that pin
+  before it sends anything at all, and stops if they differ. The six
+  words are the same pin, made easy to read aloud: matching them on the
+  call proves nobody swapped the Invite on its way to you.
+- **Your device's seat.** Once your storyguide approves your device, it
+  gets a key of its own, kept in your computer's keychain. It works only
+  with your passcode, only for this saga, and your storyguide can end it
+  at any time (Leave Saga ends it from your side).
+- **The limits.** A wrong passcode slows your device down (three tries
+  are free, then the waits grow), so nobody can guess it quickly, and
+  nobody else's device can lock you out. Your storyguide's computer
+  closes a connection that floods it or sends what it doesn't understand,
+  and turns away too many connections at once.
+- **If something looks wrong** (the six words don't match, a passcode
+  you know is refused, a seat ended you didn't leave), stop, and ask your
+  storyguide on your call before trying again.
 
 **See also:** [How to host a saga](help:guide-hosting)

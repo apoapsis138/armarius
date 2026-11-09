@@ -29,6 +29,10 @@ from .protocol import Body, Field, MessageSpec, Refused, Reply, Session
 
 CREDENTIAL_MAX = 64
 PROOF_MAX = 64
+#: A proof is an HMAC-SHA256, as 64 hex digits; anything else is refused
+#: before it is compared.
+PROOF_HEX = 64
+HEX_DIGITS = frozenset("0123456789abcdef")
 
 
 def signin_specs(
@@ -70,16 +74,28 @@ def signin_specs(
         wait = devices.lock_remaining(device)
         if wait:
             return Reply("locked", {"seconds": wait})
+        if not passcodes.allows(player):
+            return Reply("short_passcode")  # changed since the challenge
         try:
-            _, digest = players.stored_parts(player.passcode_hash)
+            salt, digest = players.stored_parts(player.passcode_hash)
         except ValueError:
             raise Refused from None
-        if not proof_is_good(str(body["proof"]), digest, nonce, pin()):
+        proof = str(body["proof"])
+        if len(proof) != PROOF_HEX or not set(proof) <= HEX_DIGITS:
+            raise Refused  # not a proof at all: nothing to compare
+        if not proof_is_good(proof, digest, nonce, pin()):
             return Reply("denied", {"seconds": devices.failed(device)})
         devices.signed_in(device)
         session.player_id = player.id
         session.device_id = device.id
-        session.still_allowed = lambda: _still_good(devices, device, player_of)
+        # A passcode changed after this (by the player, or a reset by the
+        # storyguide) ends this sign-in: its salt is no longer the player's.
+        signed_with = salt
+        session.still_allowed = lambda: _still_good(
+            devices, device, player_of, signed_with
+        )
+        # Changing the passcode is accepted only as the very next message.
+        session.just_proved = True
         return Reply("signed_in", {"player": player.name})
 
     def ask_reset(session: Session, body: Body) -> Reply:
@@ -108,8 +124,21 @@ def signin_specs(
 
 
 def _still_good(
-    devices: DeviceBook, device: Device, player_of: Callable[[str], Player | None]
+    devices: DeviceBook,
+    device: Device,
+    player_of: Callable[[str], Player | None],
+    salt: bytes,
 ) -> bool:
-    """Whether a signed-in connection may carry on: the device is not ended
-    and its player is still in the saga."""
-    return devices.is_live(device.id) and player_of(device.player_id) is not None
+    """Whether a signed-in connection may carry on: the device is not ended,
+    its player is still in the saga, and their passcode is the one it
+    signed in with (its salt unchanged)."""
+    if not devices.is_live(device.id):
+        return False
+    player = player_of(device.player_id)
+    if player is None:
+        return False
+    try:
+        now, _ = players.stored_parts(player.passcode_hash)
+    except ValueError:
+        return False
+    return now == salt

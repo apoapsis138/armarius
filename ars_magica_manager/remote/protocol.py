@@ -72,6 +72,13 @@ class Session:
     read_logged: bool = False
     #: A change arriving in parts (changes.Upload), until its last part.
     upload: object = None
+    #: Set by a passcode proof that has just signed in, and cleared by the
+    #: next message: changing the passcode is taken only then
+    #: (passcode_change.py).
+    just_proved: bool = False
+    #: When the connection opened (monotonic seconds), for its deadline to
+    #: sign in (host.py).
+    opened: float = 0.0
 
 
 @dataclass(frozen=True)

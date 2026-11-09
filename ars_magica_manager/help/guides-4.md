@@ -445,7 +445,91 @@ Every few seconds each player's copy picks up what the others saved. If it finds
 ### Remote seats: players with their own Armarius
 <!-- help: guide-hosting-remote; gui -->
 
-With your own tunnel (Cloudflare Tunnel, or another) pointed at this computer, host for **Remote seats** in the Host for Players window and **Issue Invite** to each player. They paste it into **Join a Saga** on their title page or Sagas shelf, check your six words on the call, read you their device's three words, and you **Approve**. Their steps are in [Join a Saga](help:join-game), and what they can expect of you in [What a host can and can't see or do](help:what-a-host-sees).
+With your own tunnel (Cloudflare Tunnel, or another) pointed at this computer, host for **Remote seats** in the Host for Players window and **Issue Invite** to each player. They paste it into **Join a Saga** on their title page or Sagas shelf, check your six words on the call, read you their device's three words, and you **Approve**. Their steps are in [Join a Saga](help:join-game), and what they can expect of you in [What a host can and can't see or do](help:what-a-host-sees). Choosing a tunnel, issuing and revoking safely, and the Log are in [Remote seats: hosting safely](help:guide-hosting-safety).
+
+### Remote seats: hosting safely
+<!-- help: guide-hosting-safety; gui -->
+
+The app on your computer listens to **this computer only** (port 8790
+unless you change it): nothing on your network or the internet can reach
+it directly. A **tunnel** carries players to it: a small program on your
+computer that keeps one connection open to a company's servers, which
+give you an https address. Inside the tunnel the app runs its own
+encryption, locked to your host's key, so the tunnel company carries what
+it cannot read (it sees that someone connected, and when, not what
+passed). Choose one of the tunnels below; the steps are as of November
+2026, and each service changes its pages from time to time, so follow its
+own guide where these differ.
+
+- **Cloudflare Tunnel** (free; you need a domain on Cloudflare). Install
+  `cloudflared`, then `cloudflared tunnel login`, `cloudflared tunnel
+  create armarius`, and `cloudflared tunnel route dns armarius
+  saga.example.com`. In its `config.yml`, point the hostname at
+  `http://localhost:8790`, then `cloudflared tunnel run armarius` (or
+  install it as a service so it starts with Windows). In Host for
+  Players choose **Cloudflare Tunnel** and the address
+  `https://saga.example.com`. Where to go: developers.cloudflare.com,
+  Cloudflare Tunnel. Its quick tunnels (`trycloudflare.com`) change
+  address each time, so every Invite would be lost: use a named tunnel.
+- **Tailscale Funnel** (free; no domain needed). Install Tailscale and
+  sign in; in the admin console's DNS page turn on HTTPS and Funnel. Then
+  `tailscale funnel --bg 8790` publishes it at
+  `https://YOUR-PC.YOUR-TAILNET.ts.net` (the public side must be port
+  443, 8443 or 10000; the 8790 is your computer's). `tailscale funnel
+  8790 off` stops it. In Host for Players choose **Another tunnel**.
+  Where to go: tailscale.com/docs, Tailscale Funnel.
+- **ngrok** (a free account gets one fixed address). Install ngrok, add
+  your token, then `ngrok http 8790 --url YOUR-NAME.ngrok-free.dev`. A
+  random address changes each time, so use your fixed one. Choose
+  **Another tunnel**. Where to go: ngrok.com/docs.
+- **Your own server** (a small rented server with a domain). On it, run
+  a web server that adds https and passes the player's address on, such
+  as Caddy (`reverse_proxy localhost:8790`); from your computer, open a
+  reverse SSH tunnel to it: `ssh -N -R 8790:localhost:8790 you@server`.
+  Choose **Another tunnel**.
+- **Port forwarding on your router** is not offered: the app won't
+  listen beyond this computer, and opening your router would show every
+  player (and anyone who finds it) your home address. If you must, put a
+  web server such as Caddy on this computer in front of it, as on your
+  own server above, and forward only port 443 to that.
+
+Whichever you use, the address goes in **Tunnel address** (`https://`,
+nothing after the name), and the tunnel points at `http://localhost:8790`.
+The address is not secret; the Invite carries it. The app tells players
+apart by the address the tunnel passes on (Cloudflare's own header, or
+the last `X-Forwarded-For` entry, which ngrok and Caddy add); a tunnel
+that passes on none makes the limits count every player as one.
+
+**Issuing and revoking.** Issue each player their own Invite, and send it
+by a different way from your call if you can (a chat message, an email).
+It works once, on one device, for 24 hours. On the call, read all six of
+your words, and have the player check every one; approve a device only
+when its player reads you the three words your screen shows. A changed
+passcode, or one you reset, ends every seat still signed in with the old
+one at once. If a device is lost or a player leaves, **Revoke** its
+seat at once (Seats): it is cut off within a second. A storyguide's
+device sees everything in the saga, so revoke it as soon as it is lost.
+If you think your host key itself has leaked (a copy of your keychain),
+**Rotate Host Key**: every Invite and seat ends, and everyone needs a new
+Invite and new six words. Seats nobody uses stop working after the days
+you set in **Idle Expiry** (90 unless you change it).
+
+**The Log** (Host for Players) records who did what and when: Invites
+issued and redeemed, approvals and rejections, sign-ins and wrong
+passcodes, lock-outs, revokes, which records each seat read or changed,
+passcode changes and resets asked, role changes, and seasons advanced or
+undone by a storyguide. It never holds a passcode, a credential, an
+Invite's code or what was typed, and it lives in your data folder, not in
+the saga, so players never receive it. It keeps a year.
+
+**What the app does for you.** A wrong passcode slows that device down
+(three free tries, then growing waits), without locking anyone else out.
+A connection that floods, sends what the app doesn't understand, or stays
+silent too long is closed. Each player's seat receives only what that
+player may see, and every change they send is checked against what is
+theirs to change. The full list is in the app's threat model
+(`docs/threat-model-remote-seats.md` beside its source), and what the
+players are told in [What keeps you safe](help:join-game-safety).
 
 ### Tailscale
 <!-- help: guide-hosting-tailscale -->

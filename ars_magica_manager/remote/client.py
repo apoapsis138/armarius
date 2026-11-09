@@ -25,7 +25,10 @@ from .. import __version__, players, storage
 from ..models import Saga
 from .changes import SAGA, change_messages
 from .identity import normalise_pin
-from .proof import make_proof
+from .proof import NONCE_BYTES, make_proof
+
+#: A passcode's salt is 16 bytes (players.hash_passcode).
+SALT_BYTES = 16
 from .protocol import (
     PROTOCOL_VERSION,
     Body,
@@ -249,10 +252,16 @@ class RemoteClient:
         if challenge.type != "challenge" or not isinstance(salt, str):
             raise SignInError("refused")
         try:
-            digest = digest_for(bytes.fromhex(salt))
-            proof = make_proof(digest, bytes.fromhex(str(nonce)), self._pin)
+            salt_bytes, nonce_bytes = bytes.fromhex(salt), bytes.fromhex(str(nonce))
         except ValueError:
             raise SignInError("refused") from None
+        # A salt and nonce of the sizes the app makes, so a hostile host
+        # can't hand every player the same short salt to guess them all at
+        # once from one table.
+        if len(salt_bytes) != SALT_BYTES or len(nonce_bytes) != NONCE_BYTES:
+            raise SignInError("refused")
+        digest = digest_for(salt_bytes)
+        proof = make_proof(digest, nonce_bytes, self._pin)
         reply = await self.request("prove", {"proof": proof})
         if reply.type == "signed_in":
             return str(reply.body.get("player", ""))

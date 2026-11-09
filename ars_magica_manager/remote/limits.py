@@ -29,6 +29,9 @@ class Limits:
     handshake_timeout: float = 10.0
     #: Seconds a connection may stay silent before it is closed.
     idle_timeout: float = 120.0
+    #: Seconds a connection may go on without signing in (redeeming an
+    #: Invite and waiting for the storyguide's approval fit well inside).
+    sign_in_deadline: float = 600.0
     #: Refused messages tolerated on one connection before it is closed.
     max_strikes: int = 3
     #: Bytes in one message, before encryption.
