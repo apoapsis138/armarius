@@ -101,7 +101,7 @@ S spoofing, T tampering, R repudiation, I information disclosure, D denial of se
 | B3 listener to core | S | Stolen Invite or credential (C) | Single use, 24 h, Storyguide approval; passcode as well; Device credential in keychain; revoke; idle expiry |
 | | T | Malformed or oversized messages (A, B) | Registry of allowed types; type, shape and size checks; no deserialiser that runs code; a change's records checked field by field against the app's own record types, strictly (unknown keys and older shapes refused), the field named in the log (`shapes.py`, ADR 0012) |
 | | E | A seat asks for more than its rights (A) | Seat checked on every message; `viewing.py` and `players.guard_changes` |
-| | I | Learning that a hidden record exists (A) | An unreadable record is treated as not existing; one uniform error |
+| | I | Learning that a hidden record exists (A) | An unreadable record is treated as not existing; one uniform error; presence ("here") names others only on a record the seat may read, and notes no other |
 | | R | "I never did that" | Audit log of invites, approvals, sign-ins, revocations and changes |
 | | D | Expensive requests (A) | Per-seat rate limits and result-size caps |
 | B4 core to files | E | Path traversal (A) | Records by id, never client-supplied paths |

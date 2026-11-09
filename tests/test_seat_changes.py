@@ -20,7 +20,7 @@ def _saga() -> tuple[Saga, Player]:
     anna = players.find(saga, "Anna")
     assert anna is not None
     magus = saga.characters[0]
-    magus.background.player_id = anna.id
+    magus.background.player_ids = [anna.id]
     magus.secrets.append(Secret("Hers", "LEAK-CHARSECRET"))
     return saga, anna
 

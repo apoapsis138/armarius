@@ -1112,7 +1112,7 @@ The list of players; the Inspector shows the one last clicked.
 ### What a signed-in player can do
 <!-- help: players-access -->
 
-Choose who plays a character with **Played by** in the character's Biographical Detail (only the storyguide can). A signed-in player can then:
+Choose who plays a character in the character's Biographical Detail (only the storyguide can): tick **Played by** each player who plays them (several, in troupe-style play), or **Played by everyone in the troupe** for a character the troupe shares, such as a grog. Any of a character's players may change it; if two change the same thing at once, the later save is kept and the other is told. A signed-in player can then:
 
 - change the characters they play, with those characters' familiars, laboratories and books, and their season plans;
 - change the covenants too, if you ticked May change covenants for them;
@@ -1316,6 +1316,6 @@ When the storyguide hosts the app, opening a saga in a browser (or over SSH) fir
 
 If the saga has no players yet, it can't be opened from a browser: the storyguide adds players on the [Players tab](help:tab-content-players) of Saga Content. Your name is shown in the header beside the saga's date while you're signed in. Going back to the saga list (Escape) signs you out.
 
-While several people have the saga open, each one's saves keep everyone else's changes, and within a few seconds the others' screens show them: the sheet on show updates where it is (with a note such as "Ana changed Corvinus; reloaded"), and if two people open the same character, both are told ("Ana is also on Corvinus"). If the record you have open is deleted elsewhere, the saga is shown instead.
+While several people have the saga open, each one's saves keep everyone else's changes, and within a few seconds the others' screens show them: the sheet on show updates where it is (with a note such as "Ana changed Corvinus; reloaded"), and if two people open the same character, both are told ("Ana is also on Corvinus"; on the desktop, "◉ Ana is here too" beside the trail, for as long as she is), whether they're in a browser, the storyguide's own desktop or a Remote seat. If the record you have open is deleted elsewhere, the saga is shown instead.
 
 **See also:** [Players](help:tab-content-players), [How to host a saga](help:guide-hosting), [Saga picker](help:saga-picker)

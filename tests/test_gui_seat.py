@@ -36,9 +36,9 @@ def _saga() -> Saga:
     ana = Player(id="p1", name="Ana", role=players.PLAYER)
     ben = Player(id="p2", name="Ben", role=players.PLAYER)
     mine = Character(id="pc1", name="Leandro", type="magus", covenant_id="home")
-    mine.background.player_id = ana.id
+    mine.background.player_ids = [ana.id]
     theirs = Character(id="pc2", name="Bertrand", type="magus", covenant_id="home")
-    theirs.background.player_id = ben.id
+    theirs.background.player_ids = [ben.id]
     return Saga(
         id="seat_saga",
         name="Seat Saga",
@@ -125,7 +125,7 @@ def test_a_player_lands_on_their_characters_then_the_troupes(app):
 
 def test_a_player_with_no_character_is_told(app):
     saga = _saga()
-    saga.characters[0].background.player_id = None
+    saga.characters[0].background.player_ids = []
     saga.characters[0].background.player = ""
     window = _window(saga)
     window.sit_as(saga.players[0])

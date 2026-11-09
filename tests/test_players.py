@@ -6,7 +6,7 @@ from dataclasses import asdict
 
 import pytest
 from support import everything_saga, wait_until
-from textual.widgets import Button, Input, ListView, Select, Static, Tree
+from textual.widgets import Button, Checkbox, Input, ListView, Static, Tree
 
 from ars_magica_manager import players as pl
 from ars_magica_manager import storage
@@ -178,7 +178,7 @@ def _troupe() -> tuple[Saga, Player, Player]:
     saga = everything_saga()
     ana = pl.add(saga, {"name": "Ana", "role": pl.PLAYER, "passcode": "rosemary"})
     hedda = pl.add(saga, {"name": "Hedda", "role": pl.STORYGUIDE, "passcode": "sage"})
-    saga.character("mag1").background.player_id = ana.id
+    saga.character("mag1").background.player_ids = [ana.id]
     return saga, ana, hedda
 
 
@@ -207,7 +207,7 @@ def test_a_player_may_change_their_characters_and_what_belongs_to_them():
 def test_removing_a_player_frees_their_characters():
     saga, ana, _ = _troupe()
     pl.remove(saga, ana)
-    assert saga.character("mag1").background.player_id is None
+    assert saga.character("mag1").background.player_ids == []
 
 
 def test_the_save_guard_takes_back_what_a_player_may_not_change():
@@ -325,14 +325,15 @@ async def test_only_the_storyguide_says_who_plays_a_character(in_a_browser):
         ws = await _workspace_as(app, pilot, saga, hedda)
         await _show(pilot, ws, ("character", "comp1"))
         ws._edit_biographical_detail()
-        assert await wait_until(pilot, lambda: bool(app.screen.query("#fld-player_id")))
+        tick = f"#fld-plays_{ana.id}"
+        assert await wait_until(pilot, lambda: bool(app.screen.query(tick)))
         dialog = app.screen
-        played_by = dialog.query_one("#fld-player_id", Select)
-        played_by.value = ana.id
+        dialog.query_one(tick, Checkbox).value = True
         dialog.query_one("#btn-save", Button).press()
         assert await wait_until(pilot, lambda: app.screen is ws)
         assert (
-            storage.load_saga(saga.id).character("comp1").background.player_id == ana.id
+            ana.id
+            in storage.load_saga(saga.id).character("comp1").background.player_ids
         )
 
 

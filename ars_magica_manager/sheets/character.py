@@ -154,8 +154,7 @@ def biographical_left_text(saga: Saga, character: Character) -> str:
     b, d = character.background, character.description
     played_by = []
     if saga.players:  # a hosted saga's sign-in
-        player = pl.player_by_id(saga, b.player_id)
-        played_by = [f"Played by: {escape(player.name) if player else '(no one)'}"]
+        played_by = [f"Played by: {escape(pl.played_by(b, saga.players))}"]
     return "\n".join(
         [
             f"Player: {escape(b.player) or '(not set)'}",
@@ -855,8 +854,8 @@ def biographical_facts(saga: Saga, character: Character) -> list[Fact]:
     b, d = character.background, character.description
     facts = [_fact("Player", b.player)]
     if saga.players:  # a hosted saga's sign-in
-        player = pl.player_by_id(saga, b.player_id)
-        facts.append(_fact("Played by", player.name if player else None))
+        who = pl.played_by(b, saga.players)
+        facts.append(_fact("Played by", None if who == "(no one)" else who))
     return [
         *facts,
         _fact("Birth Name", b.birth_name),

@@ -17,7 +17,8 @@ two are safe to run side by side.
 
 from __future__ import annotations
 
-from collections.abc import Callable
+import uuid
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -59,6 +60,7 @@ from .. import (
     hotkeys,
     joined_games,
     paths,
+    presence,
     references,
     saga_index,
     seat,
@@ -286,6 +288,13 @@ def _title(command: Command) -> str:
     return command.title
 
 
+def _hidden_label(name: str) -> QLabel:
+    label = QLabel()
+    label.setAccessibleName(name)
+    label.hide()
+    return label
+
+
 @dataclass(frozen=True)
 class Place:
     """A page the reader has opened: what kind, and whose (a covenant's or
@@ -332,6 +341,8 @@ class MainWindow(QMainWindow):
     #: when it was last asked (time.monotonic).
     connection_lost: bool = False
     last_asked: float = 0.0
+    #: This window's presence id, once a saga with players is open.
+    _presence_id: str | None = None
 
     def __init__(self, saga_ids: list[str] | None = None) -> None:
         super().__init__()
@@ -419,14 +430,10 @@ class MainWindow(QMainWindow):
         bar = QHBoxLayout()
         bar.setContentsMargins(12, 4, 8, 0)
         bar.addLayout(self.crumbs)
+        bar.addWidget(self._here_label())
         self.drag = DragStrip(self, self.palette_, APP_NAME)
         bar.addWidget(self.drag, 1)
-        #: Find, while a saga is open: drops the finder (finder.py).
-        self.find_button = QPushButton("  Find")
-        self.find_button.setFlat(True)
-        self.find_button.setToolTip("Find a record in the saga by name (Ctrl+F)")
-        self.find_button.clicked.connect(self.open_finder)
-        bar.addWidget(self.find_button)
+        bar.addWidget(self._find_button())
         #: Player view, while a saga is open: the saga as the players see
         #: it (viewing.py), said in words beside the eye while it is on.
         self.view_button = QPushButton()
@@ -806,6 +813,7 @@ class MainWindow(QMainWindow):
             joined.tick(self)
             return
         self.pick_up()
+        self._local_presence()
 
     def pick_up(self) -> None:
         """Bring in what another copy (or the host) saved, and say so."""
@@ -824,6 +832,57 @@ class MainWindow(QMainWindow):
             return
         if found is not None:
             self.picked_up(found, season_was)
+
+    def _find_button(self) -> QPushButton:
+        """Find, while a saga is open: drops the finder (finder.py)."""
+        self.find_button = QPushButton("  Find")
+        self.find_button.setFlat(True)
+        self.find_button.setToolTip("Find a record in the saga by name (Ctrl+F)")
+        self.find_button.clicked.connect(self.open_finder)
+        return self.find_button
+
+    def _here_label(self) -> QLabel:
+        """Who else has the record on show open, in a hosted saga
+        (presence.py): beside the trail, a mark and their names."""
+        self.here_label = _hidden_label("Also here")
+        return self.here_label
+
+    def open_record_key(self) -> str | None:
+        """The record on show, as "characters:mag1" (presence.py), or None
+        for a page that isn't one record's."""
+        place = self.trail[-1] if self.trail else None
+        if place is None or not place.id:
+            return None
+        kind = next((k for k, v in _REF_PLACES.items() if v == place.kind), None)
+        return f"{kind}:{place.id}" if kind else None
+
+    def also_here(self, record: str | None, others: Sequence[str]) -> None:
+        """Show who else has `record` open, if it is still the one on show:
+        a mark and the names beside the trail, never colour alone."""
+        if record is None or record != self.open_record_key() or not others:
+            self.here_label.hide()
+            return
+        names = ", ".join(others)
+        verb = "is" if len(others) == 1 else "are"
+        self.here_label.setText(f"  ◉ {escape(names)} {verb} here too")
+        self.here_label.setStyleSheet(
+            f"color:{self.palette_['heading']}; background:transparent;"
+            "font-style:italic;"
+        )
+        self.here_label.show()
+
+    def _local_presence(self) -> None:
+        """While the saga has players, say which record this window has
+        open, and show who else has it open, as the terminal does."""
+        saga = self.saga
+        if saga is None or not saga.players:
+            return
+        if self._presence_id is None:
+            self._presence_id = f"desktop-{uuid.uuid4().hex}"
+        record = self.open_record_key()
+        who = self.player.name if self.player is not None else ""
+        presence.note(self._presence_id, saga.id, who, record)
+        self.also_here(record, presence.others_on(self._presence_id, saga.id, record))
 
     def picked_up(
         self, found: Refreshed, season_was: tuple[int, str] | None = None
@@ -1199,6 +1258,9 @@ class MainWindow(QMainWindow):
             event.ignore()
             return
         self.end_joined()
+        self.shared_timer.stop()
+        if self._presence_id is not None:
+            presence.leave(self._presence_id)  # no longer "here" for others
         super().closeEvent(event)
 
     def _lose_unsent(self) -> bool:

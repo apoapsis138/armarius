@@ -195,6 +195,10 @@ class SeatSession:
         except ChangeNotSaved as refused:
             raise NotSaved(f"{kind}:{key}") from refused
 
+    def here(self, record: str) -> list[str]:
+        """Say which record this seat has open; who else has it open."""
+        return self._loop.run(self._talk().here(record))
+
     def picture(self, folder: str, name: str) -> bytes | None:
         """A picture the saga names, asked for while a page is drawn: a few
         seconds at most, so a slow or lost host never holds the window (the

@@ -316,7 +316,8 @@ def troupes_own(record: Any) -> bool:
     if isinstance(record, Character):
         # As seasons.defaults.is_player_character, which this module sits
         # below.
-        return bool(record.background.player.strip() or record.background.player_id)
+        b = record.background
+        return bool(b.player.strip() or b.player_ids or b.everyone_plays)
     if isinstance(record, Covenant):
         return record.played
     return False

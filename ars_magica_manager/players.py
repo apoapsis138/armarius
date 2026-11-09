@@ -14,11 +14,13 @@ from __future__ import annotations
 import hashlib
 import hmac
 import secrets
-from typing import Any
+from collections.abc import Sequence
+from typing import Any, cast
 
 from . import storage
 from .markup import escape, fit
 from .models import (
+    Background,
     Character,
     Covenant,
     Familiar,
@@ -136,10 +138,12 @@ def update(player: Player, values: dict[str, Any]) -> None:
 
 
 def remove(saga: Saga, player: Player) -> None:
-    """Delete `player`; the characters they played are no one's."""
+    """Delete `player`; they no longer play any character."""
     saga.players.remove(player)
-    for character in characters_of(saga, player):
-        character.background.player_id = None
+    for character in saga.characters:
+        ids = character.background.player_ids
+        if player.id in ids:
+            ids.remove(player.id)
 
 
 # -- who may change what --
@@ -149,9 +153,45 @@ def player_by_id(saga: Saga, player_id: str | None) -> Player | None:
     return next((p for p in saga.players if p.id == player_id), None)
 
 
+def plays(background: object, player: Player) -> bool:
+    """Whether `player` plays the character with this Biographical Detail
+    (a Background, or one as plain data, which may be a player's change of
+    any shape: anything but a record plays no one): named among its
+    players, or a player of the troupe when everyone plays it."""
+    if isinstance(background, Background):
+        ids, everyone = background.player_ids, background.everyone_plays
+    elif isinstance(background, dict):
+        found = cast(dict[str, Any], background)
+        ids = found.get("player_ids")
+        ids = ids if isinstance(ids, list) else []
+        everyone = found.get("everyone_plays") is True
+    else:
+        return False
+    return player.id in ids or (everyone and player.role == PLAYER)
+
+
+def played_by(background: Background, players: Sequence[Player]) -> str:
+    """Who plays the character, in words: "Everyone in the troupe", the
+    players' names, or "(no one)"."""
+    if background.everyone_plays:
+        return "Everyone in the troupe"
+    names = [p.name for p in players if p.id in background.player_ids]
+    return ", ".join(names) or "(no one)"
+
+
+def has_players(background: Background) -> bool:
+    """Whether any saga Player plays the character."""
+    return bool(background.player_ids) or background.everyone_plays
+
+
+def players_of(saga: Saga, character: Character) -> list[Player]:
+    """The players who play `character`."""
+    return [p for p in saga.players if plays(character.background, p)]
+
+
 def characters_of(saga: Saga, player: Player) -> list[Character]:
     """The characters `player` plays."""
-    return [c for c in saga.characters if c.background.player_id == player.id]
+    return [c for c in saga.characters if plays(c.background, player)]
 
 
 def may_change(
@@ -245,7 +285,7 @@ def guard_changes(
     mine = {
         c["id"]
         for c in before.get("characters", [])
-        if (c.get("background") or {}).get("player_id") == player.id
+        if plays(c.get("background"), player)
     }
     owner_of = {
         "characters": lambda r: r.get("id") in mine,
@@ -267,7 +307,43 @@ def guard_changes(
             refused.append(key)
         else:
             kept[key] = _guard_records(key, old or [], new or [], may, refused)
+    if "characters" in kept:
+        kept["characters"] = _same_players(
+            before.get("characters") or [], kept["characters"], refused
+        )
     return kept, refused
+
+
+_WHO_PLAYS = ("player_ids", "everyone_plays")
+
+
+def _same_players(
+    old: list[dict[str, Any]], new: list[dict[str, Any]], refused: list[str]
+) -> list[dict[str, Any]]:
+    """`new` characters with who plays each as it was: only the storyguide
+    says who plays a character (a player can't add themselves to another's,
+    nor hand theirs on)."""
+
+    def background_of(record: object) -> dict[str, Any]:
+        found = record.get("background") if isinstance(record, dict) else None
+        return cast(dict[str, Any], found) if isinstance(found, dict) else {}
+
+    was = {r.get("id"): background_of(r) for r in old}
+    kept = []
+    for record in new:
+        if not isinstance(record, dict):
+            kept.append(record)  # refused later by the shape check
+            continue
+        background = background_of(record)
+        earlier = was.get(record.get("id"))
+        if earlier is not None and any(
+            background.get(k) != earlier.get(k) for k in _WHO_PLAYS
+        ):
+            background = {**background, **{k: earlier.get(k) for k in _WHO_PLAYS}}
+            record = {**record, "background": background}
+            refused.append(f"characters[{record.get('id')}].background.player_ids")
+        kept.append(record)
+    return kept
 
 
 def _guard_records(

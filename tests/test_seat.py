@@ -25,8 +25,8 @@ def _troupe() -> tuple[Saga, Player, Player, Character, Character]:
     saga.players = [ana, ben]
     mine = Character(id="c1", name="Mine", type="magus")
     theirs = Character(id="c2", name="Theirs", type="magus")
-    mine.background.player_id = ana.id
-    theirs.background.player_id = ben.id
+    mine.background.player_ids = [ana.id]
+    theirs.background.player_ids = [ben.id]
     saga.characters = [mine, theirs]
     return saga, ana, ben, mine, theirs
 

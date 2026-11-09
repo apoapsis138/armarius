@@ -43,7 +43,7 @@ def test_player_characters_are_grouped_troupe_covenant_first():
 
 def test_a_signed_in_player_makes_a_player_character_too():
     saga = _saga()
-    saga.characters[0].background.player_id = "p1"
+    saga.characters[0].background.player_ids = ["p1"]
     names = [c.name for _, people in troupe.player_characters(saga) for c in people]
     assert "Gunther" in names
 

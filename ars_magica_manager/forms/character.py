@@ -15,6 +15,7 @@ from dataclasses import replace
 from typing import Any
 
 from .. import catalog, creation, faith, seasons, sourcebooks, storage
+from .. import players as pl
 from .. import possessions as pos
 from .. import sheet_text as st
 from ..arts import ART_ABBREVIATIONS, ARTS, FORMS, TECHNIQUES
@@ -91,32 +92,45 @@ _BIOGRAPHY_TEXT_FIELDS_AFTER_YEAR: list[tuple[str, str]] = [
 def played_by_field(
     background: Background, players: Sequence[Player], may_assign: bool
 ) -> list[DialogField]:
-    """Who plays the character, from the saga's players: only
-    when the saga has players, and only the storyguide may change it."""
+    """Who plays the character, from the saga's players: one, several
+    (troupe-style) or everyone in the troupe. Only when the saga has
+    players, and only the storyguide may change it."""
     if not players:
         return []
     if not may_assign:
-        playing = next((p for p in players if p.id == background.player_id), None)
         return [
             DialogField(
-                "_played_by",
-                "Played by",
-                "info",
-                playing.name if playing else "(no one)",
+                "_played_by", "Played by", "info", pl.played_by(background, players)
             )
         ]
+    roster = [p for p in players if p.role == pl.PLAYER]
+
+    def one_by_one(values: dict[str, Any]) -> bool:
+        return not values.get("everyone_plays")
+
     return [
         DialogField(
-            "player_id",
-            "Played by",
-            "select",
-            background.player_id,
-            options=[(escape(p.name), p.id) for p in players],
-            allow_blank=True,
-            placeholder="(no one)",
-            hint="The player who may change this character when they sign in.",
-        )
+            "everyone_plays",
+            "Played by everyone in the troupe",
+            "check",
+            background.everyone_plays,
+            hint="A shared grog, say: every player may change it.",
+        ),
+        *(
+            DialogField(
+                f"{PLAYS}{p.id}",
+                f"Played by {escape(p.name)}",
+                "check",
+                p.id in background.player_ids,
+                show_if=one_by_one,
+            )
+            for p in roster
+        ),
     ]
+
+
+#: The key of a "Played by <player>" tick, before the player's id.
+PLAYS = "plays_"
 
 
 def biographical_fields(
@@ -219,6 +233,12 @@ def biographical_problem(values: dict[str, Any]) -> str | None:
 def apply_biographical(character: Character, result: dict[str, Any]) -> None:
     for attribute in known_fields(Background, result):
         setattr(character.background, attribute, result[attribute])
+    ticks = {k.removeprefix(PLAYS): v for k, v in result.items() if k.startswith(PLAYS)}
+    if ticks or "everyone_plays" in result:
+        character.background.everyone_plays = bool(result.get("everyone_plays"))
+        # Players not offered (a storyguide) keep their place.
+        kept = [i for i in character.background.player_ids if i not in ticks]
+        character.background.player_ids = kept + [i for i, on in ticks.items() if on]
     if "religion" in result:
         character.background.religion = str(result["religion"] or "")
     old = character.description

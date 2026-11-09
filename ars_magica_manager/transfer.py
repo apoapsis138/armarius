@@ -218,7 +218,10 @@ def _troupes_own(key: str, record: dict[str, Any]) -> bool:
     if key == "characters":
         background = record.get("background") or {}
         return bool(
-            str(background.get("player") or "").strip() or background.get("player_id")
+            str(background.get("player") or "").strip()
+            or background.get("player_ids")
+            or background.get("everyone_plays")
+            or background.get("player_id")  # an older export's one player
         )
     if key == "covenants":
         return record.get("played", True) is not False
@@ -266,9 +269,10 @@ def for_reader(data: dict[str, Any]) -> dict[str, Any]:
 
 def without_players(data: dict[str, Any]) -> dict[str, Any]:
     """An export with nothing of who may sign in to the saga: no Players,
-    and no character's link to the Player who plays them (its id is made
-    from their name). The free-text "Player" a character sheet names stays,
-    as part of the character."""
+    and no character's link to the Players who play them (their ids are
+    made from their names). The free-text "Player" a character sheet names
+    stays, as part of the character, as does "played by everyone", which
+    names no one."""
     saga = data.get("saga")
     if not isinstance(saga, dict):
         return data
@@ -277,8 +281,11 @@ def without_players(data: dict[str, Any]) -> dict[str, Any]:
     characters = []
     for character in saga.get("characters") or []:
         background = character.get("background")
-        if isinstance(background, dict) and background.get("player_id"):
-            character = {**character, "background": {**background, "player_id": None}}
+        if isinstance(background, dict) and (
+            background.get("player_ids") or background.get("player_id")
+        ):
+            kept = {k: v for k, v in background.items() if k != "player_id"}
+            character = {**character, "background": {**kept, "player_ids": []}}
         characters.append(character)
     kept_saga["characters"] = characters
     return {**data, "saga": kept_saga}

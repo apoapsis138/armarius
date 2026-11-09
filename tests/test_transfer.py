@@ -656,17 +656,17 @@ def test_a_whole_saga_export_carries_no_players(tmp_path):
 
     source = _source()
     anna = players.add(source, {"name": "Anna", "passcode": "a long enough passcode"})
-    source.characters[0].background.player_id = anna.id
+    source.characters[0].background.player_ids = [anna.id]
     path = transfer.export_saga_to(tmp_path / "all.amm.json", source)
     text = path.read_text(encoding="utf-8")
     data = transfer.read(path)
     assert data["saga"]["players"] == []
-    assert all(not c["background"]["player_id"] for c in data["saga"]["characters"])
+    assert all(not c["background"]["player_ids"] for c in data["saga"]["characters"])
     assert "Anna" not in text and "scrypt$" not in text and anna.id not in text
     # A single character's export leaves the link out too.
     one = transfer.export_to(tmp_path / "one.amm.json", source, source.characters[0])
     assert anna.id not in one.read_text(encoding="utf-8")
-    assert source.characters[0].background.player_id == anna.id  # the saga keeps it
+    assert anna.id in source.characters[0].background.player_ids  # the saga keeps it
     assert [p.name for p in source.players] == ["Anna"]  # the saga keeps them
 
 

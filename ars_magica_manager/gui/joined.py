@@ -43,6 +43,10 @@ class Synced:
 
     saved: Saved | None
     read: tuple[str, Saga | None]
+    #: The record the window had open when the talk began, and who else
+    #: has it open (presence.py).
+    record: str | None = None
+    others: tuple[str, ...] = ()
 
 
 @dataclass
@@ -207,10 +211,13 @@ def tick(window: MainWindow) -> None:
     if window.unsent or due:
         saga = window.saga
         now = asdict(saga) if window.unsent and saga is not None else None
+        record = window.open_record_key()
 
         def sync() -> Synced:
             saved = store.send(now) if now is not None else None
-            return Synced(saved, store.seat.read(store.revision))
+            read = store.seat.read(store.revision)
+            others = tuple(session.here(record or ""))
+            return Synced(saved, read, record, others)
 
         _start(window, "sync", sync)
 
@@ -250,6 +257,7 @@ def _finished(window: MainWindow, talk: Talk) -> None:
     if problem is not None:
         raise problem
     synced: Synced = talk.future.result()
+    window.also_here(synced.record, synced.others)
     edited_since = window.edits != talk.edits
     if synced.saved is not None:
         window.unsent = edited_since

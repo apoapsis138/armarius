@@ -55,7 +55,8 @@ def default_of(saga: Saga, character: Character) -> str:
 
 def is_player_character(character: Character) -> bool:
     """Whether a Player plays `character` (a non-player character has none)."""
-    return bool(character.background.player.strip() or character.background.player_id)
+    b = character.background
+    return bool(b.player.strip() or b.player_ids or b.everyone_plays)
 
 
 def notified(saga: Saga) -> list[Character]:

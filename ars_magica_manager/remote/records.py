@@ -26,7 +26,7 @@ import zlib
 from collections.abc import Callable
 from dataclasses import asdict, dataclass
 
-from .. import storage, viewing
+from .. import presence, storage, viewing
 from ..models import Player, Saga
 from ..seat_view import seat_view
 from ..transfer import MAPS, PORTRAITS, pictures_named
@@ -60,6 +60,33 @@ class Snapshot:
     revision: str
     packed: bytes  # the view's JSON, compressed
     pictures: frozenset[tuple[str, str]]  # (folder, file name) it names
+    #: The records the view holds, as "characters:mag1" (presence.py).
+    records: frozenset[str] = frozenset()
+    #: The seat's player's name.
+    player: str = ""
+
+
+#: The lists whose records presence names.
+_PRESENT_KINDS = (
+    "characters",
+    "covenants",
+    "laboratories",
+    "familiars",
+    "tribunals",
+    "neighbours",
+    "creatures",
+)
+
+
+def _records_in(data: dict[str, object]) -> frozenset[str]:
+    found: set[str] = set()
+    for kind in _PRESENT_KINDS:
+        records = data.get(kind)
+        if isinstance(records, list):
+            for record in records:
+                if isinstance(record, dict) and isinstance(record.get("id"), str):
+                    found.add(f"{kind}:{record['id']}")
+    return frozenset(found)
 
 
 def pack(data: dict[str, object]) -> tuple[str, bytes]:
@@ -104,6 +131,8 @@ class SeatSnapshots:
         load: Callable[[str], Saga] = storage.load_saga,
     ) -> None:
         self._saga_id = saga_id
+        #: The hosted saga's id (presence notes are by saga).
+        self.saga_id = saga_id
         self._log = log
         self._load = load
         self._stamp = -1
@@ -135,7 +164,13 @@ class SeatSnapshots:
         revision, packed = pack(data)
         if len(packed) > MAX_SNAPSHOT:
             raise ValueError("The saga is too large to send to a Remote seat.")
-        snapshot = Snapshot(revision, packed, frozenset(pictures_named({"saga": data})))
+        snapshot = Snapshot(
+            revision,
+            packed,
+            frozenset(pictures_named({"saga": data})),
+            _records_in(data),
+            player.name,
+        )
         self._views[player_id] = snapshot
         return snapshot
 
@@ -187,6 +222,21 @@ def records_specs(
             raise Refused
         return in_parts("picture", blob, {"folder": folder, "name": name})
 
+    def here(session: Session, body: Body) -> Reply:
+        """The seat has `record` open ("" for none): noted with every
+        copy's presence, and who else has it open answered. Only a record
+        the seat may read is noted; for any other, no one is named."""
+        try:
+            found = snapshots.for_player(session.player_id)
+        except LookupError, ValueError:
+            raise Refused from None
+        record = str(body.get("record") or "")
+        record = record if record in found.records else ""
+        me = f"seat-{session.label}"
+        presence.note(me, snapshots.saga_id, found.player, record or None)
+        others = presence.others_on(me, snapshots.saga_id, record or None)
+        return Reply("here", {"others": "\n".join(others)[:2000]})
+
     return [
         MessageSpec(
             "snapshot",
@@ -200,6 +250,11 @@ def records_specs(
                 "name": Field(str, max_length=PICTURE_NAME_MAX),
             },
             picture,
+        ),
+        MessageSpec(
+            "here",
+            {"record": Field(str, max_length=PICTURE_NAME_MAX, required=False)},
+            here,
         ),
     ]
 

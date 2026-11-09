@@ -546,7 +546,9 @@ def magi_age(saga: Saga) -> int:
 
 
 def _played(background: Background) -> bool:
-    return bool(background.player_id or background.player.strip())
+    return bool(
+        background.player_ids or background.everyone_plays or background.player.strip()
+    )
 
 
 def pretenses_spent(creature: Creature) -> int:

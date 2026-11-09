@@ -38,7 +38,7 @@ async def hosted() -> AsyncIterator[Hosted]:
     saga = hidden_saga()
     anna = players.find(saga, "Anna")
     assert anna is not None
-    saga.characters[0].background.player_id = anna.id
+    saga.characters[0].background.player_ids = [anna.id]
     saga.characters.append(Character(id="other", name="Bertrand", type="magus"))
     hosted = Hosted(saga)
     hosted.port = await hosted.host.start()

@@ -87,6 +87,9 @@ def close_qt_windows():
         # A form left with changes would otherwise stop to ask.
         if hasattr(window, "unsaved"):
             window.unsaved = lambda: False
+        # So would a joined saga's window holding changes not yet sent.
+        if hasattr(window, "unsent"):
+            window.unsent = False
         window.close()
         window.deleteLater()
     QCoreApplication.sendPostedEvents(None, QEvent.Type.DeferredDelete)

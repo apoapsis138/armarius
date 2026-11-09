@@ -345,6 +345,15 @@ class RemoteClient:
             raise UnreadableReply
         return await self._parts(head, MAX_PICTURE)
 
+    async def here(self, record: str) -> list[str]:
+        """Say which record this seat has open ("" for none); who else has
+        it open (presence.py), by name."""
+        reply = await self.request("here", {"record": record})
+        others = reply.body.get("others")
+        if reply.type != "here" or not isinstance(others, str):
+            raise UnreadableReply
+        return [name for name in others.split("\n") if name]
+
     async def send_change(
         self,
         kind: str,

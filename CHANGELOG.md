@@ -123,6 +123,13 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.93.0 — 2026-11-09
+
+### Sodales
+
+- **Characters played by more than one player**: in troupe-style play a character can be played by several players, or by everyone in the troupe (a shared grog, say). Biographical Detail has a "Played by" tick for each player and one for everyone. Any of a character's players may change it, and only the storyguide says who plays it. Older saves' one player is moved over when they are opened.
+- **See who else is on a record**: when someone else has open the record you're looking at, "◉ Bruno is here too" shows beside the trail, on the desktop as in the terminal, whether they're in a browser, at the storyguide's window or in a Remote seat. A player is only ever told about records they can see.
+
 ## 3.92.0 — 2026-11-09
 
 ### Sodales

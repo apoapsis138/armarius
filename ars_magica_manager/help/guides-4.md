@@ -386,10 +386,10 @@ What the players get in their browser (or over SSH) is the terminal version of t
 <!-- /gui -->
 a name, the Role *Player*, and a passcode you give them yourself. Add a *Storyguide* there too if another storyguide will sign in from a browser.
 <!-- tui -->
-2. For each player's characters, open the character, edit its Biographical Detail and choose who it's **Played by**. Tick **May change covenants** on a player who should keep the covenant's books.
+2. For each player's characters, open the character, edit its Biographical Detail and tick who it's **Played by** (several players, or everyone in the troupe, for a shared character). Tick **May change covenants** on a player who should keep the covenant's books.
 <!-- /tui -->
 <!-- gui -->
-2. For each player's characters, open the character and click **Edit** on Biographical Detail, in its Description chapter, and choose who it's **Played by**. Tick **May change covenants** on a player who should keep the covenant's books.
+2. For each player's characters, open the character and click **Edit** on Biographical Detail, in its Description chapter, and tick who it's **Played by** (several players, or everyone in the troupe, for a shared character). Tick **May change covenants** on a player who should keep the covenant's books.
 <!-- /gui -->
 3. Set up the private network (Tailscale or ZeroTier below) and note your computer's address on it.
 

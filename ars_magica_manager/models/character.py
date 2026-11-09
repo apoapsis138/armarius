@@ -71,10 +71,13 @@ class Background:
     "Description" box -- see Description below for that)."""
 
     player: str = ""
-    #: The saga Player who plays this character (players.py):
-    #: when they sign in to a hosted saga, they may change it. None: no one
-    #: but the storyguide.
-    player_id: str | None = None
+    #: The saga Players who play this character (players.py), by id: when
+    #: they sign in to a hosted saga, any of them may change it. Several in
+    #: troupe-style play; none: no one but the storyguide.
+    player_ids: list[str] = field(default_factory=list)
+    #: Played by everyone in the troupe (a shared grog): every player may
+    #: change it, whoever joins later too.
+    everyone_plays: bool = False
     setting: str = ""
     size: int = 0
     confidence_score: int = 0
@@ -109,6 +112,11 @@ class Background:
             d["confidence_score"] = d.pop("confidence")
         # Religion was free text before it was a list.
         d["religion"] = religion_from_text(str(d.get("religion") or ""))
+        # A character named one player before it could name several.
+        if "player_id" in d:
+            one = d.pop("player_id")
+            if one and not d.get("player_ids"):
+                d["player_ids"] = [one]
         return cls(**known_fields(cls, d))
 
 

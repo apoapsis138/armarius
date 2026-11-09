@@ -77,7 +77,7 @@ def test_a_spell_row_sorts_a_general_spell_by_number():
 def test_the_players_say_whom_they_play():
     saga = _saga()
     player = pl.add(saga, {"name": "Alex", "passcode": "x"})
-    saga.characters[0].background.player_id = player.id
+    saga.characters[0].background.player_ids = [player.id]
     assert scs.players_table(saga).rows == [["Alex", "Player", saga.characters[0].name]]
 
 

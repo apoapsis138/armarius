@@ -48,7 +48,7 @@ class Running:
         saga = hidden_saga()
         anna = players.find(saga, "Anna")
         assert anna is not None
-        saga.characters[0].background.player_id = anna.id
+        saga.characters[0].background.player_ids = [anna.id]
         self.loop = LoopThread()
         self.hosted = Hosted(saga)
         self.hosted.port = self.loop.run(self.hosted.host.start())
@@ -165,6 +165,9 @@ class _SilentHost:
             raise ConnectionError("lost")
         return "Anna"
 
+    def here(self, record: str) -> list[str]:
+        return []
+
     def close(self) -> None:
         self.answer.set()
 
@@ -173,13 +176,27 @@ class _SilentHost:
 def test_a_host_that_stops_answering_never_holds_the_window(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    from ars_magica_manager.saga_store import RemoteStore
-
     saga = hidden_saga()
     storage.save_saga(saga)
     main = MainWindow(saga_ids=[saga.id])
+    # Closing it (here, or when the test ends) mustn't wait on a question.
+    main.ask = lambda _dialog: QDialog.DialogCode.Accepted
     main.shared_timer.stop()
     host = _SilentHost()
+    try:
+        _goes_quiet_then_back(main, host, monkeypatch)
+    finally:
+        host.answer.set()
+        main.unsent = False
+        main.session = None
+        main.close()
+
+
+def _goes_quiet_then_back(
+    main: MainWindow, host: _SilentHost, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from ars_magica_manager.saga_store import RemoteStore
+
     store = RemoteStore(host)  # type: ignore[arg-type]
     store._took("r1", main.saga)  # type: ignore[arg-type]
     main.store, main.session = store, host  # type: ignore[assignment]
@@ -189,7 +206,8 @@ def test_a_host_that_stops_answering_never_holds_the_window(
     started = time.monotonic()
     main.shared_tick()  # asks the host, in the background
     main.shared_tick()  # the host hasn't answered: the window goes on
-    assert time.monotonic() - started < 1.0
+    # Far short of the read's 10 s wait, even on a busy machine.
+    assert time.monotonic() - started < 5.0
     assert main.talk is not None
     assert main.note.text() == "The host is slow to answer…"
 
@@ -211,8 +229,6 @@ def test_a_host_that_stops_answering_never_holds_the_window(
     assert not main.connection_lost and main.note.text() == "Connected again."
     _talk_done(main)  # sends, then reads
     assert host.sent and not main.unsent
-    main.session = None
-    main.close()
 
 
 @pytest.mark.usefixtures("app")

@@ -30,7 +30,8 @@ A covenant the troupe plays, as opposed to the covenants of the Region.
 _Avoid_: Player covenant, home covenant
 
 **Player character**:
-A character whose player is named, whichever covenant they belong to.
+A character whose players are named (one, several in troupe-style play, or
+everyone in the troupe), whichever covenant they belong to.
 _Avoid_: PC
 
 **Record**:

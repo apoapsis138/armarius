@@ -183,7 +183,8 @@ def plan_update(
     for name in PLACEMENT[kind]:
         setattr(incoming, name, getattr(record, name))
     if isinstance(record, Character) and isinstance(incoming, Character):
-        incoming.background.player_id = record.background.player_id
+        incoming.background.player_ids = list(record.background.player_ids)
+        incoming.background.everyone_plays = record.background.everyone_plays
     if isinstance(record, Covenant) and isinstance(incoming, Covenant):
         incoming.saga_id = record.saga_id
     plan = UpdatePlan(
