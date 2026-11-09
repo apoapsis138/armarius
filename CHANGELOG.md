@@ -123,6 +123,12 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.98.2 — 2026-11-09
+
+### Illuminatio
+
+- **Saga Management opens when you turn to it**: the saga page draws its Saga Management chapter, with the Sessions list, only when it is first opened, as The Region is. Nothing else changes.
+
 ## 3.98.1 — 2026-11-09
 
 ### Fundamenta

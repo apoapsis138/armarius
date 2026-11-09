@@ -1289,7 +1289,9 @@ class SagaPage(QWidget):
         self.codex.add(
             "Saga Management",
             "manage",
-            self._management(hooks.get("sessions")),
+            # Built when first opened, as The Region is: its Sessions list
+            # and buttons are drawn only for the storyguide who looks.
+            lambda: self._management(hooks.get("sessions")),
             "saga-management",
         )
         column.addWidget(self.codex, 1)
