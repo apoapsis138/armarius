@@ -1613,7 +1613,8 @@ While you play, your pages show what you may see, and you change only
 what's yours (your characters, their laboratories, familiars and season
 plans, and the covenants if your storyguide gave you covenant rights).
 Every few seconds your pages pick up what others saved, with a note at
-the window's foot.
+the window's foot. When your storyguide advances the season, your
+window turns the season's dial too.
 
 ### What a host can and can't see or do
 <!-- help: what-a-host-sees; gui -->

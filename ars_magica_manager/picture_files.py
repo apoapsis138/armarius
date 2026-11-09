@@ -34,7 +34,10 @@ def picture(folder: str, name: str) -> bytes | None:
     if _fetch is not None:
         key = (folder, name)
         if key not in _kept:
-            _kept[key] = _fetch(folder, name)
+            try:
+                _kept[key] = _fetch(folder, name)
+            except ConnectionError, TimeoutError:
+                return None  # the host can't be reached: asked again next time
         return _kept[key]
     root = storage.portraits_dir() if folder == PORTRAITS else storage.maps_dir()
     path = root / name

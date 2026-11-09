@@ -110,7 +110,11 @@ class RemoteStore:
     def save(self, saga: Saga) -> Saved:
         """Send each record changed since the last snapshot. A change the
         host refuses is listed; the rest are kept."""
-        now = asdict(saga)
+        return self.send(asdict(saga))
+
+    def send(self, now: dict[str, Any]) -> Saved:
+        """As save, for the saga as plain data (`asdict`, taken on the
+        window's thread, so this can run on another)."""
         overlaps: list[str] = []
         refused: list[str] = []
         for kind in sorted(CHANGEABLE):
@@ -127,7 +131,11 @@ class RemoteStore:
     def refresh(self, saga: Saga) -> Refreshed | None:
         """A new snapshot, if the host's saga changed in what this seat may
         see."""
-        revision, fresh = self.seat.read(self.revision)
+        return self.take(*self.seat.read(self.revision))
+
+    def take(self, revision: str, fresh: Saga | None) -> Refreshed | None:
+        """What `seat.read` brought (it may have been read on another
+        thread): the new snapshot and what changed in it, or None."""
         if fresh is None:
             return None
         changed = [

@@ -62,6 +62,28 @@ def test_another_copys_save_is_picked_up_with_a_note() -> None:
 
 
 @pytest.mark.usefixtures("app")
+def test_a_season_advanced_elsewhere_turns_the_dial_here(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    main, saga = _window()
+    turned: list[bool] = []
+    monkeypatch.setattr(main, "_turn_the_dial", lambda then: turned.append(True))
+    path = storage.saga_path(saga.id)
+    data = json.loads(path.read_text(encoding="utf-8"))
+    data["current_season"] = "Summer"
+    data["saved_by"] = "Hedda"
+    path.write_text(json.dumps(data), encoding="utf-8")
+    main.shared_tick()
+    assert turned == [True]
+    assert (
+        main.note.text() == f"Hedda advanced the season to Summer {saga.current_year}."
+    )
+    _saved_elsewhere(saga.id, "Leandro the Bold")  # no new season: no dial
+    main.shared_tick()
+    assert turned == [True]
+
+
+@pytest.mark.usefixtures("app")
 def test_nothing_is_picked_up_while_a_form_is_open() -> None:
     main, saga = _window()
     main._open = QDialog(main)  # a form open over the page

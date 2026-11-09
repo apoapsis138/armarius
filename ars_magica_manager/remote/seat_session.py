@@ -30,6 +30,9 @@ from .client import (
 from .vault import DeviceVault
 from .words import device_words, host_words, two_lines
 
+#: The longest a picture may be waited for while a page is drawn (seconds).
+PICTURE_WAIT = 4.0
+
 
 class InviteRefused(Exception):
     """The host didn't take the Invite: unknown, used or expired."""
@@ -193,4 +196,7 @@ class SeatSession:
             raise NotSaved(f"{kind}:{key}") from refused
 
     def picture(self, folder: str, name: str) -> bytes | None:
-        return self._loop.run(self._talk().picture(folder, name))
+        """A picture the saga names, asked for while a page is drawn: a few
+        seconds at most, so a slow or lost host never holds the window (the
+        page shows none; ConnectionError or TimeoutError)."""
+        return self._loop.run(self._talk().picture(folder, name), timeout=PICTURE_WAIT)

@@ -39,6 +39,10 @@ from .records import MAX_PICTURE, MAX_SNAPSHOT, PART_BYTES, REVISION_LENGTH
 from .secure import MAX_FRAME, ChannelClosed, ChannelError, SecureChannel
 from .vault import DeviceVault
 
+#: Seconds between the connection's pings; with no answer within half that,
+#: the connection is taken as lost.
+HEARTBEAT = 5.0
+
 
 def new_device_secret() -> str:
     """A fresh 128-bit secret for one request, as 32 hex digits."""
@@ -154,7 +158,12 @@ class RemoteClient:
         http = aiohttp.ClientSession()
         try:
             async with asyncio.timeout(timeout):
-                ws = await http.ws_connect(url, max_msg_size=MAX_FRAME)
+                # The heartbeat pings every few seconds and closes the
+                # connection if no answer comes: a dropped network is noticed
+                # in seconds, not when a request times out.
+                ws = await http.ws_connect(
+                    url, max_msg_size=MAX_FRAME, heartbeat=HEARTBEAT
+                )
                 try:
                     channel = await SecureChannel.connect(_ClientWire(ws), pin)
                 except BaseException:

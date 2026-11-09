@@ -9,18 +9,75 @@ Player first joins or rejoins, not when the app opens.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+import threading
+import time
+from collections.abc import Callable
+from concurrent.futures import Future
+from dataclasses import asdict, dataclass
+from typing import TYPE_CHECKING, Any
 
 from PySide6.QtWidgets import QDialog
 
 from .. import joined_games, picture_files
 from ..joined_games import JoinedGame
-from ..saga_store import LocalStore, RemoteStore
+from ..models import Saga
+from ..saga_store import LocalStore, Refreshed, RemoteStore, Saved
 from .forms import ConfirmDialog
 
 if TYPE_CHECKING:
     from ..remote.seat_session import SeatSession
     from .window import MainWindow
+
+#: How often a Joined game asks the host what changed (seconds); a change
+#: of the Player's goes at the next tick instead.
+ASK_EVERY = 5.0
+#: How long a talk with the host may run before the window says so.
+SLOW = 4.0
+
+
+@dataclass(frozen=True)
+class Synced:
+    """What one talk with the host brought back: what the Player's changes
+    met (None when there were none to send) and the host's saga, as
+    `seat.read` gives it."""
+
+    saved: Saved | None
+    read: tuple[str, Saga | None]
+
+
+@dataclass
+class Talk:
+    """One talk with the host, under way on a thread of its own so the
+    window never waits on the network (Active Object: the window starts it
+    and handles its result when it is done).
+
+    `kind` is "sync" (send the Player's changes, then read what changed)
+    or "reconnect". `edits` is the window's count of edits when it began:
+    a snapshot is taken only if nothing was edited since."""
+
+    kind: str
+    future: Future[Any]
+    session: SeatSession
+    edits: int
+    started: float
+    said_slow: bool = False
+
+
+def _in_background(work: Callable[[], Any]) -> Future[Any]:
+    """Run `work` on a daemon thread; its result (or error) in the Future.
+    A daemon, so a talk the host never answers doesn't keep the app from
+    closing."""
+    future: Future[Any] = Future()
+
+    def run() -> None:
+        try:
+            future.set_result(work())
+        # Every error is handed to the window, which says it or re-raises it.
+        except BaseException as problem:  # noqa: BLE001
+            future.set_exception(problem)
+
+    threading.Thread(target=run, name="talk with the host", daemon=True).start()
+    return future
 
 
 def join_game(window: MainWindow) -> None:
@@ -113,44 +170,129 @@ def end_joined(window: MainWindow) -> None:
     window.session = None
     window.store = LocalStore()
     window.unsent = False
+    # A talk still under way is left to end on its own; its result is
+    # dropped (tick checks it is the open game's).
+    window.talk = None
+    window.connection_lost = False
+    window.last_asked = time.monotonic()
     picture_files.use_host(None)
     if session is not None:
         session.close()
 
 
-def reconnect(window: MainWindow) -> None:
-    """The host stopped answering: try again (each tick until it answers),
-    with the key kept for the session."""
+def tick(window: MainWindow) -> None:
+    """A Joined game's tick: see to the talk under way, or start the next
+    one (the Player's changes sent, then what changed asked for) when one
+    is due. Never waits on the network."""
+    session, store = window.session, window.store
+    if session is None or not isinstance(store, RemoteStore):
+        return
+    talk = window.talk
+    if talk is not None and talk.session is not session:
+        window.talk = talk = None  # from a game since closed
+    if talk is not None:
+        if not talk.future.done():
+            if not talk.said_slow and time.monotonic() - talk.started > SLOW:
+                talk.said_slow = True
+                window.note.say("The host is slow to answer…", window.palette_)
+            return
+        window.talk = None
+        _finished(window, talk)
+        return
+    due = time.monotonic() - window.last_asked >= ASK_EVERY
+    if window.connection_lost:
+        if due:
+            _start(window, "reconnect", session.reconnect)
+        return
+    if window.unsent or due:
+        saga = window.saga
+        now = asdict(saga) if window.unsent and saga is not None else None
+
+        def sync() -> Synced:
+            saved = store.send(now) if now is not None else None
+            return Synced(saved, store.seat.read(store.revision))
+
+        _start(window, "sync", sync)
+
+
+def _start(window: MainWindow, kind: str, work: Callable[[], Any]) -> None:
+    session = window.session
+    assert session is not None  # tick checked
+    window.last_asked = time.monotonic()
+    window.talk = Talk(
+        kind, _in_background(work), session, window.edits, window.last_asked
+    )
+
+
+def _finished(window: MainWindow, talk: Talk) -> None:
+    """A talk is done: show what it brought, or what went wrong."""
     # start-up: as join_game.
     from ..remote.seat_session import NeedsPasscode, SeatEnded
-    from ..remote.secure import ChannelError
 
-    session = window.session
-    if session is None:
+    problem = talk.future.exception()
+    if talk.kind == "reconnect":
+        if problem is None:
+            window.connection_lost = False
+            window.note.say("Connected again.", window.palette_)
+        elif isinstance(problem, NeedsPasscode):
+            _needs_passcode(window)
+        elif isinstance(problem, SeatEnded):
+            _seat_ended(window, talk.session)
+        elif not isinstance(problem, ConnectionError | TimeoutError):
+            raise problem
         return
+    if isinstance(problem, ConnectionError | TimeoutError):
+        _lost(window)
+        return
+    if isinstance(problem, ValueError):
+        window.unreadable(problem)
+        return
+    if problem is not None:
+        raise problem
+    synced: Synced = talk.future.result()
+    edited_since = window.edits != talk.edits
+    if synced.saved is not None:
+        window.unsent = edited_since
+        if synced.saved.refused:
+            window.refused(synced.saved.refused)
+    if edited_since:
+        return  # the Player changed more meanwhile: sent, then read, next tick
+    store = window.store
+    assert isinstance(store, RemoteStore)  # tick checked
+    found: Refreshed | None = store.take(*synced.read)
+    if found is not None:
+        window.picked_up(found)
+
+
+def _lost(window: MainWindow) -> None:
+    """The host stopped answering: said at once, and tried again each tick
+    (in the background) until it answers, with the key kept for the
+    session. Changes made meanwhile wait."""
+    window.connection_lost = True
+    window.last_asked = 0.0  # try again at the next tick
     window.note.say("Connection lost; trying again…", window.palette_)
-    try:
-        session.reconnect()
-    except ChannelError, ConnectionError, TimeoutError:
-        return  # the next tick tries again
-    except NeedsPasscode:
-        window.end_joined()
-        window.shelf_again()
-        window.tell(
-            "Sign In Again",
-            "Your passcode changed on the host. Open the game from the shelf "
-            "to sign in with the new one.",
-        )
-        return
-    except SeatEnded:
-        game = next(
-            (g for g in joined_games.listed() if g.pin == session.pin),
-            JoinedGame("", "this game", session.url, session.pin),
-        )
-        window.end_joined()
-        window.shelf_again()
-        _ended(window, game)
-        return
-    window.note.say("Connected again.", window.palette_)
-    if window.unsent:
-        window.save_saga()
+
+
+def reconnect(window: MainWindow) -> None:
+    """The host stopped answering a talk the window made itself."""
+    _lost(window)
+
+
+def _needs_passcode(window: MainWindow) -> None:
+    window.end_joined()
+    window.shelf_again()
+    window.tell(
+        "Sign In Again",
+        "Your passcode changed on the host. Open the saga from the shelf "
+        "to sign in with the new one.",
+    )
+
+
+def _seat_ended(window: MainWindow, session: SeatSession) -> None:
+    game = next(
+        (g for g in joined_games.listed() if g.pin == session.pin),
+        JoinedGame("", "this saga", session.url, session.pin),
+    )
+    window.end_joined()
+    window.shelf_again()
+    _ended(window, game)

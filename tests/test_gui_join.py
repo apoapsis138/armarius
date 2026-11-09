@@ -6,6 +6,8 @@ sent back, and leaving it."""
 from __future__ import annotations
 
 import os
+import threading
+import time
 from collections.abc import Iterator
 
 import pytest
@@ -100,6 +102,16 @@ def _joined_window(running: Running) -> tuple[MainWindow, JoinWindow]:
     return main, dialog
 
 
+def _talk_done(main: MainWindow, seconds: float = 10.0) -> None:
+    """Tick until the talk with the host it starts has finished."""
+    end = time.monotonic() + seconds
+    main.shared_tick()  # starts the talk
+    while main.talk is not None and time.monotonic() < end:
+        time.sleep(0.02)
+        main.shared_tick()
+    assert main.talk is None, "the talk with the host didn't finish"
+
+
 @pytest.mark.usefixtures("app")
 def test_a_player_joins_reads_and_changes_their_character(running: Running) -> None:
     main, dialog = _joined_window(running)
@@ -112,11 +124,95 @@ def test_a_player_joins_reads_and_changes_their_character(running: Running) -> N
     assert [g.saga_name for g in joined_games.listed()] == [saga.name]
     saga.characters[0].name = "Leandro the Bold"
     main.save_saga()
+    assert main.unsent  # sent by the tick, in the background
+    _talk_done(main)
+    assert not main.unsent
     assert storage.load_saga(running.hosted.saga.id).characters[0].name == (
         "Leandro the Bold"
     )
     main.end_joined()
     assert main.session is None and not main.store.remote
+
+
+class _SilentHost:
+    """A seat whose host goes quiet: each read waits until `answer` is set,
+    then fails while `down`, as a dropped network does."""
+
+    url, pin = "wss://example.test/remote", "pin"
+
+    def __init__(self) -> None:
+        self.answer = threading.Event()
+        self.down = True
+        self.sent: list[str] = []
+        self.revision = ""
+
+    def read(self, since: str = "") -> tuple[str, object]:
+        self.answer.wait(10)
+        if self.down:
+            raise ConnectionError("lost")
+        return since, None  # nothing new
+
+    def send_change(
+        self, kind: str, key: str, before: object, after: object
+    ) -> list[str]:
+        if self.down:
+            raise ConnectionError("lost")
+        self.sent.append(f"{kind}:{key}")
+        return []
+
+    def reconnect(self) -> str:
+        if self.down:
+            raise ConnectionError("lost")
+        return "Anna"
+
+    def close(self) -> None:
+        self.answer.set()
+
+
+@pytest.mark.usefixtures("app")
+def test_a_host_that_stops_answering_never_holds_the_window(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from ars_magica_manager.saga_store import RemoteStore
+
+    saga = hidden_saga()
+    storage.save_saga(saga)
+    main = MainWindow(saga_ids=[saga.id])
+    main.shared_timer.stop()
+    host = _SilentHost()
+    store = RemoteStore(host)  # type: ignore[arg-type]
+    store._took("r1", main.saga)  # type: ignore[arg-type]
+    main.store, main.session = store, host  # type: ignore[assignment]
+    monkeypatch.setattr(joined, "SLOW", 0.0)
+    main.last_asked = 0.0  # due now
+
+    started = time.monotonic()
+    main.shared_tick()  # asks the host, in the background
+    main.shared_tick()  # the host hasn't answered: the window goes on
+    assert time.monotonic() - started < 1.0
+    assert main.talk is not None
+    assert main.note.text() == "The host is slow to answer…"
+
+    host.answer.set()  # the read fails: the connection is lost
+    while main.talk is not None and not main.talk.future.done():
+        time.sleep(0.01)
+    main.shared_tick()
+    assert main.connection_lost
+    assert main.note.text() == "Connection lost; trying again…"
+
+    assert main.saga is not None
+    main.saga.characters[0].name = "Leandro the Bold"
+    main.save_saga()  # kept, said, and sent once the host is back
+    assert main.unsent and "Not sent yet" in main.note.text()
+
+    host.down = False
+    main.last_asked = 0.0
+    _talk_done(main)  # reconnects
+    assert not main.connection_lost and main.note.text() == "Connected again."
+    _talk_done(main)  # sends, then reads
+    assert host.sent and not main.unsent
+    main.session = None
+    main.close()
 
 
 @pytest.mark.usefixtures("app")

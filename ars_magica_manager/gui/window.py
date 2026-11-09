@@ -91,7 +91,7 @@ from ..joined_games import JoinedGame
 from ..markup import escape
 from ..models import Character, Covenant, Familiar, Laboratory, Player, Saga
 from ..paths import APP_NAME
-from ..saga_store import LocalStore, SagaStore
+from ..saga_store import LocalStore, Refreshed, SagaStore
 from ..sheets import laboratory as ls
 from . import atlas as atlas_page
 from . import (
@@ -321,6 +321,18 @@ SPOT_CHAPTERS: dict[tuple[str, str], str] = {
 
 
 class MainWindow(QMainWindow):
+    # A Joined game's talk with its host (joined.tick): set on the
+    # instance as they change; these are where each starts.
+    #: How many times the saga was saved (edited): a talk takes the host's
+    #: snapshot only if none came since it began.
+    edits: int = 0
+    #: The talk under way in the background, if any.
+    talk: joined.Talk | None = None
+    #: Whether the host stopped answering (tried again each tick), and
+    #: when it was last asked (time.monotonic).
+    connection_lost: bool = False
+    last_asked: float = 0.0
+
     def __init__(self, saga_ids: list[str] | None = None) -> None:
         super().__init__()
         self.setWindowTitle("Armarius")
@@ -379,7 +391,7 @@ class MainWindow(QMainWindow):
         self.store: SagaStore = LocalStore()
         #: A Joined game's conversation with its host, while one is open.
         self.session: SeatSession | None = None
-        #: Changes made while a Joined game's host couldn't be reached.
+        #: A Joined game's changes not yet taken by the host.
         self.unsent = False
         #: What another copy of a hosted saga just saved, said at the foot.
         self.note = NoteStrip(self)
@@ -747,36 +759,52 @@ class MainWindow(QMainWindow):
         saga = self.saga
         if saga is None:
             return
-        try:
-            saved = self.store.save(saga)
-        except ConnectionError, TimeoutError:
+        self.edits += 1
+        if self.store.remote:
+            # Sent by the next tick, in the background: the window never
+            # waits on the network.
             self.unsent = True
-            self.note.say(
-                "Not sent yet: the host can't be reached. It goes when the "
-                "connection is back.",
-                self.palette_,
-            )
+            if self.connection_lost:
+                self.note.say(
+                    "Not sent yet: the host can't be reached. It goes when the "
+                    "connection is back.",
+                    self.palette_,
+                )
             return
-        self.unsent = False
-        if not self.store.remote:
-            return
-        if saved.refused:
-            self.tell(
-                "Not Saved",
-                "The host didn't take your change to "
-                + escape(", ".join(saved.refused))
-                + ": it isn't yours to change. The page shows the host's saga again.",
+        self.store.save(saga)
+
+    def refused(self, refused: list[str]) -> None:
+        """The host didn't take some of a Joined game's changes."""
+        self.tell(
+            "Not Saved",
+            "The host didn't take your change to "
+            + escape(", ".join(refused))
+            + ": it isn't yours to change. The page shows the host's saga again.",
+        )
+
+    def unreadable(self, problem: Exception) -> None:
+        """What another copy saved (or the host sent) can't be read: said
+        once, the saga in hand kept."""
+        if not self._unreadable:
+            said = (
+                f"{problem} Yours is kept."
+                if self.store.remote
+                else f"Another copy's save couldn't be read ({problem}); yours is kept."
             )
-        self.pick_up()
+            self.note.say(said, self.palette_)
+        self._unreadable = True
 
     def shared_tick(self) -> None:
         """Pick up another copy's save, as the terminal does: the page
         drawn again with a note saying who changed what. Waits while a
-        form or question is open, so nothing being typed is touched."""
+        form or question is open, so nothing being typed is touched. A
+        Joined game's talk with its host runs in the background
+        (joined.tick)."""
         if self.saga is None or self._step_open():
             return
-        if self.store.remote and self.unsent:
-            self.save_saga()
+        if self.store.remote:
+            joined.tick(self)
+            return
         self.pick_up()
 
     def pick_up(self) -> None:
@@ -784,24 +812,31 @@ class MainWindow(QMainWindow):
         saga = self.saga
         if saga is None:
             return
+        # Read before the refresh, which may change this saga in place.
+        season_was = (saga.current_year, saga.current_season)
         try:
             found = self.store.refresh(saga)
         except ValueError as problem:
-            if not self._unreadable:
-                said = (
-                    f"{problem} Yours is kept."
-                    if self.store.remote
-                    else f"Another copy's save couldn't be read ({problem}); yours is kept."
-                )
-                self.note.say(said, self.palette_)
-            self._unreadable = True
+            self.unreadable(problem)
             return
         except ConnectionError, TimeoutError:
             self.reconnect()
             return
+        if found is not None:
+            self.picked_up(found, season_was)
+
+    def picked_up(
+        self, found: Refreshed, season_was: tuple[int, str] | None = None
+    ) -> None:
+        """Show what another copy (or the host) saved, and say so; the
+        season's dial turns if it moved (`season_was`: the season before,
+        for a saga the refresh changed in place)."""
         self._unreadable = False
-        if found is None:
+        saga = self.saga
+        if saga is None:
             return
+        if season_was is None:
+            season_was = (saga.current_year, saga.current_season)
         if found.saga is not saga:
             saga = self.saga = found.saga
             catalog.use_saga(saga)
@@ -813,13 +848,23 @@ class MainWindow(QMainWindow):
         if place is not None and place.id and open_record is None:
             self.go(self._up_to(SAGA))
             self.note.say(f"{who} deleted what you had open.", self.palette_)
-            return
-        self.redraw()
-        names = {record_id for _kind, record_id in changed}
-        if open_record is not None and open_record.id in names:
-            self.note.say(f"{who} changed {open_record.name}; reloaded.", self.palette_)
         else:
-            self.note.say(f"Updated by {who}.", self.palette_)
+            self.redraw()
+            names = {record_id for _kind, record_id in changed}
+            if open_record is not None and open_record.id in names:
+                self.note.say(
+                    f"{who} changed {open_record.name}; reloaded.", self.palette_
+                )
+            else:
+                self.note.say(f"Updated by {who}.", self.palette_)
+        if (saga.current_year, saga.current_season) != season_was:
+            # Another copy advanced the season: the dial turns here too.
+            self.note.say(
+                f"{who} advanced the season to {saga.current_season} "
+                f"{saga.current_year}.",
+                self.palette_,
+            )
+            self._turn_the_dial(lambda: None)
 
     def _shown_record(self, place: Place | None) -> Any:
         """The record a place shows, if it shows one and it is still there."""

@@ -123,6 +123,13 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.92.0 — 2026-11-09
+
+### Sodales
+
+- **A joined saga never freezes when the connection drops**: everything a player's copy says to the host now happens in the background. If the host is slow the window says so, and if the connection drops it says "Connection lost; trying again…" within seconds and keeps trying, while you go on working. What you change meanwhile is kept and sent once the host answers again. A picture the host can't send in time is simply left out until it can.
+- **A player's window turns the season's dial too**: when the storyguide advances the season, every player's window turns the dial and says who advanced it, as the storyguide's own does.
+
 ## 3.91.1 — 2026-11-08
 
 ### Sodales
