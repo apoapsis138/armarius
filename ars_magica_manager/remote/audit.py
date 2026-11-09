@@ -34,8 +34,12 @@ HOST_KEY_ROTATED = "host_key_rotated"
 RECORDS_READ = "records_read"
 RECORD_CHANGED = "record_changed"
 CHANGE_REFUSED = "change_refused"
+PASSCODE_CHANGED = "passcode_changed"
+RESET_ASKED = "reset_asked"
 EVENTS = frozenset(
     {
+        PASSCODE_CHANGED,
+        RESET_ASKED,
         RECORDS_READ,
         RECORD_CHANGED,
         CHANGE_REFUSED,

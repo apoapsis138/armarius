@@ -33,7 +33,9 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from ..players import MIN_PASSCODE, passcode_problem
 from ..remote.client import (
+    ChangeNotSaved,
     NoCredential,
     SignInError,
     UnreadableReply,
@@ -365,6 +367,14 @@ class PasscodeWindow(Sheet):
         self.passcode = QLineEdit()
         self.passcode.setEchoMode(QLineEdit.EchoMode.Password)
         self.column.addWidget(self.passcode)
+        self.forgot = QPushButton("I've forgotten my passcode")
+        self.forgot.setFlat(True)
+        self.forgot.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.forgot.clicked.connect(self._ask_reset)
+        self.column.addWidget(self.forgot, 0, Qt.AlignmentFlag.AlignLeft)
+        self.asked = text("", p["label"], serif(12.5, italic=True), wrap=True)
+        self.asked.hide()
+        self.column.addWidget(self.asked)
         self.save.clicked.connect(self._sign_in)
         self.finish()
         self.setMinimumWidth(NARROWEST)
@@ -378,6 +388,95 @@ class PasscodeWindow(Sheet):
         try:
             _busy(self.session.connect)
             _busy(lambda: self.session.sign_in(self.passcode.text()))
+        except SIGN_IN_ERRORS as problem:
+            self.refuse(sign_in_problem(problem))
+            return
+        self.accept()
+
+    def _ask_reset(self) -> None:
+        """Ask the storyguide for a new passcode, from this device's seat."""
+        try:
+            _busy(self.session.ask_reset)
+        except SIGN_IN_ERRORS as problem:
+            self.refuse(sign_in_problem(problem))
+            return
+        self.error.hide()
+        self.forgot.hide()
+        self.asked.setText(
+            "Your storyguide has been asked. They'll check it's really you, "
+            "then give you a new passcode: type it here when they do."
+        )
+        self.asked.show()
+        self.adjustSize()  # room for the note's lines
+
+
+class ChangePasscodeWindow(Sheet):
+    """Change Passcode: the current one, then the new one twice. The new
+    one is checked here and only its scrambled form is sent (ADR 0013)."""
+
+    def __init__(
+        self,
+        game_name: str,
+        session: SeatSession,
+        p: Palette,
+        parent: QWidget | None = None,
+    ) -> None:
+        super().__init__(f"Change Passcode for {game_name}", p, "Change", parent)
+        self.session = session
+        self.current = self._field(p, "Your passcode now")
+        self.new = self._field(p, "The new passcode")
+        self.column.addWidget(
+            text(
+                f"At least {MIN_PASSCODE} characters: a few words you'll "
+                'remember, such as "grey owl over the mill".',
+                p["label"],
+                serif(12.5, italic=True),
+                wrap=True,
+            )
+        )
+        self.again = self._field(p, "The new one again")
+        self.save.clicked.connect(self._change)
+        self.finish()
+        self.setMinimumWidth(NARROWEST)
+
+    def _field(self, p: Palette, label: str) -> QLineEdit:
+        self.column.addWidget(text(label, p["foreground"], serif(13)))
+        field = QLineEdit()
+        field.setEchoMode(QLineEdit.EchoMode.Password)
+        self.column.addWidget(field)
+        return field
+
+    def showEvent(self, event: QShowEvent) -> None:
+        super().showEvent(event)
+        QTimer.singleShot(0, self.current.setFocus)
+
+    def problem(self) -> str | None:
+        """What's wrong before anything is sent, or None."""
+        if not self.current.text():
+            return "Type your passcode now first."
+        weak = passcode_problem(self.new.text())
+        if weak is not None:
+            return weak
+        if self.new.text() != self.again.text():
+            return "The two new passcodes differ: type them again."
+        if self.new.text() == self.current.text():
+            return "That's the passcode you have now."
+        return None
+
+    def _change(self) -> None:
+        problem = self.problem()
+        if problem is not None:
+            self.refuse(problem)
+            return
+        try:
+            _busy(
+                lambda: self.session.change_passcode(
+                    self.current.text(), self.new.text()
+                )
+            )
+        except ChangeNotSaved:
+            self.refuse("The host didn't take the new passcode. Try again.")
+            return
         except SIGN_IN_ERRORS as problem:
             self.refuse(sign_in_problem(problem))
             return

@@ -758,6 +758,9 @@ class MainWindow(QMainWindow):
     def leave_game(self, game: JoinedGame) -> None:
         joined.leave_game(self, game)
 
+    def change_passcode(self, game: JoinedGame) -> None:
+        joined.change_passcode(self, game)
+
     def end_joined(self) -> None:
         joined.end_joined(self)
 
@@ -1552,7 +1555,11 @@ class MainWindow(QMainWindow):
                 self.change_save_folder,
                 str(paths.data_dir()),
                 joined=JoinedShelf(
-                    joined_games.listed(), self.join_game, self.rejoin, self.leave_game
+                    joined_games.listed(),
+                    self.join_game,
+                    self.rejoin,
+                    self.leave_game,
+                    self.change_passcode,
                 ),
             )
         if place.kind == SAGA:

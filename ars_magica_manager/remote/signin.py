@@ -82,7 +82,22 @@ def signin_specs(
         session.still_allowed = lambda: _still_good(devices, device, player_of)
         return Reply("signed_in", {"player": player.name})
 
+    def ask_reset(session: Session, body: Body) -> Reply:
+        """A forgotten passcode: asked by a device the host knows, so only a
+        seat the storyguide approved can ask; anything else gets the one
+        refusal. The storyguide confirms by voice and sets a new one."""
+        device = devices.find(str(body["credential"]))
+        if device is None or player_of(device.player_id) is None:
+            raise Refused
+        devices.ask_reset(device)
+        return Reply("reset_asked")
+
     return [
+        MessageSpec(
+            "ask_reset",
+            {"credential": Field(str, max_length=CREDENTIAL_MAX)},
+            ask_reset,
+        ),
         MessageSpec(
             "begin_signin",
             {"credential": Field(str, max_length=CREDENTIAL_MAX)},

@@ -20,6 +20,7 @@ from test_remote_records import Hosted
 from test_seat_view import LEAKS, hidden_saga
 
 from ars_magica_manager import joined_games, picture_files, players, storage
+from ars_magica_manager.commands import Form
 from ars_magica_manager.gui import joined, pictures
 from ars_magica_manager.gui.join import JoinWindow
 from ars_magica_manager.gui.themes import PALETTES
@@ -32,6 +33,7 @@ from ars_magica_manager.remote.seat_session import SeatSession
 from ars_magica_manager.remote.vault import DeviceVault
 
 PASSCODE = "a long enough passcode"
+NEW_PASSCODE = "grey owl over the mill"
 
 
 @pytest.fixture(scope="module")
@@ -262,6 +264,62 @@ def test_the_title_page_opens_the_joined_saga_played_last(running: Running) -> N
     )
     assert page.choices[0].key == tp.OPEN and page.saga_id == game.saga_id
     assert page.choices[0].detail == game.saga_name
+
+
+@pytest.mark.usefixtures("app")
+def test_a_player_changes_their_passcode_and_stays_signed_in(
+    running: Running,
+) -> None:
+    from ars_magica_manager.gui.join import ChangePasscodeWindow
+
+    main, dialog = _joined_window(running)
+    session = dialog.session
+    assert session is not None
+    joined.open_joined(main, session)
+    window = ChangePasscodeWindow("Saga", session, PALETTES[0], main)
+    window.current.setText("not the passcode at all")
+    window.new.setText(NEW_PASSCODE)
+    window.again.setText("something else entirely")
+    window._change()
+    assert "differ" in window.error.text()  # nothing sent yet
+    window.again.setText(NEW_PASSCODE)
+    window._change()
+    assert window.error.text() == "That passcode isn't right."
+    window.current.setText(PASSCODE)
+    window._change()
+    assert window.result() == QDialog.DialogCode.Accepted
+    anna = players.player_by_id(
+        storage.load_saga(running.hosted.saga.id), running.hosted.anna.id
+    )
+    assert anna is not None and players.passcode_matches(anna, NEW_PASSCODE)
+    # The key kept for reconnecting is the new passcode's.
+    session.close_connection()
+    assert session.reconnect() == "Anna"
+    main.end_joined()
+
+
+@pytest.mark.usefixtures("app")
+def test_a_forgotten_passcode_is_asked_for_and_answered(running: Running) -> None:
+    from ars_magica_manager.forms.remote_seats import NEW_PASSCODE as ASKS
+    from ars_magica_manager.forms.remote_seats import SeatsDesk
+    from ars_magica_manager.gui.join import PasscodeWindow
+
+    main, dialog = _joined_window(running)
+    assert dialog.session is not None
+    dialog.session.close()
+    seat = running.session(running.url, running.hosted.pin)
+    window = PasscodeWindow("Saga", seat, PALETTES[0], main)
+    window._ask_reset()
+    assert window.asked.isVisibleTo(window) and not window.forgot.isVisibleTo(window)
+    seat.close()
+
+    desk = SeatsDesk(storage.load_saga(running.hosted.saga.id))
+    [row] = [r for r in desk.requests() if r.asks == ASKS]
+    assert row.player == "Anna"
+    form = desk.set_new_passcode(row.id)
+    assert isinstance(form, Form)
+    form.apply({"name": "Anna", "role": "player", "passcode": NEW_PASSCODE})
+    assert [r for r in desk.requests() if r.asks == ASKS] == []
 
 
 @pytest.mark.usefixtures("app")

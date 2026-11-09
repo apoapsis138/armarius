@@ -212,11 +212,12 @@ class JoinedShelf:
     join: Callable[[], None]
     rejoin: Callable[[JoinedGame], None]
     leave: Callable[[JoinedGame], None]
+    change_passcode: Callable[[JoinedGame], None] = lambda _game: None
 
 
 def _joined_card(game: JoinedGame, p: Palette, joined: JoinedShelf) -> ClickableCard:
-    """A Joined game as a card: its name, marked hosted elsewhere, with Leave
-    Game; choosing it signs in again."""
+    """A Joined game as a card: its name, marked hosted elsewhere, with
+    Change Passcode and Leave Saga; choosing it signs in again."""
     card = ClickableCard(p, pad=16)
     card_title(
         card,
@@ -225,10 +226,23 @@ def _joined_card(game: JoinedGame, p: Palette, joined: JoinedShelf) -> Clickable
         p,
         symbol_label(artwork.icon("players"), p),
     )
+    change = edit_button(
+        "Change Passcode",
+        p,
+        lambda _checked=False: joined.change_passcode(game),
+        "edit",
+    )
     leave = edit_button(
         "Leave Saga", p, lambda _checked=False: joined.leave(game), "delete"
     )
-    card.column.addWidget(leave, 0, Qt.AlignmentFlag.AlignRight)
+    row = QHBoxLayout()
+    row.setContentsMargins(0, 0, 0, 0)
+    row.addStretch(1)
+    row.addWidget(change)
+    row.addWidget(leave)
+    buttons = QWidget()
+    buttons.setLayout(row)
+    card.column.addWidget(buttons)
     card.clicked = lambda: joined.rejoin(game)
     return card
 

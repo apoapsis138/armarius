@@ -67,6 +67,17 @@ class RemotePasscodes(SharedFile):
                 self._salts.pop(player.id, None)
             self._save()
 
+    def allow(self, player: Player) -> None:
+        """Allow `player`'s passcode as it is now, which they set themselves
+        from their seat: their app checked its length, since the host only
+        ever sees its scrambled form (ADR 0013)."""
+        salt = _salt(player)
+        if not salt:
+            raise ValueError("The player has no passcode.")
+        with self._fresh():
+            self._salts[player.id] = salt
+            self._save()
+
     def forget(self, player_id: str) -> None:
         """A player was deleted."""
         with self._fresh():

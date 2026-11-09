@@ -25,12 +25,18 @@ import time
 from collections.abc import Callable
 from dataclasses import asdict, dataclass
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from .. import shapes
 from ..files import write_atomic
 from . import audit
 from .folder import SharedFile, remote_file
-from .invites import Request
+
+if TYPE_CHECKING:
+    # Only the type: the invites module loads the cryptography library,
+    # which the app leaves unloaded at start-up (saga_content reads this
+    # module).
+    from .invites import Request
 
 DAY = 24 * 3600.0
 DEFAULT_IDLE_DAYS = 90
@@ -58,6 +64,9 @@ class Device:
     locked_until: float = 0.0
     ended: float = 0.0
     end_reason: str = ""
+    #: When the player asked, from this device, for a new passcode (0: not
+    #: asking). The storyguide answers by setting one.
+    reset_asked: float = 0.0
 
 
 @dataclass
@@ -221,6 +230,39 @@ class DeviceBook(SharedFile):
         with self._fresh():
             self._now(device).last_seen = self._clock()
             self._save()
+
+    # -- a forgotten passcode ------------------------------------------------
+
+    def ask_reset(self, device: Device) -> None:
+        """The player has forgotten their passcode and asks, from `device`,
+        for a new one."""
+        with self._fresh():
+            device = self._now(device)
+            device.reset_asked = self._clock()
+            self._save()
+        self._note(audit.RESET_ASKED, device)
+
+    def resets(self) -> list[Device]:
+        """The live devices asking for a new passcode, longest waiting first."""
+        with self._fresh():
+            asking = [
+                d for d in self._devices.values() if d.reset_asked and not d.ended
+            ]
+            return sorted(asking, key=lambda d: d.reset_asked)
+
+    def reset_done(self, player_id: str) -> None:
+        """The player's passcode was set again (or the ask turned down): no
+        device of theirs is asking any more."""
+        with self._fresh():
+            asking = [
+                d
+                for d in self._devices.values()
+                if d.player_id == player_id and d.reset_asked
+            ]
+            for device in asking:
+                device.reset_asked = 0.0
+            if asking:
+                self._save()
 
     # -- ending ---------------------------------------------------------------
 

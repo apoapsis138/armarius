@@ -1,6 +1,6 @@
 [project]
 name = "ars-magica-manager"
-version = "3.95.0"
+version = "3.96.0"
 description = "Armarius, a saga manager for Ars Magica: a GM-facing tool for Ars Magica 5th Edition covenants, characters, laboratories, and libraries."
 readme = "README.md"
 license = "GPL-3.0-only"
@@ -62,6 +62,10 @@ ignore = ["UP045", "ISC004", "TRY004"]
 extend-select = ["PLR0915"]
 
 [tool.pyright]
+# The project's own environment, so an editor's pyright sees the same
+# libraries as `uv run pyright` (and stops calling them missing).
+venvPath = "."
+venv = ".venv"
 reportMissingParameterType = "error"
 include = ["ars_magica_manager", "tools", "main.py"]
 typeCheckingMode = "basic"

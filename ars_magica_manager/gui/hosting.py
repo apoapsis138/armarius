@@ -43,7 +43,7 @@ from PySide6.QtWidgets import (
 from .. import hosting
 from ..commands import Command, Empty, Finished, Picked, Refuse, drive
 from ..forms import hosting as hosting_forms
-from ..forms.remote_seats import IssuedInvite, SeatsDesk
+from ..forms.remote_seats import NEW_PASSCODE, IssuedInvite, SeatsDesk
 from ..remote.identity import NoKeychainError
 from ..remote.plan import RemotePlan
 from . import pictures, sounds
@@ -374,18 +374,26 @@ class HostingWindow(Sheet):
         column = QVBoxLayout(tab)
         self.issue = edit_button("Issue Invite", p, self._issue, "players")
         self.approve_button = edit_button("Approve", p, self._approve, "edit")
+        self.new_passcode = edit_button(
+            "Set New Passcode", p, self._set_new_passcode, "edit"
+        )
         self.reject_button = edit_button("Reject", p, self._reject, "delete")
         column.addLayout(
-            self._buttons(self.issue, self.approve_button, self.reject_button)
+            self._buttons(
+                self.issue, self.approve_button, self.new_passcode, self.reject_button
+            )
         )
         self.requests = ledger_table(
-            ["Player", "Device", "Its three words", "Asked"], p
+            ["Player", "Device", "Asks for", "Its three words", "Asked"], p
         )
+        self.reset_rows: set[str] = set()
+        self.requests.itemSelectionChanged.connect(self._request_chosen)
         column.addWidget(self.requests, 1)
         self.no_requests = text(
-            "No device is waiting. When a player redeems an Invite, their "
-            "device shows here: ask them to read you its three words, then "
-            "Approve.",
+            "No one is waiting. When a player redeems an Invite, their device "
+            "shows here: ask them to read you its three words, then Approve. "
+            "A player who has forgotten their passcode asks here too: check "
+            "it's really them, then Set New Passcode.",
             p["dim"],
             serif(12.5, italic=True),
             wrap=True,
@@ -410,6 +418,15 @@ class HostingWindow(Sheet):
         self.seats.itemSelectionChanged.connect(self._seat_chosen)
         column.addWidget(self.seats, 1)
         return tab
+
+    def _request_chosen(self) -> None:
+        """Approve acts on a device's request, Set New Passcode on a
+        player's ask for one, Reject on either."""
+        chosen = ledger_choice(self.requests)
+        resetting = chosen in self.reset_rows
+        self.approve_button.setEnabled(chosen is not None and not resetting)
+        self.new_passcode.setEnabled(resetting)
+        self.reject_button.setEnabled(chosen is not None)
 
     def _seat_chosen(self) -> None:
         """Revoke acts on a live seat only."""
@@ -476,12 +493,12 @@ class HostingWindow(Sheet):
         requests = self.desk.requests()
         fill_ledger(
             self.requests,
-            [(r.id, [r.player, r.device, r.words, r.asked]) for r in requests],
+            [(r.id, [r.player, r.device, r.asks, r.words, r.asked]) for r in requests],
         )
+        self.reset_rows = {r.id for r in requests if r.asks == NEW_PASSCODE}
         self.requests.setVisible(bool(requests))
         self.no_requests.setVisible(not requests)
-        self.approve_button.setEnabled(bool(requests))
-        self.reject_button.setEnabled(bool(requests))
+        self._request_chosen()
         waiting = f" ({len(requests)} waiting)" if requests else ""
         self.setWindowTitle(TITLE + waiting)
         self.tabs.setTabText(
@@ -587,6 +604,11 @@ class HostingWindow(Sheet):
         chosen = ledger_choice(self.requests)
         if chosen is not None:
             self.run(self.desk.approve(chosen))
+
+    def _set_new_passcode(self) -> None:
+        chosen = ledger_choice(self.requests)
+        if chosen is not None:
+            self.run(self.desk.set_new_passcode(chosen))
 
     def _reject(self) -> None:
         chosen = ledger_choice(self.requests)

@@ -14,6 +14,7 @@ player's half of the Remote Proxy (saga_store.py).
 
 from __future__ import annotations
 
+import secrets
 from typing import Any
 
 from .. import players
@@ -166,6 +167,46 @@ class SeatSession:
             return self._keys[salt]
 
         return self._signed_in(key)
+
+    def change_passcode(self, old: str, new: str) -> None:
+        """Change this Player's passcode (ADR 0013): `new` checked here (the
+        host never sees it), then, on a connection of its own so the
+        game's own talks go on, a fresh sign-in with `old` and the new
+        one's digest under a fresh salt sent. The key kept for reconnecting
+        becomes the new one's. ValueError for a new passcode too short;
+        SignInError (a wrong `old`, or a lock-out), SeatEnded, ChangeNotSaved
+        or ChannelError otherwise."""
+        problem = players.passcode_problem(new)
+        if problem is not None:
+            raise ValueError(problem)
+        salt = secrets.token_bytes(16)
+
+        async def change() -> bytes:
+            client = await RemoteClient.connect(self.url, self.pin)
+            async with client:
+                await client.hello()
+                try:
+                    await client.sign_in(old, self.vault)
+                except SignInError as error:
+                    if error.kind == "refused":
+                        raise SeatEnded("This device's seat has ended.") from error
+                    raise
+                digest = players.passcode_digest(new, salt)
+                await client.change_passcode(salt, digest)
+                return digest
+
+        digest = self._loop.run(change(), timeout=60)
+        self._keys = {salt: digest}
+
+    def ask_reset(self) -> None:
+        """Ask the storyguide for a new passcode, from this device's seat:
+        connects first. SeatEnded when the host no longer knows the device;
+        NoCredential or ChannelError otherwise."""
+        self.connect()
+        try:
+            self._loop.run(self._talk().ask_reset(self.vault))
+        except SignInError as error:
+            raise SeatEnded("This device's seat has ended.") from error
 
     def forget_seat(self) -> None:
         """Leave the game: the credential goes from the keychain."""

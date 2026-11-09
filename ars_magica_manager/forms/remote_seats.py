@@ -54,6 +54,8 @@ EVENT_LABELS: dict[str, str] = {
     audit.RECORDS_READ: "Read the saga",
     audit.RECORD_CHANGED: "Changed",
     audit.CHANGE_REFUSED: "Change refused",
+    audit.PASSCODE_CHANGED: "Changed their passcode",
+    audit.RESET_ASKED: "Asked for a new passcode",
 }
 
 
@@ -120,12 +122,26 @@ class SeatsDesk:
         )
 
     def requests(self) -> list[RequestRow]:
-        return [
+        """What waits on the storyguide: devices asking for a seat, then
+        players asking, from their seat, for a new passcode."""
+        seats = [
             RequestRow(
                 r.id, self.name_of(r.player_id), r.device, r.words, when(r.created)
             )
             for r in self.invites().pending()
         ]
+        resets = [
+            RequestRow(
+                RESET + d.id,
+                self.name_of(d.player_id),
+                d.name,
+                "",
+                when(d.reset_asked),
+                asks=NEW_PASSCODE,
+            )
+            for d in self.devices().resets()
+        ]
+        return seats + resets
 
     def seats(self) -> list[SeatRow]:
         book = self.devices()
@@ -234,7 +250,17 @@ class SeatsDesk:
         return _decide(self, request_id, approve=True)
 
     def reject(self, request_id: str) -> Command:
+        if request_id.startswith(RESET):
+            return turn_down_reset(self, request_id)
         return _decide(self, request_id, approve=False)
+
+    def set_new_passcode(self, request_id: str) -> Command:
+        """Answer a player's ask for a new passcode: their player form, to
+        set one (which ends the ask), after checking it's really them."""
+        device = self.devices().get(request_id.removeprefix(RESET))
+        if device is None or not device.reset_asked:
+            return Refuse("Set New Passcode", "That player is no longer asking.")
+        return self.edit_player(device.player_id)
 
     def revoke(self, device_id: str) -> Command:
         return revoke_seat(self, device_id)
@@ -283,6 +309,12 @@ def _saving(desk: SeatsDesk, command: Command) -> Command:
     return command
 
 
+#: A request row's id when a player asks for a new passcode: this, then the
+#: device's id.
+RESET = "reset:"
+SEAT, NEW_PASSCODE = "A seat", "A new passcode"
+
+
 @dataclass(frozen=True)
 class RequestRow:
     id: str
@@ -290,6 +322,8 @@ class RequestRow:
     device: str
     words: str
     asked: str
+    #: What is asked for: SEAT or NEW_PASSCODE.
+    asks: str = SEAT
 
 
 @dataclass(frozen=True)
@@ -543,6 +577,27 @@ def _decide(desk: SeatsDesk, request_id: str, *, approve: bool) -> Command:
         "Its Invite is spent: if it was really theirs, issue a new one."
     )
     return Confirm(question, apply, yes_label="Reject", title="Reject Request")
+
+
+def turn_down_reset(desk: SeatsDesk, request_id: str) -> Command:
+    """Turn down an ask for a new passcode: it leaves Requests, and the
+    player keeps the passcode they have."""
+    device = desk.devices().get(request_id.removeprefix(RESET))
+    if device is None or not device.reset_asked:
+        return Refuse("Turn Down", "That player is no longer asking.")
+    who = escape(desk.name_of(device.player_id))
+
+    def apply() -> list[str]:
+        desk.devices().reset_done(device.player_id)
+        return notes(f"Turned down. {who} keeps the passcode they have.")
+
+    return Confirm(
+        f"Turn down {who}'s ask for a new passcode, from "
+        f"{escape(device.name)}?\n\nDo so if it wasn't really them.",
+        apply,
+        yes_label="Turn Down",
+        title="Turn Down",
+    )
 
 
 def revoke_seat(desk: SeatsDesk, device_id: str) -> Command:

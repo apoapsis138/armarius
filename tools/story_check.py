@@ -9,6 +9,10 @@ Runs, in order: the tests (the slice's from `slice_tests.py`, or with
 prints one line (ok, or the failing test names / the first lines of the
 tool's output), and the exit code is nonzero if any failed.
 
+A test run past its limit (FULL_LIMIT, SLICE_LIMIT) is stopped with
+every worker it started, and said; the conftest also fails a test whose
+window waits for an answer no test gives.
+
 A test that fails in the parallel run is run again once, alone. One that
 then passes is reported as flaky, not failed, and noted (with the date) in
 FLAKY_LOG, so the worst offenders can be found and their waits fixed; one
@@ -31,17 +35,48 @@ FLAKY_LOG = ROOT / ".pytest_cache" / "flaky_tests.txt"
 PARALLEL = ["-q", "-n", "auto", "--dist", "worksteal"]
 
 
-def run(command: list[str]) -> tuple[int, str]:
-    done = subprocess.run(
+#: The longest a test run may take (seconds) before it is stopped, every
+#: worker with it: the full suite takes about four minutes.
+FULL_LIMIT = 600
+SLICE_LIMIT = 420
+
+
+class TimedOut(Exception):
+    """A run went past its limit; it and its workers were stopped."""
+
+
+def stop_tree(pid: int) -> None:
+    """End a process and every process it started (pytest's workers):
+    ending only the parent leaves the workers running, holding files."""
+    if sys.platform == "win32":
+        subprocess.run(
+            ["taskkill", "/T", "/F", "/PID", str(pid)],
+            check=False,
+            capture_output=True,
+        )
+    else:
+        subprocess.run(["pkill", "-KILL", "-P", str(pid)], check=False)
+        subprocess.run(["kill", "-KILL", str(pid)], check=False)
+
+
+def run(command: list[str], limit: float | None = None) -> tuple[int, str]:
+    """Run `command`; its exit code and output. TimedOut past `limit`."""
+    with subprocess.Popen(
         command,
         cwd=ROOT,
-        check=False,
-        capture_output=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
         text=True,
         encoding="utf-8",
         errors="replace",
-    )
-    return done.returncode, done.stdout + done.stderr
+    ) as process:
+        try:
+            output, _ = process.communicate(timeout=limit)
+        except subprocess.TimeoutExpired:
+            stop_tree(process.pid)
+            process.communicate()
+            raise TimedOut from None
+        return process.returncode, output
 
 
 def failed_tests(output: str) -> list[str]:
@@ -61,9 +96,16 @@ def summary(output: str) -> str:
     return output.strip().splitlines()[-1] if output.strip() else ""
 
 
-def tests_step(command: list[str]) -> tuple[bool, str]:
+def tests_step(command: list[str], limit: float) -> tuple[bool, str]:
     """Run the tests; rerun each failure alone. (passed, what to print)."""
-    code, output = run(command)
+    try:
+        code, output = run(command, limit)
+    except TimedOut:
+        return False, (
+            f"stopped after {limit:.0f} s, every test process with it: a test "
+            "is stuck (a window waiting for an answer, or a wait that never "
+            "ends). Run the slice's files alone with -p no:xdist to find it."
+        )
     if code == 0:
         return True, summary(output)
     failed = failed_tests(output)
@@ -72,7 +114,13 @@ def tests_step(command: list[str]) -> tuple[bool, str]:
     real: list[tuple[str, str]] = []
     flaky: list[str] = []
     for test in failed:
-        again, said = run([*UV, "python", "-m", "pytest", "-q", "-p", "no:xdist", test])
+        try:
+            again, said = run(
+                [*UV, "python", "-m", "pytest", "-q", "-p", "no:xdist", test],
+                SLICE_LIMIT,
+            )
+        except TimedOut:
+            again, said = 1, f"stopped after {SLICE_LIMIT} s: stuck"
         if again == 0:
             flaky.append(test)
         else:
@@ -95,7 +143,7 @@ def main(argv: list[str]) -> int:
     else:
         tests = [*UV, "python", "tools/slice_tests.py", *PARALLEL]
     bad = 0
-    passed, said = tests_step(tests)
+    passed, said = tests_step(tests, FULL_LIMIT if full else SLICE_LIMIT)
     label = "full suite" if full else "slice tests"
     if passed:
         print(f"ok    {label}" + (f"\n{said}" if "flaky" in said or full else ""))
@@ -125,6 +173,12 @@ def main(argv: list[str]) -> int:
         return 1
     if not full:
         print("\nAll clear. Story done? Run it once with --full.")
+    else:
+        print(
+            "\nAll clear. On commit, the version: MINOR if the story adds or "
+            "changes what the app does, PATCH for a fix, code health, tests "
+            "or docs; stories committed together take the largest."
+        )
     return 0
 
 

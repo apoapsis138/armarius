@@ -23,7 +23,7 @@ import hashlib
 import json
 import os
 import zlib
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import asdict, dataclass
 
 from .. import presence, storage, viewing
@@ -264,11 +264,16 @@ def seat_registry(
     picture_file: Callable[[str, str], bytes | None],
     changes: SeatChanges,
     max_bytes: int = MEMBER_MESSAGE,
+    more: Sequence[MessageSpec] = (),
 ) -> Registry:
-    """What a signed-in seat may send: hello, ping, the read-only messages
-    and per-record changes."""
+    """What a signed-in seat may send: hello, ping, the read-only messages,
+    per-record changes, and `more` (changing the passcode)."""
     registry = member_registry(max_bytes)
-    for spec in [*records_specs(snapshots, picture_file), *change_specs(changes)]:
+    for spec in [
+        *records_specs(snapshots, picture_file),
+        *change_specs(changes),
+        *more,
+    ]:
         registry.register(spec)
     return registry
 

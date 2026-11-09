@@ -123,6 +123,17 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.96.0 — 2026-11-09
+
+### Sodales
+
+- **Change your own passcode**: Change Passcode on a joined saga's card asks for your passcode now and the new one twice (at least 14 characters). Only its scrambled form goes to the host, never the passcode, and you stay signed in.
+- **Forgotten passcode**: "I've forgotten my passcode" on the Rejoin window asks your storyguide, from a computer that already has a seat. The ask shows in their Requests; they check it's really you, set a new passcode with Set New Passcode, and your computer keeps its seat. The Log notes both, never the passcode.
+
+### Fundamenta
+
+- **Tests never hang on a window**: a window left waiting for an answer in a test gives up after a few seconds and fails the test by name, and a test run that goes on too long is stopped with all its workers. Each test also starts with no one signed in.
+
 ## 3.95.0 — 2026-11-09
 
 ### Sodales

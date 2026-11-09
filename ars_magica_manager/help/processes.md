@@ -1557,6 +1557,15 @@ read you the three words their screen shows; **Approve** asks whether they
 match before it gives the device a seat. **Reject** turns it away; its
 Invite is spent. A request not decided within an hour lapses.
 
+A player who has forgotten their passcode asks here too, from a device
+that already has a seat: **Asks for** says *A new passcode*. Check it's
+really them (on your call, say), then **Set New Passcode** opens their
+player form: type a new passcode and tell it to them. Setting one, here
+or on Players, answers the ask; their device keeps its seat. **Reject**
+turns the ask down and they keep the passcode they have. Players can also
+change their own passcode from their seat; the Log notes it, never the
+passcode.
+
 ### Seats
 <!-- help: remote-seats-list; gui -->
 
@@ -1626,6 +1635,21 @@ it for a long while, or they gave their host a new key), the app says so:
 ask for a new invite. **Leave Saga** on the saga's card forgets this
 computer's seat; to come back you'll need a new invite.
 
+### Changing or forgetting your passcode
+<!-- help: join-game-passcode; gui -->
+
+**Change Passcode** on the saga's card changes it: type the passcode you
+have now, then the new one twice (at least 14 characters; a few words
+you'll remember, such as "grey owl over the mill"). A wrong current
+passcode counts toward the lock-out, as signing in does. You stay signed
+in, and from then on you use the new one on every computer you join from.
+
+Forgotten it? Click the saga on the shelf, then **I've forgotten my
+passcode** under the passcode. Your storyguide is asked; they check it's
+really you (on your call, say) and give you a new passcode, which you type
+there. This computer keeps its seat, so you need no new invite. Only a
+computer that already has a seat can ask.
+
 While you play, your pages show what you may see, and you change only
 what's yours (your characters, their laboratories, familiars and season
 plans, and the covenants if your storyguide gave you covenant rights).
@@ -1645,9 +1669,11 @@ you can agree who changes what.
   your computer's own keychain (Windows Credential Manager, macOS
   Keychain or a Linux Secret Service). The saga stays in memory while
   it's open and is gone when you close it.
-- **Your passcode never crosses the internet**, not even scrambled: your
-  app proves it knows it, in a way that is useless to anyone who
-  overhears, and to anyone pretending to be the host.
+- **Your passcode never crosses the internet.** Signing in, your app
+  proves it knows it, in a way that is useless to anyone who overhears,
+  and to anyone pretending to be the host. Changing it, only the new
+  one's scrambled form is sent, inside the encrypted connection: the form
+  the host keeps, from which the passcode can't be read back.
 - **The six words are your check that you reached your storyguide**, not
   someone in the middle. Compare them on your call each time you join
   from a new invite.

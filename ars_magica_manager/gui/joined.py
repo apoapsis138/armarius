@@ -160,6 +160,37 @@ def leave_game(window: MainWindow, game: JoinedGame) -> None:
     window.shelf_again()
 
 
+def change_passcode(window: MainWindow, game: JoinedGame) -> None:
+    """Change Passcode, from the game's card: with the game open, through
+    its session, so the key kept for reconnecting becomes the new one's;
+    else on a session of its own, closed once done."""
+    # start-up: as join_game.
+    from ..remote.seat_session import SeatSession
+    from .join import ChangePasscodeWindow
+
+    open_one = window.session
+    session = (
+        open_one
+        if open_one is not None and open_one.pin == game.pin
+        else SeatSession(game.url, game.pin)
+    )
+    if session is not open_one and not session.has_credential():
+        session.close()
+        _ended(window, game)
+        return
+    dialog = ChangePasscodeWindow(game.saga_name, session, window.palette_, window)
+    try:
+        if window.ask(dialog) == QDialog.DialogCode.Accepted:
+            window.tell(
+                "Change Passcode",
+                "Your passcode is changed. Use the new one from now on, on "
+                "every computer you join this saga from.",
+            )
+    finally:
+        if session is not open_one:
+            session.close()
+
+
 def open_joined(window: MainWindow, session: SeatSession) -> None:
     """Open the Joined game `session` is signed in to: its saga from the
     host, read as the Player, its pictures from the host."""

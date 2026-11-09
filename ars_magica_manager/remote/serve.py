@@ -31,6 +31,7 @@ from .host import RemoteHost
 from .identity import KeychainStore, KeyStore, NoKeychainError, load_or_create
 from .invites import InviteBook, book_path
 from .limits import Limits
+from .passcode_change import passcode_specs
 from .passcodes import RemotePasscodes, passcodes_path
 from .plan import CLOUDFLARE, DEFAULT_PORT, LISTEN_ADDRESS, TUNNELS, identity_name
 from .records import SeatSnapshots, picture_from_disk, seat_registry
@@ -92,7 +93,12 @@ def build(
         identity,
         registry,
         limits,
-        members=seat_registry(snapshots, picture_from_disk, SeatChanges(saga_id, log)),
+        members=seat_registry(
+            snapshots,
+            picture_from_disk,
+            SeatChanges(saga_id, log),
+            more=passcode_specs(saga_id, passcodes, log),
+        ),
         # Only the tunnel, on this computer, can reach the listener, so the
         # address it passes on is the player's own (threat model, section 4).
         trust_forwarded_address=True,

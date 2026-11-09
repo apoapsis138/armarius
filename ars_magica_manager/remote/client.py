@@ -250,6 +250,27 @@ class RemoteClient:
             raise SignInError(reply.type, _seconds(reply))
         raise SignInError("refused")
 
+    async def change_passcode(self, salt: bytes, digest: bytes) -> None:
+        """Set the passcode to the one whose scrypt digest under `salt` is
+        `digest` (signed in just now with the old one): only the digest
+        goes, never the passcode. ChangeNotSaved if the host refuses."""
+        reply = await self.request(
+            "change_passcode", {"salt": salt.hex(), "digest": digest.hex()}
+        )
+        if reply.type != "passcode_changed":
+            raise ChangeNotSaved
+
+    async def ask_reset(self, vault: DeviceVault) -> None:
+        """Ask the storyguide, from this approved device, for a new passcode.
+        NoCredential with no seat here; SignInError("refused") when the host
+        no longer knows this device."""
+        credential = vault.load(self._pin)
+        if not credential:
+            raise NoCredential("This device has not been approved by the host.")
+        reply = await self.request("ask_reset", {"credential": credential})
+        if reply.type != "reset_asked":
+            raise SignInError("refused")
+
     async def hello(self) -> str:
         """Greet the host; its app version. Raises VersionMismatch when the
         two apps' major versions differ, saying which should update."""

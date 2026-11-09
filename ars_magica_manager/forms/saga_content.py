@@ -37,6 +37,7 @@ from ..models import (
     SagaSource,
     Spell,
 )
+from ..remote.devices import DeviceBook, devices_path
 from ..remote.passcodes import RemotePasscodes, passcodes_path
 from ..rules import spell_levels
 
@@ -755,6 +756,8 @@ def player_form(saga: Saga, existing: Player | None) -> Form:
         apply_plays(saga, player, values)
         if values.get("passcode"):
             RemotePasscodes(passcodes_path(saga.name)).note(player, values["passcode"])
+            # A new passcode answers the player's ask for one.
+            DeviceBook(devices_path(saga.name)).reset_done(player.id)
 
     return Form(
         player_title(existing),
