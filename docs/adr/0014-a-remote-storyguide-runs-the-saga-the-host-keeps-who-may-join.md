@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: accepted (narrowed by ADR 0015: a storyguide reads only their own and unassigned stories)
 ---
 
 # A remote storyguide runs the saga; the host keeps who may join

@@ -81,10 +81,24 @@ def linked_from(saga: Saga, record: Any) -> list[Fact]:
     return _named("Linked from", _linking(saga, record))
 
 
+def storyguide_fact(saga: Saga, record: Any) -> list[Fact]:
+    """Who runs `record` as storyguide ("Storyguide: Bruno"), in a saga
+    with a second storyguide (ADR 0015); none otherwise."""
+    if not viewing.troupe_style(saga) or not isinstance(record, viewing.ASSIGNABLE):
+        return []
+    owner = viewing.storyguide_of(record, saga)
+    return [Fact("Storyguide", viewing.storyguide_name(saga, owner))]
+
+
 def links_back(saga: Saga, record: Any) -> list[Fact]:
-    """The factions `record` is a member of, then every other record
-    whose Links include it: a neighbour's or creature's page."""
-    return member_of(saga, record) + linked_from(saga, record)
+    """Who runs it as storyguide, the factions `record` is a member of,
+    then every other record whose Links include it: a neighbour's or
+    creature's page."""
+    return (
+        storyguide_fact(saga, record)
+        + member_of(saga, record)
+        + linked_from(saga, record)
+    )
 
 
 def _covenant(saga: Saga, record: Any) -> list[Fact]:
@@ -160,6 +174,7 @@ def rules_facts(saga: Saga, record: Any) -> list[Fact]:
 
 #: Each heading's query, in the order a sheet shows them.
 QUERIES: tuple[Callable[[Saga, Any], list[Fact]], ...] = (
+    storyguide_fact,
     _covenant,
     _located_in,
     lands_fact,

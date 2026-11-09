@@ -1383,7 +1383,68 @@ until you turn it on.
 Sagas from before keep every record known; a pack brings its records
 known, except any it marks secret.
 
-**See also:** [How to reveal a record to the players](help:guide-reveal), [What a signed-in player can do](help:players-access), [A record's Secrets](help:tab-secrets)
+**With a second storyguide** (a Player whose role is Storyguide), Player
+view becomes **Playing**, and every storyguide's window opens in it,
+yours too: your characters as a player sees them.
+<!-- tui -->
+Player View in More switches to your storyguide role and back.
+<!-- /tui -->
+<!-- gui -->
+The eye then reads **Playing** or **Storyguide**; click it to switch.
+<!-- /gui -->
+Each switch is written in the host's Remote seats log. In your
+storyguide role you read your own stories and those with no storyguide
+whole; another storyguide's you read as a player would (see
+[A storyguide for each story](help:assign-storyguide)).
+
+**See also:** [How to reveal a record to the players](help:guide-reveal), [What a signed-in player can do](help:players-access), [A record's Secrets](help:tab-secrets), [How to run a saga with several storyguides](help:guide-troupe-storyguides)
+
+# A storyguide for each story
+<!-- help: assign-storyguide -->
+
+In troupe-style play several of you take turns as storyguide, each
+running their own stories (DE pp. 529-530, the alpha and beta
+storyguides). Once the saga has a second storyguide (a Player whose role
+is **Storyguide**), any record that keeps Secrets (a character, covenant,
+place, lord, faction, threat, creature or Tribunal) can have its own
+storyguide: you (the host) or one of them. A covenant's open story
+events are its storyguide's; a laboratory or familiar is its
+character's.
+
+- **Its storyguide** reads it whole: its Secrets, Roll Tables, a
+  threat's stages still to come and its clock.
+- **Any other storyguide, the host included,** reads it as a player
+  would, and can't change it. There is no storyguide who reads
+  everything. Find, Looking Ahead, Needs You, the Atlas and exports
+  follow the same rule.
+- **No storyguide:** every storyguide reads it whole, as before.
+
+<!-- tui -->
+**Its Storyguide**, in More (`m`) on the record,
+<!-- /tui -->
+<!-- gui -->
+**Its Storyguide**, in the record's Manage chapter,
+<!-- /gui -->
+sets it. Any storyguide takes a record with none for themselves; only
+its own storyguide releases it (blank) or hands it on to another. Nobody
+takes someone else's, so nobody can read another's Secrets by taking
+them. The record's Connections (or its facts) say whose it is.
+
+Deleting a storyguide, or making them a player again, leaves their
+records with no storyguide, so every storyguide then reads their
+Secrets; you are asked first, with the records named.
+
+**What it is not:** a lock. The host's saga file holds everything, and
+Armarius keeps the rule on screen and in what it sends. It keeps friends
+from spoiling each other's stories; it doesn't stop someone who opens the
+file.
+
+**From a Remote seat**, while another storyguide runs some of the saga's
+stories, Advance Season is left to the host's computer, which holds
+every record whole; a seat holds another's records only as the players
+have them.
+
+**See also:** [Player view](help:player-view), [How to run a saga with several storyguides](help:guide-troupe-storyguides), [What a signed-in player can do](help:players-access)
 
 ### Hide many records
 <!-- help: mark-unknown -->

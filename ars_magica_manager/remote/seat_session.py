@@ -257,6 +257,11 @@ class SeatSession:
         """Ask the host to undo the advance that reached `now`."""
         return self._loop.run(self._talk().undo_season(now), timeout=60)
 
+    def switched(self, *, playing: bool) -> None:
+        """Tell the host a storyguide switched to Playing or to their
+        storyguide role, for its log (ADR 0015)."""
+        self._loop.run(self._talk().switched(playing))
+
     def here(self, record: str) -> list[str]:
         """Say which record this seat has open; who else has it open."""
         return self._loop.run(self._talk().here(record))

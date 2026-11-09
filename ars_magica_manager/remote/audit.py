@@ -39,8 +39,13 @@ RESET_ASKED = "reset_asked"
 SEASON_ADVANCED = "season_advanced"
 SEASON_UNDONE = "season_undone"
 ROLE_CHANGED = "role_changed"
+#: A storyguide switching to Playing, or to their storyguide role (ADR 0015).
+SWITCHED_TO_PLAYING = "switched_to_playing"
+SWITCHED_TO_STORYGUIDE = "switched_to_storyguide"
 EVENTS = frozenset(
     {
+        SWITCHED_TO_PLAYING,
+        SWITCHED_TO_STORYGUIDE,
         SEASON_UNDONE,
         SEASON_ADVANCED,
         ROLE_CHANGED,

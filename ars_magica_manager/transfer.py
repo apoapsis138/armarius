@@ -142,8 +142,8 @@ def export_data(
     """The export of `record` as JSON-ready data. `with_members` (a covenant
     only) adds its laboratories and characters. Anyone but the storyguide
     exports from their seat view, so a file carries no more than the
-    screen shows them."""
-    if not viewing.storyguide_reads():
+    screen shows them; so does a storyguide among several (ADR 0015)."""
+    if not viewing.reads_everything(viewing.current(), saga):
         saga = seat_view(saga, viewing.current())
         listed: list[Record] = [*saga.characters, *saga.laboratories, *saga.covenants]
         found = next(
@@ -510,8 +510,8 @@ def saga_file_name(saga: Saga) -> str:
 def export_saga_data(saga: Saga) -> dict[str, Any]:
     """The export of the whole saga as JSON-ready data: every record and
     what they hold, so nothing it points at is left outside it. Anyone but
-    the storyguide exports their seat view."""
-    if not viewing.storyguide_reads():
+    a storyguide who reads every record exports their seat view."""
+    if not viewing.reads_everything(viewing.current(), saga):
         saga = seat_view(saga, viewing.current())
     return {
         "format": FORMAT,

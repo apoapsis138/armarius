@@ -314,6 +314,11 @@ def test_a_storyguides_seat_runs_the_saga_but_not_who_may_join(
     assert dialog.session is not None
     joined.open_joined(main, dialog.session)
     assert isinstance(main.store, RemoteStore) and main.store.whole
+    # With a second storyguide the window opens Playing (ADR 0015); the
+    # switch takes her to her storyguide role, logged on the host.
+    assert not viewing.current().is_storyguide
+    main.toggle_player_view()
+    assert main.switched is False
     viewer = viewing.current()
     assert viewer.is_storyguide and not viewer.hosts
     assert main.saga is not None

@@ -51,6 +51,7 @@ from .... import (
     section_verbs,
     sourcebooks,
     storage,
+    storyguides,
     transfer,
     tribunals,
     viewing,
@@ -551,9 +552,11 @@ class WorkspaceBase(Screen[None]):
 
     async def on_mount(self) -> None:
         #: Player view (viewing.py): the storyguide's own copy as the
-        #: players see it, remembered for the saga on this computer.
-        self._player_view = self._is_storyguide() and viewing.player_view_on(
-            self.saga.id
+        #: players see it, remembered for the saga on this computer. With a
+        #: second storyguide it is Playing, and every storyguide's copy
+        #: opens in it (ADR 0015).
+        self._player_view = self._is_storyguide() and (
+            viewing.troupe_style(self.saga) or viewing.player_view_on(self.saga.id)
         )
         self._use_viewer()
         self._update_saga_clock()
@@ -1516,6 +1519,8 @@ class WorkspaceBase(Screen[None]):
         # One swap at a time: two in flight at once interleave their removes
         # and mounts, leaving both sheets mounted or removing one mid-mount.
         async with self._detail_lock:
+            # What the sheet's parts ask of who may read them (viewing.reads).
+            viewing.on_page(self._record_on_show())
             # Must be awaited before mounting replacements below, or a same-id
             # widget not yet removed collides with its freshly-mounted
             # replacement and Textual raises DuplicateIds.
@@ -1977,8 +1982,6 @@ class WorkspaceBase(Screen[None]):
         """Whether whoever is signed in may run `action` here:
         the storyguide anything; a player moves around and reads anywhere,
         and changes only what they may change (players.may_change)."""
-        if self._is_storyguide():
-            return True
         record = self._record_on_show()
         if seat.may_act(self.saga, self._signed_in(), action, record):
             return True
@@ -1991,7 +1994,7 @@ class WorkspaceBase(Screen[None]):
 
     def _may_change_here(self) -> bool:
         """Whether whoever is signed in may change the record on show."""
-        return pl.may_change(self.saga, self._signed_in(), self._record_on_show())
+        return seat.may_change(self.saga, self._record_on_show())
 
     def _record_on_show(self) -> Any:
         """The record the open page is of (None: the saga's own page)."""
@@ -2018,7 +2021,9 @@ class WorkspaceBase(Screen[None]):
         """More's Player View on the saga: turn the storyguide's own copy
         to what the players see, or back."""
         self._player_view = not self._player_view
-        viewing.set_player_view(self.saga.id, self._player_view)
+        if not self.app.is_web:
+            viewing.set_player_view(self.saga.id, self._player_view)
+        storyguides.log_switch(self.saga, self._signed_in(), playing=self._player_view)
         self._use_viewer()
         self._update_saga_clock()
         self._rebuild_tree()

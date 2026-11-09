@@ -425,6 +425,10 @@ def entries(
     found = [e for source in SOURCES for e in source(saga, start, stop)]
     if not viewing.storyguide_reads():
         found = public(saga, found)
+    elif others := others_names(saga):
+        # Another storyguide's records come as the players see them (ADR 0015).
+        seen = set(map(id, public(saga, found)))
+        found = [e for e in found if e.source not in others or id(e) in seen]
     if show in SHOWS and show != EVERYTHING:
         found = [e for e in found if e.show == show]
     if covenant is not None:
@@ -437,6 +441,21 @@ def entries(
 #: the storyguide's own calendar), never a threat's stage, a place's
 #: trigger or the world's yearly turn.
 PUBLIC: frozenset[str] = frozenset({TRIBUNAL, NEIGHBOURS, INCOME, CHARACTERS, CALENDAR})
+
+
+def others_names(saga: Saga) -> set[str]:
+    """The names of the records another storyguide runs, as whoever is
+    looking reads the saga (none unless they are a storyguide among
+    several)."""
+    looking = viewing.current()
+    if viewing.reads_everything(looking, saga):
+        return set()
+    return {
+        r.name
+        for kind in (saga.characters, saga.covenants, saga.neighbours, saga.creatures)
+        for r in kind
+        if not viewing.holds(looking, r, saga)
+    }
 
 
 def public(saga: Saga, found: list[Entry]) -> list[Entry]:

@@ -39,7 +39,7 @@ from .forms import charter as charter_forms
 from .forms import church as church_forms
 from .forms import constant_effect as constant_forms
 from .forms import covenant as covenant_forms
-from .forms import covenant_history
+from .forms import covenant_history, notes_goals
 from .forms import covers as cover_forms
 from .forms import creature as creature_forms
 from .forms import criamon as criamon_forms
@@ -177,6 +177,7 @@ def character_ops(saga: Saga, character: Character) -> dict[str, SectionOps]:
     table.update(_virtue_flaw_ops(saga, character))
     table.update(_device_ops(saga, "character", character.id))
     table.update(secrets_ops(character))
+    table.update(notes_goals.ops(saga, character))
     table.update(world_forms.standing_ops(saga, character))
     table[CONSTANT_EFFECTS_SECTION] = constant_forms.ops(saga, character)
     table[COVERS_SECTION] = cover_forms.ops(character)

@@ -17,7 +17,15 @@ way; what changes is what it is allowed to put on it.
 
 A record the troupe plays (a player character, a troupe covenant, their
 laboratories and familiars) is always known, as are Tribunals; anything
-else carries `known` (models), which Reveal ticks."""
+else carries `known` (models), which Reveal ticks.
+
+With more than one storyguide (troupe-style play, ADR 0015), a record can
+have its own storyguide (`storyguide_of`). A storyguide reads their own
+records and those with none as the storyguide does; a record another
+storyguide runs they read as a player would, the host included. Each
+storyguide's window opens Playing, Player view by another name: their
+characters as a player sees them, until they switch to their storyguide
+role."""
 
 from __future__ import annotations
 
@@ -32,9 +40,12 @@ from .models import (
     Covenant,
     CovenantDiaryEntry,
     Creature,
+    Familiar,
+    Laboratory,
     Neighbour,
     Player,
     Saga,
+    Tribunal,
 )
 from .models import (
     secret_words as words_of,
@@ -62,11 +73,25 @@ class Viewer:
         return self.kind == STORYGUIDE
 
     @property
+    def storyguide_id(self) -> str:
+        """Which storyguide sits here, as a record names its own
+        (storyguide_of), whether reading as one or Playing: a
+        Storyguide-role Player's id, HOST for the host's own window, ""
+        for anyone else."""
+        if self.player is not None:
+            return self.player.id if self.player.role == STORYGUIDE else ""
+        if self.hosts:
+            return HOST
+        # A storyguide's seat that doesn't say who: the records with no
+        # storyguide are theirs to run, and no one else's.
+        return UNNAMED if self.kind == STORYGUIDE else ""
+
+    @property
     def label(self) -> str:
         """How a header names who is reading: "" for the storyguide."""
         if self.kind == TABLE:
             return "Player view"
-        if self.player is not None:
+        if self.player is not None and self.kind == PLAYER:
             return self.player.name
         return ""
 
@@ -78,15 +103,187 @@ TABLE_VIEWER = Viewer(TABLE)
 def viewer_for(
     player: Player | None, *, player_view: bool = False, hosts: bool = True
 ) -> Viewer:
-    """The viewer of a copy: the player signed in (a storyguide among them
-    reads everything), else the storyguide's own window, which is the
-    table while Player view is on. `hosts`: whether this copy is the
-    host's, not one joined from a Remote seat."""
+    """The viewer of a copy: the player signed in, else a storyguide (the
+    host's own window, or a Storyguide-role Player). With `player_view`
+    (Playing, with more than one storyguide) a storyguide reads as a
+    player would: the host's own window as the table, a Storyguide-role
+    Player as themselves. `hosts`: whether this copy is the host's, not
+    one joined from a Remote seat."""
     if player is not None and player.role != STORYGUIDE:
         return Viewer(PLAYER, player, hosts)
     if player_view:
-        return TABLE_VIEWER
+        if player is not None:
+            return Viewer(PLAYER, player, hosts)
+        return TABLE_VIEWER if hosts else Viewer(TABLE, None, False)
+    if player is not None:
+        return Viewer(STORYGUIDE, player, hosts)
     return STORYGUIDE_VIEWER if hosts else Viewer(STORYGUIDE, None, False)
+
+
+# -- whose record it is --
+
+#: A record's storyguide when the host runs it: never a Player's id, which
+#: is a slug of their name (storage.slugify).
+HOST = "@host"
+#: A storyguide's seat that doesn't say which storyguide sits there.
+UNNAMED = "@storyguide"
+
+
+def storyguide_ids(saga: Saga) -> set[str]:
+    """Who may run a record as storyguide: the host and each
+    Storyguide-role Player."""
+    return {HOST, *(p.id for p in saga.players if p.role == STORYGUIDE)}
+
+
+def troupe_style(saga: Saga | None) -> bool:
+    """Whether `saga` has a second storyguide (a Storyguide-role Player
+    beside the host), so records may have their own storyguide and every
+    storyguide switches between Playing and their storyguide role."""
+    return saga is not None and any(p.role == STORYGUIDE for p in saga.players)
+
+
+#: The records that can have their own storyguide (each holds Secrets).
+ASSIGNABLE = (Character, Covenant, Neighbour, Creature, Tribunal)
+
+
+def storyguide_of(record: Any, saga: Saga | None = None) -> str:
+    """Who runs `record` as storyguide: "" for no one (any storyguide reads
+    it), HOST, or a Storyguide-role Player's id. A laboratory or familiar
+    is its character's; a record naming someone no longer a storyguide is
+    no one's. `saga`: by default the one in use."""
+    found = saga if saga is not None else _saga
+    if found is None:
+        return ""
+    if isinstance(record, Laboratory):
+        record = found.character(record.owner_id) if record.owner_id else None
+    elif isinstance(record, Familiar):
+        record = found.character(record.character_id)
+    if not isinstance(record, ASSIGNABLE):
+        return ""
+    owner = record.storyguide_id
+    return owner if owner in storyguide_ids(found) else ""
+
+
+def runs(viewer: Viewer, record: Any = None, saga: Saga | None = None) -> bool:
+    """Whether the storyguide sitting as `viewer` (reading as one or
+    Playing) may change `record`: one of their own, or one with no
+    storyguide (None: the saga itself). False for anyone else."""
+    me = viewer.storyguide_id
+    if not me:
+        return False
+    if record is None:
+        return True
+    return storyguide_of(record, saga) in ("", me)
+
+
+def holds(viewer: Viewer, record: Any = None, saga: Saga | None = None) -> bool:
+    """Whether `viewer`, reading as a storyguide, reads `record` whole:
+    Secrets, Roll Tables, a threat's stages to come and all."""
+    return viewer.is_storyguide and runs(viewer, record, saga)
+
+
+def readable(viewer: Viewer, record: Any, saga: Saga | None = None) -> bool:
+    """Whether `viewer` may read `record` at all: a storyguide's own (or
+    no one's), else while the players know of it."""
+    return holds(viewer, record, saga) or is_known(record)
+
+
+#: others_run_any's answers, by saga and storyguide, while a page is drawn:
+#: forgotten whenever another page is (on_page) or another reader (use).
+_others: dict[tuple[int, str], bool] = {}
+
+
+def others_run_any(viewer: Viewer, saga: Saga) -> bool:
+    """Whether some record of `saga` is another storyguide's, so the
+    storyguide `viewer` doesn't read the whole saga."""
+    if not troupe_style(saga) and viewer.storyguide_id == HOST:
+        return False
+    key = (id(saga), viewer.storyguide_id)
+    found = _others.get(key)
+    if found is None:
+        found = _others[key] = _others_run_any(viewer.storyguide_id, saga)
+    return found
+
+
+def _others_run_any(me: str, saga: Saga) -> bool:
+    live = storyguide_ids(saga)
+    return any(
+        r.storyguide_id and r.storyguide_id != me and r.storyguide_id in live
+        for kind in (
+            saga.characters,
+            saga.covenants,
+            saga.neighbours,
+            saga.creatures,
+            saga.tribunals,
+        )
+        for r in kind
+    )
+
+
+def reads_everything(viewer: Viewer, saga: Saga) -> bool:
+    """Whether `viewer` reads the whole of `saga`: a storyguide, and no
+    record of it another storyguide's."""
+    return viewer.is_storyguide and not others_run_any(viewer, saga)
+
+
+def records_of(saga: Saga, storyguide_id: str) -> list[Any]:
+    """The records `storyguide_id` runs, for a warning that names them."""
+    return [
+        r
+        for kind in (
+            saga.covenants,
+            saga.characters,
+            saga.neighbours,
+            saga.creatures,
+            saga.tribunals,
+        )
+        for r in kind
+        if storyguide_id and r.storyguide_id == storyguide_id
+    ]
+
+
+def reads_private(
+    viewer: Viewer, character: Character, saga: Saga | None = None
+) -> bool:
+    """Whether `viewer` reads `character`'s private notes and unshared
+    goals: its storyguide (among several, only its own), its players (all
+    of them, for a shared one) and its Steward; no one else."""
+    if holds(viewer, character, saga):
+        return True
+    player = viewer.player
+    if player is None or viewer.kind == TABLE:
+        return False
+    b = character.background
+    return (
+        player.id in b.player_ids
+        or (b.everyone_plays and player.role == PLAYER)
+        or (bool(b.steward_id) and b.steward_id == player.id)
+    )
+
+
+def free_records(saga: Saga, storyguide_id: str) -> list[Any]:
+    """Leave `storyguide_id`'s records with no storyguide (they were
+    deleted, or made a player again); the records freed."""
+    found = records_of(saga, storyguide_id)
+    for record in found:
+        record.storyguide_id = ""
+    _others.clear()
+    return found
+
+
+def assign(record: Any, storyguide_id: str) -> None:
+    """Make `storyguide_id` ("": no one) `record`'s storyguide."""
+    record.storyguide_id = storyguide_id
+    _others.clear()
+
+
+def storyguide_name(saga: Saga, storyguide_id: str) -> str:
+    """How a page names a record's storyguide."""
+    if not storyguide_id:
+        return "(none)"
+    if storyguide_id == HOST:
+        return "The host"
+    return next((p.name for p in saga.players if p.id == storyguide_id), "(none)")
 
 
 # -- who is looking now --
@@ -101,6 +298,7 @@ def use(viewer: Viewer, saga: Saga | None = None) -> None:
     so one viewer at a time is enough."""
     global _in_use, _saga
     _in_use, _saga = viewer, saga
+    _others.clear()
 
 
 def current() -> Viewer:
@@ -113,9 +311,23 @@ def in_use_saga() -> Saga | None:
     return _saga
 
 
-def storyguide_reads() -> bool:
-    """Whether whoever is looking now reads everything."""
-    return _in_use.is_storyguide
+def storyguide_reads(record: Any = None) -> bool:
+    """Whether whoever is looking now reads `record` whole, as its
+    storyguide (None: the saga's own pages)."""
+    return holds(_in_use, record)
+
+
+#: The record the page being drawn is of (None: the saga's own pages), so
+#: a part of the page asks about it (`reads(part=...)`).
+_page: Any = None
+
+
+def on_page(record: Any) -> None:
+    """Note the record the page being drawn is of, set by each front-end
+    as it builds a page."""
+    global _page
+    _page = record
+    _others.clear()
 
 
 # -- what is storyguide-only --
@@ -157,6 +369,12 @@ HOST_ONLY_ACTIONS: frozenset[str] = frozenset(
     {"host_saga", "stop_hosting", "downtime_run"}
 )
 
+#: What changes every record of the saga at once. A Remote seat holds
+#: another storyguide's records only as the players have them, so while
+#: there are any, its storyguide leaves these to the host's computer,
+#: which holds them whole (ADR 0015).
+SEASON_WIDE: frozenset[str] = frozenset({"advance_season"})
+
 #: What only the storyguide may do, so Player view leaves it off the
 #: storyguide's own window too (a signed-in player is refused much more:
 #: see the workspace's own list). Each is an actions.MORE_MENU action.
@@ -166,6 +384,7 @@ STORYGUIDE_ONLY_ACTIONS: frozenset[str] = frozenset(
         "reveal",
         "conceal",
         "mark_unknown",
+        "assign_storyguide",
         "reveal_secret",
         "conceal_secret",
         "split_secret",
@@ -229,6 +448,7 @@ PLAYER_BARRED_ACTIONS: frozenset[str] = frozenset(
         "reveal",
         "conceal",
         "mark_unknown",
+        "assign_storyguide",
         "player_view",
         "take_up_tale",
         "take_up_story",
@@ -297,7 +517,9 @@ def may_read(viewer: Viewer, record: Any = None, part: str = "") -> bool:
     host's never reads the HOST_ONLY parts."""
     if not viewer.hosts and part in HOST_ONLY:
         return False
-    if viewer.is_storyguide:
+    # A storyguide reads another storyguide's record as a player would
+    # (ADR 0015).
+    if holds(viewer, record):
         return True
     if part and part in STORYGUIDE_ONLY:
         return False
@@ -311,6 +533,13 @@ def may_do(viewer: Viewer, action: str) -> bool:
     change the record on show is players.may_change. A copy that isn't
     the host's is never offered HOST_ONLY_ACTIONS."""
     if not viewer.hosts and action in HOST_ONLY_ACTIONS:
+        return False
+    if (
+        action in SEASON_WIDE
+        and not viewer.hosts
+        and _saga is not None
+        and others_run_any(viewer, _saga)
+    ):
         return False
     if viewer.is_storyguide:
         return True
@@ -326,7 +555,10 @@ def is_looking(action: str) -> bool:
 
 
 def reads(record: Any = None, part: str = "") -> bool:
-    """may_read for whoever is looking now."""
+    """may_read for whoever is looking now; a part with no record named
+    is of the page being drawn (on_page)."""
+    if record is None and part:
+        record = _page
     return may_read(_in_use, record, part)
 
 
@@ -379,10 +611,12 @@ def shown[R](
     anyway: the one a form already holds, so opening it never loses its
     value."""
     looking = viewer or _in_use
-    if looking.is_storyguide:
+    if looking.is_storyguide and (_saga is None or reads_everything(looking, _saga)):
         return list(records)
     return [
-        r for r in records if is_known(r) or (keep and getattr(r, "id", None) == keep)
+        r
+        for r in records
+        if readable(looking, r) or (keep and getattr(r, "id", None) == keep)
     ]
 
 
@@ -406,17 +640,31 @@ def ref_readable(found: Ref, viewer: Viewer | None = None) -> bool:
     """Whether the viewer (by default whoever is looking) may read the
     record `found` names, in the saga in use."""
     looking = viewer or _in_use
-    if looking.is_storyguide or _saga is None:
+    if _saga is None:
         return True
-    return ref_known(_saga, found)
+    record = find(_saga, found.kind, found.id)
+    return record is None or readable(looking, record, _saga)
 
 
-def about_known(saga: Saga, about: Iterable[str]) -> bool:
-    """Whether every record a line is about ("kind:id") is known."""
+def ref_held(saga: Saga, found: Ref, viewer: Viewer | None = None) -> bool:
+    """Whether the viewer reads the record `found` names whole, as its
+    storyguide (a record gone: as for the saga)."""
+    looking = viewer or _in_use
+    record = find(saga, found.kind, found.id)
+    return holds(looking, record, saga)
+
+
+def about_known(saga: Saga, about: Iterable[str], viewer: Viewer | None = None) -> bool:
+    """Whether every record a line is about ("kind:id") is known (or, for
+    a storyguide `viewer`, theirs to read)."""
     for each in about:
         kind, _, record_id = each.partition(":")
         record = find(saga, kind, record_id)
-        if record is not None and not is_known(record):
+        if record is None:
+            continue
+        if viewer is not None and holds(viewer, record, saga):
+            continue
+        if not is_known(record):
             return False
     return True
 
@@ -438,13 +686,13 @@ def diary_readable(
     app wrote about an unknown record (or a threat's chapter) is the
     storyguide's until it is revealed."""
     looking = viewer or _in_use
-    if looking.is_storyguide:
+    if reads_everything(looking, saga):
         return True
     if entry.threat_id:
         threat = saga.neighbour(entry.threat_id)
-        if threat is not None and not is_known(threat):
+        if threat is not None and not readable(looking, threat, saga):
             return False
-    return about_known(saga, entry.about)
+    return about_known(saga, entry.about, looking)
 
 
 def shows_entry(entry: CovenantDiaryEntry) -> bool:
@@ -463,10 +711,10 @@ def line_readable(
     """Whether the viewer may read a neighbour's Diary line (a dict; its
     "about" lists the records it is about)."""
     looking = viewer or _in_use
-    if looking.is_storyguide:
+    if reads_everything(looking, saga):
         return True
     found = line.get("about") or []
-    return about_known(saga, found if isinstance(found, list) else [])
+    return about_known(saga, found if isinstance(found, list) else [], looking)
 
 
 def secret_words(record: Any) -> str:
@@ -492,7 +740,9 @@ def scrub(fact: Fact, viewer: Viewer | None = None) -> Fact | None:
     """`fact` as the viewer may read it: each unknown record it names
     taken out, name and link; None when it names nothing else."""
     looking = viewer or _in_use
-    if looking.is_storyguide or not fact.refs:
+    if not fact.refs or (
+        looking.is_storyguide and (_saga is None or reads_everything(looking, _saga))
+    ):
         return fact
     hidden = [r for r in fact.refs if not ref_readable(r, looking)]
     if not hidden:

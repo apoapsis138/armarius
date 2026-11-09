@@ -35,6 +35,13 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Secret": ""},
         shown={"#secrets-list": "His master"},
     ),
+    "add goal": Contract(
+        prefill={"Goal": ""},
+        edits={"Goal": "Master the Creo Art"},
+        saved=lambda s: [(g.text, g.shared) for g in s.characters[0].goals],
+        expected=[("Master the Creo Art", False)],
+        invalid={"Goal": ""},
+    ),
     # Creation Worksheet
     "spend creation xp": Contract(
         prefill={"Ability or Art": Select.NULL, "Pool xp": "5"},

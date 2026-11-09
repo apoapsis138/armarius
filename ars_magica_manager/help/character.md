@@ -288,6 +288,44 @@ in, the traits it suggests and the foods that keep it in balance (those of
 the opposite qualities, p. 41). Complexion changes no roll: it is the
 troupe's guide to personality and to which diseases threaten.
 
+### Notes & Goals
+<!-- help: section-char-notes -->
+
+The player's own page in the character's sheet: their **Private notes**
+(plans, suspicions, what the character really thinks of the princeps)
+and the **goals** they set the character. It is on the
+<!-- tui -->
+Personality tab.
+<!-- /tui -->
+<!-- gui -->
+Description chapter.
+<!-- /gui -->
+
+**Who reads it:** the character's players (all of them, for a character
+several play), its Steward, and its storyguide (with a
+[storyguide for each story](help:assign-storyguide), only its own). No
+other player sees the notes, nor that there are any: a Remote seat and an
+export leave them out. A goal ticked **Share with the troupe** is read by
+anyone who reads the character; the rest are private.
+
+The list's first row is the notes, then each goal, with the score it aims
+at and who reads it; everything is written out in full below the list.
+<!-- tui -->
+`a` adds a goal, `e` edits the notes or the goal chosen and `d` deletes a
+goal after asking. On a goal with a score to reach, More (`m`) offers
+**Plan the Study Path**.
+<!-- /tui -->
+<!-- gui -->
+**Add** adds a goal, **Edit** edits the notes or the goal chosen and
+**Delete** deletes a goal after asking. On a goal with a score to reach,
+**Plan** opens Plan the Study Path.
+<!-- /gui -->
+
+**You type:** for a goal, its words, whether to share it, and, for a
+score to reach, the **Art or Ability**, the **Score** and the year to
+reach it **By the end of** ("Creo 15 by 1230"). [Study Path](help:study-path)
+then opens filled in from it. The notes support **bold** and *italic*.
+
 ### Personality Traits
 <!-- help: section-personality-traits -->
 

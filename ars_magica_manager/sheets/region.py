@@ -221,7 +221,9 @@ def threats_grid(saga: Saga) -> Grid:
         if colour:
             styles[(index, 4)] = colour
         upcoming = (
-            threats.reached(saga, found).next if viewing.storyguide_reads() else None
+            threats.reached(saga, found).next
+            if viewing.storyguide_reads(found)
+            else None
         )
         rows.append(
             [

@@ -152,10 +152,14 @@ async def test_a_browser_copy_signs_in_before_opening_a_saga(in_a_browser):
         assert await wait_until(pilot, lambda: isinstance(app.screen, SagaPickerScreen))
         assert await wait_until(pilot, lambda: app.player is None)
 
-        # A storyguide signed in from a browser keeps the saga's players.
+        # A storyguide signed in from a browser keeps the saga's players,
+        # once switched from Playing (with a second storyguide every
+        # storyguide's copy opens Playing: ADR 0015).
         await _open_first_saga(pilot, app)
         await _sign_in(pilot, app, "Hedda", "sage")
         assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        assert not await _has_players_tab(pilot, app.screen)
+        await app.screen.action_player_view()
         assert await _has_players_tab(pilot, app.screen)
 
 

@@ -37,6 +37,7 @@ from .plan import CLOUDFLARE, DEFAULT_PORT, LISTEN_ADDRESS, TUNNELS, identity_na
 from .records import SeatSnapshots, picture_from_disk, seat_registry
 from .redemption import door_registry
 from .season_undo import undo_specs
+from .switches import switch_specs
 
 #: How often the listener looks for devices the window has revoked.
 WATCH_EVERY = 1.0
@@ -100,7 +101,11 @@ def build(
             snapshots,
             picture_from_disk,
             SeatChanges(saga_id, log),
-            more=[*passcode_specs(saga_id, passcodes, log), *undo_specs(saga_id, log)],
+            more=[
+                *passcode_specs(saga_id, passcodes, log),
+                *undo_specs(saga_id, log),
+                *switch_specs(saga_id, log),
+            ],
         ),
         # Only the tunnel, on this computer, can reach the listener, so the
         # address it passes on is the player's own (threat model, section 4).

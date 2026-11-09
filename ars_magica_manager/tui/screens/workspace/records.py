@@ -27,6 +27,7 @@ from .... import (
     saga_index,
     storage,
     story_chapters,
+    storyguides,
     threats,
     town_charter,
     town_court,
@@ -46,6 +47,7 @@ from ....forms import creature as creature_forms
 from ....forms import go_to as go_to_forms
 from ....forms import hunting as hunting_forms
 from ....forms import neighbour as neighbour_forms
+from ....forms import notes_goals as goal_forms
 from ....forms import polemic as polemic_forms
 from ....forms import reveal as reveal_forms
 from ....forms import secrets as secret_forms
@@ -80,6 +82,7 @@ from ....sections import (
     MARRIAGE_TERMS_SECTION,
     MARRIAGES_SECTION,
     NEIGHBOUR_INFO_SECTION,
+    NOTES_SECTION,
     REGION_STORIES_SECTION,
     REGION_THREATS_SECTION,
     SECRETS_SECTION,
@@ -716,6 +719,11 @@ class RecordActions(WorkspaceBase):
         """More's Hide from the Players on a record they know of."""
         self._reveal_step(reveal_forms.conceal)
 
+    def action_assign_storyguide(self) -> None:
+        """More's Its Storyguide: take a record with none, or release or
+        hand on one's own (storyguides.py)."""
+        self._reveal_step(storyguides.assign_form)
+
     def _reveal_step(self, step: Callable[[Any, Any], Any]) -> None:
         record = self._record_to_delete()
         if record is None:
@@ -737,6 +745,21 @@ class RecordActions(WorkspaceBase):
     def action_split_secret(self) -> None:
         """More's Split by Paragraph on a record's chosen secret."""
         self._secret_step(lambda _saga, record, row: secret_forms.split(record, row))
+
+    def action_plan_goal(self) -> None:
+        """More's Plan the Study Path on a chosen goal of Notes & Goals."""
+        view = self._current_sheet_view()
+        character = self.selected_character
+        row = view.section_row(NOTES_SECTION) if view is not None else None
+        if character is None or row is None:
+            return
+        self._run_commit(
+            goal_forms.plan_form(self.saga, character, row),
+            "section-char-season",
+            "section-char-ahead",
+            "tab-planning",
+            told=True,
+        )
 
     def _secret_step(self, step: Callable[[Any, Any, Any], Any]) -> None:
         view = self._current_sheet_view()

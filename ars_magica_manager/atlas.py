@@ -348,10 +348,26 @@ def shown_pins(
     narrows them to those kinds of record."""
     if table is None:
         table = not viewing.storyguide_reads()
+    looking = viewing.current()
+
+    def secret_to_me(pin: Pin) -> bool:
+        """A secret pin hidden here: from the table, and from a storyguide
+        whose record it isn't (ADR 0015)."""
+        if not pin.secret:
+            return False
+        if table:
+            return True
+        return not viewing.ref_held(saga, Ref(pin.kind, pin.record_id, ""), looking)
+
+    def hidden(found: Any) -> bool:
+        return (table and not viewing.is_known(found)) or not viewing.readable(
+            looking, found, saga
+        )
+
     own = {
         (pin.kind, pin.record_id): pin
         for pin in saga.pins
-        if pin.map_id == map_id and not pin.hidden and not (table and pin.secret)
+        if pin.map_id == map_id and not pin.hidden and not secret_to_me(pin)
     }
 
     def where(kind: str, found: Any, seen: frozenset[str]) -> tuple[Pin, Any] | None:
@@ -372,7 +388,7 @@ def shown_pins(
     for kind, found in _records(saga):
         if kinds is not None and kind not in kinds:
             continue
-        if table and not viewing.is_known(found):
+        if hidden(found):
             continue
         located = where(kind, found, frozenset())
         if located is None:
@@ -387,7 +403,7 @@ def shown_pins(
                 concept(kind, found),
                 summary(found),
                 pin if mine else None,
-                "" if mine or (table and not viewing.is_known(host)) else host.name,
+                "" if mine or hidden(host) else host.name,
             )
         )
     return shown

@@ -17,10 +17,18 @@ and every record in it.
 _Avoid_: Campaign, game, save
 
 **Storyguide**:
-A role a Player holds: a storyguide sees everything in the saga, its
-Secrets included, and may change any record in it. In troupe-style play
-several Players may hold it.
+A role a Player holds, and the host: while in it, a storyguide reads and
+changes the saga as the storyguide does, Secrets included, except the
+records assigned to another storyguide. In troupe-style play several hold
+it, and each can switch to playing, when they see only what a player sees.
 _Avoid_: GM, DM, referee
+
+**Assigned storyguide**:
+The storyguide who runs a record (a threat, a place, a lord, a creature, a
+character or a covenant): only they read its Secrets and change it; with
+none assigned, every storyguide may. The books' beta storyguide, given free
+rein over one part of the saga (DE pp. 529-530).
+_Avoid_: Owner, beta (alone)
 
 **Host**:
 The storyguide whose computer keeps the saga and opens it to the troupe.

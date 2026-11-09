@@ -318,24 +318,32 @@ def path_text(saga: Saga, character: Character, path: Path) -> str:
     return "\n".join(lines)
 
 
-def study_path_form(saga: Saga, character: Character) -> Command:
+def study_path_form(
+    saga: Saga,
+    character: Character,
+    *,
+    subject: str = "",
+    goal: int = 5,
+    by_year: int | None = None,
+) -> Command:
+    """Plan the Study Path; `subject`, `goal` and `by_year` fill it in (a
+    player's goal: forms/notes_goals.py)."""
     if not rules.is_planned(character):
         return Refuse(TITLE, f"{escape(character.name)} doesn't plan seasons.")
     options = subject_options(character)
     if not options:
         return Refuse(TITLE, f"{escape(character.name)} has no Art or Ability yet.")
+    chosen = subject if subject in {key for _label, key in options} else options[0][1]
 
     def fields() -> list[DialogField]:
         return [
-            DialogField(
-                "subject", "Art or Ability", "select", options[0][1], options=options
-            ),
-            DialogField("goal", "Score wanted", "int", 5),
+            DialogField("subject", "Art or Ability", "select", chosen, options=options),
+            DialogField("goal", "Score wanted", "int", goal),
             DialogField(
                 "by_year",
                 "By the end of",
                 "int",
-                saga.current_year + 3,
+                max(by_year or saga.current_year + 3, saga.current_year),
                 hint="The seasons already planned stay as they are.",
             ),
         ]

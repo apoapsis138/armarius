@@ -1527,6 +1527,46 @@ find it.
 
 **See also:** [Player view](help:player-view), [How to host a saga](help:guide-hosting)
 
+# How to run a saga with several storyguides
+<!-- help: guide-troupe-storyguides -->
+
+Bruno runs the faerie court's story, you run the threat in the hills, and
+each of you plays a magus in the other's story.
+
+1. **Make Bruno a storyguide.** In Saga Management's Players, edit Bruno
+   and set his role to **Storyguide**. The saga now has two storyguides,
+   and every storyguide's window opens **Playing**.
+2. **Switch to your storyguide role.**
+<!-- tui -->
+   **Player View**, in More (`m`) on the saga, switches between Playing
+   and your storyguide role.
+<!-- /tui -->
+<!-- gui -->
+   Click the eye in the title bar: it reads **Playing** or
+   **Storyguide**.
+<!-- /gui -->
+   The host's log notes each switch.
+3. **Take your stories.** On the threat's page choose **Its
+   Storyguide**
+<!-- tui -->
+   (More, `m`)
+<!-- /tui -->
+<!-- gui -->
+   (its Manage chapter)
+<!-- /gui -->
+   and pick yourself. Bruno does the same for the faerie court. Its
+   Secrets, Roll Tables and stages to come are now yours alone; Bruno
+   reads it as a player would, and you read his court the same way.
+4. **Hand one on.** When Bruno takes over the hills, choose Its
+   Storyguide again and pick him; only the record's own storyguide can.
+5. **Leave the rest shared.** A record with no storyguide is read whole
+   by every storyguide, as before.
+6. **When someone leaves.** Deleting Bruno, or making him a player
+   again, asks first and names his records: they are left with no
+   storyguide.
+
+**See also:** [A storyguide for each story](help:assign-storyguide), [Player view](help:player-view), [How to host a saga](help:guide-hosting)
+
 # How to find a record
 <!-- help: guide-find-record -->
 

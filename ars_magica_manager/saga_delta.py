@@ -28,7 +28,7 @@ import re
 from dataclasses import asdict, dataclass, fields
 from typing import Any
 
-from . import storage
+from . import storage, viewing
 from .merge import merge
 from .models import Saga
 
@@ -120,10 +120,90 @@ class Folded:
     advanced: bool
 
 
-def fold(saga: Saga, before: dict[str, Any], after: dict[str, Any]) -> Folded:
+#: The record lists with their own storyguide (viewing.ASSIGNABLE), and
+#: those whose records are a character's (theirs is the character's).
+_ASSIGNABLE = frozenset(
+    {"characters", "covenants", "neighbours", "creatures", "tribunals"}
+)
+_CHARACTERS_OWN = {"laboratories": "owner_id", "familiars": "character_id"}
+
+
+def _owner(saga: Saga, place: str) -> str:
+    """Who runs the record at `place` in `saga`, as viewing.storyguide_of
+    says ("" for a field of the saga, or a record not there)."""
+    found = _RECORD.match(place)
+    if found is None:
+        return ""
+    key, record_id = found.groups()
+    record = next((r for r in getattr(saga, key, []) if r.id == record_id), None)
+    return viewing.storyguide_of(record, saga) if record is not None else ""
+
+
+def _refuse_others(
+    saga: Saga,
+    me: str,
+    places: list[str],
+    before: dict[str, Any],
+    after: dict[str, Any],
+) -> None:
+    """Refuse a change to another storyguide's record, or one that takes
+    a record for anyone but `me` or hands on one not theirs (ADR 0015)."""
+    live = viewing.storyguide_ids(saga)
+    for place in places:
+        if not _RECORD.match(place):
+            _refuse_character_lines(saga, me, place, before, after)
+            continue
+        owner = _owner(saga, place)
+        if owner and owner != me:
+            raise DeltaRefused(f"{place} is another storyguide's.")
+        key = _key_of(place)
+        record = after.get(place)
+        if key in _CHARACTERS_OWN and isinstance(record, dict) and place not in before:
+            # A new laboratory or familiar: its character must be the
+            # storyguide's to change.
+            character = saga.character(str(record.get(_CHARACTERS_OWN[key]) or ""))
+            if character is not None and viewing.storyguide_of(character, saga) not in (
+                "",
+                me,
+            ):
+                raise DeltaRefused(f"{place} belongs to another storyguide's story.")
+        if key not in _ASSIGNABLE or not isinstance(record, dict):
+            continue
+        given = str(record.get("storyguide_id") or "")
+        given = given if given in live else ""
+        if given not in ("", me) and owner != me:
+            raise DeltaRefused(f"Only {place}'s own storyguide hands it on.")
+
+
+def _refuse_character_lines(
+    saga: Saga, me: str, place: str, before: dict[str, Any], after: dict[str, Any]
+) -> None:
+    """A list of the saga's without ids (season plans, lab projects): each
+    line added, changed or taken out that is a character's must be a
+    character the storyguide `me` may change."""
+    was, now = before.get(place), after.get(place)
+    if not isinstance(was, list) or not isinstance(now, list):
+        return
+    changed = [r for r in was if r not in now] + [r for r in now if r not in was]
+    for line in changed:
+        if not isinstance(line, dict) or "character_id" not in line:
+            continue
+        character = saga.character(str(line.get("character_id") or ""))
+        if character is not None and viewing.storyguide_of(character, saga) not in (
+            "",
+            me,
+        ):
+            raise DeltaRefused(f"{place} names another storyguide's character.")
+
+
+def fold(
+    saga: Saga, before: dict[str, Any], after: dict[str, Any], *, by: str = ""
+) -> Folded:
     """`saga` (the host's) with a storyguide's change folded in. Raises
-    DeltaRefused for a change only the host may make, or one naming no place
-    of the saga; ValueError, naming the field, for one it can't read."""
+    DeltaRefused for a change only the host may make, one to a record
+    another storyguide runs (`by`: the id of the storyguide who made it),
+    or one naming no place of the saga; ValueError, naming the field, for
+    one it can't read."""
     theirs = asdict(saga)
     places = [*before, *(p for p in after if p not in before)]
     for place in places:
@@ -134,6 +214,8 @@ def fold(saga: Saga, before: dict[str, Any], after: dict[str, Any]) -> Folded:
             raise DeltaRefused("Only the host changes the saga's Players.")
         if _RECORD.match(place) and not _records(theirs.get(key) or []):
             raise DeltaRefused(f"{key!r} is not a list of records.")
+    if by:
+        _refuse_others(saga, by, places, before, after)
     advancing = any(key in after for key in DATE)
     if advancing and any(before[key] != theirs[key] for key in DATE if key in before):
         now = f"{theirs['current_season']} {theirs['current_year']}"

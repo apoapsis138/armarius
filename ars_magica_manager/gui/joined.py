@@ -282,12 +282,16 @@ def tick(window: MainWindow) -> None:
         if due:
             _start(window, "reconnect", session.reconnect)
         return
-    if window.unsent or due:
+    if window.unsent or due or window.switched is not None:
         saga = window.saga
         now = asdict(saga) if window.unsent and saga is not None else None
         record = window.open_record_key()
+        # A storyguide's switch, for the host's log (ADR 0015).
+        switched, window.switched = window.switched, None
 
         def sync() -> Synced:
+            if switched is not None:
+                session.switched(playing=switched)
             saved = store.send(now) if now is not None else None
             read = store.seat.read(store.revision)
             others = tuple(session.here(record or ""))

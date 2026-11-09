@@ -78,6 +78,7 @@ def show(saga: Saga, record: Any = None) -> None:
     saga itself), for `read_only`."""
     global _on_show
     _on_show = (saga, record)
+    viewing.on_page(record)
 
 
 #: A character's This Season section: its Steward may change its plans
@@ -97,18 +98,28 @@ def read_only(part: str = "") -> bool:
 
 def may_change(saga: Saga, record: Any = None) -> bool:
     """Whether whoever sits in this copy may change `record` (None: the
-    saga itself)."""
-    player = viewing.current().player
-    return runs_the_saga(player) or players.may_change(saga, player, record)
+    saga itself). A storyguide, the host included, changes their own
+    records and those with no storyguide, never another's (ADR 0015)."""
+    viewer = viewing.current()
+    if runs_the_saga(viewer.player):
+        return viewing.runs(viewer, record, saga)
+    return players.may_change(saga, viewer.player, record)
 
 
 def may_plan(saga: Saga, record: Any) -> bool:
     """Whether whoever sits here may change `record`'s season plans: a
     character's Players, and its Steward."""
-    player = viewing.current().player
-    if runs_the_saga(player):
-        return True
-    return isinstance(record, Character) and players.may_plan(saga, player, record)
+    viewer = viewing.current()
+    if runs_the_saga(viewer.player):
+        return viewing.runs(viewer, record, saga)
+    return isinstance(record, Character) and players.may_plan(
+        saga, viewer.player, record
+    )
+
+
+#: What a storyguide may do whatever record is on show, Playing too:
+#: switch between Playing and their storyguide role.
+ANYWHERE = frozenset({"player_view"})
 
 
 def may_act(saga: Saga, player: Player | None, action: str, record: Any = None) -> bool:
@@ -117,8 +128,14 @@ def may_act(saga: Saga, player: Player | None, action: str, record: Any = None) 
     around and reads anywhere (viewing.LOOKING_ACTIONS) and otherwise only
     what their copy offers and players.may_change lets them change."""
     if runs_the_saga(player):
-        # All but what only the host's own copy does (viewing.HOST_ONLY_ACTIONS).
-        return viewing.may_do(viewing.current(), action)
+        viewer = viewing.current()
+        if action in ANYWHERE:
+            return True
+        # All but what only the host's own copy does (viewing.HOST_ONLY_ACTIONS),
+        # and on another storyguide's record only looking (ADR 0015).
+        return viewing.may_do(viewer, action) and (
+            viewing.is_looking(action) or viewing.runs(viewer, record, saga)
+        )
     if not viewing.may_do(viewing.current(), action):
         return False
     return viewing.is_looking(action) or players.may_change(saga, player, record)

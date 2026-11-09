@@ -229,6 +229,9 @@ class Tribunal:
     #: What only the storyguide should read: the record's Secrets
     #: chapter, hidden from players signed in to a hosted copy.
     secrets: list[Secret] = field(default_factory=list)
+    #: Who runs it as storyguide (viewing.storyguide_of): "" for no one,
+    #: the host, or a Storyguide-role Player's id.
+    storyguide_id: str = ""
     # Polemic (Transforming Mythic Europe pp. 27-35): the arguments meant
     # for coming meetings, each with its texts. Older saves load without.
     arguments: list[Argument] = field(default_factory=list)

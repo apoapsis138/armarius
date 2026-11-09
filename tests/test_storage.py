@@ -585,6 +585,7 @@ def _saga_with_every_record() -> Saga:  # noqa: PLR0915
     magus.stirpes.append(models.Stirps("Rooster", form="Animal", level=10))
     magus.constant_effects.append(ConstantEffect("Ring of Flight", powerful=True))
     magus.progress.append(Progress("vis", "Study"))
+    magus.goals.append(models.PlayerGoal("g", "Master Creo", subject="art:creo"))
     magus.ordeals, magus.refused_vendettas = (
         [Ordeal("Minor")],
         [RefusedVendetta("Rival", 3)],

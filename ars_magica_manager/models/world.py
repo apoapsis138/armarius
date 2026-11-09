@@ -149,6 +149,9 @@ class Neighbour:
     #: left out of everything a player reads until the storyguide reveals
     #: it. Older saves load known.
     known: bool = True
+    #: Who runs it as storyguide (viewing.storyguide_of): "" for no one,
+    #: the host, or a Storyguide-role Player's id.
+    storyguide_id: str = ""
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Neighbour:

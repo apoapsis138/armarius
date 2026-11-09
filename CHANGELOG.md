@@ -77,6 +77,7 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | Fundamenta I | Foundations | 2.11.0 | Your data in its own folder, safe saves, packaging and automatic checks |
 | Fundamenta II | Your own folder | 2.43.0 | Choose where your sagas, backups, exports and settings are kept |
 | Sodales I | The troupe | 2.18.0 | The saga hosted for players' browsers and SSH, with sign-in and safe saves |
+| Sodales II | Salvus Conductus | 4.0.0 | Remote seats: players and troupe storyguides join from their own Armarius over the internet, reviewed end to end |
 | Illuminatio I | The desktop | 2.51.0 | The desktop version, with a page for every record and everything editable |
 | Illuminatio II | The title page | 2.61.0 | The title page, the window's own title bar, chapters, gifts and printing to PDF |
 | Illuminatio III | Gilt | 2.92.0 | Gilt initials, ruled ledgers, manuscript drop-downs and sounds |
@@ -123,6 +124,14 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | Milestone | Version | What it marked |
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
+
+## 4.1.0 — 2026-11-09
+
+### Sodales
+
+- **A storyguide for each story.** With a second storyguide in the saga, a character, covenant, place, lord, faction, threat, creature or Tribunal can have its own storyguide (Its Storyguide, in More or the record's Manage). Its storyguide reads it whole; any other storyguide, the host too, reads it as a player would and can't change it, on every page, in Find, Looking Ahead, Needs You, the Atlas, a Remote seat and an export. Any storyguide takes a record with none; only its own storyguide releases it or hands it on. Deleting a storyguide, or making them a player again, asks first and leaves their stories with no storyguide.
+- **Playing and Storyguide.** With a second storyguide, Player view becomes a switch between Playing and your storyguide role; every storyguide's window opens Playing, and each switch is noted in the host's Remote seats log. From a Remote seat, while another storyguide runs stories, the season is advanced on the host's computer.
+- **A player's Notes & Goals.** A new section on a played character's Personality tab (Description on the desktop): the player's private notes and the goals they set the character. Only its players, its Steward and its storyguide read them; a goal ticked Share with the troupe is read by all. A goal of a score to reach ("Creo 15 by 1230") opens Plan the Study Path filled in.
 
 ## 4.0.0 — 2026-11-09
 

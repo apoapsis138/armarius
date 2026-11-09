@@ -26,7 +26,7 @@ from collections.abc import Iterator
 from contextlib import contextmanager
 
 from . import memberships, threats, viewing, world
-from .models import Player, Saga
+from .models import Pin, Player, Saga
 from .place_events import diary as place_diary
 from .place_events import tables as place_tables
 from .references import Ref
@@ -51,18 +51,42 @@ def looking_as(viewer: viewing.Viewer, saga: Saga) -> Iterator[None]:
 
 def seat_view(saga: Saga, viewer: viewing.Viewer) -> Saga:
     """A copy of `saga` holding only what `viewer` may read. The
-    storyguide's is the whole saga, less the passcode hashes."""
+    storyguide's is the whole saga, less the passcode hashes; among
+    several storyguides, a record another runs is as the players have it
+    (ADR 0015)."""
     view = copy.deepcopy(saga)
     view.players = [_name_only(p) for p in saga.players]
-    if viewer.is_storyguide:
+    if viewing.reads_everything(viewer, view):
         return view
     with looking_as(viewer, view):
+        held = _held(view, viewer)
         _hide_lines(view, viewer)
-        _hide_threat_futures(view)
-        _hide_secrets(view)
-        _hide_tables_and_targets(view)
-        _hide_unknown(view)
+        _hide_threat_futures(view, held)
+        _hide_secrets(view, held)
+        _hide_tables_and_targets(view, held)
+        _hide_private(view, viewer)
+        _hide_unknown(view, viewer)
     return view
+
+
+def _hide_private(view: Saga, viewer: viewing.Viewer) -> None:
+    """A character's private notes and unshared goals, for anyone but its
+    players, Steward and storyguide: not even that they exist."""
+    for character in view.characters:
+        if not viewing.reads_private(viewer, character, view):
+            character.private_notes = ""
+            character.goals = [g for g in character.goals if g.shared]
+
+
+def _held(view: Saga, viewer: viewing.Viewer) -> set[int]:
+    """The records `viewer` reads whole, by identity, asked once before
+    any is changed."""
+    return {
+        id(record)
+        for kind in _WITH_SECRETS
+        for record in getattr(view, kind)
+        if viewing.holds(viewer, record, view)
+    }
 
 
 def _name_only(player: Player) -> Player:
@@ -98,20 +122,21 @@ def _hide_lines(view: Saga, viewer: viewing.Viewer) -> None:
                 if (target := world.link_target(view, link)) is None
                 or viewing.may_read(viewer, target)
             ]
-    view.pins = [
-        pin
-        for pin in view.pins
-        if not pin.secret
-        and not pin.hidden
-        and viewing.ref_known(view, Ref(pin.kind, pin.record_id, ""))
-    ]
+
+    def pin_kept(pin: Pin) -> bool:
+        found = Ref(pin.kind, pin.record_id, "")
+        if viewing.ref_held(view, found, viewer):
+            return True
+        return not pin.secret and not pin.hidden and viewing.ref_known(view, found)
+
+    view.pins = [pin for pin in view.pins if pin_kept(pin)]
 
 
-def _hide_threat_futures(view: Saga) -> None:
+def _hide_threat_futures(view: Saga, held: set[int]) -> None:
     """A threat as the players learn of it: the stages that have come or
     been marked, never its antagonist, clock or what is still to come."""
     for neighbour in view.neighbours:
-        if neighbour.kind != threats.THREAT:
+        if neighbour.kind != threats.THREAT or id(neighbour) in held:
             continue
         stages = threats.stages(neighbour)
         stages[:] = [s for s in stages if threats.shows_stage(view, neighbour, s)]
@@ -126,27 +151,36 @@ def _hide_threat_futures(view: Saga) -> None:
             )
 
 
-def _hide_secrets(view: Saga) -> None:
+def _hide_secrets(view: Saga, held: set[int]) -> None:
     for kind in _WITH_SECRETS:
         for record in getattr(view, kind):
-            record.secrets = [s for s in record.secrets if s.revealed_year is not None]
+            if id(record) not in held:
+                record.secrets = [
+                    s for s in record.secrets if s.revealed_year is not None
+                ]
 
 
-def _hide_tables_and_targets(view: Saga) -> None:
+def _hide_tables_and_targets(view: Saga, held: set[int]) -> None:
     """A place's Roll Tables are the storyguide's; so is a research
     target kept hidden until it is reached."""
     for neighbour in view.neighbours:
-        if "tables" in neighbour.details:
+        if "tables" in neighbour.details and id(neighbour) not in held:
             place_tables(neighbour).clear()
     for character in view.characters:
+        if id(character) in held:
+            continue
         for goal in character.breakthroughs:
             if goal.hidden_target and not goal.reached:
                 goal.target = 0
 
 
-def _hide_unknown(view: Saga) -> None:
-    """The records the players don't know of, gone."""
-    view.characters = [c for c in view.characters if viewing.is_known(c)]
-    view.covenants = [c for c in view.covenants if viewing.is_known(c)]
-    view.neighbours = [n for n in view.neighbours if viewing.is_known(n)]
-    view.creatures = [c for c in view.creatures if viewing.is_known(c)]
+def _hide_unknown(view: Saga, viewer: viewing.Viewer) -> None:
+    """The records the reader doesn't know of, gone."""
+
+    def kept(record: object) -> bool:
+        return viewing.readable(viewer, record, view)
+
+    view.characters = [c for c in view.characters if kept(c)]
+    view.covenants = [c for c in view.covenants if kept(c)]
+    view.neighbours = [n for n in view.neighbours if kept(n)]
+    view.creatures = [c for c in view.creatures if kept(c)]

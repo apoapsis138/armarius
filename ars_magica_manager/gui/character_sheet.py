@@ -87,6 +87,7 @@ from ..forms import criamon as criamon_forms
 from ..forms import device as device_forms
 from ..forms import go_to as go_to_forms
 from ..forms import menu as menu_forms
+from ..forms import notes_goals as goal_forms
 from ..forms import power as power_forms
 from ..forms import religion as religion_forms
 from ..forms import reveal as reveal_forms
@@ -116,6 +117,7 @@ from ..sections import (
     CHAR_AHEAD_SECTION,
     CONSTANT_EFFECTS_SECTION,
     COVERS_SECTION,
+    NOTES_SECTION,
     ORDINATIONS_SECTION,
     PETITIONS_SECTION,
     POWERS_SECTION,
@@ -1004,6 +1006,8 @@ class CharacterSheet(QWidget):
                 self._placed("Reputations"),
             )
         )
+        if goal_forms.shown(saga, c):
+            parts.append(self._notes_goals())
         if world.holds_standing(saga, c):
             parts += relations(saga, c, p, self.run, links=False)
         parts += self._biography_sections(forms)
@@ -1012,6 +1016,38 @@ class CharacterSheet(QWidget):
         if cover_forms.shown(c):
             parts.append(self._covers())
         return scrolling_page(p, *parts)
+
+    def _notes_goals(self) -> QWidget:
+        """Notes & Goals (forms/notes_goals.py): the player's own notes and
+        goals, for those who read them; a goal shared, for the troupe."""
+        saga, c, p = self.saga, self.character, self.p
+        table = Table(
+            ["Notes & Goals", "Aim", "Read by"],
+            goal_forms.table_rows(saga, c),
+            markup=True,
+        )
+        plan: RowVerb = (
+            "Plan",
+            "open",
+            lambda row: goal_forms.plan_form(saga, c, row),
+            lambda row: goal_forms.plans(saga, c, row),
+        )
+        box = QWidget()
+        column = QVBoxLayout(box)
+        column.setContentsMargins(0, 0, 0, 0)
+        column.addWidget(
+            table_section(
+                goal_forms.title(saga, c),
+                table,
+                self._table()[NOTES_SECTION],
+                p,
+                self.run,
+                empty="No goals yet.",
+                more=[plan],
+            )
+        )
+        column.addWidget(TextBlock(goal_forms.text(saga, c), p))
+        return box
 
     def _hermetic_sections(self, forms: dict[str, Form]) -> list[QWidget]:
         """A magus's Hermetic Background, and his familiar (or the card to

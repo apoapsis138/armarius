@@ -63,6 +63,7 @@ from .character import HermeticBackground as HermeticBackground
 from .character import Investment as Investment
 from .character import LabTextAccess as LabTextAccess
 from .character import Ordeal as Ordeal
+from .character import PlayerGoal as PlayerGoal
 from .character import Progress as Progress
 from .character import RefusedVendetta as RefusedVendetta
 from .character import ResearchAttempt as ResearchAttempt

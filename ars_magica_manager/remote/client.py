@@ -462,6 +462,13 @@ class RemoteClient:
             raise UnreadableReply
         return str(reply.body.get("message", ""))[:400]
 
+    async def switched(self, playing: bool) -> None:
+        """Tell the host a storyguide switched to Playing or to their
+        storyguide role (remote/switches.py), for its log."""
+        reply = await self.request("switched", {"playing": playing})
+        if reply.type != "noted":
+            raise UnreadableReply
+
     async def close(self) -> None:
         try:
             await self._channel.close()

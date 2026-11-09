@@ -800,6 +800,22 @@ class ResearchAttempt:
 
 
 @dataclass
+class PlayerGoal:
+    """A goal a character's player sets them (forms/notes_goals.py):
+    their words, whether the troupe may read it (otherwise only those who
+    read the character's private notes), and, for a score to reach, the
+    Art or Ability ("art:creo", "ability:Magic Theory", as Study Path
+    names one), the score and the year to reach it by."""
+
+    id: str
+    text: str
+    shared: bool = False
+    subject: str = ""
+    score: int = 0
+    by_year: int | None = None
+
+
+@dataclass
 class Breakthrough:
     """A magus's Arcane Discovery goal: what it is, its kind and
     target (the storyguide may type a secret one), the points gained, what
@@ -1065,6 +1081,11 @@ class Character:
     lab_text_access: dict[str, LabTextAccess] = field(default_factory=dict)
     #: Arcane Discovery goals.
     breakthroughs: list[Breakthrough] = field(default_factory=list)
+    #: The player's own notes and goals (forms/notes_goals.py): read by
+    #: the character's players, its Steward and its storyguide; a goal
+    #: ticked shared, by the troupe too.
+    private_notes: str = ""
+    goals: list[PlayerGoal] = field(default_factory=list)
     #: A grog's yearly update; None until set up.
     grog_year: GrogYear | None = None
     #: An animal grog's kind, species and Language; None for a person
@@ -1136,6 +1157,10 @@ class Character:
     #: left out of everything a player reads until the storyguide reveals
     #: it. Older saves load known.
     known: bool = True
+    #: Who runs it as storyguide (viewing.storyguide_of): "" for no one,
+    #: the host, or a Storyguide-role Player's id. Another storyguide reads
+    #: it only as a player would.
+    storyguide_id: str = ""
     links: list[Link] = field(default_factory=list)
     #: His attitude toward each player covenant and the favours owed
     #: between him and the troupe, as a neighbour's are (models.world).
@@ -1242,6 +1267,9 @@ class Character:
         d.update(
             links=[Link(**known_fields(Link, x)) for x in d.get("links", [])],
             interests_off=_interests_off(d),
+            goals=[
+                PlayerGoal(**known_fields(PlayerGoal, g)) for g in d.get("goals") or []
+            ],
         )
         d.update(
             agents=[Agent.from_dict(a) for a in d.get("agents", [])],

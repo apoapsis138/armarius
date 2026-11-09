@@ -32,6 +32,17 @@ async def hosted() -> AsyncIterator[Hosted]:
     await serving.host.stop()
 
 
+async def test_a_storyguides_switch_is_logged_on_the_host(hosted: Hosted) -> None:
+    client = await hosted.signed_in()
+    try:
+        await client.switched(True)
+        await client.switched(False)
+    finally:
+        await client.close()
+    events = [e.event for e in AuditLog(audit_path(hosted.saga.name)).entries()]
+    assert events[-2:] == [audit.SWITCHED_TO_PLAYING, audit.SWITCHED_TO_STORYGUIDE]
+
+
 async def test_a_storyguides_seat_reads_everything_but_the_passcodes(
     hosted: Hosted,
 ) -> None:

@@ -143,7 +143,8 @@ class SeatChanges:
             player = players.player_by_id(saga, session.player_id)
             if player is None or player.role != players.STORYGUIDE:
                 raise Refused
-            folded = fold(saga, before, after)
+            # Never another storyguide's records (ADR 0015).
+            folded = fold(saga, before, after, by=player.id)
         except DeltaRefused as refused:
             if refused.advanced:
                 raise

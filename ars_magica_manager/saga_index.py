@@ -313,8 +313,20 @@ def entries(saga: Saga) -> list[Entry]:
     read it: the storyguide's with each record's Secrets to be found by, a
     player's without the records they don't know of."""
     found = [entry for list_kind in KINDS.values() for entry in list_kind(saga)]
-    if viewing.storyguide_reads():
+    looking = viewing.current()
+    if viewing.reads_everything(looking, saga):
         return [_with_secrets(saga, entry) for entry in found]
+    if looking.is_storyguide:
+        # Among several storyguides: their own records with their Secrets,
+        # another's as the players find them (ADR 0015).
+        return [
+            _with_secrets(saga, entry)
+            if viewing.ref_held(saga, entry.ref, looking)
+            else entry
+            for entry in found
+            if viewing.ref_held(saga, entry.ref, looking)
+            or viewing.ref_known(saga, entry.ref)
+        ]
     hidden = viewing.unknown_names(saga)
     return [
         _without_names(entry, hidden)

@@ -39,6 +39,7 @@ from ....forms import church as church_forms
 from ....forms import constant_effect as constant_forms
 from ....forms import covers as cover_forms
 from ....forms import criamon as criamon_forms
+from ....forms import notes_goals as goal_forms
 from ....forms import power as power_forms
 from ....forms import religion as religion_forms
 from ....models import (
@@ -59,6 +60,7 @@ from ....sections import (
     CRIAMON_PATH_SECTION,
     CRIAMON_STATIONS_SECTION,
     FAITH_SECTION,
+    NOTES_SECTION,
     ORDERS_SECTION,
     ORDINATIONS_SECTION,
     PETITIONS_SECTION,
@@ -639,6 +641,28 @@ class CharacterSheetView(SheetView):
                         "section-reputations",
                         self._reputation_rows,
                         id="character-reputations-list",
+                    )
+            if goal_forms.shown(self.saga, character):
+                with SheetSection(
+                    title=self._titled(
+                        NOTES_SECTION,
+                        NOTES_SECTION,
+                        lambda: goal_forms.title(self.saga, self.character),
+                    ),
+                    id=NOTES_SECTION,
+                ):
+                    yield self._list(
+                        NOTES_SECTION,
+                        lambda: (
+                            goal_forms.rows(self.saga, self.character)
+                            or [(None, "[$label]No goals yet.[/]")]
+                        ),
+                        id="char-notes-list",
+                    )
+                    yield self._static(
+                        NOTES_SECTION,
+                        lambda: goal_forms.text(self.saga, self.character),
+                        id="char-notes-text",
                     )
             if world.holds_standing(self.saga, character):
                 yield from self._relations(character, links=False)

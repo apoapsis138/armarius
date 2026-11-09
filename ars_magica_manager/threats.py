@@ -378,7 +378,7 @@ def due(saga: Saga, neighbour: Neighbour) -> tuple[int, str] | None:
     """The next dated stage's date (sortable) and "Title, Winter 1220",
     for the Region's Threat due; None if no dated stage is to come, and
     for the players, who never see what is still to come."""
-    if not viewing.storyguide_reads():
+    if not viewing.storyguide_reads(neighbour):
         return None
     upcoming = reached(saga, neighbour).next
     if upcoming is None or not by_date(neighbour):
@@ -391,7 +391,7 @@ def due(saga: Saga, neighbour: Neighbour) -> tuple[int, str] | None:
 
 def facts(saga: Saga, neighbour: Neighbour) -> list[Fact]:
     at = reached(saga, neighbour)
-    if not viewing.storyguide_reads():
+    if not viewing.storyguide_reads(neighbour):
         # The players learn of a threat's stages as they come, never of
         # its clock or what is still to come (viewing.py).
         return [
@@ -444,7 +444,7 @@ def clock(saga: Saga, neighbour: Neighbour) -> tuple[int, int] | None:
     threat's stages come, or a track's position up to its last stage.
     None while it is dormant or has nothing to count, and for the
     players, who never see a threat's clock (viewing.py)."""
-    if is_dormant(neighbour) or not viewing.storyguide_reads():
+    if is_dormant(neighbour) or not viewing.storyguide_reads(neighbour):
         return None
     every = stages(neighbour)
     if by_date(neighbour):
@@ -531,7 +531,7 @@ def problem(values: dict[str, Any]) -> str | None:
 def shows_stage(saga: Saga, neighbour: Neighbour, stage: Stage) -> bool:
     """Whether whoever is looking may read `stage`: the storyguide any; the
     players one once it has come or been marked (viewing.py)."""
-    return viewing.storyguide_reads() or (
+    return viewing.storyguide_reads(neighbour) or (
         (stage.get("outcome") or PENDING) != PENDING or has_come(saga, neighbour, stage)
     )
 

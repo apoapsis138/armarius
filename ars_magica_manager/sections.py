@@ -263,6 +263,9 @@ VOTE_SECTION = "section-meeting-vote"
 #: A record's Secrets chapter (forms/secrets.py): the same section on a
 #: covenant's, character's, Tribunal's, neighbour's and creature's sheet.
 SECRETS_SECTION = "section-secrets"
+#: A character's Notes & Goals (forms/notes_goals.py), on its Personality
+#: tab: the player's own, read by few.
+NOTES_SECTION = "section-char-notes"
 #: The tab (on the desktop, the chapter) that holds it.
 SECRETS_TAB = "tab-secrets"
 #: The secrets revealed to the troupe, in the same tab: what anyone but
@@ -437,6 +440,7 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     ATTENDANCE_SECTION: frozenset({"edit"}),
     VOTE_SECTION: frozenset({"edit"}),
     SECRETS_SECTION: frozenset({"add", "edit", "remove"}),
+    NOTES_SECTION: frozenset({"add", "edit", "remove"}),
     GOODS_SECTION: frozenset({"add", "edit", "remove"}),
     # A place's Tomb tab (Lands of the Nile).
     TOMB_SECTION: frozenset({"edit"}),

@@ -65,6 +65,7 @@ from .. import (
     saga_index,
     seat,
     storage,
+    storyguides,
     title_page,
     undo_season,
     viewing,
@@ -415,6 +416,9 @@ class MainWindow(QMainWindow):
         self.session: SeatSession | None = None
         #: A Joined game's changes not yet taken by the host.
         self.unsent = False
+        #: A storyguide's switch to Playing (True) or their storyguide role
+        #: (False) from a Joined game, for the host's log; None once sent.
+        self.switched: bool | None = None
         #: What another copy of a hosted saga just saved, said at the foot.
         self.note = NoteStrip(self)
         #: Every few seconds, while the saga has players: pick up what
@@ -745,6 +749,10 @@ class MainWindow(QMainWindow):
         Player), or as its storyguide."""
         self.saga = saga
         self.player = player
+        if viewing.troupe_style(saga) and seat.runs_the_saga(player):
+            # With a second storyguide every storyguide's window opens
+            # Playing (ADR 0015).
+            viewing.set_player_view(saga.id, True)
         self._use_viewer()
         # Its user-made entries join the shared catalogs, as in the terminal.
         catalog.use_saga(saga)
@@ -1051,6 +1059,21 @@ class MainWindow(QMainWindow):
         )
 
     def _draw_view_button(self) -> None:
+        saga = self.saga
+        if viewing.troupe_style(saga):
+            # Among several storyguides the eye is the switch between
+            # Playing and the storyguide's role (ADR 0015).
+            playing = not viewing.current().is_storyguide
+            self.view_button.setChecked(playing)
+            self.view_button.setText("  Playing" if playing else "  Storyguide")
+            self.view_button.setToolTip(
+                "Playing: your characters as a player sees them. Click to "
+                "switch to your storyguide role."
+                if playing
+                else "Your storyguide role: your stories and those with no "
+                "storyguide, Secrets and all. Click to switch to Playing."
+            )
+            return
         on = viewing.current().kind == viewing.TABLE
         self.view_button.setChecked(on)
         self.view_button.setText("  Player view" if on else "")
@@ -1067,7 +1090,13 @@ class MainWindow(QMainWindow):
         saga = self.saga
         if saga is None:
             return
-        viewing.set_player_view(saga.id, not viewing.player_view_on(saga.id))
+        playing = not viewing.player_view_on(saga.id)
+        viewing.set_player_view(saga.id, playing)
+        if self.store.remote:
+            # Logged on the host with the next talk to it (gui/joined.py).
+            self.switched = playing
+        else:
+            storyguides.log_switch(saga, self.player, playing=playing)
         self._use_viewer()
         if self.finder is not None and shiboken6.isValid(self.finder):
             self.finder.close()
@@ -1940,8 +1969,8 @@ class MainWindow(QMainWindow):
         saga = self.saga
         shown = saga is not None and bool(self.trail) and self.trail[-1].kind != SHELF
         self.find_button.setVisible(shown)
-        # Player view is the storyguide's own screen: a player has no eye.
-        self.view_button.setVisible(shown and self.player is None)
+        # Player view is a storyguide's own screen: a player has no eye.
+        self.view_button.setVisible(shown and seat.runs_the_saga(self.player))
         self._draw_view_button()
         self._draw_seat_button()
         if not shown:

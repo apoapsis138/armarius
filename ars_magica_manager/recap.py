@@ -135,7 +135,9 @@ def _threats(saga: Saga, within: Span) -> Part | None:
     for neighbour in saga.neighbours:
         if not threats.is_threat(neighbour):
             continue
-        if within.players and not viewing.is_known(neighbour):
+        if (within.players and not viewing.is_known(neighbour)) or not (
+            viewing.readable(viewing.current(), neighbour, saga)
+        ):
             continue
         for stage in threats.stages(neighbour):
             order = threats.stage_order(stage)

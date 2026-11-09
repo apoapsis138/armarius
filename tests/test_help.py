@@ -360,6 +360,9 @@ async def test_every_tab_and_section_has_help():
             played=False,
         )
     )
+    # A played character has Notes & Goals.
+    played = next(c for c in saga.characters if c.id == NODES["character"][1])
+    played.private_notes = "Notes"
     # The Grand Tribunal's customs have a tab of their own.
     saga.tribunals.append(
         Tribunal(id="grand", name="The Grand Tribunal", package="grand")
@@ -624,6 +627,7 @@ GUIDES = [
     "guide-find-action",
     "guide-charter",
     "guide-reveal",
+    "guide-troupe-storyguides",
     "guide-find-record",
     "guide-sessions",
 ]

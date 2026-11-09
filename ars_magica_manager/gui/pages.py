@@ -1129,7 +1129,9 @@ def troupe_chapter(
 
     # A player seated here (seat.py) is met by their own characters first,
     # then the rest of the troupe's.
-    me = viewing.current().player
+    # A storyguide among the Players meets theirs only while Playing.
+    looking = viewing.current()
+    me = looking.player if not looking.is_storyguide else None
     mine = players.characters_of(saga, me) if me is not None else []
     groups = troupe.player_characters(saga, apart={c.id for c in mine})
     played = sum(len(members) for _, members in groups)

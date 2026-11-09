@@ -32,6 +32,7 @@ from . import (
     seasons,
     selling,
     sourcebooks,
+    storyguides,
     theban_customs,
     threats,
     traditions,
@@ -53,6 +54,7 @@ from .forms import careers, go_to, take_up
 from .forms import certamen_duel as certamen_forms
 from .forms import charter as charter_forms
 from .forms import hubris as hubris_forms
+from .forms import notes_goals as goal_forms
 from .forms import secrets as secret_forms
 from .forms import threshold as threshold_forms
 from .forms import tmre_divination as tmre_divination_forms
@@ -136,6 +138,7 @@ from .sections import (
     LIBRARY_SECTIONS,
     MANORS_SECTION,
     NEIGHBOUR_INFO_SECTION,
+    NOTES_SECTION,
     ORDERS_SECTION,
     PLAYERS_SECTION,
     REGION_STORIES_SECTION,
@@ -418,11 +421,15 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("k", "conceal", "Hide from the Players"),
     MenuItem("k", "mark_unknown", "Hide from the Players"),
     MenuItem("v", "player_view", "Player View"),
+    # A record's own storyguide, with more than one (storyguides.py).
+    MenuItem("y", "assign_storyguide", storyguides.TITLE),
     # One secret of a record's Secrets list, revealed or taken back, or
     # split into a secret for each paragraph.
     MenuItem("k", "reveal_secret", "Reveal the Secret"),
     MenuItem("k", "conceal_secret", "Hide the Secret Again"),
     MenuItem("s", "split_secret", "Split by Paragraph"),
+    # A player's goal of a score to reach (forms/notes_goals.py).
+    MenuItem("p", "plan_goal", "Plan the Study Path"),
     # A chapter of what the troupe did: on a threat, or a chosen open story.
     MenuItem("t", "take_up_tale", "Take Up the Tale"),
     MenuItem("t", "take_up_story", "Take Up the Tale"),
@@ -1092,6 +1099,14 @@ def _reveals(facts: ActionFacts, *, known: bool) -> bool:
     )
 
 
+def _assigns_storyguide(facts: ActionFacts) -> bool:
+    """Its Storyguide: on a record that can have one, with a second
+    storyguide, for a storyguide who runs it (storyguides.offered)."""
+    return facts.on_record() and storyguides.offered(
+        facts.saga, facts.record_to_delete()
+    )
+
+
 def _on_region(facts: ActionFacts) -> bool:
     """On the saga or the Region (the desktop's The Region chapter)."""
     return facts.selected_kind in (
@@ -1552,6 +1567,7 @@ _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     "conceal": partial(_reveals, known=True),
     "mark_unknown": _on_region,
     "player_view": _on_saga,
+    "assign_storyguide": _assigns_storyguide,
     "delay_threat": _on_threat_under_way,
     "take_up_tale": _on_threat_under_way,
     "go_to": _goes_to,
@@ -1705,6 +1721,17 @@ def _splits_secret(facts: ActionFacts, section: str) -> bool:
     """Split by Paragraph: on a chosen secret of several paragraphs."""
     chosen = _chosen_secret(facts, section)
     return chosen is not None and secret_forms.splits(*chosen)
+
+
+def _plans_goal(facts: ActionFacts, section: str) -> bool:
+    """Plan the Study Path: on a chosen goal of Notes & Goals naming an Art
+    or Ability and a score, for whoever may plan the character's seasons."""
+    character = facts.selected_character
+    return (
+        section == NOTES_SECTION
+        and character is not None
+        and goal_forms.plans(facts.saga, character, facts.chosen_row(NOTES_SECTION))
+    )
 
 
 def _in_more_section(action: str) -> Callable[[ActionFacts, str], bool]:
@@ -1963,6 +1990,7 @@ _SECTION_RULES: dict[str, Callable[[ActionFacts, str], bool]] = {
     "reveal_secret": partial(_on_secret, revealed=False),
     "conceal_secret": partial(_on_secret, revealed=True),
     "split_secret": _splits_secret,
+    "plan_goal": _plans_goal,
     "add": _has_verb("add"),
     "remove": _has_verb("remove"),
     "edit": _has_verb("edit"),

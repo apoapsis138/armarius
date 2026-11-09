@@ -19,7 +19,7 @@ from .. import house_rules as hr
 from .. import own_abilities as oa
 from .. import players as pl
 from .. import saga_content as sc
-from .. import sourcebooks, traditions
+from .. import sourcebooks, storyguides, traditions, viewing
 from .. import spells as spl
 from ..arts import FORMS, TECHNIQUES
 from ..commands import Act, Choice, Choose, Confirm, Form, Refuse, SectionOps
@@ -755,6 +755,9 @@ def player_form(saga: Saga, existing: Player | None) -> Form:
         else:
             player = existing
             pl.update(existing, values)
+            if was == pl.STORYGUIDE and player.role != pl.STORYGUIDE:
+                # Their stories have no storyguide now (ADR 0015).
+                viewing.free_records(saga, player.id)
         apply_plays(saga, player, values)
         devices = DeviceBook(devices_path(saga.name))
         if values.get("passcode"):
@@ -776,11 +779,25 @@ def player_form(saga: Saga, existing: Player | None) -> Form:
         if promoting and seated and existing is not None:
             return Confirm(
                 f"Make {escape(existing.name)} a storyguide? Within seconds "
-                f"{escape(', '.join(seated))} will see everything in the saga, "
-                "Secrets included, and may change any record in it.",
+                f"{escape(', '.join(seated))} will see everything in the saga "
+                "but another storyguide's stories, Secrets included, and may "
+                "change any record in it but those.",
                 lambda: store(values),
                 yes_label="Make Storyguide",
                 title="Make Storyguide",
+            )
+        demoting = (
+            existing is not None
+            and existing.role == pl.STORYGUIDE
+            and values.get("role") != pl.STORYGUIDE
+        )
+        freed = storyguides.freed_warning(saga, existing.id) if existing else ""
+        if demoting and freed and existing is not None:
+            return Confirm(
+                f"Make {escape(existing.name)} a player again?{freed}",
+                lambda: store(values),
+                yes_label="Make Player",
+                title="Make Player",
             )
         store(values)
         return None
@@ -806,12 +823,14 @@ def delete_player(saga: Saga, player: Player) -> Confirm:
     """Delete a player, after asking."""
 
     def apply() -> None:
+        viewing.free_records(saga, player.id)
         pl.remove(saga, player)
         RemotePasscodes(passcodes_path(saga.name)).forget(player.id)
 
     return Confirm(
         f"Delete the player {escape(player.name)}?\n\n"
-        "They will no longer be able to sign in.",
+        "They will no longer be able to sign in."
+        + storyguides.freed_warning(saga, player.id),
         apply,
     )
 

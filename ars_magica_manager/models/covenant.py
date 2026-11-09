@@ -528,6 +528,10 @@ class Covenant:
     #: left out of everything a player reads until the storyguide reveals
     #: it. Older saves load known.
     known: bool = True
+    #: Who runs it as storyguide (viewing.storyguide_of): "" for no one,
+    #: the host, or a Storyguide-role Player's id. Its open story events
+    #: are that storyguide's too.
+    storyguide_id: str = ""
     # Hermetic Projects (Hermetic Projects pp. 36-41): the great works it
     # has begun, and the one its Projects tab shows ("" for the first).
     hermetic_projects: list[HermeticProject] = field(default_factory=list)

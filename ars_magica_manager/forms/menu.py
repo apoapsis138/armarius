@@ -49,6 +49,7 @@ from .. import (
     sessions,
     storage,
     story_chapters,
+    storyguides,
     study_path,
     teaching,
     threats,
@@ -178,6 +179,8 @@ NOT_ON_PAGES = frozenset(
         "reveal_secret",
         "conceal_secret",
         "split_secret",
+        # Notes & Goals' own row button.
+        "plan_goal",
         "edit_arms",
         "edit_fatigue",
         "edit_familiar_fatigue",
@@ -562,6 +565,9 @@ MANAGE: dict[str, str] = {
     "troupe's covenants' Diary.",
     "conceal": "Take it back: it is left out of everything the players read "
     "until you reveal it again, and the line its reveal wrote goes.",
+    "assign_storyguide": "Take it as your story while it has no storyguide, "
+    "or release or hand on one of yours: its storyguide alone reads its "
+    "Secrets, and any other storyguide reads it as a player would.",
     "delay_threat": "Push the threat later or bring it sooner: its dated stages "
     "still to come move together, or it moves back or on along its track; "
     "the reason goes in its Diary.",
@@ -575,11 +581,20 @@ MANAGE: dict[str, str] = {
 ON_THE_PAGE = frozenset({*MANAGE, "toggle_mode", "creation_worksheet"})
 
 
+def _managed(page: Page, action: str, detail: str) -> str:
+    """A Manage entry's line, with Its Storyguide saying whose it is now."""
+    if action != "assign_storyguide":
+        return detail
+    record = page.record_to_delete()
+    who = viewing.storyguide_name(page.saga, viewing.storyguide_of(record, page.saga))
+    return f"{detail} Now: {escape(who)}."
+
+
 def manage_items(page: Page) -> list[ManageItem]:
     """What the page's Manage chapter offers, in order."""
     labels = {item.action: item.label for item in MORE_MENU}
     items = [
-        ManageItem(action, labels[action], detail)
+        ManageItem(action, labels[action], _managed(page, action, detail))
         for action, detail in MANAGE.items()
         if action != DELETE_RECORD and available(action, page)
     ]
@@ -2046,6 +2061,9 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "merge_doubles": lambda page: merges.merge_form(page.saga),
     "reveal": lambda page: reveal_forms.reveal(page.saga, page.record_to_delete()),
     "conceal": lambda page: reveal_forms.conceal(page.saga, page.record_to_delete()),
+    "assign_storyguide": lambda page: storyguides.assign_form(
+        page.saga, page.record_to_delete()
+    ),
     "mark_unknown": lambda page: reveal_forms.mark_unknown(page.saga),
     "delay_threat": _delay_command,
     "take_up_tale": _take_up_command,

@@ -30,6 +30,7 @@ from . import (
     story_chapters,
     teaching,
     threats,
+    viewing,
 )
 from .commands import Act, Command, Go, Refuse, SectionOps
 from .grids import Grid
@@ -385,8 +386,18 @@ def _overdue(saga: Saga) -> list[Item]:
 
 
 def items(saga: Saga) -> list[Item]:
-    """Everything waiting on the storyguide, source by source."""
-    return [item for source in SOURCES for item in source(saga)]
+    """Everything waiting on the storyguide, source by source: among
+    several storyguides, only what is about their own stories and those
+    with none (ADR 0015)."""
+    found = [item for source in SOURCES for item in source(saga)]
+    looking = viewing.current()
+    if viewing.reads_everything(looking, saga):
+        return found
+    return [
+        item
+        for item in found
+        if item.ref is None or viewing.ref_held(saga, item.ref, looking)
+    ]
 
 
 def title(saga: Saga) -> str:

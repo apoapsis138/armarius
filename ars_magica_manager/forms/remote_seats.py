@@ -59,7 +59,11 @@ EVENT_LABELS: dict[str, str] = {
     audit.SEASON_ADVANCED: "Advanced the season",
     audit.SEASON_UNDONE: "Undid the last season",
     audit.ROLE_CHANGED: "Role changed",
+    audit.SWITCHED_TO_PLAYING: "Switched to Playing",
+    audit.SWITCHED_TO_STORYGUIDE: "Switched to their storyguide role",
 }
+#: The events the host's own window logs too, with no player named.
+HOSTS_OWN = frozenset({audit.SWITCHED_TO_PLAYING, audit.SWITCHED_TO_STORYGUIDE})
 
 
 def when(moment: float) -> str:
@@ -179,7 +183,9 @@ class SeatsDesk:
                 LogRow(
                     when(entry.when),
                     self._event_text(entry.event, entry.record),
-                    self.name_of(entry.player_id) if entry.player_id else "",
+                    self.name_of(entry.player_id)
+                    if entry.player_id
+                    else ("The host" if entry.event in HOSTS_OWN else ""),
                     devices.get(entry.device_id, "") if entry.device_id else "",
                 )
             )

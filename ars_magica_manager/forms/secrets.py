@@ -58,8 +58,8 @@ def revealed(record: Any) -> list[Secret]:
 
 def storyguides(record: Any) -> bool:
     """Whether whoever is looking reads every secret (the storyguide), not
-    just the revealed ones."""
-    return viewing.reads(part=SECRETS_SECTION)
+    just the revealed ones): among several, only its own (ADR 0015)."""
+    return viewing.reads(record, part=SECRETS_SECTION)
 
 
 def shown(record: Any) -> bool:
