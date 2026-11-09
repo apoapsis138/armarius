@@ -684,8 +684,7 @@ def test_saga_content_opens_from_the_saga_page_with_its_chapters(app):
         "House Rules",
         "Mystery Cults",
         "Spells",
-        "Players",
-    ]
+    ]  # the Players are in the saga page's Saga Management
 
 
 def test_the_spells_filter_as_on_the_terminal_and_show_in_the_inspector(app):

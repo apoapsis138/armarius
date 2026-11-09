@@ -99,6 +99,40 @@ def test_saga_management_has_one_host_for_players_row_that_opens_the_window() ->
 
 
 @pytest.mark.usefixtures("app")
+def test_the_players_are_in_saga_management_and_invite_from_there() -> None:
+    from PySide6.QtWidgets import QTableView
+
+    from ars_magica_manager.gui.saga_content import CHAPTERS
+
+    desk = _desk()
+    storage.save_saga(desk.saga)
+    main = MainWindow(saga_ids=[desk.saga.id])
+    answers = Answers()
+    main.ask = answers  # type: ignore[assignment]
+    main.show()
+    main.open_saga(desk.saga.id)
+    assert "Players" not in [name for name, _ in CHAPTERS]  # not Saga Content's
+    page = main.page()
+    assert isinstance(page, SagaPage)
+    page.codex.open_chapter("Saga Management")
+    tables = [
+        t
+        for t in page.findChildren(QTableView)
+        if t.model() is not None
+        and t.model().headerData(3, t.horizontalHeader().orientation()) == "Remote seat"
+    ]
+    assert len(tables) == 1
+    tables[0].selectRow(0)  # Anna, ready
+    QApplication.processEvents()
+    [invite] = [
+        b for b in page.findChildren(QPushButton) if b.text().strip() == "Issue Invite"
+    ]
+    invite.click()
+    assert main._hosting is not None and main._hosting.isVisible()
+    assert answers.last(InviteDialog).issued.player == "Anna"  # type: ignore[attr-defined]
+
+
+@pytest.mark.usefixtures("app")
 def test_the_window_follows_the_theme() -> None:
     """Opened again after the theme changed, it is drawn in the new one."""
     desk = _desk()
@@ -121,8 +155,7 @@ def test_the_window_shows_the_six_words_and_waits_for_requests() -> None:
     window = _window(desk, Answers())
     assert window.remote_choice.isChecked()
     assert len(window.words.text().split()) == 6
-    assert window.tabs.currentIndex() == 0  # Players first
-    window.tabs.setCurrentIndex(1)
+    assert window.tabs.currentIndex() == 0  # Requests first
     assert window.no_requests.isVisible() and not window.requests.isVisible()
     assert window.start.isVisible() and not window.stop.isVisible()
     window.browser_choice.setChecked(True)
@@ -189,10 +222,10 @@ def test_the_window_fits_at_its_size_and_at_its_narrowest(width: int) -> None:
     QApplication.processEvents()
     assert window.width() == width
     buttons = (
-        window.add_player,
-        window.edit_player,
-        window.delete_player,
-        window.invite_player,
+        window.issue,
+        window.approve_button,
+        window.new_passcode,
+        window.reject_button,
     )
     for button in buttons:
         assert button.geometry().right() <= window.tabs.pages.width()

@@ -382,7 +382,7 @@ What the players get in their browser (or over SSH) is the terminal version of t
 1. Open the saga and select **Saga Content**, then its [Players tab](help:tab-content-players). Add each player with `a`:
 <!-- /tui -->
 <!-- gui -->
-1. Open the saga's **Saga Content** (in its Rules and Content chapter), then its [Players chapter](help:tab-content-players). Add each player with **Add**:
+1. Open the saga page's **Saga Management** chapter: the [Players](help:section-players) are there, beside Host for Players. Add each player with **Add**:
 <!-- /gui -->
 a name, the Role *Player*, and a passcode you give them yourself. Add a *Storyguide* there too if another storyguide will sign in from a browser.
 <!-- tui -->

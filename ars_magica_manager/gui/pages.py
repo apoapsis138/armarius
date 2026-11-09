@@ -51,7 +51,12 @@ from ..forms import menu as menu_forms
 from ..joined_games import JoinedGame
 from ..models import Character, Creature, Neighbour, Saga, Session, Tribunal
 from ..references import Fact, Ref
-from ..sections import CONFLICT_BATTLES_SECTION, FIGHTS_SECTION, SIEGES_SECTION
+from ..sections import (
+    CONFLICT_BATTLES_SECTION,
+    FIGHTS_SECTION,
+    PLAYERS_SECTION,
+    SIEGES_SECTION,
+)
 from ..sheets import character as cs
 from ..sheets import creature as crs
 from ..sheets import familiar as fs
@@ -114,6 +119,9 @@ class SagaHooks(TypedDict, total=False):
     #: Draws Saga Management's Sessions section, given the inspector
     #: (gui/sessions_section.py).
     sessions: Callable[[Callable[[str, str, str], None]], QWidget]
+    #: Draws Saga Management's Players section, given the inspector
+    #: (gui/players_section.py).
+    players: Callable[[Callable[[str, str, str], None]], QWidget]
 
 
 #: Saga Management's hosting entries, drawn as one Host for Players row.
@@ -1291,7 +1299,7 @@ class SagaPage(QWidget):
             "manage",
             # Built when first opened, as The Region is: its Sessions list
             # and buttons are drawn only for the storyguide who looks.
-            lambda: self._management(hooks.get("sessions")),
+            lambda: self._management(hooks.get("sessions"), hooks.get("players")),
             "saga-management",
         )
         column.addWidget(self.codex, 1)
@@ -1396,7 +1404,9 @@ class SagaPage(QWidget):
         )
 
     def _management(
-        self, sessions: Callable[[Callable[[str, str, str], None]], QWidget] | None
+        self,
+        sessions: Callable[[Callable[[str, str, str], None]], QWidget] | None,
+        players: Callable[[Callable[[str, str, str], None]], QWidget] | None = None,
     ) -> QWidget:
         p = self.p
         placed = self.placer.placed_buttons("Saga Management") if self.placer else []
@@ -1414,6 +1424,9 @@ class SagaPage(QWidget):
             if rows
             else text("Nothing to manage.", p["dim"], serif(12.5, italic=True))
         ]
+        if players is not None and viewing.reads(part=PLAYERS_SECTION):
+            # Who may sign in, beside Host for Players (the host's only).
+            parts.append(players(self.codex.inspect))
         if sessions is not None:
             parts.append(sessions(self.codex.inspect))
         if not viewing.current().hosts:

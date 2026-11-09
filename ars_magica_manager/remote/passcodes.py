@@ -91,6 +91,20 @@ class RemotePasscodes(SharedFile):
             return bool(salt) and self._salts.get(player.id) == salt
 
 
+#: Whether a Player can sign in from a Remote seat, as the Players list says
+#: it: ready, a Table-only Player, or a passcode to set again.
+READY = "✓ Ready"
+NO_PASSCODE = "✗ No passcode: table only"
+SET_AGAIN = "✗ Too short, or set elsewhere: set a new one"
+
+
+def readiness(passcodes: RemotePasscodes, player: Player) -> str:
+    """Whether `player` can sign in from a Remote seat, in a few words."""
+    if not player.passcode_hash:
+        return NO_PASSCODE
+    return READY if passcodes.allows(player) else SET_AGAIN
+
+
 def _salt(player: Player) -> str:
     try:
         salt, _ = players.stored_parts(player.passcode_hash)

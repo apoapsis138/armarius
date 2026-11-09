@@ -133,6 +133,7 @@ from .markup_html import plain
 from .medallions import SeasonHeadpiece
 from .menus import Placer
 from .pages import JoinedShelf, SagaPage, SagaShelf
+from .players_section import players_section
 from .region import NeighbourPage
 from .saga_content import SagaContentPage
 from .season_panel import SeasonPanel
@@ -1273,6 +1274,15 @@ class MainWindow(QMainWindow):
         shown.raise_()
         shown.activateWindow()
 
+    def issue_invite(self, player_id: str) -> None:
+        """Issue Invite for the player chosen on Saga Management's Players:
+        Host for Players opens and shows the Invite (or why there can't be
+        one)."""
+        self.open_hosting()
+        shown = self._hosting
+        if shown is not None:
+            shown.run(shown.desk.issue_invite(player_id))
+
     def closeEvent(self, event: QCloseEvent) -> None:
         """Closing while the saga is hosted asks first: it ends every
         player's connection. So does closing a Joined game with changes the
@@ -1970,6 +1980,9 @@ class MainWindow(QMainWindow):
             open_siege=self.open_siege,
             open_hosting=self.open_hosting,
             sessions=lambda inspect: sessions_section(saga, p, self.run, inspect),
+            players=lambda inspect: players_section(
+                saga, p, self.run, inspect, self.issue_invite
+            ),
         )
 
     def _placer(self) -> Placer:

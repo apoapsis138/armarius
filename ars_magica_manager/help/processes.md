@@ -1565,22 +1565,22 @@ Closing the app while the saga is hosted asks first, as it ends every
 player's connection.
 
 For Remote seats it also shows the host's **six words**, which you read
-aloud on your group's call, and four pages, chosen on the rail at the
-left: Players, Requests, Seats and Log. The window looks for new requests
-every few seconds; the title, and Requests on the rail, count those
-waiting.
+aloud on your group's call, and three pages, chosen on the rail at the
+left: Requests, Seats and Log. The window looks for new requests every
+few seconds; the title, and Requests on the rail, count those waiting.
 
 ### Players
 <!-- help: remote-seats-players; gui -->
 
-Everyone who may sign in to the saga, with their role, the characters
-they play, and whether they can sign in from a Remote seat (**✓ Ready**,
-or why not). **Add**, **Edit** and **Delete** work as on Saga Content's
-[Players](help:tab-content-players): a player's form has a **Plays** tick
-for each of the troupe's characters (several players may tick the same
-one). A passcode needs at least 14 characters: a few words they'll
-remember, such as "grey owl over the mill", are easiest. Choose a player
-and **Issue Invite** to invite them.
+Who may sign in is on the saga page's **Saga Management**, beside the
+Host for Players button: the [Players](help:section-players) list, with
+each player's role, the characters they play, and whether they can sign
+in from a Remote seat (**✓ Ready**, or why not). A player's form has a
+**Plays** tick for each of the troupe's characters (several players may
+tick the same one). A passcode needs at least 14 characters: a few words
+they'll remember, such as "grey owl over the mill", are easiest. Choose
+a player there and **Issue Invite** to invite them: this window opens
+with the Invite.
 
 **Storyguides in troupe-style play.** Give a player the role
 **Storyguide** to let them run the saga from their own seat: they see

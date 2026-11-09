@@ -311,7 +311,8 @@ class HostingWindow(Sheet):
         self.pin.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
         column.addWidget(self.pin)
         self.tabs = RailPages(p)
-        self.tabs.addTab(self._players_tab(), "Players", "players")
+        # The Players are in the saga page's Saga Management, beside this
+        # window's button.
         self.tabs.addTab(self._requests_tab(), "Requests", "new")
         self.tabs.addTab(self._seats_tab(), "Seats", "character")
         self.tabs.addTab(self._log_tab(), "Log", "history")
@@ -327,7 +328,7 @@ class HostingWindow(Sheet):
             text(
                 "Players open the saga in a web browser (or over SSH) on their "
                 "own computers and sign in with the name and passcode you gave "
-                "them on Saga Content's Players. Host on your private network's "
+                "them on Saga Management's Players. Host on your private network's "
                 "address (Tailscale or ZeroTier), never one the internet can "
                 "reach. Invites and seats are for Remote seats only.",
                 self.p["label"],
@@ -344,29 +345,6 @@ class HostingWindow(Sheet):
             row.addWidget(button)
         row.addStretch(1)
         return row
-
-    def _players_tab(self) -> QWidget:
-        """Who may sign in: add, edit or delete them, and invite one."""
-        p = self.p
-        tab = QWidget()
-        column = QVBoxLayout(tab)
-        self.add_player = edit_button("Add", p, self._add_player, "add")
-        self.edit_player = edit_button("Edit", p, self._edit_player, "edit")
-        self.delete_player = edit_button("Delete", p, self._delete_player, "delete")
-        self.invite_player = edit_button(
-            "Issue Invite", p, self._invite_player, "players"
-        )
-        column.addLayout(
-            self._buttons(
-                self.add_player,
-                self.edit_player,
-                self.delete_player,
-                self.invite_player,
-            )
-        )
-        self.players = ledger_table(["Player", "Role", "Plays", "Remote seat"], p)
-        column.addWidget(self.players, 1)
-        return tab
 
     def _requests_tab(self) -> QWidget:
         p = self.p
@@ -484,12 +462,6 @@ class HostingWindow(Sheet):
         self.tabs.setEnabled(True)
         self.words.setText(words)
         self.pin.setText(f"Fingerprint: {pin}")
-        rows = self.desk.player_rows()
-        fill_ledger(
-            self.players, [(r.id, [r.name, r.role, r.plays, r.remote]) for r in rows]
-        )
-        for button in (self.edit_player, self.delete_player, self.invite_player):
-            button.setEnabled(bool(rows))
         requests = self.desk.requests()
         fill_ledger(
             self.requests,
@@ -502,7 +474,7 @@ class HostingWindow(Sheet):
         waiting = f" ({len(requests)} waiting)" if requests else ""
         self.setWindowTitle(TITLE + waiting)
         self.tabs.setTabText(
-            1, f"Requests ({len(requests)})" if requests else "Requests"
+            0, f"Requests ({len(requests)})" if requests else "Requests"
         )
         seats = self.desk.seats()
         self.live_seats = {s.id for s in seats if s.live}
@@ -583,22 +555,6 @@ class HostingWindow(Sheet):
 
     def _issue(self) -> None:
         self.run(self.desk.issue_invite())
-
-    def _add_player(self) -> None:
-        self.run(self.desk.add_player())
-
-    def _edit_player(self) -> None:
-        chosen = ledger_choice(self.players)
-        if chosen is not None:
-            self.run(self.desk.edit_player(chosen))
-
-    def _delete_player(self) -> None:
-        chosen = ledger_choice(self.players)
-        if chosen is not None:
-            self.run(self.desk.delete_player(chosen))
-
-    def _invite_player(self) -> None:
-        self.run(self.desk.issue_invite(ledger_choice(self.players)))
 
     def _approve(self) -> None:
         chosen = ledger_choice(self.requests)

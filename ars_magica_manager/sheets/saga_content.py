@@ -23,6 +23,7 @@ from ..markup import escape
 from ..models import AbilityDef, Saga, Spell
 from ..models.mystery_cults import is_saga_cult
 from ..references import Fact
+from ..remote.passcodes import RemotePasscodes, passcodes_path, readiness
 from ..rules import activities
 from ..rules import options as rule_options
 from .covenant import Table
@@ -459,14 +460,18 @@ def spell_rows(saga: Saga, spells: Sequence[Spell]) -> list[SpellRow]:
     ]
 
 
-def players_table(saga: Saga) -> Table:
+def players_table(saga: Saga, *, seats: bool = False) -> Table:
+    """The Players as the list shows them; with `seats` (the desktop's
+    Saga Management), whether each can sign in from a Remote seat."""
+    allowed = RemotePasscodes(passcodes_path(saga.name)) if seats else None
     return Table(
-        ["Name", "Role", "Plays"],
+        ["Name", "Role", "Plays", *(["Remote seat"] if seats else [])],
         [
             [
                 player.name,
                 pl.ROLE_LABELS.get(player.role, player.role),
                 ", ".join(c.name for c in pl.characters_of(saga, player)),
+                *([readiness(allowed, player)] if allowed is not None else []),
             ]
             for player in saga.players
         ],

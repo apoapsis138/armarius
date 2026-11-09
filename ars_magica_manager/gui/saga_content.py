@@ -30,10 +30,8 @@ from .. import (
     artwork,
     section_verbs,
     traditions,
-    viewing,
 )
 from .. import house_rules as hr
-from .. import players as pl
 from .. import saga_content as sc
 from .. import spells as spl
 from ..arts import FORMS, TECHNIQUES
@@ -43,7 +41,6 @@ from ..models import Saga, Spell
 from ..sections import (
     GOODS_SECTION,
     HOUSE_RULES_SECTION,
-    PLAYERS_SECTION,
     SOURCES_SECTION,
 )
 from ..sheets import saga_content as scs
@@ -63,7 +60,6 @@ from .themes import Palette
 from .widgets import (
     ANY_LEVEL,
     ROW_HEIGHT,
-    Card,
     ClickableCard,
     Codex,
     Symbol,
@@ -91,7 +87,6 @@ CHAPTERS = (
     ("House Rules", "magic"),
     ("Mystery Cults", "secrets"),
     ("Spells", "enchanted_item"),
-    ("Players", "players"),
 )
 
 #: The chapters too long to draw every time the page opens.
@@ -148,14 +143,12 @@ class SagaContentPage(QWidget):
             "House Rules": self._house_rules,
             "Mystery Cults": self._mystery_cults,
             "Spells": self._spells,
-            "Players": self._players,
         }
+        # The Players are in the saga page's Saga Management on the desktop.
         for name, concept in CHAPTERS:
             # The Goods ledger and the traditions' cards are long: drawn
             # when first turned to.
             build = builders[name]
-            if name == "Players" and not viewing.reads(part="tab-content-players"):
-                continue
             self.codex.add(name, concept, build if name in LATER else build())
         outer.addWidget(self.codex, 1)
 
@@ -713,46 +706,6 @@ class SagaContentPage(QWidget):
             f"{spl.shorthand(spell)}  ·  {spl.rdt_text(spell)}",
             spl.detail_text(self.saga, spell),
             artwork.art_symbol(spell.form) if spell.form in FORMS else None,
-        )
-
-    def _players(self) -> QWidget:
-        p, saga = self.p, self.saga
-        chooser = Chooser()
-        players = scs.players_table(saga)
-        self.players = cells_table(
-            players.columns,
-            players.rows,
-            p,
-            lambda row: self.inspect(
-                saga.players[row].name,
-                pl.ROLE_LABELS.get(saga.players[row].role, ""),
-                pl.detail_text(saga, saga.players[row]),
-            ),
-        )
-        choose_rows(self.players, chooser)
-        note = Card(p, pad=10)
-        note.column.addWidget(
-            text(
-                "Players sign in to the hosted terminal app; passcodes are kept"
-                " only as hashes.",
-                p["label"],
-                wrap=True,
-            )
-        )
-        return scrolling_page(
-            p,
-            section(
-                f"Players ({len(saga.players)})",
-                p,
-                self.players if saga.players else _none("None yet.", p),
-                buttons=verb_buttons(
-                    section_verbs.ops_of(saga, saga)[PLAYERS_SECTION],
-                    chooser,
-                    self.run,
-                    p,
-                ),
-            ),
-            note,
         )
 
 

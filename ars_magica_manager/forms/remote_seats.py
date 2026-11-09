@@ -36,7 +36,7 @@ from ..remote.invites import InviteBook, InviteError, book_path, encode_invite
 from ..remote.passcodes import RemotePasscodes, passcodes_path
 from ..remote.plan import TUNNELS, RemotePlan, identity_name, last_plan, url_problem
 from ..remote.words import host_words, two_lines
-from .saga_content import delete_player, player_form
+from .saga_content import player_form
 
 #: What each audit event is called in the Log.
 EVENT_LABELS: dict[str, str] = {
@@ -193,30 +193,6 @@ class SeatsDesk:
         found = references.find(self.saga, kind, record_id)
         return f"{label}: {found.name if found is not None else record_id}"
 
-    def player_rows(self) -> list[PlayerRow]:
-        """Everyone who may sign in: their role, whom they play, and
-        whether their passcode works from a Remote seat."""
-        rows = []
-        for p in self.saga.players:
-            plays = ", ".join(c.name for c in players.characters_of(self.saga, p))
-            problem = remote_problem(self, p)
-            if problem is None:
-                ready = "✓ Ready"
-            elif not p.passcode_hash:
-                ready = "✗ No passcode yet"
-            else:
-                ready = "✗ Too short, or set elsewhere: set a new one"
-            rows.append(
-                PlayerRow(
-                    p.id,
-                    p.name,
-                    players.ROLE_LABELS.get(p.role, p.role),
-                    plays or "(no one)",
-                    ready,
-                )
-            )
-        return rows
-
     def log_players(self) -> list[tuple[str, str]]:
         """The players the Log can be narrowed to: (name, id)."""
         return [(p.name, p.id) for p in self.saga.players]
@@ -232,20 +208,12 @@ class SeatsDesk:
     def issue_invite(self, player_id: str | None = None) -> Command:
         return issue_invite(self, player_id)
 
-    def add_player(self) -> Command:
-        return _saving(self, player_form(self.saga, None))
-
     def edit_player(self, player_id: str) -> Command:
+        """A player's form (Set New Passcode answers an ask with it)."""
         player = players.player_by_id(self.saga, player_id)
         if player is None:
             return Refuse("Edit Player", "That player is gone.")
         return _saving(self, player_form(self.saga, player))
-
-    def delete_player(self, player_id: str) -> Command:
-        player = players.player_by_id(self.saga, player_id)
-        if player is None:
-            return Refuse("Delete Player", "That player is gone.")
-        return _saving(self, delete_player(self.saga, player))
 
     def approve(self, request_id: str) -> Command:
         return _decide(self, request_id, approve=True)
@@ -274,15 +242,6 @@ class SeatsDesk:
 
 
 _ENDED = {"revoked": "Revoked", "expired": "Expired"}
-
-
-@dataclass(frozen=True)
-class PlayerRow:
-    id: str
-    name: str
-    role: str
-    plays: str
-    remote: str
 
 
 def _saving(desk: SeatsDesk, command: Command) -> Command:

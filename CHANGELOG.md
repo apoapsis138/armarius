@@ -123,6 +123,12 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.99.0 — 2026-11-09
+
+### Sodales
+
+- **Players in Saga Management**: on the desktop the Players list moves from Saga Content to the saga page's Saga Management, beside Host for Players and the Sessions. It shows whether each player can join from a Remote seat (ready, no passcode, or a passcode to set again), and Issue Invite on the chosen player opens Host for Players with their Invite. Host for Players keeps Requests, Seats and Log. The terminal's Players tab stays where it was.
+
 ## 3.98.3 — 2026-11-09
 
 ### Sodales

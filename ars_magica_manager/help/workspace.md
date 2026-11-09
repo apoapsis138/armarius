@@ -1189,10 +1189,10 @@ The list of Sessions; the Inspector shows the one last clicked: when, its game d
 Who can sign in to this saga when you host it, so that players open it in a web browser from their own computers. Each player signs in with their name and the passcode you give them. Your own window, the app run on your computer, never asks.
 <!-- gui -->
 
-Host the saga with **Host for Players**, in the saga page's Saga Management (see [How to host a saga](help:guide-hosting)); the players you add here are the ones it lets in. To join from their own copy of Armarius over the internet (a Remote seat), a player's passcode needs at least 14 characters, set here; see [Issue Invite](help:issue-invite).
+On the desktop the Players are in the saga page's **Saga Management**, beside **Host for Players** (see [How to host a saga](help:guide-hosting)) and the Sessions; the players you add there are the ones it lets in. To join from their own copy of Armarius over the internet (a Remote seat), a player's passcode needs at least 14 characters, set there; the list says whether each can (**✓ Ready**, or why not), and **Issue Invite** on the chosen player opens Host for Players with their Invite (see [Issue Invite](help:issue-invite)).
 <!-- /gui -->
 
-Only the storyguide sees this tab: your own window, or someone signed in with the Storyguide role.
+Only the storyguide sees it: your own window, or someone signed in with the Storyguide role (not a storyguide joined from a Remote seat: who may join is the host's).
 
 Players stay in this saga: no export or pack carries them, nor which player plays a character (a character keeps the Player named on its sheet).
 
@@ -1214,7 +1214,7 @@ Leave the Passcode blank when adding someone who only sits at the table: a **tab
 The list of players, with the details panel below it.
 <!-- /tui -->
 <!-- gui -->
-The list of players; the Inspector shows the one last clicked.
+The list of players, in Saga Management, with whether each can sign in from a Remote seat; the Inspector shows the one last clicked. **Issue Invite** invites the chosen player.
 <!-- /gui -->
 
 ### What a signed-in player can do
@@ -1410,11 +1410,13 @@ troupe learns of it.
 <!-- help: saga-management; gui -->
 
 A chapter of the saga's page: Import, Export Saga, Export a Cult, Export
-Pack and Host for Players, each with a line on what it does. Host for
-Players opens the [Host for Players](help:host-for-players-window) window,
-where you host the saga and manage Remote seats; while the saga is hosted,
-its line says how. It is the storyguide's alone: [Player view](help:player-view)
-leaves it out.
+Pack and Host for Players, each with a line on what it does; then the
+[Players](help:section-players) and the [Sessions](help:section-sessions).
+Host for Players opens the [Host for Players](help:host-for-players-window)
+window, where you host the saga and manage Remote seats; while the saga is
+hosted, its line says how. It is the storyguide's alone: [Player view](help:player-view)
+leaves it out, and a storyguide joined from a Remote seat sees no Players
+(who may join is the host's).
 
 **See also:** [Import Data](help:import-data), [How to host a saga](help:guide-hosting), [Host for Players](help:host-for-players-window)
 
@@ -1423,7 +1425,7 @@ leaves it out.
 
 When the storyguide hosts the app, opening a saga in a browser (or over SSH) first asks who you are: type your Name and the Passcode the storyguide gave you, then Sign in. Name is not case-sensitive; the passcode is.
 
-If the saga has no players yet, it can't be opened from a browser: the storyguide adds players on the [Players tab](help:tab-content-players) of Saga Content. Your name is shown in the header beside the saga's date while you're signed in. Going back to the saga list (Escape) signs you out.
+If the saga has no players yet, it can't be opened from a browser: the storyguide adds them on the [Players](help:tab-content-players) (Saga Content's Players tab in the terminal, the saga page's Saga Management on the desktop). Your name is shown in the header beside the saga's date while you're signed in. Going back to the saga list (Escape) signs you out.
 
 While several people have the saga open, each one's saves keep everyone else's changes, and within a few seconds the others' screens show them: the sheet on show updates where it is (with a note such as "Ana changed Corvinus; reloaded"), and if two people open the same character, both are told ("Ana is also on Corvinus"; on the desktop, "◉ Ana is here too" beside the trail, for as long as she is), whether they're in a browser, the storyguide's own desktop or a Remote seat. If the record you have open is deleted elsewhere, the saga is shown instead.
 
