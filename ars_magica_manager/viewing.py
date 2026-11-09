@@ -347,7 +347,11 @@ def troupes_own(record: Any) -> bool:
         # As seasons.defaults.is_player_character, which this module sits
         # below.
         b = record.background
-        return bool(b.player.strip() or b.player_ids or b.everyone_plays)
+        # A Steward keeps it between Sessions (sessions.py), so their seat
+        # must see it to plan its seasons.
+        return bool(
+            b.player.strip() or b.player_ids or b.everyone_plays or b.steward_id
+        )
     if isinstance(record, Covenant):
         return record.played
     return False

@@ -123,6 +123,13 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.98.3 — 2026-11-09
+
+### Sodales
+
+- **Teaching asks from a Remote seat**: asking another player's character to teach yours, and accepting or declining an ask, now reach the host from a player's own computer (they were kept only on that computer).
+- **Stewards from a Remote seat**: a player always sees the characters they are Steward of, even one the storyguide hasn't revealed, so they can plan its seasons.
+
 ## 3.98.2 — 2026-11-09
 
 ### Illuminatio

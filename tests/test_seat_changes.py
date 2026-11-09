@@ -121,6 +121,67 @@ def test_a_season_plan_only_for_ones_own_character():
         )
 
 
+def test_a_seat_sends_every_list_a_player_may_change() -> None:
+    """Whatever guard_changes lets a player change (a list not refused as a
+    whole), a Remote seat sends: a list missing from CHANGEABLE never
+    reaches the host from a seat."""
+    from ars_magica_manager.seat_changes import CHANGEABLE
+
+    saga, anna = _saga()
+    before = asdict(saga)
+    after = dict(before)
+    for key, value in before.items():
+        if isinstance(value, list):
+            after[key] = [*value, {"id": "zz-new", "character_id": "zz"}]
+        elif isinstance(value, dict):
+            after[key] = {**value, "zz-new": 1}
+        elif isinstance(value, bool):
+            after[key] = not value
+        elif isinstance(value, int):
+            after[key] = value + 1
+        elif isinstance(value, str):
+            after[key] = value + "x"
+        elif value is None:
+            after[key] = ["zz-new"]
+    _kept, refused = players.guard_changes(anna, before, after)
+    whole = {r for r in refused if "[" not in r}
+    open_to_players = {k for k in before if k not in whole} - {"app_version"}
+    assert open_to_players <= CHANGEABLE, open_to_players - CHANGEABLE
+
+
+def test_a_teaching_ask_from_a_seat() -> None:
+    saga, anna = _saga()
+    mine = saga.characters[0].id
+    ask = {
+        "id": "ask1",
+        "student_id": mine,
+        "teacher_id": "someone-elses",
+        "subject": "ability:Latin",
+        "season": "Spring",
+        "year": 1221,
+        "status": "asked",
+        "note": "",
+    }
+    done = apply_change(saga, anna, "teach_requests", "ask1", None, ask)
+    assert [r.id for r in done.saga.teach_requests] == ["ask1"]
+    theirs = {**ask, "id": "ask2", "student_id": "nobody-of-hers"}
+    with pytest.raises(ChangeRefused):
+        apply_change(saga, anna, "teach_requests", "ask2", None, theirs)
+
+
+def test_a_steward_plans_the_season_of_a_character_kept_unknown() -> None:
+    saga, anna = _saga()
+    grog = Character(id="grog", name="Hob", type="grog")
+    grog.known = False
+    grog.background.steward_id = anna.id
+    saga.characters.append(grog)
+    plan = {"character_id": "grog", "year": 1221, "season": "Spring", "activity": "x"}
+    done = apply_change(
+        saga, anna, "season_plans", record_key("season_plans", plan), None, plan
+    )
+    assert any(p.character_id == "grog" for p in done.saga.season_plans)
+
+
 def test_a_change_must_name_the_record_it_carries():
     saga, anna = _saga()
     before = _seen(saga, anna, "characters", saga.characters[0].id)

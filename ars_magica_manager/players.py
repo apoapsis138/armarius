@@ -291,6 +291,22 @@ _SHARED_PARTS = frozenset(
     }
 )
 
+#: The saga lists a player may change records of (which records: their own,
+#: guard_changes says). A Remote seat sends changes to exactly these and
+#: _SHARED_PARTS (seat_changes.CHANGEABLE; tests/test_seat_changes.py keeps
+#: the two in step).
+OWN_RECORDS = frozenset(
+    {
+        "characters",
+        "laboratories",
+        "familiars",
+        "covenants",
+        "season_plans",
+        "teach_requests",
+        "lab_projects",
+    }
+)
+
 #: How a record of each list is named, where it has no id: a season plan
 #: by its character and season, a lab project by its character and spell.
 _NATURAL_KEYS: dict[str, tuple[str, ...]] = {
@@ -352,6 +368,7 @@ def guard_changes(
         ),
         "lab_projects": lambda r: r.get("character_id") in mine,
     }
+    assert set(owner_of) == OWN_RECORDS  # one list, kept here
     kept = dict(after)
     refused: list[str] = []
     for key in [*before, *(k for k in after if k not in before)]:

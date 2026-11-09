@@ -33,20 +33,10 @@ from .models import CovenantDiaryEntry, Link, Player, Saga, known_fields
 from .seat_view import looking_as, seat_view
 
 #: The saga lists a Player may change a record of (players.guard_changes
-#: says which records of them).
-CHANGEABLE = frozenset(
-    {
-        "characters",
-        "laboratories",
-        "familiars",
-        "covenants",
-        "books",
-        "spells",
-        "enchanted_devices",
-        "season_plans",
-        "lab_projects",
-    }
-)
+#: says which records of them): their own records' lists and the shared
+#: ones, from players.py, so a list a player may change is never left out
+#: of what a seat sends.
+CHANGEABLE = players.OWN_RECORDS | {"books", "spells", "enchanted_devices"}
 
 Record = dict[str, Any]
 

@@ -67,6 +67,51 @@ async def test_a_seat_changes_its_character_and_hidden_data_survives(
     assert [e.record for e in changed] == [f"characters:{magus.id}"]
 
 
+async def test_a_teaching_ask_reaches_the_host_from_a_seat(hosted: Hosted) -> None:
+    from ars_magica_manager.saga_store import RemoteStore
+
+    client = await hosted.signed_in()
+    try:
+        _, view = await client.read_saga()
+        assert view is not None
+        ask = {
+            "id": "ask1",
+            "student_id": view.characters[0].id,
+            "teacher_id": "other",
+            "subject": "ability:Latin",
+            "season": "Spring",
+            "year": 1221,
+            "status": "asked",
+            "note": "",
+        }
+
+        class Seat:
+            """The store's seat, over this test's own connection."""
+
+            def __init__(self) -> None:
+                self.sent: list[str] = []
+
+            def send_change(
+                self, kind: str, key: str, before: object, after: object
+            ) -> list[str]:
+                self.sent.append(kind)
+                return []
+
+        # The store sends the ask: teach_requests is one of the lists a seat
+        # sends (it wasn't before 3.98.0's asks reached the seat).
+        seat = Seat()
+        store = RemoteStore(seat)  # type: ignore[arg-type]
+        store._took("r", view)
+        now = asdict(view)
+        now["teach_requests"] = [ask]
+        store.send(now)
+        assert seat.sent == ["teach_requests"]
+        await client.send_change("teach_requests", "ask1", None, ask)
+    finally:
+        await client.close()
+    assert [r.id for r in storage.load_saga(hosted.saga.id).teach_requests] == ["ask1"]
+
+
 async def test_another_players_character_is_refused_logged_and_counted(
     hosted: Hosted,
 ) -> None:
