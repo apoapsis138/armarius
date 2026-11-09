@@ -1,5 +1,6 @@
 import os
 import sys
+from pathlib import Path
 
 import pytest
 from tiers import is_screen_test_file
@@ -31,6 +32,24 @@ def pytest_collection_modifyitems(config, items):
     for item in items:
         if is_screen_test_file(item.path):
             item.add_marker(pytest.mark.ui)
+
+
+#: Each worker's test under way, one file per worker, so a run stopped at
+#: its limit can say which tests it was in (tools/story_check.py).
+RUNNING = Path(__file__).resolve().parent.parent / ".pytest_cache" / "running"
+
+
+def _running_file() -> Path:
+    return RUNNING / f"{os.environ.get('PYTEST_XDIST_WORKER', 'main')}.txt"
+
+
+def pytest_runtest_logstart(nodeid, location):
+    RUNNING.mkdir(parents=True, exist_ok=True)
+    _running_file().write_text(nodeid, encoding="utf-8")
+
+
+def pytest_runtest_logfinish(nodeid, location):
+    _running_file().unlink(missing_ok=True)
 
 
 @pytest.fixture(autouse=True)

@@ -2,6 +2,7 @@
 
     uv run python tools/story_check.py          # a slice
     uv run python tools/story_check.py --full   # once per story
+    uv run python tools/story_check.py --goldens  # regenerate the goldens
 
 Runs, in order: the tests (the slice's from `slice_tests.py`, or with
 --full the whole suite), ruff's import sorting (applied), `ruff format`,
@@ -23,6 +24,7 @@ broken help file or a failed assertion, in full).
 from __future__ import annotations
 
 import datetime
+import os
 import re
 import subprocess
 import sys
@@ -96,16 +98,44 @@ def summary(output: str) -> str:
     return output.strip().splitlines()[-1] if output.strip() else ""
 
 
+#: Each pytest worker's test under way, written by tests/conftest.py.
+RUNNING = ROOT / ".pytest_cache" / "running"
+
+
+def still_running() -> list[str]:
+    """The tests the workers were in when the run was stopped."""
+    if not RUNNING.is_dir():
+        return []
+    return sorted(f.read_text(encoding="utf-8").strip() for f in RUNNING.glob("*.txt"))
+
+
+def stopped(limit: float) -> str:
+    """What to say of a run stopped at its limit: the tests it was in. A
+    test seen there again on a rerun is stuck; a long list of different
+    ones means the run is simply too big for the limit (run the files in
+    smaller groups)."""
+    running = still_running()
+    lines = [f"stopped after {limit:.0f} s, every test process with it."]
+    if running:
+        lines.append("Still running then:")
+        lines += [f"  {test}" for test in running]
+        lines.append(
+            "Run those alone with -p no:xdist: one that hangs is stuck (a "
+            "window waiting for an answer, a wait that never ends); if each "
+            "passes, the slice is too big for the limit."
+        )
+    return "\n".join(lines)
+
+
 def tests_step(command: list[str], limit: float) -> tuple[bool, str]:
     """Run the tests; rerun each failure alone. (passed, what to print)."""
+    if RUNNING.is_dir():
+        for leftover in RUNNING.glob("*.txt"):
+            leftover.unlink(missing_ok=True)
     try:
         code, output = run(command, limit)
     except TimedOut:
-        return False, (
-            f"stopped after {limit:.0f} s, every test process with it: a test "
-            "is stuck (a window waiting for an answer, or a wait that never "
-            "ends). Run the slice's files alone with -p no:xdist to find it."
-        )
+        return False, stopped(limit)
     if code == 0:
         return True, summary(output)
     failed = failed_tests(output)
@@ -136,7 +166,58 @@ def tests_step(command: list[str], limit: float) -> tuple[bool, str]:
     return not real, "\n".join(lines)
 
 
+#: Regenerating the golden files: the sheet text in parallel, and the
+#: dispatch matrix in one process (its shards write one file), side by
+#: side. The matrix takes about ten minutes; run this in the background.
+GOLDENS = (
+    [*UV, "python", "-m", "pytest", *PARALLEL, "tests/test_sheet_text.py"],
+    [
+        *UV,
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:xdist",
+        "tests/test_dispatch_matrix.py",
+    ],
+)
+
+
+def goldens() -> int:
+    """Regenerate both golden files at once; then show what changed."""
+    env = {**os.environ, "UPDATE_GOLDEN": "1"}
+    processes = [
+        subprocess.Popen(
+            command,
+            cwd=ROOT,
+            env=env,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+        for command in GOLDENS
+    ]
+    bad = 0
+    for command, process in zip(GOLDENS, processes, strict=True):
+        output, _ = process.communicate()
+        name = command[-1]
+        if process.returncode == 0:
+            print(f"ok    {name}")
+        else:
+            bad += 1
+            print(f"FAIL  {name}\n{output.strip()[-800:]}")
+    _code, diff = run(["git", "diff", "--stat", "--", "tests/golden"])
+    print(diff.strip() or "No golden changed.")
+    print("Review the diff of tests/golden before committing.")
+    return 1 if bad else 0
+
+
 def main(argv: list[str]) -> int:
+    if "--goldens" in argv:
+        return goldens()
     full = "--full" in argv
     if full:
         tests = [*UV, "python", "-m", "pytest", *PARALLEL]

@@ -139,7 +139,19 @@ AREA_TESTS: dict[str, tuple[str, ...]] = {
         "test_gui_conflicts.py",
         "test_gui_medallion_placements.py",
     ),
-    "ars_magica_manager/actions.py": ("test_dispatch_matrix.py", "test_keyboard.py"),
+    # What each page offers: the key routing, the desktop's button rows.
+    "ars_magica_manager/actions.py": (
+        "test_dispatch_matrix.py",
+        "test_keyboard.py",
+        "test_gui_edit_seasons.py",
+        "test_gui_sheet.py",
+    ),
+    "ars_magica_manager/forms/menu.py": (
+        "test_keyboard.py",
+        "test_gui_edit_seasons.py",
+        "test_gui_sheet.py",
+        "test_gui_menus.py",
+    ),
     # A covenant's Charter of Covenant: its clause list's flow, and its
     # forms' contracts.
     "ars_magica_manager/covenant_charter.py": (

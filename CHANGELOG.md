@@ -123,6 +123,12 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.98.1 — 2026-11-09
+
+### Fundamenta
+
+- **Checks after the 3.98.0 retro**: one test names every place a new More action still has to be registered; a test run stopped at its time limit says which tests it was in; both golden files regenerate with one command; the edit-tools guard also catches a script that rewrites a file with `write_text`; and the per-change test run includes the button-list tests when the menus change. Nothing the app does changes.
+
 ## 3.98.0 — 2026-11-09
 
 ### Sodales
