@@ -202,7 +202,14 @@ Advancing Winter also closes the year:
 <!-- gui -->
 - **The date only:** on the saga's page, choose **Seasons** in the rail and click **Set Date** beside The Date. Set the season and year and choose Set. This moves the date without undoing anything the season did, and Wealth added at a year end isn't taken back.
 <!-- /gui -->
-- **The whole season:** the backup in `sagas/backups` (in Armarius in your OneDrive folder) holds the saga as it was just before the last season was applied. Quit the app, copy the backup over the saga's file of the same name in `sagas`, then reopen the saga. The four backups before it are kept too, as `<name>.1.json` (the season before) to `<name>.4.json`: to go further back, copy one of those over the saga's file and rename it to the saga's name. No backup is taken when nothing was planned.
+<!-- tui -->
+- **The whole season:** choose the saga, press `m` for More and choose **Undo Last Season**.
+<!-- /tui -->
+<!-- gui -->
+- **The whole season:** on the saga's page, choose **Seasons** in the rail and click **Undo Last Season** beside Set Date.
+<!-- /gui -->
+  It puts the whole saga back as it was before the last Advance Season: the date, Wealth, Diaries and every result. It asks first, and names the records anyone changed since, as those changes go too. Each undo goes back one more advance, up to five; a downtime run undoes as one. It isn't offered after Set Date has moved the date since. A storyguide who joined from their own computer can use it too: the host's computer, which keeps the backups, does it.
+- **Undoing an undo:** the saga as it was just before the undo is kept as `<name>.undone.json` in `sagas/backups` (in Armarius in your OneDrive folder). With the app closed, copy it over the saga's file in `sagas` and rename it to the saga's name.
 
 ### What the app does for you
 <!-- help: guide-seasons-auto -->

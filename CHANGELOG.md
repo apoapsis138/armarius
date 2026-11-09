@@ -123,6 +123,16 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.100.0 — 2026-11-09
+
+### Book of Hours
+
+- **Undo Last Season**: beside Set Date (and in More on the saga), it puts the whole saga back as it was before the last Advance Season: the date, Wealth, Diaries and every result. It asks first and names the records anyone changed since, as those go too; each undo goes back one more advance, up to five, and a downtime run undoes as one. The saga as it stood is kept in the backups folder first. Every advance is now backed up, not only one with plans. The season's dial turns back, and every other window says who undid the season.
+
+### Sodales
+
+- **Undo from a storyguide's seat**: a storyguide joined from their own computer can undo a season too; the host's computer, which keeps the backups, does it, and the Log notes it.
+
 ## 3.99.0 — 2026-11-09
 
 ### Sodales

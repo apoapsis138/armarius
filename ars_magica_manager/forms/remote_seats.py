@@ -57,6 +57,7 @@ EVENT_LABELS: dict[str, str] = {
     audit.PASSCODE_CHANGED: "Changed their passcode",
     audit.RESET_ASKED: "Asked for a new passcode",
     audit.SEASON_ADVANCED: "Advanced the season",
+    audit.SEASON_UNDONE: "Undid the last season",
     audit.ROLE_CHANGED: "Role changed",
 }
 

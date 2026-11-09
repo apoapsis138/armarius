@@ -6,7 +6,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Saga",
         "d": "(disabled)",
-        "m": "MenuScreen: Import, Export Saga, Export Pack, Host for Players, Set Date, Run Downtime, Previously On, Hide from the Players, Player View",
+        "m": "MenuScreen: Import, Export Saga, Export Pack, Host for Players, Set Date, Undo Last Season, Run Downtime, Previously On, Hide from the Players, Player View",
         "slash": "(disabled)"
       }
     }

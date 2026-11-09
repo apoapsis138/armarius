@@ -26,6 +26,7 @@ from .. import (
     aging_due,
     mobile_covenants,
     seasons,
+    storage,
     tribunal_terms,
     what_changed,
     world_turns,
@@ -43,8 +44,8 @@ from . import charter as charter_forms
 from . import experiment_results
 from . import season as season_forms
 
-#: Backs the saga up before a season with plans is applied
-#: (storage.backup_saga), or None not to.
+#: Backs the saga up before a season is applied (storage.backup_saga),
+#: and so lets it be undone; or None not to.
 Backup = Callable[[Saga], object] | None
 
 
@@ -119,14 +120,9 @@ def advance_text(saga: Saga) -> AdvanceText:
         "at 0."
         if new
         else "",
-        "[dim]Advanced by mistake? Set Date (More on the saga) puts the date back"
-        + (" (Wealth isn't changed back)." if new else ".")
-        + (
-            " The saga is backed up first (sagas/backups in your data folder)."
-            if plans
-            else ""
-        )
-        + "[/]",
+        "[dim]Advanced by mistake? Undo Last Season (beside Set Date) puts the "
+        "whole saga back as it was: the saga is backed up first (sagas/backups "
+        "in your data folder).[/]",
     )
 
 
@@ -707,6 +703,10 @@ def _finish(
             "Point (More on Aging & Warping, or asked before the next season)."
         )
     said = " ".join((escape(message), *moved))
+    if backup is not None:
+        # The saga just after the advance, beside the backup from before
+        # it: what Undo Last Season compares with (undo_season.py).
+        storage.remember_after(saga)
     return Played(done, said, bool(worked or done.year_end or changed), changed)
 
 

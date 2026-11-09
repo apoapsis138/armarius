@@ -18,7 +18,7 @@ from typing import TYPE_CHECKING, Any
 
 from PySide6.QtWidgets import QDialog
 
-from .. import joined_games, picture_files, players
+from .. import joined_games, picture_files, players, undo_season
 from ..joined_games import JoinedGame
 from ..models import Player, Saga
 from ..saga_store import LocalStore, Refreshed, RemoteStore, Saved
@@ -208,6 +208,8 @@ def open_joined(window: MainWindow, session: SeatSession) -> None:
     picture_files.use_host(session.picture)
     signed = signed_in_as(saga, session)
     store.whole = is_storyguide(signed)
+    # A storyguide's Undo Last Season asks the host, which keeps the backups.
+    undo_season.use_host(session)
     window.load(saga, signed)
 
 
@@ -251,6 +253,7 @@ def end_joined(window: MainWindow) -> None:
     window.connection_lost = False
     window.last_asked = time.monotonic()
     picture_files.use_host(None)
+    undo_season.use_host(None)
     if session is not None:
         session.close()
 

@@ -321,7 +321,8 @@ More's Set Date on the saga
 <!-- gui -->
 **Set Date** in the saga page's Seasons chapter
 <!-- /gui -->
-puts the date back, but it doesn't undo what the season did.
+puts the date back, but it doesn't undo what the season did: **Undo Last
+Season**, beside it, does (see [Undoing a mistake](help:guide-seasons-undo)).
 
 ### Questions along the way
 <!-- help: advance-season-questions -->
@@ -423,7 +424,7 @@ Leave them as they are and **Continue** if nothing interrupted it. Once the seas
 
 Every plan's outcome is worked out first, from the saga as it stood before the season, and only then are they all applied. So one character's results can't change another's, or their own, in the same season: raising Magic Theory this season doesn't raise this season's Lab Total. Dice left blank on a plan are rolled now.
 
-Before anything is applied the saga is backed up to `sagas/backups` in your data folder (the last five are kept), so the season can be undone by copying the backup over the saga's file.
+Before anything is applied the saga is backed up to `sagas/backups` in your data folder (the last five are kept), so the season can be undone with **Undo Last Season** (see [Undoing a mistake](help:guide-seasons-undo)).
 
 Then, for each plan:
 

@@ -237,6 +237,7 @@ PLAYER_BARRED_ACTIONS: frozenset[str] = frozenset(
         "create_familiar",
         "advance_season",
         "set_date",
+        "undo_season",
         "downtime_run",
         "import_data",
         "give",

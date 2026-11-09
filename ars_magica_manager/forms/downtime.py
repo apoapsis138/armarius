@@ -29,7 +29,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field, replace
 from typing import Any
 
-from .. import what_changed, world, world_turns
+from .. import storage, what_changed, world, world_turns
 from ..commands import Confirm, Form, Then, notes
 from ..form_spec import DialogField, pairs
 from ..markup import escape
@@ -62,6 +62,9 @@ class Run:
     kept: dict[str, dict[str, Any]]
     played: int = 0
     defaulted: list[str] = field(default_factory=list)
+    #: Whether the run took a backup first, so its end keeps the copy
+    #: after it: Undo Last Season undoes the whole run.
+    backed_up: bool = False
 
 
 def next_tribunal(saga: Saga) -> tuple[str, int] | None:
@@ -175,6 +178,7 @@ def _start(
         backup(saga)
     played = [c for c in saga.characters if is_player_character(c)]
     run = Run(saga, end, advance.Deferring(rng), what_changed.keep_all(saga, played))
+    run.backed_up = backup is not None
     return _season(run)
 
 
@@ -278,6 +282,8 @@ def _reviews(run: Run, deferred: list[advance.Deferred]) -> Any:
 
 def _summary(run: Run) -> list[str]:
     saga = run.saga
+    if run.backed_up:
+        storage.remember_after(saga)  # the whole run undoes as one
     lines = [
         f"Downtime: {run.played} season{'' if run.played == 1 else 's'} played; "
         f"it is now {saga.current_season} {saga.current_year}."

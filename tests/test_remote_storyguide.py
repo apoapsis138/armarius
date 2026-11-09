@@ -72,6 +72,28 @@ async def test_a_storyguide_advances_the_season_and_the_host_backs_up_first(
     assert audit.SEASON_ADVANCED in events
 
 
+async def test_a_storyguide_undoes_the_season_on_the_host(hosted: Hosted) -> None:
+    client = await hosted.signed_in()
+    try:
+        _revision, saga = await client.read_saga()
+        assert saga is not None
+        assert await client.undo_offer() is None  # nothing advanced yet
+        base = asdict(saga)
+        now = copy.deepcopy(base)
+        now["current_season"] = "Summer"
+        await client.send_saga(*saga_delta(base, now))
+        found = await client.undo_offer()
+        assert found is not None and found[0].startswith("Spring")
+        assert await client.undo_season("Autumn 1066") == ""  # not the season now
+        said = await client.undo_season(found[1])
+    finally:
+        await client.close()
+    assert "back to Spring" in said
+    assert storage.load_saga(hosted.saga.id).current_season == "Spring"
+    events = [e.event for e in AuditLog(audit_path(hosted.saga.name)).entries()]
+    assert audit.SEASON_UNDONE in events
+
+
 async def test_the_players_stay_the_hosts(hosted: Hosted) -> None:
     client = await hosted.signed_in()
     try:

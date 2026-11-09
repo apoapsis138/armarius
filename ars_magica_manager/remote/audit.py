@@ -37,9 +37,11 @@ CHANGE_REFUSED = "change_refused"
 PASSCODE_CHANGED = "passcode_changed"
 RESET_ASKED = "reset_asked"
 SEASON_ADVANCED = "season_advanced"
+SEASON_UNDONE = "season_undone"
 ROLE_CHANGED = "role_changed"
 EVENTS = frozenset(
     {
+        SEASON_UNDONE,
         SEASON_ADVANCED,
         ROLE_CHANGED,
         PASSCODE_CHANGED,

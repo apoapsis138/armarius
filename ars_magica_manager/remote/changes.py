@@ -155,6 +155,9 @@ class SeatChanges:
         if folded.advanced:
             storage.backup_saga(saga)
         storage.save_saga(folded.saga, storage.Saver(player.name))
+        if folded.advanced:
+            # Beside the backup, so the advance can be undone (undo_season.py).
+            storage.remember_after(folded.saga)
         self._note(
             audit.SEASON_ADVANCED if folded.advanced else audit.RECORD_CHANGED,
             session,

@@ -330,7 +330,8 @@ To bookmark a page, open it and click the ribbon at the right of its header, bel
 ### More on the saga
 <!-- help: saga-more -->
 
-- **Set Date** moves the saga to any season and year without applying anything. Use it to put the date back after advancing by mistake; it does not undo what the season did (a backup is kept for that, see [Advance Season](help:advance-season)).
+- **Set Date** moves the saga to any season and year without applying anything; it does not undo what a season did.
+- **Undo Last Season** puts the whole saga back as it was before the last advance (see [Undoing a mistake](help:guide-seasons-undo)).
 - **Import** opens the Import Data dialog: characters, covenants or laboratories exported from another saga, books from a CSV file, or spells from a CSV file. See [Import Data](help:import-data).
 - **Host for Players** lets the players open the app in a web browser on their own computers, and **Stop Hosting** ends it. Only the storyguide's own window offers them. See [How to host a saga](help:guide-hosting).
 

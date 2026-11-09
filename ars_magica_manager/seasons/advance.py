@@ -584,7 +584,7 @@ def finish_season(
     """Play out the season, once its questions are answered (`secured`: was
     each lapsed contested resource secured; the Discovery moves already
     taken), in the rules' order (from the workspace's Advance
-    Time): `backup` the saga if anything is planned; apply each plan; in
+    Time): `backup` the saga; apply each plan; in
     Winter, the year's end -- grogs, business, then aging; the covenants'
     season (harvests, resources); the season record; at a new year, each
     covenant's surplus into its Wealth; then the date moves on (the caller
@@ -593,7 +593,8 @@ def finish_season(
     an interruption)."""
     new_year = saga.current_season == SEASONS[-1]
     record = make_record(saga, worked)
-    if worked and backup is not None:
+    if backup is not None:
+        # Every season, planned or not, so any advance can be undone.
         backup(saga)
     # Philosophic Alchemy's digestions, at the Lab Totals the season began with.
     record.lines += apply_digestions(saga, worked)

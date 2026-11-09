@@ -66,6 +66,7 @@ from .. import (
     seat,
     storage,
     title_page,
+    undo_season,
     viewing,
 )
 from .. import familiars as fam
@@ -91,7 +92,15 @@ from ..forms import printing as print_forms
 from ..forms import saga as saga_forms
 from ..joined_games import JoinedGame
 from ..markup import escape
-from ..models import Character, Covenant, Familiar, Laboratory, Player, Saga
+from ..models import (
+    Character,
+    Covenant,
+    Familiar,
+    Laboratory,
+    Player,
+    Saga,
+    season_order,
+)
 from ..paths import APP_NAME
 from ..saga_store import LocalStore, Refreshed, SagaStore
 from ..sheets import laboratory as ls
@@ -933,9 +942,16 @@ class MainWindow(QMainWindow):
             else:
                 self.note.say(f"Updated by {who}.", self.palette_)
         if (saga.current_year, saga.current_season) != season_was:
-            # Another copy advanced the season: the dial turns here too.
+            # Another copy advanced (or undid) the season: the dial turns
+            # here too.
+            back = season_order(
+                season=saga.current_season, year=saga.current_year
+            ) < season_order(season=season_was[1], year=season_was[0])
             self.note.say(
-                f"{who} advanced the season to {saga.current_season} "
+                f"{who} undid {season_was[1]} {season_was[0]}: the saga is back "
+                f"to {saga.current_season} {saga.current_year}."
+                if back
+                else f"{who} advanced the season to {saga.current_season} "
                 f"{saga.current_year}.",
                 self.palette_,
             )
@@ -1435,6 +1451,18 @@ class MainWindow(QMainWindow):
         step = outcome.end
         if ended is not None:
             ended(step)
+            return
+        if isinstance(step, undo_season.Undone) and step.remote:
+            # Done on the host: the next read brings the saga back, and the
+            # dial turns then.
+            self.last_asked = 0.0
+            self.tell(undo_season.TITLE, step.message)
+            return
+        if isinstance(step, undo_season.Undone):
+            # The season's dial turns back to the season the saga is in now.
+            said = step.message
+            self.redraw()
+            self._turn_the_dial(lambda: self.tell(undo_season.TITLE, said))
             return
         sounds.play(self._saved_cue(page))
         if then is not None:

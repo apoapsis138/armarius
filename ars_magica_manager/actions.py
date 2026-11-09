@@ -374,6 +374,7 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("o", "demote", "Demote"),
     MenuItem("w", "creation_worksheet", "Creation Worksheet"),
     MenuItem("t", "set_date", "Set Date"),
+    MenuItem("z", "undo_season", "Undo Last Season"),
     MenuItem("o", "downtime_run", "Run Downtime"),
     MenuItem("u", "previously_on", "Previously On"),
     MenuItem("a", "edit_arms", "Arms"),
@@ -1513,6 +1514,7 @@ def _has_asks(facts: ActionFacts) -> bool:
 _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     "teaching_requests": _has_asks,
     "set_date": _on_saga,
+    "undo_season": _on_saga,
     "downtime_run": _on_saga,
     "previously_on": _on_saga,
     "export_saga": _exports_saga,

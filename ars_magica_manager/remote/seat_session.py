@@ -20,6 +20,7 @@ from typing import Any
 from .. import players
 from ..models import Saga
 from ..saga_store import NotSaved
+from ..undo_season import Undo
 from .bridge import LoopThread
 from .client import (
     ChangeNotSaved,
@@ -243,6 +244,18 @@ class SeatSession:
             return self._loop.run(self._talk().send_saga(before, after), timeout=120)
         except ChangeNotSaved as refused:
             raise NotSaved("saga") from refused
+
+    def undo_offer(self) -> Undo | None:
+        """What the host can undo (undo_season.HostUndo), or None."""
+        found = self._loop.run(self._talk().undo_offer())
+        if found is None:
+            return None
+        back_to, now, lost = found
+        return Undo(0, back_to, now, tuple(lost))
+
+    def undo_season(self, now: str) -> str:
+        """Ask the host to undo the advance that reached `now`."""
+        return self._loop.run(self._talk().undo_season(now), timeout=60)
 
     def here(self, record: str) -> list[str]:
         """Say which record this seat has open; who else has it open."""

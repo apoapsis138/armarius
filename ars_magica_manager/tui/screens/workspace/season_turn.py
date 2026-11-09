@@ -6,7 +6,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import Any
 
-from .... import places, storage
+from .... import places, storage, undo_season
 from ....actions import (
     NodeKind,
 )
@@ -133,6 +133,18 @@ class SeasonActions(WorkspaceBase):
         self._rebuild_tree()
         if isinstance(end, list) and end:
             self.notify("\n".join(str(line) for line in end), timeout=30)
+
+    def action_undo_season(self) -> None:
+        """Undo Last Season (undo_season.py): asked first, then the saga put
+        back in place, saved, and everything drawn again."""
+        saga = self.saga
+
+        def done(end: object) -> None:
+            if isinstance(end, undo_season.Undone):
+                storage.save_saga(saga)
+                self.run_worker(self._downtime_kept([end.message]))
+
+        run_steps(self.app, undo_season.undo_command(saga), done)
 
     def action_set_date(self) -> None:
         saga = self.saga

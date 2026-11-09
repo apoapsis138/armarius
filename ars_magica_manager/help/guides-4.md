@@ -357,7 +357,7 @@ When an imported book or spell has the name of one already in the saga, the app 
 
 Each saga is saved as one file, the saga's id followed by `.json`, in the `sagas` folder of Armarius in your OneDrive folder (see the README to keep it elsewhere). The app saves every change as you make it.
 
-- Before a season with plans is applied, the app copies the saga to `sagas/backups`, keeping the last five (the newest has the saga's own file name; older ones end `.1.json` to `.4.json`). To undo that season, copy the backup over the saga's file with the app closed.
+- Before each season (or downtime run) is applied, the app copies the saga to `sagas/backups`, keeping the last five (the newest has the saga's own file name; older ones end `.1.json` to `.4.json`), each with a copy just after it (`.after.json`). **Undo Last Season** uses them (see [Undoing a mistake](help:guide-seasons-undo)).
 - That is the only backup the app keeps, so for anything older, copy the saga's file yourself from time to time.
 - To keep a single character, laboratory or covenant safe before a big change, export it as above.
 - Every saga file, export and pack is checked as it is read: a field holding the wrong kind of thing (a file edited by hand, or damaged) is named, and the saga isn't opened, nor changed. Copy a backup over its file to go back to before the damage.

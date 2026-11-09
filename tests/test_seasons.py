@@ -809,11 +809,12 @@ def test_finishing_a_winter_season_runs_the_year_end_in_order():
     assert (saga.current_season, saga.current_year) == ("Spring", 1221)
 
 
-def test_finishing_a_season_with_nothing_planned_takes_no_backup():
+def test_finishing_a_season_with_nothing_planned_still_takes_a_backup():
+    """Every advance is backed up, so any can be undone (undo_season.py)."""
     saga = _saga(_magus())
     calls: list[object] = []
     done = seasons.finish_season(saga, [], {}, random.Random(1), backup=calls.append)
-    assert calls == [] and done.applied == [] and done.added == []
+    assert calls == [saga] and done.applied == [] and done.added == []
     assert (saga.current_season, saga.current_year) == ("Summer", 1220)
     assert saga.season_records == []
 

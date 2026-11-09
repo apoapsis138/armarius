@@ -429,6 +429,30 @@ class RemoteClient:
         overlaps = str(reply.body.get("overlaps", ""))
         return [o for o in overlaps.split("; ") if o]
 
+    async def undo_offer(self) -> tuple[str, str, list[str]] | None:
+        """What the host can undo (a storyguide's seat): the season it goes
+        back to, the season it is now, and the records changed since; None
+        when nothing can be."""
+        reply = await self.request("undo_offer")
+        if reply.type == "no_undo":
+            return None
+        back_to, now = reply.body.get("back_to"), reply.body.get("now")
+        lost = reply.body.get("lost", "")
+        if reply.type != "undo" or not isinstance(back_to, str):
+            raise UnreadableReply
+        names = [n for n in str(lost).split("\n") if n]
+        return back_to[:40], str(now)[:40], names
+
+    async def undo_season(self, now: str) -> str:
+        """Ask the host to undo the advance that reached `now`; its line
+        saying so, or "" when the saga moved on meanwhile."""
+        reply = await self.request("undo_season", {"now": now})
+        if reply.type == "no_undo":
+            return ""
+        if reply.type != "undone":
+            raise UnreadableReply
+        return str(reply.body.get("message", ""))[:400]
+
     async def close(self) -> None:
         try:
             await self._channel.close()

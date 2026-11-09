@@ -329,21 +329,47 @@ def backup_path(saga_id: str, age: int = 0) -> Path:
     return sagas_dir() / "backups" / name
 
 
-def backup_saga(saga: Saga) -> Path:
-    """Save `saga` as it stands as its newest backup -- taken just before a
-    season is applied, so that season can be undone by copying the backup
-    back over the saga's file. The previous backups move one place older and
-    the oldest beyond BACKUPS_KEPT is dropped."""
-    backup_path(saga.id, BACKUPS_KEPT - 1).unlink(missing_ok=True)
-    for age in range(BACKUPS_KEPT - 2, -1, -1):
-        older = backup_path(saga.id, age)
-        if older.exists():
-            older.replace(backup_path(saga.id, age + 1))
-    path = backup_path(saga.id)
+def after_path(saga_id: str, age: int = 0) -> Path:
+    """Where the copy of a saga just after an advance is kept, beside the
+    backup taken just before it (`backup_path` of the same age): the pair
+    Undo Last Season reads (undo_season.py)."""
+    name = f"{saga_id}.after.json" if age == 0 else f"{saga_id}.after.{age}.json"
+    return sagas_dir() / "backups" / name
+
+
+def undone_path(saga_id: str) -> Path:
+    """Where the saga as it stood is kept when a season is undone, so a
+    mistaken undo loses nothing (copied back by hand)."""
+    return sagas_dir() / "backups" / f"{saga_id}.undone.json"
+
+
+def _write_copy(saga: Saga, path: Path) -> Path:
     newer = _newer_data.get(str(saga_path(saga.id)))
     saga.app_version = __version__ if newer is None else newer["app_version"]
     write_atomic(path, json.dumps(_with_newer(asdict(saga), newer), indent=2))
     return path
+
+
+def backup_saga(saga: Saga) -> Path:
+    """Save `saga` as it stands as its newest backup -- taken just before a
+    season is applied, so that season can be undone (undo_season.py). The
+    previous backups, and the copies after each advance beside them, move one
+    place older and the oldest beyond BACKUPS_KEPT is dropped; the newest has
+    no after-copy until the advance ends (`remember_after`)."""
+    for path_of in (backup_path, after_path):
+        path_of(saga.id, BACKUPS_KEPT - 1).unlink(missing_ok=True)
+        for age in range(BACKUPS_KEPT - 2, -1, -1):
+            older = path_of(saga.id, age)
+            if older.exists():
+                older.replace(path_of(saga.id, age + 1))
+    return _write_copy(saga, backup_path(saga.id))
+
+
+def remember_after(saga: Saga) -> Path:
+    """Keep `saga` as it stands just after an advance (or a downtime run)
+    ended, beside the backup taken before it: what Undo Last Season compares
+    the saga with, to say what changed since."""
+    return _write_copy(saga, after_path(saga.id))
 
 
 def load_saga(saga_id: str) -> Saga:

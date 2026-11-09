@@ -56,6 +56,7 @@ from .. import (
     traditions,
     transfer,
     tribunals,
+    undo_season,
     viewing,
     world,
 )
@@ -618,6 +619,7 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "host_saga": ((NodeKind.SAGA, "Saga Management"),),
     "stop_hosting": ((NodeKind.SAGA, "Saga Management"),),
     "set_date": ((NodeKind.SAGA, "Seasons"),),
+    "undo_season": ((NodeKind.SAGA, "Seasons"),),
     "downtime_run": ((NodeKind.SAGA, "Seasons"),),
     "previously_on": ((NodeKind.SAGA, "Seasons"),),
     "create_covenant": ((NodeKind.SAGA, "Covenants"),),
@@ -2035,6 +2037,7 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "promote": _detail_command("promote"),
     "demote": _detail_command("demote"),
     "set_date": lambda page: set_date(page.saga),
+    "undo_season": lambda page: undo_season.undo_command(page.saga),
     "downtime_run": lambda page: downtime.downtime_form(page.saga, storage.backup_saga),
     "previously_on": lambda page: session_forms.previously_on(page.saga),
     "edit_arms": _arms_command,
