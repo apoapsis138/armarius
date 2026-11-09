@@ -27,6 +27,7 @@ from typing import Any, cast
 
 from .. import players, storage
 from ..models import Saga
+from ..saga_delta import DeltaRefused, fold
 from ..seat_changes import CHANGEABLE, ChangeRefused, apply_change
 from . import audit
 from .protocol import Body, Field, MessageSpec, Refused, Reply, Session
@@ -40,6 +41,8 @@ CHANGE_PART = 40_000
 MAX_CHANGE = 2 * 1024 * 1024
 MAX_PARTS = -(-MAX_CHANGE // CHANGE_PART)
 KEY_MAX = 200
+#: The kind of a storyguide's change to the whole saga (saga_delta.py).
+SAGA = "saga"
 
 
 @dataclass
@@ -127,6 +130,38 @@ class SeatChanges:
         self._note(audit.RECORD_CHANGED, session, record)
         return applied.overlaps
 
+    def take_saga(self, session: Session, packed: bytes) -> list[str]:
+        """A storyguide's change to the whole saga (saga_delta.py), folded
+        in and saved, the saga backed up first when it advances the season;
+        the overlaps. DeltaRefused (with `advanced`) when another advanced
+        first; Refused (and logged) for anything else it can't take."""
+        try:
+            before, after = unpack_change(packed)
+            if before is None or after is None:
+                raise Refused
+            saga: Saga = storage.load_saga(self._saga_id)
+            player = players.player_by_id(saga, session.player_id)
+            if player is None or player.role != players.STORYGUIDE:
+                raise Refused
+            folded = fold(saga, before, after)
+        except DeltaRefused as refused:
+            if refused.advanced:
+                raise
+            self._note(audit.CHANGE_REFUSED, session, SAGA)
+            raise Refused from None
+        except Refused, OSError, ValueError:
+            self._note(audit.CHANGE_REFUSED, session, SAGA)
+            raise Refused from None
+        if folded.advanced:
+            storage.backup_saga(saga)
+        storage.save_saga(folded.saga, storage.Saver(player.name))
+        self._note(
+            audit.SEASON_ADVANCED if folded.advanced else audit.RECORD_CHANGED,
+            session,
+            SAGA,
+        )
+        return folded.overlaps
+
 
 def _saved(overlaps: list[str]) -> Reply:
     return Reply("saved", {"overlaps": "; ".join(overlaps)[:2000]})
@@ -150,12 +185,19 @@ def change_specs(changes: SeatChanges) -> list[MessageSpec]:
             or hashlib.sha256(blob).hexdigest() != upload.sha256
         ):
             raise Refused
+        if upload.kind == SAGA:
+            try:
+                return _saved(changes.take_saga(session, blob))
+            except DeltaRefused as refused:
+                # Not a strike: another storyguide advanced first.
+                return Reply("advanced", {"now": refused.advanced})
         return _saved(changes.take(session, upload.kind, upload.key, blob))
 
     def change(session: Session, body: Body) -> Reply:
         kind, key = str(body["kind"]), str(body["key"])
         size, parts = int(body["size"]), int(body["parts"])
-        if kind not in CHANGEABLE or parts != max(1, -(-size // CHANGE_PART)):
+        known = kind in CHANGEABLE or kind == SAGA
+        if not known or parts != max(1, -(-size // CHANGE_PART)):
             raise Refused
         upload = Upload(kind, key, size, str(body["sha256"]), parts)
         upload.received += piece(body["data"])

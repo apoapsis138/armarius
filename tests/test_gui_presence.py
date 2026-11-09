@@ -52,9 +52,13 @@ def test_the_window_shows_who_else_has_the_record_open() -> None:
     main.show_character("mag1")
     assert main.open_record_key() == "characters:mag1"
     presence.note("browser-1", saga.id, "Anna", "characters:mag1")
+    presence.note("seat-2", saga.id, "Bruno (storyguide)", "characters:mag1")
     main.shared_tick()
     assert main.here_label.isVisibleTo(main)
-    assert main.here_label.text().strip() == "◉ Anna is here too"
+    assert (
+        main.here_label.text().strip() == "◉ Anna, Bruno (storyguide) are also viewing"
+    )
+    presence.leave("seat-2")
     presence.leave("browser-1")
     main.shared_tick()
     assert not main.here_label.isVisibleTo(main)

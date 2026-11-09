@@ -27,7 +27,7 @@ from collections.abc import Callable, Sequence
 from dataclasses import asdict, dataclass
 
 from .. import presence, storage, viewing
-from ..models import Player, Saga
+from ..models import Saga
 from ..seat_view import seat_view
 from ..transfer import MAPS, PORTRAITS, pictures_named
 from . import audit
@@ -159,7 +159,9 @@ class SeatSnapshots:
         player = next((p for p in saga.players if p.id == player_id), None)
         if player is None:
             raise LookupError("No such player.")
-        view = seat_view(saga, viewing.viewer_for(_as_player(player)))
+        # A storyguide's seat reads the whole saga (less the passcode
+        # hashes, which seat_view always drops); a player's, their view.
+        view = seat_view(saga, viewing.viewer_for(player))
         data = asdict(view)
         revision, packed = pack(data)
         if len(packed) > MAX_SNAPSHOT:
@@ -169,7 +171,7 @@ class SeatSnapshots:
             packed,
             frozenset(pictures_named({"saga": data})),
             _records_in(data),
-            player.name,
+            presence.label(player),
         )
         self._views[player_id] = snapshot
         return snapshot
@@ -183,12 +185,6 @@ class SeatSnapshots:
                 device_id=session.device_id,
             )
             session.read_logged = True
-
-
-def _as_player(player: Player) -> Player:
-    """A seat always reads as a player: hosting rights stay with the
-    storyguide's own window (a storyguide's seat is a later story)."""
-    return Player(id=player.id, name=player.name, role="player")
 
 
 def records_specs(

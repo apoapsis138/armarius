@@ -21,6 +21,7 @@ from typing import Any, Protocol
 
 from . import storage
 from .models import Saga
+from .saga_delta import HOST_ONLY, saga_delta
 from .seat_changes import CHANGEABLE, record_key
 
 
@@ -85,14 +86,19 @@ class RemoteSeat(Protocol):
         after: dict[str, Any] | None,
     ) -> list[str]: ...
 
+    def send_saga(self, before: dict[str, Any], after: dict[str, Any]) -> list[str]: ...
+
 
 class RemoteStore:
-    """A Joined game's saga, read from and saved to its host."""
+    """A Joined game's saga, read from and saved to its host. A player's
+    seat sends each record changed (ADR 0010); a storyguide's (`whole`)
+    sends what changed in the whole saga (saga_delta.py, ADR 0014)."""
 
     remote = True
 
-    def __init__(self, seat: RemoteSeat) -> None:
+    def __init__(self, seat: RemoteSeat, *, whole: bool = False) -> None:
         self.seat = seat
+        self.whole = whole
         self.revision = ""
         self._base: dict[str, Any] = {}
 
@@ -115,6 +121,8 @@ class RemoteStore:
     def send(self, now: dict[str, Any]) -> Saved:
         """As save, for the saga as plain data (`asdict`, taken on the
         window's thread, so this can run on another)."""
+        if self.whole:
+            return self._send_whole(now)
         overlaps: list[str] = []
         refused: list[str] = []
         for kind in sorted(CHANGEABLE):
@@ -127,6 +135,30 @@ class RemoteStore:
                     refused.append(f"{kind}:{key}")
         self._base = now
         return Saved(overlaps, refused)
+
+    def _send_whole(self, now: dict[str, Any]) -> Saved:
+        """A storyguide's save: what changed since the last snapshot, sent
+        at once. Changes to what only the host changes are left out and
+        listed as refused. AlreadyAdvanced (from the seat) is passed on."""
+        before, after = saga_delta(self._base, now)
+        held = [p for p in {*before, *after} if p.split("[", 1)[0] in HOST_ONLY]
+        for place in held:
+            before.pop(place, None)
+            after.pop(place, None)
+        overlaps: list[str] = []
+        refused = sorted(held)
+        if before or after:
+            try:
+                overlaps = self.seat.send_saga(before, after)
+            except NotSaved:
+                refused.append("saga")
+        self._base = now
+        return Saved(overlaps, refused)
+
+    def start_again(self) -> None:
+        """Drop what wasn't taken (another storyguide advanced first): the
+        next read brings the host's whole saga, which replaces this copy."""
+        self.revision = ""
 
     def refresh(self, saga: Saga) -> Refreshed | None:
         """A new snapshot, if the host's saga changed in what this seat may

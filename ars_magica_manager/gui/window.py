@@ -875,7 +875,7 @@ class MainWindow(QMainWindow):
             return
         names = ", ".join(others)
         verb = "is" if len(others) == 1 else "are"
-        self.here_label.setText(f"  ◉ {escape(names)} {verb} here too")
+        self.here_label.setText(f"  ◉ {escape(names)} {verb} also viewing")
         self.here_label.setStyleSheet(
             f"color:{self.palette_['heading']}; background:transparent;"
             "font-style:italic;"
@@ -891,8 +891,7 @@ class MainWindow(QMainWindow):
         if self._presence_id is None:
             self._presence_id = f"desktop-{uuid.uuid4().hex}"
         record = self.open_record_key()
-        who = self.player.name if self.player is not None else ""
-        presence.note(self._presence_id, saga.id, who, record)
+        presence.note(self._presence_id, saga.id, presence.label(self.player), record)
         self.also_here(record, presence.others_on(self._presence_id, saga.id, record))
 
     def picked_up(
@@ -907,9 +906,13 @@ class MainWindow(QMainWindow):
             return
         if season_was is None:
             season_was = (saga.current_year, saga.current_season)
+        role_changed = False
         if found.saga is not saga:
             saga = self.saga = found.saga
             catalog.use_saga(saga)
+            # A Joined game's reader as the host has them now: the host may
+            # have made them a storyguide, or a player again.
+            role_changed = joined.role_changed(self, saga)
             self._use_viewer()
         changed = found.changed
         who = saga.saved_by or "The storyguide"
@@ -935,6 +938,13 @@ class MainWindow(QMainWindow):
                 self.palette_,
             )
             self._turn_the_dial(lambda: None)
+        if role_changed:
+            self.note.say(
+                "The host made you a storyguide: you see the whole saga now."
+                if joined.is_storyguide(self.player)
+                else "The host made you a player again.",
+                self.palette_,
+            )
 
     def _shown_record(self, place: Place | None) -> Any:
         """The record a place shows, if it shows one and it is still there."""
@@ -966,6 +976,7 @@ class MainWindow(QMainWindow):
             saga,
             self.player,
             player_view=viewing.player_view_on(saga.id),
+            hosts=not self.store.remote,
             on_refused=lambda refused: self.tell(
                 "Not saved",
                 "Only the storyguide can change " + escape(", ".join(refused)) + ".",
@@ -998,6 +1009,11 @@ class MainWindow(QMainWindow):
             menu.addAction(player.name).triggered.connect(
                 lambda _checked=False, who=player: self.sit_as(who)
             )
+        if self.player is not None:
+            # Playing as a player, the host keeps hosting: Host for Players
+            # stays one click away, and hosting goes on whoever sits here.
+            menu.addSeparator()
+            menu.addAction("Host for Players…").triggered.connect(self.open_hosting)
         menu.exec(self.seat_button.mapToGlobal(self.seat_button.rect().bottomLeft()))
 
     def _draw_seat_button(self) -> None:
@@ -1291,8 +1307,11 @@ class MainWindow(QMainWindow):
         saga = self.saga
         if saga is None:
             return
+        # A Joined game's host backs its own saga up when the advance
+        # reaches it (saga_delta.py): nothing is written here.
+        backup = None if self.store.remote else storage.backup_saga
         self.run(
-            advance_forms.advance_season(saga, storage.backup_saga),
+            advance_forms.advance_season(saga, backup),
             ended=self._season_played,
         )
 

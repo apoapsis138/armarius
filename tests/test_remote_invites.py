@@ -173,16 +173,15 @@ def test_the_book_lives_in_the_data_folder_not_the_saga() -> None:
     assert path.parent.name == "remote" and path.name == "My_Saga____x-invites.json"
 
 
-def test_only_a_player_can_be_invited(tmp_path: Path) -> None:
+def test_players_and_storyguides_can_be_invited(tmp_path: Path) -> None:
     saga = Saga(id="s", name="S")
     anna = players.add(saga, {"name": "Anna", "role": players.PLAYER, "passcode": "p"})
-    gm = players.add(saga, {"name": "GM", "role": players.STORYGUIDE, "passcode": "p"})
+    players.add(saga, {"name": "GM", "role": players.STORYGUIDE, "passcode": "p"})
     book = InviteBook(tmp_path / "invites.json")
     assert book.issue(anna.id)
-    for name in ("GM", "Nobody"):
-        with pytest.raises(ValueError, match="not a Player"):
-            invites.issue_for(book, saga, name)
-    assert gm.role == players.STORYGUIDE
+    assert invites.issue_for(book, saga, "GM")
+    with pytest.raises(ValueError, match="not a Player"):
+        invites.issue_for(book, saga, "Nobody")
 
 
 def test_the_invite_text_round_trips_and_is_one_pasteable_line() -> None:

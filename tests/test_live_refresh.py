@@ -171,8 +171,8 @@ async def test_two_people_on_one_record_are_told():
         await ws._shared_tick()
         await ws._shared_tick()  # said once, not every tick
         await pilot.pause()
-        told = [n.message for n in app._notifications if "also on" in n.message]
-        assert told == ["Ana is also on Leandro."]
+        told = [n.message for n in app._notifications if "also viewing" in n.message]
+        assert told == ["Ana is also viewing Leandro."]
     # Closing the saga drops this copy's presence.
     assert presence.others_on("ana-tab", "test_saga", "characters:mag1") == []
 

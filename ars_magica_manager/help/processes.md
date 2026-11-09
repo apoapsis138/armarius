@@ -1507,6 +1507,27 @@ one). A passcode needs at least 14 characters: a few words they'll
 remember, such as "grey owl over the mill", are easiest. Choose a player
 and **Issue Invite** to invite them.
 
+**Storyguides in troupe-style play.** Give a player the role
+**Storyguide** to let them run the saga from their own seat: they see
+everything (Secrets, unknown records, Roll Tables, threats' stages to
+come), change any record, advance the season and change Saga Settings.
+What stays yours, on this computer only, is who may join and as what:
+the Players and their roles, this window, and deleting the saga. Making
+someone a storyguide whose devices already have seats asks first, naming
+those devices; the change reaches their seat within seconds, and the Log
+notes it. Storyguides are marked "(storyguide)" in these lists, in the
+Log, and beside the trail when they are viewing a record.
+
+To play a character yourself for a while, use **Play as** in the title
+bar: hosting goes on, and its menu keeps **Host for Players** one click
+away until you choose **Storyguide** again.
+
+When a storyguide advances the season from their seat, this computer backs
+the saga up first, then takes it in as it takes any save, keeping a
+player's change made meanwhile unless it touched the same thing. If two
+storyguides advance at once, the first wins; the second is told who
+advanced, and nothing of theirs is changed.
+
 While the saga has players, your own window picks up what they save every
 few seconds: the page is drawn again, with a note at its foot such as
 "Anna changed Leandro; reloaded." It waits while you have a form or
@@ -1539,9 +1560,11 @@ kept for the saga, outside the saga file.
 <!-- help: issue-invite; gui -->
 
 On **Players** (with the player chosen) or **Requests**, **Issue Invite**
-asks which Player to invite. Only Players whose passcode has at least 14
-characters, set since this rule began, are offered; the others are listed
-with the reason. A storyguide's sign-in is not offered.
+asks which Player to invite: players and storyguides alike, storyguides
+marked. Only those whose passcode has at least 14 characters, set since
+this rule began, are offered; the others are listed with the reason. A
+storyguide's device will see everything in the saga, and approving it
+says so.
 
 The window then shows the line to send the player by chat or email, with a
 **Copy** button, and the host's six words to read them on the call. The
@@ -1656,8 +1679,18 @@ plans, and the covenants if your storyguide gave you covenant rights).
 Every few seconds your pages pick up what others saved, with a note at
 the window's foot. When your storyguide advances the season, your
 window turns the season's dial too. If someone else has the record you're
-on open, their name shows beside the trail ("◉ Bruno is here too"), so
+on open, their name shows beside the trail ("◉ Bruno is also viewing",
+a storyguide marked "Bruno (storyguide)"), so
 you can agree who changes what.
+
+If the host made you a **storyguide**, you see the whole saga and may
+change any record, advance the season (Advance Season, as on the host's
+computer) and change Saga Settings. The host's own computer backs the
+saga up before your advance is taken in. If another storyguide advanced
+first, you are told who, nothing of yours is changed, and your window
+shows the saga as it now is: look before advancing again. Who may join,
+and as what, stays the host's: Saga Management says so. When the host
+changes your role, your window follows within seconds and says so.
 
 ### What a host can and can't see or do
 <!-- help: what-a-host-sees; gui -->

@@ -294,10 +294,10 @@ def book_path(saga_name: str) -> Path:
 
 
 def issue_for(book: InviteBook, saga: Saga, player_name: str) -> str:
-    """An Invite for the Player named `player_name`; ValueError if there is
-    no such Player (the Storyguide's own seat is not one)."""
+    """An Invite for the Player named `player_name` (a player or a
+    storyguide); ValueError if there is no such Player."""
     player = players.find(saga, player_name)
-    if player is None or player.role != players.PLAYER:
+    if player is None:
         raise ValueError(f"{player_name!r} is not a Player in this saga.")
     return book.issue(player.id)
 

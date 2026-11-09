@@ -593,8 +593,7 @@ class WorkspaceBase(Screen[None]):
     _unreadable: bool = False
 
     def _who(self) -> str:
-        player = self._signed_in()
-        return player.name if player is not None else ""
+        return presence.label(self._signed_in())
 
     def _open_record_key(self) -> str | None:
         """The record on show, as "characters:mag1", for presence."""
@@ -642,7 +641,7 @@ class WorkspaceBase(Screen[None]):
             name = self._shown_name()
             self.notify(
                 f"{escape(', '.join(sorted(new)))} "
-                f"{'is' if len(new) == 1 else 'are'} also on {escape(name)}.",
+                f"{'is' if len(new) == 1 else 'are'} also viewing {escape(name)}.",
                 timeout=6,
             )
 

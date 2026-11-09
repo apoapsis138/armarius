@@ -236,6 +236,14 @@ class SeatSession:
         except ChangeNotSaved as refused:
             raise NotSaved(f"{kind}:{key}") from refused
 
+    def send_saga(self, before: dict[str, Any], after: dict[str, Any]) -> list[str]:
+        """A storyguide's change to the whole saga; the overlaps. NotSaved
+        when the host refused it; AlreadyAdvanced as client.send_saga."""
+        try:
+            return self._loop.run(self._talk().send_saga(before, after), timeout=120)
+        except ChangeNotSaved as refused:
+            raise NotSaved("saga") from refused
+
     def here(self, record: str) -> list[str]:
         """Say which record this seat has open; who else has it open."""
         return self._loop.run(self._talk().here(record))

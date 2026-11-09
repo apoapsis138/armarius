@@ -23,7 +23,7 @@ import aiohttp
 
 from .. import __version__, players, storage
 from ..models import Saga
-from .changes import change_messages
+from .changes import SAGA, change_messages
 from .identity import normalise_pin
 from .proof import make_proof
 from .protocol import (
@@ -86,6 +86,16 @@ class ChangeNotSaved(Exception):
 
     def __init__(self) -> None:
         super().__init__("The host didn't save that change.")
+
+
+class AlreadyAdvanced(Exception):
+    """Another storyguide advanced the season first: nothing was changed.
+    `who` advanced it; `now` is the saga's season ("Summer 1221")."""
+
+    def __init__(self, said: str) -> None:
+        who, _, now = said.partition("|")
+        self.who, self.now = who or "Someone", now
+        super().__init__(f"{self.who} has already advanced the saga to {now}.")
 
 
 class VersionMismatch(ChannelError):
@@ -393,6 +403,27 @@ class RemoteClient:
             last = index == len(messages) - 1
             if reply.type == "refused" or (not last and reply.type != "more"):
                 raise ChangeNotSaved
+        if reply.type != "saved":
+            raise UnreadableReply
+        overlaps = str(reply.body.get("overlaps", ""))
+        return [o for o in overlaps.split("; ") if o]
+
+    async def send_saga(
+        self, before: dict[str, Any], after: dict[str, Any]
+    ) -> list[str]:
+        """A storyguide's change to the whole saga (saga_delta.py): what
+        changed, as it was and as they left it. The overlaps with changes
+        made meanwhile (theirs kept). AlreadyAdvanced when another advanced
+        the season first; ChangeNotSaved when the host refused it."""
+        messages = change_messages(SAGA, "", before, after)
+        reply = Reply("refused")
+        for index, (name, body) in enumerate(messages):
+            reply = await self.request(name, body)
+            last = index == len(messages) - 1
+            if reply.type == "refused" or (not last and reply.type != "more"):
+                raise ChangeNotSaved
+        if reply.type == "advanced":
+            raise AlreadyAdvanced(str(reply.body.get("now", ""))[:120])
         if reply.type != "saved":
             raise UnreadableReply
         overlaps = str(reply.body.get("overlaps", ""))

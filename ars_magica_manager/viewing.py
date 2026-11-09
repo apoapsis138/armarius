@@ -53,6 +53,9 @@ class Viewer:
 
     kind: str
     player: Player | None = None
+    #: Whether this copy is the host's (it keeps the saga): a storyguide
+    #: joined from a Remote seat isn't, and is offered nothing in HOST_ONLY.
+    hosts: bool = True
 
     @property
     def is_storyguide(self) -> bool:
@@ -72,13 +75,18 @@ STORYGUIDE_VIEWER = Viewer(STORYGUIDE)
 TABLE_VIEWER = Viewer(TABLE)
 
 
-def viewer_for(player: Player | None, *, player_view: bool = False) -> Viewer:
+def viewer_for(
+    player: Player | None, *, player_view: bool = False, hosts: bool = True
+) -> Viewer:
     """The viewer of a copy: the player signed in (a storyguide among them
     reads everything), else the storyguide's own window, which is the
-    table while Player view is on."""
+    table while Player view is on. `hosts`: whether this copy is the
+    host's, not one joined from a Remote seat."""
     if player is not None and player.role != STORYGUIDE:
-        return Viewer(PLAYER, player)
-    return TABLE_VIEWER if player_view else STORYGUIDE_VIEWER
+        return Viewer(PLAYER, player, hosts)
+    if player_view:
+        return TABLE_VIEWER
+    return STORYGUIDE_VIEWER if hosts else Viewer(STORYGUIDE, None, False)
 
 
 # -- who is looking now --
@@ -137,6 +145,13 @@ STORYGUIDE_ONLY: frozenset[str] = frozenset(
         "section-players",
     }
 )
+
+#: The parts only the host's own copy shows: who may join, and as what
+#: (ADR 0014). A storyguide joined from a Remote seat reads all else.
+HOST_ONLY: frozenset[str] = frozenset({"tab-content-players", "section-players"})
+#: What only the host's own copy does: hosting (and with it Host for
+#: Players: invites, approvals, seats, the log).
+HOST_ONLY_ACTIONS: frozenset[str] = frozenset({"host_saga", "stop_hosting"})
 
 #: What only the storyguide may do, so Player view leaves it off the
 #: storyguide's own window too (a signed-in player is refused much more:
@@ -268,7 +283,10 @@ def may_read(viewer: Viewer, record: Any = None, part: str = "") -> bool:
     """Whether `viewer` may read `record` (None: something of the whole
     saga) and, on its page, the part `part` (a section, tab or chapter id;
     "": the page itself). The storyguide reads everything; anyone else a
-    known record's parts not in STORYGUIDE_ONLY."""
+    known record's parts not in STORYGUIDE_ONLY. A copy that isn't the
+    host's never reads the HOST_ONLY parts."""
+    if not viewer.hosts and part in HOST_ONLY:
+        return False
     if viewer.is_storyguide:
         return True
     if part and part in STORYGUIDE_ONLY:
@@ -280,7 +298,10 @@ def may_do(viewer: Viewer, action: str) -> bool:
     """Whether `viewer`'s copy offers `action` at all: the storyguide
     anything; the table (Player view) all but STORYGUIDE_ONLY_ACTIONS; a
     player signed in also not PLAYER_BARRED_ACTIONS. Whether a player may
-    change the record on show is players.may_change."""
+    change the record on show is players.may_change. A copy that isn't
+    the host's is never offered HOST_ONLY_ACTIONS."""
+    if not viewer.hosts and action in HOST_ONLY_ACTIONS:
+        return False
     if viewer.is_storyguide:
         return True
     if action in STORYGUIDE_ONLY_ACTIONS:

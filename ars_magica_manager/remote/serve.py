@@ -22,7 +22,7 @@ import os
 import sys
 from collections.abc import Callable
 
-from .. import players, storage
+from .. import storage
 from ..models import Player
 from .audit import AuditLog, audit_path
 from .changes import SeatChanges
@@ -59,7 +59,9 @@ class SagaPlayers:
             return None
         if stamp != self._stamp:
             saga = storage.load_saga(self._saga_id)
-            self._players = {p.id: p for p in saga.players if p.role == players.PLAYER}
+            # Players and storyguides alike: the role decides what a seat
+            # reads and changes (records.py, saga_delta.py).
+            self._players = {p.id: p for p in saga.players}
             self._stamp = stamp
         return self._players.get(player_id)
 

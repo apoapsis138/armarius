@@ -17,7 +17,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field, replace
 from typing import Any
 
-from .. import hosting, players, references, storage
+from .. import hosting, players, presence, references, storage
 from ..commands import Command, Confirm, Form, Picked, Refuse, notes
 from ..form_spec import DialogField
 from ..markup import escape
@@ -56,6 +56,8 @@ EVENT_LABELS: dict[str, str] = {
     audit.CHANGE_REFUSED: "Change refused",
     audit.PASSCODE_CHANGED: "Changed their passcode",
     audit.RESET_ASKED: "Asked for a new passcode",
+    audit.SEASON_ADVANCED: "Advanced the season",
+    audit.ROLE_CHANGED: "Role changed",
 }
 
 
@@ -103,8 +105,9 @@ class SeatsDesk:
         return last_plan(self.saga.id, self.saga.name)
 
     def name_of(self, player_id: str) -> str:
+        """A player's name as the lists show it, storyguides marked."""
         player = players.player_by_id(self.saga, player_id)
-        return player.name if player is not None else "(a deleted player)"
+        return who_is(player) if player is not None else "(a deleted player)"
 
     # -- what the window shows -----------------------------------------------
 
@@ -196,10 +199,8 @@ class SeatsDesk:
         rows = []
         for p in self.saga.players:
             plays = ", ".join(c.name for c in players.characters_of(self.saga, p))
-            problem = remote_problem(self, p) if p.role == players.PLAYER else None
-            if p.role != players.PLAYER:
-                ready = "Storyguide: no Remote seat yet"
-            elif problem is None:
+            problem = remote_problem(self, p)
+            if problem is None:
                 ready = "✓ Ready"
             elif not p.passcode_hash:
                 ready = "✗ No passcode yet"
@@ -218,7 +219,7 @@ class SeatsDesk:
 
     def log_players(self) -> list[tuple[str, str]]:
         """The players the Log can be narrowed to: (name, id)."""
-        return [(p.name, p.id) for p in self.saga.players if p.role == players.PLAYER]
+        return [(p.name, p.id) for p in self.saga.players]
 
     def idle_days(self) -> int:
         return self.devices().idle_days
@@ -293,6 +294,8 @@ def _saving(desk: SeatsDesk, command: Command) -> Command:
 
         def save_form(values: dict[str, Any]) -> Any:
             done = apply(values)
+            if isinstance(done, Form | Confirm):
+                return _saving(desk, done)  # saved once the next step is
             storage.save_saga(desk.saga)
             return done
 
@@ -302,6 +305,8 @@ def _saving(desk: SeatsDesk, command: Command) -> Command:
 
         def save_confirmed() -> Any:
             done = confirmed()
+            if isinstance(done, Form | Confirm):
+                return _saving(desk, done)
             storage.save_saga(desk.saga)
             return done
 
@@ -454,6 +459,12 @@ def remote_host_form(desk: SeatsDesk) -> Form:
 # -- Issue Invite ----------------------------------------------------------------
 
 
+def who_is(player: Player) -> str:
+    """A Player's name, marked when they are a storyguide: "Bruno
+    (storyguide)"."""
+    return presence.label(player)
+
+
 def remote_problem(desk: SeatsDesk, player: Player) -> str | None:
     """Why `player` can't be given an Invite, or None if they can."""
     if not player.passcode_hash:
@@ -477,7 +488,8 @@ def issue_invite(desk: SeatsDesk, player_id: str | None = None) -> Command:
             "An Invite says where to connect: host for Remote seats once, with "
             "your tunnel's address, first.",
         )
-    seats = [p for p in desk.saga.players if p.role == players.PLAYER]
+    # Players and storyguides alike: a storyguide's seat reads everything.
+    seats = list(desk.saga.players)
     if not seats:
         return Refuse("Issue Invite", "Add the players first, under Players.")
     able = [p for p in seats if remote_problem(desk, p) is None]
@@ -515,8 +527,10 @@ def issue_invite(desk: SeatsDesk, player_id: str | None = None) -> Command:
             "Player",
             "select",
             player_id if player_id in {p.id for p in able} else able[0].id,
-            options=[(p.name, p.id) for p in able],
-            hint="Each Invite works once, for one device, for 24 hours.",
+            options=[(who_is(p), p.id) for p in able],
+            hint="Each Invite works once, for one device, for 24 hours. A "
+            "storyguide's device will see everything in the saga, Secrets "
+            "included.",
         )
     ]
     if unable:
@@ -571,6 +585,13 @@ def _decide(desk: SeatsDesk, request_id: str, *, approve: bool) -> Command:
             f"Give {device} {who}'s seat? Approve only if {who} read you these "
             f"words on the call:\n\n[b]{words}[/]"
         )
+        asking = next((r for r in desk.invites().pending() if r.id == request_id), None)
+        player = players.player_by_id(desk.saga, asking.player_id) if asking else None
+        if player is not None and player.role == players.STORYGUIDE:
+            question += (
+                "\n\nThey are a storyguide: this device will see everything in "
+                "the saga, Secrets included, and change any record in it."
+            )
         return Confirm(question, apply, yes_label="Approve", title="Approve Request")
     question = (
         f"Reject {device}'s request for {who}?\n\n"

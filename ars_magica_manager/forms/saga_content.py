@@ -37,6 +37,8 @@ from ..models import (
     SagaSource,
     Spell,
 )
+from ..remote import audit
+from ..remote.audit import AuditLog, audit_path
 from ..remote.devices import DeviceBook, devices_path
 from ..remote.passcodes import RemotePasscodes, passcodes_path
 from ..rules import spell_levels
@@ -747,17 +749,42 @@ def player_form(saga: Saga, existing: Player | None) -> Form:
     """Add (None) or Edit a player: name, role, passcode and whom they play.
     Saga Content's Players and Host for Players both run it."""
 
-    def apply(values: dict[str, Any]) -> None:
+    def store(values: dict[str, Any]) -> None:
+        was = existing.role if existing is not None else ""
         if existing is None:
             player = pl.add(saga, values)
         else:
             player = existing
             pl.update(existing, values)
         apply_plays(saga, player, values)
+        devices = DeviceBook(devices_path(saga.name))
         if values.get("passcode"):
             RemotePasscodes(passcodes_path(saga.name)).note(player, values["passcode"])
             # A new passcode answers the player's ask for one.
-            DeviceBook(devices_path(saga.name)).reset_done(player.id)
+            devices.reset_done(player.id)
+        if was and was != player.role and _seated(devices, player):
+            AuditLog(audit_path(saga.name)).record(
+                audit.ROLE_CHANGED, player_id=player.id
+            )
+
+    def apply(values: dict[str, Any]) -> Confirm | None:
+        promoting = (
+            existing is not None
+            and existing.role != pl.STORYGUIDE
+            and values.get("role") == pl.STORYGUIDE
+        )
+        seated = _seated(DeviceBook(devices_path(saga.name)), existing)
+        if promoting and seated and existing is not None:
+            return Confirm(
+                f"Make {escape(existing.name)} a storyguide? Within seconds "
+                f"{escape(', '.join(seated))} will see everything in the saga, "
+                "Secrets included, and may change any record in it.",
+                lambda: store(values),
+                yes_label="Make Storyguide",
+                title="Make Storyguide",
+            )
+        store(values)
+        return None
 
     return Form(
         player_title(existing),
@@ -765,6 +792,15 @@ def player_form(saga: Saga, existing: Player | None) -> Form:
         apply,
         validate=lambda values: player_problem(saga, existing, values),
     )
+
+
+def _seated(devices: DeviceBook, player: Player | None) -> list[str]:
+    """The names of `player`'s devices with a live Remote seat."""
+    if player is None:
+        return []
+    return [
+        d.name for d in devices.devices() if d.player_id == player.id and not d.ended
+    ]
 
 
 def delete_player(saga: Saga, player: Player) -> Confirm:

@@ -31,6 +31,7 @@ from ars_magica_manager.remote.host import PATH
 from ars_magica_manager.remote.invites import encode_invite
 from ars_magica_manager.remote.seat_session import SeatSession
 from ars_magica_manager.remote.vault import DeviceVault
+from ars_magica_manager.saga_store import RemoteStore
 
 PASSCODE = "a long enough passcode"
 NEW_PASSCODE = "grey owl over the mill"
@@ -295,6 +296,47 @@ def test_a_player_changes_their_passcode_and_stays_signed_in(
     # The key kept for reconnecting is the new passcode's.
     session.close_connection()
     assert session.reconnect() == "Anna"
+    main.end_joined()
+
+
+@pytest.mark.usefixtures("app")
+def test_a_storyguides_seat_runs_the_saga_but_not_who_may_join(
+    running: Running,
+) -> None:
+    from ars_magica_manager import seat, viewing
+
+    host = storage.load_saga(running.hosted.saga.id)
+    anna = players.find(host, "Anna")
+    assert anna is not None
+    anna.role = players.STORYGUIDE
+    storage.save_saga(host)
+    main, dialog = _joined_window(running)
+    assert dialog.session is not None
+    joined.open_joined(main, dialog.session)
+    assert isinstance(main.store, RemoteStore) and main.store.whole
+    viewer = viewing.current()
+    assert viewer.is_storyguide and not viewer.hosts
+    assert main.saga is not None
+    assert not seat.may_act(main.saga, main.player, "host_saga")
+    assert seat.may_act(main.saga, main.player, "advance_season")
+    assert not viewing.reads(part="section-players")
+
+    # The storyguide renames a neighbour: the whole-saga change reaches the host.
+    main.saga.neighbours[0].name = "Renamed from a seat"
+    main.save_saga()
+    _talk_done(main)
+    assert storage.load_saga(host.id).neighbours[0].name == "Renamed from a seat"
+
+    # The host makes Anna a player again: the window follows, in place.
+    host = storage.load_saga(host.id)
+    again = players.find(host, "Anna")
+    assert again is not None
+    again.role = players.PLAYER
+    storage.save_saga(host)
+    main.last_asked = 0.0
+    _talk_done(main)
+    assert main.player is not None and main.player.role == players.PLAYER
+    assert not main.store.whole and not viewing.current().is_storyguide
     main.end_joined()
 
 

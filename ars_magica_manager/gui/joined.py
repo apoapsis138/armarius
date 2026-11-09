@@ -18,9 +18,9 @@ from typing import TYPE_CHECKING, Any
 
 from PySide6.QtWidgets import QDialog
 
-from .. import joined_games, picture_files
+from .. import joined_games, picture_files, players
 from ..joined_games import JoinedGame
-from ..models import Saga
+from ..models import Player, Saga
 from ..saga_store import LocalStore, Refreshed, RemoteStore, Saved
 from .forms import ConfirmDialog
 
@@ -206,8 +206,37 @@ def open_joined(window: MainWindow, session: SeatSession) -> None:
     window.end_joined()
     window.store, window.session = store, session
     picture_files.use_host(session.picture)
-    signed = next((p for p in saga.players if p.name == session.player_name), None)
+    signed = signed_in_as(saga, session)
+    store.whole = is_storyguide(signed)
     window.load(saga, signed)
+
+
+def signed_in_as(saga: Saga, session: SeatSession) -> Player | None:
+    """The Player a seat signed in as, as the host's saga has them now."""
+    return next((p for p in saga.players if p.name == session.player_name), None)
+
+
+def is_storyguide(player: Player | None) -> bool:
+    return player is not None and player.role == players.STORYGUIDE
+
+
+def role_changed(window: MainWindow, saga: Saga) -> bool:
+    """After a new snapshot `saga`, before the window seats its reader:
+    the seat's Player as the host has them now, and whether the host
+    changed their role. If so the window reads and saves as the new role
+    from now on, and says so."""
+    session, store = window.session, window.store
+    if session is None or not isinstance(store, RemoteStore):
+        return False
+    signed = signed_in_as(saga, session)
+    was = window.player.role if window.player is not None else ""
+    if signed is None:
+        return False
+    window.player = signed
+    if signed.role == was:
+        return False
+    store.whole = is_storyguide(signed)
+    return True
 
 
 def end_joined(window: MainWindow) -> None:
@@ -276,9 +305,13 @@ def _start(window: MainWindow, kind: str, work: Callable[[], Any]) -> None:
 def _finished(window: MainWindow, talk: Talk) -> None:
     """A talk is done: show what it brought, or what went wrong."""
     # start-up: as join_game.
+    from ..remote.client import AlreadyAdvanced
     from ..remote.seat_session import NeedsPasscode, SeatEnded
 
     problem = talk.future.exception()
+    if isinstance(problem, AlreadyAdvanced):
+        _advanced_first(window, problem)
+        return
     if talk.kind == "reconnect":
         if problem is None:
             window.connection_lost = False
@@ -312,6 +345,21 @@ def _finished(window: MainWindow, talk: Talk) -> None:
     found: Refreshed | None = store.take(*synced.read)
     if found is not None:
         window.picked_up(found)
+
+
+def _advanced_first(window: MainWindow, problem: Exception) -> None:
+    """Another storyguide advanced the season first: this window's changes
+    since its last read weren't made. It takes the host's saga again."""
+    store = window.store
+    assert isinstance(store, RemoteStore)  # tick checked
+    store.start_again()
+    window.unsent = False
+    window.last_asked = 0.0  # read at the next tick
+    window.tell(
+        "Already Advanced",
+        f"{problem} Your changes since then weren't made: the saga shows the "
+        "host's now. Look before advancing again.",
+    )
 
 
 def _lost(window: MainWindow) -> None:

@@ -200,7 +200,8 @@ def test_the_log_is_newest_first_and_narrows_to_a_player(desk: rs.SeatsDesk) -> 
     assert anna is not None
     assert {r.player for r in desk.log_rows(anna.id)} == {"Anna"}
     assert ("Anna", anna.id) in desk.log_players()
-    assert "Sg" not in [name for name, _ in desk.log_players()]
+    # Storyguides too: they can have seats now.
+    assert "Sg" in [name for name, _ in desk.log_players()]
 
 
 def test_the_host_form_checks_the_address_and_says_where_to_point_the_tunnel(

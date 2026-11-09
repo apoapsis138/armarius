@@ -123,6 +123,15 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.97.0 — 2026-11-09
+
+### Sodales
+
+- **Storyguides in troupe-style play**: give a player the Storyguide role and they can join from their own computer as a storyguide: they see the whole saga, Secrets included, change any record, advance the season and change Saga Settings. Who may join, and as what, stays the host's (the Players, their roles and Host for Players). Making someone a storyguide whose devices already have seats asks first, naming the devices; approving a storyguide's device says it will see everything; the change reaches their seat within seconds, and the Log notes it.
+- **A season advanced from a storyguide's seat**: the host's computer backs the saga up first, then takes it in without losing a player's change made meanwhile. If two storyguides advance at once, the first wins and the second is told who advanced.
+- **"Is also viewing"**: the note beside the trail (and in the terminal) now reads "◉ Bruno is also viewing", with storyguides marked "Bruno (storyguide)".
+- **Host for Players while playing**: playing a character with Play as, its menu keeps Host for Players one click away; hosting goes on.
+
 ## 3.96.0 — 2026-11-09
 
 ### Sodales

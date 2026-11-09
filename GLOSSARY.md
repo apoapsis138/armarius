@@ -17,9 +17,17 @@ and every record in it.
 _Avoid_: Campaign, game, save
 
 **Storyguide**:
-The person who keeps the saga: they see everything in it, its Secrets
-included, and may host it for the troupe.
+A role a Player holds: a storyguide sees everything in the saga, its
+Secrets included, and may change any record in it. In troupe-style play
+several Players may hold it.
 _Avoid_: GM, DM, referee
+
+**Host**:
+The storyguide whose computer keeps the saga and opens it to the troupe.
+Only the host decides who may join and with which role (the saga's
+Players, their roles and Host for Players), and only the host may delete
+the saga.
+_Avoid_: owner, admin, server
 
 **Troupe**:
 The players and the storyguide who play the saga together.

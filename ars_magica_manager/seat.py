@@ -34,11 +34,13 @@ def sign_in(
     *,
     player_view: bool = False,
     on_refused: Callable[[list[str]], None] | None = None,
+    hosts: bool = True,
 ) -> None:
     """Seat `player` (None: the storyguide's own window) at `saga`. With
     `player_view`, the storyguide's own window shows what the table sees.
-    `on_refused` is told what a save took back from a player."""
-    viewing.use(viewing.viewer_for(player, player_view=player_view), saga)
+    `on_refused` is told what a save took back from a player. `hosts`:
+    whether this copy is the host's (not one joined from a Remote seat)."""
+    viewing.use(viewing.viewer_for(player, player_view=player_view, hosts=hosts), saga)
     storage.saved_by = player.name if player is not None else ""
     if runs_the_saga(player):
         storage.guard = None
@@ -97,7 +99,8 @@ def may_act(saga: Saga, player: Player | None, action: str, record: Any = None) 
     around and reads anywhere (viewing.LOOKING_ACTIONS) and otherwise only
     what their copy offers and players.may_change lets them change."""
     if runs_the_saga(player):
-        return True
+        # All but what only the host's own copy does (viewing.HOST_ONLY_ACTIONS).
+        return viewing.may_do(viewing.current(), action)
     if not viewing.may_do(viewing.current(), action):
         return False
     return viewing.is_looking(action) or players.may_change(saga, player, record)

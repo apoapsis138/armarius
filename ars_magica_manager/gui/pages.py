@@ -1306,13 +1306,24 @@ class SagaPage(QWidget):
                     rows.append(self._hosting_row())
                 continue
             rows.append((button, menu_forms.management_note(item.action)))
-        return scrolling_page(
-            p,
-            chapter_title("Saga Management", p),
+        parts: list[QWidget] = [
             action_rows(rows, p)
             if rows
-            else text("Nothing to manage.", p["dim"], serif(12.5, italic=True)),
-        )
+            else text("Nothing to manage.", p["dim"], serif(12.5, italic=True))
+        ]
+        if not viewing.current().hosts:
+            # A storyguide joined from a Remote seat (ADR 0014).
+            parts.append(
+                text(
+                    "Who may join the saga, and as player or storyguide, is "
+                    "the host's to change, on their own computer: the Players, "
+                    "and Host for Players.",
+                    p["dim"],
+                    serif(12.5, italic=True),
+                    wrap=True,
+                )
+            )
+        return scrolling_page(p, chapter_title("Saga Management", p), *parts)
 
     def _hosting_row(self) -> tuple[QPushButton, str]:
         """Host for Players, opening the window that hosts and manages."""

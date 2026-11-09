@@ -13,8 +13,9 @@ import json
 import time
 from pathlib import Path
 
-from . import storage
+from . import players, storage
 from .files import write_atomic
+from .models import Player
 
 #: How long a copy counts as still there after it last noted itself.
 FRESH = 10.0
@@ -22,6 +23,17 @@ FRESH = 10.0
 
 def _folder() -> Path:
     return storage.sagas_dir() / ".presence"
+
+
+def label(player: Player | None) -> str:
+    """How presence (and Host for Players' lists) name someone: a
+    storyguide marked, so the troupe knows whose view is the whole saga;
+    "" for the host's own window."""
+    if player is None:
+        return ""
+    if player.role == players.STORYGUIDE:
+        return f"{player.name} (storyguide)"
+    return player.name
 
 
 def note(session: str, saga_id: str, who: str, record: str | None) -> None:
