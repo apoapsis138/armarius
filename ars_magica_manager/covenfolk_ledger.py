@@ -19,7 +19,7 @@ from . import covenant_diary, goods
 from . import economics as eco
 from . import inhabitants as inh
 from .markup import escape
-from .models import INHABITANT_KINDS, LOYALTY_EQUIPMENT, LOYALTY_MONEY, Covenant, Saga
+from .models import LOYALTY_EQUIPMENT, LOYALTY_MONEY, Covenant, Saga
 from .rules import covenfolk, living, xp
 
 
@@ -334,13 +334,45 @@ def pounds_per_point(covenant: Covenant) -> float:
     return (1 + 2 + 5) / 10 + 2 / 10 * wages
 
 
+def _animals_line(saga: Saga, covenant: Covenant, rate: float) -> Line | None:
+    """The Horses, Hounds and Livestock as one line: how many, their
+    points rounded up once, and each row's Size and share (None for no
+    animals)."""
+    rows = [
+        entry
+        for kind in covenfolk.ANIMAL_POINT_KINDS
+        for entry in covenfolk.entries_for_kind(saga, covenant, kind)
+    ]
+    if not rows:
+        return None
+    points = covenfolk.animal_points(saga, covenant)
+    names = "\n".join(
+        f"[b]{escape(e.name or '(unnamed)')}[/]"
+        + (f" x{e.quantity}" if e.quantity != 1 else "")
+        + f": {inh.animal_text(e)}"
+        for e in rows
+    )
+    return Line(
+        "Animals",
+        (
+            str(covenfolk.headcount(rows)),
+            str(points),
+            f"£{goods.number(round(points * rate, 1))}",
+        ),
+        "A Size +3 horse counts 1 point; each Size smaller halves it, each "
+        "larger doubles it, and a carnivore counts double. The shares are "
+        "added, then rounded up, in every season (Hermetic Projects p. 123; "
+        f"Errata p. 82).\n\n{names}",
+    )
+
+
 def household_lines(saga: Saga, covenant: Covenant) -> list[Line]:
     """Each group of inhabitants, its people, points and yearly cost, then
     the total (its last line)."""
     rate = pounds_per_point(covenant)
     lines = []
     counted = 0
-    for kind in INHABITANT_KINDS:
+    for kind in covenfolk.INHABITANT_POINTS:
         entries = covenfolk.entries_for_kind(saga, covenant, kind)
         people = covenfolk.headcount(entries)
         if not people:
@@ -362,6 +394,10 @@ def household_lines(saga: Saga, covenant: Covenant) -> list[Line]:
                 f"{summer} in Summer or Autumn (DE p. 190).\n\n{names}",
             )
         )
+    animals = _animals_line(saga, covenant, rate)
+    if animals is not None:
+        counted += covenfolk.animal_points(saga, covenant)
+        lines.append(animals)
     others = covenant.population.other_people
     if others:
         each = covenfolk.kind_points("inhabitant", covenant)

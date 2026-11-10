@@ -1830,6 +1830,7 @@ OPENERS: dict[str, Opener] = {
     "add covenfolk member": Opener("covenant", _new_inhabitant("inhabitant")),
     "add craftsperson": Opener("covenant", _new_inhabitant("craftsperson")),
     "add horses": Opener("covenant", _new_inhabitant("horse")),
+    "add livestock": Opener("covenant", _new_inhabitant("livestock")),
     "add book": Opener("covenant", lambda ws: ws._book_form(None)),
     "edit book": Opener(
         "covenant",

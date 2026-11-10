@@ -377,6 +377,12 @@ class Inhabitant:
     specialist_score: int | None = None
     teacher_communication: int | None = None
     teacher_teaching: int | None = None
+    #: Horses, Hounds and Livestock: each animal's Size, and whether it is
+    #: a carnivore, for its Points of Inhabitants (None: the kind's usual,
+    #: rules.covenfolk.ANIMAL_DEFAULTS). An animal grog's Size is its
+    #: sheet's.
+    size: int | None = None
+    carnivore: bool | None = None
 
     def __post_init__(self) -> None:
         if self.kind not in INHABITANT_KINDS:

@@ -778,26 +778,43 @@ Provisions on the Economics tab.
 ### Horses
 <!-- help: section-inh-horse -->
 
-The covenant's horses, with a Quantity. Each counts as one point of
-inhabitants, whatever the Covenant Season. Adding one offers the
-covenant's animal grogs (Grogs, Chapter 7: Horses & Hounds) not yet on a
-list, so a named horse can be one of the covenant's horses.
+The covenant's horses, with a Quantity, a Size (+3 to start) and
+Carnivore. Adding one offers the covenant's animal grogs (Grogs, Chapter
+7: Horses & Hounds) not yet on a list, so a named horse can be one of the
+covenant's horses; an animal grog's Size is its sheet's.
+
+**Points of inhabitants by Size.** Every animal on Horses, Hounds and
+Livestock counts against a Size +3 horse at 1 point: half as much for
+each Size smaller (two Size +2 animals, four Size +1 or eight Size 0 cost
+1 point), twice as much for each Size larger, and double for a
+carnivore. The rows' shares are added and the total rounded up, the same
+in every Covenant Season, and it counts towards the servants and
+teamsters the covenant needs. Twelve Size 0 wolves cost 3 points. Each
+row shows its Size and share. The book gives this for a menagerie's
+beasts (Hermetic Projects p. 123; Errata p. 82); the Definitive Edition's
+table (p. 190) counts horses and says nothing of other animals, so the
+app counts every animal this way.
+<!-- gui -->
+The Household's Inhabitants ledger lists them together as Animals.
+<!-- /gui -->
 
 ### Hounds
 <!-- help: section-inh-hound -->
 
-The covenant's dogs, hawks and other working animals, with a Quantity.
+The covenant's dogs, hawks and other working animals, with a Quantity, a
+Size (−2, a running dog, to start) and Carnivore (ticked to start).
 Adding one offers the covenant's animal grogs not yet on a list, or an
-animal with no character sheet. Covenants counts only horses among the
-inhabitants, so hounds count towards neither Total Inhabitants nor the
-points of inhabitants, as livestock don't.
+animal with no character sheet. Hounds count towards the points of
+inhabitants by Size (see [Horses](help:section-inh-horse)) but not towards
+Total Inhabitants, a headcount of people and horses.
 
 ### Livestock
 <!-- help: section-inh-livestock -->
 
-The covenant's animals, kept here for convenience. Livestock are not
-inhabitants: they count towards neither Total Inhabitants nor the points of
-inhabitants.
+The covenant's farm animals, one row for each kind (sheep, oxen, pigs),
+each with its Quantity, Size and Carnivore. Size has no default: type the
+animal's. Livestock count towards the points of inhabitants by Size (see
+[Horses](help:section-inh-horse)) but not towards Total Inhabitants.
 
 ### Whereabouts
 <!-- help: section-cov-whereabouts -->

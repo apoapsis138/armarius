@@ -30,7 +30,7 @@ from ..models import (
     Inhabitant,
     Saga,
 )
-from ..rules import covenfolk
+from ..rules import covenfolk, derived
 
 #: The grog chooser's first entry: someone with no character sheet.
 NEW_PERSON = "(New person -- not from a character sheet)"
@@ -88,6 +88,8 @@ def inhabitant_fields(
         )
     if kind == "craftsperson":
         fields += _craftsperson_fields(entry, character)
+    if kind in covenfolk.ANIMAL_POINT_KINDS:
+        fields += _animal_fields(kind, entry, character)
     if kind not in covenfolk.AUTO_KINDS:
         fields.append(
             DialogField("quantity", "Quantity", "int", entry.quantity if entry else 1)
@@ -159,6 +161,49 @@ def _identity_fields(
             )
         )
     return fields
+
+
+def _animal_fields(
+    kind: str,
+    entry: covenfolk.InhabitantEntry | None,
+    character: Character | None,
+) -> list[DialogField]:
+    """An animal's Size and whether it is a carnivore, for its Points of
+    Inhabitants: an animal grog's Size is its sheet's and its kind says
+    whether it eats meat, so both are shown, not asked."""
+    usual_size, usual_carnivore = covenfolk.ANIMAL_DEFAULTS[kind]
+    if character is not None:
+        size = int(derived.size(character).total)
+        return [
+            DialogField(
+                "_sz",
+                "Size",
+                "info",
+                f"{size:+d} (from the character sheet)"
+                + (", a carnivore" if usual_carnivore else ""),
+            )
+        ]
+    record = entry.record if entry is not None else None
+    size = record.size if record is not None else None
+    carnivore = record.carnivore if record is not None else None
+    return [
+        DialogField(
+            "size",
+            "Size",
+            "optint",
+            usual_size if size is None else size,
+            required=True,
+            hint="A Size +3 horse counts 1 point; each Size smaller halves "
+            "it, each larger doubles it (Hermetic Projects p. 123).",
+        ),
+        DialogField(
+            "carnivore",
+            "Carnivore",
+            "check",
+            usual_carnivore if carnivore is None else carnivore,
+            hint="A meat-eater (a hound, a cat, a hawk) counts double.",
+        ),
+    ]
 
 
 def _covenant_role_fields(entry: covenfolk.InhabitantEntry | None) -> list[DialogField]:

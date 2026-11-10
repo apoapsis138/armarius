@@ -358,11 +358,11 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Wealth
 
-      Points of Inhabitants:       16                    Total Income:                      100
-      Points of Laboratories:      10                    Expenditure (Before Cost Savings): 21
+      Points of Inhabitants:       17                    Total Income:                      100
+      Points of Laboratories:      10                    Expenditure (Before Cost Savings): 22
       Points of Weapons and Armor: 0                     Cost Savings:                      0
-      Wealth:                      0                     Total Expenditure:                 21
-                                                         Surplus/Deficit:                   +79
+      Wealth:                      0                     Total Expenditure:                 22
+                                                         Surplus/Deficit:                   +78
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Sources of Income (1)
@@ -382,7 +382,7 @@
       ○ Buildings                  2        0
       ○ Consumables                4        0
       ○ Laboratories               1        0
-      ○ Provisions                 8        0
+      ○ Provisions                 9        0
       ○ Wages (x1)                 4        0
       ○ Weapons                    0        0
       ○ Writing Materials          1        0

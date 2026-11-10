@@ -27,6 +27,7 @@ from .models import (
 from .rules import living, reputations, study, xp
 from .rules.animal_grogs import describe as describe_animal
 from .rules.covenfolk import (
+    ANIMAL_POINT_KINDS,
     AUTO_KINDS,
     GIFT_LOYALTY_MODIFIERS,
     ROLE_TASKS,
@@ -87,9 +88,9 @@ GROG_KINDS: tuple[str, ...] = ("specialist", "craftsperson", "turb", "inhabitant
 #: Kinds an animal grog can be assigned to: a horse grog is one of the
 #: covenant's horses, a dog or a hawk one of its hounds.
 ANIMAL_KINDS: tuple[str, ...] = ("horse", "hound")
-#: Kinds listed but not counted as inhabitants: Covenants' Points of
-#: Inhabitants count horses (1 point each) but no other animal, so hounds
-#: count no more than livestock do.
+#: Kinds left out of Total Inhabitants, a headcount of people and horses
+#: (DE p. 190); their Points of Inhabitants still count, by Size
+#: (rules.covenfolk.ANIMAL_POINT_KINDS).
 UNCOUNTED_KINDS: tuple[str, ...] = ("hound", "livestock")
 
 #: Loyalty points from the Equipment/Money situational modifiers, keyed by
@@ -194,6 +195,18 @@ def total_inhabitants(saga: Saga, covenant: Covenant) -> int:
         headcount(entries_for_kind(saga, covenant, kind))
         for kind in INHABITANT_KINDS
         if kind not in UNCOUNTED_KINDS
+    )
+
+
+def animal_text(entry: InhabitantEntry) -> str:
+    """An animal row's Size, diet and share of Points of Inhabitants:
+    "Size -2, carnivore, 3/4 point"."""
+    points = entry.animal_points
+    unit = "point" if points <= 1 else "points"
+    return (
+        f"Size {entry.size:+d}"
+        + (", carnivore" if entry.carnivore else "")
+        + f", {points} {unit}"
     )
 
 
@@ -525,6 +538,9 @@ _RESPONSIBILITY_WIDTH = 18
 _ROLE_WIDTH = 14
 _SCORE_WIDTH = 7
 _QTY_WIDTH = 5
+_SIZE_WIDTH = 6
+_CARNIVORE_WIDTH = 9
+_POINTS_WIDTH = 7
 
 
 def table_header(kind: str) -> str:
@@ -551,7 +567,11 @@ def table_header(kind: str) -> str:
         )
     if kind == "inhabitant":
         return f"  {name}{'Role':<{_ROLE_WIDTH}}{'Qty':>{_QTY_WIDTH}}  {year}"
-    return f"  {name}{'Qty':>{_QTY_WIDTH}}  {year}"  # horse, hound, livestock
+    # horse, hound, livestock
+    return (
+        f"  {name}{'Qty':>{_QTY_WIDTH}}{'Size':>{_SIZE_WIDTH}}"
+        f"  {'Carnivore':<{_CARNIVORE_WIDTH}}{'Points':>{_POINTS_WIDTH}}  {year}"
+    )
 
 
 def row_label(entry: InhabitantEntry) -> str:
@@ -588,7 +608,10 @@ def row_label(entry: InhabitantEntry) -> str:
         shown_year = year if entry.quantity == 1 else f"{'-':>{_YEAR_WIDTH}}"
         return f"{name}{role}{qty}  {shown_year}"
     qty = f"{entry.quantity:>{_QTY_WIDTH}}"  # horse, hound, livestock
-    return f"{name}{qty}  {year}"
+    size = f"{entry.size:>+{_SIZE_WIDTH}d}"
+    carnivore = f"{'Yes' if entry.carnivore else '':<{_CARNIVORE_WIDTH}}"
+    points = f"{entry.animal_points!s:>{_POINTS_WIDTH}}"
+    return f"{name}{qty}{size}  {carnivore}{points}  {year}"
 
 
 def detail_text(entry: InhabitantEntry | None, current_year: int) -> str:
@@ -631,6 +654,13 @@ def detail_text(entry: InhabitantEntry | None, current_year: int) -> str:
             lines.append(f"[b]Linked Ability:[/] {escape(entry.linked_ability)}")
     if kind not in AUTO_KINDS:
         lines.append(f"[b]Quantity:[/] {entry.quantity}")
+    if kind in ANIMAL_POINT_KINDS:
+        lines.append(f"[b]Points of Inhabitants:[/] {escape(animal_text(entry))}")
+        lines.append(
+            "[dim]A Size +3 horse counts 1; each Size smaller halves it, each "
+            "larger doubles it, a carnivore counts double (Hermetic Projects "
+            "p. 123; Errata p. 82).[/]"
+        )
     if entry.character is not None and entry.character.animal is not None:
         lines.append(f"[b]Animal:[/] {escape(describe_animal(entry.character.animal))}")
     if entry.character is not None:

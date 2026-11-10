@@ -230,7 +230,13 @@ _INHABITANT_COLUMNS: dict[str, tuple[tuple[str, Callable[[Any], str]], ...]] = {
         ("Qty", lambda e: str(e.quantity)),
     ),
     **dict.fromkeys(
-        ("horse", "hound", "livestock"), (("Qty", lambda e: str(e.quantity)),)
+        ("horse", "hound", "livestock"),
+        (
+            ("Qty", lambda e: str(e.quantity)),
+            ("Size", lambda e: f"{e.size:+d}"),
+            ("Carnivore", lambda e: "Yes" if e.carnivore else ""),
+            ("Points", lambda e: str(e.animal_points)),
+        ),
     ),
 }
 

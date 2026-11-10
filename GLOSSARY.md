@@ -507,6 +507,21 @@ Everyone living at a covenant apart from its magi and companions: grogs,
 servants, craftsmen, specialists, laborers, teamsters and dependents.
 (DE p. 190)
 
+**Points of Inhabitants**:
+What a covenant's people and animals count for when its servants,
+teamsters and upkeep are reckoned: each kind of person a set number by the
+covenant's season (DE p. 190). An animal counts against a Size +3 horse at
+1 point, halved for each Size smaller and doubled for each Size larger,
+and doubled again for a carnivore; a herd's fractions are added before
+rounding up (Hermetic Projects p. 123; Errata p. 82).
+_Avoid_: Inhabitant points, upkeep points
+
+**Carnivore**:
+For Points of Inhabitants, an animal that eats meat (a hound, a cat, a
+wolf); every other animal counts as the baseline, whatever else it eats
+(Hermetic Projects p. 123; Errata p. 82).
+_Avoid_: Diet, herbivore (as a choice)
+
 **Familiar**:
 A magical beast a magus befriends and then binds to himself by laboratory
 magic; it keeps a will of its own. (DE p. 265)

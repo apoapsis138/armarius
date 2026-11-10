@@ -125,6 +125,12 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 4.3.0 — 2026-11-10
+
+### Pagina
+
+- **Animals counted by Size.** A covenant's Horses, Hounds and Livestock now each have a Size and a Carnivore box, and count towards the points of inhabitants as the book counts a menagerie's beasts (Hermetic Projects p. 123; Errata p. 82): a Size +3 horse is 1 point, each Size smaller halves it, each larger doubles it, and a carnivore counts double. The shares of every animal row are added and rounded up once, the same in every season, so twelve Size 0 wolves cost 3 points; they now count towards the servants and teamsters the covenant needs. A new horse starts at Size +3, a hound at −2 and a carnivore, and livestock asks for its Size; an animal grog uses its sheet's Size. Each row shows its Size and share, and the desktop's Household ledger lists the animals together.
+
 ## 4.2.0 — 2026-11-09
 
 ### Gauntlet

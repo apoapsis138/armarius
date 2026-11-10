@@ -7,19 +7,19 @@ text are inhabitants.py's."""
 from __future__ import annotations
 
 from dataclasses import dataclass
+from fractions import Fraction
 from typing import Any
 
 from ..models import (
     COMPANION_TYPES,
-    INHABITANT_KINDS,
     Arrival,
     Character,
     Covenant,
     Inhabitant,
     Saga,
 )
-from . import effects, living, medicine, scores
-from .menagerie import covenant_upkeep
+from . import derived, effects, living, medicine, scores
+from .menagerie import covenant_upkeep, points_by_size
 from .rounding import round_away_from_zero, round_up
 
 SOURCE = (
@@ -42,8 +42,8 @@ TEAMSTER_POINTS_PER_LABORER = 2
 AUTO_KINDS: tuple[str, ...] = ("magus", "companion")
 
 
-#: Points of one inhabitant by kind: (Spring/Winter covenant, Summer/Autumn
-#: covenant). Livestock are not in the book's table and count nothing.
+#: Points of one person by kind: (Spring/Winter covenant, Summer/Autumn
+#: covenant). The animals count by Size instead (ANIMAL_POINT_KINDS).
 INHABITANT_POINTS: dict[str, tuple[int, int]] = {
     "magus": (5, 10),
     "companion": (3, 5),
@@ -51,9 +51,23 @@ INHABITANT_POINTS: dict[str, tuple[int, int]] = {
     "craftsperson": (2, 3),
     "turb": (1, 2),
     "inhabitant": (1, 2),
-    "horse": (1, 1),
-    "hound": (0, 0),
-    "livestock": (0, 0),
+}
+
+#: The lists of animals, which count by Size and diet in every season: a
+#: Size +3 horse 1 point, halved for each Size smaller, doubled for each
+#: larger, a carnivore double, all the covenant's animals added before
+#: rounding up (rules.menagerie.points_by_size). The book gives this for a
+#: menagerie's beasts; the DE's table (p. 190) counts a horse at 1 and is
+#: silent on other animals, so the app uses it for every animal.
+ANIMAL_POINT_KINDS: tuple[str, ...] = ("horse", "hound", "livestock")
+ANIMALS_SOURCE = "Hermetic Projects, p. 123; Errata (Ars Magica 5th Edition), p. 82"
+
+#: Each list's usual animal: (Size, carnivore). A hound is the Running Dog
+#: (Lords of Men p. 50); livestock has no usual Size, so its form asks.
+ANIMAL_DEFAULTS: dict[str, tuple[int | None, bool]] = {
+    "horse": (3, False),
+    "hound": (-2, True),
+    "livestock": (None, False),
 }
 
 
@@ -269,6 +283,34 @@ class InhabitantEntry:
         return self._own("description", "")
 
     @property
+    def size(self) -> int:
+        """An animal's Size: an animal grog's from its sheet, else the
+        entry's, else its kind's usual (0 for livestock with none)."""
+        if self.character is not None:
+            return int(derived.size(self.character).total)
+        stored = self._own("size", None)
+        if stored is not None:
+            return stored
+        return ANIMAL_DEFAULTS.get(self.kind, (None, False))[0] or 0
+
+    @property
+    def carnivore(self) -> bool:
+        """Whether the animals eat meat: an animal grog's kind decides (a
+        hound does, a horse doesn't), else the entry, else its kind's
+        usual."""
+        usual = ANIMAL_DEFAULTS.get(self.kind, (None, False))[1]
+        if self.character is not None:
+            return usual
+        stored = self._own("carnivore", None)
+        return usual if stored is None else stored
+
+    @property
+    def animal_points(self) -> Fraction:
+        """The row's share of the animals' Points of Inhabitants, before
+        the covenant's total is rounded up."""
+        return points_by_size(self.size, self.carnivore) * self.quantity
+
+    @property
     def linked(self) -> bool:
         """Tied to a character sheet (auto-listed, or a grog assigned here)."""
         return self.character is not None
@@ -339,11 +381,12 @@ def inhabitant_points(
     minimum Servants/Teamsters formulas below, which each exclude
     themselves."""
     total = 0
-    for kind in INHABITANT_KINDS:
+    for kind, pair in INHABITANT_POINTS.items():
         entries = entries_for_kind(saga, covenant, kind)
         if kind == "inhabitant" and exclude_roles:
             entries = [e for e in entries if e.role not in exclude_roles]
-        total += headcount(entries) * _season_column(INHABITANT_POINTS[kind], covenant)
+        total += headcount(entries) * _season_column(pair, covenant)
+    total += animal_points(saga, covenant)
     total += covenant.population.other_people * _season_column(
         OTHER_COVENFOLK_POINTS, covenant
     )
@@ -352,6 +395,22 @@ def inhabitant_points(
     # A Menagerie's beasts cost points as horses do (Hermetic Projects p. 123).
     total += covenant_upkeep(covenant)
     return total
+
+
+def animal_points(saga: Saga, covenant: Covenant) -> int:
+    """The Points of Inhabitants of the covenant's Horses, Hounds and
+    Livestock: each row's share added, the total rounded up (twelve wolves
+    cost 3), the same in every season."""
+    total = sum(
+        (
+            entry.animal_points
+            for kind in ANIMAL_POINT_KINDS
+            for entry in entries_for_kind(saga, covenant, kind)
+        ),
+        Fraction(0),
+    )
+    # Halvings and doublings of 1 are exact as a float.
+    return round_up(float(total))
 
 
 def regimen_points(saga: Saga, covenant: Covenant) -> int:
@@ -364,7 +423,7 @@ def regimen_points(saga: Saga, covenant: Covenant) -> int:
     if covenant.economics.emergency_savings > 0:
         return 0
     groups: dict[tuple[str, int, int], int] = {}
-    for kind in INHABITANT_KINDS:
+    for kind, pair in INHABITANT_POINTS.items():
         for entry in entries_for_kind(saga, covenant, kind):
             character = entry.character
             if character is None or not character.aging.regimen:
@@ -381,7 +440,7 @@ def regimen_points(saga: Saga, covenant: Covenant) -> int:
                 saga, character
             )
             key = (physician.id, start, level)
-            points = entry.quantity * _season_column(INHABITANT_POINTS[kind], covenant)
+            points = entry.quantity * _season_column(pair, covenant)
             groups[key] = groups.get(key, 0) + points
     extra = 0
     for (_, start, level), points in groups.items():

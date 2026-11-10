@@ -874,16 +874,35 @@ CONTRACTS: dict[str, Contract] = {
         shown={"#inh-craftsperson-list": "Smith"},
     ),
     "add horses": Contract(
-        prefill={"Name": "", "Year Born": "", "Quantity": "1"},
-        edits={"Name": "Ponies", "Quantity": "4"},
+        prefill={
+            "Name": "",
+            "Year Born": "",
+            "Size": "3",
+            "Carnivore": False,
+            "Quantity": "1",
+        },
+        edits={"Name": "Ponies", "Size": "2", "Quantity": "4"},
         saved=lambda s: [
-            (i.kind, i.quantity, i.year_born)
+            (i.kind, i.quantity, i.year_born, i.size, i.carnivore)
             for i in covenant(s).inhabitants
             if i.name == "Ponies"
         ],
-        expected=[("horse", 4, None)],
-        invalid={"Quantity": "0"},
+        expected=[("horse", 4, None, 2, False)],
+        invalid=[{"Quantity": "0"}, {"Size": ""}],
         shown={"#inh-horse-list": "Ponies"},
+    ),
+    # Livestock has no usual Size: the form asks for one.
+    "add livestock": Contract(
+        prefill={"Name": "", "Size": "", "Carnivore": False, "Quantity": "1"},
+        edits={"Name": "Oxen", "Size": "2", "Quantity": "4"},
+        saved=lambda s: [
+            (i.kind, i.quantity, i.size, i.carnivore)
+            for i in covenant(s).inhabitants
+            if i.name == "Oxen"
+        ],
+        expected=[("livestock", 4, 2, False)],
+        invalid={"Size": ""},
+        shown={"#inh-livestock-list": "Oxen"},
     ),
     "edit charter": Contract(
         prefill={"Name": "", "Year": "", "Notarized by a Quaesitor": False},

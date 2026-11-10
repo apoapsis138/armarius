@@ -522,15 +522,21 @@ async def test_horses_and_livestock_take_a_blank_year_and_a_quantity():
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
         await _select_covenant(pilot, app)
-        for kind, name in (("horse", "Grey Mare"), ("livestock", "Sheep")):
+        # Qty, Size, Carnivore (blank), Points, Year Arrived.
+        for kind, name, size, shown in (
+            ("horse", "Grey Mare", 3, ["4", "+3", "4", "Unknown"]),
+            ("livestock", "Sheep", 0, ["4", "+0", "1/2", "Unknown"]),
+        ):
             await _open_inh_section(pilot, app, f"section-inh-{kind}")
             await pilot.press("a")
             await _wait_for_screen(pilot, app, FieldsDialog)
             assert isinstance(app.screen, FieldsDialog)  # no picker for animals
-            _fill(app, name=name, quantity=4)
+            _fill(app, name=name, size=size, quantity=4)
             await _save_dialog(pilot, app)
             await wait_until(pilot, lambda kind=kind: len(_inh_labels(app, kind)) == 1)
-            assert _inh_labels(app, kind) == [f"{name:<20}    4     Unknown"]
+            [label] = _inh_labels(app, kind)
+            assert label.startswith(name)
+            assert label[len(name) :].split() == shown
         assert _inh_title(app, "horse") == "Horses (4)"
 
 

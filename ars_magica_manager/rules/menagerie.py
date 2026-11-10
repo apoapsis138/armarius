@@ -129,12 +129,17 @@ def is_magical(beast: Beast) -> bool:
     return beast.kind != TRANSFORMED and beast.might > 0
 
 
+def points_by_size(size: int, carnivore: bool) -> Fraction:
+    """One animal's Inhabitants points against a Size +3 horse's 1: halved
+    for each Size smaller, doubled for each larger, doubled again for a
+    carnivore (p. 123; Errata p. 82)."""
+    each = Fraction(2) ** (size - HORSE_SIZE)
+    return each * 2 if carnivore else each
+
+
 def inhabitant_points(beast: Beast) -> Fraction:
     """The Inhabitants points the row's beasts cost (p. 123)."""
-    each = Fraction(2) ** (beast.size - HORSE_SIZE)
-    if beast.diet == CARNIVORE:
-        each *= 2
-    return each * beast.count
+    return points_by_size(beast.size, beast.diet == CARNIVORE) * beast.count
 
 
 def upkeep(project: HermeticProject) -> int:

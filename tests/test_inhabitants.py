@@ -1,4 +1,5 @@
 import re
+from fractions import Fraction
 
 import pytest
 from support import strip_markup
@@ -249,18 +250,82 @@ def test_total_inhabitants_is_calculated_from_every_list_and_other_people():
     assert inh.total_inhabitants(saga, cov) == 4 + 1 + 1 + 2 + 3 + 2
 
 
-def test_livestock_are_tracked_but_never_counted():
+def test_livestock_count_points_by_size_but_not_in_the_headcount():
     saga, cov = _saga()
     points_before = covenfolk.inhabitant_points(saga, cov)
     total_before = inh.total_inhabitants(saga, cov)
     cov.inhabitants.append(
-        Inhabitant(id="l1", kind="livestock", name="Sheep", quantity=50)
+        Inhabitant(id="l1", kind="livestock", name="Sheep", quantity=50, size=0)
     )
-    # Neither Total Inhabitants nor the Economics points move.
+    # Total Inhabitants is a headcount of people and horses; the points
+    # count the sheep, eight Size 0 to the point: 50 / 8, rounded up.
     assert inh.total_inhabitants(saga, cov) == total_before
-    assert covenfolk.inhabitant_points(saga, cov) == points_before
-    # Still listed and headcount-able on its own list.
+    assert covenfolk.inhabitant_points(saga, cov) == points_before + 7
     assert covenfolk.headcount(covenfolk.entries_for_kind(saga, cov, "livestock")) == 50
+
+
+def _animal_points(*records: Inhabitant) -> int:
+    saga, cov = _saga()
+    cov.inhabitants = list(records)
+    return covenfolk.animal_points(saga, cov)
+
+
+def test_a_size_three_horse_counts_one_and_size_doubles_or_halves_it():
+    assert _animal_points(Inhabitant(id="h", kind="horse", size=3)) == 1
+    assert _animal_points(Inhabitant(id="h", kind="horse", size=5)) == 4
+    assert _animal_points(Inhabitant(id="h", kind="horse", size=2, quantity=2)) == 1
+    assert _animal_points(Inhabitant(id="h", kind="horse", size=2, quantity=3)) == 2
+
+
+def test_twelve_wolves_cost_three_points():
+    wolves = Inhabitant(id="w", kind="hound", size=0, carnivore=True, quantity=12)
+    assert _animal_points(wolves) == 3
+
+
+def test_the_animals_shares_are_added_before_rounding_up():
+    # 3/4 + 1/4 is 1 point; rounding each row first would make it 2.
+    dogs = Inhabitant(id="d", kind="hound", size=-2, carnivore=True, quantity=12)
+    sheep = Inhabitant(id="s", kind="livestock", size=0, quantity=2)
+    assert covenfolk.InhabitantEntry("hound", dogs).animal_points == Fraction(3, 4)
+    assert _animal_points(dogs, sheep) == 1
+
+
+def test_the_same_in_every_season():
+    saga, cov = _saga()
+    cov.inhabitants = [Inhabitant(id="h", kind="horse", quantity=4)]
+    for season in ("Spring", "Summer", "Autumn", "Winter"):
+        cov.covenant_season = season
+        assert covenfolk.animal_points(saga, cov) == 4
+
+
+def test_an_old_row_takes_its_kinds_usual_size_and_diet():
+    horse = covenfolk.InhabitantEntry("horse", Inhabitant(id="h", kind="horse"))
+    hound = covenfolk.InhabitantEntry("hound", Inhabitant(id="d", kind="hound"))
+    assert (horse.size, horse.carnivore) == (3, False)
+    assert (hound.size, hound.carnivore) == (-2, True)
+
+
+def test_an_animal_grogs_size_is_its_sheets_and_its_kind_says_carnivore():
+    dog = Character(id="dog", name="Fang", type="grog")
+    dog.background.size = -1
+    entry = covenfolk.InhabitantEntry(
+        "hound", Inhabitant(id="d", kind="hound", character_id="dog", size=5), dog
+    )
+    assert (entry.size, entry.carnivore) == (-1, True)
+
+
+def test_animal_points_raise_the_servants_needed():
+    saga, cov = _saga()
+    before = covenfolk.minimum_servants(saga, cov)
+    cov.inhabitants.append(Inhabitant(id="h", kind="horse", size=6, quantity=2))
+    assert covenfolk.inhabitant_points(saga, cov) >= 16
+    assert covenfolk.minimum_servants(saga, cov) > before
+
+
+def test_an_animal_rows_text_names_its_size_diet_and_share():
+    dogs = Inhabitant(id="d", kind="hound", size=-2, carnivore=True, quantity=12)
+    entry = covenfolk.InhabitantEntry("hound", dogs)
+    assert inh.animal_text(entry) == "Size -2, carnivore, 3/4 point"
 
 
 # --------------------------------------------------------------------- grogs
@@ -334,7 +399,9 @@ def test_row_labels_follow_the_paper_sheet_per_kind():
     assert _labels(saga, cov, "turb") == [
         "Thomae              Shield Grog           1     Unknown"
     ]
-    assert _labels(saga, cov, "horse") == ["Grey                    3     Unknown"]
+    assert _labels(saga, cov, "horse") == [
+        "Grey                    3    +3                 3     Unknown"
+    ]
 
 
 def test_magus_row_label_lines_up_under_the_table_header():
@@ -745,8 +812,10 @@ def test_inhabitant_points_count_each_kind_and_everyone_counted_by_number():
         Inhabitant(id="a", kind="specialist", name="Steward"),  # 2
         Inhabitant(id="b", kind="craftsperson", name="Smith"),  # 2
         Inhabitant(id="c", kind="turb", name="Guards", quantity=4),  # 4
-        Inhabitant(id="d", kind="horse", name="Mules", quantity=2),  # 2
-        Inhabitant(id="e", kind="livestock", name="Sheep", quantity=9),  # 0
+        # Animals by Size: two Size +3 mules 2, nine Size 0 sheep 9/8,
+        # added and rounded up: 4.
+        Inhabitant(id="d", kind="horse", name="Mules", quantity=2),
+        Inhabitant(id="e", kind="livestock", name="Sheep", quantity=9, size=0),
         # Other Covenfolk, each tagged with its Covenant Role: 1 point each.
         Inhabitant(
             id="f", kind="inhabitant", name="Servants", quantity=3, role="Servant"
@@ -759,8 +828,9 @@ def test_inhabitant_points_count_each_kind_and_everyone_counted_by_number():
         ),
     ]
     cov.population.other_people = 1
-    # 8 (magus + companion) + 2 + 2 + 4 + 2 + 0 + (3 + 1 + 2) covenfolk + 1 other
-    assert covenfolk.inhabitant_points(saga, cov) == 8 + 10 + 7
+    # 8 (magus + companion) + 2 + 2 + 4 + 4 animals + (3 + 1 + 2) covenfolk
+    # + 1 other
+    assert covenfolk.inhabitant_points(saga, cov) == 8 + 12 + 7
 
 
 def test_a_departed_magus_no_longer_counts_toward_the_points():
