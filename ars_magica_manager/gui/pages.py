@@ -38,6 +38,7 @@ from .. import (
     section_verbs,
     sessions,
     sieges,
+    stores,
     story_chapters,
     teaching,
     troupe,
@@ -100,6 +101,8 @@ class SagaHooks(TypedDict, total=False):
     nothing."""
 
     open_content: Callable[[], None]
+    #: Opens the Armarium or the Custodia Mirabilium, by its key.
+    open_store: Open
     open_seasons: Callable[[], None]
     placer: Placer | None
     open_character: Open
@@ -1290,7 +1293,9 @@ class SagaPage(QWidget):
         )
         self.codex.add("Seasons", "season", self._seasons(open_seasons))
         self.codex.add(
-            "Rules and Content", "library", self._rules_and_content(open_content)
+            "Rules and Content",
+            "library",
+            self._rules_and_content(open_content, hooks.get("open_store", _ignore)),
         )
         self.settings = SettingsChapter(
             saga, p, self.codex, run, self._buttons("Saga Settings")
@@ -1388,7 +1393,11 @@ class SagaPage(QWidget):
             card_grid([past], 2),
         )
 
-    def _rules_and_content(self, open_content: Callable[[], None]) -> QWidget:
+    def _rules_and_content(
+        self, open_content: Callable[[], None], open_store: Open
+    ) -> QWidget:
+        """Saga Content's card, then, for the storyguide, the Armarium's
+        and the Custodia Mirabilium's (stores.py)."""
         p, saga = self.p, self.saga
         content = ClickableCard(p, pad=16)
         card_title(
@@ -1401,8 +1410,25 @@ class SagaPage(QWidget):
         content.column.addWidget(fact_grid(scs.header_facts(saga), p, 4))
         content.clicked = open_content
         self.content = content
+        cards: list[QWidget] = [content]
+        self.store_cards: dict[str, ClickableCard] = {}
+        for store in stores.STORES.values():
+            if not viewing.reads(part=store.section):
+                continue
+            card = ClickableCard(p, pad=16)
+            card_title(
+                card,
+                store.title,
+                store.subtitle,
+                p,
+                symbol_label(artwork.icon(store.icon), p),
+            )
+            card.column.addWidget(fact_grid(stores.card_facts(saga, store), p, 3))
+            card.clicked = lambda key=store.key: open_store(key)
+            self.store_cards[store.key] = card
+            cards.append(card)
         return scrolling_page(
-            p, chapter_title("Rules and Content", p), card_grid([content], 2)
+            p, chapter_title("Rules and Content", p), card_grid(cards, 2)
         )
 
     def _management(

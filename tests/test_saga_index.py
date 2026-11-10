@@ -104,27 +104,56 @@ def test_every_kind_lists_itself_and_opens_a_page():
         "Gottfried of Arnsberg": ("Lord", "neighbours", "gottfried"),
         "The Court of Thorns": ("Faction", "neighbours", "court"),
         "The Wyrm": ("Creature", "creatures", "wyrm"),
-        # A book, spell or device opens the page that holds it.
-        "Thorns and Roses": ("Book", "covenants", "cov"),
+        # A spell opens the page that holds it; for the storyguide, a book
+        # opens the Armarium and a device the Custodia, held or not.
+        "Thorns and Roses": ("Book", "armarium", ""),
+        "A Lost Book": ("Book", "armarium", ""),
         "Ward of the Thorn": ("Spell", "characters", "mag"),
-        "Ring of Embers": ("Enchanted device", "characters", "mag"),
+        "Ring of Embers": ("Enchanted device", "custodia", ""),
     }
     # ... at its row there.
     spots = {name: e.spot for name, e in found.items() if e.spot is not None}
     assert spots == {
         "Thorns and Roses": saga_index.Spot(saga_index.BOOKS, "b1"),
+        "A Lost Book": saga_index.Spot(saga_index.BOOKS, "b2"),
         "Ward of the Thorn": saga_index.Spot(saga_index.SPELLS, "own-spell"),
         "Ring of Embers": saga_index.Spot(saga_index.DEVICES, "d1"),
     }
-    magus = found["Ring of Embers"].ref
-    assert saga_index.spot_row(saga, magus, spots["Ring of Embers"]) == 0
+    assert found["Thorns and Roses"].place == "Fengheld"
+    assert found["A Lost Book"].place == "Unassigned"
+    magus = found["Ward of the Thorn"].ref
     assert saga_index.spot_row(saga, magus, spots["Ward of the Thorn"]) == 0
-    # A book's row is the page's to find: each sets its own order.
-    assert saga_index.spot_row(saga, magus, spots["Thorns and Roses"]) is None
-    # One held by nobody has no page to open.
-    assert "A Lost Book" not in found
     for entry in found.values():
-        assert entry.ref.kind in references.KINDS.values()
+        assert entry.ref.kind in (*references.KINDS.values(), "armarium", "custodia")
+
+
+def test_a_player_finds_a_book_or_device_on_its_holders_page():
+    saga = _saga()
+    viewing.use(viewing.TABLE_VIEWER, saga)
+    found = {e.name: e for e in saga_index.entries(saga)}
+    held = {
+        name: (e.ref.kind, e.ref.id, e.spot)
+        for name, e in found.items()
+        if name in ("Thorns and Roses", "Ring of Embers")
+    }
+    assert held == {
+        "Thorns and Roses": (
+            "covenants",
+            "cov",
+            saga_index.Spot(saga_index.BOOKS, "b1"),
+        ),
+        "Ring of Embers": (
+            "characters",
+            "mag",
+            saga_index.Spot(saga_index.DEVICES, "d1"),
+        ),
+    }
+    magus = found["Ring of Embers"].ref
+    assert saga_index.spot_row(saga, magus, held["Ring of Embers"][2]) == 0
+    # A book's row is the page's to find: each sets its own order.
+    assert saga_index.spot_row(saga, magus, held["Thorns and Roses"][2]) is None
+    # One held by nobody is left out: the storyguide may be hiding it.
+    assert "A Lost Book" not in found
 
 
 def test_a_match_shows_its_name_kind_and_place():

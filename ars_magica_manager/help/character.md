@@ -4299,6 +4299,10 @@ the magus's Talisman is one of them. Beside Add, Edit and Delete, the
 take another, **Use Charge** uses a charge of a Charged Item, and **Use**
 uses a finished effect once.
 <!-- /gui -->
+The device form's **Holder** may be "(none - unassigned)": the device
+leaves this list and waits, held by nobody, in
+[the Custodia Mirabilium](help:custodia).
+
 Using an effect shows its Initiative (Quickness + stress die, +3 with a
 Fast Trigger), its Penetration (0 unless enchanted with more) and how many
 of its uses a day are spent (DE pp. 257, 259); in a fight, Next Blow's **Use

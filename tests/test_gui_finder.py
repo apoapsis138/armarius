@@ -17,11 +17,12 @@ from PySide6.QtWidgets import QApplication
 from screen_helpers import _sample_saga_with_covenant
 from support import everything_saga
 
-from ars_magica_manager import saga_index, storage
+from ars_magica_manager import saga_index, storage, stores, viewing
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.character_sheet import CharacterSheet
 from ars_magica_manager.gui.covenant import CovenantPage
 from ars_magica_manager.gui.finder import FinderPanel
+from ars_magica_manager.gui.stores import StorePage
 from ars_magica_manager.gui.widgets import Codex
 from ars_magica_manager.gui.window import MainWindow
 from ars_magica_manager.models import Book, EnchantedDevice, KnownSpell, Spell
@@ -151,9 +152,9 @@ def test_a_rows_name_is_whole_and_its_kind_never_overlaps_it(app, name, after):
 
 
 def test_a_book_device_or_spell_opens_at_its_chapter_and_row(app):
-    """Each opens its holder's page at the chapter that lists it, its row
-    chosen (shown in the inspector): each second in its list, so the row
-    is not just the first."""
+    """As a player finds them, each opens its holder's page at the chapter
+    that lists it, its row chosen (shown in the inspector): each second in
+    its list, so the row is not just the first."""
     saga = everything_saga()
     magus = saga.character("mag1")
     assert magus is not None
@@ -185,7 +186,10 @@ def test_a_book_device_or_spell_opens_at_its_chapter_and_row(app):
     window = MainWindow(saga_ids=[saga.id])
     window.resize(1400, 900)
     window.show()
+    # A player's Find: the storyguide's opens the stores (below).
+    viewing.use(viewing.TABLE_VIEWER, saga)
     found = {e.name: e for e in saga_index.entries(saga)}
+    viewing.use(viewing.STORYGUIDE_VIEWER, saga)
     for name, chapter in (
         ("Ward of Quills", "Hermetic Magic"),
         ("Quillstaff", "Inventory"),
@@ -199,4 +203,31 @@ def test_a_book_device_or_spell_opens_at_its_chapter_and_row(app):
         assert isinstance(codex, Codex), name
         assert codex.rail.currentItem().text() == chapter, name
         assert codex.inspector.title.text() == name, name
+    window.close()
+
+
+def test_the_storyguides_find_opens_a_book_or_device_in_its_store(app):
+    """Every book opens the Armarium and every device the Custodia, held
+    or unassigned, at its row: a filter that hides the row is cleared."""
+    saga = everything_saga()
+    saga.books.append(Book(id="b-lost", name="Quires Lost", type="Art Summa"))
+    saga.enchanted_devices.append(EnchantedDevice(id="d-lost", name="Quillwand"))
+    storage.save_saga(saga)
+    window = MainWindow(saga_ids=[saga.id])
+    window.resize(1400, 900)
+    window.show()
+    StorePage.remembered["armarium"] = stores.Filter(kind="Tractatus")
+    found = {e.name: e for e in saga_index.entries(saga)}
+    for name, title in (
+        ("Quires Lost", "The Armarium"),
+        ("Summa", "The Armarium"),
+        ("Quillwand", "The Custodia Mirabilium"),
+        ("Wand", "The Custodia Mirabilium"),
+    ):
+        window.open_entry(found[name])
+        page = window.page()
+        assert isinstance(page, StorePage), name
+        assert page.store.title == title
+        assert page.codex.inspector.title.text() == name, name
+    StorePage.remembered.clear()
     window.close()

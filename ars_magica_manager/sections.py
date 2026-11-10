@@ -54,10 +54,14 @@ BOOK_SECTIONS: frozenset[str] = frozenset(
         "section-lib-books",
         "section-lab-books",
         "section-books",
-        "section-unassigned-books",
         LAB_TEXTS_SECTION,
     }
 )
+
+#: The saga's two stores (stores.py): the Armarium, every book, and the
+#: Custodia Mirabilium, every enchanted device, held or unassigned.
+ARMARIUM_SECTION = "section-armarium"
+CUSTODIA_SECTION = "section-custodia"
 
 #: The lab's Virtues and Flaws sections: either refreshes both lists and
 #: their shared details panel.
@@ -85,11 +89,11 @@ GIVE_SECTIONS: dict[str, str] = {
     "section-lab-raw-vis": "vis",
     "section-pos-vis_store": "vis",
     **{
-        section: "book"
-        for section in BOOK_SECTIONS
-        if section not in ("section-lib-summary", "section-unassigned-books")
+        section: "book" for section in BOOK_SECTIONS if section != "section-lib-summary"
     },
     **dict.fromkeys(DEVICE_SECTIONS, "device"),
+    ARMARIUM_SECTION: "book",
+    CUSTODIA_SECTION: "device",
     "section-inventory": "gear",
     "section-pos-weapon": "gear",
     "section-pos-armor": "gear",
@@ -345,6 +349,8 @@ STIGMATA_SECTION = "section-char-stigmata"
 COVERS_SECTION = "section-char-covers"
 
 CORE_SECTIONS: dict[str, frozenset[str]] = {
+    ARMARIUM_SECTION: frozenset({"add", "edit", "remove"}),
+    CUSTODIA_SECTION: frozenset({"add", "edit", "remove"}),
     POWERS_SECTION: frozenset({"add", "edit", "remove"}),
     CONSTANT_EFFECTS_SECTION: frozenset({"add", "edit", "remove"}),
     COVERS_SECTION: frozenset({"add", "edit", "remove"}),

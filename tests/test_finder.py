@@ -6,7 +6,7 @@ from __future__ import annotations
 from support import everything_saga, wait_until
 from textual.widgets import Input
 
-from ars_magica_manager import storage
+from ars_magica_manager import storage, viewing
 from ars_magica_manager.models import Book, EnchantedDevice, KnownSpell, Spell
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import WorkspaceScreen
@@ -60,8 +60,10 @@ def _entry(finder: FinderScreen):
 
 
 async def test_a_book_device_or_spell_opens_at_its_row():
-    """Each opens its holder's sheet on the tab that lists it, its row
-    chosen: books, devices and Known Spells, each second in its list so
+    """A spell opens its magus's sheet at Known Spells; for the
+    storyguide a book opens the Armarium and a device the Custodia
+    Mirabilium, held or not; for a player each opens its holder's sheet on
+    the tab that lists it. Each row is chosen, each second in its list so
     the row is not just the first."""
     saga = everything_saga()
     magus = saga.character("mag1")
@@ -85,6 +87,7 @@ async def test_a_book_device_or_spell_opens_at_its_row():
             owner_id="mag1",
         )
     )
+    saga.books.append(Book(id="b-lost", name="Quartos Lost", type="Art Summa"))
     storage.save_saga(saga)
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 60)) as pilot:
@@ -93,15 +96,23 @@ async def test_a_book_device_or_spell_opens_at_its_row():
         await pilot.press("enter")
         assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
         workspace = app.screen
-        cases = [
+        storyguide = [
             # (typed, the list its row is chosen in, that row's label start)
             ("ward of q", "known-spells-list", "Ward of Quills"),
+            ("quillst", "custodia-list", "Quillstaff"),
+            ("quires", "armarium-list", "Quires of Thorn"),
+            ("quartos", "armarium-list", "Quartos Lost"),
+            ("wand", "custodia-list", "Wand"),
+        ]
+        player = [
             ("quillst", "section-cov-devices-list", "Quillstaff"),
             ("quires", "section-books-list", "Quires of Thorn"),
-            ("wand", "section-lab-devices-list", "Wand"),
             ("summa", "section-lib-books-list", "Summa"),
         ]
-        for typed, list_id, label in cases:
+        cases = [*((False, *c) for c in storyguide), *((True, *c) for c in player)]
+        for as_player, typed, list_id, label in cases:
+            if as_player:
+                viewing.use(viewing.TABLE_VIEWER, workspace.saga)
             await pilot.press("ctrl+f")
             assert await wait_until(pilot, lambda: isinstance(app.screen, FinderScreen))
             finder = app.screen

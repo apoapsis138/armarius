@@ -51,13 +51,13 @@ from .... import (
     section_verbs,
     sourcebooks,
     storage,
+    stores,
     storyguides,
     transfer,
     tribunals,
     viewing,
     world,
 )
-from .... import books as bk
 from .... import familiars as fam
 from .... import players as pl
 from .... import sheet_text as st
@@ -95,11 +95,13 @@ from ....rules import creation_covenant as cov_creation
 from ....rules import options as rule_options
 from ....sections import (
     AGENTS_SECTION,
+    ARMARIUM_SECTION,
     BESTIARY_INFO_SECTION,
     CONFLICT_BATTLES_SECTION,
     CONFLICTS_INFO_SECTION,
     CORE_SECTIONS,
     CREATURE_INFO_SECTION,
+    CUSTODIA_SECTION,
     FIGHTS_SECTION,
     NEIGHBOUR_INFO_SECTION,
     REGION_INFO_SECTION,
@@ -142,6 +144,7 @@ from ..sheets import (
     SheetView,
     TribunalSheetView,
 )
+from ..sheets.stores import StoreSheetView
 from ..steps import run_steps
 from ..widgets import (
     BottomBar,
@@ -182,7 +185,8 @@ _HELP_PAGES: dict[NodeKind, str] = {
     NodeKind.FAMILIAR: "familiar",
     NodeKind.LABORATORY_GROUP: "laboratory-group",
     NodeKind.LABORATORY: "laboratory",
-    NodeKind.BOOK_GROUP: "unassigned-books",
+    NodeKind.ARMARIUM: stores.ARMARIUM,
+    NodeKind.CUSTODIA: stores.CUSTODIA,
     NodeKind.SEASONS: "seasons",
     NodeKind.SAGA_CONTENT: "saga-content",
     NodeKind.REGION: "region",
@@ -208,6 +212,8 @@ SPOT_SECTIONS: dict[tuple[str, str], str] = {
     ("characters", saga_index.BOOKS): "section-books",
     ("characters", saga_index.DEVICES): "section-char-devices",
     ("characters", saga_index.SPELLS): "section-known-spells",
+    (stores.ARMARIUM, saga_index.BOOKS): ARMARIUM_SECTION,
+    (stores.CUSTODIA, saga_index.DEVICES): CUSTODIA_SECTION,
 }
 
 #: The More commands whose handler isn't `action_<action>`.
@@ -477,6 +483,8 @@ class WorkspaceBase(Screen[None]):
         NodeKind.CREATURE: (set(), CREATURE_INFO_SECTION),
         NodeKind.CONFLICTS: (set(), CONFLICTS_INFO_SECTION),
         NodeKind.SEASONS: (set(), SEASONS_INFO_SECTION),
+        NodeKind.ARMARIUM: (set(), ARMARIUM_SECTION),
+        NodeKind.CUSTODIA: (set(), CUSTODIA_SECTION),
     }
 
     DEFAULT_CSS = """
@@ -520,6 +528,8 @@ class WorkspaceBase(Screen[None]):
         self._creature_sheet_view: CreatureSheetView | None = None
         self._conflicts_view: ConflictsSheetView | None = None
         self._seasons_view: SeasonsSheetView | None = None
+        #: The Armarium or the Custodia Mirabilium, whichever is on show.
+        self._store_view: StoreSheetView | None = None
         #: One detail-pane swap at a time (see _set_detail).
         self._detail_lock = asyncio.Lock()
         #: While the Footer's keys are worked out (active_bindings), what
@@ -765,17 +775,15 @@ class WorkspaceBase(Screen[None]):
                     escape(lab.name) + _creating(lab),
                     data=(NodeKind.LABORATORY, lab.id),
                 )
-        # Books with no owner file under the saga.
-        loose_books = bk.unassigned_books(self.saga)
-        if loose_books:
-            tree.root.add_leaf(
-                f"Unassigned Books ({len(loose_books)})", data=(NodeKind.BOOK_GROUP,)
-            )
         tree.root.add_leaf(
             f"Seasons ({len(self.saga.season_records)})",
             data=(NodeKind.SEASONS,),
         )
         tree.root.add_leaf("Saga Content", data=(NodeKind.SAGA_CONTENT,))
+        # Every book and device, held or not: the storyguide's alone.
+        for store in stores.STORES.values():
+            if viewing.reads(part=store.section):
+                tree.root.add_leaf(store.title, data=(NodeKind(store.key),))
 
     def _add_covenant_node(
         self, parent: TreeNode[Any], covenant: Covenant, *, expand: bool
@@ -1224,10 +1232,7 @@ class WorkspaceBase(Screen[None]):
         sheet's top panel, outside its tabs. With none, a flat tab that
         dispatches on its own id (see _SHEET_DISPATCH), otherwise the sheet's
         always-visible top section, so 'e' edits the record from any tab.
-        The Unassigned Books node has no sheet, just a section; on Saga
-        Content, a tab acts on its list (TAB_SECTIONS)."""
-        if self.selected_kind == NodeKind.BOOK_GROUP:
-            return "section-unassigned-books"
+        On Saga Content, a tab acts on its list (TAB_SECTIONS)."""
         view = self._current_sheet_view()
         if view is None:
             return None
@@ -1351,7 +1356,17 @@ class WorkspaceBase(Screen[None]):
         if not lists:
             return
         index = saga_index.spot_row(self.saga, opens, spot)
-        if index is None and spot.list == saga_index.BOOKS:
+        store = next(
+            (w for w in section.ancestors if isinstance(w, StoreSheetView)), None
+        )
+        if store is not None:
+            # A store's filter may hide the row: choosing it clears that.
+            index = (
+                lists.first().selected_data_index
+                if store.choose(spot.record_id)
+                else None
+            )
+        elif index is None and spot.list == saga_index.BOOKS:
             # A book list sets its own order (a codex's books together).
             books = next(
                 (w for w in section.ancestors if isinstance(w, BookListView)), None
@@ -1447,7 +1462,8 @@ class WorkspaceBase(Screen[None]):
             NodeKind.LABORATORY_GROUP: f"Laboratories{where}",
             NodeKind.SAGA_CONTENT: "Saga Content",
             NodeKind.SEASONS: "Seasons",
-            NodeKind.BOOK_GROUP: "Unassigned Books",
+            NodeKind.ARMARIUM: stores.STORES[stores.ARMARIUM].title,
+            NodeKind.CUSTODIA: stores.STORES[stores.CUSTODIA].title,
             NodeKind.REGION: "The Region",
             NodeKind.NEIGHBOUR_GROUP: "The Region",
             NodeKind.BESTIARY: "The Bestiary",
@@ -1594,6 +1610,8 @@ class WorkspaceBase(Screen[None]):
             NodeKind.CREATURE: self._creature_sheet_view,
             NodeKind.CONFLICTS: self._conflicts_view,
             NodeKind.SEASONS: self._seasons_view,
+            NodeKind.ARMARIUM: self._store_view,
+            NodeKind.CUSTODIA: self._store_view,
         }.get(self.selected_kind)
 
     def _open_creation_worksheet(
@@ -1940,6 +1958,8 @@ class WorkspaceBase(Screen[None]):
             NodeKind.BESTIARY,
             NodeKind.CONFLICTS,
             NodeKind.SEASONS,
+            NodeKind.ARMARIUM,
+            NodeKind.CUSTODIA,
         )
         if self.selected_kind in whole_saga:
             return self.saga

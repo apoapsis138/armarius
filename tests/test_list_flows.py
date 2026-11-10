@@ -194,6 +194,15 @@ def _saga() -> Saga:
         characters=[magus],
         familiars=[familiar],
         laboratories=[lab],
+        # Unassigned, in the Armarium and the Custodia Mirabilium.
+        books=[
+            Book(id="bk1", name="Folio [torn]", type="Other"),
+            Book(id="bk2", name="Codex Aureus", type="Other"),
+        ],
+        enchanted_devices=[
+            EnchantedDevice(id="dv1", name="Wand [bent]"),
+            EnchantedDevice(id="dv2", name="Ring"),
+        ],
     )
 
 
@@ -273,6 +282,8 @@ _SHEET_VIEW_ATTR = {
     "neighbour": "_neighbour_sheet_view",
     "tribunal": "_tribunal_sheet_view",
     "seasons": "_seasons_view",
+    "armarium": "_store_view",
+    "custodia": "_store_view",
 }
 
 
@@ -634,6 +645,19 @@ ITEM_LISTS: dict[str, ListCase] = {
         "section-cov-tower-devices",
         "cov-tower-devices-list",
         lambda s: s.covenants[0].hermetic_projects[0].devices,
+    ),
+    # Every book and device in the saga; these two held by nobody.
+    "armarium": ListCase(
+        ("armarium",),
+        "section-armarium",
+        "armarium-list",
+        lambda s: s.books,
+    ),
+    "custodia": ListCase(
+        ("custodia",),
+        "section-custodia",
+        "custodia-list",
+        lambda s: s.enchanted_devices,
     ),
 }
 

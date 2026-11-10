@@ -234,10 +234,21 @@ Every book at a covenant: those it owns and those owned by its laboratories
 and characters. It is a view, not a record of its own.
 _Avoid_: Book collection
 
+**Armarium**:
+Every book in the saga in one list, whoever holds it, unassigned books
+included; the storyguide's place to make books for the players to find. A
+view, like the Library, not a record of its own.
+_Avoid_: Unassigned Books, book list
+
+**Custodia Mirabilium**:
+"The keeping of wonders": every enchanted device in the saga in one list,
+whoever holds it, unassigned devices included. A view, not a record.
+_Avoid_: Device list, item vault
+
 **Unassigned**:
 Said of a character, laboratory or book that belongs to no covenant (or, for
-a book, to nobody).
-_Avoid_: Orphaned, loose
+a book or an enchanted device, to nobody).
+_Avoid_: Orphaned, loose, unowned
 
 **Modifier**:
 One effect an entry (a Virtue, a Flaw, a Boon, a Hook) has on one figure,

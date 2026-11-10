@@ -60,6 +60,9 @@ SHEET_OPEN_WIDGET_BUDGET = {
     "seasons": 40,
     "bestiary": 30,
     "creature": 50,
+    # The Armarium and the Custodia: a filter of two choices over one list.
+    "armarium": 30,
+    "custodia": 30,
 }
 
 

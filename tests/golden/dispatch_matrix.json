@@ -3820,5 +3820,29 @@
         "slash": "(disabled)"
       }
     }
+  },
+  "armarium": {
+    "(node)": {
+      "active": "section-armarium",
+      "keys": {
+        "a": "FieldsDialog: Add a Book",
+        "e": "FieldsDialog: Edit Summa",
+        "d": "ConfirmScreen",
+        "m": "FieldsDialog: Give Summa",
+        "slash": "(disabled)"
+      }
+    }
+  },
+  "custodia": {
+    "(node)": {
+      "active": "section-custodia",
+      "keys": {
+        "a": "FieldsDialog: Add an Enchanted Device",
+        "e": "FieldsDialog: Edit an Enchanted Device",
+        "d": "ConfirmScreen",
+        "m": "FieldsDialog: Give Wand",
+        "slash": "(disabled)"
+      }
+    }
   }
 }

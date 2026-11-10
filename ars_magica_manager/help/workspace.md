@@ -94,16 +94,16 @@ The tree's top node is the saga itself. Under it:
 
 - Each covenant, with two groups under it: **Characters** and **Laboratories**. A magus with a bound familiar has the familiar under them ("Familiar: name").
 - **Unassigned Characters** and **Unassigned Laboratories**: those with no covenant. These groups only appear when there is something in them.
-- **Unassigned Books**: books with no owner, only shown when there are some.
 - **Seasons**: the record of each season applied.
 - **Saga Content**: the books in play, the catalogs the saga hides, its House Rules, its own spells and (for the storyguide) its players.
+- **The Armarium** and **The Custodia Mirabilium** (the storyguide's only): every book, and every enchanted device, in the saga, held or [unassigned](help:armarium).
 
 A character's node shows its type, for example "Leandro (magus)". A covenant, laboratory or character still being made is marked "(creating)".
 
 ### Moving around
 <!-- help: workspace-moving -->
 
-- Arrow keys move along the tree. **Enter** shows the chosen node and moves focus into it: into a sheet's first section, or into a list (Seasons, Unassigned Books).
+- Arrow keys move along the tree. **Enter** shows the chosen node and moves focus into it: into a sheet's first section, or into a list (Seasons).
 - **Esc** steps out: from a sheet back to the tree, and from the tree back to the saga picker.
 - **Tab** and **Shift+Tab** move from one section of a sheet to the next. Each section is one stop: its list if it has one, otherwise its title. Arrow keys move within a section.
 - **1** to **9** open a sheet's tabs; the tabs show their numbers.
@@ -235,12 +235,15 @@ Arnsberg · Lord · The Drachenfels".
   record by the place it is at, and by the Tribunal whose lands it lies
   in ("in the lands of Rhine", set on a place: see
   [The Place tab](help:tab-nb-place)).
-- **Books, spells and enchanted devices** have no page of their own: a
-  book or device opens the page of whoever holds it, and a spell the
-  page of the magus who knows it, at the tab or chapter that lists it
-  with its row chosen (a covenant's book in its Library, a device among
-  its holder's Enchanted Devices, a spell in Known Spells). A book nobody
-  owns is not listed, nor a spell nobody knows.
+- **Books, spells and enchanted devices** have no page of their own. A
+  spell opens the page of the magus who knows it, at Known Spells with
+  its row chosen; a spell nobody knows is not listed. For the
+  storyguide, every book opens [the Armarium](help:armarium) and every
+  device [the Custodia Mirabilium](help:custodia), at its row (a filter
+  hiding it is cleared), held or unassigned. For a player, a book or
+  device opens the page of whoever holds it, at its row (a covenant's
+  book in its Library, a device among its holder's Enchanted Devices),
+  and one nobody holds is not listed.
 - **Secrets, for the storyguide:** your Find also looks in each record's
   [Secrets](help:tab-secrets), last, a match there marked "secret" with
   the words around it. A player's Find never does, and in
@@ -541,32 +544,91 @@ The form asks for a Name, a Size and the covenant, and whether it is one of the 
 
 **See also:** [Characters group](help:character-group), [Creation Worksheet](help:creation-worksheet), [How to create a character, covenant or laboratory](help:guide-creation)
 
-# Unassigned Books
-<!-- help: unassigned-books; tui -->
+# The Armarium
+<!-- help: armarium -->
 
-The books in the saga that nobody owns: not a covenant's library, a laboratory or a character. The node only appears in the tree while there are some.
+Every book in the saga in one list: each covenant's library, each laboratory's and each character's books, and the books nobody holds, **Unassigned**. Lab texts, casting tablets and the volumes of a codex are each a row of their own; a volume's row names its codex. An armarius is a locked book closet (Covenants p. 92): this is the saga's.
 
-**You type:** a book's details with `a` and `e`, the same form as a library's. Give a book an owner and it moves off this list.
+Only the storyguide sees it, since the unassigned books are often ones the players haven't found yet.
 
-**The app works out:** the count, and the details panel for the chosen book.
+<!-- tui -->
+It is the **The Armarium** node in the tree, beside Saga Content.
+<!-- /tui -->
+<!-- gui -->
+Open it from its card in the saga page's **Rules and Content** chapter, beside Saga Content.
+<!-- /gui -->
 
-### Acting on several books
-<!-- help: unassigned-books-marked -->
+**See also:** [The Custodia Mirabilium](help:custodia), [How to make a book or device for the players to find](help:guide-store-find), [Find](help:find)
 
-Mark books with Space (or Ctrl+click) to act on them together. With books marked, `e` gives them all one new owner and `d` deletes them all, each after a confirmation. With none marked, e and d act on the highlighted book. A book bound in a codex takes its whole codex to the new owner.
+### Books tab
+<!-- help: tab-armarium -->
 
-Books imported from a CSV file on the saga (More, Import, Books) land here.
+The Armarium's one list, [Books](help:section-armarium), its filter above it and the chosen book's details below.
 
-**See also:** [Import Data](help:import-data), [The workspace](help:workspace), [How to import and export](help:guide-import-export)
+### Books
+<!-- help: section-armarium -->
 
-# Unassigned Books
-<!-- help: unassigned-books; gui -->
+Each row is a book: its Name, Type, Subject (the Art, Ability or spell it is on) and Holder, the covenant, laboratory or character that has it, or Unassigned.
 
-The books in the saga that nobody owns: not a covenant's library, a laboratory or a character. Books imported from a CSV file on the saga (Import, in Saga Management) land here.
+**Filter:** choose a **Holder** (one record, or **Unassigned** for the books nobody has) and a **Type**; the list's title counts what it shows ("Books (3 of 59)").
 
-The desktop doesn't list them yet: open the saga in the terminal version to see them, give them an owner or delete them. Once a book has an owner it shows in that covenant's Library, laboratory or character's books.
+<!-- tui -->
+**You type:** `a` adds a book with no owner, `e` edits the chosen one and `d` deletes it, in the same form as a library's. More's **Give** hands the chosen book to a covenant, laboratory or character.
 
-**See also:** [Import Data](help:import-data), [How to import and export](help:guide-import-export)
+Mark books with Space (or Ctrl+click) to act on them together: with books marked, `e` gives them all one new owner and `d` deletes them all, each after a confirmation.
+<!-- /tui -->
+<!-- gui -->
+**You type:** **Add** makes a book with no owner, **Edit** and **Delete** act on the chosen row, in the same form as a library's, and **Give** hands the chosen book to a covenant, laboratory or character. **Change Owner** gives several of the books listed one new owner at once.
+<!-- /gui -->
+
+Give on an unassigned book writes only the receiver's Diary ("Received ..."); on a held book it is the usual Give, both Diaries. To take a book away from its holder, edit its Owner to "(none - unassigned)": nothing is written in a Diary. A book bound in a codex takes its whole codex with it, and the form says so. Deleting a held book names its holder first.
+
+Books imported from a CSV file on the saga land here, unassigned.
+
+**The app works out:** the count, who holds each book, and the chosen book's details, its holder a link that opens it.
+
+**See also:** [Library tab](help:tab-cov-library), [Import Data](help:import-data), [How to import and export](help:guide-import-export)
+
+# The Custodia Mirabilium
+<!-- help: custodia -->
+
+"The keeping of wonders": every enchanted device in the saga in one list, each held by a covenant, a laboratory or a character, or by nobody, **Unassigned**. Only the storyguide sees it.
+
+<!-- tui -->
+It is the **The Custodia Mirabilium** node in the tree, beside Saga Content.
+<!-- /tui -->
+<!-- gui -->
+Open it from its card in the saga page's **Rules and Content** chapter, beside Saga Content.
+<!-- /gui -->
+
+**See also:** [The Armarium](help:armarium), [How to make a book or device for the players to find](help:guide-store-find), [Find](help:find)
+
+### Enchanted Devices tab
+<!-- help: tab-custodia -->
+
+The Custodia's one list, [Enchanted Devices](help:section-custodia), its filter above it and the chosen device's details below.
+
+### Enchanted Devices
+<!-- help: section-custodia -->
+
+Each row is a device: its Name, Type (Invested, Lesser, Charged, or Talisman), its first Effect and how many more ("+2 more"), and its Holder, or Unassigned. The details list every effect.
+
+**Filter:** choose a **Holder** (one record, or **Unassigned**) and a **Type**.
+
+<!-- tui -->
+**You type:** `a` adds a device with no holder, `e` edits the chosen one and `d` deletes it, in the same form as on a holder's sheet. More's **Give** hands the chosen device to a covenant, laboratory or character.
+<!-- /tui -->
+<!-- gui -->
+**You type:** **Add** makes a device with no holder, **Edit** and **Delete** act on the chosen row, in the same form as on a holder's page, and **Give** hands the chosen device to a covenant, laboratory or character.
+<!-- /gui -->
+
+Effects are instilled, used and charged on the holder's page. Give on an unassigned device writes only the receiver's Diary; on a held one it is the usual Give. To take a device away, edit its Holder to "(none - unassigned)". Deleting a held device names its holder first.
+
+A talisman given away or set down keeps its Talisman mark. The rules say only the magus who prepared an item can attune it, and that he always keeps an Arcane Connection to his talisman, which makes it dangerous in an enemy's hands (DE p. 259); whether it is still his talisman in other hands, and whether it can be attuned again, is the troupe's call.
+
+**The app works out:** the count, who holds each device, and the chosen device's details and effects, its holder a link that opens it.
+
+**See also:** [Enchanted Devices](help:section-char-devices), [Give](help:give)
 
 # Seasons
 <!-- help: seasons -->

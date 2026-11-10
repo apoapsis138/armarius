@@ -1832,6 +1832,13 @@ OPENERS: dict[str, Opener] = {
     "add horses": Opener("covenant", _new_inhabitant("horse")),
     "add livestock": Opener("covenant", _new_inhabitant("livestock")),
     "add book": Opener("covenant", lambda ws: ws._book_form(None)),
+    # The Armarium's and the Custodia's Add: an item with no holder.
+    "armarium add book": Opener(
+        "armarium", lambda ws: ws._core_verb("section-armarium", "add")
+    ),
+    "custodia add device": Opener(
+        "custodia", lambda ws: ws._core_verb("section-custodia", "add")
+    ),
     "edit book": Opener(
         "covenant",
         lambda ws: ws._book_form(next(b for b in ws.saga.books if b.id == "b-cov")),
@@ -2446,7 +2453,7 @@ async def open_dialog(
         assert await wait_until(
             pilot, lambda: base.selected_kind == NODES[opener.node][0]
         )
-        if opener.node not in ("saga", "book_group"):
+        if opener.node != "saga":
             assert await wait_until(
                 pilot, lambda: base._current_sheet_view() is not None
             )

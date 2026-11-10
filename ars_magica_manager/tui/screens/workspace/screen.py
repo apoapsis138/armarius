@@ -101,4 +101,6 @@ class WorkspaceScreen(
             **self._shared_section_ops(),
             **self._virtue_flaw_section_ops(),
             **self._device_section_ops(),
+            # The Armarium's Edit and Delete act on its marked books first.
+            **self._store_section_ops(),
         }

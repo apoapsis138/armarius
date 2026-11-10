@@ -18,7 +18,9 @@ never does, and never lists a record the players don't know of
 
 Books, spells and enchanted devices have no page of their own: each
 opens the page that holds it (its owner, the magus who knows it, its
-holder) at its row, the entry's Spot, and one held by nobody is left out.
+holder) at its row, the entry's Spot, and one held by nobody is left out;
+for the storyguide, every book and device opens its store (stores.py),
+the Armarium or the Custodia Mirabilium, at its row, held or not.
 A Spot names the list, not a front-end's tab or chapter: each front-end
 keeps its own table of where a page shows each list (a parameter object
 the openers take, as Help's Go there takes a place)."""
@@ -31,7 +33,7 @@ from dataclasses import dataclass, replace
 from functools import cache
 from typing import Any
 
-from . import catalog, memberships, neighbours, places, references, viewing
+from . import catalog, memberships, neighbours, places, references, stores, viewing
 from . import enchanted_devices as ed
 from . import familiars as fam
 from .models import Character, Saga
@@ -292,6 +294,35 @@ def _spells(saga: Saga) -> Iterator[Entry]:
             )
 
 
+def store_ref(store: stores.Store) -> Ref:
+    """The Ref that opens a store (the Armarium, the Custodia Mirabilium):
+    its kind is the store's key."""
+    return Ref(store.key, "", store.title)
+
+
+def _stored(saga: Saga, store: stores.Store, kind: str, listed: str) -> Iterator[Entry]:
+    """Every item of `store`, held or not, opening the store at its row."""
+    for item in store.items(saga):
+        holder = store.holder(saga, item)
+        also = (("held by", holder.name), *_lands(saga, holder)) if holder else ()
+        yield Entry(
+            store_ref(store),
+            store.cells(saga, item)[0],
+            kind,
+            stores.holder_name(holder),
+            also,
+            Spot(listed, item.id),
+        )
+
+
+def _stored_books(saga: Saga) -> Iterator[Entry]:
+    return _stored(saga, stores.STORES[stores.ARMARIUM], "Book", BOOKS)
+
+
+def _stored_devices(saga: Saga) -> Iterator[Entry]:
+    return _stored(saga, stores.STORES[stores.CUSTODIA], "Enchanted device", DEVICES)
+
+
 #: Each kind of record Find lists, in the order a search with no words
 #: lists them.
 KINDS: dict[str, Callable[[Saga], Iterable[Entry]]] = {
@@ -307,15 +338,27 @@ KINDS: dict[str, Callable[[Saga], Iterable[Entry]]] = {
     "enchanted devices": _devices,
 }
 
+#: For whoever reads the stores (the storyguide): every book and device
+#: opens the Armarium or the Custodia Mirabilium at its row, held or not.
+STORED_KINDS: dict[str, Callable[[Saga], Iterable[Entry]]] = {
+    **KINDS,
+    "books": _stored_books,
+    "enchanted devices": _stored_devices,
+}
+
 
 def entries(saga: Saga) -> list[Entry]:
     """Every record Find can open, kind by kind, as whoever is looking may
-    read it: the storyguide's with each record's Secrets to be found by, a
-    player's without the records they don't know of."""
-    found = [entry for list_kind in KINDS.values() for entry in list_kind(saga)]
+    read it: the storyguide's with each record's Secrets to be found by,
+    and every book and device in its store; a player's without the
+    records they don't know of, a book or device on its holder's page."""
     looking = viewing.current()
     if viewing.reads_everything(looking, saga):
+        found = [
+            entry for list_kind in STORED_KINDS.values() for entry in list_kind(saga)
+        ]
         return [_with_secrets(saga, entry) for entry in found]
+    found = [entry for list_kind in KINDS.values() for entry in list_kind(saga)]
     if looking.is_storyguide:
         # Among several storyguides: their own records with their Secrets,
         # another's as the players find them (ADR 0015).

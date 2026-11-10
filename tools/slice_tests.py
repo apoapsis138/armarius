@@ -84,6 +84,28 @@ DIALOG_CONTRACT_TESTS = (
 )
 
 AREA_TESTS: dict[str, tuple[str, ...]] = {
+    # The Armarium and the Custodia Mirabilium: both front-ends' pages,
+    # their Add forms, their lists, Find, and the sheets' text and keys.
+    "ars_magica_manager/stores.py": (
+        "test_gui_stores.py",
+        "test_list_flows.py",
+        "test_dialog_contracts_library.py",
+        "test_finder.py",
+        "test_gui_finder.py",
+        "test_sheet_text.py",
+        "test_dispatch_matrix.py",
+    ),
+    "ars_magica_manager/forms/stores.py": (
+        "test_list_flows.py",
+        "test_dialog_contracts_library.py",
+        "test_gui_stores.py",
+    ),
+    "ars_magica_manager/gui/stores.py": ("test_gui_stores.py", "test_gui_finder.py"),
+    "ars_magica_manager/tui/screens/sheets/stores.py": (
+        "test_list_flows.py",
+        "test_finder.py",
+        "test_screens_books.py",
+    ),
     # Remote seats: the desktop's Host for Players window draws them.
     "ars_magica_manager/forms/remote_seats.py": ("test_gui_hosting.py",),
     "ars_magica_manager/remote/": ("test_gui_hosting.py",),

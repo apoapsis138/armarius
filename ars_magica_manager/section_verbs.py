@@ -27,6 +27,7 @@ from . import (
     mobile_covenants,
     seat,
     sourcebooks,
+    stores,
     town_charter,
     traditions,
 )
@@ -58,6 +59,7 @@ from .forms import saga_content as content_forms
 from .forms import season as season_forms
 from .forms import sessions as session_forms
 from .forms import spell as spell_forms
+from .forms import stores as store_forms
 from .forms import tradition as tradition_forms
 from .forms import trait as trait_forms
 from .forms import tribunal as tribunal_forms
@@ -256,9 +258,10 @@ def creature_ops(saga: Saga, creature: Creature) -> dict[str, SectionOps]:
 
 def saga_ops(saga: Saga, record: Saga) -> dict[str, SectionOps]:
     """The sheets of the saga as a whole: Saga Content, Seasons, Conflicts,
-    the Bestiary and the Region. Saga Content's Spells list counts into the
-    spells it shows now, and its Mystery Cults into the cult and degree
-    chosen, so the sheet gives those itself."""
+    the Bestiary, the Region and the two stores. Saga Content's Spells list
+    counts into the spells it shows now, and its Mystery Cults into the
+    cult and degree chosen, so the sheet gives those itself; so does a
+    store, filtered (here unfiltered)."""
     return {
         **ahead_forms.seasons_ops(saga),
         **conflicts.ops(saga),
@@ -269,6 +272,12 @@ def saga_ops(saga: Saga, record: Saga) -> dict[str, SectionOps]:
         HOUSE_RULES_SECTION: content_forms.house_rule_ops(saga),
         PLAYERS_SECTION: content_forms.player_ops(saga),
         SESSIONS_SECTION: session_forms.session_ops(saga),
+        **{
+            store.section: store_forms.store_ops(
+                saga, store, lambda store=store: stores.shown(saga, store)
+            )
+            for store in stores.STORES.values()
+        },
     }
 
 

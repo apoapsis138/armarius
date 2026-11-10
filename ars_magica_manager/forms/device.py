@@ -58,6 +58,9 @@ from . import experimental_effects
 #: The Maker select's value for a maker who isn't one of the saga's
 #: characters (their name is typed).
 OTHER_MAKER = "_other"
+#: The Holder select's choice for a device nobody holds (as a book's
+#: Owner select has).
+NO_HOLDER = "(none - unassigned)"
 
 #: A front-end's own chooser for a "picker" field (see form_spec).
 Picker = Callable[[Any], Any]
@@ -455,11 +458,11 @@ def _device_holder_fields(
     ] + [("Someone else (type the name)", OTHER_MAKER)]
     if device is None:
         maker_value: str | None = None
-        holder_value = holder
+        holder_value = holder or ""
     else:
         maker_value = device.maker_id or (OTHER_MAKER if device.maker_name else None)
         holder_value = (
-            f"{device.holder_kind}:{device.holder_id}" if device.holder_kind else None
+            f"{device.holder_kind}:{device.holder_id}" if device.holder_kind else ""
         )
     return [
         DialogField(
@@ -467,10 +470,9 @@ def _device_holder_fields(
             "Holder",
             "select",
             holder_value,
-            options=holder_options(saga, holder_value or ""),
-            required=True,
-            allow_blank=True,
-            placeholder="(choose who holds it)",
+            options=[*holder_options(saga, holder_value), (NO_HOLDER, "")],
+            hint="None: it waits, unassigned, in the Custodia Mirabilium for "
+            "someone to find.",
         ),
         DialogField(
             "maker",

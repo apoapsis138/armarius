@@ -5,7 +5,6 @@ from pathlib import Path
 from screen_helpers import (
     _book_names,
     _fill,
-    _find_node,
     _is_form,
     _open_workspace,
     _pick_csv,
@@ -28,10 +27,9 @@ from textual.widgets import (
     Input,
     Select,
     Static,
-    Tree,
 )
 
-from ars_magica_manager import storage
+from ars_magica_manager import storage, stores
 from ars_magica_manager.models import Book, Covenant, Saga
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import (
@@ -271,16 +269,12 @@ async def test_a_templated_ability_needs_its_detail_and_round_trips():
     assert saved.ability == "Area Lore: Rhine Tribunal"
 
 
-async def test_an_unowned_book_files_under_the_saga():
+async def test_an_unowned_book_waits_unassigned_in_the_armarium():
     storage.save_saga(_saga_with_books())
 
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 50)) as pilot:
         await _select_covenant(pilot, app)
-        tree = app.screen.query_one("#nav-tree", Tree)
-        node = _find_node(tree, ("book_group",))
-        assert str(node.label) == "Unassigned Books (1)"
-
         await _show_library_tab(pilot, app)
         await _choose_book(pilot, app, 0)
         await pilot.press("e")
@@ -288,25 +282,28 @@ async def test_an_unowned_book_files_under_the_saga():
         _fill(app, owner="")
         await _save_dialog(pilot, app)
         await wait_until(pilot, lambda: "Summa of Flame" not in _book_names(app))
-        assert str(_find_node(tree, ("book_group",)).label) == "Unassigned Books (2)"
 
-        await _select(pilot, app, ("book_group",))
+        await _select(pilot, app, ("armarium",))
+        await wait_until(pilot, lambda: app.screen._store_view is not None)
+        view = app.screen._store_view
+        assert app.screen._active_section() == "section-armarium"
+        loose = stores.unassigned(app.screen.saga, view.store)
+        assert [b.name for b in loose] == ["Summa of Flame", "Lost Folio"]
+        # Mark both and give them one owner with e.
+        rows = view.query_one(SelectableList)
+        for book in loose:
+            index = view.shown.index(book)
+            position = next(p for p, (i, _) in enumerate(rows._rows) if i == index)
+            rows.toggle_check(position)
+        await pilot.press("e")
+        await _wait_for_screen(pilot, app, FieldsDialog)
+        _fill(app, owner="covenant:cov1")
+        await _save_dialog(pilot, app)
+        await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        await pilot.press("y")
         await wait_until(
-            pilot, lambda: _book_names(app) == ["Summa of Flame", "Lost Folio"]
+            pilot, lambda: not stores.unassigned(app.screen.saga, view.store)
         )
-        assert _book_names(app) == ["Summa of Flame", "Lost Folio"]
-        assert app.screen._active_section() == "section-unassigned-books"
-        # Give both back to the covenant: the node goes away.
-        for _ in range(2):
-            before = len(_book_names(app))
-            await _choose_book(pilot, app, 0)
-            await pilot.press("e")
-            await _wait_for_screen(pilot, app, FieldsDialog)
-            assert app.screen.query_one("#fld-owner", Select).value == ""
-            _fill(app, owner="covenant:cov1")
-            await _save_dialog(pilot, app)
-            await wait_until(pilot, lambda b=before: len(_book_names(app)) < b)
-        assert _find_node(tree, ("book_group",)) is None
 
     assert _saved_books()["b5"].owner_id == "cov1"
 
@@ -414,8 +411,8 @@ async def test_saga_import_offers_books_and_spells_and_files_books_unassigned(tm
         assert "Row 5 (Oddity): unknown type 'Scroll'." in message
         await pilot.press("y")
         await wait_until(pilot, lambda: len(app.screen.saga.books) == 5)
-        tree = app.screen.query_one("#nav-tree", Tree)
-        assert str(_find_node(tree, ("book_group",)).label) == "Unassigned Books (3)"
+        armarium = stores.STORES[stores.ARMARIUM]
+        assert len(stores.unassigned(app.screen.saga, armarium)) == 3
 
     saved = _saved_books()
     imported = [b for b in saved.values() if b.id not in ("book1", "book2")]
@@ -448,9 +445,6 @@ async def test_library_import_puts_every_book_in_the_covenant(tmp_path):
         await pilot.press("y")
         await wait_until(pilot, lambda: len(_book_names(app)) == before + 3)
         assert _book_names(app)[-3:] == ["On Flame", "Notes", "Pilum"]
-        assert (
-            _find_node(app.screen.query_one("#nav-tree", Tree), ("book_group",)) is None
-        )
 
     imported = [b for b in _saved_books().values() if b.name in ("On Flame", "Notes")]
     assert {(b.owner_kind, b.owner_id) for b in imported} == {("covenant", "cov1")}

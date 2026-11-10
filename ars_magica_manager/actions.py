@@ -174,7 +174,9 @@ class NodeKind(StrEnum):
     LABORATORY = "laboratory"
     SAGA_CONTENT = "saga_content"
     SEASONS = "seasons"
-    BOOK_GROUP = "book_group"
+    #: The saga's stores (stores.py): every book, every enchanted device.
+    ARMARIUM = "armarium"
+    CUSTODIA = "custodia"
     REGION = "region"
     TRIBUNAL = "tribunal"
     NEIGHBOUR_GROUP = "neighbour_group"

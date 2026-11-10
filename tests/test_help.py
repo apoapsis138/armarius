@@ -149,6 +149,8 @@ SHEETS = {
     "bestiary": "_bestiary_view",
     "creature": "_creature_sheet_view",
     "conflicts": "_conflicts_view",
+    "armarium": "_store_view",
+    "custodia": "_store_view",
 }
 
 
@@ -629,6 +631,7 @@ GUIDES = [
     "guide-reveal",
     "guide-troupe-storyguides",
     "guide-find-record",
+    "guide-store-find",
     "guide-sessions",
 ]
 

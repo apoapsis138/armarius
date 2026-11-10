@@ -97,11 +97,16 @@ def _give_book(saga: Saga, source: Holder, thing: Any, count: int, to: Holder) -
 def _give_device(
     saga: Saga, source: Holder, thing: Any, count: int, to: Holder
 ) -> None:
-    epitome = next((b for b in saga.books if b.device_id == thing.id), None)
+    _hand_device(saga, thing, to)
+
+
+def _hand_device(saga: Saga, device: Any, to: Holder) -> None:
+    """`to` holds `device` now; a talisman keeps its mark."""
+    epitome = next((b for b in saga.books if b.device_id == device.id), None)
     if epitome is not None:
         # An epitome is a book: the book and its codex go with it.
         bk.set_owner(saga, epitome, kind_of(to), to.id)
-    thing.holder_kind, thing.holder_id = kind_of(to), to.id
+    device.holder_kind, device.holder_id = kind_of(to), to.id
 
 
 def _give_gear(saga: Saga, source: Holder, thing: Any, count: int, to: Holder) -> None:
@@ -195,9 +200,10 @@ def _label(holder: Holder) -> str:
     return f"{holder.name} ({holder.type})"
 
 
-def receivers(saga: Saga, kind: str, source: Holder) -> list[Holder]:
-    """Everyone in the saga who can take `kind` from `source`: the
-    covenants, their laboratories, then the characters, in any covenant."""
+def receivers(saga: Saga, kind: str, source: Holder | None) -> list[Holder]:
+    """Everyone in the saga who can take `kind` from `source` (None: an
+    unassigned book or device, from nobody): the covenants, their
+    laboratories, then the characters, in any covenant."""
     takes = GIVERS[kind].takes
     found: list[Holder] = [*saga.covenants, *saga.laboratories, *saga.characters]
     return [h for h in found if h is not source and takes(h)]
@@ -233,12 +239,16 @@ def _write(saga: Saga, holder: Holder, text: str, kind: str, pounds: int) -> Non
 
 
 def _record(
-    saga: Saga, kind: str, source: Holder, to: Holder, what: str, count: int
+    saga: Saga, kind: str, source: Holder | None, to: Holder, what: str, count: int
 ) -> None:
-    """Both sides' Diary lines (vis.move writes its own)."""
+    """Both sides' Diary lines (vis.move writes its own); only the
+    receiver's for what nobody held."""
     if kind == VIS:
         return
     pounds = count if kind == SILVER else 0
+    if source is None:
+        _write(saga, to, f"Received {what}", kind, pounds)
+        return
     _write(saga, source, f"Gave {what} to {to.name}", kind, -pounds)
     _write(saga, to, f"Received {what} from {source.name}", kind, pounds)
 
@@ -246,10 +256,10 @@ def _record(
 # --------------------------------------------------------------------- give
 
 
-def problem(kind: str, source: Holder, thing: Any, count: int) -> str | None:
+def problem(kind: str, source: Holder | None, thing: Any, count: int) -> str | None:
     """Why `count` can't be given, or None."""
     giver = GIVERS[kind]
-    if giver.most is None:
+    if giver.most is None or source is None:
         return None
     most = giver.most(source, thing)
     if count < 1:
@@ -260,66 +270,106 @@ def problem(kind: str, source: Holder, thing: Any, count: int) -> str | None:
 
 
 def give_now(
-    saga: Saga, kind: str, source: Holder, thing: Any, count: int, to: Holder
+    saga: Saga, kind: str, source: Holder | None, thing: Any, count: int, to: Holder
 ) -> str:
     """Give `count` of `thing` (all of it, for what is given whole) from
-    `source` to `to`, with both Diaries' lines; what was given, in words."""
+    `source` (None: an unassigned book or device) to `to`, with the
+    Diaries' lines; what was given, in words."""
     giver = GIVERS[kind]
     what = giver.words(thing, count)
-    giver.move(saga, source, thing, count, to)
+    if source is not None:
+        giver.move(saga, source, thing, count, to)
+    elif kind == BOOK:
+        bk.set_owner(saga, thing, kind_of(to), to.id)
+    elif kind == DEVICE:
+        _hand_device(saga, thing, to)
+    else:
+        raise ValueError(f"Only a book or a device can be given from nobody: {kind}.")
     _record(saga, kind, source, to, what, count)
     return what
 
 
 class Gift(NamedTuple):
-    """What Give would give: the kind of thing, who gives it and the thing
-    itself (None for silver)."""
+    """What Give would give: the kind of thing, who gives it (None for an
+    unassigned book or device) and the thing itself (None for silver)."""
 
     kind: str
-    source: Holder
+    source: Holder | None
     thing: Any = None
 
 
 def gift(saga: Saga, kind: str, shown: Holder | None, thing: Any = None) -> Gift | None:
     """The Gift of `thing` from the record on show (`shown`): a book from
     whoever owns it and a device from whoever holds it, wherever it is
-    listed; None when nobody does."""
+    listed, or from nobody when it is unassigned; anything else from
+    `shown` (None when nothing is on show)."""
     if kind == BOOK:
-        source = library.owner_record(saga, thing)
-    elif kind == DEVICE:
+        return Gift(kind, library.owner_record(saga, thing), thing)
+    if kind == DEVICE:
         source = vis.find_holder(saga, thing.holder_kind or "", thing.holder_id)
-    else:
-        source = shown
-    return Gift(kind, source, thing) if source is not None else None
+        return Gift(kind, source, thing)
+    return Gift(kind, shown, thing) if shown is not None else None
 
 
-def blocked(saga: Saga, kind: str, source: Holder, thing: Any = None) -> str | None:
+def blocked(
+    saga: Saga, kind: str, source: Holder | None, thing: Any = None
+) -> str | None:
     """Why `source` can't give `thing` now, or None."""
     giver = GIVERS[kind]
-    if not giver.takes(source):
+    if source is None:
+        if kind not in (BOOK, DEVICE):
+            return "Nobody holds this: give it an owner first."
+    elif not giver.takes(source):
         return f"{escape(source.name)} holds no {giver.noun}."
-    if giver.most is not None and giver.most(source, thing) < 1:
+    elif giver.most is not None and giver.most(source, thing) < 1:
         return f"{escape(source.name)} has none to give."
     if not receivers(saga, kind, source):
         return f"Nobody else in the saga can take {giver.noun}."
     return None
 
 
-def give(saga: Saga, kind: str, source: Holder, thing: Any = None) -> Command:
+def codex_words(saga: Saga, kind: str, thing: Any) -> str:
+    """For a book bound in a codex with others: that the whole codex goes
+    with it ("" otherwise)."""
+    if kind != BOOK:
+        return ""
+    codex = library.codex_of(saga, thing)
+    mates = bk.codex_books(saga, thing)
+    if codex is None or len(mates) < 2:
+        return ""
+    return f"Bound in {codex.name}: its {len(mates)} books go together."
+
+
+def give(saga: Saga, kind: str, source: Holder | None, thing: Any = None) -> Command:
     """Give `thing` (a vis.Held, a Book, an EnchantedDevice, a gear
     Possession; nothing for silver) from `source` to another record: who
-    gets it and, for vis, gear and silver, how many."""
+    gets it and, for vis, gear and silver, how many. An unassigned book or
+    device (`source` None) is given from nobody: only its receiver's
+    Diary records it."""
     giver = GIVERS[kind]
     reason = blocked(saga, kind, source, thing)
     if reason is not None:
         return Refuse("Give Silver" if kind == SILVER else "Give Away", reason)
-    most = giver.most(source, thing) if giver.most is not None else None
+    most = (
+        giver.most(source, thing)
+        if giver.most is not None and source is not None
+        else None
+    )
     choices = receivers(saga, kind, source)
     shown = giver.words(thing, most or 1)
+    codex = codex_words(saga, kind, thing)
 
     def fields() -> list[DialogField]:
         found = [
-            DialogField("_what", "From", "info", f"{source.name} ({shown})"),
+            DialogField(
+                "_what",
+                "From",
+                "info",
+                f"{source.name} ({shown})"
+                if source is not None
+                else f"Unassigned ({shown})",
+            ),
+            *([DialogField("_codex", "Codex", "info", codex)] if codex else []),
             DialogField(
                 "to",
                 "To",
@@ -329,7 +379,9 @@ def give(saga: Saga, kind: str, source: Holder, thing: Any = None) -> Command:
                 required=True,
                 allow_blank=True,
                 placeholder="(choose who gets it)",
-                hint="Both sides' Diaries record the gift.",
+                hint="Both sides' Diaries record the gift."
+                if source is not None
+                else "The receiver's Diary records it.",
             ),
         ]
         if most is not None:

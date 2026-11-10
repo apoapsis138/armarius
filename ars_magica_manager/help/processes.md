@@ -1083,7 +1083,7 @@ Brings records into the saga from files. Open it from **Import** in the saga pag
 - **A Whole Saga**: a file written by **Export Saga**. Every covenant, laboratory, character and familiar in it is added beside this saga's own, with their books and devices and the saga's own spells and house rules, as importing each record would; so are its places, neighbours and calendar entries, and its Tribunals, joined to this saga's own of the same name.
 - **A Content Pack**: a file written by **Export Pack**. Its Tribunals, covenants, characters, places, neighbours and calendar entries are added, except those this saga already has one of the same name of: those are kept as they are, and the pack's links to them go to this saga's own. See [Content packs](help:export-pack).
 - **A Mystery Cult**: a file written by **Export a Cult**. The cult, its Lore, degrees, Scripts and components, joins this saga's own cults on Saga Content; one of a name this saga has already is marked "(imported)", and its founder, a character of the other saga, isn't kept.
-- **Books**: a CSV file with a header row. Columns, in any order and any case: name, type, language, author, year_published, description, art, ability, level, quality, tractatus_type, spell, codex, encyclopedia, opus and physical_form; name and type are needed. Rows with the same codex are bound together in one new codex of that name, an encyclopedia when its rows' encyclopedia column says yes. A tractatus's opus can be commentary or correspondence; physical_form is one of exemplar, flap-bound, juvenilia, edition de luxe, treasure-bound, ex libris, holographic, huge codex, unbound or damaged. A level or quality of "var" means the figure is to be set later: the book is imported, highlighted until you edit it to give its numbers, and can't be studied until then. Books imported here go to Unassigned Books.
+- **Books**: a CSV file with a header row. Columns, in any order and any case: name, type, language, author, year_published, description, art, ability, level, quality, tractatus_type, spell, codex, encyclopedia, opus and physical_form; name and type are needed. Rows with the same codex are bound together in one new codex of that name, an encyclopedia when its rows' encyclopedia column says yes. A tractatus's opus can be commentary or correspondence; physical_form is one of exemplar, flap-bound, juvenilia, edition de luxe, treasure-bound, ex libris, holographic, huge codex, unbound or damaged. A level or quality of "var" means the figure is to be set later: the book is imported, highlighted until you edit it to give its numbers, and can't be studied until then. Books imported here go to [the Armarium](help:armarium), unassigned.
 <!-- tui -->
 From a covenant's **Library** tab, More's Import puts them straight into that covenant's library instead.
 <!-- /tui -->
@@ -1248,7 +1248,13 @@ It asks who gets it and, for vis
 and gear, how many. A book changes owner and a device changes holder (a
 device's epitome goes with it); gear given in part is split, so both keep
 some. Vis goes to a covenant, a laboratory or a magus; a laboratory takes
-no gear or silver.
+no gear or silver. A book bound in a codex takes its whole codex, and the
+form says so.
+
+In [the Armarium](help:armarium) and [the Custodia Mirabilium](help:custodia),
+Give hands any book or device on: one already held as above, one nobody
+holds (Unassigned) to its first holder, with only the receiver's Diary
+recording it.
 
 **Give Silver** gives pounds of silver from a character's purse (on
 Personal Gear) or a covenant's Wealth to another character or covenant,
@@ -1274,7 +1280,7 @@ reads an export of that same record over it: for example after working on a char
 
 What it replaces: the record's own contents, and what travels with it in an export (a character's familiar, devices and books; a laboratory's or covenant's books and devices). What it keeps: the record itself, so everything that points at it still does, and where it sits in this saga (a character's covenant and laboratory, a laboratory's covenant and owner). A covenant's file made with its laboratories and characters updates the covenant only; update each of them from its own export.
 
-**See also:** [Import Spells](help:import-spells), [Unassigned Books](help:unassigned-books), [The saga](help:saga), [How to import and export](help:guide-import-export)
+**See also:** [Import Spells](help:import-spells), [The Armarium](help:armarium), [The saga](help:saga), [How to import and export](help:guide-import-export)
 
 # Import a Content Pack
 <!-- help: import-pack -->

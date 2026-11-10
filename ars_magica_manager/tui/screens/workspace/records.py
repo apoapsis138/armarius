@@ -26,6 +26,7 @@ from .... import (
     ruins,
     saga_index,
     storage,
+    stores,
     story_chapters,
     storyguides,
     threats,
@@ -688,6 +689,9 @@ class RecordActions(WorkspaceBase):
             if node_kind is not None
             else None
         )
+        if kind in stores.STORES:
+            # A store (Find's book or device): its leaf.
+            node = _tree_node_with_data(tree, (NodeKind(kind),))
         if node is None:
             self.notify("That record isn't in the saga's tree.", severity="warning")
             return False

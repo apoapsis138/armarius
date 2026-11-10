@@ -68,6 +68,8 @@ SHEETS = {
     "seasons",
     "bestiary",
     "creature",
+    "armarium",
+    "custodia",
 }
 
 
@@ -188,7 +190,7 @@ async def _reopen(pilot, workspace: WorkspaceScreen, node: str) -> None:
     out of it."""
     _keep_focus_out(workspace)
     workspace.set_focus(None)
-    await _show_node(pilot, workspace, "book_group" if node == "saga" else "saga")
+    await _show_node(pilot, workspace, "conflicts" if node == "saga" else "saga")
     await _show_node(pilot, workspace, node)
 
 

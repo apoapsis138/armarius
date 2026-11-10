@@ -65,6 +65,7 @@ from .. import (
     saga_index,
     seat,
     storage,
+    stores,
     storyguides,
     title_page,
     undo_season,
@@ -149,6 +150,7 @@ from .saga_content import SagaContentPage
 from .season_panel import SeasonPanel
 from .seasons import SeasonsPage
 from .sessions_section import sessions_section
+from .stores import SPOT_LISTS, StorePage
 from .style import gilding, snapping
 from .style.frame import (
     MAXIMISE,
@@ -189,6 +191,8 @@ from .worksheet import WorksheetPage
     CREATURE,
     FIGHT,
     SIEGE,
+    ARMARIUM,
+    CUSTODIA,
 ) = (
     "shelf",
     "saga",
@@ -205,6 +209,9 @@ from .worksheet import WorksheetPage
     "creature",
     "fight",
     "siege",
+    # The saga's stores: a Place's kind is the store's key (stores.STORES).
+    stores.ARMARIUM,
+    stores.CUSTODIA,
 )
 
 #: The settings gear's entries.
@@ -237,6 +244,8 @@ _HELP_IDS = {
     CREATURE: ["creature"],
     FIGHT: ["fights", "conflicts"],
     SIEGE: ["sieges", "conflicts"],
+    ARMARIUM: [stores.ARMARIUM],
+    CUSTODIA: [stores.CUSTODIA],
 }
 
 #: The prefix of each page's tab topics; a character's are the plain
@@ -338,6 +347,7 @@ SPOT_CHAPTERS: dict[tuple[str, str], str] = {
     ("characters", saga_index.BOOKS): "Inventory",
     ("characters", saga_index.DEVICES): "Inventory",
     ("characters", saga_index.SPELLS): "Hermetic Magic",
+    **{(key, listed): stores.STORES[key].heading for key, listed in SPOT_LISTS.items()},
 }
 
 
@@ -1184,6 +1194,10 @@ class MainWindow(QMainWindow):
     def open_ref(self, found: references.Ref) -> None:
         """Open the record a link on a page names, below the page on show,
         so Back returns to it."""
+        if found.kind in stores.STORES:
+            # Find's book or device: the store, at its row.
+            self.open_store(found.kind)
+            return
         kind = _REF_PLACES.get(found.kind)
         if self.saga is None or kind is None:
             return
@@ -1224,6 +1238,11 @@ class MainWindow(QMainWindow):
     def open_content(self) -> None:
         """Open the saga's Saga Content, below the saga."""
         self.go([Place(SHELF), Place(SAGA), Place(CONTENT)])
+
+    def open_store(self, key: str) -> None:
+        """Open the Armarium or the Custodia Mirabilium (`key`, a
+        stores.STORES key), below the saga."""
+        self.go([Place(SHELF), Place(SAGA), Place(key)])
 
     def open_familiar(self, familiar_id: str) -> None:
         """Open a familiar's page, below its magus."""
@@ -1618,37 +1637,42 @@ class MainWindow(QMainWindow):
             seat.show(self.saga, record)
         return self._build_page(place)
 
+    def _shelf_page(self, p: Palette) -> QWidget:
+        """The saga shelf: every saga that opens, and a word on those that
+        don't."""
+        sagas, unreadable = [], []
+        for saga_id in self.saga_ids:
+            try:
+                sagas.append(storage.load_saga(saga_id))
+            except (OSError, ValueError) as problem:
+                unreadable.append(storage.unreadable_note(saga_id, problem))
+        if unreadable:
+            # Said once the shelf is on show; the rest are listed.
+            said = "\n\n".join(unreadable)
+            QTimer.singleShot(0, lambda: self.tell("A Saga Can't Be Opened", said))
+        return SagaShelf(
+            sagas,
+            p,
+            self.open_saga,
+            self.new_saga,
+            self.delete_saga,
+            self.change_save_folder,
+            str(paths.data_dir()),
+            joined=JoinedShelf(
+                joined_games.listed(),
+                self.join_game,
+                self.rejoin,
+                self.leave_game,
+                self.change_passcode,
+            ),
+        )
+
     def _build_page(self, place: Place) -> QWidget:
         p, saga = self.palette_, self.saga
         if place.kind == HELP:
             return self._help_page()
         if place.kind == SHELF or saga is None:
-            sagas, unreadable = [], []
-            for saga_id in self.saga_ids:
-                try:
-                    sagas.append(storage.load_saga(saga_id))
-                except (OSError, ValueError) as problem:
-                    unreadable.append(storage.unreadable_note(saga_id, problem))
-            if unreadable:
-                # Said once the shelf is on show; the rest are listed.
-                said = "\n\n".join(unreadable)
-                QTimer.singleShot(0, lambda: self.tell("A Saga Can't Be Opened", said))
-            return SagaShelf(
-                sagas,
-                p,
-                self.open_saga,
-                self.new_saga,
-                self.delete_saga,
-                self.change_save_folder,
-                str(paths.data_dir()),
-                joined=JoinedShelf(
-                    joined_games.listed(),
-                    self.join_game,
-                    self.rejoin,
-                    self.leave_game,
-                    self.change_passcode,
-                ),
-            )
+            return self._shelf_page(p)
         if place.kind == SAGA:
             return self._saga_page(saga, p)
         if place.kind == FIGHT:
@@ -1663,6 +1687,8 @@ class MainWindow(QMainWindow):
             return SiegePage(saga, siege, p, self.run)
         if place.kind == CONTENT:
             return SagaContentPage(saga, p, self.run)
+        if place.kind in stores.STORES:
+            return StorePage(saga, stores.STORES[place.kind], p, self.run)
         if place.kind == TRIBUNAL:
             tribunal = saga.tribunal(place.id)
             if tribunal is None:
@@ -1865,6 +1891,8 @@ class MainWindow(QMainWindow):
             return saga.name
         if place.kind == CONTENT:
             return "Saga Content"
+        if place.kind in stores.STORES:
+            return stores.STORES[place.kind].title
         if place.kind == SEASONS:
             return "Seasons"
         if place.kind == HELP:
@@ -1936,6 +1964,8 @@ class MainWindow(QMainWindow):
                 HELP,
                 FIGHT,
                 SIEGE,
+                ARMARIUM,
+                CUSTODIA,
             )
         ):
             return None
@@ -2023,6 +2053,7 @@ class MainWindow(QMainWindow):
             p,
             self.open_covenant,
             open_content=self.open_content,
+            open_store=self.open_store,
             open_seasons=self.open_seasons,
             placer=self._placer(),
             open_character=self.show_character,

@@ -125,6 +125,14 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 4.4.0 — 2026-11-10
+
+### Book of Hours
+
+- **The Armarium and the Custodia Mirabilium.** Every book in the saga in one list, the Armarium (an armarius is a book closet, Covenants p. 92), and every enchanted device in another, the Custodia Mirabilium, "the keeping of wonders": each row says who holds it, or Unassigned, and a filter narrows them to one holder, the unassigned ones, or one type. Only the storyguide sees them: two cards beside Saga Content in Rules and Content on the desktop, two entries beside it in the terminal's tree. Add makes a book or device nobody holds, for the players to find; Give hands it to a covenant, laboratory or character, and only the receiver's Diary records a find. Delete names the holder of what it deletes. A book bound in a codex takes its whole codex with it, and a talisman keeps its mark wherever it goes. They replace the terminal's Unassigned Books, marking several books to give them one owner included.
+- **A device can be set down.** The enchanted device form offers "(none - unassigned)" as its holder, as the book form does.
+- **Find opens the stores.** The storyguide's Find opens every book and device at its row in the Armarium or the Custodia, held or not. A player's Find still opens the holder's page and lists nothing nobody holds.
+
 ## 4.3.1 — 2026-11-10
 
 ### Fundamenta

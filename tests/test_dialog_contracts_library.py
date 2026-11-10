@@ -51,6 +51,36 @@ CONTRACTS: dict[str, Contract] = {
         ],
         shown={"#section-lib-books-list": "Scrolls"},
     ),
+    # The Armarium's Add: the book form, its owner none.
+    "armarium add book": Contract(
+        prefill={"Name": "", "Type": Select.NULL, "Owner": ""},
+        edits={
+            "Name": "Found Folio",
+            "Type": "Tractatus",
+            "Subject": "Art",
+            "Art": "Ignem",
+            "Quality": "7",
+        },
+        saved=lambda s: [
+            (b.owner_kind, b.owner_id) for b in s.books if b.name == "Found Folio"
+        ],
+        expected=[(None, None)],
+        invalid={"Name": ""},
+        shown={"#armarium-list": "Found Folio"},
+    ),
+    # The Custodia's Add: the device form, its holder none.
+    "custodia add device": Contract(
+        prefill={"Name": "", "Holder": ""},
+        edits={"Name": "Buried Wand"},
+        saved=lambda s: [
+            (d.holder_kind, d.holder_id)
+            for d in s.enchanted_devices
+            if d.name == "Buried Wand"
+        ],
+        expected=[(None, None)],
+        invalid={"Name": ""},
+        shown={"#custodia-list": "Buried Wand"},
+    ),
     "add book into a codex": Contract(
         prefill={"Name": "", "Codex": Select.NULL, "Owner": "covenant:cov1"},
         edits={

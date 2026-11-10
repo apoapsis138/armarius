@@ -355,6 +355,11 @@ STORYGUIDE_ONLY: frozenset[str] = frozenset(
         # cults and spells stay public (a player can't change them).
         "tab-content-players",
         "section-players",
+        # The Armarium and the Custodia Mirabilium (stores.py): every book
+        # and device, the unassigned ones the storyguide keeps for the
+        # players to find among them.
+        "section-armarium",
+        "section-custodia",
     }
 )
 

@@ -10,9 +10,9 @@ from textual.widgets import (
     Tree,
 )
 
-from .... import books as bk
 from .... import (
     neighbours,
+    stores,
     viewing,
 )
 from ....actions import (
@@ -20,13 +20,13 @@ from ....actions import (
 )
 from ..sheets import (
     BestiarySheetView,
-    BookListView,
     ConflictsSheetView,
     CreatureSheetView,
     RegionSheetView,
     SagaContentSheetView,
     SeasonsSheetView,
 )
+from ..sheets.stores import StoreSheetView
 from ..widgets import (
     SelectableList,
     SheetSection,
@@ -54,6 +54,7 @@ class NavigationActions(WorkspaceBase):
         self._creature_sheet_view = None
         self._conflicts_view = None
         self._seasons_view = None
+        self._store_view = None
 
         handler = self._NODE_SELECTED.get(kind)
         if handler is not None:
@@ -201,16 +202,14 @@ class NavigationActions(WorkspaceBase):
         self.selected_tribunal = tribunal
         await self._show_tribunal_detail(tribunal)
 
-    async def _select_book_group(self, ident: str | None) -> None:
+    async def _select_store(self, _ident: str | None) -> None:
+        """The Armarium or the Custodia Mirabilium (the node's kind is the
+        store's key)."""
         self.selected_covenant = None
-        await self._set_detail(
-            BookListView(
-                self.saga,
-                lambda: bk.unassigned_books(self.saga),
-                section_id="section-unassigned-books",
-                title="Unassigned Books",
-            )
-        )
+        view = StoreSheetView(self.saga, stores.STORES[self.selected_kind.value])
+        await self._set_detail(view)
+        self._store_view = view
+        self._focus_first_section(initial=True)
 
     #: The handler for each kind of tree node (Strategy, as a table).
     _NODE_SELECTED: ClassVar[
@@ -225,7 +224,8 @@ class NavigationActions(WorkspaceBase):
         NodeKind.LABORATORY: _select_laboratory,
         NodeKind.SAGA_CONTENT: _select_saga_content,
         NodeKind.SEASONS: _select_seasons,
-        NodeKind.BOOK_GROUP: _select_book_group,
+        NodeKind.ARMARIUM: _select_store,
+        NodeKind.CUSTODIA: _select_store,
         NodeKind.REGION: _select_region,
         NodeKind.TRIBUNAL: _select_tribunal,
         NodeKind.NEIGHBOUR_GROUP: _select_region,

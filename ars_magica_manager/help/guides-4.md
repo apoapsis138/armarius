@@ -318,12 +318,12 @@ The preview lists what will be added, the links kept and the links dropped. [Imp
 
 1. Make a CSV file with a header row. The columns are listed under [What can be imported](help:import-data-kinds); **name** and **type** are needed. The cost of each book is worked out by the app, so an owner or cost column is ignored.
 <!-- tui -->
-2. To import books with no owner, select the saga, press `m` (More), choose **Import**, then **Books**. They land in [Unassigned Books](help:unassigned-books), where you can mark several and give them an owner with `e`.
+2. To import books with no owner, select the saga, press `m` (More), choose **Import**, then **Books**. They land in [the Armarium](help:armarium), unassigned: choose Holder **Unassigned** there to list them, mark several with Space and give them an owner with `e`.
 3. To import books straight into a covenant's library, open the covenant's [Library tab](help:tab-cov-library) (`8`) instead, and press `m` (More) and choose **Import** there. [Go there](go:tab-cov-library)
 4. Choose the file. This picker starts in the folder the app was started from.
 <!-- /tui -->
 <!-- gui -->
-2. To import books with no owner, click **Import** in the saga page's **Saga Management** chapter, then choose **Books**. They land in the saga's unassigned books, which a new covenant can buy from on its Creation Worksheet. The desktop has no page for unassigned books yet: to give them an owner, use the terminal version.
+2. To import books with no owner, click **Import** in the saga page's **Saga Management** chapter, then choose **Books**. They land in [the Armarium](help:armarium), unassigned, where a new covenant can buy from them on its Creation Worksheet. To give them an owner, open the Armarium from the saga page's **Rules and Content** and use **Give** on a book, or **Change Owner** for several at once.
 3. To import books straight into a covenant's [library](help:tab-cov-library), open the covenant's page and click **Import** on its Library.
 4. Choose the file in the Open window, which starts in the folder the app was started from.
 <!-- /gui -->
@@ -362,7 +362,7 @@ Each saga is saved as one file, the saga's id followed by `.json`, in the `sagas
 - To keep a single character, laboratory or covenant safe before a big change, export it as above.
 - Every saga file, export and pack is checked as it is read: a field holding the wrong kind of thing (a file edited by hand, or damaged) is named, and the saga isn't opened, nor changed. Copy a backup over its file to go back to before the damage.
 
-**See also:** [Import Data](help:import-data), [Import Spells](help:import-spells), [Unassigned Books](help:unassigned-books), [Library tab](help:tab-cov-library), [House Rules](help:tab-content-house-rules), [The saga](help:saga), [Advancing a season](help:advance-season)
+**See also:** [Import Data](help:import-data), [Import Spells](help:import-spells), [The Armarium](help:armarium), [Library tab](help:tab-cov-library), [House Rules](help:tab-content-house-rules), [The saga](help:saga), [Advancing a season](help:advance-season)
 
 # How to host a saga for your troupe
 <!-- help: guide-hosting -->
@@ -1593,11 +1593,55 @@ The troupe meets Gottfried of Arnsberg again, and you need his page now.
    everything there, a Tribunal ("Rhine") for what lies in its lands, or
    a member's name for the factions they belong to. The reason shows
    beside each such match.
-5. **Find a book, spell or device.** Type its name: it opens the page of
-   whoever holds it (the magus who knows a spell), at its row, ready
-   for Edit or More.
+5. **Find a book, spell or device.** Type its name: a spell opens the
+   page of the magus who knows it, at its row. For the storyguide, a
+   book opens [the Armarium](help:armarium) and a device
+   [the Custodia Mirabilium](help:custodia), at its row, held or
+   unassigned; for a player, it opens the page of whoever holds it, and
+   one nobody holds isn't listed.
 
 **See also:** [Find](help:find)
+
+# How to make a book or device for the players to find
+<!-- help: guide-store-find -->
+
+The magi will break into the ruined tower next session, and in it waits a
+summa on Ignem and a wand nobody has held for a century.
+
+<!-- tui -->
+1. **Make the book.** Choose **The Armarium** in the tree and press `a`.
+   Fill in the book form as for any book; its Owner starts at
+   "(none - unassigned)", so it waits here, held by nobody.
+2. **Make the device.** Choose **The Custodia Mirabilium** and press `a`.
+   Its Holder starts at "(none - unassigned)". Add its effects later, once
+   someone holds it, from that holder's Enchanted Devices.
+3. **Keep track of what waits.** Set the Holder filter to **Unassigned**
+   to list only what nobody holds.
+4. **When the players find it,** choose its row and press `m` (More),
+   **Give**, and choose who takes it: the covenant's library, a
+   laboratory or the magus who carried it home. Their Diary records it.
+<!-- /tui -->
+<!-- gui -->
+1. **Make the book.** In the saga page's **Rules and Content**, open
+   **The Armarium** and click **Add**. Fill in the book form as for any
+   book; its Owner starts at "(none - unassigned)", so it waits here,
+   held by nobody.
+2. **Make the device.** Open **The Custodia Mirabilium** and click
+   **Add**. Its Holder starts at "(none - unassigned)". Add its effects
+   later, once someone holds it, from that holder's Enchanted Devices.
+3. **Keep track of what waits.** Set the Holder filter to **Unassigned**
+   to list only what nobody holds.
+4. **When the players find it,** choose its row and click **Give**, and
+   choose who takes it: the covenant's library, a laboratory or the
+   magus who carried it home. Their Diary records it.
+<!-- /gui -->
+
+Neither list is shown to the players, and their Find doesn't list what
+nobody holds, so nothing gives the find away early. A talisman found
+keeps its Talisman mark: whether it can serve its finder is the troupe's
+call (see [the Custodia Mirabilium](help:section-custodia)).
+
+**See also:** [The Armarium](help:armarium), [The Custodia Mirabilium](help:custodia), [Give](help:give)
 
 # How to plan and record a Session
 <!-- help: guide-sessions -->

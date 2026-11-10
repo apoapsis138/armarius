@@ -143,7 +143,12 @@ async def _player_view_text(saga: Saga, node: str) -> str:
         return "\n".join(await _all_tabs(pilot, app, workspace))
 
 
-@pytest.mark.parametrize("node", sorted(NODES))
+#: The sheets a player never sees (viewing.STORYGUIDE_ONLY): no node in
+#: Player view's tree.
+STORYGUIDE_NODES = ("armarium", "custodia")
+
+
+@pytest.mark.parametrize("node", sorted(n for n in NODES if n not in STORYGUIDE_NODES))
 async def test_every_sheet_reads_the_same_from_the_copy(node: str):
     whole = await _player_view_text(hidden_saga(), node)
     copied = await _player_view_text(

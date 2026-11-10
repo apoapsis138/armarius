@@ -4,6 +4,7 @@ the saga's spells, players) and Books (every book list)."""
 from __future__ import annotations
 
 from collections.abc import Callable
+from functools import partial
 from typing import Any
 
 from textual.css.query import NoMatches
@@ -20,7 +21,7 @@ from ....markup import escape
 from ....models import (
     Book,
 )
-from ....sections import GOODS_SECTION
+from ....sections import ARMARIUM_SECTION, GOODS_SECTION
 from ..fields import FieldsDialog
 from ..forms import (
     _book_fields,
@@ -62,7 +63,6 @@ from .base import (
     NodeKind,
     WorkspaceBase,
     _SectionOps,
-    _tree_node_with_data,
 )
 
 
@@ -221,7 +221,7 @@ class LibraryActions(WorkspaceBase):
             then=confirm,
         )
 
-    # -- Books (Library tab, laboratory/character Books, Unassigned Books) --
+    # -- Books (Library tab, laboratory and character Books) --
 
     def _book_view(self) -> BookListView | None:
         """The book list showing in the detail pane, if any: the active
@@ -470,24 +470,71 @@ class LibraryActions(WorkspaceBase):
         run_steps(self.app, import_forms.import_data(self.saga, covenant), done)
 
     def _books_changed(self) -> None:
-        """After any book edit: re-render the book list on show, and keep the
-        tree's Unassigned Books node in step (it appears, changes count or goes
-        away as books lose and gain owners)."""
+        """After any book edit: re-render the book list on show (or the
+        store)."""
         # Every list on show: an edit can move a book between a laboratory's
         # Lab Texts and its other Books.
         for view in self._detail_pane().query(BookListView):
             view.rebuild()
-        tree = self._nav_tree()
-        node = _tree_node_with_data(tree, (NodeKind.BOOK_GROUP,))
-        count = len(bk.unassigned_books(self.saga))
-        if node is not None and count:
-            node.set_label(f"Unassigned Books ({count})")
-        elif node is not None:
-            node.remove()
-        elif count:
-            tree.root.add_leaf(
-                f"Unassigned Books ({count})", data=(NodeKind.BOOK_GROUP,)
+        store = self._store_view
+        if store is not None:
+            store.refresh_section(store.store.section)
+
+    # -- the Armarium: its marked books --
+
+    def _marked_in_store(self) -> list[Book]:
+        """The books marked (Space) in the Armarium on show."""
+        store = self._store_view
+        if store is None:
+            return []
+        return [item for item in store.marked() if isinstance(item, Book)]
+
+    def _edit_in_store(self) -> None:
+        """e in the Armarium: with books marked, give them one new owner;
+        else edit the chosen row."""
+        marked = self._marked_in_store()
+        if marked:
+            self._change_owner_of(marked)
+        else:
+            self._core_verb(ARMARIUM_SECTION, "edit")
+
+    def _remove_in_store(self) -> None:
+        """d in the Armarium: with books marked, delete them all after
+        confirming; else delete the chosen row."""
+        marked = self._marked_in_store()
+        if not marked:
+            self._core_verb(ARMARIUM_SECTION, "remove")
+            return
+        count = len(marked)
+
+        def handle_all(confirmed: bool | None) -> None:
+            if not confirmed:
+                return
+            for book in marked:
+                if book in self.saga.books:
+                    self.saga.books.remove(book)
+            bk.prune_codices(self.saga)
+            storage.save_saga(self.saga)
+            self._books_changed()
+
+        self.app.push_screen(
+            ConfirmScreen(
+                f"Are you sure you want to delete {count} "
+                f"book{'s' if count != 1 else ''}?"
+            ),
+            handle_all,
+        )
+
+    def _store_section_ops(self) -> dict[str, _SectionOps]:
+        """The Armarium's a / d / e: the core's, but e and d act on its
+        marked books first (see _edit_in_store)."""
+        return {
+            ARMARIUM_SECTION: _SectionOps(
+                partial(self._core_verb, ARMARIUM_SECTION, "add"),
+                self._remove_in_store,
+                self._edit_in_store,
             )
+        }
 
     def _library_section_ops(self) -> dict[str, _SectionOps]:
         """a / d / e on the saga's own sections and the library's (see

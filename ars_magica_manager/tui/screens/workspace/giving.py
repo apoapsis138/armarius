@@ -32,6 +32,11 @@ class GivingActions(CreationActions):
     def _to_give(self) -> giving.Gift | None:
         section = self._active_section()
         kind = GIVE_SECTIONS.get(section or "")
+        store = self._store_view
+        if kind is not None and store is not None and section == store.store.section:
+            # A store's row, held by anyone or by nobody.
+            thing = store.chosen()
+            return giving.gift(self.saga, kind, None, thing) if thing else None
         shown = self._shown_holder()
         if section is None or kind is None or shown is None:
             return None

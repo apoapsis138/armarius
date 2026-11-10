@@ -46,11 +46,13 @@ def follower(run: Run) -> Callable[[Ref], None]:
 def give_verb(
     saga: Saga,
     kind: str,
-    shown: giving.Holder,
+    shown: giving.Holder | None,
     things: Callable[[], Sequence[object]],
 ) -> RowVerb:
     """Give: the chosen row's thing (row `i` is `things()[i]`, of
-    giving's `kind`) to another record, offered while it can be given."""
+    giving's `kind`) to another record, offered while it can be given.
+    `shown` is the record whose page lists it (None on a store's page,
+    where a book or device is given from whoever holds it, or nobody)."""
 
     def gift(row: int) -> giving.Gift | None:
         listed = things()
