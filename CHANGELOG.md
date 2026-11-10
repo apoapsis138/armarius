@@ -125,6 +125,12 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 4.3.1 — 2026-11-10
+
+### Fundamenta
+
+- **Four more working guides for Claude.** The project now carries guides for test-first work (expected values for a rule come from the books, not from the app), for researching a question with cited notes (rules from the books), for writing a feature's spec under its Feature, and for splitting a spec into stories on the board. They change nothing in the app.
+
 ## 4.3.0 — 2026-11-10
 
 ### Pagina
