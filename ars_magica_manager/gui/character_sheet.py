@@ -157,6 +157,7 @@ from .menus import Placer
 from .pages import action_rows, card_grid, familiar_card
 from .research import research_chapter
 from .style.ornaments import FleuronRule
+from .style.pieces import heading as heading_font
 from .themes import Palette
 from .timeline import Calendar, legend, season_text
 from .widgets import (
@@ -681,7 +682,7 @@ class XpTable(QTreeView):
         self.selectionModel().currentRowChanged.connect(self._chosen)
 
     def group(self, title: str) -> QStandardItem:
-        head = _item(title, font=serif(13, caps=True, bold=True))
+        head = _item(title, font=heading_font(13, self.p, caps=True))
         head.setForeground(QBrush(QColor(self.p["heading"])))
         head.setSelectable(False)
         self.model_.appendRow(head)

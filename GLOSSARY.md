@@ -470,6 +470,28 @@ _Avoid_: Actions menu, overflow
 The menu of what can be created from where the user is.
 _Avoid_: Create menu
 
+**Theme**:
+The look the desktop app is drawn in: its colours, paper, ornament and
+heading type. Scriptorum and Scriptorum Dark are themes; so is each House
+theme.
+_Avoid_: Skin, palette (which is only a theme's colours)
+
+**House family**:
+One of the three groups the Houses fall into (True Lineages, Mystery Cults,
+Societates), seen in the app as the shared form of their House themes:
+frame, corners, rules and heading type.
+_Avoid_: House type, category, lineage
+
+**House theme**:
+A theme for one House, built on its House family's form, in the House's
+own colours, mark and texture, and in one mood, light or dark.
+_Avoid_: House skin, House palette
+
+**Settings window**:
+The window the settings gear opens, holding the theme and the app's other
+settings.
+_Avoid_: Preferences, options, settings menu
+
 ### Building the app
 
 **Feature**:
@@ -569,6 +591,16 @@ fight one another or rule the mundanes. (DE p. 6)
 One of the twelve lineages or societies into which the Order is divided,
 all but Ex Miscellanea descended from one of its Founders. (DE p. 12)
 
+**True Lineage**:
+One of the four Houses (Bonisagus, Guernicus, Mercere, Tremere) made up
+only of magi trained in an unbroken line from its founder, so none can
+join it later. (DE p. 12)
+
+**Societas**:
+One of the four Houses (Ex Miscellanea, Flambeau, Jerbiton, Tytalus) that
+gather magi of common interests, which a magus may join fairly easily
+after training; plural Societates. (DE p. 12)
+
 **Tribunal**:
 One of the thirteen regions into which the Order divides Mythic Europe,
 and the meeting of that region's magi, normally held every seven years.
@@ -596,8 +628,9 @@ _Avoid_: Guild (a mundane trade body)
 
 **Mystery Cult**:
 A body that teaches a mystery, a path to greater magical power gained by
-Initiation rather than study alone; four of the Houses are Mystery Cults.
-(DE p. 233)
+Initiation rather than study alone; four of the Houses (Bjornaer, Criamon,
+Merinita, Verditius) are Mystery Cults, joined by Initiation into the
+cult's Outer Mystery. (DE pp. 12, 233)
 
 **Initiation Script**:
 The written procedure, like a Lab Text, that a Mystagogue follows to

@@ -174,7 +174,7 @@ A covenant, laboratory or character still being made is In Creation: its page is
 - What the terminal keeps in its New and More menus is on the page itself: a New card at the end of the cards it adds to (**New Covenant**, **New Character**, **New Laboratory**), or a button in the chapter or section it acts on, such as **Give** beside a list's Add, Edit and Delete, **Set Up Research Library** on a covenant's Library or **Set Date** in the saga's Seasons chapter.
 - A record's **Manage** chapter holds what acts on the record as a whole: Export, Update from a File, Print to PDF, Show on Map (on the desktop, for a covenant, laboratory, neighbour or creature on one of the saga's maps: see [The Atlas](help:saga-atlas)) and Delete.
 - **Advance Season**, the card at the foot of the chapters on the left, shows the present season's medallion and date; click anywhere on it to advance the saga by one season, after asking first. It is on every page of a saga with chapters, but not on a Creation Worksheet, a Fight or a Siege. See [Advance Season](help:advance-season).
-- The **gear** at the right of the top bar, past a thin rule after Help, holds the app's own settings: switch the theme, turn the sounds on or off, and Reduce motion. A tick shows which are on.
+- The **gear** at the right of the top bar, past a thin rule after Help, opens the [Settings window](help:settings-window): the theme, the sounds and Reduce motion.
 - The **bookmark**, a ribbon at the right of the header of a character, covenant, laboratory, familiar, Tribunal, neighbour or creature, keeps that page on the saga's [The Troupe](help:saga-troupe) chapter; it fills in when the page is bookmarked, and a second click takes the bookmark out.
 - **Find**, just left of Help, or `Ctrl+F`, drops a box to type a name in and open that record, wherever it is in the saga. See [Find](help:find).
 - **Help**, or `?` or `F1`, opens Help on the page and chapter on show. `Esc` goes back a page (or cancels a form that is open), and `q` quits. See [Keys](help:keys).
@@ -184,15 +184,42 @@ A covenant, laboratory or character still being made is In Creation: its page is
 
 The Inspector, on the right of a record's page, shows whatever you last clicked on the page in full: a row, a card, a book, a spell.
 
-**Switch to**, in the gear's menu at the right of the top bar, switches between the two themes, Scriptorum (aged parchment and iron gall ink) and Scriptorum Dark (vellum by candlelight); it names the one it switches to. The desktop remembers your choice on this computer and opens in it next time.
+The theme, chosen in the [Settings window](help:settings-window) (the gear at the right of the top bar), is the look the whole app is drawn in: Scriptorum (aged parchment and iron gall ink), Scriptorum Dark (vellum by candlelight), or a House's own. The desktop remembers your choice on this computer and opens in it next time.
 
 While a saga is open, the headpiece band under the top bar carries the present season's medallion at its centre, drawn in the set the saga chooses (the saga's settings, Medallion style). The same medallions mark the seasons elsewhere: the Seasons page's title and each past season's heading, each season's column in Ahead (on the Seasons page and a covenant's Seasons chapter), a covenant's header (its own Covenant Season, beside its Magic Aura and Loyalty, with no words), the title of a covenant's Seasons chapter, a character's This Season, the column heads of a character's and a laboratory's calendar, and a siege's track. The present season's medallion glows. A figure drawn as a medallion, such as an aura or a Loyalty, takes the same set in its own colour. They change with the season when it is advanced, and with the set when the saga's settings change it.
 
-**Sounds**, in the gear's menu, turns the sounds on or off, and the app remembers which. Sounds are kept for moments that mean something: a page turning when you open a chapter (a longer one for a record or page), a quill when a form is saved, coins in a Treasury, a chest for the Inventory, a wax seal when the new season comes to the top of its dial, and a dull knock when an entry is refused. Plain button presses stay silent. While the sounds are on and Armarius is the active window, it keeps the audio device awake with silence, so Bluetooth speakers and headphones don't lose the start of each sound. The sounds play on Windows only.
+**Sounds**, in the Settings window, turns the sounds on or off, and the app remembers which. Sounds are kept for moments that mean something: a page turning when you open a chapter (a longer one for a record or page), a quill when a form is saved, coins in a Treasury, a chest for the Inventory, a wax seal when the new season comes to the top of its dial, and a dull knock when an entry is refused. Plain button presses stay silent. While the sounds are on and Armarius is the active window, it keeps the audio device awake with silence, so Bluetooth speakers and headphones don't lose the start of each sound. The sounds play on Windows only.
 
-The pages move a little, never in your way: the Inspector's new item inks in on its gilt leaf as a sheen of light crosses it, a chosen row's gold wash spreads from the left with its leaf after it, a chapter fades in with a small slide, and an experience line that has moved since you last saw it (after Advance Season, or an edit) grows to its new length. When the season advances, a dial of the four seasons turns in the middle of the window to bring the new one to the top, then shows its medallion large with its name and year (a click or a key skips it); a wax seal is pressed on the page for a moment when a record is moved to In Play (its initial). **Reduce motion**, in the gear's menu, stills them: the pages change at once, with no dial and no seal; it shows ticked while it is on, and the app remembers your choice. Until you choose, it follows Windows' own Animation effects setting.
+The pages move a little, never in your way: the Inspector's new item inks in on its gilt leaf as a sheen of light crosses it, a chosen row's gold wash spreads from the left with its leaf after it, a chapter fades in with a small slide, and an experience line that has moved since you last saw it (after Advance Season, or an edit) grows to its new length. When the season advances, a dial of the four seasons turns in the middle of the window to bring the new one to the top, then shows its medallion large with its name and year (a click or a key skips it); a wax seal is pressed on the page for a moment when a record is moved to In Play (its initial). **Reduce motion**, in the Settings window, stills them: the pages change at once, with no dial and no seal; it shows ticked while it is on, and the app remembers your choice. Until you choose, it follows Windows' own Animation effects setting.
 
-**See also:** [The saga](help:saga), [Saga Content](help:saga-content), [Seasons](help:seasons), [Getting started](help:guide-getting-started)
+**See also:** [The saga](help:saga), [Saga Content](help:saga-content), [Seasons](help:seasons), [Getting started](help:guide-getting-started), [The Settings window](help:settings-window)
+
+### The Settings window
+<!-- help: settings-window; gui -->
+
+The gear at the right of the top bar opens the Settings window. It stays open beside the page while you go on working; close it with **Close** or its title bar's close button, and the gear brings it back.
+
+- **Theme** lists every look the app can be drawn in. Scriptorum and Scriptorum Dark come first; the House themes follow, under their House family (True Lineages, Mystery Cults, Societates). Each row shows a small sample of its page, with the House's mark, and a few words on it. Click one and the whole app is drawn in it at once, the window included; there is nothing to confirm. A record In Creation is drawn on the theme's own drafting page, cooler and ruled. Printed pages stay in Scriptorum.
+- **Sounds** turns the app's sounds on or off.
+- **Reduce motion** stills the pages' movements, the season dial and the seal.
+
+A House theme draws the window, its pages and its windows in its House family's form, with the House's own colours, paper and mark:
+
+- **True Lineages** (Bonisagus, Guernicus, Mercere, Tremere): square-cut and Roman, a double rule round the page with square blocks at its corners, a key pattern through the band over the page, and headings in inscriptional capitals.
+- **Mystery Cults** (Bjornaer, Criamon, Merinita, Verditius): round and closed, a frame with rounded corners and a ring at each, chains of rings, and headings in uncials.
+- **Societates** (Ex Miscellanea, Flambeau, Jerbiton, Tytalus): angular, a frame with its corners cut off, chevrons, a row of swallow-tailed pennants in the House's colours hung from a cord across the band over the page, big titles (a sheet's name, a window's title) in blackletter and section headings in small capitals in the House's heading colour.
+
+The House's mark is a seal at the foot of the frame, in a gilt ring, and its sign alone shows faintly at the foot of the Inspector, as a watermark shows in a sheet held to the light; an illuminated initial takes the House's pigments. Text stays as easy to read as in Scriptorum: a texture is drawn fainter behind text and whole in the margins. The colours that mean something (a realm, a season's kind, Loyalty, an error or warning) and a coat of arms keep their colours in every theme.
+
+The House themes so far:
+
+- **Bonisagus** (True Lineages, light): clean vellum faintly ruled with compass-drawn circles, lapis ink and the crossed keys.
+- **Criamon** (Mystery Cults, dark): the violet dark of the Cave of Twisting Shadows, faintly marked with loops of the infinite, rings within rings and small spirals; bone-pale ink, lamp-amber headings and the Loop of the Infinite in the Eye of Time.
+- **Tytalus** (Societates, dark): Fudarus's storm-slate sky with rain driven across it and the House's spira of four turns struck again and again; headings and seal in Buliste's violet, a bright amethyst, and frame, rules and scroll bars in Harpax's green, a deep, dark verdigris, the two claimants' colours set against each other in lightness as well as hue, so they part even for red-green colourblind eyes. A name or a passage opens on a small illuminated initial: a burnished-gold letter on a ground quartered violet and green.
+
+The app remembers each choice on this computer.
+
+**See also:** [How to choose a theme](help:guide-themes), [The Inspector and the theme](help:workspace-status)
 
 # Find
 <!-- help: find -->

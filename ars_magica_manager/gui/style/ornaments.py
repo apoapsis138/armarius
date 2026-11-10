@@ -1,10 +1,10 @@
 """Printer's ornaments, the small pieces of art a printed book sets
-around its text: a headpiece band over every page, a hedera leaf opening
-each heading's rule, a tailpiece closing each chapter, and flourishes in
-a card's corners.
+around its text: a headpiece band over every page, a rule under each
+heading, a tailpiece closing each chapter, and an ornament in a card's
+corners.
 
-The leaves are EB Garamond's own fleurons (❦ ❧ ☙), so nothing new is
-bundled; the rules, lozenges and corners are drawn, in the palette's gilt.
+Each is drawn in its theme's look (families.py): Scriptorum's hedera
+leaves and gilt flourishes (flourish.py), or a House family's own form.
 """
 
 from __future__ import annotations
@@ -23,36 +23,32 @@ from PySide6.QtGui import (
 )
 from PySide6.QtWidgets import QPushButton, QWidget
 
-from ...style import fonts
 from ...style.palettes import Palette
+from . import liveries
+from .flourish import HEDERA, HEDERA_LEFT, HEDERA_RIGHT, fading, leaf
+from .flourish import alpha as _alpha
 
-HEDERA, HEDERA_LEFT, HEDERA_RIGHT = "❦", "☙", "❧"
+#: What other modules take from here.
+__all__ = [
+    "HEDERA",
+    "HEDERA_LEFT",
+    "HEDERA_RIGHT",
+    "FleuronButton",
+    "FleuronRule",
+    "Headpiece",
+    "InspectorFrame",
+    "ShortRule",
+    "Tailpiece",
+    "corner_flourishes",
+    "gloss_box",
+    "heading_family",
+    "ledger_entry",
+]
 
 
-def _alpha(colour: str, alpha: int) -> QColor:
-    c = QColor(colour)
-    c.setAlpha(alpha)
-    return c
-
-
-def _fading(colour: str, x0: float, x1: float, width: float) -> QPen:
-    """A pen in full colour at x0 that fades out by x1."""
-    fade = QLinearGradient(x0, 0, x1, 0)
-    fade.setColorAt(0, QColor(colour))
-    fade.setColorAt(0.7, _alpha(colour, 150))
-    fade.setColorAt(1, _alpha(colour, 0))
-    return QPen(QBrush(fade), width)
-
-
-def _leaf(painter: QPainter, x: float, y: float, leaf: str, size: float, colour: str):
-    """Draw a fleuron centred on (x, y); its width. The font sets its
-    fleurons low in the line, so they are raised to sit on the centre."""
-    painter.setFont(QFont(fonts.SERIF, round(size)))
-    painter.setPen(QColor(colour))
-    width = painter.fontMetrics().horizontalAdvance(leaf)
-    box = QRectF(x - width, y - size * 1.7, 2 * width, size * 3)
-    painter.drawText(box, Qt.AlignmentFlag.AlignCenter, leaf)
-    return width
+def heading_family(p: Palette) -> str:
+    """The headings' typeface in palette `p`'s theme."""
+    return liveries.look(p).heading_family
 
 
 class _Ornament(QWidget):
@@ -76,94 +72,48 @@ class _Ornament(QWidget):
 
 
 class FleuronRule(_Ornament):
-    """A heading's rule: a hedera leaf, then a double rule fading out."""
+    """A heading's rule: in Scriptorum, a hedera leaf, then a double rule
+    fading out."""
 
     def draw(self, painter: QPainter, width: float, cy: float):
-        gilt = self.p["accent"]
-        start = _leaf(painter, 9, cy, HEDERA_RIGHT, 13, gilt) + 13
-        painter.setPen(_fading(gilt, start, width * 0.8, 1.4))
-        painter.drawLine(QPointF(start, cy), QPointF(width * 0.8, cy))
-        painter.setPen(_fading(gilt, start, width * 0.55, 0.6))
-        painter.drawLine(QPointF(start, cy + 3), QPointF(width * 0.55, cy + 3))
+        liveries.look(self.p).heading_rule(painter, width, cy, self.p)
 
 
 class ShortRule(_Ornament):
-    """A short rule under a title: a hedera leaf, with a rule fading out
-    to each side."""
+    """A short rule under a title: in Scriptorum, a hedera leaf, with a
+    rule fading out to each side."""
 
     HEIGHT = 26
 
     def draw(self, painter: QPainter, width: float, cy: float):
-        gilt = self.p["accent"]
-        cx = width / 2
-        _leaf(painter, cx, cy, HEDERA, 15, gilt)
-        for side in (-1, 1):
-            near, far = cx + side * 18, cx + side * 210
-            painter.setPen(_fading(gilt, near, far, 1.2))
-            painter.drawLine(QPointF(near, cy), QPointF(far, cy))
+        liveries.look(self.p).short_rule(painter, width, cy, self.p)
 
 
 class Headpiece(_Ornament):
-    """The band over a page: a hedera between two leaves, and a double
-    rule set with lozenges running out to each side and fading."""
+    """The band over a page: in Scriptorum, a hedera between two leaves,
+    and a double rule set with lozenges running out to each side and
+    fading."""
 
     HEIGHT = 34
 
     def draw(self, painter: QPainter, width: float, cy: float):
-        gilt = self.p["accent"]
-        cx = width / 2
-        _leaf(painter, cx, cy, HEDERA, 24, gilt)
-        _leaf(painter, cx - 30, cy, HEDERA_LEFT, 16, gilt)
-        _leaf(painter, cx + 30, cy, HEDERA_RIGHT, 16, gilt)
+        liveries.look(self.p).headpiece_centre(painter, width, cy, self.p)
         self.band(painter, width, cy, 50)
 
     def band(self, painter: QPainter, width: float, cy: float, inner: float) -> None:
-        """The dots `inner` out from the centre, and past them the double
-        rule set with lozenges, running out to each side and fading."""
-        gilt = self.p["accent"]
-        cx = width / 2
-        for side in (-1, 1):
-            painter.setPen(Qt.PenStyle.NoPen)
-            painter.setBrush(QColor(gilt))
-            painter.drawEllipse(QPointF(cx + side * inner, cy), 2.2, 2.2)
-            near, far = cx + side * (inner + 10), cx + side * (width / 2 - 6)
-            painter.setPen(_fading(gilt, near, far, 1.3))
-            for dy in (-4, 4):
-                painter.drawLine(QPointF(near, cy + dy), QPointF(far, cy + dy))
-            painter.setPen(Qt.PenStyle.NoPen)
-            x = near
-            while (far - x) * side > 0:
-                left = 1 - abs(x - near) / abs(far - near)
-                painter.setBrush(_alpha(gilt, int(255 * left**1.2)))
-                lozenge = QPainterPath(QPointF(x, cy - 3))
-                lozenge.lineTo(x + 3, cy)
-                lozenge.lineTo(x, cy + 3)
-                lozenge.lineTo(x - 3, cy)
-                lozenge.closeSubpath()
-                painter.drawPath(lozenge)
-                x += side * 22
+        """The band running out to each side from `inner` beside the
+        centre."""
+        liveries.look(self.p).band(painter, width, cy, inner, self.p)
 
 
 class Tailpiece(_Ornament):
-    """A cul-de-lampe closing a chapter: three leaves narrowing to a
-    point, between two short rules."""
+    """A cul-de-lampe closing a chapter: in Scriptorum, three leaves
+    narrowing to a point, between two short rules."""
 
     HEIGHT = 60
 
     def draw(self, painter: QPainter, width: float, _cy: float):
-        gilt = self.p["accent"]
-        cx, top = width / 2, 14
-        painter.setPen(_fading(gilt, cx - 34, cx - 150, 1.0))
-        painter.drawLine(QPointF(cx - 150, top), QPointF(cx - 34, top))
-        painter.setPen(_fading(gilt, cx + 34, cx + 150, 1.0))
-        painter.drawLine(QPointF(cx + 34, top), QPointF(cx + 150, top))
-        _leaf(painter, cx - 22, top, HEDERA_LEFT, 15, gilt)
-        _leaf(painter, cx, top, HEDERA, 17, gilt)
-        _leaf(painter, cx + 22, top, HEDERA_RIGHT, 15, gilt)
-        _leaf(painter, cx, top + 22, HEDERA, 10, gilt)
-        painter.setPen(Qt.PenStyle.NoPen)
-        painter.setBrush(QColor(gilt))
-        painter.drawEllipse(QPointF(cx, top + 38), 2.2, 2.2)
+        liveries.look(self.p).tailpiece(painter, width, self.p)
 
 
 class FleuronButton(QPushButton):
@@ -188,7 +138,7 @@ class FleuronButton(QPushButton):
         hot = self.underMouse() or self.hasFocus()
         colour = self.p["heading"] if hot else self.p["label"]
         cy = self.height() / 2 - 1
-        _leaf(painter, self.width() / 2, cy, HEDERA_RIGHT, 13, colour)
+        leaf(painter, self.width() / 2, cy, HEDERA_RIGHT, 13, colour)
         painter.setPen(QPen(_alpha(self.p["rule"], 255), 1))
         painter.drawLine(
             QPointF(3, self.height() - 1.5),
@@ -206,32 +156,10 @@ class FleuronButton(QPushButton):
 
 
 def corner_flourishes(painter: QPainter, rect: QRectF, p: Palette, arm: float) -> None:
-    """A curl in each corner of `rect`, with a bracket `arm` long and a
-    dot at each end, as a printer frames a panel."""
-    painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-    gilt = QColor(p["accent"])
-    r = rect.adjusted(3, 3, -3, -3)
-    for x, y, sx, sy in (
-        (r.left(), r.top(), 1, 1),
-        (r.right(), r.top(), -1, 1),
-        (r.left(), r.bottom(), 1, -1),
-        (r.right(), r.bottom(), -1, -1),
-    ):
-        painter.setPen(QPen(gilt, 1.1))
-        painter.setBrush(Qt.BrushStyle.NoBrush)
-        bracket = QPainterPath(QPointF(x + sx * arm, y))
-        bracket.lineTo(x, y)
-        bracket.lineTo(x, y + sy * arm)
-        painter.drawPath(bracket)
-        curl = QPainterPath(QPointF(x + sx * 3, y + sy * 3))
-        curl.cubicTo(
-            x + sx * 9, y + sy * 2, x + sx * 8, y + sy * 8, x + sx * 5, y + sy * 6
-        )
-        painter.drawPath(curl)
-        painter.setPen(Qt.PenStyle.NoPen)
-        painter.setBrush(gilt)
-        painter.drawEllipse(QPointF(x + sx * (arm + 2), y), 1.2, 1.2)
-        painter.drawEllipse(QPointF(x, y + sy * (arm + 2)), 1.2, 1.2)
+    """The ornament in each corner of `rect`, its arms `arm` long, as a
+    printer frames a panel: in Scriptorum a curl and a bracket with a dot
+    at each end; in a House theme its family's own."""
+    liveries.look(p).corners(painter, rect, p, arm)
 
 
 def gloss_box(painter: QPainter, rect: QRectF, p: Palette, heading: str) -> float:
@@ -242,10 +170,10 @@ def gloss_box(painter: QPainter, rect: QRectF, p: Palette, heading: str) -> floa
     painter.save()
     painter.setRenderHint(QPainter.RenderHint.Antialiasing)
     r = rect.adjusted(1, 1, -1, -1)
-    leaf = QLinearGradient(0, r.top(), 0, r.bottom())
-    leaf.setColorAt(0, QColor(p["surface"]))
-    leaf.setColorAt(1, QColor(p["panel"]))
-    painter.setBrush(QBrush(leaf))
+    sheet = QLinearGradient(0, r.top(), 0, r.bottom())
+    sheet.setColorAt(0, QColor(p["surface"]))
+    sheet.setColorAt(1, QColor(p["panel"]))
+    painter.setBrush(QBrush(sheet))
     painter.setPen(QPen(QColor(p["accent"]), 1.3))
     painter.drawRect(r)
     painter.setBrush(Qt.BrushStyle.NoBrush)
@@ -256,7 +184,7 @@ def gloss_box(painter: QPainter, rect: QRectF, p: Palette, heading: str) -> floa
     x = r.left() + InspectorFrame.MARGIN - 8
     painter.drawLine(QPointF(x, r.top() + 44), QPointF(x, r.bottom() - 14))
     cy = r.top() + 22
-    font = QFont(fonts.SERIF)
+    font = QFont(heading_family(p))
     font.setPointSizeF(16)
     font.setBold(True)
     font.setCapitalization(QFont.Capitalization.SmallCaps)
@@ -270,12 +198,12 @@ def gloss_box(painter: QPainter, rect: QRectF, p: Palette, heading: str) -> floa
         heading,
     )
     gilt = p["accent"]
-    _leaf(painter, cx - width / 2 - 18, cy, HEDERA_LEFT, 14, gilt)
-    _leaf(painter, cx + width / 2 + 18, cy, HEDERA_RIGHT, 14, gilt)
+    leaf(painter, cx - width / 2 - 18, cy, HEDERA_LEFT, 14, gilt)
+    leaf(painter, cx + width / 2 + 18, cy, HEDERA_RIGHT, 14, gilt)
     for side in (-1, 1):
         near = cx + side * (width / 2 + 34)
         far = cx + side * (r.width() / 2 - 22)
-        painter.setPen(_fading(gilt, near, far, 0.9))
+        painter.setPen(fading(gilt, near, far, 0.9))
         painter.drawLine(QPointF(near, cy), QPointF(far, cy))
     painter.restore()
     return r.top() + 44

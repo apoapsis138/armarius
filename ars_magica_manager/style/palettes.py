@@ -9,6 +9,7 @@ holds the same colours as Textual themes, and desktop/ draws with them.
 
 from __future__ import annotations
 
+import colorsys
 from dataclasses import dataclass
 from typing import Any
 
@@ -190,6 +191,294 @@ def for_mode(p: Palette, in_creation: bool) -> Palette:
     return IN_CREATION.get(p.name, p) if in_creation else p
 
 
+# -- House themes' colours ---------------------------------------------------
+
+
+def luminance(colour: str) -> float:
+    """`colour`'s relative luminance (WCAG 2), 0 for black to 1 for white."""
+    channels = []
+    for i in (1, 3, 5):
+        c = int(colour[i : i + 2], 16) / 255
+        channels.append(c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4)
+    red, green, blue = channels
+    return 0.2126 * red + 0.7152 * green + 0.0722 * blue
+
+
+def contrast(a: str, b: str) -> float:
+    """The contrast ratio of two colours (WCAG 2), 1 to 21."""
+    light, dark = sorted((luminance(a), luminance(b)), reverse=True)
+    return (light + 0.05) / (dark + 0.05)
+
+
+def hue(colour: str) -> float:
+    """`colour`'s hue, 0 to 1 round the colour wheel."""
+    rgb = [int(colour[i : i + 2], 16) / 255 for i in (1, 3, 5)]
+    return colorsys.rgb_to_hls(*rgb)[0]
+
+
+def _hls(colour: str) -> tuple[float, float, float]:
+    rgb = [int(colour[i : i + 2], 16) / 255 for i in (1, 3, 5)]
+    return colorsys.rgb_to_hls(*rgb)
+
+
+def _from_hls(h: float, lightness: float, s: float) -> str:
+    rgb = colorsys.hls_to_rgb(h, min(max(lightness, 0.0), 1.0), s)
+    return "#" + "".join(f"{round(c * 255):02X}" for c in rgb)
+
+
+def mixed(a: str, b: str, t: float) -> str:
+    """The colour `t` of the way from `a` to `b` (as `b` laid over `a` at
+    opacity `t`)."""
+    channels = (
+        round(int(a[i : i + 2], 16) * (1 - t) + int(b[i : i + 2], 16) * t)
+        for i in (1, 3, 5)
+    )
+    return "#" + "".join(f"{c:02X}" for c in channels)
+
+
+def retuned(colour: str, ground: str, ratio: float) -> str:
+    """`colour` in its own hue, made lighter or darker only as far as it
+    must be to stand `ratio` against `ground` (or as near as it can)."""
+    if contrast(colour, ground) >= ratio:
+        return colour
+    h, lightness, s = _hls(colour)
+    step = 0.01 if luminance(ground) < 0.18 else -0.01
+    best = colour
+    while 0.0 <= lightness <= 1.0:
+        lightness += step
+        best = _from_hls(h, lightness, s)
+        if contrast(best, ground) >= ratio:
+            return best
+    return best
+
+
+#: The colours that mean something (a season's kind, a realm, Loyalty, an
+#: error or warning): every theme keeps their hues, retuned only for
+#: contrast against its own page.
+MEANINGFUL = (
+    "text-error",
+    "text-warning",
+    "text-success",
+    "season-lab",
+    "season-study",
+    "season-writing",
+    "season-work",
+    "season-adventure",
+    "season-rest",
+    "season-other",
+    "realm-Magic",
+    "realm-Divine",
+    "realm-Faerie",
+    "realm-Infernal",
+    "loyalty-high",
+    "loyalty-low",
+)
+
+#: Text colours that must stand 4.5:1 against the page.
+TEXT = ("foreground", "label", "heading", "text-error", "text-warning", "text-success")
+#: The contrast text keeps against its page (WCAG AA).
+READABLE = 4.5
+#: The contrast a House theme's text colours are given against its plain
+#: page: above READABLE, so a texture and a watermark have room under it.
+HEADROOM = 5.5
+
+
+def house(name: str, base: Palette, colours: dict[str, str]) -> Palette:
+    """A House theme's palette: `base` (Scriptorum or Scriptorum Dark, for
+    its mood) with `colours` laid over it, as a prototype is copied and
+    changed. Its meaningful colours keep `base`'s hues, each retuned only
+    as far as it needs to stand against the new page as well as it did on
+    `base`'s (text at least HEADROOM)."""
+    merged = {**base.colours, **colours}
+    ground = merged["background"]
+    for key in MEANINGFUL:
+        if key in colours:
+            continue
+        before = contrast(base[key], base["background"])
+        wanted = max(min(before, 7.0), HEADROOM if key in TEXT else 0.0)
+        merged[key] = retuned(base[key], ground, wanted)
+    return Palette(name, base.dark, merged)
+
+
+#: The colours a draft's page changes: its skin, rules and the inks of its
+#: labels; the text, headings and meaningful colours stay.
+_COOLED = (
+    "background",
+    "surface",
+    "panel",
+    "rule",
+    "selection",
+    "label",
+    "dim",
+    "paper-fleck",
+    "shadow",
+    "button-shadow",
+)
+#: The hue a draft cools toward: the grey-green of drafting vellum.
+_COOL_HUE = 150 / 360
+
+
+def cooled(p: Palette) -> Palette:
+    """`p`'s In Creation twin, made from its own colours as DRAFTING is
+    from SCRIPTORUM: its page turned toward cool grey-green and greyer,
+    ruled; its inks, headings and meaningful colours as they were."""
+    colours = dict(p.colours)
+    for key in _COOLED:
+        h, lightness, s = _hls(p[key])
+        # Halfway round to the cool hue, the shorter way, and half as rich.
+        turn = ((_COOL_HUE - h + 0.5) % 1.0) - 0.5
+        colours[key] = _from_hls((h + turn * 0.6) % 1.0, lightness, s * 0.45)
+    for key in ("label", "dim"):
+        colours[key] = retuned(colours[key], colours["background"], READABLE)
+    return Palette(f"{p.name} Drafting", p.dark, colours, ruled=True)
+
+
+#: House Bonisagus: the theorists' and Trianoma's House, keepers of the
+#: Order (DE p. 13; Houses of Hermes: True Lineages p. 4, two keys
+#: crossed). A clean, cool vellum and lapis ink, gold for the keys.
+BONISAGUS = house(
+    "Bonisagus",
+    SCRIPTORUM,
+    {
+        "background": "#F1EEE5",
+        "surface": "#E8E3D4",
+        "panel": "#D9D2BC",
+        "foreground": "#1D2230",
+        "primary": "#1E3F8A",
+        "accent": "#A07C1E",
+        "heading": "#1E3F8A",
+        "label": "#4A5062",
+        "rule": "#C4BCA4",
+        "dim": "#5A5F6E",
+        "text-accent": "#6A5412",
+        "selection": "#DCE1EA",
+        "paper-fleck": "#465066",
+        "paper-sheen": "#FFFFFF",
+        "shadow": "#0A1428",
+        "button-shadow": "#A3A29C",
+    },
+)
+
+#: House Criamon: seekers of the Enigma, who mark their skin with arcane
+#: signs and hold that time is a circle (DE p. 13; Houses of Hermes:
+#: Mystery Cults p. 44, the Loop of the Infinite in the Eye of Time; the
+#: domus magna is the Cave of Twisting Shadows). A cave's violet dark,
+#: bone-pale ink and the amber of a lamp.
+CRIAMON = house(
+    "Criamon",
+    SCRIPTORUM_DARK,
+    {
+        "background": "#15131C",
+        "surface": "#1D1A26",
+        "panel": "#272333",
+        "foreground": "#DDD5C4",
+        "primary": "#E3B07A",
+        "accent": "#B98A4E",
+        "heading": "#E3B07A",
+        "label": "#A99DB5",
+        "rule": "#3B344D",
+        "dim": "#9A90A7",
+        "text-accent": "#CFA36C",
+        "selection": "#2D2740",
+        "paper-fleck": "#000000",
+        "paper-sheen": "#B9AECB",
+        "shadow": "#000000",
+        "button-shadow": "#3B344D",
+    },
+)
+
+#: House Tytalus: masters of conflict, growing through struggle (DE p. 17;
+#: Houses of Hermes: Societates p. 71, "from conflict, growth", the spira
+#: of four turns; Fudarus on its storm-beaten island in sea mist). Storm
+#: slate, its headings and seal in Buliste's violet, a bright amethyst,
+#: and its frame and rules in Harpax's green, a deep, dark verdigris: the
+#: two claimants' colours set against each other in lightness as well as
+#: hue, so they read as opposed to an eye that cannot tell the hues apart.
+TYTALUS = house(
+    "Tytalus",
+    SCRIPTORUM_DARK,
+    {
+        "background": "#121619",
+        "surface": "#1A1F23",
+        "panel": "#232A2F",
+        "foreground": "#D8D6CC",
+        "primary": "#D4B6FF",
+        "accent": "#28654F",
+        "heading": "#D4B6FF",
+        "label": "#9EA7AD",
+        "rule": "#33404A",
+        "dim": "#8F989E",
+        "text-accent": "#8CC79A",
+        "selection": "#2A2437",
+        "paper-fleck": "#000000",
+        "paper-sheen": "#A9B7C2",
+        "shadow": "#000000",
+        "button-shadow": "#33404A",
+    },
+)
+
+#: The House themes' palettes, in the order the Settings window lists them.
+HOUSES: tuple[Palette, ...] = (BONISAGUS, CRIAMON, TYTALUS)
+
+#: Each House theme's In Creation twin, made from its own colours.
+for _house in HOUSES:
+    IN_CREATION[_house.name] = cooled(_house)
+
+#: The pigments an illuminated initial takes in a House's theme, over
+#: PIGMENTS: its ground's two colours (lapis and vermilion in Scriptorum).
+HOUSE_PIGMENTS: dict[str, dict[str, str]] = {
+    # Lapis and a deep sea-green, cool as the House's ink.
+    BONISAGUS.name: {
+        "vermilion": "#1F6A6E",
+        "vermilion-deep": "#0F3E42",
+    },
+    # The violet of the cave and the verdigris of Kronos's serpent coils.
+    CRIAMON.name: {
+        "lapis": "#4A3478",
+        "lapis-deep": "#271B45",
+        "vermilion": "#2F7A68",
+        "vermilion-deep": "#16443A",
+        "knot-ground": "#140E22",
+    },
+    # The two claimants' colours, quartered against each other: a light
+    # amethyst against a dark verdigris, apart in lightness as in hue.
+    TYTALUS.name: {
+        "lapis": "#8A62D0",
+        "lapis-deep": "#5A3A96",
+        "vermilion": "#1F5243",
+        "vermilion-deep": "#0C2620",
+        "knot-ground": "#0E1215",
+    },
+}
+
+
+def pigments(p: Palette) -> dict[str, str]:
+    """An illuminated initial's pigments on palette `p`'s page."""
+    own = HOUSE_PIGMENTS.get(p.name.removesuffix(" Drafting"), {})
+    return {**PIGMENTS, **own}
+
+
+#: A House theme's metal for the frames, rods and rims the desktop gilds,
+#: (stop, colour) as BURNISH: a House whose accent is not gold works them
+#: in its own accent, so no Scriptorum gold strays onto its page.
+HOUSE_METAL: dict[str, tuple[tuple[float, str], ...]] = {
+    # Harpax's verdigris, burnished: dark, its accent, a pale glint, back.
+    TYTALUS.name: (
+        (0.00, "#0C2620"),
+        (0.25, "#28654F"),
+        (0.45, "#6FA894"),
+        (0.60, "#28654F"),
+        (1.00, "#0C2620"),
+    ),
+}
+
+
+def metal(p: Palette) -> tuple[tuple[float, str], ...]:
+    """The metal palette `p`'s theme gilds with: BURNISH, or its House's
+    own."""
+    return HOUSE_METAL.get(p.name.removesuffix(" Drafting"), BURNISH)
+
+
 #: An illuminated initial's pigments (illumination.py): the same in either
 #: theme, as a painted letter is the same colours on any page.
 PIGMENTS = {
@@ -345,3 +634,41 @@ OPENING_CARD: dict[str, str] = {
     "dark": "#1e1610",
     "darker": "#080604",
 }
+
+#: A House theme's opening card, over OPENING_CARD: the same cover page in
+#: the House's own metal and night.
+HOUSE_CARDS: dict[str, dict[str, str]] = {
+    BONISAGUS.name: {
+        "gold": "#E6CD7E",
+        "parchment": "#E8E4D6",
+        "numbers": "#B9BBAE",
+        "button": "#D7B95C",
+        "button-text": "#121A2C",
+        "dark": "#0E1730",
+        "darker": "#04070F",
+    },
+    CRIAMON.name: {
+        "gold": "#E3B07A",
+        "parchment": "#E2DACA",
+        "numbers": "#B2A6BE",
+        "button": "#C9955A",
+        "button-text": "#1A1320",
+        "dark": "#14101C",
+        "darker": "#040306",
+    },
+    TYTALUS.name: {
+        "gold": "#D9C27E",
+        "parchment": "#DCD8CC",
+        "numbers": "#A9B3B9",
+        "button": "#9C78C8",
+        "button-text": "#0E1215",
+        "dark": "#101519",
+        "darker": "#030506",
+    },
+}
+
+
+def opening_card(p: Palette) -> dict[str, str]:
+    """The opening card's colours under palette `p`'s theme."""
+    own = HOUSE_CARDS.get(p.name.removesuffix(" Drafting"), {})
+    return {**OPENING_CARD, **own}

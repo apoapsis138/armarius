@@ -35,7 +35,7 @@ from PySide6.QtWidgets import QHBoxLayout, QPushButton, QVBoxLayout, QWidget
 from .. import artwork, hall, meeting
 from ..models import Case, Saga, Tribunal
 from . import motion, pictures, shields
-from .themes import OPENING_CARD, Palette
+from .themes import Palette, opening_card
 from .widgets import serif, text
 
 #: How long the Praeco takes over each covenant when calling the vote,
@@ -437,7 +437,7 @@ class OpeningCard(QWidget):
         self.setGeometry(window.rect())
         column = QVBoxLayout(self)
         column.addStretch(2)
-        c = OPENING_CARD
+        c = self.colours = opening_card(p)
         for words, colour, font in (
             (card.anno, c["gold"], serif(15, caps=True)),
             (card.title, c["gold"], _display(44)),
@@ -503,7 +503,7 @@ class OpeningCard(QWidget):
             QPointF(self.width() / 2, self.height() / 2),
             max(self.width(), self.height()) * 0.7,
         )
-        middle, edge = QColor(OPENING_CARD["dark"]), QColor(OPENING_CARD["darker"])
+        middle, edge = QColor(self.colours["dark"]), QColor(self.colours["darker"])
         middle.setAlpha(225)
         edge.setAlpha(250)
         vignette.setColorAt(0, middle)
@@ -521,7 +521,7 @@ class OpeningCard(QWidget):
                     painter,
                     found,
                     QRectF(left + i * (size + gap), top, size, size * shields.HEIGHT),
-                    OPENING_CARD["button"],
+                    self.colours["button"],
                 )
         painter.end()
 

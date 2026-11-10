@@ -18,7 +18,8 @@ apprentice a magus; a *scriptorium* is where books are written; a
 the storyguide; an *illuminatio* is the painted and gilded copy of a
 manuscript; the *orbis* is the world; a *concilium* is a council;
 *insignia* are marks of honour; a *peregrinatio* is a journey into
-other lands; and a *mappa mundi* is a medieval map of the world. Each major version has a name of its own: an *incipit* is
+other lands; a *mappa mundi* is a medieval map of the world; and a
+livery is the colours and badge a great household's people wore. Each major version has a name of its own: an *incipit* is
 the opening words of a manuscript, a *folio* a sheet folded into leaves,
 a *codex* the bound book, and a *nomen novum* a new name.
 
@@ -49,6 +50,7 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | Peregrinatio | The Tribunal packs: each Tribunal book, ready to import |
 | Hedge Magic | The non-Hermetic traditions: their Arts, chapters and rules |
 | Mappa Mundi | The Atlas: the saga's maps and the records pinned on them |
+| Liveries of the Houses | The desktop drawn in a House's own look: its family's form, colours, paper and mark |
 
 ## Editions
 
@@ -124,6 +126,16 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | Milestone | Version | What it marked |
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
+
+## 4.5.0 — 2026-11-10
+
+### Liveries of the Houses
+
+- **The Settings window.** The gear at the right of the top bar now opens a Settings window instead of a menu. It stays open beside the page while you work, and holds the theme, the sounds and Reduce motion. Each theme is a row with a small sample of its page and a few words on it; click one and the whole app is drawn in it at once, the window too.
+- **House themes, more than colours.** A theme now chooses the paper, the frame, the ornaments and the heading type as well as the colours. The Houses fall into three families (Definitive Edition p. 12), and each family has its own form: the True Lineages square-cut and Roman, with a double rule, key patterns and inscriptional capitals; the Mystery Cults round, with ringed corners, chains of rings and uncials; the Societates angular, with cut corners, chevrons, a row of pennants across the band over the page and blackletter titles. A House's mark is a seal at the foot of the frame and a faint watermark at the foot of the Inspector, and an illuminated initial takes its pigments. Text stays as easy to read as in Scriptorum, a record In Creation is drawn on the theme's own drafting page, and the colours that mean something (a realm, a season's kind, Loyalty, a warning) and coats of arms keep their colours in every theme. Printed pages stay in Scriptorum.
+- **Bonisagus.** A light True Lineage theme: clean vellum faintly ruled with compass-drawn circles, lapis ink and the crossed keys (Definitive Edition p. 13; Houses of Hermes: True Lineages p. 4).
+- **Criamon.** A dark Mystery Cult theme: the violet dark of the Cave of Twisting Shadows, marked with loops, rings within rings and spirals, bone-pale ink, lamp-amber headings and the Loop of the Infinite in the Eye of Time (Definitive Edition p. 13; Houses of Hermes: Mystery Cults pp. 44, 51).
+- **Tytalus.** A dark Societas theme: Fudarus's storm-slate sky with rain across it and the House's spira struck again and again, headings in Buliste's violet and frame and rules in Harpax's green, set apart in lightness as well as hue so they part for red-green colourblind eyes; a name opens on a gold initial on a ground quartered violet and green (Definitive Edition p. 17; Houses of Hermes: Societates p. 71).
 
 ## 4.4.0 — 2026-11-10
 

@@ -150,12 +150,12 @@ def test_the_spell_filter_hides_spells_whose_names_dont_match(app):
     assert sheet.spell_view.model().rowCount() == 0
 
 
-def test_the_theme_toggle_redraws_the_sheet_in_the_other_palette(app):
+def test_choosing_a_theme_redraws_the_sheet_in_its_palette(app):
     window = MainWindow(saga_ids=[])
     saga = _sample_saga_with_covenant()
     window.load(saga)
     window.show_character(saga.characters[0].id)
-    window.toggle_theme()
+    window.choose_theme(PALETTES[1].name)
     assert window.palette_ is PALETTES[1]
     assert window.character_id == saga.characters[0].id
     assert window.sheet_area.findChild(CharacterSheet) is not None
@@ -163,7 +163,7 @@ def test_the_theme_toggle_redraws_the_sheet_in_the_other_palette(app):
 
 def test_the_desktop_opens_in_the_theme_chosen_last(app):
     assert MainWindow(saga_ids=[]).palette_ is PALETTES[0]
-    MainWindow(saga_ids=[]).toggle_theme()
+    MainWindow(saga_ids=[]).choose_theme(PALETTES[1].name)
     reopened = MainWindow(saga_ids=[])
     assert reopened.palette_ is PALETTES[1]
     body = reopened.stack.widget(0)
@@ -184,7 +184,7 @@ def test_the_pages_lie_on_paper_and_their_cards_cast_shadows(app):
     assert isinstance(body, Paper) and body.p is PALETTES[0]
     card = window.findChildren(ClickableCard)[0]
     assert isinstance(card.graphicsEffect(), QGraphicsDropShadowEffect)
-    window.toggle_theme()
+    window.choose_theme(PALETTES[1].name)
     assert body.p is PALETTES[1]
 
 
@@ -203,7 +203,7 @@ def test_the_pages_are_set_with_printers_ornaments(app):
     assert len(sheet.findChildren(Tailpiece)) >= len(sheet.chapters()) - 1
     window.resize(1400, 900)
     window.grab()  # the ornaments and the cards' corner flourishes paint
-    window.toggle_theme()
+    window.choose_theme(PALETTES[1].name)
     assert headpiece.p is PALETTES[1]
 
 

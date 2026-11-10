@@ -69,7 +69,7 @@ from ..tables import Table
 from ..tribunal_packages.rhine import gild_tree
 from . import marks, motion, pictures, sounds
 from .markup_html import cell_style, struck, to_html
-from .style import gilding
+from .style import gilding, liveries
 from .style.ornaments import corner_flourishes
 from .style.paper import lift, shade, translucent
 from .style.pieces import (
@@ -87,6 +87,7 @@ from .style.pieces import (
     text,
     tier_badge,
 )
+from .style.pieces import heading as heading_font
 from .themes import HOVER_WASH, WASH, Palette
 
 #: What the app's other modules take from style through here.
@@ -571,7 +572,7 @@ class Inspector(QFrame):
         self.action: QWidget | None = None
         self.symbol = QLabel()
         top.addWidget(self.symbol)
-        self.title = text("", p["heading"], serif(17, bold=True), wrap=True)
+        self.title = text("", p["heading"], heading_font(17, p), wrap=True)
         self.title.setContentsMargins(0, 0, 0, self.DRIFT)
         top.addWidget(self.title, 1)
         column.addLayout(top)
@@ -604,6 +605,10 @@ class Inspector(QFrame):
     def paintEvent(self, event: QPaintEvent) -> None:
         painter = QPainter(self)
         gilding.gilt_leaf(painter, QRectF(self.rect()), self.p)
+        # A House theme's mark, watermarked faintly at the leaf's foot.
+        liveries.look(self.p).inspector_mark(
+            painter, QRectF(self.rect()).adjusted(14, 14, -14, -14), self.p
+        )
         painter.end()
 
     def resizeEvent(self, event: QResizeEvent) -> None:

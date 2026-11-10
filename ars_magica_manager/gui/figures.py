@@ -20,7 +20,6 @@ from PySide6.QtCore import QEvent, QPointF, QRectF, Qt
 from PySide6.QtGui import (
     QColor,
     QEnterEvent,
-    QFont,
     QFontMetricsF,
     QLinearGradient,
     QMouseEvent,
@@ -44,6 +43,7 @@ from . import motion, pictures
 from .markup_html import to_html
 from .medallions import figure_medallion, paint_season
 from .style.paper import lift, shade
+from .style.pieces import initial_letter
 from .themes import Palette
 from .widgets import mix, serif, text
 
@@ -218,10 +218,7 @@ def prose(words: str, p: Palette, *, initial: bool = True) -> QWidget:
     row = QHBoxLayout(box)
     row.setContentsMargins(0, 0, 0, 0)
     row.setSpacing(2)
-    letter = QLabel(words[0])
-    letter.setFont(QFont(pictures.DISPLAY, 30))
-    letter.setStyleSheet(f"color:{p['heading']}; background:transparent")
-    row.addWidget(letter, 0, Qt.AlignmentFlag.AlignTop)
+    row.addWidget(initial_letter(words[0], p, 30), 0, Qt.AlignmentFlag.AlignTop)
     row.addWidget(body, 1, Qt.AlignmentFlag.AlignTop)
     return box
 

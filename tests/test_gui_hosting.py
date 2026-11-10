@@ -143,8 +143,7 @@ def test_the_window_follows_the_theme() -> None:
     main.open_hosting()
     first = main._hosting
     assert first is not None and first.p == main.palette_
-    main.palette_index = (main.palette_index + 1) % len(PALETTES)
-    main._apply_theme()
+    main.choose_theme(PALETTES[1].name)
     assert main._hosting is not first  # drawn again, as it was open
     assert main._hosting is not None and main._hosting.p == main.palette_
 

@@ -24,9 +24,12 @@ from PySide6.QtGui import (
 )
 from PySide6.QtWidgets import QApplication, QScrollBar, QStyle, QStyleOptionSlider
 
-from ...style.palettes import PIGMENTS, WASH, Palette
-from .illumination import gold
-from .ornaments import HEDERA_RIGHT, _leaf, corner_flourishes
+from ...style.palettes import BURNISH, PIGMENTS, WASH, Palette, metal, pigments
+from . import liveries
+from .flourish import HEDERA_RIGHT
+from .flourish import leaf as _leaf
+from .illumination import quartered_advance, quartered_letter
+from .ornaments import corner_flourishes
 from .paper import paper, shade
 
 
@@ -81,11 +84,21 @@ def sheen(painter: QPainter, rect: QRectF, at: float) -> None:
     painter.restore()
 
 
+def worked(rect: QRectF, p: Palette) -> QBrush:
+    """The metal palette `p`'s theme gilds with (burnished gold, or a
+    House's own), across `rect` corner to corner."""
+    gradient = QLinearGradient(rect.topLeft(), rect.bottomRight())
+    for stop, colour in metal(p):
+        gradient.setColorAt(stop, QColor(colour))
+    return QBrush(gradient)
+
+
 def gilt_frame(painter: QPainter, rect: QRectF, p: Palette, gap: float = 5) -> None:
-    """A burnished gold frame on `rect`, with a fine rule `gap` inside it."""
+    """A burnished frame on `rect` in the theme's metal, with a fine rule
+    `gap` inside it."""
     painter.setRenderHint(QPainter.RenderHint.Antialiasing)
     painter.setBrush(Qt.BrushStyle.NoBrush)
-    painter.setPen(QPen(gold(rect), 2.4))
+    painter.setPen(QPen(worked(rect, p), 2.4))
     painter.drawRect(rect)
     painter.setPen(QPen(shade(p["accent"], 200), 0.8))
     painter.drawRect(rect.adjusted(gap, gap, -gap, -gap))
@@ -142,17 +155,30 @@ def paint_gilt_rod(painter: QPainter, bar: QScrollBar, p: Palette) -> None:
     pressed = bar.isSliderDown()
     half = 4.0 if pressed else 3.5
     rod = QRectF(cx - half, slider.top() + 6, 2 * half, max(slider.height() - 12, 4))
+    stops = metal(p)
+    if stops is BURNISH:
+        dark, mid, light = (
+            PIGMENTS["gold-dark"],
+            PIGMENTS["gold"],
+            PIGMENTS["gold-light"],
+        )
+    else:
+        # A House's metal: its darkest, its body and its glint.
+        dark, mid, light = stops[0][1], stops[1][1], stops[2][1]
     sheen = QLinearGradient(rod.topLeft(), rod.topRight())
-    sheen.setColorAt(0.0, QColor(PIGMENTS["gold-dark"]))
-    sheen.setColorAt(0.35, QColor(PIGMENTS["gold"]))
-    sheen.setColorAt(0.5, QColor(PIGMENTS["gold-light"]))
-    sheen.setColorAt(0.7, QColor(PIGMENTS["gold"]))
-    sheen.setColorAt(1.0, QColor(PIGMENTS["gold-dark"]))
+    for stop, colour in (
+        (0.0, dark),
+        (0.35, mid),
+        (0.5, light),
+        (0.7, mid),
+        (1.0, dark),
+    ):
+        sheen.setColorAt(stop, QColor(colour))
     painter.setBrush(QBrush(sheen))
-    painter.setPen(QPen(QColor(PIGMENTS["gold-dark"]), 0.8))
+    painter.setPen(QPen(QColor(dark), 0.8))
     painter.drawRoundedRect(rod, half, half)
     for y in (rod.top() - 1.5, rod.bottom() + 1.5):
-        painter.setBrush(gold(QRectF(cx - 4, y - 4, 8, 8)))
+        painter.setBrush(worked(QRectF(cx - 4, y - 4, 8, 8), p))
         painter.drawEllipse(QPointF(cx, y), 3.2, 3.2)
 
 
@@ -201,7 +227,28 @@ def gild_application(app: QApplication, p: Palette) -> None:
 # -- a name's initial --
 
 
+def initial_advance(letter: str, font: QFont, p: Palette) -> float:
+    """How far a name's initial drawn by gilt_letter in `font` reaches
+    along its line before the rest of the name."""
+    if liveries.look(p).quartered_initials:
+        return quartered_advance(letter, font)
+    return QFontMetricsF(font).horizontalAdvance(letter)
+
+
 def gilt_letter(
+    painter: QPainter, letter: str, font: QFont, baseline: QPointF, p: Palette
+) -> None:
+    """Draw the initial `letter` in `font` with its baseline starting at
+    `baseline`: in a House theme with quartered initials, a small
+    illuminated letter (illumination.quartered_letter); otherwise the
+    rubric's colour with a gilt edge."""
+    if liveries.look(p).quartered_initials:
+        quartered_letter(painter, letter, font, baseline, pigments(p))
+    else:
+        rubric_letter(painter, letter, font, baseline, p)
+
+
+def rubric_letter(
     painter: QPainter, letter: str, font: QFont, baseline: QPointF, p: Palette
 ) -> None:
     """Draw `letter` in `font` with its baseline starting at `baseline`, in
@@ -225,11 +272,11 @@ def gilt_letter(
 def gilt_word(
     painter: QPainter, word: str, font: QFont, baseline: QPointF, p: Palette
 ) -> None:
-    """Draw `word` as gilt_letter draws one letter, each letter with its
+    """Draw `word` as rubric_letter draws one letter, each letter with its
     own gilt edge: for a title, where every letter is a capital's size."""
     metrics = QFontMetricsF(font)
     for i, letter in enumerate(word):
         if letter.isspace():
             continue
         x = baseline.x() + metrics.horizontalAdvance(word[:i])
-        gilt_letter(painter, letter, font, QPointF(x, baseline.y()), p)
+        rubric_letter(painter, letter, font, QPointF(x, baseline.y()), p)

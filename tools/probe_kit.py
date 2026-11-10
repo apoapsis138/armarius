@@ -102,12 +102,13 @@ async def tui_dump(app: Any, pilot: Any, label: str, out: Path) -> None:
         handle.write("\n".join(support.screen_lines(app)) + "\n")
 
 
-def desktop(theme: int = 0) -> Any:
+def desktop(theme: int | str = 0) -> Any:
     """The QApplication, dressed as the desktop window dresses it (fonts,
-    app font, style sheet, gilding) in PALETTES[theme], which is also saved
-    as the theme, so a MainWindow made afterwards opens in it. Call it
-    inside temp_saga() (or another temp data folder): it writes the
-    settings. Returns the palette."""
+    app font, style sheet, gilding) in a theme: themes.THEMES[theme], or
+    the theme named `theme`. It is also saved as the theme, so a
+    MainWindow made afterwards opens in it. Call it inside temp_saga() (or
+    another temp data folder): it writes the settings. Returns the
+    palette."""
     # start-up: Qt loads only for desktop probes, not terminal ones.
     from PySide6.QtWidgets import QApplication
 
@@ -120,8 +121,13 @@ def desktop(theme: int = 0) -> Any:
     found = QApplication.instance()
     app = found if isinstance(found, QApplication) else QApplication([])
     pictures.register_fonts()
-    p = themes.PALETTES[theme]
-    themes.remember_theme(theme)
+    chosen = (
+        themes.liveries.named(theme) if isinstance(theme, str) else themes.THEMES[theme]
+    )
+    if chosen is None:
+        raise ValueError(f"no theme is called {theme!r}")
+    p = chosen.palette
+    themes.remember_theme(chosen)
     dress_application(app, p)
     return p
 

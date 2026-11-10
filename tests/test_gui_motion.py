@@ -19,7 +19,7 @@ from ars_magica_manager.gui.character_sheet import CharacterSheet, XpTable
 from ars_magica_manager.gui.season_panel import SeasonDial, wheel_place
 from ars_magica_manager.gui.themes import SCRIPTORUM
 from ars_magica_manager.gui.widgets import XP_FROM, Spread
-from ars_magica_manager.gui.window import MOTION, MainWindow
+from ars_magica_manager.gui.window import MainWindow
 from ars_magica_manager.gui.worksheet import WorksheetPage
 from ars_magica_manager.models import Character
 
@@ -248,13 +248,17 @@ def test_a_finished_character_is_sealed(app, moves):
     window.close()
 
 
-def test_the_settings_gear_turns_reduce_motion_on_and_off(app, monkeypatch):
+def test_the_settings_window_turns_reduce_motion_on_and_off(app, monkeypatch):
     monkeypatch.setattr(motion, "windows_animates", lambda: True)
     window = MainWindow(saga_ids=[])
-    entry = window.settings_entries[MOTION]
-    assert entry.text() == "Reduce motion" and not entry.isChecked()
-    entry.trigger()
-    assert motion.reduced() and entry.isChecked()
-    entry.trigger()
-    assert not motion.reduced() and not entry.isChecked()
+    window.settings.click()
+    shown = window._settings
+    assert shown is not None
+    box = shown.motion
+    assert box.text() == "Reduce motion" and not box.isChecked()
+    box.click()
+    assert motion.reduced() and box.isChecked()
+    box.click()
+    assert not motion.reduced() and not box.isChecked()
+    shown.close()
     window.close()

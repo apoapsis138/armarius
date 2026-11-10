@@ -56,6 +56,7 @@ from .editing import (
 from .figures import fact_grid
 from .mystery_cults import CultsChapter
 from .pages import card_grid, page_header
+from .style.pieces import heading as heading_font
 from .themes import Palette
 from .widgets import (
     ANY_LEVEL,
@@ -176,7 +177,7 @@ class SagaContentPage(QWidget):
             if group.heading != heading:
                 heading = group.heading
                 column.addWidget(
-                    text(heading, p["heading"], serif(13, caps=True, bold=True))
+                    text(heading, p["heading"], heading_font(13, p, caps=True))
                 )
             if group.subheading:
                 column.addWidget(
@@ -281,7 +282,7 @@ class SagaContentPage(QWidget):
         for group in scs.tradition_groups(saga):
             head = QHBoxLayout()
             head.addWidget(
-                text(group.title, p["heading"], serif(13, caps=True, bold=True))
+                text(group.title, p["heading"], heading_font(13, p, caps=True))
             )
             head.addStretch(1)
             head.addWidget(text(group.state, p["label"], serif(11, italic=True)))

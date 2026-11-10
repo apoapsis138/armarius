@@ -157,7 +157,7 @@ def title_words(
             continue
         rest = word
         if not (skip_first and i == 0) and word[0].isupper():
-            gilding.gilt_letter(g, word[0], f, QPointF(x, at.y()), p)
+            gilding.rubric_letter(g, word[0], f, QPointF(x, at.y()), p)
             x += metrics.horizontalAdvance(word[0])
             rest = word[1:]
         _text(g, QPointF(x, at.y()), rest, f, p["heading"])

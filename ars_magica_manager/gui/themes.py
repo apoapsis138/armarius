@@ -1,5 +1,6 @@
-"""The desktop's Scriptorum themes: the palettes and style sheet are
-in `style`; which theme was chosen last is the app's.
+"""The desktop's themes: the palettes are in `style`, the themes by name
+in `style.liveries`, the style sheet in `style.sheet`; which theme was
+chosen last is the app's.
 """
 
 from __future__ import annotations
@@ -24,8 +25,11 @@ from ..style.palettes import (
     Palette,
     for_mode,
     murex,
+    opening_card,
     wash_style,
 )
+from .style import liveries
+from .style.liveries import THEMES, Theme
 from .style.sheet import style_sheet
 
 #: What the app's other modules take from style through here.
@@ -43,11 +47,15 @@ __all__ = [
     "SCRIPTORUM",
     "SCRIPTORUM_DARK",
     "SEASON_PIGMENTS",
+    "THEMES",
     "TINCTURES",
     "WASH",
     "Palette",
+    "Theme",
     "for_mode",
+    "liveries",
     "murex",
+    "opening_card",
     "style_sheet",
     "wash_style",
 ]
@@ -57,13 +65,15 @@ __all__ = [
 THEME = "desktop_theme"
 
 
-def saved_theme() -> int:
-    """The index in PALETTES of the theme chosen last on this computer;
-    Scriptorum's when none was, or the one saved is no longer offered."""
+def saved_theme() -> Theme:
+    """The theme chosen last on this computer (liveries.THEMES);
+    Scriptorum when none was, or the one saved is no longer offered."""
     name = settings.load_settings().get(THEME)
-    return next((i for i, p in enumerate(PALETTES) if p.name == name), 0)
+    found = liveries.named(name if isinstance(name, str) else None)
+    # A drafting twin's name is never saved; only a theme's own.
+    return found if found is not None and found.name == name else THEMES[0]
 
 
-def remember_theme(index: int) -> None:
-    """Keep PALETTES[index] as the theme the desktop opens in."""
-    settings.update_settings(**{THEME: PALETTES[index].name})
+def remember_theme(theme: Theme) -> None:
+    """Keep `theme` as the theme the desktop opens in, by its name."""
+    settings.update_settings(**{THEME: theme.name})

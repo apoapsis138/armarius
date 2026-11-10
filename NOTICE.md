@@ -159,7 +159,9 @@ WAV, its silence trimmed, and its level evened with the others.
 Font License, version 1.1, with each font's licence beside it: EB Garamond,
 © 2017 The EB Garamond Project Authors; Uncial Antiqua, © 2011 Brian J.
 Bonislawsky DBA Astigmatic (AOETI), Reserved Font Name "Uncial Antiqua";
-Manufacturing Consent, © 2019 The Manufacturing Consent Project Authors.
+Manufacturing Consent, © 2019 The Manufacturing Consent Project Authors;
+Cinzel, © 2020 The Cinzel Project Authors
+(https://github.com/NDISCOVER/Cinzel), from the Google Fonts repository.
 
 **The word list** in `ars_magica_manager/assets/words/english.txt` is the
 English list of [BIP-39](https://github.com/bitcoin/bips/blob/master/bip-0039/english.txt)

@@ -26,7 +26,6 @@ from typing import TYPE_CHECKING, Any
 import shiboken6
 from PySide6.QtCore import QByteArray, QEvent, Qt, QTimer
 from PySide6.QtGui import (
-    QAction,
     QCloseEvent,
     QFont,
     QKeySequence,
@@ -150,6 +149,7 @@ from .saga_content import SagaContentPage
 from .season_panel import SeasonPanel
 from .seasons import SeasonsPage
 from .sessions_section import sessions_section
+from .settings_window import SettingsWindow
 from .stores import SPOT_LISTS, StorePage
 from .style import gilding, snapping
 from .style.frame import (
@@ -163,9 +163,9 @@ from .style.frame import (
 )
 from .style.paper import Paper
 from .themes import (
-    PALETTES,
     Palette,
-    for_mode,
+    Theme,
+    liveries,
     remember_theme,
     saved_theme,
     style_sheet,
@@ -213,9 +213,6 @@ from .worksheet import WorksheetPage
     stores.ARMARIUM,
     stores.CUSTODIA,
 )
-
-#: The settings gear's entries.
-THEME, SOUNDS, MOTION = "theme", "sounds", "motion"
 
 
 def dress_application(app: QApplication, p: Palette) -> None:
@@ -372,11 +369,14 @@ class MainWindow(QMainWindow):
         self.setWindowIcon(app_icon())
         # The window draws its own title bar (frame.py).
         self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
-        self.palette_index = saved_theme()
+        #: The theme the desktop is drawn in (liveries.THEMES).
+        self.theme: Theme = saved_theme()
         #: The palette pages are built in while one is printed.
         self._printing: Palette | None = None
         #: The palette the window is drawn in now.
-        self._applied = PALETTES[self.palette_index]
+        self._applied = self.theme.palette
+        #: The Settings window, once opened.
+        self._settings: SettingsWindow | None = None
         self.saga_ids = storage.list_sagas() if saga_ids is None else saga_ids
         self.saga: Saga | None = None
         #: The player seated at the open saga (seat.py); None is the
@@ -487,25 +487,13 @@ class MainWindow(QMainWindow):
         #: Sets the settings gear apart from Help and Find.
         self.bar_rule = BarRule(self.palette_)
         bar.addWidget(self.bar_rule)
-        #: The settings gear: its menu holds the theme, the sounds and
-        #: reduce motion, one entry each (SETTINGS).
+        #: The settings gear: it opens the Settings window (the theme,
+        #: the sounds and Reduce Motion).
         self.settings = QPushButton()
         self.settings.setFlat(True)
-        self.settings.setToolTip("Theme, sounds and motion")
+        self.settings.setToolTip("Settings: theme, sounds and motion")
         self.settings.setAccessibleName("Settings")
-        self.settings_menu = QMenu(self.settings)
-        self.settings_entries: dict[str, QAction] = {}
-        for key, act in (
-            (THEME, self.toggle_theme),
-            (SOUNDS, self.toggle_sounds),
-            (MOTION, self.toggle_motion),
-        ):
-            entry = self.settings_menu.addAction("")
-            entry.setCheckable(key != THEME)
-            entry.triggered.connect(lambda _checked=False, act=act: act())
-            self.settings_entries[key] = entry
-        self.settings.setMenu(self.settings_menu)
-        self.settings.setStyleSheet("QPushButton::menu-indicator { width:0px; }")
+        self.settings.clicked.connect(self.open_settings)
         bar.addWidget(self.settings)
         bar.addSpacing(10)
         self.controls = WindowButtons(self, self.palette_)
@@ -602,11 +590,11 @@ class MainWindow(QMainWindow):
     @property
     def palette_(self) -> Palette:
         """The theme, in the mode of the record on show: drafting vellum
-        while it is In Creation (themes.for_mode); parchment while a page
+        while it is In Creation (liveries.for_mode); parchment while a page
         is built for printing."""
         if self._printing is not None:
             return self._printing
-        return for_mode(PALETTES[self.palette_index], self._drafting())
+        return liveries.for_mode(self.theme, self._drafting())
 
     def _drafting(self) -> bool:
         """Whether the page on show is a record In Creation, or its
@@ -2105,38 +2093,39 @@ class MainWindow(QMainWindow):
     def crumb_names(self) -> list[str]:
         return [self._name(place) for place in self.trail]
 
-    def toggle_theme(self) -> None:
-        self.palette_index = (self.palette_index + 1) % len(PALETTES)
-        remember_theme(self.palette_index)
+    def choose_theme(self, name: str) -> None:
+        """Draw the desktop in the theme called `name` and remember it;
+        a name no theme has changes nothing."""
+        theme = liveries.named(name)
+        if theme is None or theme.name != name or theme is self.theme:
+            return
+        self.theme = theme
+        remember_theme(theme)
         self._apply_theme()
         if self.trail:  # the pages' colours are drawn in
             self.go(self.trail)
 
-    def toggle_sounds(self) -> None:
-        sounds.set_enabled(not sounds.enabled())
-        self._draw_sound()
-        sounds.play("page")
+    def open_settings(self) -> None:
+        """Open the Settings window beside the page (or bring it forward):
+        it stays open while the app is used."""
+        old = self._settings
+        if old is not None and shiboken6.isValid(old) and old.isVisible():
+            old.raise_()
+            old.activateWindow()
+            return
+        self._show_settings(None)
 
-    def _draw_sound(self) -> None:
-        on = sounds.enabled()
-        entry = self.settings_entries[SOUNDS]
-        entry.setIcon(
-            pictures.icon("sounds_on" if on else "sounds_off", self._applied["label"])
+    def _show_settings(self, where: QWidget | None) -> None:
+        """The Settings window, drawn in the theme on show, where `where`
+        was (a window it replaces) or beside the page."""
+        shown = self._settings = SettingsWindow(
+            self.palette_, self.theme, self.choose_theme, self
         )
-        entry.setText("Sounds")
-        entry.setChecked(on)
-
-    def toggle_motion(self) -> None:
-        motion.set_reduced(not motion.reduced())
-        self._draw_motion()
-
-    def _draw_motion(self) -> None:
-        still = motion.reduced()
-        p = self._applied
-        entry = self.settings_entries[MOTION]
-        entry.setIcon(pictures.icon("motion", p["dim"] if still else p["label"]))
-        entry.setText("Reduce motion")
-        entry.setChecked(still)
+        if where is not None:
+            shown.setGeometry(where.geometry())
+        shown.show()
+        shown.raise_()
+        shown.activateWindow()
 
     def _apply_theme(self) -> None:
         p = self._applied = self.palette_
@@ -2160,14 +2149,18 @@ class MainWindow(QMainWindow):
             and hosting_open.p != p
         ):
             self.open_hosting()  # drawn again in the new theme
-        other = PALETTES[(self.palette_index + 1) % len(PALETTES)]
-        theme = self.settings_entries[THEME]
-        theme.setText(f"Switch to {other.name}")
-        theme.setIcon(pictures.icon("theme", p["label"]))
+        settings_open = self._settings
+        if (
+            settings_open is not None
+            and shiboken6.isValid(settings_open)
+            and settings_open.isVisible()
+            and settings_open.p != p
+        ):
+            # Drawn again in the new theme, where it was.
+            settings_open.close()
+            self._show_settings(settings_open)
         self.settings.setIcon(pictures.gear_icon(p["label"]))
         self.help.setIcon(pictures.icon("help", p["label"]))
         self.find_button.setIcon(magnifier_icon(p["label"]))
         self.view_button.setIcon(eye_icon(p["label"]))
         self.seat_button.setIcon(pictures.icon("players", p["label"]))
-        self._draw_sound()
-        self._draw_motion()

@@ -22,12 +22,9 @@ from pathlib import Path
 from typing import Any
 
 import shiboken6
-from PySide6.QtCore import QByteArray, QEvent, QRectF, Qt
+from PySide6.QtCore import QByteArray, QEvent, Qt
 from PySide6.QtGui import (
     QColor,
-    QPainter,
-    QPaintEvent,
-    QPen,
     QShowEvent,
 )
 from PySide6.QtWidgets import (
@@ -77,6 +74,7 @@ from ..paths import APP_NAME
 from . import shields, sounds
 from .markup_html import plain, to_html
 from .style import snapping
+from .style.families import DIALOG
 from .style.frame import (
     CLOSE,
     MAXIMISE,
@@ -88,9 +86,9 @@ from .style.frame import (
 from .style.ornaments import (
     FleuronRule,
     InspectorFrame,
-    corner_flourishes,
 )
 from .style.paper import Paper, lift
+from .style.pieces import title as title_font
 from .themes import Palette
 from .widgets import (
     ClickableCard,
@@ -117,15 +115,11 @@ def _shown_text(value: object) -> str:
 
 
 class _Page(Paper):
-    """A dialog's sheet of paper, ruled round its edge, with a flourish in
-    each corner."""
+    """A dialog's sheet of paper, framed in its theme's look: in
+    Scriptorum ruled round its edge, with a flourish in each corner."""
 
-    def paintEvent(self, event: QPaintEvent) -> None:
-        super().paintEvent(event)
-        painter = QPainter(self)
-        painter.setPen(QPen(QColor(self.p["rule"]), 1))
-        painter.drawRect(QRectF(self.rect()).adjusted(0.5, 0.5, -0.5, -0.5))
-        corner_flourishes(painter, QRectF(self.rect()), self.p, 18)
+    def __init__(self, p: Palette) -> None:
+        super().__init__(p, DIALOG)
 
 
 #: The windows closed and waiting for Qt to delete them (_Sheet.exec).
@@ -163,7 +157,7 @@ class _Sheet(QDialog):
         self.column.setSpacing(8)
         self.column.setContentsMargins(26, 6, 26, 18)
         sheet.addLayout(self.column, 1)
-        self.heading = text(plain(title), p["heading"], serif(17, bold=True))
+        self.heading = text(plain(title), p["heading"], title_font(17, p))
         self.column.addWidget(self.heading)
         self.column.addWidget(FleuronRule(p))
         self.error = text("", p["text-error"], serif(12, italic=True), wrap=True)

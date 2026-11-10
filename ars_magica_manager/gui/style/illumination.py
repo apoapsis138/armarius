@@ -4,8 +4,9 @@ worked with white pen-work, framed by a plaited knotwork band with a
 small knot in each corner.
 
 Everything is painted here, in the manuscript's own pigments rather than
-the theme's: an illuminated letter is the same colours on any page. Only
-its glow follows the theme, stronger by candlelight.
+the theme's colours: the gold, ink and pen-work are the same on any page.
+A House theme grinds its own ground (palettes.HOUSE_PIGMENTS), and the
+glow follows the theme, stronger by candlelight.
 """
 
 from __future__ import annotations
@@ -18,6 +19,7 @@ from PySide6.QtGui import (
     QBrush,
     QColor,
     QFont,
+    QFontMetricsF,
     QLinearGradient,
     QPainter,
     QPainterPath,
@@ -29,7 +31,7 @@ from PySide6.QtGui import (
 from PySide6.QtWidgets import QWidget
 
 from ...style import fonts
-from ...style.palettes import BURNISH, PIGMENTS, Palette
+from ...style.palettes import BURNISH, PIGMENTS, Palette, pigments
 
 LAPIS = QColor(PIGMENTS["lapis"])
 LAPIS_DEEP = QColor(PIGMENTS["lapis-deep"])
@@ -262,14 +264,15 @@ def paint_initial(painter: QPainter, outer: QRectF, letter: str, p: Palette) -> 
     inner = band_in.adjusted(rim * 0.6, rim * 0.6, -rim * 0.6, -rim * 0.6)
 
     # The gold rims and the knotwork band's dark ground.
+    pigment = pigments(p)
     painter.setBrush(gold(outer))
     painter.drawRect(outer)
-    painter.setBrush(KNOT_GROUND)
+    painter.setBrush(QColor(pigment["knot-ground"]))
     painter.drawRect(band_out)
     painter.setBrush(gold(band_in))
     painter.drawRect(band_in)
 
-    _paint_ground(painter, inner, side, rng)
+    _paint_ground(painter, inner, side, rng, pigment)
     _paint_knotwork(painter, band_out, band)
 
     # Ink lines along every edge of the frame.
@@ -282,18 +285,24 @@ def paint_initial(painter: QPainter, outer: QRectF, letter: str, p: Palette) -> 
 
 
 def _paint_ground(
-    painter: QPainter, inner: QRectF, side: float, rng: random.Random
+    painter: QPainter,
+    inner: QRectF,
+    side: float,
+    rng: random.Random,
+    pigment: dict[str, str],
 ) -> None:
-    """The ground, quartered lapis and vermilion and darker toward its
-    edges, worked with white pen-work, with a leaf and a flower in each
-    corner."""
+    """The ground, quartered in its two pigments (lapis and vermilion in
+    Scriptorum, a House's own in its theme) and darker toward its edges,
+    worked with white pen-work, with a leaf and a flower in each corner."""
     cx, cy = inner.center().x(), inner.center().y()
     half_w, half_h = inner.width() / 2, inner.height() / 2
-    for x, y, light, deep in (
-        (inner.left(), inner.top(), LAPIS, LAPIS_DEEP),
-        (cx, inner.top(), VERMILION, VERMILION_DEEP),
-        (inner.left(), cy, VERMILION, VERMILION_DEEP),
-        (cx, cy, LAPIS, LAPIS_DEEP),
+    first = QColor(pigment["lapis"]), QColor(pigment["lapis-deep"])
+    second = QColor(pigment["vermilion"]), QColor(pigment["vermilion-deep"])
+    for x, y, (light, deep) in (
+        (inner.left(), inner.top(), first),
+        (cx, inner.top(), second),
+        (inner.left(), cy, second),
+        (cx, cy, first),
     ):
         shade = QRadialGradient(inner.center(), inner.width() * 0.75)
         shade.setColorAt(0, light)
@@ -419,6 +428,80 @@ def _paint_letter(
         glint.setColorAt(1, QColor(255, 255, 255, 0))
         painter.setBrush(glint)
         painter.drawEllipse(at, 9 * scale, 9 * scale)
+    painter.restore()
+
+
+# -- a name's small illuminated initial --
+
+#: A small initial's ground: how far it reaches round the letter, and the
+#: gap after it before the rest of the name, as fractions of the font's
+#: size.
+_GROUND_PAD, _GROUND_GAP = 0.16, 0.10
+
+
+def _quartered_box(letter: str, font: QFont) -> tuple[QPainterPath, QRectF]:
+    """`letter`'s outline in `font` with its baseline at the origin, and
+    the square ground round it, its left edge at the origin."""
+    shape = QPainterPath()
+    shape.addText(0, 0, font, letter)
+    box = shape.boundingRect()
+    pad = QFontMetricsF(font).height() * _GROUND_PAD
+    side = max(box.width(), box.height()) + 2 * pad
+    ground = QRectF(0, box.center().y() - side / 2, side, side)
+    shape.translate(ground.center().x() - box.center().x(), 0)
+    return shape, ground
+
+
+def quartered_advance(letter: str, font: QFont) -> float:
+    """How far quartered_letter's initial in `font` reaches along its
+    line, its gap after it included."""
+    _shape, ground = _quartered_box(letter, font)
+    return ground.width() + QFontMetricsF(font).height() * _GROUND_GAP
+
+
+def quartered_letter(
+    painter: QPainter,
+    letter: str,
+    font: QFont,
+    baseline: QPointF,
+    pigment: dict[str, str],
+) -> None:
+    """`letter` as a small illuminated initial, its ground's left edge at
+    `baseline` and the letter on that baseline: a square ground quartered
+    in `pigment`'s two colours (a House's, palettes.HOUSE_PIGMENTS), each
+    darker toward its edges, in a gold rim and an ink line, and the letter
+    on it in burnished gold with an ink edge."""
+    painter.save()
+    painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+    painter.translate(baseline)
+    shape, ground = _quartered_box(letter, font)
+    cx, cy = ground.center().x(), ground.center().y()
+    half = ground.width() / 2
+    first = QColor(pigment["lapis"]), QColor(pigment["lapis-deep"])
+    second = QColor(pigment["vermilion"]), QColor(pigment["vermilion-deep"])
+    for x, y, (light, deep) in (
+        (ground.left(), ground.top(), first),
+        (cx, ground.top(), second),
+        (ground.left(), cy, second),
+        (cx, cy, first),
+    ):
+        shade = QRadialGradient(ground.center(), ground.width() * 0.75)
+        shade.setColorAt(0, light)
+        shade.setColorAt(1, deep)
+        painter.fillRect(QRectF(x, y, half, half), shade)
+    painter.setBrush(Qt.BrushStyle.NoBrush)
+    painter.setPen(QPen(gold(ground), max(1.2, ground.width() * 0.05)))
+    painter.drawRect(ground.adjusted(0.6, 0.6, -0.6, -0.6))
+    painter.setPen(QPen(INK, 0.8))
+    painter.drawRect(ground)
+    stroker = QPainterPathStroker()
+    stroker.setJoinStyle(Qt.PenJoinStyle.RoundJoin)
+    stroker.setWidth(max(1.6, ground.width() * 0.06))
+    painter.setPen(Qt.PenStyle.NoPen)
+    painter.setBrush(INK)
+    painter.drawPath(stroker.createStroke(shape).united(shape))
+    painter.setBrush(gold(shape.boundingRect()))
+    painter.drawPath(shape)
     painter.restore()
 
 

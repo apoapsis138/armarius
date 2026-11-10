@@ -76,6 +76,7 @@ from .markup_html import plain
 from .menus import Placer
 from .pages import action_rows, card_grid
 from .research import research_chapter
+from .style.pieces import heading as heading_font
 from .themes import Palette
 from .timeline import Calendar, legend, season_text
 from .widgets import (
@@ -367,14 +368,12 @@ class LaboratoryPage(QWidget):
             {pair: int(total.total) for pair, total in totals.items()}, p, show
         )
         base, by_activity = Card(p), Card(p)
-        base.column.addWidget(
-            text("Base Lab Total", p["heading"], serif(13, bold=True))
-        )
+        base.column.addWidget(text("Base Lab Total", p["heading"], heading_font(13, p)))
         base.column.addWidget(
             columns_text(lab_planning.base_lab_total_text(saga, lab, magus), p)
         )
         by_activity.column.addWidget(
-            text("By Activity", p["heading"], serif(13, bold=True))
+            text("By Activity", p["heading"], heading_font(13, p))
         )
         by_activity.column.addWidget(
             columns_text(lab_planning.activity_totals_text(saga, lab, magus), p)

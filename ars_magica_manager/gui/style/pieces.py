@@ -22,7 +22,7 @@ from PySide6.QtWidgets import (
 
 from ...style import fonts
 from ...style.palettes import Palette
-from . import gilding
+from . import gilding, liveries
 from .ornaments import FleuronRule, Tailpiece, corner_flourishes
 from .paper import lift, translucent
 
@@ -37,6 +37,31 @@ def serif(
     if caps:
         font.setCapitalization(QFont.Capitalization.SmallCaps)
     return font
+
+
+def heading(size: float, p: Palette, *, caps: bool = False) -> QFont:
+    """A section heading's font in palette `p`'s theme: bold EB Garamond
+    in Scriptorum, its House family's heading type in a House theme (the
+    book face's small capitals in a Societas)."""
+    look = liveries.look(p)
+    caps = (caps or look.always_small_caps) and look.small_caps
+    font = serif(size, bold=True, caps=caps)
+    font.setFamily(look.heading_family)
+    return font
+
+
+def title(size: float, p: Palette) -> QFont:
+    """A big title's font (a dialog's) in palette `p`'s theme: as a
+    heading in Scriptorum, its House family's title type in a House
+    theme (a Societas's blackletter)."""
+    font = serif(size, bold=True)
+    font.setFamily(liveries.look(p).title_family)
+    return font
+
+
+def heading_ink(p: Palette) -> str:
+    """The colour a section heading is inked in on palette `p`'s page."""
+    return p[liveries.look(p).heading_ink]
 
 
 def text(
@@ -73,14 +98,14 @@ def chapter_title(
     column.setSpacing(1)
     # Beside buttons (no rule of its own), a long title wraps rather than
     # push them off the page.
-    title = text(words, p["foreground"], serif(15, caps=True, bold=True), wrap=not rule)
+    label = text(words, heading_ink(p), heading(15, p, caps=True), wrap=not rule)
     if emblem is None:
-        column.addWidget(title)
+        column.addWidget(label)
     else:
         line = QHBoxLayout()
         line.setSpacing(8)
         line.addWidget(emblem, 0, Qt.AlignmentFlag.AlignVCenter)
-        line.addWidget(title, 1, Qt.AlignmentFlag.AlignVCenter)
+        line.addWidget(label, 1, Qt.AlignmentFlag.AlignVCenter)
         column.addLayout(line)
     if rule:
         column.addWidget(FleuronRule(p))
@@ -109,11 +134,12 @@ class GiltName(QLabel):
     def _metrics(self) -> tuple[QFontMetricsF, QFontMetricsF]:
         return QFontMetricsF(self.initial), QFontMetricsF(self.font())
 
+    def _initial_advance(self) -> float:
+        return gilding.initial_advance(self.name[0], self.initial, self.p)
+
     def sizeHint(self) -> QSize:
         big, small = self._metrics()
-        width = big.horizontalAdvance(self.name[0]) + small.horizontalAdvance(
-            self.name[1:]
-        )
+        width = self._initial_advance() + small.horizontalAdvance(self.name[1:])
         height = max(big.ascent(), small.ascent()) + max(big.descent(), small.descent())
         margins = self.contentsMargins()
         return QSize(
@@ -137,10 +163,46 @@ class GiltName(QLabel):
         painter.setFont(self.font())
         painter.setPen(self.palette().color(self.foregroundRole()))
         painter.drawText(
-            QPointF(box.left() + big.horizontalAdvance(self.name[0]), baseline),
+            QPointF(box.left() + self._initial_advance(), baseline),
             self.name[1:],
         )
         painter.end()
+
+
+class PaintedInitial(QWidget):
+    """A passage's opening letter, painted as a name's initial is
+    (gilding.gilt_letter), `size` points high: for a House theme whose
+    initials are small illuminated letters."""
+
+    def __init__(self, letter: str, p: Palette, size: float) -> None:
+        super().__init__()
+        self.letter, self.p = letter, p
+        self.font_ = QFont(fonts.DISPLAY)
+        self.font_.setPointSizeF(size)
+        metrics = QFontMetricsF(self.font_)
+        self.setFixedSize(
+            ceil(gilding.initial_advance(letter, self.font_, p)) + 2,
+            ceil(metrics.ascent() + metrics.descent() * 0.5),
+        )
+        self.setAccessibleName(letter)
+
+    def paintEvent(self, _event: QPaintEvent) -> None:
+        painter = QPainter(self)
+        baseline = QPointF(1, QFontMetricsF(self.font_).ascent())
+        gilding.gilt_letter(painter, self.letter, self.font_, baseline, self.p)
+        painter.end()
+
+
+def initial_letter(letter: str, p: Palette, size: float) -> QWidget:
+    """A passage's opening letter, `size` points high: in the display face
+    in the heading's colour, or a small illuminated letter in a House
+    theme that paints its initials so."""
+    if liveries.look(p).quartered_initials:
+        return PaintedInitial(letter, p, size)
+    label = QLabel(letter)
+    label.setFont(QFont(fonts.DISPLAY, round(size)))
+    label.setStyleSheet(f"color:{p['heading']}; background:transparent")
+    return label
 
 
 def display_name(name: str, p: Palette, size: int = 34) -> QLabel:

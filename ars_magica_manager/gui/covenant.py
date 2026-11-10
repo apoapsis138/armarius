@@ -138,6 +138,7 @@ from .pages import (
 from .polemic import charter_strength_verbs
 from .region import KindChapters
 from .ships import ships_section
+from .style.pieces import heading as heading_font
 from .themes import Palette
 from .timeline import SeasonTimeline, legend, season_text
 from .widgets import (
@@ -169,7 +170,7 @@ def _titled(title: str, widget: QWidget, p: Palette) -> QWidget:
     column = QVBoxLayout(box)
     column.setContentsMargins(0, 14, 0, 0)
     column.setSpacing(2)
-    column.addWidget(text(title, p["heading"], serif(13.5, caps=True)))
+    column.addWidget(text(title, p["heading"], heading_font(13.5, p, caps=True)))
     column.addWidget(widget)
     return box
 
@@ -1475,7 +1476,7 @@ class CovenantPage(QWidget):
         table, counted = Card(p), Card(p)
         table.column.addWidget(columns_text(cov_build.table_text(saga, covenant), p))
         counted.column.addWidget(
-            text("What's Counted", p["heading"], serif(13, bold=True))
+            text("What's Counted", p["heading"], heading_font(13, p))
         )
         counted.column.addWidget(columns_text(cov_build.items_text(saga, covenant), p))
         return scrolling_page(

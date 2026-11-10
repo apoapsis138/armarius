@@ -1,15 +1,20 @@
-"""The Scriptorum palettes as a Qt style sheet."""
+"""A theme's palette as a Qt style sheet."""
 
 from __future__ import annotations
 
 from ...style.palettes import Palette, wash_style
+from . import liveries
 
 
 def style_sheet(p: Palette, serif: str) -> str:
     """The whole window's Qt style sheet in palette `p`; `serif` is the
-    headings' family (EB Garamond). The data font is the application's,
-    not set here: a style sheet's font would override every
-    widget's own (the fixed-pitch lists, the Arts' italic serif names)."""
+    serif family (EB Garamond) of tabs, menus and fields, and the theme's
+    own heading type (a House family's) sets section titles and the tabs,
+    its title type a sheet's name. The data font is the application's, not set here:
+    a style sheet's font would override every widget's own (the
+    fixed-pitch lists, the Arts' italic serif names)."""
+    look = liveries.look(p)
+    heading, title = look.heading_family, look.title_family
     return f"""
     QWidget {{
         background: transparent;
@@ -68,7 +73,7 @@ def style_sheet(p: Palette, serif: str) -> str:
         border-top: 1px solid {p["rule"]};
     }}
     QTabBar::tab {{
-        font-family: "{serif}";
+        font-family: "{heading}";
         font-size: 13pt;
         background: transparent;
         color: {p["label"]};
@@ -81,15 +86,15 @@ def style_sheet(p: Palette, serif: str) -> str:
     }}
     QTabBar::tab:hover {{ color: {p["foreground"]}; }}
     QLabel#sectionTitle {{
-        font-family: "{serif}";
+        font-family: "{heading}";
         font-size: 14pt;
         font-weight: 600;
-        color: {p["foreground"]};
+        color: {p[look.heading_ink]};
         border-bottom: 1px solid {p["rule"]};
         padding-bottom: 2px;
     }}
     QLabel#sheetName {{
-        font-family: "{serif}";
+        font-family: "{title}";
         font-size: 24pt;
         color: {p["foreground"]};
     }}
