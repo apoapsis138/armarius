@@ -100,7 +100,7 @@ overrides it.
 ## Status
 
 Armarius is a personal project. Bug reports are welcome as issues; pull
-requests aren't being taken. To report a security problem, see
+requests are open to invited collaborators only. To report a security problem, see
 [SECURITY.md](SECURITY.md).
 
 ## Developing
