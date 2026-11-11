@@ -369,7 +369,7 @@ Each saga is saved as one file, the saga's id followed by `.json`, in the `sagas
 
 The storyguide can let the players open the saga in a web browser on their own computers, while it stays on the storyguide's. The app and the saga file never leave your computer; each player who opens the page gets their own copy of the app, running on your machine.
 
-You need a private network that you and the players share. The app doesn't come with one: use your home network, **Tailscale** or **ZeroTier** (recipes below). Never host on an address the whole internet can reach.
+You need a private network that you and the players share. The app doesn't come with one: use your home network, **Tailscale** or **ZeroTier** (recipes below). Never host on an address the whole internet can reach: anyone who reaches the address gets a copy of the app and its sign-in, and the browser page isn't encrypted beyond what the network adds. What can go wrong this way, and what the app does about it, is in the app's threat model (`docs/threat-model-browser-and-ssh-hosting.md` beside its source).
 
 <!-- gui -->
 What the players get in their browser (or over SSH) is the terminal version of the app, so their screens look like it rather than like this window. You keep using the desktop window while you host: it and the players' copies all save into the same saga file, each change merged with the others.
