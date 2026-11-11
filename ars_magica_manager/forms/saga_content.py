@@ -902,7 +902,7 @@ def source_ops(saga: Saga) -> SectionOps:
             return Refuse(
                 "Delete a Saga Source",
                 f"{escape(source.abbreviation)} is cited by "
-                f"{escape(', '.join(e.name for e in citing))}: change them first.",
+                f"{escape(hr.cited_names(citing))}: change them first.",
             )
         return Confirm(
             f"Delete {escape(source.abbreviation)}?",

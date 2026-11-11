@@ -309,6 +309,23 @@ def test_the_dream_working_form_for_the_dreamer_and_wounds():
     assert form.validate({**wound, "earlier_light": -1})
 
 
+def test_the_dreamer_is_chosen_and_a_magus_dreamer_counts_his_power():
+    # The rolls are the dreamer's (TMRE p. 105): the form names nobody to
+    # start with, and the magus's +3 follows the dreamer, not the traveler.
+    morphea = _morphea()
+    ivan = Character(id="p", name="Ivan", type="grog")
+    ivan.characteristics = Characteristics(intelligence=1)
+    saga = _saga(morphea, ivan)
+    fields = {f.key: f for f in forms.dream_fields(saga, morphea)}
+    assert fields["dreamer"].value is None and fields["magus_power"].value is False
+    form = forms.dream_form(saga, morphea)
+    assert isinstance(form, Form)
+    grog = form.apply({"roll": forms.RESHAPE, "dreamer": "p", "die": 5})[1]
+    own = form.apply({"roll": forms.RESHAPE, "dreamer": morphea.id, "die": 5})[1]
+    assert "6 against 9" in grog
+    assert "against 9" in own and "6 against 9" not in own
+
+
 def test_the_dream_working_form_rolls_its_own_die():
     morphea = _morphea()
     saga = _saga(morphea)

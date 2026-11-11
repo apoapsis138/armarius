@@ -594,7 +594,13 @@ def new_laboratory_form(
 
 
 def familiar_create_fields(saga: Saga, magus_id: str | None) -> list[DialogField]:
-    """Name the Familiar and choose its magus (one with no Familiar yet)."""
+    """Name the Familiar and choose its magus (one with no Familiar yet).
+    Bound already starts ticked for a magus still In Creation (a familiar
+    bound before play) and unticked for one in play, who binds it by a
+    season's lab work (DE p. 267)."""
+    magus = saga.character(magus_id) if magus_id else None
+    candidates = [magus] if magus is not None else fam.unbonded_magi(saga)
+    bound = bool(candidates) and all(c.in_creation for c in candidates)
     return [
         DialogField(
             "name", "Name", "text", "", required=True, placeholder="e.g. Ashwing"
@@ -613,9 +619,10 @@ def familiar_create_fields(saga: Saga, magus_id: str | None) -> list[DialogField
             "bound",
             "Bound already",
             "check",
-            True,
-            hint="Untick to bind it by lab work: the bond's True Friend and "
-            "Loyal (Partner) +3 come when that season is played (DE p. 267).",
+            bound,
+            hint="Ticked: a familiar bound before play, the bond granted now. "
+            "Unticked: bind it by lab work, the bond's True Friend and Loyal "
+            "(Partner) +3 coming when that season is played (DE p. 267).",
         ),
     ]
 

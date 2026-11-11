@@ -19,6 +19,7 @@ them alongside the catalog's once the saga is the one in use
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from dataclasses import replace
 from typing import Any
 
@@ -286,6 +287,13 @@ def citing(saga: Saga, source: str) -> list[Any]:
         )
         if entry.source == source
     ]
+
+
+def cited_names(entries: Iterable[Any]) -> str:
+    """The names of `entries` (see citing) for a sentence, each with what
+    it names still to choose shown as a word: "Saint's Blessing (Ability)",
+    not its "{ability}"."""
+    return ", ".join(catalog.blank_name(e.name) for e in entries)
 
 
 def remove(saga: Saga, kind: str, entry: Entry) -> None:

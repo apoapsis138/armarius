@@ -96,7 +96,10 @@ def _fill_placeholders(name: str, params: dict[str, str]) -> str:
 
 def blank_name(name: str) -> str:
     """A catalog name with what it names still to choose, as a list or a
-    form's title shows it: "Affinity with {art}" -> "Affinity with (Art)"."""
+    form's title shows it: "Affinity with {art}" -> "Affinity with (Art)";
+    one already in brackets keeps one pair: "Saint's Blessing ({ability})"
+    -> "Saint's Blessing (Ability)"."""
+    name = _BRACKETED_PLACEHOLDER.sub(lambda m: f"({m.group(1).title()})", name)
     return _PLACEHOLDER.sub(lambda m: f"({m.group(1).title()})", name)
 
 
@@ -109,6 +112,7 @@ def needs_note(name: str, parameters: Sequence[str]) -> str:
 
 
 _PLACEHOLDER = re.compile(r"\{(\w+)\}")
+_BRACKETED_PLACEHOLDER = re.compile(r"\(\{(\w+)\}\)")
 
 
 @lru_cache(maxsize=16)

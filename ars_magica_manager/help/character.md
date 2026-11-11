@@ -1115,9 +1115,12 @@ writes it in his Diary:
   spirit as two is 3 less (p. 103). A botch gains real Warping Points,
   and Twilight is real, timed in the waking world (p. 106).
 - **The dreamer notices travelers:** Perception + Awareness + a stress
-  die against 9 (p. 105).
+  die against 9 (p. 105). These two rolls are the dreamer's, whoever's
+  dream it is, so the form asks for the **Dreamer**: usually someone
+  else, the magus himself only in his own dream.
 - **The dreamer reshapes the dream:** Intelligence + a stress die, +3
-  for a magus (or similar power), +3 for Dream Magic, +3 for Hermetic
+  for a magus (counted for a magus dreamer; tick it for one of similar
+  power), +3 for Dream Magic, +3 for Hermetic
   Dream Interpreter and +1 for each other power of illusion or dreams
   (at most +3), against 9. The total is the change's magnitude (p. 105).
 - **A wound in the dream:** Stamina + a stress die + the earlier dream

@@ -272,6 +272,12 @@ def lab_total(
 def _magus_lines(magus: Character, technique: str, form: str) -> list[Line]:
     """The Arts, Intelligence and Magic Theory."""
     label, theory = hybrid.theory(magus)
+    # Its fixed bonus (Puissant) shown apart, as an Art's is, so the line
+    # agrees with the score the Diary gives.
+    name = label.removesuffix(" (for Magic Theory)")
+    score, bonus = ability_score(magus, name)
+    if bonus and score + bonus == theory:
+        label = f"{label} ({score}{bonus:+d})"
     return [
         _art_line(magus, technique),
         _art_line(magus, form),

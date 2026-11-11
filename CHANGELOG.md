@@ -127,6 +127,41 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 4.10.1 — 2026-11-11
+
+### Pagina
+
+- **Wording fixed.** "an Infernal aura", not "a Infernal"; a familiar's species written as a description ("A falcon of the Swabian Alb, its feathers...") reads as "a falcon of the Swabian Alb" in the suggested-familiars note; a Certamen loser is named rather than called "him".
+- **Opening the Arts in the Diary** says where the experience went: "Kaspar; Teaching +2 xp".
+- **Magic Theory in a Lab Total** shows a Puissant bonus apart, "Magic Theory (3+2)", as an Art's line does.
+
+### Book of Hours
+
+- **Bind a New Familiar** starts with Bound already ticked only for a magus still In Creation; a magus in play binds by a season's lab work (DE p. 267).
+- **Dream Working** asks whose dream it is: the Dreamer starts blank, and the +3 for a magus follows the dreamer chosen, not the traveler (The Mysteries Revised Edition p. 105).
+- **Undergo an Initiation** says to leave a Verditius's first Inner Mystery's Hubris Ordeal out of a typed Script bonus: the app adds its +3 itself.
+
+### Florilegium
+
+- **A House Rule with a placeholder** is named "Saint's Blessing (Ability)" where Saga Content lists what cites a source, not "Saint's Blessing ({ability})".
+
+### Concilium
+
+- **A Tribunal with more covenants than its book counts** reads "12 (book: 10)", not "12 recorded of 10".
+- **The meeting not yet opened** says holding the first step calls the roll, on either front-end, not the terminal's "Edit (e)".
+
+### Peregrinatio
+
+- **The Rhine's Wild Hunt** rides through Winter 1220 and is beaten on Walpurgis Night in Spring 1221 (Guardians of the Forests p. 81), instead of all three stages coming at once.
+
+### Illuminatio
+
+- **Tables keep to their page.** A column grows at most 320 pixels, a longer cell ending in an ellipsis (the inspector shows the row in full), and a sideways scroll bar no longer hides a table's last row: the Rhine's Gilds show all six.
+
+### Glossa
+
+- **Covenant help** names the desktop's Inventory chapter and lists the chapters in their order.
+
 ## 4.10.0 — 2026-11-11
 
 ### Illuminatio

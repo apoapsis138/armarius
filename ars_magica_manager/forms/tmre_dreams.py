@@ -121,6 +121,12 @@ def _dreamer(saga: Saga, character: Character, values: dict[str, Any]) -> Charac
     return next((c for c in saga.characters if c.id == chosen), character)
 
 
+def _magus_power(dreamer: Character, values: dict[str, Any]) -> bool:
+    """Whether the dreamer counts as a magus to reshape a dream: a magus
+    does, and one of similar power when the form says so (TMRE p. 105)."""
+    return dreamer.type == "magus" or bool(values.get("magus_power"))
+
+
 def _earlier(values: dict[str, Any]) -> dr.DreamWounds:
     return dr.DreamWounds(
         light=_int(values, "earlier_light"),
@@ -210,17 +216,23 @@ def dream_fields(saga: Saga, character: Character) -> list[DialogField]:
             "dreamer",
             "Dreamer",
             "select",
-            character.id,
+            None,
             options=people,
             required=True,
+            allow_blank=True,
+            placeholder="(whose dream it is)",
             show_if=_is(AWARE, RESHAPE),
+            hint="These are the dreamer's own rolls against travelers in the "
+            "dream: usually someone else, the traveler himself only in his "
+            "own dream (TMRE pp. 104-105).",
         ),
         DialogField(
             "magus_power",
-            "The dreamer is a magus (or of similar power) (+3)",
+            "The dreamer, not a magus, has a magus's power (+3)",
             "check",
-            character.type == "magus",
+            False,
             show_if=_is(RESHAPE),
+            hint="A magus dreamer has the +3 already.",
         ),
         DialogField(
             "other_powers",
@@ -373,7 +385,7 @@ def dream_lines(saga: Saga, character: Character, values: dict[str, Any]) -> lis
             ]
         base = dr.reshape_base(
             dreamer,
-            magus=bool(values.get("magus_power")),
+            magus=_magus_power(dreamer, values),
             other_powers=_int(values, "other_powers"),
         )
         return [
@@ -459,7 +471,7 @@ def _dreams(
         base = int(
             dr.reshape_base(
                 dreamer,
-                magus=bool(values.get("magus_power")),
+                magus=_magus_power(dreamer, values),
                 other_powers=_int(values, "other_powers"),
             ).total
         )

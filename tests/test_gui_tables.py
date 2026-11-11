@@ -20,7 +20,7 @@ from ars_magica_manager import storage
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.character_sheet import CharacterSheet
 from ars_magica_manager.gui.themes import PALETTES
-from ars_magica_manager.gui.widgets import table_view
+from ars_magica_manager.gui.widgets import WIDEST_COLUMN, table_view
 from ars_magica_manager.gui.window import MainWindow
 from ars_magica_manager.models import DiaryEntry, Possession
 from ars_magica_manager.tables import Table
@@ -76,7 +76,19 @@ def test_the_stretch_column_takes_the_room(app):
     )
     header = view.horizontalHeader()
     assert header.sectionResizeMode(1) == QHeaderView.ResizeMode.Stretch
-    assert header.sectionResizeMode(0) == QHeaderView.ResizeMode.ResizeToContents
+    assert header.sectionResizeMode(0) == QHeaderView.ResizeMode.Interactive
+
+
+def test_a_long_cell_can_t_widen_its_column_past_the_cap(app):
+    # One gild's whole membership mustn't push the table past its page: the
+    # column stops at WIDEST_COLUMN and the cell ends in an ellipsis.
+    members = ", ".join(f"Magus {n} of a long name" for n in range(20))
+    view = table_view(
+        Table(["Gild", "Members", "Agenda"], [["Elder", members, "x"]], stretch=2),
+        P,
+        lambda _: None,
+    )
+    assert view.columnWidth(1) == WIDEST_COLUMN
 
 
 def test_the_sheet_draws_its_lists_as_tables(app):

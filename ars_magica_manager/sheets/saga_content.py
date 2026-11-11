@@ -218,7 +218,7 @@ def book_text(saga: Saga, book: str | None) -> str:
         return head
     holds = brought(saga).get(book, NOTHING_COUNTED)
     if book in sourcebooks.saga_sources(saga):
-        cited = ", ".join(e.name for e in hr.citing(saga, book))
+        cited = hr.cited_names(hr.citing(saga, book))
         lines = [head, f"[b]Holds:[/] {escape(holds)}"]
         return "\n".join(
             lines + ([f"[b]Cited by:[/] {escape(cited)}"] if cited else [])

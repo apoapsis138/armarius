@@ -348,7 +348,7 @@ def source_detail(saga: Saga, source: SagaSource | None) -> str:
         f"[b]{escape(source.title or source.abbreviation)}[/] "
         f"({escape(source.abbreviation)})",
         f"{state}. Cited by: "
-        + (escape(", ".join(e.name for e in cited)) if cited else "(no entry yet)"),
+        + (escape(hr.cited_names(cited)) if cited else "(no entry yet)"),
     ]
     return "\n".join(lines)
 

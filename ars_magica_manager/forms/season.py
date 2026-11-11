@@ -787,8 +787,10 @@ def _supplement_bonus_fields(
             "int",
             bonus,
             show_if=activity_is("undergo_initiation"),
-            hint="At a folk witches' sabbat, add +1 for each helping witch with "
-            "the Ability granted, at most the Magic aura (Hedge Magic RE p. 46).",
+            hint="Leave out a Verditius's first Inner Mystery's Hubris Ordeal: "
+            "its +3 is added for you (HoH:MC p. 117). At a folk witches' "
+            "sabbat, add +1 for each helping witch with the Ability granted, "
+            "at most the Magic aura (Hedge Magic RE p. 46).",
         ),
         DialogField(
             "sabbat_helpers",

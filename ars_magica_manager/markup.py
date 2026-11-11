@@ -25,6 +25,12 @@ def plural(count: int, noun: str) -> str:
     return f"{count} {noun}{'' if count == 1 else 's'}"
 
 
+def a_or_an(word: str) -> str:
+    """ "a Magic", "an Infernal": `word` after the article its first letter
+    asks for (a vowel takes "an")."""
+    return f"{'an' if word[:1].lower() in 'aeiou' else 'a'} {word}"
+
+
 def aligned(rows: Sequence[tuple[str, object]]) -> str:
     """`label: value` lines with the values lined up in one column. The
     labels are in the theme's $label colour, so the values stand out."""

@@ -1669,22 +1669,10 @@ def _threats(rhine: Rhine) -> None:
             "it. Then every huntsman strikes with lethal force, and the rider is "
             "found at dawn exhausted and frozen, Enfeebled for good."
         ),
+        # The Hunt rides through the winter and is beaten on Walpurgis
+        # Night (Guardians of the Forests p. 81), so its spring follows its
+        # winter; the years are the pack's, the book gives none.
         stages=[
-            stage(
-                "Frau Holle's flight",
-                year=1220,
-                season="Spring",
-                clues="For nine days before Walpurgis Night a humble wood-wife in a rickety wagon begs villagers for help and shelter and checks their housekeeping, the Hunt at her heels.",
-                ignored="A village that turns her away hears the Hunt pass over; one that shelters her draws its attention.",
-                turned="A peasant who carves her a new linchpin finds the shavings turned to gold; a farmer who hides her in his barn finds gold in his rye.",
-            ),
-            stage(
-                "Walpurgis Night",
-                year=1220,
-                season="Spring",
-                clues="The Harz witches climb the Brocken, fires are lit on the slopes and the auras double.",
-                ignored="The Hunt fights the airy spirits of summer round the Witches' Altar and loses, and at dawn Walpurga drives her wagon off across the clouds.",
-            ),
             stage(
                 "Stormy winter nights",
                 year=1220,
@@ -1692,6 +1680,21 @@ def _threats(rhine: Rhine) -> None:
                 clues="Howling like the arctic wind over the peasants' roofs; a grim rider who asks a traveller to mount up.",
                 ignored="A mortal who rides is found at dawn, never to recover.",
                 stopped="A Holzfrau sheltered or a rider refused, and winter loosens its grip a little.",
+            ),
+            stage(
+                "Frau Holle's flight",
+                year=1221,
+                season="Spring",
+                clues="For nine days before Walpurgis Night a humble wood-wife in a rickety wagon begs villagers for help and shelter and checks their housekeeping, the Hunt at her heels.",
+                ignored="A village that turns her away hears the Hunt pass over; one that shelters her draws its attention.",
+                turned="A peasant who carves her a new linchpin finds the shavings turned to gold; a farmer who hides her in his barn finds gold in his rye.",
+            ),
+            stage(
+                "Walpurgis Night",
+                year=1221,
+                season="Spring",
+                clues="The Harz witches climb the Brocken, fires are lit on the slopes and the auras double.",
+                ignored="The Hunt fights the airy spirits of summer round the Witches' Altar and loses, and at dawn Walpurga drives her wagon off across the clouds.",
             ),
         ],
     )

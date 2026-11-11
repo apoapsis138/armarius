@@ -19,7 +19,7 @@ from screen_helpers import (
     _wait_for_screen,
 )
 from support import build_all_tabs, choose, menu, wait_until
-from textual.widgets import Button, Input, Select, Static, Tree
+from textual.widgets import Button, Checkbox, Input, Select, Static, Tree
 
 from ars_magica_manager import familiars as fam
 from ars_magica_manager import storage
@@ -59,6 +59,11 @@ async def test_binding_a_familiar_nests_it_under_its_magus_and_grants_shared_tra
         assert app.screen.query_one("#fld-character_id", Select).value == "char1"
 
         app.screen.query_one("#fld-name", Input).value = "Ashwing"
+        # A magus in play binds by lab work, so the box starts unticked:
+        # tick it for a familiar bound already.
+        bound = app.screen.query_one("#fld-bound", Checkbox)
+        assert bound.value is False
+        bound.value = True
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
         assert isinstance(app.screen, WorkspaceScreen)

@@ -18,6 +18,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 
+from ..markup import a_or_an
 from ..models import (
     CORD_SCORE_COSTS,
     BondPower,
@@ -135,12 +136,12 @@ def fitting_note(familiar: Familiar, technique: str, form: str) -> str:
     ]
     if not lines:
         return ""
-    kind = familiar.species or familiar.name
+    kind = _kind(familiar.species or familiar.name)
     named = [art for art in (technique, form) if kind and suits(art, kind)]
     verdict = (
-        f"The list names a {kind} for {' and '.join(named)}."
+        f"The list names {a_or_an(kind)} for {' and '.join(named)}."
         if named
-        else f"Neither list names a {kind} by name: the Arts must suit the "
+        else f"Neither list names {a_or_an(kind)} by name: the Arts must suit the "
         "animal or its powers (a bird suits Auram), as the troupe decides."
         if kind
         else ""
@@ -150,6 +151,15 @@ def fitting_note(familiar: Familiar, technique: str, form: str) -> str:
         + "; ".join(lines)
         + (f". {verdict}" if verdict else ".")
     )
+
+
+def _kind(species: str) -> str:
+    """The animal a species names, for a sentence: a species written as a
+    description ("A falcon of the Swabian Alb, its feathers glowing...")
+    loses its article and everything after its first comma."""
+    kind = species.strip().split(",")[0].strip()
+    first, _, rest = kind.partition(" ")
+    return rest if rest and first.casefold() in ("a", "an", "the") else kind
 
 
 def binding_level(familiar: Familiar) -> int:

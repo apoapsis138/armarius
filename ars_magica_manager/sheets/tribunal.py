@@ -78,7 +78,13 @@ def _praeco(saga: Saga, tribunal: Tribunal) -> str:
 
 
 def _of_total(recorded: int, total: int | None) -> str:
-    return f"{recorded} recorded of {total}" if total is not None else str(recorded)
+    """ "8 recorded of 10"; "12 (book: 10)" once the saga has added more
+    than the book's count."""
+    if total is None:
+        return str(recorded)
+    if recorded > total:
+        return f"{recorded} (book: {total})"
+    return f"{recorded} recorded of {total}"
 
 
 def proxies(tribunal: Tribunal, covenant: Covenant) -> int:

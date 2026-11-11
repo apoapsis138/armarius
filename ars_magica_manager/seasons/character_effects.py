@@ -70,7 +70,15 @@ def diary_entry(saga: Saga, character: Character, worked: rules.Outcome) -> Diar
     )
     if worked.gains:
         total = sum(g.result.xp for g in worked.gains)
-        name += f" (+{total} xp)"
+        gained = list(
+            dict.fromkeys(rules.subject_label(g.subject, names) for g in worked.gains)
+        )
+        # A season on someone else (Opening an apprentice's Arts) names
+        # them; the experience then says where it went.
+        if all(subject in name for subject in gained):
+            name += f" (+{total} xp)"
+        else:
+            name += f"; {', '.join(gained)} +{total} xp"
     if plan.by_default:
         name += " (default)"
     lines = [_gain_line(g, names) for g in worked.gains]

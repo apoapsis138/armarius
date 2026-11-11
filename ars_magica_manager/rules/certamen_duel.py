@@ -216,17 +216,19 @@ def play(
             lines.append(f"Round {number}: {said}")
             if defender.down:
                 winner = attacker.plan.magus
+                loser = defender.plan.magus.name
                 how = (
-                    f"{defender.plan.magus.name} falls unconscious: "
-                    f"{winner.name} may cast a spell of {technique} {form} at "
-                    "him, his Parma Magica circumvented"
+                    f"{loser} falls unconscious: {winner.name} may cast a spell "
+                    f"of {technique} {form} at {loser}, whose Parma Magica is "
+                    "circumvented"
                 )
                 break
             if _concedes(defender):
                 winner = attacker.plan.magus
                 how = (
                     f"{defender.plan.magus.name} concedes at "
-                    f"{FATIGUE_LEVELS[defender.level]}; his Parma Magica stands"
+                    f"{FATIGUE_LEVELS[defender.level]}, Parma Magica still "
+                    "standing"
                 )
                 break
         if winner is not None or "botches" in how:

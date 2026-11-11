@@ -19,14 +19,14 @@ A magus can have one familiar at a time, so Bind Familiar is only offered while 
 3. In the Bind a New Familiar form, type the familiar's **Name** and choose its **Magus Partner**. When you started from the magus's own node, they are already chosen. Choose **Create**.
 4. The familiar's sheet opens. In the tree, the magus's node now has the familiar beneath it, as "Familiar: " and its name; select it there to come back to the [Familiar sheet](help:familiar) later.
 
-With **Bound already** ticked (a familiar bound before play), making the record grants the bond at once: both the magus and the familiar gain the True Friend Virtue and a Loyal (Partner) +3 Personality Trait. Untick it to bind the familiar by lab work: the bond comes when that season is played, as the book has it (DE p. 267). You can see them on the magus's [Virtues & Flaws tab](help:tab-vf) (`3`) and the familiar's [Identity & Cords tab](help:tab-fam-identity) (`1`).
+**Bound already** starts ticked for a magus still In Creation and unticked for one in play. Ticked (a familiar bound before play), making the record grants the bond at once: both the magus and the familiar gain the True Friend Virtue and a Loyal (Partner) +3 Personality Trait. Unticked, the familiar is bound by lab work: the bond comes when that season is played, as the book has it (DE p. 267). You can see them on the magus's [Virtues & Flaws tab](help:tab-vf) (`3`) and the familiar's [Identity & Cords tab](help:tab-fam-identity) (`1`).
 <!-- /tui -->
 <!-- gui -->
 1. Open the magus's sheet and its **Description** chapter, and click the **Bind Familiar** card in the Familiar section. Or open the magus's laboratory, its **Seasons** chapter, and click **Bind Familiar** in the Planning section.
 2. In the Bind a New Familiar form, type the familiar's **Name**; its **Magus Partner** is already chosen. Choose **Create**.
 3. The familiar's page opens. The magus's Description chapter now shows the familiar as a card in its Familiar section; click it to come back to the [Familiar page](help:familiar) later.
 
-With **Bound already** ticked (a familiar bound before play), making the record grants the bond at once: both the magus and the familiar gain the True Friend Virtue and a Loyal (Partner) +3 Personality Trait. Untick it to bind the familiar by lab work: the bond comes when that season is played, as the book has it (DE p. 267). You can see them in the magus's [Virtues & Flaws chapter](help:tab-vf) and the familiar's [Virtues & Flaws](help:tab-fam-vf) and [Identity & Cords](help:tab-fam-identity) chapters.
+**Bound already** starts ticked for a magus still In Creation and unticked for one in play. Ticked (a familiar bound before play), making the record grants the bond at once: both the magus and the familiar gain the True Friend Virtue and a Loyal (Partner) +3 Personality Trait. Unticked, the familiar is bound by lab work: the bond comes when that season is played, as the book has it (DE p. 267). You can see them in the magus's [Virtues & Flaws chapter](help:tab-vf) and the familiar's [Virtues & Flaws](help:tab-fam-vf) and [Identity & Cords](help:tab-fam-identity) chapters.
 <!-- /gui -->
 
 ### Describing the creature

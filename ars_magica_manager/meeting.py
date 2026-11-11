@@ -2856,7 +2856,10 @@ def facts(saga: Saga, tribunal: Tribunal) -> list[Fact]:
     if tribunal.meeting is None:
         return [
             Fact("Held at", held_at),
-            Fact("Now", "Not yet opened: Edit (e) calls the roll and opens it"),
+            Fact(
+                "Now",
+                "Not yet opened: holding the first step calls the roll and opens it",
+            ),
         ]
     step = current(tribunal, meeting)
     number, count, _following = position(tribunal, meeting, step)

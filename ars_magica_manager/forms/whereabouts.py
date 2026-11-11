@@ -13,7 +13,7 @@ from typing import Any
 
 from ..commands import Command, Form, Refuse, notes
 from ..form_spec import DialogField, pairs
-from ..markup import escape
+from ..markup import a_or_an, escape
 from ..models import Character, Saga
 from ..rules import realms, sites
 
@@ -84,8 +84,8 @@ def apply(saga: Saga, character: Character, values: dict[str, Any]) -> list[str]
         at = f"a guest at {escape(staying.name)}" if staying else "at home"
         return notes(f"{escape(character.name)} is {at}: {realm} aura {aura}.")
     return notes(
-        f"{escape(character.name)} is away: casting there counts a {realm} aura of "
-        f"{aura} (DE pp. 410-411)."
+        f"{escape(character.name)} is away: casting there counts "
+        f"{a_or_an(realm)} aura of {aura} (DE pp. 410-411)."
     )
 
 
@@ -103,7 +103,7 @@ def where_line(saga: Saga, character: Character) -> str:
     else:
         covenant = saga.covenant(character.covenant_id)
         where = f"At home, at {escape(covenant.name)}" if covenant else "At home"
-    return f"{where}: a {realm} aura of {aura}."
+    return f"{where}: {a_or_an(realm)} aura of {aura}."
 
 
 def where_form(saga: Saga, character: Character | None) -> Command:

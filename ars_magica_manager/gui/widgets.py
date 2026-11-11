@@ -271,6 +271,8 @@ class Pips(QWidget):
 
 #: A table row's height, in pixels.
 ROW_HEIGHT = 30
+#: The widest a table's column (but its stretching one) grows, in pixels.
+WIDEST_COLUMN = 320
 #: Marks a table's total row (Table.footed), for RuledRows to rule it off.
 FOOT_ROLE = Qt.ItemDataRole.UserRole + 7
 
@@ -1139,16 +1141,35 @@ def table_view(
     view.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
     view.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
     header = view.horizontalHeader()
-    header.setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
-    header.setSectionResizeMode(table.stretch, QHeaderView.ResizeMode.Stretch)
     table_style(view, p)
-    view.setFixedHeight(
+    # Each column as wide as its words, up to a cap, so one long cell (a
+    # gild's whole membership) can't push the table past its page: what
+    # is cut ends in an ellipsis, and the inspector shows the row in full.
+    header.setSectionResizeMode(QHeaderView.ResizeMode.Interactive)
+    view.setTextElideMode(Qt.TextElideMode.ElideRight)
+    view.resizeColumnsToContents()
+    for column in range(len(table.columns)):
+        if column != table.stretch and view.columnWidth(column) > WIDEST_COLUMN:
+            view.setColumnWidth(column, WIDEST_COLUMN)
+    header.setSectionResizeMode(table.stretch, QHeaderView.ResizeMode.Stretch)
+    rows_height = (
         max(len(rows), 1) * ROW_HEIGHT
         + header.sizeHint().height()
         + 2 * view.frameWidth()
         + 2
     )
+    view.setFixedHeight(rows_height)
     view.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+
+    def make_room(_least: int, most: int) -> None:
+        # A table wider than its page scrolls sideways: its scroll bar
+        # takes room of its own instead of hiding the last row.
+        scroll_bar = view.horizontalScrollBar()
+        view.setFixedHeight(
+            rows_height + (scroll_bar.sizeHint().height() if most else 0)
+        )
+
+    view.horizontalScrollBar().rangeChanged.connect(make_room)
 
     def chosen(current: QModelIndex, _previous: QModelIndex) -> None:
         key = table.key(current.row()) if current.isValid() else None

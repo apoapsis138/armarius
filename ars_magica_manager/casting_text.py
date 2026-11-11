@@ -11,7 +11,7 @@ from . import catalog
 from . import spells as spl
 from . import vis as vis_stores
 from .arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
-from .markup import escape, problem
+from .markup import a_or_an, escape, problem
 from .models import Character, KnownSpell, Saga, Spell
 from .rules import (
     ancient_integrations,
@@ -106,11 +106,14 @@ def casting_scores_text(saga: Saga, magus: Character) -> str:
     lines = [
         *rows,
         *(
-            [f"[$label]Away from home:[/] a {realm} aura of {aura} (Current Location)."]
+            [
+                f"[$label]Away from home:[/] {a_or_an(realm)} aura of {aura} "
+                "(Current Location)."
+            ]
             if away(magus)
             else [
-                f"[$label]A guest at {escape(staying.name)}:[/] a {realm} aura of "
-                f"{aura} (Stay as Guest)."
+                f"[$label]A guest at {escape(staying.name)}:[/] {a_or_an(realm)} "
+                f"aura of {aura} (Stay as Guest)."
             ]
             if (staying := host(saga, magus)) is not None
             else []

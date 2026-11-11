@@ -15,7 +15,7 @@ from .. import spells as spl
 from ..arts import FORMS, TECHNIQUES
 from ..commands import Command, Form, Refuse, notes
 from ..form_spec import DialogField, pairs
-from ..markup import BULLET, escape
+from ..markup import BULLET, a_or_an, escape
 from ..models import Character, KnownSpell, Saga, Spell
 from ..rules import casting, dice, lacunae
 from ..rules.breakdown import Breakdown
@@ -308,7 +308,7 @@ def _aura_text(realm: str, aura: int) -> str:
         return f"the Dominion {aura}"
     if not aura:
         return "no aura"
-    return f"a {realm} aura of {aura}"
+    return f"{a_or_an(realm)} aura of {aura}"
 
 
 def lines(saga: Saga, magus: Character, values: dict[str, Any]) -> list[str]:
