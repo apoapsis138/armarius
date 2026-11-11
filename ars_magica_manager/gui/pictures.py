@@ -15,7 +15,8 @@ from PySide6.QtCore import QByteArray, QPointF, QRectF, QSize, Qt
 from PySide6.QtGui import QColor, QIcon, QPainter, QPainterPath, QPen, QPixmap
 from PySide6.QtSvg import QSvgRenderer
 
-from .. import artwork
+from .. import artwork, picture_files
+from ..models import Character
 from ..style.fonts import DISPLAY, SERIF, TITLE, UI
 from .style.fonts import register_fonts
 
@@ -49,6 +50,43 @@ def pixmap(path: Path, colour: str, size: int, ratio: float = 1.0) -> QPixmap:
     painter.end()
     picture.setDevicePixelRatio(ratio)
     return picture
+
+
+def portrait(character: Character) -> QPixmap:
+    """The character's portrait, or a null pixmap when they have none (or
+    its file is gone)."""
+    found = QPixmap()
+    data = picture_files.picture(picture_files.PORTRAITS, character.portrait)
+    if data is not None:
+        found.loadFromData(data)
+    return found
+
+
+def person_picture(
+    character: Character, colour: str, size: int, ratio: float = 2.0
+) -> QPixmap:
+    """The picture a person is shown by, `size` pixels square: their
+    portrait, cropped to fill the square, when they have one; else their
+    House's or tradition's symbol, else the figure of a person
+    (artwork.person_mark), in `colour`."""
+    picture = portrait(character)
+    if picture.isNull():
+        return pixmap(artwork.person_mark(character), colour, size, ratio)
+    side = round(size * ratio)
+    square = min(picture.width(), picture.height())
+    cropped = picture.copy(
+        (picture.width() - square) // 2,
+        (picture.height() - square) // 2,
+        square,
+        square,
+    ).scaled(
+        side,
+        side,
+        Qt.AspectRatioMode.IgnoreAspectRatio,
+        Qt.TransformationMode.SmoothTransformation,
+    )
+    cropped.setDevicePixelRatio(ratio)
+    return cropped
 
 
 def icon(concept: str, colour: str, size: int = 20) -> QIcon:

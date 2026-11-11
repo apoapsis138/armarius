@@ -417,8 +417,303 @@ TYTALUS = house(
     },
 )
 
+#: House Guernicus: the Order's judges, a true lineage, "the law above the
+#: will"; Guernicus an earth wizard, the House's roots in Rome (DE pp.
+#: 14-15; Houses of Hermes: True Lineages pp. 35-36, the scales of justice
+#: balanced on a sword). A Roman court by day: cool marble, iron-black
+#: ink, indigo headings and the scales' bronze.
+GUERNICUS = house(
+    "Guernicus",
+    SCRIPTORUM,
+    {
+        "background": "#ECEAE4",
+        "surface": "#E2DFD6",
+        "panel": "#D3CFC3",
+        "foreground": "#1C1B1A",
+        "primary": "#2E2A55",
+        "accent": "#9C7A3C",
+        "heading": "#2E2A55",
+        "label": "#4C4A47",
+        "rule": "#B9B4A8",
+        "dim": "#5B5955",
+        "text-accent": "#6B5222",
+        "selection": "#DDDCE6",
+        "paper-fleck": "#4A4A55",
+        "paper-sheen": "#FFFFFF",
+        "shadow": "#14121C",
+        "button-shadow": "#A3A19B",
+    },
+)
+
+#: House Mercere: the Redcaps, the Order's messengers, a true lineage (DE
+#: p. 15; Houses of Hermes: True Lineages p. 78, a red cap with a yellow
+#: circle inscribed with a blue triangle: duty, a coin for commerce, a
+#: potsherd from a crossroads for travel). Road-dust parchment, the cap's
+#: deep red for headings and the triangle's blue, a deep woad rather than
+#: a bright sky, for frame and rules, the red far darker than the blue.
+MERCERE = house(
+    "Mercere",
+    SCRIPTORUM,
+    {
+        "background": "#F2ECDD",
+        "surface": "#E9E0CB",
+        "panel": "#DCD0B4",
+        "foreground": "#221C14",
+        "primary": "#6E1414",
+        "accent": "#4F78BA",
+        "heading": "#6E1414",
+        "label": "#55493A",
+        "rule": "#C9BB98",
+        "dim": "#645849",
+        "text-accent": "#2F5596",
+        "selection": "#DFE4EE",
+        "paper-fleck": "#5A4A30",
+        "paper-sheen": "#FFFFFF",
+        "shadow": "#1E1408",
+        "button-shadow": "#ABA28F",
+    },
+)
+
+#: House Tremere: judgment, strategy and dignity, soldiers who hold war
+#: inevitable, a true lineage (DE p. 16; Houses of Hermes: True Lineages
+#: p. 110, Mars incised with a square, the square a flagstone of a Roman
+#: road). A war room by night: iron, pale steel headings and a dried-blood
+#: rust, steel far lighter than rust; cold where its rival Tytalus storms.
+TREMERE = house(
+    "Tremere",
+    SCRIPTORUM_DARK,
+    {
+        "background": "#15171B",
+        "surface": "#1C1F24",
+        "panel": "#262A31",
+        "foreground": "#D9DCDF",
+        "primary": "#C8D3E0",
+        "accent": "#7A3328",
+        "heading": "#C8D3E0",
+        "label": "#9AA1AA",
+        "rule": "#343A42",
+        "dim": "#8C939C",
+        "text-accent": "#D9907F",
+        "selection": "#2A2E36",
+        "paper-fleck": "#000000",
+        "paper-sheen": "#AEB8C4",
+        "shadow": "#000000",
+        "button-shadow": "#343A42",
+    },
+)
+
+#: House Bjornaer: the shapechangers, each with a heartbeast, a cult of
+#: the ancestors whose spirits give the power to change shape (DE p. 13;
+#: Houses of Hermes: Mystery Cults p. 7, the cone, which casts a
+#: triangle's shadow or a circle's but never both; the Founder Birna, "she-
+#: bear"). Daylight on a pale hide: pine headings and a bear-brown ochre,
+#: the pine far darker than the ochre.
+BJORNAER = house(
+    "Bjornaer",
+    SCRIPTORUM,
+    {
+        "background": "#EEEADF",
+        "surface": "#E4DECF",
+        "panel": "#D6CEBA",
+        "foreground": "#25211B",
+        "primary": "#22402C",
+        "accent": "#A9773C",
+        "heading": "#22402C",
+        "label": "#504A3F",
+        "rule": "#BFB59E",
+        "dim": "#5F584C",
+        "text-accent": "#6B4719",
+        "selection": "#DCE2D6",
+        "paper-fleck": "#4A3F2E",
+        "paper-sheen": "#FFFFFF",
+        "shadow": "#14100A",
+        "button-shadow": "#A8A08E",
+    },
+)
+
+#: House Merinita: the House of faeries, as strange as what it studies,
+#: turned to Arcadia by Quendalon (DE p. 16; Houses of Hermes: Mystery
+#: Cults p. 75, an oak within a circle; the Founder a white-haired woman
+#: dressed in green). Twilight in a faerie wood: moss-dark page,
+#: moonlit green-silver headings and a heather violet, the green-silver far
+#: lighter than the violet.
+MERINITA = house(
+    "Merinita",
+    SCRIPTORUM_DARK,
+    {
+        "background": "#111813",
+        "surface": "#18211A",
+        "panel": "#212C23",
+        "foreground": "#D8DDD0",
+        "primary": "#CDE3BE",
+        "accent": "#7E5E9C",
+        "heading": "#CDE3BE",
+        "label": "#9EAA98",
+        "rule": "#2C3A2E",
+        "dim": "#8E9A88",
+        "text-accent": "#BBA4D8",
+        "selection": "#262430",
+        "paper-fleck": "#000000",
+        "paper-sheen": "#AFC4A4",
+        "shadow": "#000000",
+        "button-shadow": "#2C3A2E",
+    },
+)
+
+#: House Verditius: unsurpassed makers of enchanted items, craftsmen
+#: first (DE p. 17; Houses of Hermes: Mystery Cults p. 107, a hand with a
+#: ring on each finger, the five rings Verditius made; Hephaestus's
+#: forge). A forge at night: soot, the rings' own gold for headings and a
+#: hot copper, the gold far lighter than the copper.
+VERDITIUS = house(
+    "Verditius",
+    SCRIPTORUM_DARK,
+    {
+        "background": "#17130F",
+        "surface": "#201A15",
+        "panel": "#2A231C",
+        "foreground": "#DCD3C6",
+        "primary": "#E6B866",
+        "accent": "#8E4A2A",
+        "heading": "#E6B866",
+        "label": "#A69A8A",
+        "rule": "#3A3029",
+        "dim": "#978B7B",
+        "text-accent": "#E29C70",
+        "selection": "#2E241C",
+        "paper-fleck": "#000000",
+        "paper-sheen": "#C9B49A",
+        "shadow": "#000000",
+        "button-shadow": "#3A3029",
+    },
+)
+
+#: House Ex Miscellanea: a large, diverse gathering of wizards of many
+#: traditions, founded by Pralix (DE p. 14; Houses of Hermes: Societates
+#: p. 101, the crooked staff; "the whole is composed of many parts"; Cad
+#: Gadu an island in a mist-shrouded lake). Morning mist on the lake: a
+#: warm linen page, the homespun the patchwork is sewn from (warm, so it
+#: never reads as a draft's cool grey-green vellum), lake-slate headings
+#: and a lichen ochre, the slate far darker than the ochre.
+EX_MISCELLANEA = house(
+    "Ex Miscellanea",
+    SCRIPTORUM,
+    {
+        "background": "#EEE6DD",
+        "surface": "#E4DACE",
+        "panel": "#D6C9B9",
+        "foreground": "#1F1D1B",
+        "primary": "#24384E",
+        "accent": "#A3884A",
+        "heading": "#24384E",
+        "label": "#504A42",
+        "rule": "#C0B3A3",
+        "dim": "#5F584F",
+        "text-accent": "#6B5524",
+        "selection": "#DCE1E8",
+        "paper-fleck": "#4C4238",
+        "paper-sheen": "#FFFFFF",
+        "shadow": "#1A120A",
+        "button-shadow": "#ABA290",
+    },
+)
+
+#: The traditions gathered in Ex Miscellanea, one muted colour each, for
+#: its pennants: moss, madder, woad, ochre, heather and stone, apart in
+#: lightness as well as hue.
+EX_MISCELLANEA_MOTLEY = (
+    "#5E7A55",
+    "#9C5F4A",
+    "#46607E",
+    "#B39A5C",
+    "#76628E",
+    "#8E8A7E",
+)
+
+#: House Flambeau: fire and destruction magic, the Order's knights, with a
+#: tradition of honour and chivalry (DE p. 14; Houses of Hermes:
+#: Societates p. 6, the hourglass; "Unto death, let us charge"). Embers
+#: after a battle: an ember-black page, flame headings and a deep crimson,
+#: the flame far lighter than the crimson.
+FLAMBEAU = house(
+    "Flambeau",
+    SCRIPTORUM_DARK,
+    {
+        "background": "#1A1210",
+        "surface": "#231916",
+        "panel": "#2D211D",
+        "foreground": "#E2D6CB",
+        "primary": "#F2A65A",
+        # Lifted from the deep crimson of blood (#6E1A12), which all but
+        # vanishes on the ember-black, to a crimson a frame's rule shows in.
+        "accent": "#8E2418",
+        "heading": "#F2A65A",
+        "label": "#AE9C90",
+        "rule": "#3E2C26",
+        "dim": "#A08E82",
+        "text-accent": "#EE9A7A",
+        "selection": "#33201A",
+        "paper-fleck": "#000000",
+        "paper-sheen": "#D9A27A",
+        "shadow": "#000000",
+        "button-shadow": "#3E2C26",
+    },
+)
+
+#: House Jerbiton: the arts and the mundane world, custodians of a magical
+#: culture from the cities of the Eastern Empire (DE p. 15; Houses of
+#: Hermes: Societates p. 39, a pennant flown from a tower, often marked
+#: with mercury's sign; "Beauty is all that pleases"). A Byzantine
+#: scriptorium by day: fine cream vellum, imperial purple headings and a
+#: mosaic teal, the purple far darker than the teal.
+JERBITON = house(
+    "Jerbiton",
+    SCRIPTORUM,
+    {
+        "background": "#F5F0E5",
+        "surface": "#ECE4D2",
+        "panel": "#DED3BA",
+        "foreground": "#221C22",
+        "primary": "#56204D",
+        "accent": "#3E8C88",
+        "heading": "#56204D",
+        "label": "#544A52",
+        "rule": "#CDBFA6",
+        "dim": "#625860",
+        "text-accent": "#2A6461",
+        "selection": "#E8DDE6",
+        "paper-fleck": "#4A3E48",
+        "paper-sheen": "#FFFFFF",
+        "shadow": "#160A14",
+        "button-shadow": "#ADA493",
+    },
+)
+
+#: The stones set at Verditius's frame corners beside the family's rings:
+#: a sapphire's light facet and its deep, apart from the copper and gold
+#: in lightness.
+VERDITIUS_GEM, VERDITIUS_GEM_DEEP = "#A9C4EC", "#24406E"
+
+#: The colours of Mercere's mark in its seal, the book's own (Houses of
+#: Hermes: True Lineages p. 78): the coin's yellow and the potsherd's
+#: blue, on the cap's red (the theme's heading).
+MERCERE_COIN, MERCERE_POTSHERD = "#E2B83C", "#2C5AA0"
+
 #: The House themes' palettes, in the order the Settings window lists them.
-HOUSES: tuple[Palette, ...] = (BONISAGUS, CRIAMON, TYTALUS)
+HOUSES: tuple[Palette, ...] = (
+    BONISAGUS,
+    GUERNICUS,
+    MERCERE,
+    TREMERE,
+    BJORNAER,
+    CRIAMON,
+    MERINITA,
+    VERDITIUS,
+    EX_MISCELLANEA,
+    FLAMBEAU,
+    JERBITON,
+    TYTALUS,
+)
 
 #: Each House theme's In Creation twin, made from its own colours.
 for _house in HOUSES:
@@ -449,6 +744,78 @@ HOUSE_PIGMENTS: dict[str, dict[str, str]] = {
         "vermilion-deep": "#0C2620",
         "knot-ground": "#0E1215",
     },
+    # The judges' indigo and the scales' bronze.
+    GUERNICUS.name: {
+        "lapis": "#2E2A55",
+        "lapis-deep": "#1A1733",
+        "vermilion": "#9C7A3C",
+        "vermilion-deep": "#5E4720",
+        "knot-ground": "#14122A",
+    },
+    # The Redcap's red and the potsherd's blue.
+    MERCERE.name: {
+        "lapis": "#3F69B0",
+        "lapis-deep": "#284880",
+        "vermilion": "#6E1414",
+        "vermilion-deep": "#4A0C0C",
+    },
+    # Pale steel over dried-blood rust, a light and a dark ground.
+    TREMERE.name: {
+        "lapis": "#5C6B7E",
+        "lapis-deep": "#36404D",
+        "vermilion": "#7A3328",
+        "vermilion-deep": "#4A1C15",
+        "knot-ground": "#101216",
+    },
+    # The pine and the bear-brown ochre.
+    BJORNAER.name: {
+        "lapis": "#22402C",
+        "lapis-deep": "#12261A",
+        "vermilion": "#A9773C",
+        "vermilion-deep": "#6A4820",
+        "knot-ground": "#13241A",
+    },
+    # Moonlit green-silver against heather violet, a light and a dark
+    # ground.
+    MERINITA.name: {
+        "lapis": "#8FAE80",
+        "lapis-deep": "#4F6B45",
+        "vermilion": "#7E5E9C",
+        "vermilion-deep": "#4A3460",
+        "knot-ground": "#0C120D",
+    },
+    # Hot copper and a soot-blue steel.
+    VERDITIUS.name: {
+        "lapis": "#2E3A48",
+        "lapis-deep": "#19212B",
+        "vermilion": "#8E4A2A",
+        "vermilion-deep": "#552A16",
+        "knot-ground": "#100C09",
+    },
+    # The lake's slate and the lichen's ochre.
+    EX_MISCELLANEA.name: {
+        "lapis": "#24384E",
+        "lapis-deep": "#142233",
+        "vermilion": "#A3884A",
+        "vermilion-deep": "#665429",
+        "knot-ground": "#101A26",
+    },
+    # Crimson and flame, quartered as a knight's shield.
+    FLAMBEAU.name: {
+        "lapis": "#6E1A12",
+        "lapis-deep": "#420D08",
+        "vermilion": "#E08A3C",
+        "vermilion-deep": "#A2561C",
+        "knot-ground": "#120B09",
+    },
+    # Imperial purple and the mosaic's teal.
+    JERBITON.name: {
+        "lapis": "#56204D",
+        "lapis-deep": "#36122F",
+        "vermilion": "#3E8C88",
+        "vermilion-deep": "#245654",
+        "knot-ground": "#2A0F25",
+    },
 }
 
 
@@ -469,6 +836,78 @@ HOUSE_METAL: dict[str, tuple[tuple[float, str], ...]] = {
         (0.45, "#6FA894"),
         (0.60, "#28654F"),
         (1.00, "#0C2620"),
+    ),
+    # The scales' bronze, burnished.
+    GUERNICUS.name: (
+        (0.00, "#4E3712"),
+        (0.25, "#9C7A3C"),
+        (0.45, "#D9BE86"),
+        (0.60, "#9C7A3C"),
+        (1.00, "#4E3712"),
+    ),
+    # The yellow of the Redcap's coin, the House's only warm metal.
+    MERCERE.name: (
+        (0.00, "#7A5A10"),
+        (0.25, "#D6AE34"),
+        (0.45, "#F8E39A"),
+        (0.60, "#D6AE34"),
+        (1.00, "#7A5A10"),
+    ),
+    # Polished steel.
+    TREMERE.name: (
+        (0.00, "#2B3038"),
+        (0.25, "#7E8894"),
+        (0.45, "#DDE4EC"),
+        (0.60, "#7E8894"),
+        (1.00, "#2B3038"),
+    ),
+    # Bear-brown ochre, worn like an oiled hide.
+    BJORNAER.name: (
+        (0.00, "#5A3C16"),
+        (0.25, "#A9773C"),
+        (0.45, "#DDBB8A"),
+        (0.60, "#A9773C"),
+        (1.00, "#5A3C16"),
+    ),
+    # Moonlit green-silver.
+    MERINITA.name: (
+        (0.00, "#3A4A36"),
+        (0.25, "#8FAE80"),
+        (0.45, "#E4F0DA"),
+        (0.60, "#8FAE80"),
+        (1.00, "#3A4A36"),
+    ),
+    # The rings' own gold, warmer and deeper than Scriptorum's gilt.
+    VERDITIUS.name: (
+        (0.00, "#6A3E14"),
+        (0.25, "#C68E3A"),
+        (0.45, "#F0CB86"),
+        (0.60, "#C68E3A"),
+        (1.00, "#6A3E14"),
+    ),
+    # Lichen ochre.
+    EX_MISCELLANEA.name: (
+        (0.00, "#5A4820"),
+        (0.25, "#A3884A"),
+        (0.45, "#DCCB9C"),
+        (0.60, "#A3884A"),
+        (1.00, "#5A4820"),
+    ),
+    # Flame, from ember to white heat.
+    FLAMBEAU.name: (
+        (0.00, "#5A1E0C"),
+        (0.25, "#D9772E"),
+        (0.45, "#FFD9A0"),
+        (0.60, "#D9772E"),
+        (1.00, "#5A1E0C"),
+    ),
+    # Glazed teal tesserae.
+    JERBITON.name: (
+        (0.00, "#1C4442"),
+        (0.25, "#3E8C88"),
+        (0.45, "#A8DCD8"),
+        (0.60, "#3E8C88"),
+        (1.00, "#1C4442"),
     ),
 }
 
@@ -664,6 +1103,87 @@ HOUSE_CARDS: dict[str, dict[str, str]] = {
         "button-text": "#0E1215",
         "dark": "#101519",
         "darker": "#030506",
+    },
+    GUERNICUS.name: {
+        "gold": "#D9BE86",
+        "parchment": "#E6E3DA",
+        "numbers": "#B5B1A6",
+        "button": "#B8975A",
+        "button-text": "#14121C",
+        "dark": "#16142A",
+        "darker": "#05040B",
+    },
+    MERCERE.name: {
+        "gold": "#E2B83C",
+        "parchment": "#EDE5D2",
+        "numbers": "#C2B596",
+        "button": "#E2B83C",
+        "button-text": "#221C14",
+        "dark": "#2A0E0E",
+        "darker": "#0A0303",
+    },
+    TREMERE.name: {
+        "gold": "#C8D3E0",
+        "parchment": "#D9DCDF",
+        "numbers": "#9AA1AA",
+        "button": "#8E9AA8",
+        "button-text": "#101216",
+        "dark": "#14161A",
+        "darker": "#040506",
+    },
+    BJORNAER.name: {
+        "gold": "#DDBB8A",
+        "parchment": "#E9E3D5",
+        "numbers": "#B8AF9C",
+        "button": "#A9773C",
+        "button-text": "#14100A",
+        "dark": "#14261A",
+        "darker": "#050A06",
+    },
+    MERINITA.name: {
+        "gold": "#CDE3BE",
+        "parchment": "#D8DDD0",
+        "numbers": "#9EAA98",
+        "button": "#9C82BA",
+        "button-text": "#0C120D",
+        "dark": "#111813",
+        "darker": "#030504",
+    },
+    VERDITIUS.name: {
+        "gold": "#E6B866",
+        "parchment": "#DCD3C6",
+        "numbers": "#A69A8A",
+        "button": "#C68E3A",
+        "button-text": "#17130F",
+        "dark": "#1E1611",
+        "darker": "#060403",
+    },
+    EX_MISCELLANEA.name: {
+        "gold": "#DCCB9C",
+        "parchment": "#E6E7E1",
+        "numbers": "#B1B4AC",
+        "button": "#A3884A",
+        "button-text": "#0C1218",
+        "dark": "#18222E",
+        "darker": "#05080C",
+    },
+    FLAMBEAU.name: {
+        "gold": "#F2A65A",
+        "parchment": "#E2D6CB",
+        "numbers": "#AE9C90",
+        "button": "#D9772E",
+        "button-text": "#1A1210",
+        "dark": "#1E1210",
+        "darker": "#070403",
+    },
+    JERBITON.name: {
+        "gold": "#A8DCD8",
+        "parchment": "#F0EADC",
+        "numbers": "#C2B6A0",
+        "button": "#3E8C88",
+        "button-text": "#160A14",
+        "dark": "#2A1026",
+        "darker": "#0B040A",
     },
 }
 

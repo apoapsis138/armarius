@@ -16,6 +16,7 @@ from __future__ import annotations
 from collections.abc import Callable
 
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QCheckBox,
     QHBoxLayout,
@@ -280,6 +281,10 @@ class LaboratoryPage(QWidget):
         self.owner_button = None
         if magus is not None and self.open_owner is not None:
             self.owner_button = edit_button(magus.name, p, self.open_owner, "character")
+            # The magus's portrait, House or tradition, as their cards show.
+            self.owner_button.setIcon(
+                QIcon(pictures.person_picture(magus, p["label"], 14))
+            )
             self.owner_button.setToolTip(f"Open {magus.name}'s sheet")
             row.addWidget(self.owner_button, 0, Qt.AlignmentFlag.AlignTop)
         self.identity_button = changing_button(

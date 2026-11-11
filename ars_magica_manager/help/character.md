@@ -44,7 +44,10 @@ the picture into the save folder's `portraits` folder, so moving or deleting
 the original does not lose it, and clicking again changes or removes it.
 While there is no portrait the frame shows the House symbol, or for a
 hedge wizard their tradition's symbol (the first of their traditions, if
-they belong to several); anyone else has a figure of a person. A magus's
+they belong to several); anyone else has a figure of a person. The same
+picture, the portrait first, marks the character wherever they appear:
+their card on The Troupe, on a covenant's People and among the Unassigned
+Characters, and the button naming a laboratory's owner. A magus's
 **Sanctum** button opens their laboratory below their sheet, so the trail
 leads back to them; while they have no laboratory it reads **New Sanctum**
 and creates one that is theirs.

@@ -55,7 +55,6 @@ from .. import (
     deeds,
     giving,
     marriages,
-    picture_files,
     portraits,
     saga_index,
     seasons,
@@ -2244,12 +2243,10 @@ class Portrait(QWidget):
         self.setFixedSize(self.WIDTH, self.HEIGHT)
         self.setCursor(Qt.CursorShape.PointingHandCursor)
         self.clicked = lambda: run(portraits.portrait(saga, character))
-        self.picture = QPixmap()
-        found = picture_files.picture(picture_files.PORTRAITS, character.portrait)
-        if found is not None:
-            self.picture.loadFromData(found)
-        symbol = artwork.person_symbol(character) or artwork.icon("character")
-        self.symbol = pictures.pixmap(symbol, p["heading"], HOUSE_SYMBOL - 12, 2.0)
+        self.picture = pictures.portrait(character)
+        self.symbol = pictures.pixmap(
+            artwork.person_mark(character), p["heading"], HOUSE_SYMBOL - 12, 2.0
+        )
         self.setToolTip(
             "Change the portrait" if not self.picture.isNull() else "Choose a portrait"
         )

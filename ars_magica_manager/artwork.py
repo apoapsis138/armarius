@@ -357,3 +357,9 @@ def person_symbol(character: Character) -> Path | None:
         if symbol is not None:
             return symbol
     return None
+
+
+def person_mark(character: Character) -> Path:
+    """What stands for a person with no portrait: their House's or
+    tradition's symbol (person_symbol), else the figure of a person."""
+    return person_symbol(character) or icon("character")

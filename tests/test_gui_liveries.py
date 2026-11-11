@@ -168,21 +168,127 @@ def test_tytalus_violet_and_green_part_by_lightness_for_red_green_blindness() ->
         assert (violet + 0.05) / (green + 0.05) >= 3.0
 
 
-def test_tytalus_gilds_in_its_own_verdigris_not_scriptorums_gold() -> None:
+@pytest.mark.parametrize(
+    "house",
+    [
+        pal.GUERNICUS,
+        pal.MERCERE,
+        pal.TREMERE,
+        pal.BJORNAER,
+        pal.MERINITA,
+        pal.VERDITIUS,
+        pal.EX_MISCELLANEA,
+        pal.FLAMBEAU,
+        pal.JERBITON,
+    ],
+)
+def test_a_houses_heading_and_accent_part_by_lightness_for_red_green_blindness(
+    house: pal.Palette,
+) -> None:
+    """A House's two main colours (headings and seal; frame and rules) are
+    apart in lightness as well as hue, for an eye that cannot tell red
+    from green."""
+    deuteranopia = (
+        (0.367322, 0.860646, -0.227968),
+        (0.280085, 0.672501, 0.047413),
+        (-0.011820, 0.042940, 0.968881),
+    )
+    protanopia = (
+        (0.152286, 1.052583, -0.204868),
+        (0.114503, 0.786281, 0.099216),
+        (-0.003882, -0.048116, 1.051998),
+    )
+    for matrix in (deuteranopia, protanopia):
+        lights = sorted(
+            _simulated_luminance(house[key], matrix) for key in ("heading", "accent")
+        )
+        assert (lights[1] + 0.05) / (lights[0] + 0.05) >= 2.0, house.name
+
+
+def test_a_house_whose_accent_is_not_gold_gilds_in_its_own_metal() -> None:
     gold = {colour for _stop, colour in pal.BURNISH}
-    for p in (pal.TYTALUS, pal.IN_CREATION["Tytalus"]):
-        assert not gold & {colour for _stop, colour in pal.metal(p)}
+    houses = {p.name: p for p in pal.HOUSES}
+    for name in (
+        "Tytalus",
+        "Guernicus",
+        "Mercere",
+        "Tremere",
+        "Bjornaer",
+        "Merinita",
+        "Verditius",
+        "Ex Miscellanea",
+        "Flambeau",
+        "Jerbiton",
+    ):
+        for p in (houses[name], pal.IN_CREATION[name]):
+            assert not gold & {colour for _stop, colour in pal.metal(p)}, name
     assert pal.metal(pal.SCRIPTORUM) is pal.BURNISH
     assert pal.metal(pal.BONISAGUS) is pal.BURNISH
 
 
 @pytest.mark.usefixtures("app")
-@pytest.mark.parametrize("house", ["bonisagus", "criamon", "tytalus"])
+def test_mercere_closes_a_chapter_on_its_mark_in_the_cap_coin_and_triangle() -> None:
+    theme = liveries.named("Mercere")
+    assert theme is not None
+    # Drawn at twice the size, as on a high-density screen, so the coin's
+    # few pixels are whole.
+    image = QImage(240, 120, QImage.Format.Format_ARGB32)
+    image.fill(QColor(theme.palette["background"]))
+    painter = QPainter(image)
+    painter.translate(-120, 0)
+    painter.scale(2, 2)
+    theme.look.tailpiece(painter, 240, theme.palette)
+    painter.end()
+    seen = {image.pixelColor(x, y).name() for x in range(240) for y in range(120)}
+    assert any(_near(c, pal.MERCERE_COIN) for c in seen)
+    assert any(_near(c, pal.MERCERE_POTSHERD) for c in seen)
+    assert any(_near(c, theme.palette["heading"]) for c in seen)
+
+
+@pytest.mark.usefixtures("app")
+@pytest.mark.parametrize("house", [t.name for t in liveries.THEMES[2:]])
+def test_a_house_closes_a_chapter_on_its_sign_not_a_seal_on_the_frame(
+    house: str,
+) -> None:
+    """A House's sign is the centre of its tailpiece, in its heading ink;
+    the foot of a dialog's frame carries no seal."""
+    theme = liveries.named(house)
+    assert theme is not None
+    p = theme.palette
+    tail = QImage(300, 60, QImage.Format.Format_ARGB32)
+    tail.fill(0)
+    painter = QPainter(tail)
+    theme.look.tailpiece(painter, 300, p)
+    painter.end()
+    centre = {
+        tail.pixelColor(x, y).name()
+        for x in range(150 - 12, 150 + 12)
+        for y in range(families.TAIL_Y - 12, families.TAIL_Y + 12)
+        if tail.pixelColor(x, y).alpha() > 200
+    }
+    assert any(_near(c, p["heading"]) for c in centre), house
+    # The foot of a dialog: paper and frame only, no heading-inked sign.
+    page = QImage(300, 120, QImage.Format.Format_ARGB32)
+    painter = QPainter(page)
+    theme.look.paint_page(painter, QRectF(0, 0, 300, 120), p, DIALOG)
+    painter.end()
+    foot = {
+        page.pixelColor(x, y).name() for x in range(130, 170) for y in range(80, 116)
+    }
+    assert not any(_near(c, p["heading"]) for c in foot), house
+
+
+@pytest.mark.usefixtures("app")
+@pytest.mark.parametrize("house", [t.name for t in liveries.THEMES[2:]])
 def test_the_watermark_is_the_sign_alone_without_its_stone(house: str) -> None:
     """The Inspector's watermark keeps the sign cut into a House's mark
-    but not the square stone it is cut from, nor a border round it."""
+    (or drawn on it, for a mark drawn in ink) but not the square stone it
+    is cut from, nor the frame round it."""
+    theme = liveries.named(house)
+    assert theme is not None and theme.mark is not None
     ink = pal.TYTALUS["foreground"]
-    sign = families._sign(liveries.house_mark(house), ink, 120, 1.0).toImage()
+    cut = families._drawn_sign if theme.look.sign_drawn else families._sign
+    sign = cut(theme.mark, ink, 120, 1.0).toImage()
     side = sign.width()
 
     def inked(x: int, y: int) -> bool:
@@ -196,6 +302,20 @@ def test_the_watermark_is_the_sign_alone_without_its_stone(house: str) -> None:
     ]
     assert not any(inked(x, y) for x, y in band), house
     assert sum(inked(x, y) for x in range(side) for y in range(side)) > side
+
+
+def test_ex_miscellanea_dyes_each_pennant_for_a_tradition() -> None:
+    """Ex Miscellanea's pennants run through one muted colour for each
+    tradition, not the House's two; another Societas keeps its livery."""
+    look = families.ExMiscellanea(None)
+    p = pal.EX_MISCELLANEA
+    dyes = [look.pennant(p, i) for i in range(len(pal.EX_MISCELLANEA_MOTLEY))]
+    assert dyes == list(pal.EX_MISCELLANEA_MOTLEY)
+    flambeau = families.Flambeau(None)
+    assert [flambeau.pennant(pal.FLAMBEAU, i) for i in range(2)] == [
+        pal.FLAMBEAU["heading"],
+        pal.FLAMBEAU["accent"],
+    ]
 
 
 @pytest.mark.usefixtures("app")
@@ -227,7 +347,19 @@ def _near(a: str, b: str) -> bool:
 @pytest.mark.usefixtures("app")
 @pytest.mark.parametrize(
     "form",
-    [families.Look, families.TrueLineage, families.MysteryCult, families.Societas],
+    [
+        families.Look,
+        families.TrueLineage,
+        families.MysteryCult,
+        families.Societas,
+        # The Houses that draw their own ornaments over their family's.
+        families.Bjornaer,
+        families.Merinita,
+        families.Verditius,
+        families.ExMiscellanea,
+        families.Flambeau,
+        families.Jerbiton,
+    ],
 )
 def test_every_family_form_paints_every_piece(form: type[families.Look]) -> None:
     """Each family paints a page of every kind and each ornament without

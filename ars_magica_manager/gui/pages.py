@@ -356,20 +356,14 @@ class SagaShelf(QWidget):
 
 
 def person_card(saga: Saga, character: Character, p: Palette, open_: Open) -> QWidget:
-    """A person as a card, with their House's or tradition's symbol, that
-    opens their sheet."""
+    """A person as a card, with their portrait (or their House's or
+    tradition's symbol, or a figure: pictures.person_picture), that opens
+    their sheet."""
     figures = ov.person_card(saga, character)
-    house = artwork.person_symbol(character)
+    picture = QLabel()
+    picture.setPixmap(pictures.person_picture(character, p["heading"], 40))
     card = ClickableCard(p, pad=12)
-    card_title(
-        card,
-        figures.name,
-        figures.subtitle,
-        p,
-        symbol_label(house, p, 40)
-        if house
-        else symbol_label(artwork.icon("character"), p, 32),
-    )
+    card_title(card, figures.name, figures.subtitle, p, picture)
     if figures.detail:
         card.column.addWidget(text(figures.detail, p["label"]))
     card.clicked = lambda: open_(figures.id)

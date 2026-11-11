@@ -127,6 +127,15 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 4.7.0 — 2026-11-11
+
+### Liveries of the Houses
+
+- **Nine more House themes.** Guernicus (a law tablet's marble with incised capitals, indigo and bronze), Mercere (folded letters on road-dust parchment, the cap's deep red and the triangle's deep blue), Tremere (worn flagstones on iron, steel and rust), Bjornaer (a stitched pale hide, pine and ochre, with fur and feathers), Merinita (the shadows of oak leaves at twilight, green-silver and heather), Verditius (hammered soot-dark metal, ring-gold and copper), Ex Miscellanea (a patchwork of pages on warm linen, lake slate and lichen, pennants in a colour for each tradition), Flambeau (a scorched page with the heat still in it, flame and crimson) and Jerbiton (cream vellum with a tapestry's faint weave, imperial purple and teal). Each has its own In Creation page, cooler and ruled, and each House's two main colours are set apart in lightness, so they part for red-green colourblind eyes.
+- **Backgrounds woven into the page.** Every House's texture is now part of its surface, faint and quiet, rather than things lying on it: Criamon's marks and Tremere's flagstones are fainter, Bjornaer's thread has faded into the hide, Tytalus's spirals have given way to banks of sea mist through its rain, Verditius's tools to soft glints on the metal, Flambeau's flames to scorch and ember glow, and Jerbiton's mosaics to a tapestry's weave. The ornaments at a frame's corners stay in its margin, clear of the boxes on the page.
+- **The House's sign closes each page.** The seal at the foot of the window and of every dialog is gone; instead each chapter of a page ends on the House's sign in its heading colour, between its family's rules, where Scriptorum has its three leaves. Mercere's keeps the coin and triangle in their own colours. The faint watermark at the foot of the Inspector stays.
+- **A person's picture everywhere.** A person's card on The Troupe, a covenant's People and the Unassigned Characters, and the button naming a laboratory's owner now show their portrait, or, without one, their House's or tradition's symbol, and only then the figure of a person.
+
 ## 4.6.2 — 2026-11-10
 
 ### Sodales
