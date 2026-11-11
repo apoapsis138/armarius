@@ -1102,11 +1102,15 @@ def _stewards_part(saga: Saga, p: Palette) -> list[QWidget]:
 
 
 def troupe_chapter(
-    saga: Saga, p: Palette, opens: dict[str, Callable[[Any], None]]
+    saga: Saga,
+    p: Palette,
+    opens: dict[str, Callable[[Any], None]],
+    new: Callable[[str], QWidget | None] = lambda _spot: None,
 ) -> QWidget:
     """The Troupe: the player characters by covenant, the covenants the
     troupe plays, then whatever else the reader has bookmarked, by kind.
-    `opens` opens a record of each kind (troupe.KIND_TITLES)."""
+    `opens` opens a record of each kind (troupe.KIND_TITLES); `new` is the
+    New card at a spot, if any (a player's New Character)."""
     covenants = {f.id: f for f in ov.covenant_cards(saga)}
     # How each kind of record is drawn as a card.
     cards: dict[str, Callable[[Any], QWidget]] = {
@@ -1141,11 +1145,18 @@ def troupe_chapter(
     parts: list[QWidget] = _sessions_part(saga, p)
     if me is not None:
         parts.append(chapter_title(f"Your Characters ({len(mine)})", p))
-        parts.append(
-            card_grid([cards["character"](c) for c in mine])
-            if mine
-            else quiet("None yet. The storyguide gives you a character to play.")
-        )
+        listed = with_new([cards["character"](c) for c in mine], new("Your Characters"))
+        if not mine:
+            parts.append(
+                quiet(
+                    "None yet. Make one with New Character, or the storyguide "
+                    "gives you one to play."
+                    if listed
+                    else "None yet. The storyguide gives you a character to play."
+                )
+            )
+        if listed:
+            parts.append(card_grid(listed))
         asks = [r for c in mine for r in teaching.asked_of(saga, c)]
         parts.extend(
             text(
@@ -1254,7 +1265,9 @@ class SagaPage(QWidget):
             "neighbour": open_neighbour,
             "creature": open_creature,
         }
-        self.codex.add("The Troupe", "troupe", troupe_chapter(saga, p, opens))
+        self.codex.add(
+            "The Troupe", "troupe", troupe_chapter(saga, p, opens, self._new)
+        )
         self.codex.add("The Covenants", "covenant", self._covenants())
         # The Region and The Bestiary are built when first opened: a
         # pack's Tribunal brings hundreds of neighbours and dozens of

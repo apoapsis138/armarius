@@ -2,14 +2,15 @@
 character or laboratory added to one. (A Familiar is bound with
 familiars.bind_familiar.) Each takes the values a create form collects and
 returns the new record; nothing here saves. Covenants, characters and
-laboratories start In Creation."""
+laboratories start In Creation. A character a player seated here makes
+names them as its Player (viewing.seated_player)."""
 
 from __future__ import annotations
 
 import random
 from collections.abc import Sequence
 
-from . import seasons, storage
+from . import seasons, storage, viewing
 from .arts import ARTS
 from .models import (
     SEASONS,
@@ -81,6 +82,10 @@ def add_character(
         covenant_id=covenant_id,
         in_creation=True,
     )
+    maker = viewing.seated_player()
+    if maker is not None:
+        # A player makes a character to play: it names them as its Player.
+        character.background.player_ids = [maker.id]
     saga.characters.append(character)
     covenant = saga.covenant(covenant_id)
     if character_type == "grog" and covenant is not None:

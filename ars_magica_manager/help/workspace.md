@@ -1317,10 +1317,10 @@ Choose who plays a character in the character's Biographical Detail (only the st
 - change the covenants too, if you ticked May change covenants for them;
 - look at everything else but each record's [Secrets](help:tab-secrets), which they never see, and the records they don't know of (see [Player view](help:player-view)), and Export a character, laboratory or covenant (the file downloads in their browser, without its secrets or the records they don't know of).
 
-Only the storyguide (your own window, or someone signed in as Storyguide) can make new records (New), advance or set the season, import, give things between records, share spells, or change the saga itself, its content and its players. Keys a player can't use there don't appear, and if a change slips through anyway, the app doesn't save it and says so.
+Only the storyguide (your own window, or someone signed in as Storyguide) can make any other new record (New), advance or set the season, import, give things between records, share spells, or change the saga itself, its content and its players. Keys a player can't use there don't appear, and if a change slips through anyway, the app doesn't save it and says so.
 
 <!-- gui -->
-**On the desktop** a player's window opens on **Your Characters**, then the troupe's other characters, the troupe's covenants and the rest of what the players know. Their own characters show every button; any other record is read only, with no Add, Edit or Delete, and Advance Season and Player view are not there. To see it as a player does, click the **Play as** icon (two people) in the title bar, which appears once the saga has players, and pick a player; it then reads "Playing as" and their name. Pick **Storyguide** from it to come back.
+**On the desktop** a player's window opens on **Your Characters** (with a **New Character** card, for one of their own), then the troupe's other characters, the troupe's covenants and the rest of what the players know. Their own characters show every button; any other record is read only, with no Add, Edit or Delete, and Advance Season and Player view are not there. To see it as a player does, click the **Play as** icon (two people) in the title bar, which appears once the saga has players, and pick a player; it then reads "Playing as" and their name. Pick **Storyguide** from it to come back.
 <!-- /gui -->
 
 **See also:** [Signing in](help:sign-in), [How to host a saga](help:guide-hosting), [The saga](help:saga)
@@ -1332,6 +1332,7 @@ What only the storyguide should know about a record: the covenant's
 hidden debt, the magus's true master, where a missing founder really
 went. Every covenant, character, Tribunal, neighbour and creature keeps
 a list of them, apart from its summary and notes so those can be read
+- make a character of their own with **New Character**, so a player can join before they have one: a magus or companion (a grog too, with covenant rights, since a new grog joins the covenant's household). It is theirs from the start, named in its Biographical Detail as played by them; you can change or delete it like any other;
 aloud or shown to the players as they are. Each secret is a short title
 and its words, and says whether it has been revealed, and when.
 <!-- tui -->

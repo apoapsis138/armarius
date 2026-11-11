@@ -643,6 +643,8 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "create_creature": ((NodeKind.SAGA, "Creatures"), (NodeKind.BESTIARY, "Creatures")),
     "create_character": (
         (NodeKind.SAGA, "Unassigned Characters"),
+        # A player's own characters, on The Troupe.
+        (NodeKind.SAGA, "Your Characters"),
         (NodeKind.COVENANT, "People"),
         (NodeKind.CHARACTER_GROUP, "People"),
     ),

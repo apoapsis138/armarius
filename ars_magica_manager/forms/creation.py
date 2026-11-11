@@ -19,8 +19,10 @@ from .. import (
     creation,
     medallions,
     packs,
+    players,
     ruling_templates,
     storage,
+    viewing,
 )
 from .. import familiars as fam
 from .. import grog_templates as gt
@@ -332,15 +334,25 @@ def character_create_fields(
 ) -> list[DialogField]:
     """Name, Type (`kind` to start with), a Template of that Type (one
     field per Type, shown while it is chosen; a grog's include Grogs'
-    templates while that book is in play) and covenant."""
+    templates while that book is in play) and covenant. A player seated
+    here is offered only the Types they may make (players.may_make)."""
+    types = makeable_types()
+    if kind not in (k for _, k in types):
+        kind = types[0][1]
     return [
         DialogField(
             "name", "Name", "text", "", required=True, placeholder="e.g. Leandro"
         ),
-        DialogField("type", "Type", "select", kind, options=CHARACTER_TYPES),
-        *(_template_field(saga, kind) for _, kind in CHARACTER_TYPES),
+        DialogField("type", "Type", "select", kind, options=types),
+        *(_template_field(saga, kind) for _, kind in types),
         covenant_field(saga, covenant_id),
     ]
+
+
+def makeable_types() -> list[tuple[str, str]]:
+    """The character Types whoever sits here may make (label, type)."""
+    maker = viewing.seated_player()
+    return [(label, k) for label, k in CHARACTER_TYPES if players.may_make(maker, k)]
 
 
 def template_key(kind: str) -> str:

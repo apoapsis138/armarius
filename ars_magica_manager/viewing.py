@@ -306,6 +306,15 @@ def current() -> Viewer:
     return _in_use
 
 
+def seated_player() -> Player | None:
+    """The Player seated in this copy, while they sit as a player (not a
+    storyguide, not the table): whose a character they make is."""
+    viewer = _in_use
+    if viewer.kind != PLAYER or viewer.player is None:
+        return None
+    return viewer.player if viewer.player.role != STORYGUIDE else None
+
+
 def in_use_saga() -> Saga | None:
     """The saga `use` was last given."""
     return _saga
@@ -350,7 +359,7 @@ STORYGUIDE_ONLY: frozenset[str] = frozenset(
         # Saga Management and Saga Settings (the saga page's chapters).
         "saga-management",
         "saga-settings",
-        # The editing side of Rules and Content: who plays and their
+        # The editing side of Saga Content: who plays and their
         # passcodes. The books in play, the catalogs, goods, House Rules,
         # cults and spells stay public (a player can't change them).
         "tab-content-players",
@@ -457,7 +466,6 @@ PLAYER_BARRED_ACTIONS: frozenset[str] = frozenset(
         "player_view",
         "take_up_tale",
         "take_up_story",
-        "create_character",
         "create_laboratory",
         "create_familiar",
         "advance_season",
@@ -484,6 +492,11 @@ PLAYER_BARRED_ACTIONS: frozenset[str] = frozenset(
         "end_marriage",
     }
 )
+
+#: What a signed-in player may make wherever it is offered, whatever the
+#: record on show: what they make is theirs (players.guard_changes lets a
+#: player add a new character only while it names them alone).
+PLAYER_MAKES_ACTIONS: frozenset[str] = frozenset({"create_character"})
 
 #: What anyone signed in may do anywhere: move around, read, and export
 #: (which only reads the saga).

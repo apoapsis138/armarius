@@ -14,7 +14,7 @@ from PySide6.QtWidgets import QApplication, QLabel, QPushButton
 
 from ars_magica_manager import players, seat, storage, viewing
 from ars_magica_manager.gui import pictures
-from ars_magica_manager.gui.widgets import ClickableCard
+from ars_magica_manager.gui.widgets import ClickableCard, NewCard
 from ars_magica_manager.gui.window import MainWindow
 from ars_magica_manager.models import Character, Covenant, Player, Saga
 
@@ -130,6 +130,9 @@ def test_a_player_with_no_character_is_told(app):
     window = _window(saga)
     window.sit_as(saga.players[0])
     assert "Your Characters (0)" in _labels(window)
+    assert "Make one with New Character" in _labels(window)
+    news = [c.words for c in _chapter(window).findChildren(NewCard)]
+    assert news == ["New Character"]
 
 
 def _verbs(window: MainWindow) -> set[str]:

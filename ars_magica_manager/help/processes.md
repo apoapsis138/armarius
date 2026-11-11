@@ -1622,6 +1622,12 @@ gave them covenant rights), and it never removes anything hidden from
 them, such as a Secret. Where you and a player changed the same thing,
 the later save is kept.
 
+A player needn't play a character to join: once in, they can make their
+own with **New Character** (see
+[Joining with no character yet](help:join-game-new-character)). It
+arrives here named as theirs, with a note like any change; the Log notes
+it too. Change or delete it as you would any character.
+
 ### Host for Remote Seats
 <!-- help: host-remote-seats; gui -->
 
@@ -1764,6 +1770,20 @@ what's yours (your characters, their laboratories, familiars and season
 plans, the season plans of characters you are Steward of, your teaching
 asks and answers, and the covenants if your storyguide gave you covenant
 rights).
+
+### Joining with no character yet
+<!-- help: join-game-new-character; gui -->
+
+You can join before you have a character. **Your Characters** on The
+Troupe then says "None yet", with a **New Character** card: click it to
+make your own, a magus or a companion (a grog too, if your storyguide gave
+you covenant rights, since a grog joins the covenant's household). It is
+yours from the start, named as played by you, and opens on its Creation
+Worksheet so you can carry on building it. Your storyguide sees it at once
+and can change or delete it like any other. You can't make one for someone
+else or for the whole troupe: who plays a character is the storyguide's to
+say.
+
 Every few seconds your pages pick up what others saved, with a note at
 the window's foot. When your storyguide advances the season, your
 window turns the season's dial too. If someone else has the record you're

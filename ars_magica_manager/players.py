@@ -236,6 +236,35 @@ def may_change(
     return False
 
 
+def may_make(player: Player | None, kind: str) -> bool:
+    """Whether `player` (None: the storyguide's own window) may make a new
+    character of `kind` ("magus", "grog", a companion's type): a storyguide
+    any; a player a magus or companion, and a grog only with covenant
+    rights, since a new grog joins its covenant's household."""
+    if player is None or player.role == STORYGUIDE:
+        return True
+    return kind != "grog" or player.covenant_rights
+
+
+def _made_by(record: object, player: Player) -> bool:
+    """Whether `record` (a character as plain data) is one `player` may
+    add: it names them alone as its Player, no Steward, not played by
+    everyone, of a kind they may make."""
+    if not isinstance(record, dict):
+        return False
+    found = cast(dict[str, Any], record)
+    background = found.get("background")
+    if not isinstance(background, dict):
+        return False
+    details = cast(dict[str, Any], background)
+    return (
+        details.get("player_ids") == [player.id]
+        and details.get("everyone_plays") is not True
+        and not details.get("steward_id")
+        and may_make(player, str(found.get("type", "")))
+    )
+
+
 def may_plan(saga: Saga, player: Player | None, character: Character) -> bool:
     """Whether `player` may change `character`'s season plans: whoever may
     change the character, and its Steward."""
@@ -357,8 +386,14 @@ def guard_changes(
             and (r.get("character_id"), r.get("season"), r.get("year")) in asked
         )
 
+    known = {c.get("id") for c in before.get("characters", [])}
+
+    def character_is_mine(r: dict[str, Any]) -> bool:
+        # A character the player makes is theirs: a new one naming them.
+        return r.get("id") in mine or (r.get("id") not in known and _made_by(r, player))
+
     owner_of = {
-        "characters": lambda r: r.get("id") in mine,
+        "characters": character_is_mine,
         "laboratories": lambda r: r.get("owner_id") in mine,
         "familiars": lambda r: r.get("character_id") in mine,
         "covenants": lambda r: player.covenant_rights,

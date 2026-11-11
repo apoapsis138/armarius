@@ -37,11 +37,13 @@ from .. import (
     hermetic_projects,
     manors,
     mobile_covenants,
+    players,
     saga_index,
     seasons,
     section_verbs,
     story_chapters,
     town_charter,
+    viewing,
     vis,
     world,
 )
@@ -683,7 +685,7 @@ class CovenantPage(QWidget):
                     words,
                     creation_forms.new_character_form(saga, self.covenant_id, kind),
                 )
-                if self.placer
+                if self.placer and players.may_make(viewing.seated_player(), kind)
                 else None
             )
             listed = with_new(cards, new)

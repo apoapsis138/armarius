@@ -127,6 +127,12 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 4.6.0 — 2026-11-10
+
+### Sodales
+
+- **Join before you have a character.** A player can join a saga with no character yet and make their own: **New Character** is offered to them, on a card under Your Characters on The Troupe and in the usual places. They can make a magus or a companion, and a grog too if they have covenant rights, since a new grog joins the covenant's household. The character is theirs from the start, named in its Biographical Detail as played by them, and opens on its Creation Worksheet. The storyguide sees it at once and can change or delete it. A player still can't make a character for someone else or for the whole troupe. Help has a new page, Joining with no character yet.
+
 ## 4.5.0 — 2026-11-10
 
 ### Liveries of the Houses

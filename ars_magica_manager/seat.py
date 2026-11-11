@@ -126,7 +126,8 @@ def may_act(saga: Saga, player: Player | None, action: str, record: Any = None) 
     """Whether the seat's `player` may run `action` on `record` (the record
     on show; None: the whole saga). The storyguide anything; a player moves
     around and reads anywhere (viewing.LOOKING_ACTIONS) and otherwise only
-    what their copy offers and players.may_change lets them change."""
+    what their copy offers and players.may_change lets them change, and
+    makes a character of their own (viewing.PLAYER_MAKES_ACTIONS)."""
     if runs_the_saga(player):
         viewer = viewing.current()
         if action in ANYWHERE:
@@ -138,4 +139,8 @@ def may_act(saga: Saga, player: Player | None, action: str, record: Any = None) 
         )
     if not viewing.may_do(viewing.current(), action):
         return False
-    return viewing.is_looking(action) or players.may_change(saga, player, record)
+    return (
+        viewing.is_looking(action)
+        or action in viewing.PLAYER_MAKES_ACTIONS
+        or players.may_change(saga, player, record)
+    )

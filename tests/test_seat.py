@@ -103,7 +103,8 @@ def test_another_players_page_offers_only_looking() -> None:
         | {i.action for i in menu_forms.new_items(page)}
         | {i.action for i in menu_forms.manage_items(page)}
     )
-    assert offered <= viewing.LOOKING_ACTIONS
+    # Looking, and making a character of their own.
+    assert offered <= viewing.LOOKING_ACTIONS | viewing.PLAYER_MAKES_ACTIONS
     assert menu_forms.deletes(page) is None
 
 
