@@ -1,7 +1,7 @@
 """The packs' maps and base pins, as they were placed on the desktop.
 
-Each pack's are a file, data/packs/atlas/<pack key>.json, written by
-tools/pack_pins.py from a saga in which the pins were placed by clicking
+Each pack's are a file, data/packs/atlas/<pack key>.json, exported from
+a saga in which the pins were placed by clicking
 (Place on Map), never typed: a map's name, its Tribunal's name (none for
 a region's own map), its picture (a file in data/packs/maps/, or none for
 a placeholder in its shape), its credit and scale, and each pin as its

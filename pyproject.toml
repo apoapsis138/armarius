@@ -32,15 +32,6 @@ Repository = "https://github.com/apoapsis138/Ars-Magica-Manager"
 Changelog = "https://github.com/apoapsis138/Ars-Magica-Manager/blob/main/CHANGELOG.md"
 
 [dependency-groups]
-charges = [
-    "shapely>=2.1",
-]
-catalog = [
-    "pymupdf>=1.28.2",
-    "pytesseract>=0.3.13",
-    # pytesseract's own; 12.x has known security flaws (pip-audit).
-    "pillow>=13.0.0",
-]
 dev = [
     "ruff>=0.16.8",
     "pytest>=8.0.0",

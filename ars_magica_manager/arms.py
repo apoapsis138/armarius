@@ -224,7 +224,7 @@ def drawing(d: str, box: tuple[float, float, float, float]) -> Shape:
 
 
 def layers(path: Path) -> dict[str, Shape]:
-    """A charge file cleaned by tools/clean_charge.py: its layers by id
+    """A charge file cleaned into layers: its layers by id
     (body, lines, armed), each a drawing fitted to the unit square by the
     file's viewBox."""
     text = path.read_text(encoding="utf-8")

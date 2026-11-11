@@ -194,7 +194,7 @@ version saves, and tagged in git (`v0.2.0`, ...).
 
 ### Fundamenta
 
-- **Four more working guides for Claude.** The project now carries guides for test-first work (expected values for a rule come from the books, not from the app), for researching a question with cited notes (rules from the books), for writing a feature's spec under its Feature, and for splitting a spec into stories on the board. They change nothing in the app.
+- **Development housekeeping.** Working practices for test-first work (expected values for a rule come from the books, not from the app), writing specs and splitting them into stories. They change nothing in the app.
 
 ## 4.3.0 — 2026-11-10
 
@@ -6610,9 +6610,9 @@ A fix to the covenant's Economics tab.
 
 The performance plan is saved with the project. Nothing in the app changes.
 
-- PERFORMANCE_PLAN.md records where the app spends its time (the screen,
-  not the save file), why a database isn't needed at this size, and the
-  fixes planned from it.
+- The plan records where the app spends its time (the screen, not the
+  save file), why a database isn't needed at this size, and the fixes
+  planned from it.
 
 ## 1.9.0 — 2026-09-30
 

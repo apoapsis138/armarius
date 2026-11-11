@@ -3,7 +3,6 @@ carries Atlas's attribution line, and Help's About this App shows the licences
 and credits."""
 
 import json
-import sys
 
 import pytest
 from support import screen_lines, wait_until
@@ -32,16 +31,6 @@ def test_every_catalog_carries_atlas_attribution(path):
     data = json.loads(path.read_text(encoding="utf-8"))
     assert isinstance(data, dict)
     assert data["attribution"].endswith(ATLAS)
-
-
-def test_spell_catalog_builder_writes_the_same_attribution():
-    sys.path.insert(0, str(ROOT / "tools"))
-    try:
-        import build_spell_catalog
-    finally:
-        sys.path.remove(str(ROOT / "tools"))
-    data = json.loads(catalog.SPELL_CATALOG_PATH.read_text(encoding="utf-8"))
-    assert build_spell_catalog.ATTRIBUTION == data["attribution"]
 
 
 def test_catalog_loads_a_bare_list_or_an_attributed_file(tmp_path):

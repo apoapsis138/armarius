@@ -10,19 +10,18 @@ Every SVG here is one colour, drawn in currentColor, so a front-end tints
 it to its theme. Two sets:
 
 - symbols/: Atlas Games's released Technique, Form and House symbols,
-  traced from their TIFFs by tools/trace_symbols.py (CC BY-SA 4.0, see
+  traced from their TIFFs to vector outlines (CC BY-SA 4.0, see
   NOTICE.md). They are woodcut tiles: the ink is the tile and its frame,
   and the symbol shows through as the background. House Guernicus has no
   released symbol and uses the Quaesitor's. symbols/traditions/ holds the
   hedge traditions' symbols, drawn in the same manner by
   tools/draw_traditions.py.
 - charges/: heraldic charges from Wikimedia Commons (see NOTICE.md),
-  cleaned by tools/clean_charge.py into layers (silhouette, line work,
+  cleaned into layers (silhouette, line work,
   claws), each tinted by arms.py's tincture rules.
 - drawn/: icons the app draws itself, after a Phosphor one (a ruin is
   the covenant's turret broken), each made by a script in tools/.
-- icons/: Phosphor Icons at Light weight (MIT), copied by
-  tools/fetch_icons.py, for everything else.
+- icons/: Phosphor Icons at Light weight (MIT), for everything else.
 
 app/ holds the Order of Hermes sigil, the Code of Hermes Ability's mark (the
 app icon is the title page's illuminated A, drawn in code). The typefaces
