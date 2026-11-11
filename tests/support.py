@@ -108,7 +108,7 @@ def screen_lines(app) -> list[str]:
     render_strips = getattr(compositor, "render_strips", None)
     assert render_strips is not None, (
         "Textual no longer has Screen._compositor.render_strips(): update "
-        "support.screen_lines (and CLAUDE.md's text-dump recipe) to the new API"
+        "support.screen_lines (and CONTRIBUTING.md's text-dump recipe) to the new API"
     )
     return [strip.text for strip in render_strips()]
 

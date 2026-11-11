@@ -1,4 +1,4 @@
-"""The performance guard on Footer rebuilds (CLAUDE.md "Performance
+"""The performance guard on Footer rebuilds (CONTRIBUTING.md "Performance
 rules"): a rebuild of the Footer is counted, never timed, and after each
 one it must show exactly the keys the screen has."""
 

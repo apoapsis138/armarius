@@ -3,7 +3,7 @@
 How the app is built and the decisions that shape it. What it does, by
 feature and version, is in [CHANGELOG.md](CHANGELOG.md); how to install and
 run it is in [README.md](README.md); the working rules for changing it are
-in [CLAUDE.md](CLAUDE.md). Why each lasting choice was made is in
+in [CONTRIBUTING.md](CONTRIBUTING.md). Why each lasting choice was made is in
 [docs/adr/](docs/adr/), one short record per decision.
 
 ## 1. What it is
@@ -217,8 +217,7 @@ Moving it **In Play** puts the values on its sheet. A book's "must" warns
 
 ## 8. UI conventions
 
-The standing decisions; terminal detail in UI_Conventions.md, kept in the
-project's notes (Reference/), outside the repo.
+The standing decisions.
 
 **No generative-AI art.** Every image, icon, symbol, texture or font the
 app ships or draws, in either front-end, is drawn in code or taken from a

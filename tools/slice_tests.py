@@ -20,7 +20,7 @@ slice runs only those that match what changed since the last commit
   fixtures, the dependencies) runs every screen test.
 
 This narrows what runs during a story, not what runs before one is handed
-over: the full suite still runs once, at In Review (CLAUDE.md).
+over: the full suite still runs once, before handing over (CONTRIBUTING.md).
 """
 
 from __future__ import annotations

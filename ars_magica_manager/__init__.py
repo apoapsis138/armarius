@@ -8,7 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 
 #: The app's version, 0.MINOR.PATCH. pyproject.toml is the one place it's
-#: set (see CHANGELOG.md, and CLAUDE.md for when it goes up).
+#: set (see CHANGELOG.md, and CONTRIBUTING.md for when it goes up).
 __version__: str = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))[
     "project"
 ]["version"]

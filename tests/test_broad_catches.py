@@ -1,7 +1,7 @@
 """No `except` catches TypeError or AttributeError.
 
 Those are what a renamed field or a wrong argument raise, so catching them
-turns a bug into a silent no-op (CLAUDE.md, "Catch only the error you
+turns a bug into a silent no-op (CONTRIBUTING.md, "Catch only the error you
 expect"). Data from outside (a file, another computer) is checked for
 shape where it comes in (shapes.py) and refused with a ValueError naming
 the field instead.

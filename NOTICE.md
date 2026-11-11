@@ -59,15 +59,18 @@ International license 4.0 ("CC-BY-SA 4.0").
 Sources: the *Ars Magica Fifth Edition* and *Ars Magica Definitive Edition*
 core rules, and the sourcebooks *Covenants*, *Art & Academe*, *Houses of
 Hermes: True Lineages*, *Houses of Hermes: Mystery Cults*, *Houses of
-Hermes: Societates*, *The Mysteries: Revised Edition* and, for the content
-packs, *Guardians of the Forests: The Rhine Tribunal*, *The Lion and the
-Lily: The Normandy Tribunal*, *Faith & Flame: The Provençal
+Hermes: Societates*, *The Mysteries: Revised Edition*, *Grogs* and, for the
+content packs, *Guardians of the Forests: The Rhine Tribunal*, *The Lion and
+the Lily: The Normandy Tribunal*, *Faith & Flame: The Provençal
 Tribunal*, *The Sundered Eagle: The Theban Tribunal*, *Against the
 Dark: The Transylvanian Tribunal*, *The Contested Isle: The Hibernian
 Tribunal*, *Blood and Sand: The Levant Tribunal* with *Secrets in
-Sand*, *The Cradle and the Crescent*, *Sanctuary of Ice: The Greater
-Alps Tribunal*, *Heirs to Merlin: The Stonehenge Tribunal* and *The
-Dragon and the Bear: The Novgorod Tribunal*. Where it is
+Sand*, *The Cradle and the Crescent*, *Lands of the Nile*, *Between Sand
+and Sea*, *Land of Fire & Ice* with *The Icelandic Wars*, *Through the
+Aegis: Developed Covenants*, *Magi of Hermes*, *Legends of Hermes*,
+*Antagonists*, *Sanctuary of Ice: The Greater Alps Tribunal*, *Heirs to
+Merlin: The Stonehenge Tribunal* and *The Dragon and the Bear: The
+Novgorod Tribunal*. Where it is
 recorded, each catalog entry's `source` field names its book. The spell
 catalog was built from [The Grand
 Grimoire](https://www.redcap.org/page/The_Grand_Grimoire) on Project:

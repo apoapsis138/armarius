@@ -1,4 +1,4 @@
-"""Performance guards (CLAUDE.md "Performance rules").
+"""Performance guards (CONTRIBUTING.md "Performance rules").
 
 Counts, not timings: timings flake under a parallel run. Each guard is a
 budget on work that made the app sluggish before. The guard on Footer

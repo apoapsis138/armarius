@@ -14,6 +14,6 @@ The rule is kept by the app, not by encryption: the host's saga file holds every
 
 ## Considered options
 
-- **The host as an alpha who reads everything:** the book gives the alpha a veto, but a host who plays in another's story would read its Secrets. Rejected by Hedda.
+- **The host as an alpha who reads everything:** the book gives the alpha a veto, but a host who plays in another's story would read its Secrets. Rejected.
 - **The host may reassign any record:** simpler to manage, but the host could take a record to read it.
 - **The role fixed, no switch:** a storyguide who also plays would see Secrets at the table.

@@ -215,7 +215,7 @@ def _check_golden(node: str, size: tuple[int, int], shown: str) -> None:
 
 
 async def _check_footer_rebuilds(pilot, app, view) -> None:
-    """The performance guard on the Footer (CLAUDE.md "Performance rules"):
+    """The performance guard on the Footer (CONTRIBUTING.md "Performance rules"):
     switching to each tab (its first visit, which builds it), focusing a
     section and arrowing down a list each rebuild the Footer at most once,
     and leave it showing the keys there are. Run with the sheet's own focus

@@ -290,7 +290,7 @@ async def test_arts_and_spells_tabs_are_absent_for_non_magi():
 
 async def test_switching_tabs_moves_a_a_e_with_the_tab():
     """Switching tabs must clear a stale Collapsible focus from whatever tab
-    was active before (see CLAUDE.md's flat-tab focus-tracking gotcha), so
+    was active before (see CONTRIBUTING.md's flat-tab focus-tracking gotcha), so
     'e' never re-dispatches to a section that's no longer visible. Planning
     has a section: switching to it focuses This Season. The
     Diary is a flat tab with its own a / e / d. (The Laboratory tab, the old

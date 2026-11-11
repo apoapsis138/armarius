@@ -57,7 +57,7 @@ gui = [
 
 [tool.ruff.lint]
 # TRY004: data of the wrong shape read from a save raises ValueError, as
-# loading does, so one handler covers a damaged file (CLAUDE.md).
+# loading does, so one handler covers a damaged file (CONTRIBUTING.md).
 ignore = ["UP045", "ISC004", "TRY004"]
 # Too many statements in one function (default limit 50). The functions
 # already over it carry a noqa until they are broken up.

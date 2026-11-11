@@ -1,6 +1,6 @@
 """A short overview of each sourcebook, for Saga Content's Books chapter:
 what it is about and what it gives a troupe, summarized in our own words
-from the book. A book not in the library has none."""
+from the book. A book not yet summarized has none."""
 
 from __future__ import annotations
 
