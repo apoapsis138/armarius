@@ -16,6 +16,7 @@ from textual.binding import Binding, BindingType
 from textual.containers import Horizontal
 from textual.widgets import Input, Select, Static
 
+from ... import hosting
 from ...commands import (
     RECENT,
     Choice,
@@ -264,7 +265,13 @@ def _show(app: App[Any], step: Question, answer: Callable[[object], None]) -> No
                 answer(path)
 
         app.push_screen(
-            CsvFilePickerScreen(step.title, step.start, suffix=step.suffixes),
+            CsvFilePickerScreen(
+                step.title,
+                step.start,
+                suffix=step.suffixes,
+                # A hosted copy browses only the exports folder.
+                confined=hosting.confined_chooser(),
+            ),
             handle_path,
         )
     else:

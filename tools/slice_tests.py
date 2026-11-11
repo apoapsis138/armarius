@@ -109,6 +109,13 @@ AREA_TESTS: dict[str, tuple[str, ...]] = {
     # Remote seats: the desktop's Host for Players window draws them.
     "ars_magica_manager/forms/remote_seats.py": ("test_gui_hosting.py",),
     "ars_magica_manager/remote/": ("test_gui_hosting.py",),
+    # Signing in to a hosted copy: the terminal's sign-in and new-passcode
+    # dialogs, and the hosting guards' own screen tests.
+    "ars_magica_manager/hosted_signin.py": (
+        "test_players.py",
+        "test_hosting_guards.py",
+    ),
+    "ars_magica_manager/lockout.py": ("test_players.py", "test_hosting_guards.py"),
     # A faction's members: its Members list, the sheets' Member of.
     "ars_magica_manager/memberships.py": (
         "test_dialog_contracts_tribunal.py",

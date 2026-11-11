@@ -4,6 +4,7 @@ Stop Hosting forms both front-ends draw from it."""
 from __future__ import annotations
 
 import socket
+import urllib.error
 import urllib.request
 
 import pytest
@@ -14,6 +15,7 @@ from ars_magica_manager.commands import Confirm, Form, Refuse
 from ars_magica_manager.forms import hosting as hosting_forms
 from ars_magica_manager.forms import menu as menu_forms
 from ars_magica_manager.models import Saga
+from ars_magica_manager.tui import serve
 
 
 def _free_port() -> int:
@@ -84,6 +86,13 @@ def test_host_for_players_starts_the_host_and_stop_hosting_ends_it(host):
     assert f"http://localhost:{port}" in said[0]
     with urllib.request.urlopen(f"http://localhost:{port}", timeout=5) as page_:
         assert b"Armarius" in page_.read()
+    # A request addressed to another name (DNS rebinding) gets nothing.
+    rebound = urllib.request.Request(
+        f"http://localhost:{port}", headers={"Host": f"evil.example:{port}"}
+    )
+    with pytest.raises(urllib.error.HTTPError) as refused:
+        urllib.request.urlopen(rebound, timeout=5)
+    assert refused.value.code == 403
     # Saga Management now offers Stop Hosting, saying where it is hosted.
     actions = [i.action for i in menu_forms.placed(page, "Saga Management")]
     assert "stop_hosting" in actions and "host_saga" not in actions
@@ -109,6 +118,36 @@ def test_a_port_in_use_is_refused_before_anything_starts(host):
     assert isinstance(said, Refuse)
     assert f"Port {port} is in use" in said.why
     assert not host.running
+
+
+def test_a_public_address_is_refused_unless_the_storyguide_insists(host):
+    form = hosting_forms.host_form()
+    public = _values(_free_port(), address="8.8.8.8")
+    said = form.apply(public)
+    assert isinstance(said, Refuse)
+    assert "reachable from the internet" in said.why
+    assert not host.running
+    # The box to insist shows only for such an address (or one typed in).
+    box = next(f for f in form.fields() if f.key == "public_ok")
+    assert box.show_if is not None
+    assert box.show_if(public)
+    assert box.show_if(_values(8000, address=hosting_forms.OTHER))
+    assert not box.show_if(_values(8000))
+    assert not box.show_if(_values(8000, address="100.64.1.2"))
+    # Insisting gets past the guard (here, to the address this computer
+    # hasn't got) and tells the server so; it is never remembered.
+    said = form.apply(public | {"public_ok": True})
+    assert isinstance(said, Refuse)
+    assert "reachable from the internet" not in said.why
+    plan = hosting_forms.plan_of(public | {"public_ok": True})
+    assert plan.arguments()[-1] == hosting.ALLOW_PUBLIC
+    assert hosting_forms.plan_of(_values(8000, public_ok=True)).public_ok is False
+
+
+def test_the_server_refuses_a_public_address_itself():
+    with pytest.raises(SystemExit) as refused:
+        serve.main(["--host", "0.0.0.0"])
+    assert hosting.ALLOW_PUBLIC in str(refused.value)
 
 
 def test_a_players_copy_never_hosts(host, monkeypatch):

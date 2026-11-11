@@ -51,7 +51,7 @@ def hosted_data(tmp_path, monkeypatch):
     monkeypatch.setattr(hosting.paths, "_in_use", data)
     monkeypatch.setattr(hosting.paths, "data_dir", lambda: data)
     saga = Saga(id="dammerstein", name="Dammerstein")
-    pl.add(saga, {"name": "Ana", "role": pl.PLAYER, "passcode": "rosemary"})
+    pl.add(saga, {"name": "Ana", "role": pl.PLAYER, "passcode": "rosemary and rue"})
     storage.save_saga(saga)
     return data
 
@@ -77,7 +77,7 @@ async def test_an_ssh_client_gets_the_app_and_signs_in(hosted_data):
             assert "New Saga" not in screen
             process.stdin.write(b"\r")  # open it: the sign-in dialog
             screen = await _read_until(process, "Sign in to Dammerstein")
-            for keys in (b"Ana", b"\t", b"rosemary", b"\t", b"\r"):  # as typed
+            for keys in (b"Ana", b"\t", b"rosemary and rue", b"\t", b"\r"):  # as typed
                 process.stdin.write(keys)
                 await asyncio.sleep(0.2)
             screen = await _read_until(process, "| Ana")  # signed in: the header

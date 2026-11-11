@@ -18,14 +18,19 @@ from textual.widgets import (
     Static,
 )
 
-from ... import __version__, paths, storage, title_page
+from ... import __version__, hosted_signin, paths, storage, title_page
 from ...forms import saga as saga_forms
 from ...markup import escape, problem
 from ...models import Player
 from .fields import FieldsDialog
 from .forms import _saga_fields, _save_folder_dialog
 from .help import HelpContext, HelpScreen, shown_keys
-from .prompts import ConfirmScreen, MenuScreen, _sign_in_dialog
+from .prompts import (
+    ConfirmScreen,
+    MenuScreen,
+    _new_passcode_dialog,
+    _sign_in_dialog,
+)
 from .widgets import BottomBar
 from .workspace import WorkspaceScreen
 
@@ -254,10 +259,39 @@ class SagaPickerScreen(Screen[None]):
             )
             return
 
-        def signed_in(player: Player | None) -> None:
-            if player is not None:
-                self._set_player(player)
-                self.app.push_screen(WorkspaceScreen(saga))
+        def go_in(player: Player) -> None:
+            self._set_player(player)
+            self.app.push_screen(WorkspaceScreen(saga))
+
+        def signed_in(outcome: hosted_signin.Outcome | None) -> None:
+            if outcome is None or outcome.player is None:
+                return
+            player = outcome.player
+            if not outcome.short:
+                go_in(player)
+                return
+            # A passcode shorter than the rule allows: a new one, or (this
+            # once) Not Now.
+            put_off = outcome.may_put_off
+
+            def renewed(saved: bool | None) -> None:
+                if saved:
+                    self.notify("Your new passcode is saved.")
+                    go_in(player)
+                elif put_off:
+                    hosted_signin.SignInBook(
+                        hosted_signin.book_path(saga.name)
+                    ).spend_short(player)
+                    self.notify(
+                        "Signed in with your short passcode for the last time: "
+                        "choose a new one next time.",
+                        severity="warning",
+                    )
+                    go_in(player)
+
+            self.app.push_screen(
+                _new_passcode_dialog(saga, player, may_put_off=put_off), renewed
+            )
 
         self.app.push_screen(_sign_in_dialog(saga), signed_in)
 

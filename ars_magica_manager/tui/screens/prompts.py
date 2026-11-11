@@ -21,11 +21,11 @@ from textual.widgets import (
 )
 from textual.widgets.option_list import Option
 
+from ... import hosted_signin, transfer
 from ... import house_rules as hr
 from ... import lab_texts as lt
 from ... import players as pl
 from ... import saga_content as sc
-from ... import transfer
 from ...arts import FORMS, TECHNIQUES
 from ...commands import Form, Picked
 from ...form_spec import DialogField, pairs
@@ -294,20 +294,20 @@ def _hide_entry_dialog(key: str | None) -> FieldsDialog[dict[str, Any]]:
     return dialog
 
 
-def _sign_in_dialog(saga: Saga) -> FieldsDialog[Player]:
+def _sign_in_dialog(saga: Saga) -> FieldsDialog[hosted_signin.Outcome]:
     """Who is there: a browser copy of a hosted app asks for a
-    player's name and passcode before it opens `saga`. Dismisses with the
-    player, or None if cancelled."""
+    player's name and passcode before it opens `saga` (hosted_signin.attempt:
+    wrong passcodes wait, a short one is let in once more). Dismisses with
+    the outcome of a sign-in that let the player in, or None if cancelled."""
+    book = hosted_signin.SignInBook(hosted_signin.book_path(saga.name))
+    outcome: list[hosted_signin.Outcome] = []
 
     def problem(values: dict[str, Any]) -> str | None:
-        if pl.sign_in(saga, values.get("name") or "", values.get("passcode") or ""):
-            return None
-        return "That name and passcode don't match a player of this saga."
-
-    def signed_in(values: dict[str, Any]) -> Player:
-        player = pl.sign_in(saga, values["name"], values["passcode"])
-        assert player is not None  # `problem` let the form through
-        return player
+        found = hosted_signin.attempt(
+            book, saga, values.get("name") or "", values.get("passcode") or ""
+        )
+        outcome[:] = [found]
+        return found.refused or None
 
     dialog = FieldsDialog(
         f"Sign in to {escape(saga.name)}",
@@ -317,7 +317,49 @@ def _sign_in_dialog(saga: Saga) -> FieldsDialog[Player]:
         ],
         validate=problem,
         save_label="Sign in",
-        build=signed_in,
+        build=lambda _values: outcome[0],
+    )
+    dialog.help_id = "sign-in"
+    return dialog
+
+
+def _new_passcode_dialog(
+    saga: Saga, player: Player, *, may_put_off: bool
+) -> FieldsDialog[bool]:
+    """A player who signed in with a passcode shorter than the rule allows
+    chooses a new one (hosted_signin.change_passcode saves it). With
+    `may_put_off`, Not Now lets them in this once. Dismisses with True once
+    saved, None if put off."""
+
+    def problem(values: dict[str, Any]) -> str | None:
+        new = values.get("new") or ""
+        if new != (values.get("again") or ""):
+            return "The two passcodes differ."
+        return hosted_signin.change_passcode(saga, player, new)
+
+    dialog = FieldsDialog(
+        "Choose a new passcode",
+        [
+            DialogField(
+                "_why",
+                "Why",
+                "info",
+                f"Your passcode is shorter than {pl.MIN_PASSCODE} characters, "
+                "the least a passcode may be. Choose a longer one now."
+                + (
+                    " Not Now lets you in this once; the next time, the short "
+                    "one won't."
+                    if may_put_off
+                    else ""
+                ),
+            ),
+            DialogField("new", "New passcode", "secret", "", required=True),
+            DialogField("again", "Again", "secret", "", required=True),
+        ],
+        validate=problem,
+        save_label="Save",
+        build=lambda _values: True,
+        cancel_label="Not Now" if may_put_off else "Cancel",
     )
     dialog.help_id = "sign-in"
     return dialog

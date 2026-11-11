@@ -14,6 +14,7 @@ import pytest_asyncio
 from test_remote_redeem import Spy
 
 from ars_magica_manager import players
+from ars_magica_manager.lockout import LOCK_STEPS
 from ars_magica_manager.models import Player, Saga
 from ars_magica_manager.remote import audit
 from ars_magica_manager.remote import identity as ident
@@ -25,11 +26,7 @@ from ars_magica_manager.remote.client import (
     new_device_secret,
 )
 from ars_magica_manager.remote.control import revoke_device, rotate_host_key
-from ars_magica_manager.remote.devices import (
-    DAY,
-    LOCK_STEPS,
-    DeviceBook,
-)
+from ars_magica_manager.remote.devices import DAY, DeviceBook
 from ars_magica_manager.remote.host import PATH, RemoteHost
 from ars_magica_manager.remote.invites import InviteBook, Request
 from ars_magica_manager.remote.limits import Limits

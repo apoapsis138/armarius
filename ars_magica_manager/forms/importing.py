@@ -21,7 +21,15 @@ from pathlib import Path
 from typing import Any
 
 from .. import books as bk
-from .. import catalog, cult_transfer, packs, record_update, storage, transfer
+from .. import (
+    catalog,
+    cult_transfer,
+    hosting,
+    packs,
+    record_update,
+    storage,
+    transfer,
+)
 from .. import spells as spl
 from ..commands import Choice, Choose, ChooseFile, Command, Confirm, Form, Refuse, notes
 from ..form_spec import DialogField
@@ -147,18 +155,31 @@ def save_example(folder: Path) -> list[str]:
     try:
         target.write_text(spl.EXAMPLE_CSV, encoding="utf-8")
     except OSError as error:
-        return notes(f"Couldn't save the example: {escape(str(error))}")
+        return notes(
+            f"Couldn't save the example: {escape(error.strerror or str(error))}"
+        )
     return notes(
-        f"Saved {escape(target.name)} in {escape(str(folder))}. "
+        f"Saved {escape(target.name)} in {escape(_folder_shown(folder))}. "
         "Edit it, then import it."
     )
 
 
+def _folder_shown(folder: Path) -> str:
+    """`folder` as this copy may name it: a hosted copy names the exports
+    folder, never its place on the host's disk."""
+    confined = hosting.confined_chooser()
+    if confined is not None and confined.holds(folder):
+        return confined.show(folder)
+    return str(folder)
+
+
 def spell_import_help(saga: Saga, folder: Path | None = None) -> Form:
     """Import Spells: what a spell CSV looks like, then on to choosing the
-    file, or save an example to start from in `folder` (the working
-    folder by default) instead."""
-    folder = folder or Path.cwd()
+    file, or save an example to start from in `folder` instead (the
+    working folder by default; in a hosted copy, the exports folder, the
+    one its chooser shows)."""
+    confined = hosting.confined_chooser()
+    folder = folder or (confined.root if confined is not None else Path.cwd())
 
     def apply(values: dict[str, Any]) -> Command | list[str]:
         if values.get("example"):
@@ -173,7 +194,7 @@ def spell_import_help(saga: Saga, folder: Path | None = None) -> Form:
                 "Save an example CSV instead",
                 "check",
                 False,
-                hint=f"Saved in {folder}, to edit and then import.",
+                hint=f"Saved in {_folder_shown(folder)}, to edit and then import.",
             ),
         ],
         apply,

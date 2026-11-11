@@ -52,10 +52,28 @@ def main(argv: list[str] | None = None) -> None:
         help="also take SSH clients on this port "
         f"(off unless given; try {core_hosting.DEFAULT_SSH_PORT})",
     )
+    parser.add_argument(
+        core_hosting.ALLOW_PUBLIC,
+        action="store_true",
+        help="host on an address the internet can reach (refused otherwise)",
+    )
     args = parser.parse_args(argv)
+    if not args.allow_public and core_hosting.is_public(args.host):
+        sys.exit(
+            core_hosting.public_refusal(
+                args.host, insist=f"add {core_hosting.ALLOW_PUBLIC}"
+            )
+        )
     command = f'"{sys.executable}" "{MAIN}"'
     server = Server(command, host=args.host, port=args.port, title="Armarius")
     server.initialize_logging()
+    allowed = core_hosting.allowed_hosts(args.host, args.port)
+
+    async def make_app() -> web.Application:
+        app = await server._make_app()  # pyright: ignore[reportPrivateUsage]
+        app.middlewares.append(hosting.addressed_to(allowed))
+        return app
+
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     try:
@@ -68,7 +86,7 @@ def main(argv: list[str] | None = None) -> None:
                 sys.exit(f"Can't take SSH clients: {problem}")
             print(f"SSH: ssh -p {args.ssh_port} player@{args.host}")
         web.run_app(
-            server._make_app(),
+            make_app(),
             host=args.host,
             port=args.port,
             loop=loop,

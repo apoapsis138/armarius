@@ -36,6 +36,7 @@ from ... import spells as spl
 from ...boon_hook_text import boon_hook_entry_text, boon_hook_names
 from ...forms import covenant as covenant_forms
 from ...forms import virtue as virtue_forms
+from ...hosting import ConfinedFolder
 from ...markup import escape
 from ...models import (
     VIRTUE_FLAW_TIER_COST,
@@ -1327,6 +1328,10 @@ class _CsvDirectoryTree(DirectoryTree):
         ]
 
 
+#: What a hosted copy's chooser says of a path outside its folder.
+OUTSIDE_EXPORTS = "Only files in the exports folder can be chosen here."
+
+
 class CsvFilePickerScreen(ModalDialog[Path | None]):
     """A small file explorer for choosing a .csv file: browse the folders
     below `start` (Enter opens a folder or picks a file), Up goes to the
@@ -1377,21 +1382,39 @@ class CsvFilePickerScreen(ModalDialog[Path | None]):
     """
 
     def __init__(
-        self, title: str, start: Path, *, suffix: str | tuple[str, ...] = ".csv"
+        self,
+        title: str,
+        start: Path,
+        *,
+        suffix: str | tuple[str, ...] = ".csv",
+        confined: ConfinedFolder | None = None,
     ) -> None:
         super().__init__()
         self.title_text = title
-        self.start = start
+        #: The folder it may not leave (a hosted copy's exports folder), or
+        #: None to browse the whole computer.
+        self.confined = confined
+        self.start = confined.start(start) if confined is not None else start
         #: The kinds of file to choose (".json" and ".zip" for an export).
         found = (suffix,) if isinstance(suffix, str) else suffix
         self.suffix = tuple(s.lower() for s in found)
+
+    def _shown(self, path: Path) -> str:
+        return self.confined.show(path) if self.confined is not None else str(path)
+
+    def _typed(self, raw: str) -> Path | None:
+        """The path typed in the box; None if it is outside the folder the
+        chooser keeps to."""
+        if self.confined is not None:
+            return self.confined.find(raw)
+        return Path(raw.strip().strip('"')).expanduser()
 
     def compose(self) -> ComposeResult:
         with Vertical(id="picker-dialog", classes="dialog-box"):
             yield Label(self.title_text, id="picker-title", classes="dialog-title")
             with Horizontal(id="picker-path-row"):
                 yield Button("Up", id="btn-picker-up", compact=True)
-                yield Input(str(self.start), id="picker-path", compact=True)
+                yield Input(self._shown(self.start), id="picker-path", compact=True)
             yield _CsvDirectoryTree(self.start, suffix=self.suffix, id="picker-tree")
             yield Static("", id="picker-error")
             with Horizontal(id="picker-buttons"):
@@ -1403,14 +1426,16 @@ class CsvFilePickerScreen(ModalDialog[Path | None]):
 
     def _show_folder(self, folder: Path) -> None:
         self.query_one("#picker-tree", DirectoryTree).path = folder
-        self.query_one("#picker-path", Input).value = str(folder)
+        self.query_one("#picker-path", Input).value = self._shown(folder)
         self.query_one("#picker-error", Static).update("")
 
     def _choose(self, raw: str) -> None:
         """Open a typed folder, or pick a typed file of the right kind."""
-        path = Path(raw.strip().strip('"')).expanduser()
+        path = self._typed(raw)
         error = self.query_one("#picker-error", Static)
-        if path.is_dir():
+        if path is None:
+            error.update(OUTSIDE_EXPORTS)
+        elif path.is_dir():
             self._show_folder(path)
         elif path.is_file() and path.name.lower().endswith(self.suffix):
             self.dismiss(path)
@@ -1419,19 +1444,26 @@ class CsvFilePickerScreen(ModalDialog[Path | None]):
                 f"{escape(path.name)} isn't a {' or '.join(self.suffix)} file."
             )
         else:
-            error.update(f"No such file or folder: {escape(str(path))}")
+            error.update(f"No such file or folder: {escape(self._shown_typed(raw))}")
+
+    def _shown_typed(self, raw: str) -> str:
+        return raw.strip() if self.confined is not None else str(self._typed(raw))
 
     def on_directory_tree_file_selected(
         self, event: DirectoryTree.FileSelected
     ) -> None:
         event.stop()
+        if self.confined is not None and not self.confined.holds(event.path):
+            self.query_one("#picker-error", Static).update(OUTSIDE_EXPORTS)
+            return
         self.dismiss(event.path)
 
     def on_directory_tree_directory_selected(
         self, event: DirectoryTree.DirectorySelected
     ) -> None:
         event.stop()
-        self.query_one("#picker-path", Input).value = str(event.path)
+        if self.confined is None or self.confined.holds(event.path):
+            self.query_one("#picker-path", Input).value = self._shown(event.path)
 
     def on_input_submitted(self, event: Input.Submitted) -> None:
         event.stop()
@@ -1441,7 +1473,12 @@ class CsvFilePickerScreen(ModalDialog[Path | None]):
         event.stop()
         if event.button.id == "btn-picker-up":
             tree = self.query_one("#picker-tree", DirectoryTree)
-            self._show_folder(Path(tree.path).resolve().parent)
+            folder = Path(tree.path)
+            self._show_folder(
+                self.confined.up(folder)
+                if self.confined is not None
+                else folder.resolve().parent
+            )
         elif event.button.id == "btn-picker-open":
             tree = self.query_one("#picker-tree", DirectoryTree)
             node = tree.cursor_node

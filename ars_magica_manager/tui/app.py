@@ -7,7 +7,7 @@ from typing import ClassVar
 from textual.app import App
 from textual.binding import Binding, BindingType
 
-from .. import __version__, paths, title_page
+from .. import __version__, hosting, paths, title_page
 from ..markup import escape
 from ..models import Player
 from ..settings import load_settings, update_settings
@@ -63,6 +63,10 @@ class ArsMagicaManagerApp(App[None]):
     show_title: bool = False
 
     def on_mount(self) -> None:
+        # A hosted copy has no command palette (Ctrl+P): it is Textual's,
+        # not the app's, and its theme choice would write the host's
+        # settings for someone who hasn't signed in.
+        self.use_command_palette = not hosting.is_hosted_copy()
         # Notes about the host's data folder are the storyguide's business:
         # a player's browser copy doesn't show them.
         if self.startup_notes and not self.is_web:
@@ -84,4 +88,7 @@ class ArsMagicaManagerApp(App[None]):
             self.push_screen(TitleScreen(title_page.title_page()))
 
     def watch_theme(self, theme_name: str) -> None:
-        update_settings(theme=theme_name)
+        # The settings are the storyguide's: only their own window saves
+        # its theme there.
+        if not hosting.is_hosted_copy():
+            update_settings(theme=theme_name)

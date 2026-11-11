@@ -35,7 +35,16 @@ def plan_of(values: dict[str, Any]) -> hosting.Plan:
         (values.get("ssh_port") or hosting.DEFAULT_SSH_PORT)
         if values.get("ssh")
         else None,
+        public_ok=bool(values.get("public_ok")) and _may_be_public(values),
     )
+
+
+def _may_be_public(values: dict[str, Any]) -> bool:
+    """Whether the form asks the storyguide to insist: an address typed in
+    (a name is looked up only when hosting starts), or one the internet
+    can reach."""
+    address = values.get("address") or hosting.LOCALHOST
+    return address == OTHER or hosting.is_public(address, resolve=False)
 
 
 def _problem(values: dict[str, Any]) -> str | None:
@@ -112,6 +121,16 @@ def host_form() -> Form:
                 "text",
                 "",
                 show_if=lambda values: values.get("address") == OTHER,
+            ),
+            DialogField(
+                "public_ok",
+                "I know this is reachable from the internet",
+                "check",
+                False,
+                hint="Hosting on such an address is refused unless this is "
+                "ticked: anyone on the internet could open the app and try "
+                "passcodes, and nothing is encrypted.",
+                show_if=_may_be_public,
             ),
             DialogField(
                 "port",

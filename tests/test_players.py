@@ -16,6 +16,10 @@ from ars_magica_manager.tui.screens import SagaPickerScreen, WorkspaceScreen
 from ars_magica_manager.tui.screens.fields import FieldsDialog
 from ars_magica_manager.tui.screens.workspace.base import NodeKind
 
+#: A passcode long enough to sign in from a browser without being asked
+#: for a new one.
+ROSEMARY = "rosemary for remembrance"
+
 
 def _saga_with(*players: tuple[str, str, str]) -> Saga:
     saga = Saga(id="dammerstein", name="Dammerstein", storyguide="Hedda")
@@ -124,7 +128,9 @@ async def test_the_storyguides_own_window_opens_a_saga_without_signing_in():
 
 async def test_a_browser_copy_signs_in_before_opening_a_saga(in_a_browser):
     storage.save_saga(
-        _saga_with(("Ana", pl.PLAYER, "rosemary"), ("Hedda", pl.STORYGUIDE, "sage"))
+        _saga_with(
+            ("Ana", pl.PLAYER, ROSEMARY), ("Hedda", pl.STORYGUIDE, "sage and thyme too")
+        )
     )
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 60)) as pilot:
@@ -140,7 +146,7 @@ async def test_a_browser_copy_signs_in_before_opening_a_saga(in_a_browser):
         error = dialog.query_one("#fields-error", Static)
         assert await wait_until(pilot, lambda: "don't match" in str(error.render()))
 
-        await _sign_in(pilot, app, "ana", "rosemary")
+        await _sign_in(pilot, app, "ana", ROSEMARY)
         assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
         assert app.player is not None and app.player.name == "Ana"
         assert app.screen.sub_title.endswith("| Ana")
@@ -156,11 +162,59 @@ async def test_a_browser_copy_signs_in_before_opening_a_saga(in_a_browser):
         # once switched from Playing (with a second storyguide every
         # storyguide's copy opens Playing: ADR 0015).
         await _open_first_saga(pilot, app)
-        await _sign_in(pilot, app, "Hedda", "sage")
+        await _sign_in(pilot, app, "Hedda", "sage and thyme too")
         assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
         assert not await _has_players_tab(pilot, app.screen)
         await app.screen.action_player_view()
         assert await _has_players_tab(pilot, app.screen)
+
+
+async def test_a_short_passcode_asks_for_a_new_one(in_a_browser):
+    storage.save_saga(_saga_with(("Ana", pl.PLAYER, "rosemary")))
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(120, 45)) as pilot:
+        # Signed in: asked for a new passcode first, and may put it off once.
+        await _open_first_saga(pilot, app)
+        first = await _sign_in(pilot, app, "Ana", "rosemary")
+        assert await wait_until(pilot, lambda: app.screen is not first)
+        asked = app.screen
+        assert isinstance(asked, FieldsDialog)
+        assert asked.query_one("#btn-cancel", Button).label.plain == "Not Now"
+        asked.query_one("#btn-cancel", Button).press()
+        assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        assert await _has_players_tab(pilot, app.screen) is False  # fully drawn
+
+    # Next time (another tab) the short one must be changed: refused.
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(120, 45)) as pilot:
+        await _open_first_saga(pilot, app)
+        first = await _sign_in(pilot, app, "Ana", "rosemary")
+        error = first.query_one("#fields-error", Static)
+        assert await wait_until(pilot, lambda: "last sign-in" in str(error.render()))
+        assert app.screen is first
+
+    # The storyguide sets a new short one: it gets one more sign-in, and
+    # this time the player chooses a long one.
+    saga = storage.load_saga("dammerstein")
+    pl.set_passcode(saga.players[0], "thyme")
+    storage.save_saga(saga)
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(120, 45)) as pilot:
+        await _open_first_saga(pilot, app)
+        first = await _sign_in(pilot, app, "Ana", "thyme")
+        assert await wait_until(pilot, lambda: app.screen is not first)
+        asked = app.screen
+        assert isinstance(asked, FieldsDialog)
+        asked.query_one("#fld-new", Input).value = ROSEMARY
+        asked.query_one("#fld-again", Input).value = "not the same"
+        asked.query_one("#btn-save", Button).press()
+        error = asked.query_one("#fields-error", Static)
+        assert await wait_until(pilot, lambda: "differ" in str(error.render()))
+        asked.query_one("#fld-again", Input).value = ROSEMARY
+        asked.query_one("#btn-save", Button).press()
+        assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        assert await _has_players_tab(pilot, app.screen) is False  # fully drawn
+    assert pl.sign_in(storage.load_saga("dammerstein"), "Ana", ROSEMARY) is not None
 
 
 async def test_a_saga_with_no_players_cant_be_opened_from_a_browser(in_a_browser):

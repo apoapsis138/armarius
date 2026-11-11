@@ -149,6 +149,7 @@ LAYERS: tuple[tuple[str, frozenset[str]], ...] = (
             {
                 "",
                 "arts",
+                "lockout",
                 "markup",
                 "models",
                 "paths",

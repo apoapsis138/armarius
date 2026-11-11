@@ -19,15 +19,17 @@ from __future__ import annotations
 
 import asyncio
 import sys
-from collections.abc import Mapping
+from collections.abc import Awaitable, Callable, Mapping
 from pathlib import Path
 
 import asyncssh
+from aiohttp import web
+from aiohttp.typedefs import Middleware
 from textual_serve.app_service import AppService
 from textual_serve.download_manager import DownloadManager
 
 from .. import paths
-from ..hosting import TRANSPORT_VAR
+from ..hosting import TRANSPORT_VAR, request_allowed
 from ..remote.identity import KeychainStore, KeyStore
 
 
@@ -86,6 +88,34 @@ class HostedAppService(AppService):
 
 class _SshAppService(HostedAppService):
     transport = "ssh"
+
+
+# -- the web host's requests -------------------------------------------------
+
+#: What a request not addressed to the host is told.
+_NOT_ADDRESSED = "This host answers only its own address."
+
+type _Handler = Callable[[web.Request], Awaitable[web.StreamResponse]]
+
+
+def addressed_to(allowed: frozenset[str]) -> Middleware:
+    """An aiohttp middleware (one more link in its Chain of Responsibility,
+    in front of textual-serve's handlers) that refuses a request whose
+    Host isn't one of `allowed`, and an app connection (/ws) whose Origin
+    isn't the host's own page (core_hosting.request_allowed)."""
+
+    @web.middleware
+    async def check(request: web.Request, handler: _Handler) -> web.StreamResponse:
+        if not request_allowed(
+            request.headers.get("Host"),
+            request.headers.get("Origin"),
+            request.path == "/ws",
+            allowed,
+        ):
+            raise web.HTTPForbidden(text=_NOT_ADDRESSED)
+        return await handler(request)
+
+    return check
 
 
 # -- SSH ---------------------------------------------------------------------

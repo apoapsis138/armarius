@@ -127,6 +127,16 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 4.8.0 — 2026-11-11
+
+### Sodales
+
+- **Hosting for browsers and SSH, hardened.** Host for Players refuses an address the whole internet can reach (or every address at once) unless you tick "I know this is reachable from the internet"; the tick is never remembered, and the server run from a terminal needs `--allow-public` for the same. The host answers only requests made to the address you chose, and opens a copy of the app only for its own page, so a web page from another site can't reach it.
+- **Wrong passcodes wait.** Signing in from a browser or over SSH now follows the same rule as Remote seats: three wrong passcodes for a name are free, then each try waits longer (30 seconds, 2 minutes, 10 minutes, then an hour), in every tab at once.
+- **Short passcodes are changed.** A passcode under 14 characters signs in once more and asks the player for a new one; they may put it off that once, and after that it is refused until they choose a new one or the storyguide sets one.
+- **A hosted copy keeps to its own.** A copy opened in a browser or over SSH has no command palette and never changes your settings, and its file chooser (Import, for a storyguide signed in that way) shows only your exports folder, named from there, never the rest of your computer.
+- **No data read with pickle.** A test now fails if the app ever reads data with Python's pickle, marshal or shelve, which run code hidden in what they read.
+
 ## 4.7.0 — 2026-11-11
 
 ### Liveries of the Houses

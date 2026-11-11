@@ -9,8 +9,8 @@ passcode.
 
 A device ends when the Storyguide revokes it, when it has been idle for
 longer than the saga allows (90 days unless changed), or when the host key
-is rotated. Failed passcode proofs slow a device down: three are free, then
-the waits grow.
+is rotated. Failed passcode proofs slow a device down by the rule every
+sign-in shares (lockout.py): three are free, then the waits grow.
 
 The file lives in the host's data folder, outside the saga.
 """
@@ -27,7 +27,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from .. import shapes
+from .. import lockout, shapes
 from ..files import write_atomic
 from . import audit
 from .folder import SharedFile, remote_file
@@ -41,11 +41,6 @@ if TYPE_CHECKING:
 DAY = 24 * 3600.0
 DEFAULT_IDLE_DAYS = 90
 MAX_IDLE_DAYS = 3650
-#: Failed proofs allowed before the first wait.
-FREE_FAILURES = 3
-#: Seconds to wait after the third failure, then each further one (the last
-#: repeats).
-LOCK_STEPS = (30.0, 120.0, 600.0, 3600.0)
 REVOKED, EXPIRED = "revoked", "expired"
 
 
@@ -218,9 +213,9 @@ class DeviceBook(SharedFile):
             device = self._now(device)
             device.failures += 1
             self._note(audit.SIGN_IN_FAILED, device)
-            if device.failures >= FREE_FAILURES:
-                step = min(device.failures - FREE_FAILURES, len(LOCK_STEPS) - 1)
-                device.locked_until = self._clock() + LOCK_STEPS[step]
+            until = lockout.locked_until(device.failures, self._clock())
+            if until:
+                device.locked_until = until
                 self._note(audit.DEVICE_LOCKED, device)
             self._save()
             return self.lock_remaining(device)

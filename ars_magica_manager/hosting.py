@@ -10,7 +10,9 @@ terminal front-end's code, which the core and the desktop never import,
 and so that it can be ended whole, with every player's copy.
 
 Whatever starts it, the host listens only on the address given: the
-storyguide's own network, Tailscale or ZeroTier, never a public one.
+storyguide's own network, Tailscale or ZeroTier. An address the internet
+can reach is refused unless the storyguide insists (`is_public`), and the
+web host answers only requests addressed to it (`request_allowed`).
 """
 
 from __future__ import annotations
@@ -28,6 +30,7 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import IO, ClassVar, Protocol
+from urllib.parse import urlsplit
 
 from . import paths, settings, shapes
 
@@ -87,11 +90,13 @@ class Hosting(Protocol):
 @dataclass(frozen=True)
 class Plan:
     """Where a host listens: `address`, its browser `port`, and an SSH
-    port, or None for browsers only."""
+    port, or None for browsers only. `public_ok`: the storyguide insists on
+    an address the internet can reach (never remembered: asked each time)."""
 
     address: str = LOCALHOST
     port: int = DEFAULT_PORT
     ssh_port: int | None = None
+    public_ok: bool = False
 
     module: ClassVar[str] = SERVER_MODULE
 
@@ -118,7 +123,152 @@ class Plan:
         found = ["--host", self.address, "--port", str(self.port)]
         if self.ssh_port is not None:
             found += ["--ssh-port", str(self.ssh_port)]
+        if self.public_ok:
+            found.append(ALLOW_PUBLIC)
         return found
+
+
+#: The server's flag for an address the internet can reach.
+ALLOW_PUBLIC = "--allow-public"
+
+#: Addresses that mean "every address this computer has", a public one
+#: among them.
+_EVERY_ADDRESS = frozenset({"", "0.0.0.0", "::", "*"})
+_LOOPBACK_NAMES = frozenset({LOCALHOST, "127.0.0.1", "::1"})
+
+
+def _global(text: str) -> bool:
+    try:
+        ip = ipaddress.ip_address(text.split("%")[0])
+    except ValueError:
+        return False
+    return ip.is_global or ip.is_unspecified
+
+
+def is_public(address: str, *, resolve: bool = True) -> bool:
+    """Whether hosting on `address` lets the internet in: an address the
+    internet routes to, or every address this computer has. Tailscale's
+    and private networks' addresses aren't. A name is looked up unless
+    `resolve` is False (then only a typed address is judged)."""
+    address = address.strip()
+    if address in _EVERY_ADDRESS:
+        return True
+    if address in _LOOPBACK_NAMES:
+        return False
+    try:
+        ipaddress.ip_address(address.split("%")[0])
+    except ValueError:
+        if not resolve:
+            return False
+        try:
+            infos = socket.getaddrinfo(address, None)
+        except OSError:
+            return False  # not an address at all: listening will say so
+        return any(_global(str(info[4][0])) for info in infos)
+    return _global(address)
+
+
+#: How the Host for Players form insists on a public address.
+INSIST = "tick “I know this is reachable from the internet”"
+
+
+def public_refusal(address: str, *, insist: str = INSIST) -> str:
+    """Why hosting on `address` is refused until the storyguide insists
+    (`insist` says how)."""
+    shown = address.strip() or "every address"
+    return (
+        f"{shown} can be reached from the internet: anyone there could open "
+        "the app and try passcodes, and nothing they send or see is "
+        "encrypted. Host on your Tailscale or ZeroTier address instead, or "
+        f"{insist}."
+    )
+
+
+def allowed_hosts(address: str, port: int) -> frozenset[str]:
+    """What a browser may send as the Host of a request to a host on
+    `address`:`port` (and as the Origin of the page's own connection):
+    that address, with loopback's other names for localhost, or this
+    computer's addresses when it listens on all of them."""
+    address = address.strip()
+    if address in _EVERY_ADDRESS:
+        names = {*_LOOPBACK_NAMES, *addresses()}
+    elif address in _LOOPBACK_NAMES:
+        names = set(_LOOPBACK_NAMES)
+    else:
+        names = {address}
+    shown = {f"[{n}]" if ":" in n else n for n in names}
+    found = {f"{n}:{port}" for n in shown}
+    if port == 80:
+        found |= shown  # a browser leaves the default port out
+    return frozenset(n.lower() for n in found)
+
+
+def request_allowed(
+    host: str | None, origin: str | None, websocket: bool, allowed: frozenset[str]
+) -> bool:
+    """Whether the web host answers a request: its Host must be one of
+    `allowed` (so a name that a hostile site points at this computer gets
+    nothing), and the app's own connection (`websocket`) must come from
+    the host's own page (so a page from another site can't open a copy)."""
+    if (host or "").strip().lower() not in allowed:
+        return False
+    if not websocket:
+        return True
+    parts = urlsplit(origin or "")
+    return parts.scheme in ("http", "https") and parts.netloc.lower() in allowed
+
+
+#: How a hosted copy names its exports folder, instead of its place on
+#: the host's disk.
+EXPORTS_SHOWN = "exports"
+
+
+class ConfinedFolder:
+    """A folder a file chooser can't leave (a Proxy for the file system):
+    a hosted copy's chooser shows only the exports folder and what is
+    below it, and names them from there, never by their place on the
+    host's disk."""
+
+    def __init__(self, root: Path) -> None:
+        self.root = root.resolve()
+
+    def holds(self, path: Path) -> bool:
+        """Whether `path` (links followed) is the folder or inside it."""
+        return path.resolve().is_relative_to(self.root)
+
+    def find(self, typed: str) -> Path | None:
+        """The file or folder `typed` names, as `show` writes it or as a
+        path below the folder; None if it is outside."""
+        text = typed.strip().strip('"').replace("\\", "/")
+        if text == EXPORTS_SHOWN or text.startswith(EXPORTS_SHOWN + "/"):
+            text = text[len(EXPORTS_SHOWN) :].lstrip("/")
+        path = (self.root / text).resolve()
+        return path if self.holds(path) else None
+
+    def start(self, wanted: Path) -> Path:
+        """`wanted` if it is inside, else the folder itself."""
+        return wanted if wanted.is_dir() and self.holds(wanted) else self.root
+
+    def up(self, folder: Path) -> Path:
+        """The folder above `folder`, never above the folder itself."""
+        parent = folder.resolve().parent
+        return parent if self.holds(parent) else self.root
+
+    def show(self, path: Path) -> str:
+        """`path` named from the folder: "exports/Characters"."""
+        inside = path.resolve().relative_to(self.root).as_posix()
+        return EXPORTS_SHOWN if inside == "." else f"{EXPORTS_SHOWN}/{inside}"
+
+
+def confined_chooser() -> ConfinedFolder | None:
+    """In a hosted copy, the folder its file chooser keeps to (the exports
+    folder, made if missing); None in the storyguide's own window, which
+    may browse the whole computer."""
+    if not is_hosted_copy():
+        return None
+    root = paths.data_dir() / paths.EXPORTS
+    root.mkdir(parents=True, exist_ok=True)
+    return ConfinedFolder(root)
 
 
 def addresses() -> list[str]:
@@ -232,6 +382,8 @@ class Host:
             return "The saga is already hosted. Stop Hosting first."
         if is_hosted_copy():
             return "Only the storyguide's own window can host."
+        if isinstance(plan, Plan) and not plan.public_ok and is_public(plan.address):
+            return public_refusal(plan.address)
         ports = plan.ports()
         if len(set(ports)) < len(ports):
             return "The browser port and the SSH port must differ."

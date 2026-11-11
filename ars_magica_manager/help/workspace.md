@@ -120,7 +120,7 @@ A character's node shows its type, for example "Leandro (magus)". A covenant, la
 - **/** filters a list that can be filtered: on the Saga Content Spells tab it moves to the search box, and on a laboratory's Lab Texts it opens the filter.
 - **t** advances the saga by one season. See [Advance Season](help:advance-season).
 - **Ctrl+F** opens Find, to open any record by its name. See [Find](help:find).
-- **q** quits, and **Ctrl+P** opens Textual's command palette.
+- **q** quits, and **Ctrl+P** opens Textual's command palette (not in a browser or over SSH, where the theme is the storyguide's).
 - **?** opens Help on the part of the screen that has focus (F1 does the same while you are typing in a dialog).
 
 The footer shows the keys that work where focus is at its left, and the ones that always work (New, Advance Season, Help, Back, Quit) at its right.
@@ -132,7 +132,7 @@ The row above the footer says where focus is: the tree node on show, then the ta
 
 Lists that hold records (books, spells, House Rules, a sheet's lists) have a details panel below them that shows the chosen row in full.
 
-At the right end of the same row the app names the theme in use. Change it from the command palette (Ctrl+P); the app remembers your choice for next time.
+At the right end of the same row the app names the theme in use. Change it from the command palette (Ctrl+P); the app remembers your choice for next time. A copy opened in a browser or over SSH has no command palette and keeps the storyguide's theme.
 
 **See also:** [The saga](help:saga), [Characters group](help:character-group), [Laboratories group](help:laboratory-group), [Seasons](help:seasons), [Saga Content](help:saga-content), [Getting started](help:guide-getting-started)
 
@@ -1585,6 +1585,10 @@ leaves it out, and a storyguide joined from a Remote seat sees no Players
 <!-- help: sign-in -->
 
 When the storyguide hosts the app, opening a saga in a browser (or over SSH) first asks who you are: type your Name and the Passcode the storyguide gave you, then Sign in. Name is not case-sensitive; the passcode is.
+
+Three wrong passcodes for a name are free; after that each try must wait, longer each time (30 seconds, then 2 minutes, 10 minutes, then an hour), and the dialog says how long. Other tabs wait too. A right passcode starts the count again.
+
+A passcode needs at least 14 characters. If yours is shorter (one set before that rule), signing in asks you to **Choose a new passcode**: type it twice and Save. **Not Now** lets you in this once; the next time, the short passcode is refused until you choose a new one here or the storyguide sets one. A new passcode you choose here also lets you join from a Remote seat.
 
 If the saga has no players yet, it can't be opened from a browser: the storyguide adds them on the [Players](help:tab-content-players) (Saga Content's Players tab in the terminal, the saga page's Saga Management on the desktop). Your name is shown in the header beside the saga's date while you're signed in. Going back to the saga list (Escape) signs you out.
 

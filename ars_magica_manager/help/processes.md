@@ -1067,6 +1067,8 @@ Checks never stop an edit. If the saga has **Enforce creation rules strictly** t
 Brings records into the saga from files. Open it from More's **Import** on the saga node.
 
 **You choose:** what to import, then the file: the terminal lists the folders and files of that kind.
+
+In a browser or over SSH (a storyguide signed in to a hosted saga), the list shows only the host's exports folder and the folders in it, named from there (`exports/...`): Up stops at it, and a path typed outside it is refused. Copy a file into that folder on the host's computer to import it from there.
 <!-- /tui -->
 <!-- gui -->
 Brings records into the saga from files. Open it from **Import** in the saga page's **Saga Management** chapter.
@@ -1356,7 +1358,7 @@ you already have](help:guide-book-packs-add).
 Explains what a spell CSV file looks like before you choose one. Tick **Save an example CSV instead** to save one to start from, rather than choosing a file. The spells imported become the saga's own spells, which you can edit on [Spells](help:tab-content-spells).
 
 <!-- tui -->
-Open it from More's Import on the saga node, then Spells.
+Open it from More's Import on the saga node, then Spells. In a browser or over SSH, the example is saved in the host's exports folder, the one folder the file list there shows.
 <!-- /tui -->
 <!-- gui -->
 Open it from **Import** in the saga page's Saga Management chapter, then Spells.
@@ -1566,7 +1568,9 @@ At the top, choose how **players join**:
   Each player runs the app; it connects through a tunnel you set up
   yourself, such as Cloudflare Tunnel.
 - **A browser or terminal, on your private network.** The older way, over
-  Tailscale or ZeroTier: see [How to host a saga](help:guide-hosting).
+  Tailscale or ZeroTier: see [How to host a saga](help:guide-hosting). An
+  address the internet can reach is refused unless you tick **I know this
+  is reachable from the internet**.
 
 Under it, the window says whether the saga is hosted, with **Host** or
 **Stop Hosting**. To switch the way players join, stop hosting first.
