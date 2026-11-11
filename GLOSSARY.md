@@ -172,6 +172,12 @@ A record, or a group of them, written out of one saga so another can import
 it; a content pack is one too.
 _Avoid_: Backup (which is the whole saga)
 
+**Saga notes**:
+The saga written out as a folder of linked Markdown notes, one per record,
+to read in Obsidian or any Markdown reader; nothing reads them back into a
+saga.
+_Avoid_: Export (for these), vault copy, backup
+
 **Shape check**:
 The check that data coming in (a saga file, an export, a Remote seat's
 change or snapshot) has the form its records expect, refusing it by field
