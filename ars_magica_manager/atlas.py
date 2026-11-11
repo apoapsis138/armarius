@@ -59,6 +59,7 @@ from .models import (
     Saga,
     Tribunal,
 )
+from .picture_files import safe_name
 from .references import Ref
 from .rules import sites
 
@@ -155,7 +156,7 @@ def store_picture(source: Path) -> tuple[str, int, int]:
 
 def picture_path(atlas_map: AtlasMap) -> Path | None:
     """The map's picture, if it has one and the file is there."""
-    if not atlas_map.picture:
+    if not safe_name(atlas_map.picture):
         return None
     found = storage.maps_dir() / atlas_map.picture
     return found if found.is_file() else None

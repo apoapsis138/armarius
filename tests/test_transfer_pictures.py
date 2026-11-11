@@ -12,7 +12,14 @@ from pathlib import Path
 
 import pytest
 
-from ars_magica_manager import atlas, paths, portraits, storage, transfer
+from ars_magica_manager import (
+    atlas,
+    paths,
+    picture_files,
+    portraits,
+    storage,
+    transfer,
+)
 from ars_magica_manager.models import Character, Saga, Tribunal
 
 
@@ -139,6 +146,50 @@ def test_a_shipped_packs_maps_are_read_from_beside_it(tmp_path):
     assert pictures.get(transfer.MAPS, "abc.png") == PNG
     assert pictures.get(transfer.MAPS, "missing.png") is None
     assert pictures.get(transfer.MAPS, "../abc.png") is None
+
+
+def test_only_a_bare_picture_name_is_safe():
+    for good in ("abc.png", "home--leandro.jpg", "Map.WEBP", "a b.gif"):
+        assert picture_files.safe_name(good), good
+    for bad in (
+        "",
+        "evil.txt",
+        "evil",
+        "../abc.png",
+        "..\\abc.png",
+        "a/b.png",
+        "/etc/x.png",
+        "D:evil.png",  # drive-relative: outside the folder on Windows
+        "C:\\evil.png",
+        "x.png:hidden",  # an NTFS stream
+        ".hidden.png",
+        "CON.png",
+        "nul.jpg",
+        "a\x00.png",
+    ):
+        assert not picture_files.safe_name(bad), bad
+
+
+def test_a_crafted_export_cannot_write_outside_the_maps_folder(tmp_path):
+    """An export naming its map picture unsafely: nothing is written, the
+    map is imported without its picture."""
+    saga = _saga(tmp_path)
+    data = transfer.export_saga_data(saga)
+    elsewhere = _other_computer(tmp_path)
+    for bad in ("D:evil.png", "evil.txt", "x.png:hidden", "CON.png"):
+        data["saga"]["tribunals"][0]["maps"][0]["picture"] = bad
+        crafted = tmp_path / "crafted.amm.zip"
+        with zipfile.ZipFile(crafted, "w") as archive:
+            archive.writestr("crafted.amm.json", json.dumps(data))
+            archive.writestr(f"maps/{bad}", PNG)
+        target = Saga("away", "Away")
+        plan = transfer.plan_import(
+            target, transfer.read(crafted), pictures=transfer.Pictures(crafted)
+        )
+        transfer.apply(target, plan)
+        written = [p for p in elsewhere.rglob("*") if p.is_file()]
+        assert all(p.parent.name != transfer.MAPS for p in written), bad
+        assert atlas.picture_path(target.tribunals[0].maps[0]) is None
 
 
 def test_a_zip_that_isnt_one_export_is_refused(tmp_path):

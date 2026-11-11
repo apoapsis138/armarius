@@ -15,6 +15,7 @@ from ars_magica_manager import hosting as core_hosting
 from ars_magica_manager import players as pl
 from ars_magica_manager import storage
 from ars_magica_manager.models import Saga
+from ars_magica_manager.remote.identity import MemoryStore
 from ars_magica_manager.tui import hosting
 
 MAIN = Path(__file__).resolve().parent.parent / "main.py"
@@ -57,9 +58,12 @@ def hosted_data(tmp_path, monkeypatch):
 
 async def test_an_ssh_client_gets_the_app_and_signs_in(hosted_data):
     command = f'"{sys.executable}" "{MAIN}"'
-    server = await hosting.start_ssh_server(command, "127.0.0.1", 0)
+    store = MemoryStore()
+    server = await hosting.start_ssh_server(command, "127.0.0.1", 0, store)
     port = server.sockets[0].getsockname()[1]
-    assert hosting.host_key_path().exists()  # made on the first host
+    # Made on the first host, in the keychain, never in the synced folder.
+    assert store.get(hosting.HOST_KEY_NAME)
+    assert not any(hosted_data.glob("*host_key*"))
     try:
         async with asyncssh.connect(
             "127.0.0.1", port, username="anyone", known_hosts=None
@@ -86,6 +90,27 @@ async def test_an_ssh_client_gets_the_app_and_signs_in(hosted_data):
         # Let the app copy's pipes finish closing before the loop goes, or
         # Windows' asyncio warns of an unclosed transport.
         await asyncio.sleep(0.5)
+
+
+def test_an_old_host_key_file_moves_into_the_keychain(hosted_data):
+    """A key an older version left in the synced data folder is kept (so
+    players' SSH clients still know the host), moved to the keychain, and
+    the file deleted."""
+    old = asyncssh.generate_private_key("ssh-ed25519")
+    hosting.old_host_key_path().write_bytes(old.export_private_key())
+    store = MemoryStore()
+    key = hosting.host_key(store)
+    assert key.export_public_key() == old.export_public_key()
+    assert not hosting.old_host_key_path().exists()
+    again = hosting.host_key(store)  # read back from the keychain
+    assert again.export_public_key() == old.export_public_key()
+
+
+def test_an_unreadable_host_key_is_reported(hosted_data):
+    store = MemoryStore()
+    store.set(hosting.HOST_KEY_NAME, "not a key")
+    with pytest.raises(ValueError, match="cannot be read"):
+        hosting.host_key(store)
 
 
 def test_a_copy_knows_how_it_is_reached(monkeypatch):

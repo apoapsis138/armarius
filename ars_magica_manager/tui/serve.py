@@ -23,6 +23,7 @@ from textual_serve import server as serve_module
 from textual_serve.server import Server
 
 from .. import hosting as core_hosting
+from ..remote.identity import NoKeychainError
 from . import hosting
 
 MAIN = Path(__file__).resolve().parent.parent.parent / "main.py"
@@ -59,9 +60,12 @@ def main(argv: list[str] | None = None) -> None:
     asyncio.set_event_loop(loop)
     try:
         if args.ssh_port is not None:
-            loop.run_until_complete(
-                hosting.start_ssh_server(command, args.host, args.ssh_port)
-            )
+            try:
+                loop.run_until_complete(
+                    hosting.start_ssh_server(command, args.host, args.ssh_port)
+                )
+            except (NoKeychainError, ValueError) as problem:
+                sys.exit(f"Can't take SSH clients: {problem}")
             print(f"SSH: ssh -p {args.ssh_port} player@{args.host}")
         web.run_app(
             server._make_app(),

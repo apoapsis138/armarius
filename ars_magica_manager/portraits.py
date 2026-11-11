@@ -16,14 +16,12 @@ from . import storage
 from .commands import Choice, Choose, ChooseFile, Command
 from .markup import escape
 from .models import Character, Saga
-
-#: The kinds of picture a portrait can be.
-SUFFIXES = (".png", ".jpg", ".jpeg", ".webp", ".bmp", ".gif")
+from .picture_files import SUFFIXES, safe_name
 
 
 def path(character: Character) -> Path | None:
     """The character's portrait file, if they have one and it is there."""
-    if not character.portrait:
+    if not safe_name(character.portrait):
         return None
     found = storage.portraits_dir() / character.portrait
     return found if found.is_file() else None

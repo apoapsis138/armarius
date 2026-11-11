@@ -49,6 +49,9 @@ _SECRET_MAX = 64
 PENDING, APPROVED, REJECTED = "pending", "approved", "rejected"
 _MAX_URL = 300
 INVITE_PREFIX = "ARM1"
+#: The only hosts an Invite may reach by plain ws://: this computer, where
+#: nothing sits between the two ends. Anywhere else needs wss://.
+_THIS_COMPUTER = frozenset({"127.0.0.1", "localhost", "::1"})
 
 
 class InviteError(Exception):
@@ -335,6 +338,8 @@ def decode_invite(text: str) -> InviteText:
     pieces = urlsplit(url)
     if pieces.scheme not in ("ws", "wss") or not pieces.netloc or len(url) > _MAX_URL:
         raise ValueError("The invite does not name a place to connect to.")
+    if pieces.scheme == "ws" and pieces.hostname not in _THIS_COMPUTER:
+        raise ValueError("The invite's address must be a secure one (wss://).")
     if pieces.query or pieces.fragment or pieces.username:
         raise ValueError("The invite's address must carry nothing secret.")
     return InviteText(url=url, pin=normalise_pin(parts[2]), code=_clean_code(parts[3]))

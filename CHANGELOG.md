@@ -127,6 +127,12 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 4.6.2 — 2026-11-10
+
+### Sodales
+
+- **Security fixes from an outside review.** The SSH host key is now kept in your computer's keychain (Windows Credential Manager, macOS Keychain or a Linux Secret Service) instead of the data folder, which a cloud folder may sync; a key an older version left there is moved in and its file deleted, so players' SSH clients still know your computer. An imported saga can only bring in pictures under plain picture file names: a name with a drive letter in it could have written a file outside the maps folder on Windows, and a file that isn't a picture is now left behind. A player's app accepts only Invites to a secure `wss://` address. The picture library the catalog-building tools use is updated past its known security flaws.
+
 ## 4.6.1 — 2026-11-10
 
 ### Sodales

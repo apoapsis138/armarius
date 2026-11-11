@@ -215,6 +215,8 @@ def test_text_that_is_not_an_invite_is_refused(bad: str) -> None:
     "url",
     [
         "http://game.example.com/remote",
+        "ws://game.example.com/remote",  # plain WebSocket off this computer
+        "ws://192.168.1.20:8790/remote",
         "wss:///remote",
         "wss://game.example.com/remote?token=x",
         "wss://user@game.example.com/remote",
@@ -225,6 +227,13 @@ def test_text_that_is_not_an_invite_is_refused(bad: str) -> None:
 def test_an_invite_naming_an_unsafe_address_is_refused(url: str) -> None:
     with pytest.raises(ValueError):
         invites.decode_invite(invites.encode_invite(url, "ab" * 32, "CODE"))
+
+
+def test_a_plain_websocket_invite_is_only_for_this_computer() -> None:
+    url = "ws://127.0.0.1:8790/remote"
+    assert (
+        invites.decode_invite(invites.encode_invite(url, "ab" * 32, "CODE")).url == url
+    )
 
 
 def test_the_word_list_is_the_2048_expected() -> None:

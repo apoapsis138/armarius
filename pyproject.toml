@@ -1,6 +1,6 @@
 [project]
 name = "ars-magica-manager"
-version = "4.6.1"
+version = "4.6.2"
 description = "Armarius, a saga manager for Ars Magica: a GM-facing tool for Ars Magica 5th Edition covenants, characters, laboratories, and libraries."
 readme = "README.md"
 license = "GPL-3.0-only"
@@ -38,6 +38,8 @@ charges = [
 catalog = [
     "pymupdf>=1.28.2",
     "pytesseract>=0.3.13",
+    # pytesseract's own; 12.x has known security flaws (pip-audit).
+    "pillow>=13.0.0",
 ]
 dev = [
     "ruff>=0.16.8",

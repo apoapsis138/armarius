@@ -495,7 +495,9 @@ own guide where these differ.
 
 Whichever you use, the address goes in **Tunnel address** (`https://`,
 nothing after the name), and the tunnel points at `http://localhost:8790`.
-The address is not secret; the Invite carries it. The app tells players
+The address is not secret; the Invite carries it, always as a secure
+`wss://` address, and a player's app refuses an Invite naming a plain
+`ws://` one anywhere but on its own computer. The app tells players
 apart by the address the tunnel passes on (Cloudflare's own header, or
 the last `X-Forwarded-For` entry, which ngrok and Caddy add); a tunnel
 that passes on none makes the limits count every player as one.
@@ -561,7 +563,7 @@ drop;
 ### Over SSH instead of a browser
 <!-- help: guide-hosting-ssh -->
 
-A player who prefers a terminal can connect with SSH instead. Tick **Also over SSH** when you start hosting (the SSH port is 2222 unless you change it; from a terminal, add `--ssh-port 2222`); the browser page keeps working alongside. The SSH server is the app's own: no Windows accounts are involved, and any user name is accepted, because who the player is comes from the same sign-in as in a browser. The first time, the app makes a host key (`ssh_host_key` in your data folder); players' SSH clients ask once whether to trust it.
+A player who prefers a terminal can connect with SSH instead. Tick **Also over SSH** when you start hosting (the SSH port is 2222 unless you change it; from a terminal, add `--ssh-port 2222`); the browser page keeps working alongside. The SSH server is the app's own: no Windows accounts are involved, and any user name is accepted, because who the player is comes from the same sign-in as in a browser. The first time, the app makes a host key and keeps it in your computer's keychain (Windows Credential Manager, macOS Keychain or a Linux Secret Service), never in the data folder, which a cloud folder may sync; players' SSH clients ask once whether to trust it. A key an older version left in the data folder (`ssh_host_key`) is moved into the keychain and the file deleted, so players' clients still know your computer. With no keychain, SSH hosting is refused and says why.
 
 Players connect with `ssh -p 2222 player@ADDRESS` from Windows Terminal (Windows 10 and 11 include `ssh`), macOS Terminal or any Linux terminal, and get the same saga list and sign-in. Their terminal should be at least 120 columns by 45 rows and support true colour and Unicode: Windows Terminal, iTerm2, macOS Terminal and the usual Linux terminals do; the old Windows console does not. Over SSH, Export isn't offered, since the file could only land on your computer.
 

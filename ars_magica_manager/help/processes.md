@@ -1121,7 +1121,7 @@ What goes with it:
 
 Season plans, season records and lab projects under way stay behind.
 
-**Pictures go too.** An export whose records have pictures on this computer (a character's portrait; with Export Saga or a pack, a Tribunal's maps) is written as a zip, `.amm.zip`, holding the same file and its pictures, so they reach the other computer. Import reads a `.amm.zip` as it reads a `.amm.json`, copying its maps into the maps folder (one already there is kept: a map is named by its picture's bytes) and each portrait under its character's new name. A file sent to a browser is the JSON alone, without its pictures.
+**Pictures go too.** An export whose records have pictures on this computer (a character's portrait; with Export Saga or a pack, a Tribunal's maps) is written as a zip, `.amm.zip`, holding the same file and its pictures, so they reach the other computer. Import reads a `.amm.zip` as it reads a `.amm.json`, copying its maps into the maps folder (one already there is kept: a map is named by its picture's bytes) and each portrait under its character's new name. Only pictures are copied (PNG, JPEG, WebP, BMP or GIF) under plain file names: a picture whose name has a folder or drive in it, or that isn't a picture, is left behind, and its record comes in without it. A file sent to a browser is the JSON alone, without its pictures.
 
 <!-- tui -->
 **Export Saga**, in More on the saga node, writes the whole saga to one file in the same shape: every record and what it holds. Import it into another saga with Import, **A Whole Saga**. In a browser copy, the file downloads instead. Only the storyguide can use it. **Export a Cult** beside it writes one of the saga's own Mystery Cults to a file, for Import's **A Mystery Cult**.

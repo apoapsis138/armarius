@@ -62,6 +62,7 @@ from .models import (
     Spell,
     Tribunal,
 )
+from .picture_files import safe_name
 from .rules import sites
 from .seat_view import seat_view
 
@@ -459,6 +460,8 @@ def pictures_named(data: dict[str, Any]) -> list[tuple[str, str]]:
 
 def _local_picture(folder: str, name: str) -> Path | None:
     """One of this computer's pictures, by its folder and file name."""
+    if not safe_name(name):
+        return None
     root = storage.maps_dir() if folder == MAPS else storage.portraits_dir()
     found = root / name
     return found if found.is_file() else None
@@ -602,8 +605,9 @@ class Pictures:
         self.zipped = path.is_file() and zipfile.is_zipfile(path)
 
     def get(self, folder: str, name: str) -> bytes | None:
-        """The picture's bytes, or None when the export doesn't carry it."""
-        if not name or "/" in name or "\\" in name or name.startswith("."):
+        """The picture's bytes, or None when the export doesn't carry it
+        or names it unsafely (`picture_files.safe_name`)."""
+        if not safe_name(name):
             return None
         if self.zipped:
             with zipfile.ZipFile(self.path) as archive:
@@ -1620,7 +1624,7 @@ def _copy_pictures(target: Saga, plan: ImportPlan) -> None:
         *(m for _t, m in plan.maps_for),
     ]:
         name = atlas_map.picture
-        if not name or (storage.maps_dir() / name).is_file():
+        if not safe_name(name) or (storage.maps_dir() / name).is_file():
             continue
         found = pictures.get(MAPS, name)
         if found is not None:

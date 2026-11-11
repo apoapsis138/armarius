@@ -28,6 +28,7 @@ from dataclasses import asdict, dataclass
 
 from .. import presence, storage, viewing
 from ..models import Saga
+from ..picture_files import safe_name
 from ..seat_view import seat_view
 from ..transfer import MAPS, PORTRAITS, pictures_named
 from . import audit
@@ -277,9 +278,7 @@ def seat_registry(
 def picture_from_disk(folder: str, name: str) -> bytes | None:
     """A picture from the host's own portraits or maps folder, by its file
     name only: a name with any path in it is never looked up."""
-    if folder not in (PORTRAITS, MAPS) or not name or name != os.path.basename(name):
-        return None
-    if name in (".", "..") or "/" in name or "\\" in name:
+    if folder not in (PORTRAITS, MAPS) or not safe_name(name):
         return None
     root = storage.portraits_dir() if folder == PORTRAITS else storage.maps_dir()
     path = root / name

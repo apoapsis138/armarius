@@ -28,6 +28,7 @@ from textual_serve.download_manager import DownloadManager
 
 from .. import paths
 from ..hosting import TRANSPORT_VAR
+from ..remote.identity import KeychainStore, KeyStore
 
 
 class HostedAppService(AppService):
@@ -190,28 +191,47 @@ class _Server(asyncssh.SSHServer):
         return _Session(self._command, self._downloads)
 
 
-def host_key_path() -> Path:
-    """The host's SSH key, in the data folder; made on the first SSH host."""
+#: The SSH host key's name in the keychain.
+HOST_KEY_NAME = "ssh-host-key"
+
+
+def old_host_key_path() -> Path:
+    """Where older versions kept the SSH host key: the data folder, which
+    a cloud folder syncs. Read once, moved into the keychain, deleted."""
     return paths.data_dir() / paths.HOST_KEY
 
 
-def host_key() -> asyncssh.SSHKey:
-    path = host_key_path()
-    if not path.exists():
-        key = asyncssh.generate_private_key("ssh-ed25519")
-        path.parent.mkdir(parents=True, exist_ok=True)
-        key.write_private_key(str(path))
-    return asyncssh.read_private_key(str(path))
+def host_key(store: KeyStore) -> asyncssh.SSHKey:
+    """The host's SSH key, kept in `store` (the keychain), never in the
+    synced data folder; made on the first SSH host. NoKeychainError with
+    no keychain."""
+    text = store.get(HOST_KEY_NAME)
+    if text is None:
+        old = old_host_key_path()
+        if old.is_file():
+            key = asyncssh.import_private_key(old.read_bytes())
+        else:
+            key = asyncssh.generate_private_key("ssh-ed25519")
+        store.set(HOST_KEY_NAME, key.export_private_key().decode("ascii"))
+        old.unlink(missing_ok=True)
+        return key
+    try:
+        return asyncssh.import_private_key(text)
+    except asyncssh.KeyImportError as exc:
+        raise ValueError("The SSH host key in the keychain cannot be read.") from exc
 
 
-async def start_ssh_server(command: str, host: str, port: int) -> asyncssh.SSHAcceptor:
+async def start_ssh_server(
+    command: str, host: str, port: int, store: KeyStore | None = None
+) -> asyncssh.SSHAcceptor:
     """Listen for SSH clients on `host`:`port`; each session runs `command`
-    (the app) as its own copy."""
+    (the app) as its own copy. The host key is kept in `store` (the
+    keychain unless given)."""
     downloads = DownloadManager()
     return await asyncssh.create_server(
         lambda: _Server(command, downloads),
         host,
         port,
-        server_host_keys=[host_key()],
+        server_host_keys=[host_key(store or KeychainStore())],
         encoding=None,
     )
