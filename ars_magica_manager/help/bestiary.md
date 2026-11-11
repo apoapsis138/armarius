@@ -18,8 +18,9 @@ Creature**. In the list, `a` adds one, `e` edits the chosen one's facts
 and `d` deletes it.
 <!-- /tui -->
 <!-- gui -->
-On the saga's page, the Bestiary chapter shows each creature as a card
-that opens its own page, and a New card that adds one.
+On the saga's page, the Bestiary is the second part of the
+[Compendium](help:saga-compendium) chapter: each creature as a card that
+opens its own page, and a New card that adds one.
 <!-- /gui -->
 
 **New Creature** can start from the book: **Start from the book** lists

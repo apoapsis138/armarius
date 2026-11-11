@@ -1,5 +1,5 @@
 """The desktop's Armarium and Custodia Mirabilium (gui/stores.py): their
-cards on the saga page's Rules and Content, the storyguide's alone; the
+cards on the saga page's Compendium, the storyguide's alone; the
 filter over each store's table, kept while the page is drawn again; and
 the row chosen shown in the inspector."""
 
@@ -12,7 +12,7 @@ import pytest
 pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PySide6.QtWidgets import QApplication, QPushButton
+from PySide6.QtWidgets import QApplication, QLabel, QPushButton
 from support import everything_saga
 
 from ars_magica_manager import storage, stores, viewing
@@ -42,18 +42,35 @@ def _window() -> MainWindow:
     return window
 
 
+def _compendium_words(page: SagaPage) -> set[str]:
+    page.codex.open_chapter("Compendium")
+    chapter = page.codex.pages.currentWidget()
+    return {label.text() for label in chapter.findChildren(QLabel)}
+
+
 def test_the_cards_are_the_storyguides_alone(app: QApplication) -> None:
     window = _window()
     page = window.page()
     assert isinstance(page, SagaPage)
+    words = _compendium_words(page)
     assert set(page.store_cards) == {stores.ARMARIUM, stores.CUSTODIA}
+    assert {"Compendium", "The Armarium", "The Bestiary"} <= words
     page.store_cards[stores.ARMARIUM].clicked()
     shown = window.page()
     assert isinstance(shown, StorePage) and shown.store.key == stores.ARMARIUM
     viewing.use(viewing.TABLE_VIEWER, window.saga)
     window.go(window.trail[:2])
     page = window.page()
-    assert isinstance(page, SagaPage) and page.store_cards == {}
+    assert isinstance(page, SagaPage)
+    # A player sees Saga Content's card (it is never on the storyguide's
+    # Compendium) and the Bestiary, and no store.
+    assert "Saga Content" not in words
+    words = _compendium_words(page)
+    assert page.store_cards == {} and "The Armarium" not in words
+    assert {"Content in Play", "Saga Content", "The Bestiary"} <= words
+    assert page.content is not None
+    page.content.clicked()
+    assert window.crumb_names()[-1] == "Saga Content"
     window.close()
 
 

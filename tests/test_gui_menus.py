@@ -97,10 +97,9 @@ def test_the_saga_page_sets_out_its_actions_in_its_chapters(app):
         "The Covenants",
         "The Region",
         "The Atlas",
-        "The Bestiary",
+        "Compendium",
         "Conflicts",
         "Seasons",
-        "Rules and Content",
         "Saga Settings",
         "Saga Management",
     ]
@@ -114,7 +113,7 @@ def test_the_saga_page_sets_out_its_actions_in_its_chapters(app):
     ]
     _saga_chapter(window, "The Region")
     assert list(_new(window)) == ["New Tribunal", "New Neighbour"]
-    _saga_chapter(window, "The Bestiary")
+    _saga_chapter(window, "Compendium")
     assert list(_new(window)) == ["New Creature"]
     _saga_chapter(window, "Seasons")
     assert "Set Date" in _buttons(window)

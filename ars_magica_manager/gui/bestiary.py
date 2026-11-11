@@ -1,5 +1,5 @@
-"""The desktop's page for a creature (the saga page's Bestiary chapter
-lists them as cards: pages.bestiary_chapter): its facts and Characteristics
+"""The desktop's page for a creature (the saga page's Compendium
+lists them as cards: pages.bestiary_part): its facts and Characteristics
 over chapters for its traits, combat, powers and vis, and description and
 links. What they say comes from sheets/creature.py; their buttons run
 forms/creature.py."""

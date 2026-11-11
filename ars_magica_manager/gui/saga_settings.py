@@ -1,6 +1,7 @@
 """The saga page's Saga Settings chapter: every setting as a card under its
 section's heading, each with its switch or its value at the upper right,
-as Books in Play's cards have. Clicking a card shows it in full in the
+as Books in Play's cards have, and Content in Play's card, which opens
+Saga Content. Clicking a card shows it in full in the
 inspector, with a switch of its own. A switch changes the saga at once.
 
 What it says comes from sheets/saga_settings.py and what it does from
@@ -9,7 +10,7 @@ forms/saga_settings.py.
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 
 from PySide6.QtWidgets import (
     QGraphicsOpacityEffect,
@@ -50,9 +51,13 @@ class SettingsChapter:
         codex: Codex,
         run: Run,
         buttons: Sequence[QPushButton],
+        content_card: Callable[[], QWidget],
     ) -> None:
         self.saga, self.p, self.codex, self.run = saga, p, codex, run
         self.buttons = list(buttons)
+        #: Builds Content in Play's card, Saga Content's (the saga page
+        #: draws it, as it draws every card that opens a page).
+        self.content_card = content_card
         self.cards: dict[str, ClickableCard] = {}
 
     def page(self) -> QWidget:
@@ -83,6 +88,8 @@ class SettingsChapter:
             row,
             chapter_title("Seasons", p),
             self._grid(sss.season_cards(saga)),
+            chapter_title("Content in Play", p),
+            card_grid([self.content_card()], 2),
             chapter_title("Optional Rules", p),
             rules,
             chapter_title("Tribunal", p),

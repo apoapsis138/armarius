@@ -127,6 +127,13 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 4.10.0 — 2026-11-11
+
+### Illuminatio
+
+- **The Compendium.** The saga page's Bestiary chapter is now the Compendium, in the same place after The Atlas. The storyguide finds the Armarium's and the Custodia Mirabilium's cards at its top, then the Bestiary's creatures and New Creature card. A player, or anyone in Player view, finds Saga Content's card there instead, then the Bestiary.
+- **Saga Content moves to Saga Settings.** The Rules and Content chapter is gone: Saga Content's card is now in Saga Settings, under a new heading, Content in Play, between Seasons and Optional Rules. The saga page has nine chapters.
+
 ## 4.9.0 — 2026-11-11
 
 ### Liveries of the Houses

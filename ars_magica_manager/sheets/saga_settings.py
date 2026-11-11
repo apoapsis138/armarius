@@ -208,5 +208,5 @@ def rules_lead(saga: Saga) -> str:
     in_play = sum(1 for book in every if saga_content.is_in_play(saga, book))
     return (
         f"{on} on. A rule from a book out of play is greyed out ({in_play} of "
-        f"{len(every)} books in play, chosen on Saga Content)."
+        f"{len(every)} books in play, chosen under Content in Play)."
     )

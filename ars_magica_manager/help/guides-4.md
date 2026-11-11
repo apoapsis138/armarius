@@ -323,7 +323,7 @@ The preview lists what will be added, the links kept and the links dropped. [Imp
 4. Choose the file. This picker starts in the folder the app was started from.
 <!-- /tui -->
 <!-- gui -->
-2. To import books with no owner, click **Import** in the saga page's **Saga Management** chapter, then choose **Books**. They land in [the Armarium](help:armarium), unassigned, where a new covenant can buy from them on its Creation Worksheet. To give them an owner, open the Armarium from the saga page's **Rules and Content** and use **Give** on a book, or **Change Owner** for several at once.
+2. To import books with no owner, click **Import** in the saga page's **Saga Management** chapter, then choose **Books**. They land in [the Armarium](help:armarium), unassigned, where a new covenant can buy from them on its Creation Worksheet. To give them an owner, open the Armarium from the saga page's **Compendium** and use **Give** on a book, or **Change Owner** for several at once.
 3. To import books straight into a covenant's [library](help:tab-cov-library), open the covenant's page and click **Import** on its Library.
 4. Choose the file in the Open window, which starts in the folder the app was started from.
 <!-- /gui -->
@@ -689,7 +689,7 @@ The [Bestiary](help:bestiary) holds the saga's creatures with their stat blocks.
 5. Create it. Its sheet opens; in the tree it sits under the Bestiary.
 <!-- /tui -->
 <!-- gui -->
-1. On the saga's page, click the New card in the Bestiary chapter.
+1. On the saga's page, open **Compendium** and click the New Creature card under the Bestiary.
 2. Give its name. For a kind that comes in numbers (a pack of wolves, a swarm of boglins) tick **Many** and say how many.
 3. Choose its **Realm** and type its **Might** and the Might's Form, as the stat block's first line gives them ("Magic Might 8 (Animal)"). Leave the Realm blank for a mundane beast. For a demon, type its Order, Hierarchy and Weakness too; for anything with them, its Age and Confidence.
 4. Type its **Size**, and choose where it is **found**: a place in the Region, and a level of it if it lives in a regio.
@@ -1628,7 +1628,7 @@ summa on Ignem and a wand nobody has held for a century.
    laboratory or the magus who carried it home. Their Diary records it.
 <!-- /tui -->
 <!-- gui -->
-1. **Make the book.** In the saga page's **Rules and Content**, open
+1. **Make the book.** In the saga page's **Compendium**, open
    **The Armarium** and click **Add**. Fill in the book form as for any
    book; its Owner starts at "(none - unassigned)", so it waits here,
    held by nobody.

@@ -151,7 +151,7 @@ The desktop version shows one page at a time, the way a book is read: the Sagas,
 The trail at the top left names the pages above the one on show, for example "Sagas › Matrix › Keep › Leandro". Click one to go back to it.
 
 - **Sagas** shows every saga as a card. Click one to open it.
-- A saga's page opens on **The Troupe**: the player characters, the covenants the troupe plays and the pages you have bookmarked, each a click from its page (see [The Troupe](help:saga-troupe)). **The Covenants** shows its covenants as cards, then the characters and laboratories that belong to no covenant. **The Region** holds its Tribunals and neighbours and **The Bestiary** its creatures. **Seasons** sets the date and opens the seasons played; **Rules and Content** opens Saga Content; **Saga Settings** holds its details, seasons, optional rules and ruling templates; **Saga Management** holds Import, Export Saga, Export Pack and Host for Players.
+- A saga's page opens on **The Troupe**: the player characters, the covenants the troupe plays and the pages you have bookmarked, each a click from its page (see [The Troupe](help:saga-troupe)). **The Covenants** shows its covenants as cards, then the characters and laboratories that belong to no covenant. **The Region** holds its Tribunals and neighbours and **Compendium** the Armarium, the Custodia Mirabilium and the Bestiary's creatures. **Seasons** sets the date and opens the seasons played; **Saga Settings** holds its details, seasons, the content in play (Saga Content's card), optional rules and ruling templates; **Saga Management** holds Import, Export Saga, Export Pack and Host for Players.
 - A covenant's page lists its people, laboratories and possessions; click a person or a laboratory to open their page. A magus's familiar opens from the magus's page.
 
 A covenant, laboratory or character still being made is In Creation: its page is drawn on drafting vellum, and its header has the In Creation / In Play switch and the Creation Worksheet.
@@ -299,13 +299,13 @@ Arnsberg · Lord · The Drachenfels".
 The top node of the tree. It shows the saga's own details and what it holds.
 <!-- /tui -->
 <!-- gui -->
-The saga's page, opened from its card on the Sagas page. It has ten chapters, and opens on the first. **The Troupe** gathers the player characters, the covenants the troupe plays and the pages you have bookmarked (see [The Troupe](help:saga-troupe)). **The Covenants** shows its
+The saga's page, opened from its card on the Sagas page. It has nine chapters, and opens on the first. **The Troupe** gathers the player characters, the covenants the troupe plays and the pages you have bookmarked (see [The Troupe](help:saga-troupe)). **The Covenants** shows its
 Covenants, Unassigned Characters and Unassigned Laboratories as cards, each
 heading ending in a blank card (New Covenant, New Character, New
 Laboratory) that makes one more. A covenant's card shows its aura with its Boons and
 Hooks counted (each Aura Boon adds 1, Definitive Edition p. 183), the same total its
-page shows. **The Region** holds its Tribunals, each a card with a New Tribunal card after them, and its neighbours; **The Atlas** its maps, with a pin for each covenant, place and neighbour on them (see [The Atlas](help:saga-atlas)); and **The Bestiary** its creatures (see [The Region](help:region) and [The Bestiary](help:bestiary)). **Conflicts** lists its fights and sieges (see [Conflicts](help:conflicts)). **Seasons** sets the date (Set Date) and
-opens the seasons played; **Rules and Content** opens Saga Content; **Saga Settings** holds its details, its seasons, its optional rules and its ruling templates (see [Saga Settings](help:saga-settings)); and
+page shows. **The Region** holds its Tribunals, each a card with a New Tribunal card after them, and its neighbours; **The Atlas** its maps, with a pin for each covenant, place and neighbour on them (see [The Atlas](help:saga-atlas)); and **Compendium** the Armarium, the Custodia Mirabilium and the Bestiary's creatures (see [The Region](help:region) and [Compendium](help:saga-compendium)). **Conflicts** lists its fights and sieges (see [Conflicts](help:conflicts)). **Seasons** sets the date (Set Date) and
+opens the seasons played; **Saga Settings** holds its details, its seasons, the content in play (Saga Content's card), its optional rules and its ruling templates (see [Saga Settings](help:saga-settings)); and
 **Saga Management** holds Import, Export Saga, Export Pack and Host for Players. A familiar is bound on its
 magus or in their laboratory.
 <!-- /gui -->
@@ -336,21 +336,33 @@ magus or in their laboratory.
 <!-- gui -->
 - **Keep season records**: when on, each season applied is kept on the Seasons page. When off, only the characters' Diaries keep them.
 
-On the desktop, the books in play are counted on the Saga Content card in Rules and Content, and the optional rules turned on are shown on [Saga Settings](help:saga-settings).
+On the desktop, the books in play are counted on the Saga Content card under Content in Play, and the optional rules turned on are shown, both on [Saga Settings](help:saga-settings).
 <!-- /gui -->
 
 ### Saga Settings
 <!-- help: saga-settings; gui -->
 
-Everything about the saga that can be set, on one chapter of its page, as cards under their sections' headings: **Saga Details**, **Seasons**, **Optional Rules** and **Tribunal**.
+Everything about the saga that can be set, on one chapter of its page, as cards under their sections' headings: **Saga Details**, **Seasons**, **Content in Play**, **Optional Rules** and **Tribunal**.
 
 - **Saga Details** shows the Name, Storyguide and Description; **Edit Saga** changes them.
+- **Content in Play** holds Saga Content's card, which counts the books in play, the catalogs, House Rules and spells, and opens [Saga Content](help:saga-content) when clicked: the books in play, catalogs, goods, House Rules, mystery cults, spells and Sessions are all set there.
 - A card's first line names the setting, and the line under it says briefly what it does. Click the card to read it in full in the Inspector, with its source for an optional rule.
 - A **switch** at a card's upper right turns the setting on or off at once, as a book's chip does on Books in Play; there is no Save. The Inspector has the same switch.
 - A **chip** at the upper right shows a setting chosen from a list (what idle magi, companions and grogs do, the set of Medallion Style, or the Ruling Templates): click it to change it.
 - Clicking **Medallion Style** shows an example of every set in the Inspector, with the one in use marked. The set draws every medallion on the desktop: the seasons', and the figures', such as an aura or a covenant's Loyalty.
 - **Ruling Templates** opens as a ledger, each template's name in red beside its words. A row too long for the window ends in dots: hover over it, or maximise the window, to read it all.
-- **Optional Rules** are sorted by what they touch, each naming its book. All are off until you turn them on. A rule whose book is out of play is greyed out and can't be switched; it counts as off, and your choice is kept for when the book comes back. Books are chosen on [Saga Content](help:section-books-in-play).
+- **Optional Rules** are sorted by what they touch, each naming its book. All are off until you turn them on. A rule whose book is out of play is greyed out and can't be switched; it counts as off, and your choice is kept for when the book comes back. Books are chosen on [Saga Content](help:section-books-in-play), from the card under Content in Play.
+
+### Compendium
+<!-- help: saga-compendium; gui -->
+
+The saga page's chapter of what the saga holds beyond its covenants and its region.
+
+- **The Armarium** and **The Custodia Mirabilium** open as cards at the top: every book and every enchanted device in the saga, each with its count and how many nobody holds (see [The Armarium](help:armarium) and [The Custodia Mirabilium](help:custodia)). Only the storyguide sees them.
+- **Content in Play** takes their place for a player (and in [Player view](help:player-view)): Saga Content's card, which opens [Saga Content](help:saga-content) to read the books in play, catalogs, House Rules and spells. The storyguide finds the same card on [Saga Settings](help:saga-settings), which players don't see.
+- **The Bestiary** follows: its facts, then every creature as a card that opens its page, and a New Creature card (see [The Bestiary](help:bestiary)).
+
+The chapter is drawn the first time you open it, since a Tribunal pack can bring dozens of creatures.
 
 ### The Troupe
 <!-- help: saga-troupe; gui -->
@@ -592,7 +604,7 @@ Only the storyguide sees it, since the unassigned books are often ones the playe
 It is the **The Armarium** node in the tree, beside Saga Content.
 <!-- /tui -->
 <!-- gui -->
-Open it from its card in the saga page's **Rules and Content** chapter, beside Saga Content.
+Open it from its card at the top of the saga page's **Compendium** chapter, beside the Custodia Mirabilium's.
 <!-- /gui -->
 
 **See also:** [The Custodia Mirabilium](help:custodia), [How to make a book or device for the players to find](help:guide-store-find), [Find](help:find)
@@ -635,7 +647,7 @@ Books imported from a CSV file on the saga land here, unassigned.
 It is the **The Custodia Mirabilium** node in the tree, beside Saga Content.
 <!-- /tui -->
 <!-- gui -->
-Open it from its card in the saga page's **Rules and Content** chapter, beside Saga Content.
+Open it from its card at the top of the saga page's **Compendium** chapter, beside the Armarium's.
 <!-- /gui -->
 
 **See also:** [The Armarium](help:armarium), [How to make a book or device for the players to find](help:guide-store-find), [Find](help:find)
@@ -908,7 +920,7 @@ One place for what this saga's pickers offer: the books in play and the saga's o
 Choose **Saga Content** in the tree, under Seasons. The tabs open with `1` to `5`.
 <!-- /tui -->
 <!-- gui -->
-Open it from the saga page's **Rules and Content** chapter. Its chapters (Books, Catalogs, House Rules, Spells, Players) are the tabs described below; click a row or card to see it in full in the Inspector.
+Open it from its card under **Content in Play** on the saga page's [Saga Settings](help:saga-settings); a player, who has no Saga Settings, finds the card at the top of the [Compendium](help:saga-compendium). Its chapters (Books, Catalogs, House Rules, Spells, Players) are the tabs described below; click a row or card to see it in full in the Inspector.
 <!-- /gui -->
 
 **You type:** what each tab below describes. The catalog files the app ships with are never changed: hiding something here affects only this saga.
@@ -1324,6 +1336,7 @@ Choose who plays a character in the character's Biographical Detail (only the st
 
 - change the characters they play, with those characters' familiars, laboratories and books, and their season plans;
 - plan the seasons of the characters they are **Steward** of, and change nothing else on those sheets. A Steward is chosen in the Biographical Detail of a character no Player is named on (a pooled grog, even one everyone in the troupe plays): they keep it between Sessions and decide its downtime;
+- make a character of their own with **New Character**, so a player can join before they have one: a magus or companion (a grog too, with covenant rights, since a new grog joins the covenant's household). It is theirs from the start, named in its Biographical Detail as played by them; you can change or delete it like any other;
 - change the covenants too, if you ticked May change covenants for them;
 - look at everything else but each record's [Secrets](help:tab-secrets), which they never see, and the records they don't know of (see [Player view](help:player-view)), and Export a character, laboratory or covenant (the file downloads in their browser, without its secrets or the records they don't know of).
 
@@ -1342,7 +1355,6 @@ What only the storyguide should know about a record: the covenant's
 hidden debt, the magus's true master, where a missing founder really
 went. Every covenant, character, Tribunal, neighbour and creature keeps
 a list of them, apart from its summary and notes so those can be read
-- make a character of their own with **New Character**, so a player can join before they have one: a magus or companion (a grog too, with covenant rights, since a new grog joins the covenant's household). It is theirs from the start, named in its Biographical Detail as played by them; you can change or delete it like any other;
 aloud or shown to the players as they are. Each secret is a short title
 and its words, and says whether it has been revealed, and when.
 <!-- tui -->
@@ -1463,8 +1475,14 @@ until you turn it on.
 <!-- /gui -->
 - **The storyguide's alone:** each record's [Secrets](help:tab-secrets),
   a place's or lord's [Roll Tables](help:tab-nb-tables), Needs You, Saga
-  Management, Saga Settings and the Players list of Saga Content. The
-  books in play, catalogs, House Rules and spells stay on show.
+  Management, Saga Settings, the Armarium, the Custodia Mirabilium and
+  the Players list of Saga Content. The books in play, catalogs, House
+  Rules and spells stay on show.
+<!-- gui -->
+  With Saga Settings hidden, Saga Content's card moves to the top of
+  the saga page's [Compendium](help:saga-compendium), under Content in
+  Play.
+<!-- /gui -->
 - **Threats:** a threat's stages show only once they have come or been
   marked; never its clock, its position or what is still to come.
 - **Looking Ahead** shows only the dates anyone could know: Tribunal

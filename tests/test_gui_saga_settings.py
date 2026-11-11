@@ -51,13 +51,19 @@ def _inspector_words(window: MainWindow) -> str:
 
 def test_the_chapter_has_its_sections_and_edit_saga(app):
     window = _open()
-    words = [
-        label.text()
-        for label in window.page().findChildren(QLabel)  # type: ignore[union-attr]
-    ]
-    for heading in ("Saga Details", "Seasons", "Optional Rules", "Tribunal"):
-        assert any(heading.casefold() in w.casefold() for w in words), heading
+    area = window.page().codex.pages.currentWidget()  # type: ignore[union-attr]
+    column = area.widget().layout()
+    parts = [column.itemAt(i).widget() for i in range(column.count())]
+    firsts = [w.findChild(QLabel) for w in parts if w is not None]
+    words = [label.text().casefold() for label in firsts if label is not None]
+    headings = ("Saga Details", "Seasons", "Content in Play", "Optional Rules")
+    assert [
+        w for w in words if w in {h.casefold() for h in (*headings, "Tribunal")}
+    ] == [h.casefold() for h in (*headings, "Tribunal")]
     assert buttons(window.page(), "Edit Saga")
+    # Content in Play's card opens Saga Content.
+    window.page().content.clicked()  # type: ignore[union-attr]
+    assert window.crumb_names()[-1] == "Saga Content"
 
 
 def test_edit_saga_asks_only_the_details(app):

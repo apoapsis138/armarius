@@ -1,5 +1,5 @@
-"""The Bestiary on the desktop: the saga page's chapter of creature
-cards, its New card, and a creature's page with its Edit buttons and its
+"""The Bestiary on the desktop: its creature cards on the saga page's
+Compendium, its New card, and a creature's page with its Edit buttons and its
 lists' Add, Edit and Delete, answered without showing the dialogs."""
 
 from __future__ import annotations
@@ -54,11 +54,11 @@ def _words(widget) -> str:
     return " ".join(label.text() for label in widget.findChildren(QLabel))
 
 
-def test_the_bestiary_chapter_opens_a_creature_and_makes_one(app):
+def test_the_compendium_opens_a_creature_and_makes_one(app):
     window, saga_id = _window()
     page = window.page()
     assert page is not None
-    page.codex.open_chapter("The Bestiary")  # type: ignore[attr-defined]
+    page.codex.open_chapter("Compendium")  # type: ignore[attr-defined]
     [card] = [c for c in page.findChildren(ClickableCard) if "Aeolus" in _words(c)]
     assert "Magic Might 8 (Animal)" in _words(card)
     card.clicked()
@@ -72,7 +72,7 @@ def test_the_bestiary_chapter_opens_a_creature_and_makes_one(app):
     window.go(window.trail[:2])
     page = window.page()
     assert page is not None
-    page.codex.open_chapter("The Bestiary")  # type: ignore[attr-defined]
+    page.codex.open_chapter("Compendium")  # type: ignore[attr-defined]
     [new] = [c for c in page.findChildren(NewCard) if c.words == "New Creature"]
     answering(window, {"name": "Boglin", "size": "-2"})
     new.on_click()

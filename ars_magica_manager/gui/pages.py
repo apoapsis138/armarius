@@ -90,6 +90,9 @@ from .widgets import (
 
 Open = Callable[[str], None]
 
+#: Saga Settings' chapter id: the storyguide's alone (viewing.STORYGUIDE_ONLY).
+SAGA_SETTINGS = "saga-settings"
+
 
 def _ignore(_id: str) -> None:
     """The opener a page uses when its window gave none."""
@@ -810,23 +813,41 @@ def creature_card(
     return card
 
 
-def bestiary_chapter(
+def bestiary_part(
     saga: Saga, p: Palette, open_creature: Open, new: QWidget | None
-) -> QWidget:
-    """The Bestiary: its facts, then every creature as a card, by name,
-    and the New card that adds one."""
+) -> list[QWidget]:
+    """The Bestiary: its heading and facts (how many creatures, of which
+    realms), then every creature as a card, by name, and the New card that
+    adds one."""
     cards: list[QWidget] = [
         creature_card(saga, c, p, open_creature) for c in creatures.listed(saga)
     ]
     listed = with_new(cards, new)
-    return scrolling_page(
-        p,
-        chapter_title(crs.bestiary_title(saga), p),
+    return [
+        chapter_title("The Bestiary", p),
         fact_grid(crs.bestiary_facts(saga), p, 3),
         card_grid(listed)
         if listed
         else text("None yet.", p["dim"], serif(12.5, italic=True)),
+    ]
+
+
+def store_card(
+    saga: Saga, store: stores.Store, p: Palette, open_store: Open
+) -> ClickableCard:
+    """The Armarium's or the Custodia Mirabilium's card (stores.py), that
+    opens its page."""
+    card = ClickableCard(p, pad=16)
+    card_title(
+        card,
+        store.title,
+        store.subtitle,
+        p,
+        symbol_label(artwork.icon(store.icon), p),
     )
+    card.column.addWidget(fact_grid(stores.card_facts(saga, store), p, 3))
+    card.clicked = lambda: open_store(store.key)
+    return card
 
 
 def battle_card(
@@ -1213,7 +1234,11 @@ class SagaPage(QWidget):
     covenants and what the reader has bookmarked), The Covenants (its
     covenants, and the characters and laboratories that belong to none,
     each list ending in a New card), The Region (its Tribunals and
-    neighbours), The Atlas (its maps and the records pinned on them), The Bestiary (its creatures), its Conflicts (fights and sieges), its Seasons, its Rules and Content, its Saga Settings, and Saga Management."""
+    neighbours), The Atlas (its maps and the records pinned on them),
+    Compendium (the Armarium and the Custodia Mirabilium for the
+    storyguide, then the Bestiary's creatures), its Conflicts (fights and
+    sieges), its Seasons, its Saga Settings (Saga Content among them, as
+    Content in Play), and Saga Management."""
 
     def __init__(
         self,
@@ -1263,7 +1288,7 @@ class SagaPage(QWidget):
             "The Troupe", "troupe", troupe_chapter(saga, p, opens, self._new)
         )
         self.codex.add("The Covenants", "covenant", self._covenants())
-        # The Region and The Bestiary are built when first opened: a
+        # The Region and Compendium are built when first opened: a
         # pack's Tribunal brings hundreds of neighbours and dozens of
         # creatures, too many cards to draw each time the saga opens.
         self.codex.add(
@@ -1288,10 +1313,16 @@ class SagaPage(QWidget):
             "atlas",
             lambda: AtlasChapter(saga, p, run, run_ended, self.codex.inspect),
         )
+        #: The store cards Compendium shows, by store, once built.
+        self.store_cards: dict[str, ClickableCard] = {}
+        #: Saga Content's card, once built: on Saga Settings for the
+        #: storyguide, at the top of Compendium for anyone else.
+        self.content: ClickableCard | None = None
+        open_store = hooks.get("open_store", _ignore)
         self.codex.add(
-            "The Bestiary",
-            "familiar",
-            lambda: bestiary_chapter(saga, p, open_creature, self._new("Creatures")),
+            "Compendium",
+            "library",
+            lambda: self._compendium(open_store, open_creature, open_content),
         )
         self.codex.add(
             "Conflicts",
@@ -1299,15 +1330,15 @@ class SagaPage(QWidget):
             lambda: conflicts_chapter(saga, p, run, open_fight, open_siege),
         )
         self.codex.add("Seasons", "season", self._seasons(open_seasons))
-        self.codex.add(
-            "Rules and Content",
-            "library",
-            self._rules_and_content(open_content, hooks.get("open_store", _ignore)),
-        )
         self.settings = SettingsChapter(
-            saga, p, self.codex, run, self._buttons("Saga Settings")
+            saga,
+            p,
+            self.codex,
+            run,
+            self._buttons("Saga Settings"),
+            lambda: self._content_card(open_content),
         )
-        self.codex.add("Saga Settings", "edit", self.settings.page, "saga-settings")
+        self.codex.add("Saga Settings", "edit", self.settings.page, SAGA_SETTINGS)
         self.codex.add(
             "Saga Management",
             "manage",
@@ -1400,12 +1431,10 @@ class SagaPage(QWidget):
             card_grid([past], 2),
         )
 
-    def _rules_and_content(
-        self, open_content: Callable[[], None], open_store: Open
-    ) -> QWidget:
-        """Saga Content's card, then, for the storyguide, the Armarium's
-        and the Custodia Mirabilium's (stores.py)."""
-        p, saga = self.p, self.saga
+    def _content_card(self, open_content: Callable[[], None]) -> ClickableCard:
+        """Saga Content's card, for Saga Settings' Content in Play: the
+        books in play and what else it holds, counted."""
+        p = self.p
         content = ClickableCard(p, pad=16)
         card_title(
             content,
@@ -1414,29 +1443,33 @@ class SagaPage(QWidget):
             p,
             symbol_label(artwork.icon("library"), p),
         )
-        content.column.addWidget(fact_grid(scs.header_facts(saga), p, 4))
+        content.column.addWidget(fact_grid(scs.header_facts(self.saga), p, 4))
         content.clicked = open_content
         self.content = content
-        cards: list[QWidget] = [content]
-        self.store_cards: dict[str, ClickableCard] = {}
+        return content
+
+    def _compendium(
+        self, open_store: Open, open_creature: Open, open_content: Callable[[], None]
+    ) -> QWidget:
+        """Compendium: for the storyguide, the Armarium's and the
+        Custodia Mirabilium's cards (one for each of stores.STORES); for
+        anyone else, who has no Saga Settings, Saga Content's card; then
+        the Bestiary."""
+        p, saga = self.p, self.saga
+        parts: list[QWidget] = []
         for store in stores.STORES.values():
-            if not viewing.reads(part=store.section):
-                continue
-            card = ClickableCard(p, pad=16)
-            card_title(
-                card,
-                store.title,
-                store.subtitle,
-                p,
-                symbol_label(artwork.icon(store.icon), p),
-            )
-            card.column.addWidget(fact_grid(stores.card_facts(saga, store), p, 3))
-            card.clicked = lambda key=store.key: open_store(key)
-            self.store_cards[store.key] = card
-            cards.append(card)
-        return scrolling_page(
-            p, chapter_title("Rules and Content", p), card_grid(cards, 2)
-        )
+            if viewing.reads(part=store.section):
+                self.store_cards[store.key] = store_card(saga, store, p, open_store)
+        if self.store_cards:
+            parts.append(chapter_title("Compendium", p))
+            parts.append(card_grid(list(self.store_cards.values()), 2))
+        if not viewing.reads(part=SAGA_SETTINGS):
+            # Saga Content is everyone's to read; the storyguide meets its
+            # card on Saga Settings, so it is shown here only to the rest.
+            parts.append(chapter_title("Content in Play", p))
+            parts.append(card_grid([self._content_card(open_content)], 2))
+        parts += bestiary_part(saga, p, open_creature, self._new("Creatures"))
+        return scrolling_page(p, *parts)
 
     def _management(
         self,

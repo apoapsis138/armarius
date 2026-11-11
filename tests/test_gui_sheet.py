@@ -672,7 +672,9 @@ def test_saga_content_opens_from_the_saga_page_with_its_chapters(app):
     saga = _sample_saga_with_covenant()
     window = MainWindow(saga_ids=[])
     window.load(saga)
-    window.sheet_area.findChild(SagaPage).content.clicked()
+    saga_page = window.sheet_area.findChild(SagaPage)
+    saga_page.codex.open_chapter("Saga Settings")
+    saga_page.content.clicked()
     page = window.sheet_area.findChild(SagaContentPage)
     assert page is not None
     assert window.crumb_names() == ["Sagas", saga.name, "Saga Content"]

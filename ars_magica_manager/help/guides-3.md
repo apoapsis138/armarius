@@ -30,9 +30,9 @@ The saga is saved as soon as it is made, and every change after that is saved as
 3. Back on the saga node, press `e` (the footer calls it Edit Saga).
 <!-- /tui -->
 <!-- gui -->
-1. [The saga's page](help:saga) has ten chapters, listed in the rail on the left: The Troupe, The Covenants, The Region, The Atlas, The Bestiary, Conflicts, Seasons, Rules and Content, Saga Settings and Saga Management.
-2. In **Rules and Content**, click the **Saga Content** card. On its **Books** chapter, click **Edit** on Books in Play and tick the books your troupe uses (or click one card's **In play** chip to switch just that book): catalog pickers then hide Virtues, spells and other entries from books not in play, and everything a supplement adds (its activities, optional rules and kinds of books) switches off with it. See [Saga Content](help:saga-content).
-3. Click the saga's name in the trail to go back to its page, open its **Saga Settings** chapter. A card's switch changes it at once, and clicking the card explains it in the Inspector.
+1. [The saga's page](help:saga) has nine chapters, listed in the rail on the left: The Troupe, The Covenants, The Region, The Atlas, Compendium, Conflicts, Seasons, Saga Settings and Saga Management.
+2. In **Saga Settings**, click the **Saga Content** card under Content in Play. On its **Books** chapter, click **Edit** on Books in Play and tick the books your troupe uses (or click one card's **In play** chip to switch just that book): catalog pickers then hide Virtues, spells and other entries from books not in play, and everything a supplement adds (its activities, optional rules and kinds of books) switches off with it. See [Saga Content](help:saga-content).
+3. Click the saga's name in the trail to go back to its page's **Saga Settings** chapter. A card's switch changes it at once, and clicking the card explains it in the Inspector.
 <!-- /gui -->
 4. It lists the optional rules, each off until you turn it on: Simple dice only, Dominion Magic Resistance, Harsher Infernal vis, Starting income by number of magi, Enforce creation rules strictly, Any spell parameter and Extended book Quality. The line under each says what it does.
 5. **Keep season records** keeps a record of each season under Seasons. Leave it on unless you only want the characters' Diaries to keep them.
