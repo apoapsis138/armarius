@@ -127,6 +127,12 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 4.6.1 — 2026-11-10
+
+### Sodales
+
+- **A player's Creation Worksheet has all its buttons.** A player working on their own character in creation was missing each step's list buttons: Add a Virtue and Add a Flaw, Spend xp, Learn a spell, Add an item, Add a Personality Trait and Add a Reputation. They now see the same buttons the storyguide does on their own character, and still none on anyone else's.
+
 ## 4.6.0 — 2026-11-10
 
 ### Sodales

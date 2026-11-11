@@ -155,6 +155,34 @@ def test_a_players_sheet_has_buttons_only_for_their_own_character(app):
     assert {"Add", "Edit"} <= _verbs(window)
 
 
+def _worksheet_buttons(window: MainWindow) -> set[str]:
+    """The words of every button shown on each step of the worksheet."""
+    page = window.page()
+    found: set[str] = set()
+    for index in range(len(page.steps)):  # type: ignore[union-attr]
+        page.codex.rail.setCurrentRow(index)  # type: ignore[union-attr]
+        found |= {
+            b.text().strip()
+            for b in page.findChildren(QPushButton)  # type: ignore[union-attr]
+            if b.text().strip() and not b.isHidden()
+        }
+    return found
+
+
+def test_a_players_own_worksheet_has_the_storyguides_buttons(app):
+    saga = _saga()
+    saga.characters[0].in_creation = True
+    saga.characters[1].in_creation = True
+    window = _window(saga)
+    window.open_worksheet("pc1")
+    guide = _worksheet_buttons(window)
+    window.sit_as(saga.players[0])  # Ana
+    window.open_worksheet("pc1")  # her own
+    assert _worksheet_buttons(window) == guide
+    window.open_worksheet("pc2")  # Ben's: no list buttons
+    assert _worksheet_buttons(window) < guide
+
+
 def test_a_player_has_no_advance_season(app):
     window = _window()
     window.show_character("pc1")

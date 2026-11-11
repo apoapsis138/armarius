@@ -1765,6 +1765,10 @@ class MainWindow(QMainWindow):
             return saga.covenant(place.id)
         if place.kind == CHARACTER:
             return saga.character(place.id)
+        if place.kind == WORKSHEET:
+            # The worksheet changes its record: whoever may change that
+            # record (a player their own character) gets its buttons.
+            return self._creation_record(place.id)
         return None
 
     def _controls(self) -> RecordControls | None:
