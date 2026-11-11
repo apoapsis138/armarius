@@ -28,8 +28,8 @@ dependencies = [
 ]
 
 [project.urls]
-Repository = "https://github.com/apoapsis138/Ars-Magica-Manager"
-Changelog = "https://github.com/apoapsis138/Ars-Magica-Manager/blob/main/CHANGELOG.md"
+Repository = "https://github.com/apoapsis138/Armarius"
+Changelog = "https://github.com/apoapsis138/Armarius/blob/main/CHANGELOG.md"
 
 [dependency-groups]
 dev = [
