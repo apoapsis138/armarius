@@ -20,7 +20,15 @@ TAGLINE = "A saga manager for Ars Magica"
 LAST_SAGA = "last_saga"
 
 #: The ways on, by key.
-OPEN, SAGAS, NEW, JOIN, HELP = "open", "sagas", "new", "join", "help"
+OPEN, SAGAS, NEW, JOIN, LEARN, TUTORIAL, HELP = (
+    "open",
+    "sagas",
+    "new",
+    "join",
+    "learn",
+    "tutorial",
+    "help",
+)
 
 
 @dataclass(frozen=True)
@@ -28,6 +36,24 @@ class TitleChoice:
     key: str
     label: str
     detail: str
+    #: The ways on this choice opens onto, if it leads to a choice of its
+    #: own rather than going on (Learn: Tutorials or General Help).
+    then: tuple[TitleChoice, ...] = ()
+
+
+#: Back from a choice's own choices (Learn's) to the page's.
+BACK_CHOICE = TitleChoice("back", "Back", "To the title page")
+
+#: Learn: the tutorials, or Help.
+LEARN_CHOICE = TitleChoice(
+    LEARN,
+    "Learn",
+    "Tutorials and general help",
+    (
+        TitleChoice(TUTORIAL, "Tutorials", "Play along with a walkthrough guide"),
+        TitleChoice(HELP, "General Help", "The guides and the rules"),
+    ),
+)
 
 
 @dataclass(frozen=True)
@@ -115,5 +141,5 @@ def title_page(
         choices.append(TitleChoice(JOIN, "Join a Saga", "Hosted by your storyguide"))
     else:
         choices.append(TitleChoice(NEW, "New Saga", "Begin a saga of your own"))
-    choices.append(TitleChoice(HELP, "Help", "The guides and rules"))
+    choices.append(LEARN_CHOICE)
     return TitlePage(NAME, TAGLINE, edition, tuple(choices), saga_id)

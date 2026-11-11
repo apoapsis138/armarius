@@ -19,6 +19,7 @@ from textual.widgets import (
 )
 
 from ... import __version__, hosted_signin, paths, storage, title_page
+from ...commands import Picked
 from ...forms import saga as saga_forms
 from ...markup import escape, problem
 from ...models import Player
@@ -31,6 +32,7 @@ from .prompts import (
     _new_passcode_dialog,
     _sign_in_dialog,
 )
+from .steps import run_steps
 from .widgets import BottomBar
 from .workspace import WorkspaceScreen
 
@@ -189,10 +191,29 @@ class SagaPickerScreen(Screen[None]):
         def chosen(key: str | None) -> None:
             if key == "save_folder":
                 self.change_save_folder()
+            elif key == "tutorial":
+                self.start_tutorial()
 
         self.app.push_screen(
-            MenuScreen("More", [("f", "save_folder", "Change save folder")]), chosen
+            MenuScreen(
+                "More",
+                [
+                    ("t", "tutorial", "Start a tutorial"),
+                    ("f", "save_folder", "Change save folder"),
+                ],
+            ),
+            chosen,
         )
+
+    def start_tutorial(self) -> None:
+        """Start a Tutorial: a fresh copy of a walkthrough guide's saga,
+        which opens once it is made."""
+
+        def done(end: object) -> None:
+            if isinstance(end, Picked):
+                self.open_saga(str(end.value))
+
+        run_steps(self.app, saga_forms.tutorial_form(), done)
 
     def change_save_folder(self) -> None:
         """Choose another save folder, moving the saves there if asked,

@@ -8,7 +8,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from .. import creation, packs, paths, storage
+from .. import creation, packs, paths, storage, tutorials
 from ..commands import Confirm, Form, Picked, notes
 from ..form_spec import DialogField
 from ..markup import escape
@@ -45,6 +45,49 @@ def new_saga_form() -> Form:
         lambda: creation_forms.saga_fields(None),
         apply,
         save_label="Create",
+    )
+
+
+def tutorial_form() -> Form:
+    """Start a Tutorial: one of the walkthrough guides' starting sagas,
+    copied in as a saga of the user's own; ends with its id."""
+    found = {str(t.number): t for t in tutorials.listed()}
+
+    def fields() -> list[DialogField]:
+        first = next(iter(found), "")
+        return [
+            DialogField(
+                "tutorial",
+                "Tutorial",
+                "select",
+                first,
+                [(t.label, key) for key, t in found.items()],
+                required=True,
+            )
+        ]
+
+    def live(values: dict[str, Any]) -> str:
+        chosen = found.get(str(values.get("tutorial") or ""))
+        if chosen is None:
+            return ""
+        return (
+            f"A fresh copy of {escape(chosen.title)} joins your sagas, at the "
+            f"point where guide {chosen.number} of The Walkthroughs begins. "
+            "Start it again any time for a clean copy. The guides are the "
+            f"book {escape(tutorials.GUIDE_BOOK.name)}, in the app's "
+            "data/tutorials folder."
+        )
+
+    def apply(values: dict[str, Any]) -> Picked:
+        return Picked(tutorials.start(found[str(values["tutorial"])]).id)
+
+    return Form(
+        "Start a Tutorial",
+        fields,
+        apply,
+        live=live,
+        save_label="Start",
+        help_id="guide-tutorials",
     )
 
 

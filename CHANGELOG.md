@@ -127,6 +127,13 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 4.11.0 — 2026-11-11
+
+### Glossa
+
+- **Tutorials.** The seventeen walkthrough guides now ship with the app, each with its own ready-made saga: **Start a Tutorial** on the Sagas page (and in More on the terminal's saga list) makes a fresh copy of the saga a guide begins from and opens it, so you can follow every step yourself. Start one again any time for a clean copy. The guides themselves come as one book sized for a phone, *The Walkthroughs*, in the app's `data/tutorials` folder. A new how-to, How to learn with the tutorials, lists them.
+- **Learn on the title page.** Help's card on the title page is now **Learn**, which opens onto **Tutorials** and **General Help** (with Back), so the page stays four cards wide.
+
 ## 4.10.1 — 2026-11-11
 
 ### Pagina

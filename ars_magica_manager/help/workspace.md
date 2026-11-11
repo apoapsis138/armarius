@@ -6,7 +6,9 @@ The page the app opens on: the illuminated A and the name Armarius, the tagline,
 - **Open Saga** opens the saga you had open last (or the only saga, if there is one). It isn't offered when there is no saga to open.
 - **All Sagas** goes to the [saga picker](help:saga-picker), to choose a saga, start a new one or delete one.
 - **New Saga** goes to the saga picker and opens its New Saga form at once; the new saga opens when you save it. Cancel the form and you stay on the picker.
-- **Help** opens Help.
+- **Learn** shows two more ways on in their place, with **Back** to return:
+  - **Tutorials** goes to the saga picker and opens Start a Tutorial: a ready-made saga for one of the walkthrough guides, opened once it is made (see [How to learn with the tutorials](help:guide-tutorials)).
+  - **General Help** opens Help. `?` (or F1 on the desktop) opens it from the title page too.
 
 <!-- tui -->
 Enter takes the first of them. Choose with the arrow keys and Enter, and `q` quits. A player's copy of a hosted saga skips the title page and opens on the saga picker, where they sign in.
@@ -57,11 +59,13 @@ The default is Armarius at the top of your OneDrive. The app was called Ars Magi
 - Highlight a saga and press Enter to open it in the workspace.
 - `n` opens the Create a New Saga form.
 - `d` (or Delete) deletes the highlighted saga after a confirmation. This deletes the saga's file and everything in it (covenants, characters, laboratories, library) for good, so the confirmation says so and No is the safe answer.
-- More (`m`) offers **Change save folder**: choose a folder with the folder browser (Enter opens a folder, Up goes to the parent, or type a path), and whether to move the saves there.
+- More (`m`) offers **Start a tutorial**: a fresh copy of a walkthrough guide's saga, which opens once it is made (see [How to learn with the tutorials](help:guide-tutorials)).
+- More (`m`) also offers **Change save folder**: choose a folder with the folder browser (Enter opens a folder, Up goes to the parent, or type a path), and whether to move the saves there.
 <!-- /tui -->
 <!-- gui -->
 - Click a saga's card to open it on its own page.
 - **New Saga** opens the Create a New Saga form.
+- **Start a Tutorial** makes a fresh copy of a walkthrough guide's saga and opens it (see [How to learn with the tutorials](help:guide-tutorials)).
 - **Delete**, on a saga's card, deletes that saga after a confirmation. This deletes the saga's file and everything in it (covenants, characters, laboratories, library) for good, so the confirmation says so and No is the safe answer.
 - **Change Save Folder**: choose a folder in the system's folder dialog, then whether to move the saves there.
 <!-- /gui -->

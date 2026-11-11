@@ -268,7 +268,8 @@ def _joined_card(game: JoinedGame, p: Palette, joined: JoinedShelf) -> Clickable
 
 class SagaShelf(QWidget):
     """Every saga as a card; choosing one opens it. Above them, New Saga,
-    Join a Saga and Change Save Folder with the folder the saves are in;
+    Join a Saga, Start a Tutorial and Change Save Folder with the folder
+    the saves are in;
     each card has a Delete. Joined games follow the sagas, each with Leave
     Game."""
 
@@ -283,6 +284,7 @@ class SagaShelf(QWidget):
         folder: str = "",
         *,
         joined: JoinedShelf | None = None,
+        start_tutorial: Callable[[], None] = lambda: None,
     ) -> None:
         super().__init__()
         cards = []
@@ -325,11 +327,15 @@ class SagaShelf(QWidget):
             "players",
         )
         self.join_game.setVisible(joined is not None)
+        self.start_tutorial = edit_button(
+            "Start a Tutorial", p, start_tutorial, "library"
+        )
         self.change_folder = edit_button("Change Save Folder", p, change_folder, "edit")
         buttons = QHBoxLayout()
         buttons.setContentsMargins(0, 0, 0, 0)
         buttons.addWidget(self.new_saga)
         buttons.addWidget(self.join_game)
+        buttons.addWidget(self.start_tutorial)
         buttons.addWidget(self.change_folder)
         buttons.addStretch(1)
         actions = QWidget()

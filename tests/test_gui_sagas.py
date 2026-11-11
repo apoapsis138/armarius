@@ -58,6 +58,16 @@ def test_new_saga_creates_and_opens_it(app):
     assert window.saga.id in storage.list_sagas()
 
 
+def test_start_a_tutorial_copies_the_guides_saga_and_opens_it(app):
+    window = _shelf()
+    answering(window, {"tutorial": "2"})
+    window.page().start_tutorial.click()
+    assert isinstance(window.page(), SagaPage)
+    assert window.saga is not None
+    assert window.saga.name == "The Covenfolk"
+    assert window.saga.id in storage.list_sagas()
+
+
 def test_a_cards_delete_asks_then_deletes_the_saga(app):
     window = _shelf()
     saga_id = window.saga_ids[0]

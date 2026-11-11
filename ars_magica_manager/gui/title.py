@@ -42,6 +42,7 @@ from .widgets import serif, text
 
 #: How long the page takes to fade in, in milliseconds.
 FADE_MS = 700
+BACK = tp.BACK_CHOICE
 
 
 def _choice_button(choice: tp.TitleChoice, p: Palette, first: bool) -> QPushButton:
@@ -108,7 +109,8 @@ class GiltTitle(QLabel):
 
 class TitleScreen(Paper):
     """The title page, calling `choose` with the key of the way on
-    chosen (title_page.OPEN, SAGAS, NEW, JOIN or HELP)."""
+    chosen (title_page.OPEN, SAGAS, NEW, JOIN, TUTORIAL or HELP; Learn
+    opens onto Tutorials and General Help)."""
 
     def __init__(
         self, page: tp.TitlePage, p: Palette, choose: Callable[[str], None]
@@ -135,32 +137,60 @@ class TitleScreen(Paper):
         tagline.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         column.addWidget(tagline)
         column.addSpacing(40)
-        row = QHBoxLayout()
-        row.setSpacing(22)
-        row.addStretch(1)
-        #: The buttons, by the key of their way on.
+        self.p = p
+        self.row = QHBoxLayout()
+        self.row.setSpacing(22)
+        #: The buttons on show, by the key of their way on.
         self.buttons: dict[str, QPushButton] = {}
-        for i, choice in enumerate(page.choices):
-            button = _choice_button(choice, p, first=i == 0)
-            button.clicked.connect(
-                lambda _checked=False, key=choice.key: self.choose(key)
-            )
-            row.addWidget(button)
-            self.buttons[choice.key] = button
-        row.addStretch(1)
-        column.addLayout(row)
+        #: The line saying what Enter takes: the first button on show.
+        self.hint = text("", p["dim"], serif(11.5, italic=True))
+        self.hint.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        self.show_choices(page.choices)
+        column.addLayout(self.row)
         column.addSpacing(16)
-        first = page.choices[0]
-        hint = text(f"Enter: {first.label}", p["dim"], serif(11.5, italic=True))
-        hint.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        column.addWidget(hint)
+        column.addWidget(self.hint)
         column.addStretch(3)
         column.addWidget(Tailpiece(p))
         edition = text(page.edition, p["dim"], serif(11))
         edition.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         column.addWidget(edition)
         for key in (Qt.Key.Key_Return, Qt.Key.Key_Enter):
-            QShortcut(QKeySequence(key), self, lambda: self.choose(first.key))
+            QShortcut(
+                QKeySequence(key),
+                self,
+                lambda: next(iter(self.buttons.values())).click(),
+            )
+
+    def show_choices(self, choices: tuple[tp.TitleChoice, ...]) -> None:
+        """Lay out `choices` as the row of buttons, in place of those on
+        show. A choice that opens onto choices of its own (Learn) shows
+        them, with Back to return to the page's own."""
+        for button in self.buttons.values():
+            button.deleteLater()
+        self.buttons = {}
+        while self.row.count():
+            self.row.takeAt(0)
+        self.row.addStretch(1)
+        for i, choice in enumerate(choices):
+            button = _choice_button(choice, self.p, first=i == 0)
+            if choice.then:
+                ways = (*choice.then, BACK)
+                button.clicked.connect(
+                    lambda _checked=False, ways=ways: self.show_choices(ways)
+                )
+            elif choice.key == BACK.key:
+                button.clicked.connect(
+                    lambda _checked=False: self.show_choices(self.page.choices)
+                )
+            else:
+                button.clicked.connect(
+                    lambda _checked=False, key=choice.key: self.choose(key)
+                )
+            self.row.addWidget(button)
+            self.buttons[choice.key] = button
+        self.row.addStretch(1)
+        next(iter(self.buttons.values())).setFocus()
+        self.hint.setText(f"Enter: {choices[0].label}")
 
     def fade_in(self) -> None:
         """Fade the page in from the paper."""

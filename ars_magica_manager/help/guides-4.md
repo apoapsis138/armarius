@@ -1649,6 +1649,43 @@ call (see [the Custodia Mirabilium](help:section-custodia)).
 
 **See also:** [The Armarium](help:armarium), [The Custodia Mirabilium](help:custodia), [Give](help:give)
 
+# How to learn with the tutorials
+<!-- help: guide-tutorials -->
+
+The Walkthroughs are seventeen illustrated guides that follow one troupe
+through the app, from making a magus to a covenant on the move. Each
+starts from a saga at a set point (Rabenstein in Spring 1220, the Rhine
+Tribunal on the eve of its meeting, and so on), and the app ships every
+one of those sagas, so you can do each step yourself as you read.
+
+1. **Open the guides.** They are one book, *The Walkthroughs.pdf*, sized
+   for reading on a phone, in the app's `data/tutorials` folder.
+2. **Start the tutorial.** On the title page choose **Learn**, then
+   **Tutorials**
+<!-- tui -->
+   (or, on the saga list, press `m` for More and choose **Start a
+   tutorial**),
+<!-- /tui -->
+<!-- gui -->
+   (or click **Start a Tutorial** on the Sagas page),
+<!-- /gui -->
+   and choose the guide you are reading. The list gives each guide's
+   number, title and the season its saga opens in.
+3. **Follow along.** A fresh copy of the saga joins your sagas under the
+   guide's title, and opens. Everything you do changes only your copy.
+4. **Start again any time.** Starting the same tutorial again gives a
+   new, clean copy beside the old one; delete the one you're done with
+   from the saga list.
+
+The guides are: 1 Making a Magus, 2 The Covenfolk, 3 A Year at
+Rabenstein, 4 The Laboratory, 5 Enchantments, 6 The Mystery Cults, 7 The
+Hidden Arts, 8 Beyond the Order, 9 Founding and Keeping a Covenant,
+10 Great Works, 11 A Knight's Life, 12 War, 13 Hermetic Politics, 14 The
+Saga and Its World, 15 The Four Realms, 16 Rules of the House and 17 On
+the Move.
+
+**See also:** [Saga picker](help:saga-picker), [Getting started](help:guide-getting-started)
+
 # How to plan and record a Session
 <!-- help: guide-sessions -->
 

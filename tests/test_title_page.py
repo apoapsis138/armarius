@@ -80,7 +80,7 @@ def test_the_page_names_the_app_its_version_and_release():
 
 def test_with_no_sagas_it_offers_to_begin_one():
     page = tp.title_page([])
-    assert _keys(page) == [tp.SAGAS, tp.NEW, tp.HELP]
+    assert _keys(page) == [tp.SAGAS, tp.NEW, tp.LEARN]
     assert page.choices[0].detail == "None saved yet"
     assert page.choices[1].label == "New Saga"
     assert page.saga_id is None
@@ -88,7 +88,7 @@ def test_with_no_sagas_it_offers_to_begin_one():
 
 def test_a_front_end_that_joins_offers_join_a_saga_in_new_sagas_place():
     page = tp.title_page([], joining=True)
-    assert _keys(page) == [tp.SAGAS, tp.JOIN, tp.HELP]
+    assert _keys(page) == [tp.SAGAS, tp.JOIN, tp.LEARN]
     assert page.choices[1].label == "Join a Saga"
 
 
@@ -101,7 +101,7 @@ def test_open_saga_opens_the_saga_opened_last():
     assert tp.title_page(ids).saga_id is None  # two sagas, none opened yet
     tp.remember_saga("second")
     page = tp.title_page(ids)
-    assert _keys(page) == [tp.OPEN, tp.SAGAS, tp.NEW, tp.HELP]
+    assert _keys(page) == [tp.OPEN, tp.SAGAS, tp.NEW, tp.LEARN]
     assert page.saga_id == "second"
     assert page.choices[0].detail == "The Second Saga"
 
@@ -156,14 +156,36 @@ async def test_help_from_the_title_page():
         assert await wait_until(pilot, lambda: app.screen.topic_id == "title-page")
 
 
-async def test_the_title_pages_help_choice_opens_help_over_the_picker():
+def test_learn_leads_to_the_tutorials_and_general_help():
+    (learn,) = [c for c in tp.title_page([]).choices if c.key == tp.LEARN]
+    assert [c.key for c in learn.then] == [tp.TUTORIAL, tp.HELP]
+    assert [c.label for c in learn.then] == ["Tutorials", "General Help"]
+
+
+async def test_learn_then_general_help_opens_help_over_the_picker():
     app = ArsMagicaManagerApp()
     app.show_title = True
     async with app.run_test(size=(120, 45)) as pilot:
         assert await wait_until(pilot, lambda: isinstance(app.screen, TitleScreen))
-        await pilot.press("down", "down", "enter")  # All Sagas, New Saga, Help
+        await pilot.press("down", "down", "enter")  # All Sagas, New Saga, Learn
+        assert await wait_until(
+            pilot, lambda: "General Help" in "\n".join(screen_lines(app))
+        )
+        await pilot.press("down", "enter")  # Tutorials, General Help
         assert await wait_until(pilot, lambda: isinstance(app.screen, HelpScreen))
         assert isinstance(app.screen_stack[-2], SagaPickerScreen)
+
+
+async def test_back_from_learn_lists_the_title_pages_ways_again():
+    app = ArsMagicaManagerApp()
+    app.show_title = True
+    async with app.run_test(size=(120, 45)) as pilot:
+        assert await wait_until(pilot, lambda: isinstance(app.screen, TitleScreen))
+        await pilot.press("down", "down", "enter", "down", "down", "enter")
+        assert await wait_until(
+            pilot, lambda: "All Sagas" in "\n".join(screen_lines(app))
+        )
+        assert isinstance(app.screen, TitleScreen)
 
 
 async def test_the_title_pages_new_saga_opens_the_new_saga_form_over_the_picker():
@@ -174,6 +196,22 @@ async def test_the_title_pages_new_saga_opens_the_new_saga_form_over_the_picker(
         await pilot.press("down", "enter")  # All Sagas, then New Saga
         assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
         assert "Create a New Saga" in "\n".join(screen_lines(app))
+        assert isinstance(app.screen_stack[-2], SagaPickerScreen)
+        await pilot.press("escape")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, SagaPickerScreen))
+
+
+async def test_the_title_pages_tutorials_opens_start_a_tutorial_over_the_picker():
+    app = ArsMagicaManagerApp()
+    app.show_title = True
+    async with app.run_test(size=(120, 45)) as pilot:
+        assert await wait_until(pilot, lambda: isinstance(app.screen, TitleScreen))
+        await pilot.press("down", "down", "enter")  # All Sagas, New Saga, Learn
+        await pilot.press("enter")  # Tutorials
+        assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
+        shown = "\n".join(screen_lines(app))
+        assert "Start a Tutorial" in shown
+        assert "1. Making a Magus (Spring 1220)" in shown
         assert isinstance(app.screen_stack[-2], SagaPickerScreen)
         await pilot.press("escape")
         assert await wait_until(pilot, lambda: isinstance(app.screen, SagaPickerScreen))

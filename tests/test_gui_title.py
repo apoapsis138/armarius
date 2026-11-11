@@ -53,7 +53,7 @@ def test_the_title_page_offers_the_ways_on(app):
     title = window.title
     assert title is not None
     # New Saga stays on the shelf; Join a Saga takes its place here.
-    assert list(title.buttons) == [tp.SAGAS, tp.JOIN, tp.HELP]
+    assert list(title.buttons) == [tp.SAGAS, tp.JOIN, tp.LEARN]
 
 
 def test_join_a_game_opens_the_join_window_over_the_shelf(app, monkeypatch):
@@ -75,7 +75,7 @@ def test_open_saga_opens_the_saga_opened_last(app):
     window = _titled([saga.id, other.id])
     title = window.title
     assert title is not None
-    assert list(title.buttons) == [tp.OPEN, tp.SAGAS, tp.JOIN, tp.HELP]
+    assert list(title.buttons) == [tp.OPEN, tp.SAGAS, tp.JOIN, tp.LEARN]
     title.buttons[tp.OPEN].click()
     assert window.title is None
     assert window.stack.currentIndex() == 0
@@ -93,11 +93,32 @@ def test_all_sagas_goes_to_the_shelf(app):
     assert window.saga is None
 
 
-def test_help_opens_help_on_the_shelf(app):
+def test_learn_then_general_help_opens_help_on_the_shelf(app):
     window = _titled([])
     assert window.title is not None
+    window.title.buttons[tp.LEARN].click()
+    assert list(window.title.buttons) == [tp.TUTORIAL, tp.HELP, tp.BACK_CHOICE.key]
     window.title.buttons[tp.HELP].click()
     assert isinstance(window.page(), HelpPage)
+
+
+def test_back_from_learn_shows_the_ways_on_again(app):
+    window = _titled([])
+    assert window.title is not None
+    window.title.buttons[tp.LEARN].click()
+    window.title.buttons[tp.BACK_CHOICE.key].click()
+    assert list(window.title.buttons) == [tp.SAGAS, tp.JOIN, tp.LEARN]
+
+
+def test_learn_then_tutorials_starts_a_tutorial_from_the_shelf(app, monkeypatch):
+    window = _titled([])
+    started: list[object] = []
+    monkeypatch.setattr(window, "start_tutorial", lambda: started.append(True))
+    assert window.title is not None
+    window.title.buttons[tp.LEARN].click()
+    window.title.buttons[tp.TUTORIAL].click()
+    assert window.title is None and isinstance(window.page(), SagaShelf)
+    assert started
 
 
 def test_opening_a_saga_remembers_it(app):

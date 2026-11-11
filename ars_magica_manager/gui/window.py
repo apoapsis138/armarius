@@ -635,7 +635,8 @@ class MainWindow(QMainWindow):
 
     def leave_title(self, key: str) -> None:
         """Go on from the title page by the way chosen (title_page.OPEN,
-        SAGAS, NEW, JOIN or HELP). New Saga goes by the shelf, so cancelling its
+        SAGAS, NEW, JOIN, TUTORIAL or HELP). New Saga and Start a Tutorial go
+        by the shelf, so cancelling its
         form leaves the shelf on show."""
         title, self.title = self.title, None
         if title is None:
@@ -657,6 +658,8 @@ class MainWindow(QMainWindow):
             self.rejoin(game)  # a saga played from a seat: its passcode
         elif key == title_page.NEW:
             self.new_saga()
+        elif key == title_page.TUTORIAL:
+            self.start_tutorial()
         elif key == title_page.JOIN:
             self.join_game()
         elif key == title_page.HELP:
@@ -688,6 +691,14 @@ class MainWindow(QMainWindow):
     def new_saga(self) -> None:
         """Create a New Saga and open it."""
         answered, end = self._run_on_shelf(saga_forms.new_saga_form())
+        if answered and isinstance(end, Picked):
+            self.saga_ids = storage.list_sagas()
+            self.open_saga(end.value)
+
+    def start_tutorial(self) -> None:
+        """Start a Tutorial: a fresh copy of a walkthrough guide's saga,
+        opened once it is made."""
+        answered, end = self._run_on_shelf(saga_forms.tutorial_form())
         if answered and isinstance(end, Picked):
             self.saga_ids = storage.list_sagas()
             self.open_saga(end.value)
@@ -1646,6 +1657,7 @@ class MainWindow(QMainWindow):
             self.delete_saga,
             self.change_save_folder,
             str(paths.data_dir()),
+            start_tutorial=self.start_tutorial,
             joined=JoinedShelf(
                 joined_games.listed(),
                 self.join_game,

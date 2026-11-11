@@ -35,9 +35,18 @@ def banner(word: str) -> str:
     return "\n".join("  ".join(letter[row] for letter in letters) for row in range(4))
 
 
+def _options(choices: tuple[tp.TitleChoice, ...]) -> list[Option]:
+    """Each way on as a row: its name, then where it goes."""
+    return [
+        Option(f"  {choice.label:<14}{escape(choice.detail)}", id=choice.key)
+        for choice in choices
+    ]
+
+
 class TitleScreen(Screen[None]):
     """The title page over the saga picker: Enter takes the way on
-    highlighted (the saga opened last, else every saga)."""
+    highlighted (the saga opened last, else every saga); Learn lists
+    Tutorials and General Help, with Back."""
 
     BINDINGS: ClassVar[list[BindingType]] = [
         ("q", "quit", "Quit"),
@@ -109,16 +118,7 @@ class TitleScreen(Screen[None]):
                 f"~ {escape(page.tagline)} ~", id="title-tagline", classes="title-line"
             )
             with Center():
-                yield OptionList(
-                    *(
-                        Option(
-                            f"  {choice.label:<14}{escape(choice.detail)}",
-                            id=choice.key,
-                        )
-                        for choice in page.choices
-                    ),
-                    id="title-choices",
-                )
+                yield OptionList(*_options(page.choices), id="title-choices")
             yield Static("Enter chooses", id="title-hint", classes="title-line")
             yield Static("─────── ❦ ───────", id="title-tail", classes="title-line")
             yield Static(escape(page.edition), id="title-edition", classes="title-line")
@@ -131,7 +131,21 @@ class TitleScreen(Screen[None]):
 
     def on_option_list_option_selected(self, event: OptionList.OptionSelected) -> None:
         event.stop()
-        self.choose(event.option.id or tp.SAGAS)
+        key = event.option.id or tp.SAGAS
+        if key == tp.LEARN:
+            self.show_choices((*tp.LEARN_CHOICE.then, tp.BACK_CHOICE))
+        elif key == tp.BACK_CHOICE.key:
+            self.show_choices(self.page.choices)
+        else:
+            self.choose(key)
+
+    def show_choices(self, choices: tuple[tp.TitleChoice, ...]) -> None:
+        """List `choices` in place of those on show (Learn's own, with
+        Back to the page's), the first highlighted."""
+        listed = self.query_one(OptionList)
+        listed.clear_options()
+        listed.add_options(_options(choices))
+        listed.highlighted = 0
 
     def choose(self, key: str) -> None:
         """Leave the title page for the saga picker, then take the way on
@@ -144,6 +158,8 @@ class TitleScreen(Screen[None]):
             picker.open_saga(self.page.saga_id)
         elif key == tp.NEW:
             picker.action_create_saga()
+        elif key == tp.TUTORIAL:
+            picker.start_tutorial()
         elif key == tp.HELP:
             picker.action_help()
 

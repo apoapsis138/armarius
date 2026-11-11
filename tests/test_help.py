@@ -632,6 +632,7 @@ GUIDES = [
     "guide-troupe-storyguides",
     "guide-find-record",
     "guide-store-find",
+    "guide-tutorials",
     "guide-sessions",
 ]
 
