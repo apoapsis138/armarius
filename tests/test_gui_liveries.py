@@ -9,10 +9,11 @@ import pytest
 
 pytest.importorskip("PySide6")
 
-from PySide6.QtCore import QPointF, QRectF
+from PySide6.QtCore import QPoint, QPointF, QRectF
 from PySide6.QtGui import QColor, QFont, QImage, QPainter
 from PySide6.QtWidgets import QApplication
 
+from ars_magica_manager import artwork
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.style import families, gilding, liveries, pieces
 from ars_magica_manager.gui.style.families import DIALOG, PLAIN, WINDOW
@@ -180,6 +181,7 @@ def test_tytalus_violet_and_green_part_by_lightness_for_red_green_blindness() ->
         pal.EX_MISCELLANEA,
         pal.FLAMBEAU,
         pal.JERBITON,
+        pal.DIEDNE,
     ],
 )
 def test_a_houses_heading_and_accent_part_by_lightness_for_red_green_blindness(
@@ -219,6 +221,7 @@ def test_a_house_whose_accent_is_not_gold_gilds_in_its_own_metal() -> None:
         "Ex Miscellanea",
         "Flambeau",
         "Jerbiton",
+        "Diedne",
     ):
         for p in (houses[name], pal.IN_CREATION[name]):
             assert not gold & {colour for _stop, colour in pal.metal(p)}, name
@@ -266,7 +269,12 @@ def test_a_house_closes_a_chapter_on_its_sign_not_a_seal_on_the_frame(
         for y in range(families.TAIL_Y - 12, families.TAIL_Y + 12)
         if tail.pixelColor(x, y).alpha() > 200
     }
-    assert any(_near(c, p["heading"]) for c in centre), house
+    if house == "Diedne":
+        # What is left of Diedne's sign is in the watermark's dark, and
+        # none of it in the heading's ink.
+        assert not any(_near(c, p["heading"]) for c in centre), house
+    else:
+        assert any(_near(c, p["heading"]) for c in centre), house
     # The foot of a dialog: paper and frame only, no heading-inked sign.
     page = QImage(300, 120, QImage.Format.Format_ARGB32)
     painter = QPainter(page)
@@ -359,6 +367,7 @@ def _near(a: str, b: str) -> bool:
         families.ExMiscellanea,
         families.Flambeau,
         families.Jerbiton,
+        families.Diedne,
     ],
 )
 def test_every_family_form_paints_every_piece(form: type[families.Look]) -> None:
@@ -391,12 +400,11 @@ def test_every_family_form_paints_every_piece(form: type[families.Look]) -> None
 
 @pytest.mark.usefixtures("app")
 def test_the_inspectors_watermark_keeps_text_readable() -> None:
-    """A House's mark is watermarked in the Inspector only as strongly as
-    keeps every text colour readable over it; Scriptorum has none."""
+    """A House's mark (Scriptorum's, the Order's sigil) is watermarked in
+    the Inspector only as strongly as keeps every text colour readable
+    over it."""
     for theme, p in _pages():
         opacity = theme.look.watermark_opacity(p)
-        if theme.mark is None:
-            continue
         assert 0 < opacity <= families.WATERMARK, p.name
         ground = pal.mixed(
             worst_ground(theme.look.paper(p), p.dark), p["panel"], 70 / 255
@@ -414,3 +422,99 @@ def test_house_pigments_and_opening_card_follow_the_theme() -> None:
         assert pal.opening_card(p)["dark"] != pal.OPENING_CARD["dark"]
     assert pal.pigments(pal.SCRIPTORUM) == pal.PIGMENTS
     assert pal.opening_card(pal.SCRIPTORUM_DARK) == pal.OPENING_CARD
+
+
+def test_diedne_is_renounced_of_no_family_on_scriptorums_form() -> None:
+    """Diedne is listed on its own, after the families, under Renounced;
+    its look is Scriptorum's form (no family's), with uncial headings and
+    its invented sign, a scraped triskelion, drawn in the app."""
+    theme = liveries.named("Diedne")
+    assert theme is not None and theme.group == liveries.RENOUNCED
+    assert liveries.GROUPS[-1] == liveries.RENOUNCED
+    assert liveries.THEMES[-1] is theme
+    look = theme.look
+    assert type(look).__mro__[1] is families.Look
+    assert look.heading_family == fonts.DISPLAY
+    assert theme.mark is not None and theme.mark.parent.name == "drawn"
+
+
+@pytest.mark.usefixtures("app")
+@pytest.mark.parametrize("theme", ["Scriptorum", "Scriptorum Dark"])
+def test_scriptorum_watermarks_the_orders_sigil_and_keeps_its_leaves(
+    theme: str,
+) -> None:
+    """With no House, Scriptorum watermarks the Order of Hermes's sigil at
+    the Inspector's foot, faint in the watermark's ink, and still closes a
+    chapter on its three leaves."""
+    found = liveries.named(theme)
+    assert found is not None and found.mark is None
+    look, p = found.look, found.palette
+    assert look.watermark == artwork.SIGIL
+    image = QImage(320, 420, QImage.Format.Format_ARGB32)
+    image.fill(0)
+    painter = QPainter(image)
+    look.inspector_mark(painter, QRectF(0, 0, 320, 420), p)
+    painter.end()
+    inked = [
+        image.pixelColor(x, y)
+        for x in range(0, 320, 2)
+        for y in range(0, 420, 2)
+        if image.pixelColor(x, y).alpha() > 0
+    ]
+    assert len(inked) > 500
+    ink = QColor(families.watermark_ink(p))
+    assert all(abs(c.red() - ink.red()) <= 2 for c in inked[:50])
+    # The tailpiece is the three leaves, unchanged: no House sign.
+    tail = QImage(300, 60, QImage.Format.Format_ARGB32)
+    tail.fill(0)
+    painter = QPainter(tail)
+    look.tailpiece(painter, 300, p)
+    painter.end()
+    assert any(tail.pixelColor(150, y).alpha() for y in range(60))
+
+
+@pytest.mark.usefixtures("app")
+def test_diedne_sets_its_initials_plain_in_the_headings_ash() -> None:
+    """A Diedne name's initial is a plain uncial letter in the heading's
+    ash, with no gilt edge; Scriptorum's keeps its gilt."""
+    font = QFont(fonts.DISPLAY)
+    font.setPointSizeF(40)
+
+    def letter(p: pal.Palette) -> set[str]:
+        image = QImage(80, 80, QImage.Format.Format_ARGB32)
+        image.fill(QColor(p["background"]))
+        painter = QPainter(image)
+        gilding.gilt_letter(painter, "L", font, QPointF(8, 66), p)
+        painter.end()
+        return {image.pixelColor(x, y).name() for x in range(80) for y in range(80)}
+
+    gilt = (pal.PIGMENTS["gold"], pal.PIGMENTS["gold-light"])
+    seen = letter(pal.DIEDNE)
+    assert any(_near(c, pal.DIEDNE["heading"]) for c in seen)
+    assert not any(_near(c, g) for c in seen for g in gilt)
+    assert any(_near(c, g) for c in letter(pal.SCRIPTORUM) for g in gilt)
+
+
+@pytest.mark.usefixtures("app")
+def test_diedne_wears_its_rules_and_frames_but_no_other_house_does() -> None:
+    """Diedne's rules, band and frames are broken off in gaps along them
+    (the Inspector's frame too, through Look.worn); another House's are
+    whole."""
+    diedne = liveries.named("Diedne")
+    other = liveries.named("Bonisagus")
+    assert diedne is not None and other is not None
+    frame = QRectF(10, 10, 300, 400)
+    worn = diedne.look.worn(frame)
+    assert worn is not None and other.look.worn(frame) is None
+    top = [worn.contains(QPoint(x, 10)) for x in range(10, 310)]
+    assert not all(top) and sum(top) > len(top) * 0.7
+
+    def rule(theme: liveries.Theme) -> list[bool]:
+        image = QImage(600, 40, QImage.Format.Format_ARGB32)
+        image.fill(0)
+        painter = QPainter(image)
+        theme.look.heading_rule(painter, 600, 20, theme.palette)
+        painter.end()
+        return [image.pixelColor(x, 20).alpha() > 0 for x in range(40, 300)]
+
+    assert not all(rule(diedne)) and all(rule(other))

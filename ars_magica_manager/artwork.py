@@ -316,6 +316,9 @@ DRAWN_ICONS: dict[str, Path] = {
     "crescent": DRAWN / "crescent.svg",
     "sacred_fire": DRAWN / "sacred_fire.svg",
     "sacred_tree": DRAWN / "sacred_tree.svg",
+    # House Diedne's invented sign, the mark of its theme
+    # (tools/draw_diedne_mark.py): the books give it none.
+    "diedne": DRAWN / "diedne.svg",
 }
 
 

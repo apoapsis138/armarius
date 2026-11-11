@@ -291,6 +291,41 @@ def _small(sign: QPixmap, side: int) -> QPixmap:
     return small
 
 
+@cache
+def _lit_sign(path: Path, colour: str, side: int, ratio: float) -> QPixmap:
+    """The light parts of the picture at `path` (the Order's sigil: gold
+    serpents on a dark ground) as one colour, `colour`, `side` pixels
+    square: each pixel let through as far as it is light, so the dark
+    ground and the outlines fall away and only the figure is left."""
+    full = round(side * ratio)
+    picture = (
+        QImage(str(path))
+        .scaled(
+            full,
+            full,
+            Qt.AspectRatioMode.KeepAspectRatio,
+            Qt.TransformationMode.SmoothTransformation,
+        )
+        .convertToFormat(QImage.Format.Format_ARGB32)
+    )
+    width, height = picture.width(), picture.height()
+    stride, raw = picture.bytesPerLine(), bytes(picture.constBits())
+    ink = QColor(colour)
+    blue, green, red = ink.blue(), ink.green(), ink.red()
+    pixels = bytearray(4 * width * height)
+    for y in range(height):
+        for x in range(width):
+            b, g, r, a = raw[y * stride + 4 * x : y * stride + 4 * x + 4]
+            light = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255
+            lit = min(1.0, max(0.0, (light - 0.3) / 0.45))
+            i = 4 * (y * width + x)
+            pixels[i : i + 4] = bytes((blue, green, red, round(a * lit)))
+    sign = QImage(bytes(pixels), width, height, 4 * width, QImage.Format.Format_ARGB32)
+    result = QPixmap.fromImage(sign.copy())
+    result.setDevicePixelRatio(ratio)
+    return result
+
+
 def _on_edge(i: int, width: int, height: int) -> bool:
     x, y = i % width, i // width
     return x in (0, width - 1) or y in (0, height - 1)
@@ -327,6 +362,9 @@ class Look:
     #: House's pigments (palettes.HOUSE_PIGMENTS), not the rubric's colour
     #: with a gilt edge.
     quartered_initials = False
+    #: Whether a name's or a passage's initial is a plain letter in the
+    #: heading's ink, with no decoration at all.
+    plain_initials = False
     #: Whether the form's own pieces (its frame) are drawn on the window.
     frames_window = False
     #: Whether the House's sign is drawn in ink on a light tile (and so is
@@ -334,9 +372,14 @@ class Look:
     #: dark one.
     sign_drawn = False
 
-    def __init__(self, mark: Path | None = None) -> None:
-        #: The House's mark, drawn on the frame, or None.
+    def __init__(self, mark: Path | None = None, watermark: Path | None = None) -> None:
+        #: The House's mark (an SVG), closing each chapter and watermarked
+        #: in the Inspector, or None.
         self.mark = mark
+        #: A picture watermarked in the Inspector by its light parts when
+        #: there is no House mark (Scriptorum's: the Order's sigil), or
+        #: None.
+        self.watermark = watermark
         self._tiles: dict[str, QPixmap] = {}
         self._margins: dict[str, QPixmap] = {}
         self._watermarks: dict[str, float] = {}
@@ -432,6 +475,12 @@ class Look:
         """The ornament in each corner of `rect` (a frame's, a card's)."""
         flourish.corner_flourishes(painter, rect, p, arm)
 
+    def worn(self, frame: QRectF) -> QRegion | None:
+        """What a frame ruled on `frame` (the Inspector's, a page's) keeps
+        of itself where the House's page is worn, as a clip; None, kept
+        whole, unless the House's frames are scraped."""
+        return None
+
     def sign(self, colour: str, side: int) -> QPixmap:
         """The House's sign alone, cut from its mark's tile (or, for a mark
         drawn in ink, without the tile's frame), in `colour`, `side` pixels
@@ -446,18 +495,23 @@ class Look:
         """The House's mark watermarked large at the foot of the Inspector
         (`rect` inside its frame), as a watermark shows in a sheet held to
         the light: paler than the page on a light theme, deeper on a dark
-        one, so text over it only stands out the more. Scriptorum has no
-        mark."""
-        if self.mark is None:
+        one, so text over it only stands out the more. Scriptorum, with no
+        House, shows the Order's sigil the same way."""
+        if self.mark is None and self.watermark is None:
             return
         side = round(min(rect.width() * 0.6, WATERMARK_SIDE))
         opacity = self.watermark_opacity(p)
         if side < 60 or opacity <= 0:
             return
+        if self.mark is not None:
+            sign = self.sign(watermark_ink(p), side)
+        else:
+            assert self.watermark is not None
+            sign = _lit_sign(self.watermark, watermark_ink(p), side, 2.0)
         corner = QPointF(rect.center().x() - side / 2, rect.bottom() - side - 26)
         painter.save()
         painter.setOpacity(opacity)
-        painter.drawPixmap(corner, self.sign(watermark_ink(p), side))
+        painter.drawPixmap(corner, sign)
         painter.restore()
 
     def watermark_opacity(self, p: Palette) -> float:
@@ -2062,3 +2116,270 @@ def _patch(
         while x < right - 4:
             painter.drawLine(QPointF(x, seam - 2), QPointF(x + 4, seam + 2))
             x += 8
+
+
+# -- House Diedne, of no family ----------------------------------------------
+
+
+#: How far apart the lines of Diedne's scraped-off writing run, and how far
+#: they fall across the tile's width (a whole number of lines, so a line
+#: leaving the tile's edge meets one entering the next tile).
+SCRIPT_LEADING, SCRIPT_FALL = 16.0, 64.0
+
+
+def _script_letter(rng: random.Random, at: QPointF, size: float) -> QPainterPath:
+    """One letter of an invented book hand, `size` its x-height, its
+    baseline's left end at `at`: two or three strokes chosen at random
+    (slanting minims, ascenders, descenders, arches, wedges, hooks, curls),
+    so it reads as writing without ever being a letter of any alphabet. No
+    closed bowl, so no o, a, d or b, and no word of any language, forms."""
+    path = QPainterPath()
+    x, y = at.x(), at.y() - size
+
+    def p(u: float, v: float) -> QPointF:
+        # The hand leans backward, as no book hand of the Order does.
+        return QPointF(x + (u + 0.25 * v) * size, y + v * size)
+
+    for kind in rng.sample(
+        ("minim", "ascender", "descender", "arch", "wedge", "hook", "curl"),
+        rng.randint(2, 3),
+    ):
+        if kind == "minim":
+            path.moveTo(p(0.1, 0))
+            path.lineTo(p(0.05, 1))
+        elif kind == "ascender":
+            path.moveTo(p(0.15, -0.8))
+            path.lineTo(p(0.1, 1))
+        elif kind == "descender":
+            path.moveTo(p(0.6, 0))
+            path.lineTo(p(0.55, 1.7))
+        elif kind == "arch":
+            path.moveTo(p(0.1, 0.35))
+            path.quadTo(p(0.45, -0.25), p(0.7, 0.3))
+            path.lineTo(p(0.68, 1))
+        elif kind == "wedge":
+            path.moveTo(p(0.0, 0.1))
+            path.lineTo(p(0.35, 1))
+            path.lineTo(p(0.75, 0.05))
+        elif kind == "hook":
+            path.moveTo(p(0.05, 0.9))
+            path.quadTo(p(0.4, 1.25), p(0.75, 0.55))
+        else:
+            path.moveTo(p(0.7, -0.3))
+            path.quadTo(p(0.1, -0.1), p(0.45, 0.45))
+    return path
+
+
+class Diedne(Look):
+    """House Diedne, Renounced and of no family: Scriptorum's own form,
+    worn and scraped (its rules, the headpiece's band, its frames and the
+    Inspector's broken off in places, two of its corner pieces gone), on a
+    palimpsest. Older writing in an invented hand was scraped off the
+    vellum and shows through as the ghost of a text, its lines falling
+    across the page and faded where the knife went over them, the skin
+    fine-scratched by the knife: the House erased from the Order's records
+    and showing through anyway. Headings in Uncial Antiqua, initials plain,
+    and its sign scraped all but away, closing each chapter in the
+    watermark's dark."""
+
+    heading_family = title_family = fonts.DISPLAY
+    frames_window = True
+    sign_drawn = True
+    plain_initials = True
+
+    def texture(self, painter: QPainter, p: Palette, strength: float) -> None:
+        chance = random.Random(2253)
+        ink = p["paper-sheen"]
+        # Where the knife scraped hardest the old text is all but gone:
+        # waves whose periods divide the tile, so they meet from tile to
+        # tile.
+        k1, k2 = chance.randint(1, 3), chance.randint(1, 3)
+        p1, p2 = chance.uniform(0, math.tau), chance.uniform(0, math.tau)
+
+        def kept(x: float, y: float) -> float:
+            wave = math.sin(math.tau * k1 * x / TILE + p1) * math.cos(
+                math.tau * k2 * y / TILE + p2
+            )
+            return max(0.12, min(1.0, 0.55 + 0.55 * wave))
+
+        painter.setBrush(Qt.BrushStyle.NoBrush)
+        rows = round(TILE / SCRIPT_LEADING)
+        for row in range(rows):
+            # Some lines are scraped clean away.
+            if chance.random() < 0.45:
+                continue
+            x = chance.uniform(4, 60)
+            while True:
+                letters = chance.randint(2, 5)
+                size = chance.uniform(5.5, 7.0)
+                width = letters * size * 0.95
+                if x + width > TILE - 6:
+                    break
+                y = row * SCRIPT_LEADING + x * SCRIPT_FALL / TILE
+                opacity = round(chance.randint(14, 24) * kept(x, y) * strength)
+                rng_seed = chance.random()
+
+                def word(
+                    at_painter: QPainter,
+                    at: QPointF,
+                    letters: int = letters,
+                    size: float = size,
+                    opacity: int = opacity,
+                    rng_seed: float = rng_seed,
+                ) -> None:
+                    rng = random.Random(rng_seed)
+                    at_painter.setPen(QPen(shade(ink, opacity), 0.7))
+                    for i in range(letters):
+                        # The baseline falls with the line as it runs.
+                        dx = i * size * 0.95
+                        at_painter.drawPath(
+                            _script_letter(
+                                rng,
+                                at + QPointF(dx, dx * SCRIPT_FALL / TILE),
+                                size,
+                            )
+                        )
+
+                for dy in (-TILE, 0, TILE):
+                    word(painter, QPointF(x, y + dy))
+                x += width + chance.uniform(10, 40)
+
+        # The knife's fine scratches in the grain, long and straight, all
+        # slanting near the same way.
+        def scratch(at_painter: QPainter, at: QPointF, rng: random.Random) -> None:
+            reach = rng.uniform(50, 190)
+            turn = math.radians(-28 + rng.uniform(-7, 7))
+            end = at + QPointF(reach * math.cos(turn), reach * math.sin(turn))
+            at_painter.setPen(
+                QPen(shade(ink, round(rng.randint(8, 16) * strength)), 0.5)
+            )
+            at_painter.drawLine(at, end)
+
+        _wrapped_marks(painter, chance, 34, scratch)
+
+    def worn(self, frame: QRectF) -> QRegion | None:
+        """The part of a frame ruled on `frame` the scraping left: all but
+        short gaps along each of its four sides, spread evenly along them,
+        the same each time for a frame of the same size."""
+        chance = random.Random(round(frame.width()) * 7919 + round(frame.height()))
+        whole = QRegion(frame.adjusted(-8, -8, 8, 8).toAlignedRect())
+        corners = [frame.topLeft(), frame.topRight(), frame.bottomRight()]
+        corners += [frame.bottomLeft()]
+        for start, end in zip(corners, corners[1:] + corners[:1], strict=True):
+            for gap in _gaps_along(start, end, 7.0, chance):
+                whole = whole.subtracted(QRegion(gap.toAlignedRect()))
+        return whole
+
+    def frame(self, painter: QPainter, rect: QRectF, p: Palette) -> None:
+        worn = self.worn(rect.adjusted(-3.5, -3.5, 3.5, 3.5))
+        assert worn is not None
+        painter.save()
+        painter.setClipRegion(worn, Qt.ClipOperation.IntersectClip)
+        super().frame(painter, rect, p)
+        painter.restore()
+
+    def corners(self, painter: QPainter, rect: QRectF, p: Palette, arm: float) -> None:
+        """Scriptorum's corner flourishes, two of the four scraped away
+        (the top right and the bottom left)."""
+        reach = arm + 8
+        kept = QRegion()
+        for corner in (rect.topLeft(), rect.bottomRight()):
+            box = QRectF(corner - QPointF(reach, reach), corner + QPointF(reach, reach))
+            kept = kept.united(QRegion(box.toAlignedRect()))
+        painter.save()
+        painter.setClipRegion(kept, Qt.ClipOperation.IntersectClip)
+        flourish.corner_flourishes(painter, rect, p, arm)
+        painter.restore()
+
+    def _worn_rule(
+        self, painter: QPainter, width: float, cy: float, draw: Callable[[], None]
+    ) -> None:
+        """`draw` a level rule or band across `width` at `cy`, broken off
+        in short gaps along it where it was scraped."""
+        chance = random.Random(round(width) * 31 + round(cy))
+        whole = QRegion(QRectF(0, cy - 40, width, 80).toAlignedRect())
+        for gap in _gaps_along(QPointF(0, cy), QPointF(width, cy), 40.0, chance):
+            whole = whole.subtracted(QRegion(gap.toAlignedRect()))
+        painter.save()
+        painter.setClipRegion(whole, Qt.ClipOperation.IntersectClip)
+        draw()
+        painter.restore()
+
+    def heading_rule(
+        self, painter: QPainter, width: float, cy: float, p: Palette
+    ) -> None:
+        def draw() -> None:
+            super(Diedne, self).heading_rule(painter, width, cy, p)
+
+        self._worn_rule(painter, width, cy, draw)
+
+    def short_rule(
+        self, painter: QPainter, width: float, cy: float, p: Palette
+    ) -> None:
+        def draw() -> None:
+            super(Diedne, self).short_rule(painter, width, cy, p)
+
+        self._worn_rule(painter, width, cy, draw)
+
+    def headpiece_centre(
+        self, painter: QPainter, width: float, cy: float, p: Palette
+    ) -> None:
+        def draw() -> None:
+            super(Diedne, self).headpiece_centre(painter, width, cy, p)
+
+        self._worn_rule(painter, width, cy, draw)
+
+    def band(
+        self, painter: QPainter, width: float, cy: float, inner: float, p: Palette
+    ) -> None:
+        def draw() -> None:
+            super(Diedne, self).band(painter, width, cy, inner, p)
+
+        self._worn_rule(painter, width, cy, draw)
+
+    def tail_flank(
+        self, painter: QPainter, cx: float, cy: float, inner: float, p: Palette
+    ) -> None:
+        def draw() -> None:
+            super(Diedne, self).tail_flank(painter, cx, cy, inner, p)
+
+        self._worn_rule(painter, 2 * cx, cy, draw)
+
+    def tail_sign(self, painter: QPainter, centre: QPointF, p: Palette) -> None:
+        # In the watermark's dark, not the heading's ink: what is left of
+        # the sign is pressed into the page, not written on it.
+        side = MARK_SIDE
+        painter.save()
+        painter.setOpacity(0.8)
+        painter.drawPixmap(
+            centre - QPointF(side / 2, side / 2), self.sign(watermark_ink(p), side)
+        )
+        painter.restore()
+
+
+def _gaps_along(
+    start: QPointF, end: QPointF, reach: float, chance: random.Random
+) -> list[QRectF]:
+    """The gaps scraped in a straight rule from `start` to `end` (level or
+    upright): runs of 25 to 110 pixels between gaps of 3 to 12, each gap a
+    box `reach` either side of the rule, so a mark drawn along it is cut
+    through."""
+    length = QLineF(start, end).length()
+    if length <= 0:
+        return []
+    ux, uy = (end.x() - start.x()) / length, (end.y() - start.y()) / length
+    gaps: list[QRectF] = []
+    along = chance.uniform(10, 60)
+    while along < length:
+        gap = chance.uniform(3, 12)
+        a = start + QPointF(ux * along, uy * along)
+        b = start + QPointF(ux * (along + gap), uy * (along + gap))
+        gaps.append(
+            QRectF(a, b)
+            .normalized()
+            .adjusted(
+                -reach * abs(uy), -reach * abs(ux), reach * abs(uy), reach * abs(ux)
+            )
+        )
+        along += gap + chance.uniform(25, 110)
+    return gaps

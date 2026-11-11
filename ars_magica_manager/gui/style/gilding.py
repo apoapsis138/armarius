@@ -59,8 +59,14 @@ def gilt_leaf(painter: QPainter, rect: QRectF, p: Palette) -> None:
     painter.drawTiledPixmap(rect.toRect(), paper(p))
     painter.fillRect(rect, shade(p["panel"], 70))
     outer = rect.adjusted(8, 8, -8, -8)
+    painter.save()
+    # A House whose frames are scraped wears the leaf's too.
+    worn = liveries.look(p).worn(outer)
+    if worn is not None:
+        painter.setClipRegion(worn, Qt.ClipOperation.IntersectClip)
     gilt_frame(painter, outer, p)
     corner_flourishes(painter, outer.adjusted(6, 6, -6, -6), p, 30)
+    painter.restore()
 
 
 def sheen(painter: QPainter, rect: QRectF, at: float) -> None:
@@ -240,10 +246,17 @@ def gilt_letter(
 ) -> None:
     """Draw the initial `letter` in `font` with its baseline starting at
     `baseline`: in a House theme with quartered initials, a small
-    illuminated letter (illumination.quartered_letter); otherwise the
-    rubric's colour with a gilt edge."""
-    if liveries.look(p).quartered_initials:
+    illuminated letter (illumination.quartered_letter); in one with plain
+    initials, the heading's ink alone; otherwise the rubric's colour with
+    a gilt edge."""
+    look = liveries.look(p)
+    if look.quartered_initials:
         quartered_letter(painter, letter, font, baseline, pigments(p))
+    elif look.plain_initials:
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        path = QPainterPath()
+        path.addText(baseline, font, letter)
+        painter.fillPath(path, QColor(p["heading"]))
     else:
         rubric_letter(painter, letter, font, baseline, p)
 

@@ -689,6 +689,37 @@ JERBITON = house(
     },
 )
 
+#: House Diedne: the pagan House, Renounced and destroyed in the Schism
+#: War, its leaders perhaps waiting in a regio (DE p. 12); its symbol
+#: struck from the records (Houses of Hermes, 3rd edition, p. 137) and
+#: forbidden to show (Against the Dark p. 33). No colours survive, so
+#: these are suggestions: a forbidden book by a covered lamp, scraped
+#: dark vellum, bone ink, headings in a pale ash-grey like faded chalk and
+#: an oak-gall brown for frame and rules, the ash far lighter than the
+#: brown.
+DIEDNE = house(
+    "Diedne",
+    SCRIPTORUM_DARK,
+    {
+        "background": "#17150F",
+        "surface": "#1F1C15",
+        "panel": "#29251C",
+        "foreground": "#D6CFBF",
+        "primary": "#BFC2BE",
+        "accent": "#6B5232",
+        "heading": "#BFC2BE",
+        "label": "#9C9483",
+        "rule": "#38332A",
+        "dim": "#8E8676",
+        "text-accent": "#C2A878",
+        "selection": "#2A2924",
+        "paper-fleck": "#000000",
+        "paper-sheen": "#C8BFA8",
+        "shadow": "#000000",
+        "button-shadow": "#38332A",
+    },
+)
+
 #: The stones set at Verditius's frame corners beside the family's rings:
 #: a sapphire's light facet and its deep, apart from the copper and gold
 #: in lightness.
@@ -713,6 +744,7 @@ HOUSES: tuple[Palette, ...] = (
     FLAMBEAU,
     JERBITON,
     TYTALUS,
+    DIEDNE,
 )
 
 #: Each House theme's In Creation twin, made from its own colours.
@@ -743,6 +775,14 @@ HOUSE_PIGMENTS: dict[str, dict[str, str]] = {
         "vermilion": "#1F5243",
         "vermilion-deep": "#0C2620",
         "knot-ground": "#0E1215",
+    },
+    # Ash over oak-gall.
+    DIEDNE.name: {
+        "lapis": "#8F928E",
+        "lapis-deep": "#55574F",
+        "vermilion": "#6B5232",
+        "vermilion-deep": "#3E2E1A",
+        "knot-ground": "#100E09",
     },
     # The judges' indigo and the scales' bronze.
     GUERNICUS.name: {
@@ -900,6 +940,14 @@ HOUSE_METAL: dict[str, tuple[tuple[float, str], ...]] = {
         (0.45, "#FFD9A0"),
         (0.60, "#D9772E"),
         (1.00, "#5A1E0C"),
+    ),
+    # Oak-gall, as the ink dries brown.
+    DIEDNE.name: (
+        (0.00, "#2E2214"),
+        (0.25, "#6B5232"),
+        (0.45, "#B89C70"),
+        (0.60, "#6B5232"),
+        (1.00, "#2E2214"),
     ),
     # Glazed teal tesserae.
     JERBITON.name: (
@@ -1094,6 +1142,15 @@ HOUSE_CARDS: dict[str, dict[str, str]] = {
         "button-text": "#1A1320",
         "dark": "#14101C",
         "darker": "#040306",
+    },
+    DIEDNE.name: {
+        "gold": "#C9CBC6",
+        "parchment": "#D6CFBF",
+        "numbers": "#9C9483",
+        "button": "#8A6C44",
+        "button-text": "#100E09",
+        "dark": "#17150F",
+        "darker": "#050403",
     },
     TYTALUS.name: {
         "gold": "#D9C27E",

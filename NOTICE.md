@@ -136,7 +136,10 @@ the Phosphor icons, and are the app's own work under its licence. **The
 faiths' icons** of a character's Religion chapter (a Star of David, a
 crescent and star, a fire altar and a sacred tree) are drawn the same way
 by `tools/draw_faith_icons.py`, and are the app's own work under its
-licence.
+licence. **House Diedne's sign**, `assets/drawn/diedne.svg`, is invented,
+not adapted: the books give the Renounced House no symbol, so the app's
+own code (`tools/draw_diedne_mark.py`) draws a triskelion scraped away,
+and it is the app's own work under its licence.
 
 **The sounds** in `ars_magica_manager/assets/sounds/` are recordings from
 [Freesound](https://freesound.org), each dedicated to the public domain

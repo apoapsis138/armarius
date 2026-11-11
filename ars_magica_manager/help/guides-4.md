@@ -1691,13 +1691,15 @@ books.
 
 1. **Open Settings.** Click the **gear** at the right of the top bar. The
    Settings window opens beside the page, and stays open while you work.
-2. **Look down the list.** Scriptorum and Scriptorum Dark come first. The
-   House themes follow, under their House family: True Lineages, Mystery
-   Cults, Societates. Each row shows a small sample of its page and the
-   House's mark.
-3. **Click one.** The whole app is drawn in it at once, the Settings
-   window too. There is nothing to confirm: click another to compare, or
-   Scriptorum to go back.
+2. **Open the Theme drop-down.** Scriptorum and Scriptorum Dark come
+   first. The House themes follow, under their House family: True
+   Lineages, Mystery Cults, Societates; House Diedne comes last, under
+   Renounced. Each row shows a small sample of its page, the House's mark,
+   its name and a few words on it.
+3. **Choose one.** The whole app is drawn in it at once, the Settings
+   window too. There is nothing to confirm. To compare, leave the
+   drop-down closed and press the up and down arrow keys: each theme is
+   drawn as you reach it. Choose Scriptorum to go back.
 4. **Look at a record In Creation.** It is drawn on the theme's drafting
    page, cooler and ruled, so a draft still stands out from a finished
    record.

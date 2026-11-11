@@ -9,11 +9,13 @@ import pytest
 pytest.importorskip("PySide6")
 
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QApplication
+from PySide6.QtGui import QPixmap
+from PySide6.QtTest import QTest
+from PySide6.QtWidgets import QApplication, QComboBox
 
 from ars_magica_manager import settings
 from ars_magica_manager.gui import motion, pictures, sounds
-from ars_magica_manager.gui.settings_window import NAME_ROLE, SettingsWindow
+from ars_magica_manager.gui.settings_window import SettingsWindow
 from ars_magica_manager.gui.style.liveries import GROUPS, THEMES
 from ars_magica_manager.gui.themes import SCRIPTORUM, SCRIPTORUM_DARK
 from ars_magica_manager.gui.window import MainWindow
@@ -43,21 +45,69 @@ def test_the_gear_opens_the_settings_window_not_a_menu() -> None:
 
 
 @pytest.mark.usefixtures("app")
-def test_the_themes_are_listed_under_their_groups_scriptorum_first() -> None:
+def test_the_themes_are_offered_under_their_groups_scriptorum_first() -> None:
     window = SettingsWindow(SCRIPTORUM, THEMES[0], lambda _name: None)
-    rows = [window.themes.item(i) for i in range(window.themes.count())]
-    names = [row.data(NAME_ROLE) for row in rows]
-    headings = [row.text() for row, name in zip(rows, names, strict=True) if not name]
+    assert isinstance(window.themes, QComboBox)
+    model = window.themes.model()
+    names = window.names()
+    headings = [
+        model.index(i, 0).data() for i, name in enumerate(names) if name is None
+    ]
     assert headings[0] == GROUPS[0] == "Scriptorum"
     assert headings == [g for g in GROUPS if any(t.group == g for t in THEMES)]
     themed = [name for name in names if name]
     assert themed[:2] == [SCRIPTORUM.name, SCRIPTORUM_DARK.name]
     assert sorted(themed) == sorted(theme.name for theme in THEMES)
-    # Every theme's row has its sample; a heading can't be chosen.
-    for row, name in zip(rows, names, strict=True):
-        assert bool(name) == (not row.icon().isNull())
-        assert bool(name) == (row.flags() != Qt.ItemFlag.NoItemFlags)
+    # Every theme's row has its sample and its few words; a heading can't
+    # be chosen.
+    for i, name in enumerate(names):
+        index = model.index(i, 0)
+        flags = index.flags()
+        assert bool(name) == bool(flags & Qt.ItemFlag.ItemIsSelectable)
+        if name:
+            assert isinstance(index.data(Qt.ItemDataRole.DecorationRole), QPixmap)
+            assert index.data(Qt.ItemDataRole.ToolTipRole)
     assert window.chosen() == SCRIPTORUM.name
+    # No long list: the window is no taller than its few settings need.
+    assert window.height() < 500
+    window.close()
+
+
+@pytest.mark.usefixtures("app")
+def test_the_arrow_keys_step_through_the_themes_past_the_headings() -> None:
+    """With the selector closed, Down applies the next theme and skips a
+    group's heading; Up comes back."""
+    chosen: list[str] = []
+    window = SettingsWindow(SCRIPTORUM_DARK, THEMES[1], chosen.append)
+    window.show()
+    window.themes.setFocus()
+    QTest.keyClick(window.themes, Qt.Key.Key_Down)
+    # The next theme after Scriptorum Dark is the first True Lineage, past
+    # its group's heading.
+    first_house = next(t for t in THEMES if t.group == GROUPS[1])
+    assert chosen == [first_house.name]
+    assert window.chosen() == first_house.name
+    QTest.keyClick(window.themes, Qt.Key.Key_Up)
+    assert chosen[-1] == SCRIPTORUM_DARK.name
+    window.close()
+
+
+@pytest.mark.usefixtures("app")
+def test_one_delegate_draws_a_themes_row_with_its_name_and_words() -> None:
+    """The closed box draws the chosen theme's row as the list does: its
+    sample and its name (Grab of the box, so nothing else is painted)."""
+    window = SettingsWindow(SCRIPTORUM, THEMES[0], lambda _name: None)
+    window.show()
+    assert window.themes.itemDelegate() is window.themes.row
+    picture = window.themes.grab().toImage()
+    inked = sum(
+        1
+        for x in range(0, picture.width(), 2)
+        for y in range(0, picture.height(), 2)
+        if picture.pixelColor(x, y).name() == SCRIPTORUM["background"].lower()
+    )
+    # The sample's paper shows inside the box.
+    assert inked > 50
     window.close()
 
 

@@ -127,6 +127,14 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 4.9.0 — 2026-11-11
+
+### Liveries of the Houses
+
+- **House Diedne.** A dark theme for the Renounced House, listed on its own under Renounced: a forbidden book read by a covered lamp. Its page is a palimpsest, the ghost of older writing in an invented hand scraped off the vellum and showing through, fine-scratched by the knife and almost gone behind the text. It belongs to no family, so it keeps Scriptorum's frame and ornaments, worn: its frames (the Inspector's too), its rules and the band over the page are broken off in places, and two corner flourishes are gone. Uncial headings in a pale ash-grey like faded chalk, oak-gall brown for frame and rules, plain initials, and, closing each chapter in the watermark's dark, the last traces of a triskelion gouged out of the page. The books give Diedne no symbol (its own was struck from the records), so this one is invented (Definitive Edition p. 12).
+- **The Order's sigil in Scriptorum.** Scriptorum and Scriptorum Dark, which belong to no House, show the Order of Hermes's sigil faintly at the foot of the Inspector, as the House themes show their signs: pale on Scriptorum, dark on Scriptorum Dark.
+- **The theme selector.** The Settings window's long list of themes is now a drop-down: closed, it shows the theme in use with a small sample of its page, its name and a few words on it; open, every theme so, under its family's heading. Choosing one applies it at once, and with the drop-down closed the arrow keys step from theme to theme, each drawn as you reach it. The window is much shorter for it.
+
 ## 4.8.0 — 2026-11-11
 
 ### Sodales

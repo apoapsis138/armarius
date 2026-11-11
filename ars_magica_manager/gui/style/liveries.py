@@ -15,11 +15,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from ...artwork import SYMBOLS
+from ...artwork import DRAWN, SIGIL, SYMBOLS
 from ...style.palettes import (
     BJORNAER,
     BONISAGUS,
     CRIAMON,
+    DIEDNE,
     DRAFTING,
     DRAFTING_DARK,
     EX_MISCELLANEA,
@@ -40,12 +41,14 @@ from . import families
 from .families import Look
 
 #: The groups the themes are listed under, in order: Scriptorum's own,
-#: then the three House families (DE p. 12).
+#: then the three House families (DE p. 12), then the House the Order
+#: Renounced, which belongs to none.
 SCRIPTORUM_GROUP = "Scriptorum"
 TRUE_LINEAGES = "True Lineages"
 MYSTERY_CULTS = "Mystery Cults"
 SOCIETATES = "Societates"
-GROUPS = (SCRIPTORUM_GROUP, TRUE_LINEAGES, MYSTERY_CULTS, SOCIETATES)
+RENOUNCED = "Renounced"
+GROUPS = (SCRIPTORUM_GROUP, TRUE_LINEAGES, MYSTERY_CULTS, SOCIETATES, RENOUNCED)
 
 
 @dataclass(frozen=True)
@@ -80,8 +83,9 @@ def house_mark(house: str) -> Path:
     return SYMBOLS / "houses" / f"{name}.svg"
 
 
-#: Scriptorum's look, shared by its two themes and a printed page.
-SCRIPTORUM_LOOK = Look()
+#: Scriptorum's look, shared by its two themes and a printed page: no
+#: House, so the Order of Hermes's sigil is its Inspector's watermark.
+SCRIPTORUM_LOOK = Look(watermark=SIGIL)
 
 THEMES: tuple[Theme, ...] = (
     Theme(
@@ -181,6 +185,13 @@ THEMES: tuple[Theme, ...] = (
         SOCIETATES,
         families.Tytalus(house_mark("tytalus")),
         "Storm and sea mist, the spira, violet set against green",
+    ),
+    Theme(
+        DIEDNE,
+        IN_CREATION[DIEDNE.name],
+        RENOUNCED,
+        families.Diedne(DRAWN / "diedne.svg"),
+        "A palimpsest by a covered lamp, ash and oak-gall",
     ),
 )
 

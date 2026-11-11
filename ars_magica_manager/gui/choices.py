@@ -87,6 +87,16 @@ def paint_blank(painter: QPainter, widget: QWidget, right: float, p: Palette) ->
     painter.drawLine(QPointF(box.left(), line), QPointF(right, line))
 
 
+class OwnRows(QComboBox):
+    """A drop-down whose rows its own delegate draws, in its open list and
+    as its choice in the closed blank (the Settings window's themes, each
+    with a sample of its page): the blank's line and bookmark stay, the
+    list keeps its delegate rather than the ruled slip's."""
+
+    def paint_choice_row(self, painter: QPainter, room: QRectF) -> None:
+        """Draw the chosen row in `room`, the blank above its line."""
+
+
 def paint_choice(painter: QPainter, combo: QComboBox, p: Palette) -> None:
     """A closed drop-down: its choice in italic on a dotted line (solid
     purple while it has focus or the pointer), its bookmark at its right."""
@@ -94,6 +104,10 @@ def paint_choice(painter: QPainter, combo: QComboBox, p: Palette) -> None:
     purple = murex(p)
     lively = _lively(combo)
     paint_blank(painter, combo, box.right() - RIBBON_ROOM, p)
+    if isinstance(combo, OwnRows):
+        combo.paint_choice_row(painter, box.adjusted(0, 0, -RIBBON_ROOM - 4, -5))
+        paint_ribbon(painter, box.right() - 17, box.top(), box.bottom() + 1, purple)
+        return
     font = combo.font()
     painter.setFont(font)
     if not combo.isEnabled():
@@ -233,7 +247,11 @@ class InkedChoices(QObject):
         return False
 
     def rule(self, combo: QComboBox) -> None:
-        """Give `combo`'s open list its ruled lines, once."""
+        """Give `combo`'s open list its ruled lines, once (not a drop-down
+        that draws its own rows)."""
+        if isinstance(combo, OwnRows):
+            combo.view().setMouseTracking(True)
+            return
         if not isinstance(combo.itemDelegate(), InkSlipRows):
             combo.setItemDelegate(InkSlipRows(combo, self))
             combo.view().setMouseTracking(True)
