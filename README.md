@@ -78,6 +78,11 @@ saga in play.
 
 ## Getting started
 
+**New to this?** The [Armarius website](https://apoapsis138.github.io/armarius/)
+walks through [installing it on Windows](https://apoapsis138.github.io/armarius/install/)
+step by step, answers [common setup questions](https://apoapsis138.github.io/armarius/faq/),
+and has the app's whole help and how-to guides.
+
 Requires Python 3.14+ and [`uv`](https://docs.astral.sh/uv/). Armarius is
 tested on Windows and Linux, and should run on macOS.
 

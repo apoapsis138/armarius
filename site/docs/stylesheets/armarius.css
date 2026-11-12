@@ -1,0 +1,261 @@
+/* Armarius's manuscript look for the Material theme: the desktop's
+   Scriptorum palettes (ars_magica_manager/style/palettes.py) and its fonts,
+   EB Garamond for the text, Cinzel for the header and Uncial Antiqua for a
+   page's title. Links are underlined as well as coloured, so they never
+   rest on colour alone. */
+
+@font-face {
+  font-family: "EB Garamond";
+  src: url("../assets/fonts/EBGaramond-wght.ttf") format("truetype");
+  font-weight: 400 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "EB Garamond";
+  src: url("../assets/fonts/EBGaramond-Italic-wght.ttf") format("truetype");
+  font-weight: 400 800;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Cinzel";
+  src: url("../assets/fonts/Cinzel-wght.ttf") format("truetype");
+  font-weight: 400 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Uncial Antiqua";
+  src: url("../assets/fonts/UncialAntiqua-Regular.ttf") format("truetype");
+  font-display: swap;
+}
+
+:root {
+  --md-text-font: "EB Garamond", Georgia, "Times New Roman", serif;
+  --md-code-font: Consolas, "Cascadia Mono", Menlo, monospace;
+}
+
+/* Scriptorum: aged parchment and iron gall ink. */
+[data-md-color-scheme="default"] {
+  --arm-heading: #8b0000;
+  --arm-gilt: #b8860b;
+  --arm-rule: #c9b48a;
+  --arm-link: #6b4e06;
+  --md-default-bg-color: #f4ebe1;
+  --md-default-fg-color: #2c221e;
+  --md-default-fg-color--light: #5f4f44;
+  --md-default-fg-color--lighter: #685849;
+  --md-default-fg-color--lightest: #c9b48a;
+  --md-primary-fg-color: #8b0000;
+  --md-primary-fg-color--light: #a52a2a;
+  --md-primary-fg-color--dark: #5c0000;
+  --md-primary-bg-color: #f4ebe1;
+  --md-primary-bg-color--light: #e0cba0;
+  --md-accent-fg-color: #b8860b;
+  --md-accent-fg-color--transparent: #b8860b1a;
+  --md-accent-bg-color: #f4ebe1;
+  --md-typeset-color: #2c221e;
+  --md-typeset-a-color: #6b4e06;
+  --md-code-bg-color: #ede0cb;
+  --md-code-fg-color: #2c221e;
+  --md-typeset-table-color: #c9b48a;
+  --md-typeset-table-color--light: #ede0cb;
+  --md-admonition-bg-color: #ede0cb;
+  --md-footer-bg-color: #2c221e;
+  --md-footer-bg-color--dark: #1e0f00;
+  --md-footer-fg-color: #f4ebe1;
+}
+
+/* Scriptorum Dark: a candle in a stone scriptorium. */
+[data-md-color-scheme="slate"] {
+  --arm-heading: #fcd34d;
+  --arm-gilt: #d4af37;
+  --arm-rule: #3a4150;
+  --arm-link: #d4af37;
+  --md-hue: 225;
+  --md-default-bg-color: #15171c;
+  --md-default-fg-color: #d9cba3;
+  --md-default-fg-color--light: #a39a84;
+  --md-default-fg-color--lighter: #9a937f;
+  --md-default-fg-color--lightest: #3a4150;
+  --md-primary-fg-color: #1d2027;
+  --md-primary-fg-color--light: #262b35;
+  --md-primary-fg-color--dark: #15171c;
+  --md-primary-bg-color: #fcd34d;
+  --md-primary-bg-color--light: #d4af37;
+  --md-accent-fg-color: #fcd34d;
+  --md-accent-fg-color--transparent: #fcd34d1a;
+  --md-accent-bg-color: #15171c;
+  --md-typeset-color: #d9cba3;
+  --md-typeset-a-color: #d4af37;
+  --md-code-bg-color: #1d2027;
+  --md-code-fg-color: #d9cba3;
+  --md-typeset-table-color: #3a4150;
+  --md-typeset-table-color--light: #1d2027;
+  --md-admonition-bg-color: #1d2027;
+  --md-footer-bg-color: #0f1013;
+  --md-footer-bg-color--dark: #08090b;
+  --md-footer-fg-color: #d9cba3;
+}
+
+body {
+  background: var(--md-default-bg-color);
+}
+
+/* The text: Garamond reads small, so a little larger than Material's. */
+.md-typeset {
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+@media screen and (min-width: 76.25em) {
+  .md-typeset {
+    font-size: 0.95rem;
+  }
+}
+
+/* The header: the red band, its title in Cinzel. */
+.md-header__topic,
+.md-header__title,
+.md-tabs__link {
+  font-family: "Cinzel", var(--md-text-font);
+  letter-spacing: 0.04em;
+}
+.md-tabs__link {
+  font-size: 0.75rem;
+}
+[data-md-color-scheme="default"] .md-tabs {
+  background-color: #5c0000;
+}
+[data-md-color-scheme="slate"] .md-header,
+[data-md-color-scheme="slate"] .md-tabs {
+  border-bottom: 1px solid var(--arm-rule);
+}
+
+/* A page's title in uncials, over a gilt rule; headings in red small
+   capitals, as the printed sheets set them. */
+.md-typeset h1 {
+  font-family: "Uncial Antiqua", var(--md-text-font);
+  font-weight: 400;
+  color: var(--arm-heading);
+  border-bottom: 2px solid var(--arm-gilt);
+  padding-bottom: 0.2em;
+  margin-bottom: 0.9em;
+}
+@media screen and (max-width: 44.9375em) {
+  .md-typeset h1 {
+    font-size: 1.6em;
+    line-height: 1.25;
+  }
+}
+.md-typeset h2,
+.md-typeset h3,
+.md-typeset h4 {
+  font-variant: small-caps;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--arm-heading);
+}
+.md-typeset h2 {
+  border-bottom: 1px solid var(--arm-rule);
+  padding-bottom: 0.15em;
+}
+
+/* Links: coloured and underlined. */
+.md-typeset a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+}
+.md-typeset a:hover {
+  color: var(--arm-heading);
+}
+.md-typeset .headerlink {
+  text-decoration: none;
+}
+
+/* The menus. */
+.md-nav__title,
+.md-nav__item--section > .md-nav__link {
+  font-variant: small-caps;
+  color: var(--arm-heading);
+}
+.md-nav__link--active {
+  color: var(--arm-heading);
+  font-weight: 600;
+}
+
+/* Tables and code on the paper. */
+.md-typeset table:not([class]) {
+  font-size: 0.85em;
+  background: transparent;
+}
+.md-typeset table:not([class]) th {
+  font-variant: small-caps;
+  background: var(--md-code-bg-color);
+}
+.md-typeset code,
+.md-typeset pre > code {
+  font-size: 0.8em;
+}
+
+/* Screenshots: a thin gilt frame, never wider than the page. */
+.md-typeset img.screenshot {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--arm-gilt);
+  box-shadow: 0 0.2rem 0.6rem rgba(30, 15, 0, 0.25);
+  margin: 0.4em auto 0.2em;
+}
+.md-typeset .caption {
+  text-align: center;
+  font-style: italic;
+  color: var(--md-default-fg-color--light);
+  margin-top: 0.2em;
+}
+
+/* The home page's opening: a drop capital in red with a gilt edge. */
+.md-typeset .incipit::first-letter {
+  float: left;
+  font-family: "Uncial Antiqua", var(--md-text-font);
+  font-size: 3.3em;
+  line-height: 0.85;
+  padding: 0.05em 0.08em 0 0;
+  color: var(--arm-heading);
+  text-shadow: 1px 1px 0 var(--arm-gilt);
+}
+
+/* Notes and warnings in the page's own pigments: gilt for a note or tip,
+   the heading's red for a warning, each with its word in the title. */
+.md-typeset .admonition,
+.md-typeset details,
+.md-typeset .admonition.tip,
+.md-typeset .admonition.note {
+  border-color: var(--arm-gilt);
+  font-size: 0.85em;
+}
+.md-typeset .admonition > .admonition-title,
+.md-typeset details > summary,
+.md-typeset .admonition.tip > .admonition-title,
+.md-typeset .admonition.note > .admonition-title {
+  background-color: var(--md-accent-fg-color--transparent);
+  font-variant: small-caps;
+}
+.md-typeset .admonition > .admonition-title::before,
+.md-typeset details > summary::before,
+.md-typeset .admonition.tip > .admonition-title::before,
+.md-typeset .admonition.note > .admonition-title::before {
+  background-color: var(--arm-gilt);
+}
+.md-typeset .admonition.warning {
+  border-color: var(--arm-heading);
+}
+.md-typeset .admonition.warning > .admonition-title::before {
+  background-color: var(--arm-heading);
+}
+
+/* A step not checked on a real install. */
+.md-typeset .unverified {
+  font-style: italic;
+  color: var(--md-default-fg-color--light);
+}

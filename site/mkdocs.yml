@@ -1,0 +1,76 @@
+# The base settings of the user-docs website. tools/build_site.py copies
+# this beside the gathered pages and adds docs_dir and the menu (nav), which
+# it makes from the app's help; build the site with that tool, not with
+# mkdocs directly.
+site_name: Armarius
+site_description: A saga manager for Ars Magica 5th Edition, for the storyguide and the troupe.
+site_url: https://apoapsis138.github.io/armarius/
+repo_url: https://github.com/apoapsis138/armarius
+repo_name: apoapsis138/armarius
+edit_uri: ""
+copyright: >-
+  Armarius is free software under the GNU GPL v3.0. Ars Magica rules text is
+  adapted from material ©1993–2024 Trident, Inc. d/b/a Atlas Games, under
+  CC BY-SA 4.0. An unofficial fan project, not endorsed by Atlas Games or
+  Paradox Interactive.
+
+theme:
+  name: material
+  language: en
+  # The app's own fonts, served with the site (no Google Fonts).
+  font: false
+  icon:
+    logo: material/book-open-page-variant
+    repo: material/github
+  features:
+    - navigation.tabs
+    - navigation.indexes
+    - navigation.top
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - toc.follow
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-night
+        name: Read by candlelight
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-sunny
+        name: Read by daylight
+
+extra_css:
+  - stylesheets/armarius.css
+
+extra:
+  generator: false
+
+markdown_extensions:
+  - attr_list
+  - md_in_html
+  - tables
+  - def_list
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - toc:
+      permalink: "¶"
+
+plugins:
+  - search
+
+validation:
+  nav:
+    omitted_files: warn
+    not_found: warn
+  links:
+    not_found: warn
+    anchors: warn
+    unrecognized_links: warn

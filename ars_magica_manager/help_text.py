@@ -362,6 +362,8 @@ def book(front_end: str) -> HelpBook:
 
 #: The About page: the version and NOTICE.md (licences, credits).
 ABOUT = "about"
+#: The user-docs website: this help, Install and FAQ (tools/build_site.py).
+WEBSITE = "https://apoapsis138.github.io/armarius/"
 #: What's New: CHANGELOG.md by feature and edition, then every version.
 WHATS_NEW = "whats-new"
 #: The pages under REFERENCE, after the generated About and What's New.
@@ -390,7 +392,11 @@ def about_text() -> str:
         notice = (ROOT / "NOTICE.md").read_text(encoding="utf-8")
     except OSError:
         notice = "NOTICE.md is missing: see the repository for licences."
-    return f"# Armarius v{__version__}\n\nA saga manager for Ars Magica.\n\n{notice}"
+    return (
+        f"# Armarius v{__version__}\n\nA saga manager for Ars Magica.\n\n"
+        "This help, with how to install the app and answers to common setup "
+        f"questions, is also on the [Armarius website]({WEBSITE}).\n\n{notice}"
+    )
 
 
 def page_text(help_book: HelpBook, topic_id: str) -> tuple[str, str] | None:

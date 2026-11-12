@@ -127,6 +127,12 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## Unreleased
+
+### Glossa
+
+- **The help on the web.** Armarius has a website, https://apoapsis138.github.io/armarius/, with the desktop's help and how-to guides, a step-by-step guide to installing it on Windows, and answers to common setup questions (Python not found, uv not on the PATH, running from inside the zip, the save folder and OneDrive). It is rebuilt from the app's own help with each release. Help's About page and Getting started point to it, as does the README.
+
 ## 4.11.2 — 2026-11-12
 
 ### Illuminatio

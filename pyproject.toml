@@ -45,6 +45,11 @@ dev = [
 gui = [
     "pyside6-essentials>=6.12",
 ]
+# The user-docs website (tools/build_site.py): only the Pages workflow and
+# whoever builds the site locally need it.
+site = [
+    "mkdocs-material>=9.6",
+]
 
 [tool.ruff.lint]
 # TRY004: data of the wrong shape read from a save raises ValueError, as
