@@ -512,10 +512,15 @@ class IlluminatedInitial(QWidget):
         super().__init__()
         self.letter = letter
         self.p = p
+        self.set_side(side)
+        self.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
+
+    def set_side(self, side: int) -> None:
+        """Draw the letter `side` pixels square."""
         self.side = side
         self.margin = round(side * 0.1)
         self.setFixedSize(side + 2 * self.margin, side + 2 * self.margin)
-        self.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
+        self.update()
 
     def paintEvent(self, _event: QPaintEvent) -> None:
         painter = QPainter(self)

@@ -127,6 +127,17 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 4.11.1 — 2026-11-11
+
+### Illuminatio
+
+- **The window fits the screen.** It opened 1400 by 900 whatever the screen, so on a 4K screen at a large display scale it ran off the edges, where its drawn title bar couldn't be reached to move it back, and maximising couldn't make it smaller than its title page. It now opens no larger than nine tenths of the screen's free space, centred, or maximised if even its smallest won't fit, and every form opens inside the screen, shrunk to fit if it must.
+- **The title page shrinks to fit.** On a small or highly scaled screen its margins, illuminated initial, name and buttons are drawn smaller, so the window can be made as small as about 680 by 550 (880 wide with four buttons) instead of 950 by 790 (1,230 wide). Where there is room it looks as it did.
+
+### Glossa
+
+- **How to fit the window to your screen**, a new how-to: the window fitting itself, maximising by double-clicking the top strip, and Windows's display scale. The title page and Moving around help say how the window fits.
+
 ## 4.11.0 — 2026-11-11
 
 ### Glossa

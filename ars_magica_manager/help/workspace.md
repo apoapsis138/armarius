@@ -16,6 +16,8 @@ Enter takes the first of them. Choose with the arrow keys and Enter, and `q` qui
 <!-- gui -->
 Click one; Enter takes the first of them, as the line under the buttons says. The window's own buttons, at its top right, minimise, maximise and close it.
 
+The window opens fitted to the screen: as large as the app likes, but never more than nine tenths of the screen's free space, and centred on it. On a small screen, or one set to a large display scale, the title page draws its initial, name and buttons smaller so it all fits; given room again, it draws them full size. See [How to fit the window to your screen](help:guide-window-size).
+
 The same illuminated A is the app's icon, on the Windows taskbar and in Alt-Tab. `run-gui.bat` opens the app with no console window behind it.
 <!-- /gui -->
 
@@ -24,6 +26,18 @@ The same illuminated A is the app's icon, on the Windows taskbar and in Alt-Tab.
 **The app works out:** which saga you had open last, which it remembers in the settings each time you open one.
 
 **See also:** [Saga picker](help:saga-picker), [Getting started](help:guide-getting-started)
+
+# How to fit the window to your screen
+<!-- help: guide-window-size; gui -->
+
+Use this guide when the window is too big or too small for your screen, as on a high-resolution (4K) screen set to a large display scale.
+
+1. The window fits itself. It opens no larger than nine tenths of the screen's free space, centred, and every form opens inside the screen too. If the screen is too small for even the smallest the window can be drawn, it opens maximised.
+2. To fill the screen, double-click the strip along the top of the window (on the title page, the space beside the window's buttons; on a saga's page, the app's name in the middle of the top bar), or click the maximise button at the top right. Do the same again to restore it.
+3. To size it by hand, drag any edge or corner. On the title page, the initial, name and buttons shrink as the window does, down to the smallest size it allows.
+4. If everything looks too large or too small, change the display scale in Windows: **Settings > System > Display**, then **Scale** (under **Scale and layout** on Windows 10). On a 4K screen, 150% to 200% leaves the app plenty of room; at 300% the window and its pages still fit, but drawn small. Close and reopen the app after changing the scale.
+
+**See also:** [Title page](help:title-page), [Moving around](help:workspace-moving)
 
 # Saga picker
 <!-- help: saga-picker -->
@@ -167,7 +181,7 @@ A covenant, laboratory or character still being made is In Creation: its page is
 - The player characters are on the saga's first chapter, [The Troupe](help:saga-troupe), and so is any page you bookmark.
 - Cards and rows are chosen with a click; a card that opens a page (a covenant, a person, a laboratory, a familiar) opens it on a click.
 - The trail goes back up. Leaving a page cancels a form left open on it.
-- The window can be moved by dragging the app's name in the middle of the top bar (a double-click maximises it), and resized from its edges and corners.
+- The window can be moved by dragging the app's name in the middle of the top bar (a double-click maximises it), and resized from its edges and corners. It opens fitted to the screen, and a form opens inside the screen too, shrunk to fit if it must; see [How to fit the window to your screen](help:guide-window-size).
 
 ### What the buttons act on
 <!-- help: workspace-keys; gui -->

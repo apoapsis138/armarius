@@ -81,6 +81,7 @@ from .style.frame import (
     DragStrip,
     Grips,
     WindowButtons,
+    keep_on_screen,
     native_frame_event,
 )
 from .style.ornaments import (
@@ -217,7 +218,12 @@ class _Sheet(QDialog):
         return bar
 
     def showEvent(self, event: QShowEvent) -> None:
+        """Every window opens fitted to its screen, where Qt put it (over
+        the window it was opened from): a form sized for a large screen
+        would otherwise run off a small or highly scaled one."""
         snapping.make_snappable(self)
+        if not self.isMaximized():
+            keep_on_screen(self)
         super().showEvent(event)
 
     def nativeEvent(
@@ -359,9 +365,8 @@ class FieldsDialog(_Sheet):
             self.resize(width, tall)
         elif tall > self.height():
             self.resize(width, tall)
-            screen = self.screen().availableGeometry()
-            if self.isVisible() and self.frameGeometry().bottom() > screen.bottom():
-                self.move(self.x(), max(screen.top(), screen.bottom() - self.height()))
+            if self.isVisible():
+                keep_on_screen(self)
 
     def _inspector(self, heading: str) -> InspectorFrame:
         """The live text boxed as a gloss at the foot of the page, under

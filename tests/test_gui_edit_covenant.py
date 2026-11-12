@@ -13,6 +13,7 @@ pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from gui_steps import answering, section_buttons
+from PySide6.QtCore import QSize
 from PySide6.QtWidgets import QApplication, QPushButton
 from screen_helpers import _sample_saga_with_covenant
 
@@ -23,6 +24,7 @@ from ars_magica_manager.gui.covenant import CovenantPage
 from ars_magica_manager.gui.figures import BookSpine
 from ars_magica_manager.gui.forms import ChooseDialog, ConfirmDialog, FieldsDialog
 from ars_magica_manager.gui.markup_html import plain
+from ars_magica_manager.gui.style.frame import SCREEN_SHARE
 from ars_magica_manager.gui.widgets import ClickableCard
 from ars_magica_manager.gui.window import MainWindow
 from ars_magica_manager.models import CovenantDiaryEntry, IncomeSource
@@ -127,14 +129,24 @@ def test_editing_loyalty_and_a_source_of_income(app):
     section_buttons(_page(window), "Loyalty")["Edit"].click()
     assert _saved(window).loyalty.familiarity == 2
     # Its window is wide enough for its long labels and the fields beside
-    # them, and tall enough that the fields need no scrolling.
+    # them, and tall enough that the fields need no scrolling, unless the
+    # screen is too short for that: then it opens fitted to the screen.
     loyalty = asked[0]
     assert isinstance(loyalty, FieldsDialog) and loyalty.width() > 700
+    wide, tall = loyalty.width(), loyalty.height()
+    assert tall < 820
     loyalty.show()
     QApplication.processEvents()
-    assert loyalty.body.sizeHint().width() <= loyalty.area.viewport().width()
-    assert loyalty.height() < 820
-    assert loyalty.area.verticalScrollBar().maximum() == 0
+    screen = loyalty.screen().availableGeometry()
+    room = QSize(
+        int(screen.width() * SCREEN_SHARE), int(screen.height() * SCREEN_SHARE)
+    )
+    assert loyalty.width() == min(wide, room.width())
+    assert loyalty.height() == min(tall, room.height())
+    if wide <= room.width():
+        assert loyalty.body.sizeHint().width() <= loyalty.area.viewport().width()
+    if wide <= room.width() and tall <= room.height():
+        assert loyalty.area.verticalScrollBar().maximum() == 0
     loyalty.hide()
     page = _page(window)
     controls = section_buttons(page, "Sources of Income")

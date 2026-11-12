@@ -25,6 +25,7 @@ def main() -> int:
 
     # start-up: the window and its pictures load once Qt is up.
     from . import pictures
+    from .style.frame import fit_to_screen
     from .window import MainWindow
 
     app = QApplication(sys.argv)
@@ -35,6 +36,6 @@ def main() -> int:
     window.show_title()
     if problem or renamed:
         window.statusBar().showMessage(problem or renamed or "")
-    window.resize(1400, 900)
+    fit_to_screen(window, 1400, 900)
     window.show()
     return app.exec()

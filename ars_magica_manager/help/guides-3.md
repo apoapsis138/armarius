@@ -146,6 +146,7 @@ On a topic about a chapter of the page you came from, **Go there** under the top
 - [How to start a saga from a sourcebook](help:guide-book-packs): the shipped content packs.
 <!-- gui -->
 - [How to add a map and place its records](help:guide-atlas): the saga's Atlas.
+- [How to fit the window to your screen](help:guide-window-size): high-resolution screens and display scale.
 <!-- /gui -->
 
 **See also:** [Saga picker](help:saga-picker), [The workspace](help:workspace), [The saga](help:saga), [Keys](help:keys)

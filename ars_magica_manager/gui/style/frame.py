@@ -1,7 +1,9 @@
 """The windows' own frame, in place of the system's title bar: the
 minimise, maximise and close glyphs drawn on the paper, a strip that
 moves the window (a double-click maximises it), and thin grips along the
-edges and corners that resize it.
+edges and corners that resize it. A window opens fitted to its screen
+(fit_to_screen), since with no system title bar one that ran off the
+screen couldn't be moved back.
 
 Moving and resizing go through the system (QWindow.startSystemMove and
 startSystemResize), and snapping.py gives the window back the styles
@@ -10,7 +12,17 @@ Windows snaps by, so it still snaps to the screen's edges and halves.
 
 from __future__ import annotations
 
-from PySide6.QtCore import QByteArray, QEvent, QObject, QPoint, QPointF, QRectF, Qt
+from PySide6.QtCore import (
+    QByteArray,
+    QEvent,
+    QObject,
+    QPoint,
+    QPointF,
+    QRect,
+    QRectF,
+    QSize,
+    Qt,
+)
 from PySide6.QtGui import QColor, QFont, QMouseEvent, QPainter, QPaintEvent, QPen
 from PySide6.QtWidgets import (
     QAbstractButton,
@@ -27,6 +39,9 @@ MINIMISE, MAXIMISE, CLOSE = "minimise", "maximise", "close"
 GRIP = 6
 #: The height of the strip that moves the window over the title page.
 STRIP = 40
+#: The most of a screen's free area a window opens over, so a large
+#: window on a small or highly scaled screen still shows its edges.
+SCREEN_SHARE = 0.9
 
 
 def native_frame_event(
@@ -38,6 +53,56 @@ def native_frame_event(
     (snapping.py), or None to leave it to Qt."""
     raw = event_type.data() if isinstance(event_type, QByteArray) else event_type
     return snapping.native_event(window, bytes(raw), int(message))
+
+
+def fitted(
+    available: QRect, size: QSize, least: QSize, centre: QPoint | None = None
+) -> QRect | None:
+    """Where a window `size` big goes in a screen's free area `available`:
+    no bigger than SCREEN_SHARE of it (but never under `least`, its
+    minimum), centred on `centre` (else on the area) and kept inside it.
+    None when even `least` won't fit, so the window should fill the
+    screen instead."""
+    if least.width() > available.width() or least.height() > available.height():
+        return None
+    width = min(size.width(), int(available.width() * SCREEN_SHARE))
+    height = min(size.height(), int(available.height() * SCREEN_SHARE))
+    place = QRect(0, 0, max(width, least.width()), max(height, least.height()))
+    place.moveCenter(available.center() if centre is None else centre)
+    left = min(place.left(), available.right() + 1 - place.width())
+    top = min(place.top(), available.bottom() + 1 - place.height())
+    place.moveTopLeft(QPoint(max(left, available.left()), max(top, available.top())))
+    return place
+
+
+def _least(window: QWidget) -> QSize:
+    """The smallest `window`'s contents can be laid out in."""
+    layout = window.layout()
+    if layout is not None:
+        layout.activate()
+    return window.minimumSizeHint().expandedTo(window.minimumSize())
+
+
+def fit_to_screen(
+    window: QWidget, width: int, height: int, *, keep_centre: bool = False
+) -> None:
+    """Size `window` to `width` x `height`, shrunk to fit its screen
+    (fitted), centred on the screen, or where it is now with
+    `keep_centre`. A window whose contents can't fit is maximised, its
+    restored size the whole free area."""
+    available = window.screen().availableGeometry()
+    centre = window.geometry().center() if keep_centre else None
+    place = fitted(available, QSize(width, height), _least(window), centre)
+    if place is None:
+        window.setGeometry(available)
+        window.setWindowState(window.windowState() | Qt.WindowState.WindowMaximized)
+        return
+    window.setGeometry(place)
+
+
+def keep_on_screen(window: QWidget) -> None:
+    """Shrink and move `window`, where it is, to fit its screen."""
+    fit_to_screen(window, window.width(), window.height(), keep_centre=True)
 
 
 def toggle_maximised(window: QWidget) -> None:
