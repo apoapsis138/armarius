@@ -178,6 +178,69 @@ def test_the_chronicle_has_a_line_per_version_under_its_day():
     )
 
 
+PENDING = """## Unreleased
+
+### Help
+
+- **A new guide.** Written.
+
+"""
+
+
+def _with_unreleased(block: str = PENDING) -> str:
+    return SAMPLE.replace("## 1.4.0", block + "## 1.4.0", 1)
+
+
+def test_unreleased_work_above_the_newest_version_is_read_by_feature():
+    log = cl.parse(_with_unreleased())
+    assert [(p.feature, p.text) for p in log.unreleased] == [
+        ("Help", "- **A new guide.** Written.")
+    ]
+    # Only released versions are versions, editions and Chronicle lines.
+    assert log.versions[0].number == "1.4.0"
+    assert not any(p.feature == "Help" for p in _edition(log, "Packs II").parts)
+    assert not any(e.name == "Help II" for e in log.editions)
+
+
+def test_without_an_unreleased_section_there_is_no_unreleased_work():
+    log = _log()
+    assert log.unreleased == []
+    assert "Unreleased" not in cl.whats_new(SAMPLE)
+
+
+def test_an_empty_unreleased_section_is_allowed():
+    assert cl.parse(_with_unreleased("## Unreleased\n\n")).unreleased == []
+
+
+def test_unreleased_entries_follow_the_same_feature_rules():
+    with pytest.raises(cl.ChangelogError, match="unknown feature"):
+        cl.parse(_with_unreleased(PENDING.replace("### Help", "### Hepl")))
+    with pytest.raises(cl.ChangelogError, match="under no feature"):
+        cl.parse(_with_unreleased("## Unreleased\n\n- Loose.\n\n"))
+
+
+def test_unreleased_must_come_first():
+    # Below a version.
+    late = SAMPLE.replace("## 1.3.1", PENDING + "## 1.3.1", 1)
+    with pytest.raises(cl.ChangelogError, match="before the newest version"):
+        cl.parse(late)
+    # Above another section of the preamble.
+    early = SAMPLE.replace("## Milestones", PENDING + "## Milestones", 1)
+    with pytest.raises(cl.ChangelogError, match="just before the newest version"):
+        cl.parse(early)
+    # Twice.
+    with pytest.raises(cl.ChangelogError, match="more than one"):
+        cl.parse(_with_unreleased(PENDING + PENDING))
+
+
+def test_the_page_shows_unreleased_work_first_as_in_development():
+    page = cl.whats_new(_with_unreleased())
+    headings = [line for line in page.splitlines() if line.startswith("## ")]
+    assert headings[:2] == ["## Unreleased (in development)", "## Latest"]
+    assert "### Help\n\n- **A new guide.** Written." in page
+    assert "A new guide" not in cl.chronicle_text(cl.parse(_with_unreleased()))
+
+
 def test_a_short_label_before_a_colon_gives_way_to_what_follows():
     entry = "- Behind the scenes: the forms are split. More."
     assert cl.headline(entry) == "The forms are split"
@@ -191,6 +254,8 @@ def _real() -> cl.Changelog:
 
 
 def test_the_changelog_reads_and_has_this_version():
+    # The newest released version, below any Unreleased section, is the
+    # one pyproject.toml names.
     log = _real()
     assert log.versions[0].number == __version__
 

@@ -1,0 +1,81 @@
+# Publishes a GitHub Release when a version tag (vX.Y.Z) is pushed
+# (CONTRIBUTING.md, "A release"). The tag must name the version in
+# pyproject.toml and sit on main; the release notes are that version's
+# section of CHANGELOG.md (tools/release_notes.py).
+name: Release
+
+on:
+  push:
+    tags: ["v*.*.*"]
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    env:
+      TAG: ${{ github.ref_name }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+      - name: Check the tag against pyproject.toml and main
+        run: |
+          version="${TAG#v}"
+          project=$(python3 -c 'import tomllib; print(tomllib.load(open("pyproject.toml", "rb"))["project"]["version"])')
+          if [ "$version" != "$project" ]; then
+            echo "::error::Tag $TAG does not match pyproject.toml's version $project"
+            exit 1
+          fi
+          git fetch origin main
+          if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/main; then
+            echo "::error::Tag $TAG is not on main"
+            exit 1
+          fi
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+      - name: Write the release notes from CHANGELOG.md
+        run: python3 tools/release_notes.py "$VERSION" --out notes.md
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release create "$TAG" --title "Armarius $VERSION" --notes-file notes.md --verify-tag
+
+  # The desktop builds, once the PyInstaller spec (armarius.spec) is ready:
+  # each platform builds the one-folder app, zips it and adds it to the
+  # release the job above made.
+  #
+  # build:
+  #   needs: release
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       os: [windows-latest, ubuntu-22.04]
+  #   runs-on: ${{ matrix.os }}
+  #   permissions:
+  #     contents: write
+  #   env:
+  #     TAG: ${{ github.ref_name }}
+  #   steps:
+  #     - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+  #     - uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6.8.0
+  #     - run: uv sync --locked
+  #     - name: Build
+  #       run: uv run pyinstaller armarius.spec
+  #     - name: Zip the one-folder output
+  #       shell: bash
+  #       run: |
+  #         cd dist
+  #         if [ "$RUNNER_OS" = "Windows" ]; then
+  #           7z a "../Armarius-$TAG-windows.zip" Armarius
+  #         else
+  #           zip -r "../Armarius-$TAG-linux.zip" Armarius
+  #         fi
+  #     - name: Upload to the release
+  #       shell: bash
+  #       env:
+  #         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       run: gh release upload "$TAG" Armarius-"$TAG"-*.zip

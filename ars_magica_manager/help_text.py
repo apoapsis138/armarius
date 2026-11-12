@@ -375,8 +375,9 @@ def is_guide(topic_id: str) -> bool:
 
 
 def whats_new_text() -> str:
-    """The What's New page: CHANGELOG.md's latest editions, each feature
-    with its editions, and the Chronicle of every version."""
+    """The What's New page: CHANGELOG.md's work not yet released, its
+    latest editions, each feature with its editions, and the Chronicle of
+    every version."""
     try:
         text = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
     except OSError:

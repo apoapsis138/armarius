@@ -28,7 +28,10 @@ plan (1.0.0: Phase 1, the core tracker; 2.0.0: Phase 4, creation by the
 book; 3.0.0: Phase 5, the Saga World), a new or changed feature bumps MINOR, and a bug fix or
 behind-the-scenes improvement bumps PATCH. The version is shown in the
 app's title bar and on the saga picker, recorded in every saga file that
-version saves, and tagged in git (`v0.2.0`, ...).
+version saves, and tagged in git (`v0.2.0`, ...). Changes made since the
+last release are listed under Unreleased until the next release gives
+them a version; the version goes up once per release, by the largest
+change in it.
 
 ## Features
 
@@ -126,6 +129,16 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | Milestone | Version | What it marked |
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
+
+## Unreleased
+
+### Fundamenta
+
+- **Releases.** Changes now gather on a development branch and are listed here under Unreleased; a release gives them one version together, instead of a new version for every change. The repository checks every change on Windows and Linux, and each tagged release is published on GitHub with its notes from this page.
+
+### Glossa
+
+- **Unreleased work on What's New.** What's New shows changes not yet in a release first, as Unreleased (in development).
 
 ## 4.11.2 — 2026-11-12
 
