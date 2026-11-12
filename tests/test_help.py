@@ -666,6 +666,9 @@ def test_whats_new_is_the_changelog_by_feature():
     assert text.startswith("# What's New\n")
     assert "# Changelog" not in text
     headings = [line for line in text.splitlines() if line.startswith("## ")]
+    # Work not yet released, when there is any, comes before Latest.
+    if headings[0] == "## Unreleased (in development)":
+        headings = headings[1:]
     assert headings[0] == "## Latest"
     assert headings[-2:] == ["## Chronicle", "## The names and numbers"]
     assert "## Peregrinatio" in headings

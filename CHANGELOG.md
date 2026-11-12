@@ -28,7 +28,10 @@ plan (1.0.0: Phase 1, the core tracker; 2.0.0: Phase 4, creation by the
 book; 3.0.0: Phase 5, the Saga World), a new or changed feature bumps MINOR, and a bug fix or
 behind-the-scenes improvement bumps PATCH. The version is shown in the
 app's title bar and on the saga picker, recorded in every saga file that
-version saves, and tagged in git (`v0.2.0`, ...).
+version saves, and tagged in git (`v0.2.0`, ...). Changes made since the
+last release are listed under Unreleased until the next release gives
+them a version; the version goes up once per release, by the largest
+change in it.
 
 ## Features
 
@@ -133,11 +136,13 @@ version saves, and tagged in git (`v0.2.0`, ...).
 
 - **Download the app.** Each Release now has a download for Windows and one for Linux that runs without Python: unzip it and start Armarius (the desktop) or armarius-terminal (the terminal version). Help's new guide, How to download and run the app, covers Windows' "Windows protected your PC" warning and moving to a newer version.
 - **Hosting from a download.** A downloaded copy can host a saga for players, in a browser, over SSH or with Remote seats, just as a copy run from the source can.
+- **Releases.** Changes now gather on a development branch and are listed here under Unreleased; a release gives them one version together, instead of a new version for every change. The repository checks every change on Windows and Linux, and each tagged release is published on GitHub with its notes from this page.
 
 ### Glossa
 
 - **Where the source is.** Help's About page links the source of the version you're running.
 - **What's New in reach.** Help lists its REFERENCE pages (About this App, What's New and Keys) before the long list of how-to guides, and the filter box finds About and What's New by name.
+- **Unreleased work on What's New.** What's New shows changes not yet in a release first, as Unreleased (in development).
 
 ## 4.11.2 — 2026-11-12
 
