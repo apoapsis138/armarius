@@ -135,6 +135,7 @@ change in it.
 ### Fundamenta
 
 - **Releases.** Changes now gather on a development branch and are listed here under Unreleased; a release gives them one version together, instead of a new version for every change. The repository checks every change on Windows and Linux, and each tagged release is published on GitHub with its notes from this page.
+- **Steadier checks.** The tests no longer touch the computer's own keychain, so they run the same on a machine without one, and three tests that sometimes failed on a busy machine wait for the screen they act on.
 
 ### Glossa
 

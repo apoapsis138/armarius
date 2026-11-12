@@ -16,7 +16,7 @@ from screen_helpers import (
     _select_laboratory,
     _wait_for_screen,
 )
-from support import build_all_tabs, choose, strip_markup, wait_until
+from support import build_all_tabs, choose, click_when_shown, strip_markup, wait_until
 from textual.widgets import (
     Button,
     Collapsible,
@@ -358,7 +358,7 @@ async def test_add_and_remove_a_specialization_source():
         assert isinstance(app.screen, FieldsDialog)
         app.screen.query_one("#fld-specialization", Select).value = "Terram"
         app.screen.query_one("#fld-source", Input).value = "Subterranean"
-        await pilot.click("#btn-save")
+        await click_when_shown(pilot, "#btn-save")
         await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
 
         assert _lab_rows(view, "lab-specialties-list") == ["Terram  +1  Subterranean"]
@@ -440,7 +440,7 @@ async def test_a_source_that_breaks_a_cap_arrives_turned_off():
         await pilot.press("a")
         await pilot.pause()
         app.screen.query_one("#fld-specialization", Select).value = "Texts"
-        await pilot.click("#btn-save")
+        await click_when_shown(pilot, "#btn-save")
         await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
 
         assert saga_dropped() == ["Texts"]

@@ -304,7 +304,11 @@ async def test_characteristics_step_fills_a_companion_from_an_array_placed():
         c = storage.load_saga("test_saga").characters[0].characteristics
         assert (c.intelligence, c.dexterity) == (-3, -1)
         assert await wait_until(pilot, lambda: app.screen is screen)
-        assert "Points:        7 of 7" in _text(screen, "#ws-budget")
+        # The worksheet looks at the record again once it has settled after
+        # the dialog (on_screen_resume), a moment after it is back on top.
+        assert await wait_until(
+            pilot, lambda: "Points:        7 of 7" in _text(screen, "#ws-budget")
+        ), _text(screen, "#ws-budget")
 
 
 async def test_childhood_step_sets_the_native_language_and_a_sample_childhood():
