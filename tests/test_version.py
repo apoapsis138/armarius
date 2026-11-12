@@ -20,8 +20,11 @@ def test_the_version_comes_from_pyproject_and_is_major_minor_patch():
 
 
 def test_the_changelog_has_an_entry_for_this_version():
+    # Its newest versioned heading, below any "## Unreleased" section, is
+    # this version.
     changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
-    assert f"## {__version__} " in changelog
+    newest = re.search(r"^## (\d+\.\d+\.\d+) ", changelog, flags=re.MULTILINE)
+    assert newest and newest.group(1) == __version__
 
 
 def test_a_save_records_the_version_that_wrote_it():

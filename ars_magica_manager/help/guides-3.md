@@ -123,12 +123,12 @@ Giving a laboratory to a magus who already had one frees their old laboratory, a
 <!-- help: guide-getting-started-help -->
 
 <!-- tui -->
-Press `?` anywhere for help on the part of the screen that has focus; in a dialog where you are typing, press F1. The Help screen lists THIS SCREEN first, then the HOW-TO GUIDES, the REFERENCE pages (About this App; What's New, which shows what changed by feature and edition, then every version in its Chronicle; and Keys) and ALL PAGES. The arrow keys choose a topic, `/` filters the topics, Tab moves between the list and the page, and Esc closes Help.
+Press `?` anywhere for help on the part of the screen that has focus; in a dialog where you are typing, press F1. The Help screen lists THIS SCREEN first, then the HOW-TO GUIDES, the REFERENCE pages (About this App; What's New, which shows any changes not yet in a release, then what changed by feature and edition, then every version in its Chronicle; and Keys) and ALL PAGES. The arrow keys choose a topic, `/` filters the topics, Tab moves between the list and the page, and Esc closes Help.
 
 On a topic about a tab or section of a sheet, `g` (Go there) closes Help and opens that tab on the record you were looking at, with the section focused. Some steps in the guides end with a **Go there** link that does the same when clicked. If the record on show has no such tab (Lab Totals while you look at a covenant), Help stays open and says which sheet it is on.
 <!-- /tui -->
 <!-- gui -->
-Click **Help** in the top bar, or press `?` or F1, for help on the page and chapter on show. Help lists THIS SCREEN first, then the HOW-TO GUIDES, the REFERENCE pages (such as About this App, and What's New, which shows what changed by feature and edition, then every version in its Chronicle) and ALL PAGES; the box above the list filters them. Click a topic to read it, and a link to follow it. Esc, or the trail, leads back to the page you came from, and `q` quits the app.
+Click **Help** in the top bar, or press `?` or F1, for help on the page and chapter on show. Help lists THIS SCREEN first, then the HOW-TO GUIDES, the REFERENCE pages (such as About this App, and What's New, which shows any changes not yet in a release, then what changed by feature and edition, then every version in its Chronicle) and ALL PAGES; the box above the list filters them. Click a topic to read it, and a link to follow it. Esc, or the trail, leads back to the page you came from, and `q` quits the app.
 
 On a topic about a chapter of the page you came from, **Go there** under the topic list goes back to that page, open at that chapter. Some steps in the guides end with a **Go there** link that does the same. If the page you came from has no such chapter, Help stays open and says which page it is on.
 <!-- /gui -->

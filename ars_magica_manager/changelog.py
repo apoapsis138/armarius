@@ -12,6 +12,12 @@ finished in; work after a feature's last edition is that feature's next
 edition, in progress, while later bug-fix versions alone count as smaller
 changes to the last one.
 
+Work done since the last release sits above the newest version under an
+"## Unreleased" heading, held to the same "### Feature" rule; a release
+renames it to the version's heading. What's New shows it first, as
+Unreleased (in development), and leaves it out of the editions and the
+Chronicle, which hold only released versions.
+
 The tree is a Composite (a feature holds editions, an edition holds the
 parts of versions), and the page's three parts (Latest, the features, the
 Chronicle) are three plain functions walking it.
@@ -25,6 +31,10 @@ from datetime import date
 
 #: A version's heading: "## 2.102.0 — 2026-10-19".
 _VERSION = re.compile(r"^## (\d+\.\d+\.\d+) — (\d{4}-\d{2}-\d{2})\s*$")
+#: The heading of the work done since the last release, above the newest
+#: version; a release renames it to the version's heading.
+UNRELEASED = "Unreleased"
+UNRELEASED_HEADING = f"## {UNRELEASED}"
 #: An edition's name: the feature, then its number in Roman numerals.
 _EDITION = re.compile(r"^(.+) ([IVXLC]+)$")
 _ROMAN = {"I": 1, "V": 5, "X": 10, "L": 50, "C": 100}
@@ -226,6 +236,9 @@ class Changelog:
     milestones: list[Milestone]
     versions: list[Version]
     majors: list[Major] = field(default_factory=list)
+    #: What is done but not yet in a release, by feature: kept out of the
+    #: editions and the Chronicle, which hold only released versions.
+    unreleased: list[Part] = field(default_factory=list)
 
     def feature_editions(self, feature: str) -> list[Edition]:
         return [e for e in self.editions if e.feature == feature]
@@ -261,16 +274,49 @@ def _sections(text: str) -> dict[str, str]:
     return out
 
 
+def _parts(number: str, day: str, lines: list[str], known: set[str]) -> list[Part]:
+    """One section's entries, by the "### Feature" heading each sits under."""
+    parts: list[Part] = []
+    feature, body = "", []
+    for line in [*lines, "### "]:
+        if line.startswith("### "):
+            if feature:
+                parts.append(Part(number, day, feature, "\n".join(body).strip()))
+            elif "\n".join(body).strip():
+                raise ChangelogError(f"{number} has entries under no feature")
+            feature, body = line[4:].strip(), []
+            if feature and feature not in known:
+                raise ChangelogError(f"{number}: unknown feature {feature!r}")
+        else:
+            body.append(line)
+    return parts
+
+
 def parse(text: str) -> Changelog:
     lines = text.splitlines()
     starts = [i for i, line in enumerate(lines) if _VERSION.match(line)]
     if not starts:
         raise ChangelogError("no versions")
-    preamble = "\n".join(lines[1 : starts[0]])  # after "# Changelog"
+    pending = [i for i, line in enumerate(lines) if line.strip() == UNRELEASED_HEADING]
+    if len(pending) > 1:
+        raise ChangelogError("more than one Unreleased section")
+    if pending and pending[0] > starts[0]:
+        raise ChangelogError("Unreleased must come before the newest version")
+    if pending and any(
+        line.startswith("## ") for line in lines[pending[0] + 1 : starts[0]]
+    ):
+        raise ChangelogError("Unreleased must come just before the newest version")
+    top = pending[0] if pending else starts[0]
+    preamble = "\n".join(lines[1:top])  # after "# Changelog"
     sections = _sections(preamble)
     intro, _, about = preamble.split("\n## ", 1)[0].strip().partition("\n\n")
     features = [Feature(name, about) for name, about in _table(sections["Features"])]
     known = {f.name for f in features}
+    unreleased = (
+        _parts(UNRELEASED, "", lines[pending[0] + 1 : starts[0]], known)
+        if pending
+        else []
+    )
 
     versions: list[Version] = []
     for n, start in enumerate(starts):
@@ -278,19 +324,7 @@ def parse(text: str) -> Changelog:
         match = _VERSION.match(lines[start])
         assert match
         number, day = match.groups()
-        parts: list[Part] = []
-        feature, body = "", []
-        for line in [*lines[start + 1 : end], "### "]:
-            if line.startswith("### "):
-                if feature:
-                    parts.append(Part(number, day, feature, "\n".join(body).strip()))
-                elif "\n".join(body).strip():
-                    raise ChangelogError(f"{number} has entries under no feature")
-                feature, body = line[4:].strip(), []
-                if feature and feature not in known:
-                    raise ChangelogError(f"{number}: unknown feature {feature!r}")
-            else:
-                body.append(line)
+        parts = _parts(number, day, lines[start + 1 : end], known)
         if not parts:
             raise ChangelogError(f"{number} names no feature")
         versions.append(Version(number, day, tuple(parts)))
@@ -309,8 +343,9 @@ def parse(text: str) -> Changelog:
         for number, name, marked in _table(sections.get("Major versions", ""))
     ]
     log = Changelog(
-        intro, about.strip(), features, editions, milestones, versions, majors
-    )
+        intro, about.strip(), features, editions, milestones, versions, majors,
+        unreleased,
+    )  # fmt: skip
     _assign(log)
     return log
 
@@ -459,6 +494,20 @@ def chronicle_text(log: Changelog) -> str:
     return "\n".join(out) + "\n"
 
 
+def unreleased_text(log: Changelog) -> str:
+    """The work not yet in a release, by feature ("" when there is none)."""
+    if not log.unreleased:
+        return ""
+    out = [
+        f"## {UNRELEASED} (in development)",
+        "",
+        "Done since the last release, and coming in the next one.",
+    ]
+    for part in log.unreleased:
+        out += ["", f"### {part.feature}", "", part.text]
+    return "\n".join(out) + "\n"
+
+
 def whats_new(text: str) -> str:
     """The What's New page for the changelog `text`."""
     log = parse(text)
@@ -468,6 +517,7 @@ def whats_new(text: str) -> str:
             "",
             log.intro,
             "",
+            unreleased_text(log),
             latest_text(log),
             features_text(log),
             chronicle_text(log),
