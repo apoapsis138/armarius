@@ -16,7 +16,9 @@ from PySide6.QtCore import (
     QModelIndex,
     QObject,
     QPersistentModelIndex,
+    QPoint,
     QPointF,
+    QRect,
     QRectF,
     QSize,
     Qt,
@@ -45,6 +47,8 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QHeaderView,
     QLabel,
+    QLayout,
+    QLayoutItem,
     QListView,
     QListWidget,
     QListWidgetItem,
@@ -156,6 +160,70 @@ def chip_row(
         line.addWidget(chip)
     line.addStretch(1)
     return row
+
+
+class FlowLayout(QLayout):
+    """Items left to right, starting a new row when the next one won't
+    fit the width: a row of seals that wraps instead of widening the page.
+    Its height follows its width, so the page around it grows downward."""
+
+    def __init__(self, parent: QWidget | None = None, spacing: int = 4) -> None:
+        super().__init__(parent)
+        self._items: list[QLayoutItem] = []
+        self.setSpacing(spacing)
+
+    def addItem(self, item: QLayoutItem) -> None:
+        self._items.append(item)
+
+    def count(self) -> int:
+        return len(self._items)
+
+    def itemAt(self, index: int) -> QLayoutItem | None:
+        return self._items[index] if 0 <= index < len(self._items) else None
+
+    def takeAt(self, index: int) -> QLayoutItem | None:
+        return self._items.pop(index) if 0 <= index < len(self._items) else None
+
+    def expandingDirections(self) -> Qt.Orientation:
+        return Qt.Orientation(0)
+
+    def hasHeightForWidth(self) -> bool:
+        return True
+
+    def heightForWidth(self, width: int) -> int:
+        return self._place(QRect(0, 0, width, 0), move=False)
+
+    def setGeometry(self, rect: QRect) -> None:
+        super().setGeometry(rect)
+        self._place(rect, move=True)
+
+    def sizeHint(self) -> QSize:
+        return self.minimumSize()
+
+    def minimumSize(self) -> QSize:
+        # As narrow as its widest item: never wider, so it never widens
+        # the page around it.
+        size = QSize()
+        for item in self._items:
+            size = size.expandedTo(item.minimumSize())
+        m = self.contentsMargins()
+        return size + QSize(m.left() + m.right(), m.top() + m.bottom())
+
+    def _place(self, rect: QRect, move: bool) -> int:
+        """Lay the items out in `rect` (only measuring unless `move`), and
+        return the height they take."""
+        area = rect.marginsRemoved(self.contentsMargins())
+        x, y, line = area.x(), area.y(), 0
+        gap = self.spacing()
+        for item in self._items:
+            hint = item.sizeHint()
+            if x > area.x() and x + hint.width() > area.right() + 1:
+                x, y, line = area.x(), y + line + gap, 0
+            if move:
+                item.setGeometry(QRect(QPoint(x, y), hint))
+            x += hint.width() + gap
+            line = max(line, hint.height())
+        return y + line - rect.y() + self.contentsMargins().bottom()
 
 
 class ToggleSwitch(QAbstractButton):

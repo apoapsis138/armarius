@@ -1,7 +1,7 @@
 """Logic behind a covenant's Economics tab -- no UI in here.
 
 Works out the covenant's finances from the rest of the sheet, following the
-ArM5 "Covenant Finances" rules (SOURCE; reference/Economics.md): the points of
+ArM5 "Covenant Finances" rules (SOURCE): the points of
 inhabitants, laboratories and weapons and armor, each category of yearly
 expenditure, the cost savings from laborers, craftspeople and the like, and the
 totals. Nothing here is stored; only what the user types lives in

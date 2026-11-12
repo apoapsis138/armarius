@@ -38,7 +38,7 @@ from .figures import fact_grid, prose
 from .medallions import empty_seal, member_seal
 from .ruled_entry import RuledEntry
 from .themes import Palette
-from .widgets import badge, edit_button, serif, text
+from .widgets import FlowLayout, badge, edit_button, serif, text
 
 #: Inspect: the inspector's title, the line under it, and its markup.
 Inspect = Callable[[str, str, str], None]
@@ -133,17 +133,20 @@ def _seal_under(shown: cc.SealShown) -> str:
 
 
 def seal_row(saga: Saga, covenant: Covenant, p: Palette) -> QWidget:
-    """The members' seals in a row, those still to swear last."""
+    """The members' seals in rows across the page, read left to right and
+    down, those still to swear last; a full row wraps onto the next rather
+    than widening the page."""
     box = QWidget()
-    row = QHBoxLayout(box)
-    row.setContentsMargins(0, 2, 0, 0)
-    row.setSpacing(4)
     shown = cc.seals(saga, covenant)
     if not shown:
+        row = QHBoxLayout(box)
+        row.setContentsMargins(0, 2, 0, 0)
         row.addWidget(text("No magi yet to seal it.", p["dim"], serif(12, italic=True)))
+        return box
+    rows = FlowLayout(box, spacing=4)
+    rows.setContentsMargins(0, 2, 0, 0)
     for found in shown:
-        row.addWidget(SealCell(found, p))
-    row.addStretch(1)
+        rows.addWidget(SealCell(found, p))
     return box
 
 

@@ -3,12 +3,10 @@ buy and how much there is, and the checks on what the character spent
 (Character.creation_xp, which the worksheet also adds to the Abilities).
 
 - Early Childhood: 75 xp in the Native Language and 45 xp over a fixed
-  list (§3 Early childhood experience). Covenant Upbringing adds Latin
+  list (Early childhood experience). Covenant Upbringing adds Latin
   and Order of Hermes Lore to the list (the Grogs Covenant-bred
   childhood); Feral Upbringing has no Language and 120 xp over what the
   wilds teach (DE: no Language score; Grogs: the Feral childhood).
-
-Rules: reference/rules-engine-reference.md §3.
 
 No screen uses childhood_blanks(), fill_childhood() yet: they are the rules
 for screens still to come, and only the tests call them.

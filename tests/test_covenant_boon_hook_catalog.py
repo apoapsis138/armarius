@@ -23,8 +23,7 @@ CASTLE = "covbh_hook_major_castle"
 
 def test_catalog_counts_by_tier_after_merging_the_covenants_book():
     # 37 entries from the core chapter + 179 from Covenants Chapter Two
-    # (checked entry by entry against
-    # reference/covenants-boons-and-hooks-ref.md), + 1 Minor Hook from
+    # (checked entry by entry against the book), + 1 Minor Hook from
     # Against the Dark (Zenodochium), + City & Guild's Chartered Town Boon
     # and Charter Lord Hook (p. 11), + Realms of Power: Magic's aligned-aura
     # Boons and Hook (Fine, Favorable and Troublesome Aura, p. 16).

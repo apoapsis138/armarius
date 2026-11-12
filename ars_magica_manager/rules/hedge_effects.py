@@ -30,8 +30,7 @@ costs a magnitude a step from that base, either way (Rival Magic
 pp. 23-25). An effect naming no guideline, or a General one, keeps its
 typed level.
 
-Rules: reference/rules-engine-reference.md §18 (each tradition's
-effects and items).
+Rules: each Hedge Magic tradition's effects and items.
 """
 
 from __future__ import annotations

@@ -84,7 +84,7 @@ def test_the_spell_form_fills_the_level():
 
 def test_a_virtues_extra_parameter_costs_as_its_standard_one():
     """Road (Road Magic) costs as Voice; Season (Spell Timing) as Moon and
-    needs a Ritual (reference/spell-parameters.md)."""
+    needs a Ritual."""
     assert sl.spell_level(5, "Road", "Sun", "Individual").level == 25
     season = sl.spell_level(5, "Touch", "Season", "Individual")
     assert season.level == 25 and season.ritual_required

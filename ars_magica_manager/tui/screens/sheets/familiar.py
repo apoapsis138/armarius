@@ -33,7 +33,7 @@ class FamiliarSheetView(SheetView):
 
     A fixed top panel (Familiar Info -- not inside any tab, permanently
     expanded, same PinnedCollapsible pattern as the other sheets) above a
-    5-tab body mirroring reference/familiar-rules-and-sheet.md: Identity &
+    5-tab body: Identity &
     Cords (Binding & Cords, Virtues & Flaws, Personality Traits &
     Reputations), Characteristics (the 8 Characteristics plus the typed-in
     Base Soak/Magic Resistance figures) and Combat & Health (Wounds/Fatigue,

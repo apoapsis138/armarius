@@ -15,7 +15,7 @@ pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from gui_steps import answering, section_buttons
-from PySide6.QtWidgets import QApplication, QLabel
+from PySide6.QtWidgets import QApplication, QLabel, QScrollArea
 from screen_helpers import _sample_saga_with_covenant
 
 from ars_magica_manager import storage
@@ -110,6 +110,35 @@ def test_the_charter_shows_its_seals_preamble_and_clauses(app):
     # Grouped by section, in the book's order: the Oath before Member Rights.
     assert words.index("Oath of Covenant") < words.index("Member Rights")
     assert "Broken, 1210: Letters to Durenmar." in words
+
+
+def test_many_seals_wrap_onto_rows_instead_of_widening_the_page(app):
+    saga = _sample_saga_with_covenant()
+    for i in range(10):
+        saga.characters.append(
+            Character(id=f"m{i}", name=f"Magus {i}", type="magus", covenant_id="cov1")
+        )
+    charter = saga.covenants[0].charter_of_covenant
+    charter.seals = [CharterSeal(c.id, 1200, "Spring") for c in saga.characters]
+    storage.save_saga(saga)
+    window = MainWindow(saga_ids=[saga.id])
+    window.resize(900, 700)
+    window.show()
+    window.open_covenant("cov1")
+    chapter = _chapter(_page(window), "Charter")
+    QApplication.processEvents()
+    seals = chapter.findChildren(SealCell)
+    assert len(seals) == 11
+    assert len({s.y() for s in seals}) > 1, "the seals stay on one row"
+    scroll = chapter if isinstance(chapter, QScrollArea) else None
+    parent = chapter.parentWidget()
+    while scroll is None and parent is not None:
+        scroll = parent if isinstance(parent, QScrollArea) else None
+        parent = parent.parentWidget()
+    assert scroll is not None
+    assert scroll.widget().width() <= scroll.viewport().width()
+    assert not scroll.horizontalScrollBar().isVisible()
+    window.close()
 
 
 def test_a_chosen_clause_shows_in_the_inspector_and_break_follows_it(app):

@@ -21,8 +21,7 @@ from .models import Saga
 #: The core book: always in play.
 CORE = "DE"
 
-#: Abbreviation -> title, the core book first. The abbreviations are the
-#: ones the reference docs use.
+#: Abbreviation -> title, the core book first.
 SOURCEBOOKS: dict[str, str] = {
     CORE: "Ars Magica Definitive Edition",
     "A&A": "Art & Academe",

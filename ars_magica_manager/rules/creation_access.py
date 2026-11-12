@@ -5,8 +5,7 @@ one only with the Virtue that grants it (a Gifted non-magus may take one
 without). Also the Virtues whose own xp is spent at creation, and the
 creation Ability cap by age.
 
-Rules: reference/rules-engine-reference.md §3 Ability types and who may
-learn them; Later life experience; Creation Ability cap by age.
+Rules: Ability types and who may learn them; Later life experience; Creation Ability cap by age.
 """
 
 from __future__ import annotations

@@ -41,7 +41,7 @@ SPELL_TARGETS: tuple[str, ...] = (
     "Hearing",
     "Vision",
 )
-#: The kinds of book a library holds (reference/Libraries.md).
+#: The kinds of book a library holds.
 BOOK_TYPES: tuple[str, ...] = (
     "Art Summa",
     "Ability Summa",

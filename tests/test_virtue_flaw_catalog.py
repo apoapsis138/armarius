@@ -1,5 +1,4 @@
-"""The character Virtue/Flaw catalog, reviewed against
-reference/virtues-and-flaws-reference.md, and the repeat rules it drives."""
+"""The character Virtue/Flaw catalog and the repeat rules it drives."""
 
 import re
 from collections import Counter

@@ -6,7 +6,7 @@ the book gives (the kind's usual target when it gives none), and what
 reaching it grants. Points from insight and from stabilized Discoveries
 add into the same goal (rules.experiment).
 
-Rules: reference/rules-engine-reference.md §18, Ancient Magic:
+Rules: Ancient Magic:
 integrating a lost tradition and the breakthroughs summary; Hedge Magic
 RE's integrations whose Virtue is in the catalog; True Lineages' example
 discoveries of House Bonisagus. A breakthrough's size is the Definitive

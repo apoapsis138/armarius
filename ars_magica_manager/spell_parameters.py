@@ -1,7 +1,7 @@
 """The Ranges, Durations and Targets a magus may give a spell they invent.
 
 Every magus has the standard ones. Beyond them, each parameter has to be
-opened to the magus by something (reference/spell-parameters.md):
+opened to the magus by something:
 
 - a Virtue or Mystery that grants it (spell_levels.EXTRA_PARAMETERS);
 - a research goal they reached that grants it ("Parameter": "Range:

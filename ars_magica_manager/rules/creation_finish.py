@@ -5,8 +5,7 @@ companions, none for grogs), and a Merinita magus's Warping Point when
 nothing faerie touched him. The step's "Move to In Play" then shows the
 review of every check.
 
-Rules: reference/rules-engine-reference.md §2 Personality Traits;
-Reputations; Confidence.
+Rules: Personality Traits; Reputations; Confidence.
 """
 
 from __future__ import annotations

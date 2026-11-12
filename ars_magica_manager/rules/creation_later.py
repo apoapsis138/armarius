@@ -9,7 +9,7 @@ keeps under the creation cap for the character's age.
 An animal grog's Later Life runs from the age its kind is grown, at 15
 a year, and its cap is advice (rules.animal_grogs).
 
-Rules: reference/rules-engine-reference.md §3 Later life experience;
+Rules: Later life experience;
 Creation Ability cap by age; Ability types and who may learn them.
 """
 

@@ -1,6 +1,6 @@
 """Logic behind books and the covenant Library tab -- no UI in here.
 
-Build Point costs and covenant-creation limits (reference/Libraries.md), who
+Build Point costs and covenant-creation limits, who
 owns a book, which books a covenant's Library lists, the text for list rows
 and the details panel, and reading books from a CSV file.
 """

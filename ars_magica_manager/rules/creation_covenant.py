@@ -14,9 +14,8 @@ magus the covenant says goes without one refunds 50), plus Size x 20 and each la
 (Minor 10, Major 20). Its builder needs Magic Theory 3; Safety is Refinement less the
 occupied Size; its Virtues less Flaws fit in Size + Refinement.
 
-Rules: reference/rules-engine-reference.md §14 Covenant creation
-baseline; Power level; Build Point costs; Boons and Hooks. §9 Setting up a
-laboratory.
+Rules: Covenant creation baseline; Power level; Build Point costs; Boons
+and Hooks; Setting up a laboratory.
 """
 
 from __future__ import annotations

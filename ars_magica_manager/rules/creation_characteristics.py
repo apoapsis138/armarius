@@ -14,8 +14,8 @@ from before Great changed the score).
 An animal grog has no child modifier, and its Size is added after the
 points: twice to Strength, less from Quickness (rules.animal_grogs).
 
-Rules: reference/rules-engine-reference.md §2 Characteristics; Child
-characters; §5 Great (Characteristic), Improved Characteristics.
+Rules: Characteristics; Child characters; Great (Characteristic),
+Improved Characteristics.
 """
 
 from __future__ import annotations

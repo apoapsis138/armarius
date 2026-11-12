@@ -10,7 +10,7 @@ Parma Magica above 1 is very rare.
 The worksheet records spells as "apprenticeship_spells" entries (the spell
 id, its level); the spell itself is on the Known Spells list.
 
-Rules: reference/rules-engine-reference.md §4 Apprenticeship budget;
+Rules: Apprenticeship budget;
 Maximum level of a spell learned at creation; Required and recommended
 Abilities at Gauntlet.
 

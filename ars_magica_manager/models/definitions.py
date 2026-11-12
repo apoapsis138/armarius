@@ -30,8 +30,7 @@ from .laboratory import LAB_SPECIALIZATIONS
 @dataclass(frozen=True)
 class VirtueFlawDef:
     """A character Virtue/Flaw catalog entry (shared reference data, not
-    per-saga). The field-by-field reference, with every source book's
-    version, is reference/virtues-and-flaws-reference.md.
+    per-saga).
 
     `category` is the first type the book prints (General, Hermetic,
     Supernatural...); `extra_categories` holds any others ("Supernatural,
@@ -302,8 +301,7 @@ class CovenantBoonHookDef:
     attached one can then be marked Unknown (BOON_HOOK_UNKNOWN) and counts
     3 points. `source` names the book(s) the entry comes from ("ArM5",
     "Covenants" or "ArM5; Covenants"), for attribution -- the text is
-    CC-BY-SA. The field-by-field reference, with the rules text, is
-    reference/covenants-boons-and-hooks-ref.md.
+    CC-BY-SA.
     """
 
     id: str

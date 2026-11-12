@@ -98,8 +98,8 @@ class LaboratorySheetView(SheetView):
     A fixed top panel (not inside any tab, permanently expanded) above a
     5-tab body mirroring the sheet's own pages: Planning (placeholder),
     Virtues & Flaws, Attributes (Sanctum, Specializations and their sources,
-    Features, Rooms), Inventory (Raw Vis/Equipment & Stores/Books), Diary. The panel follows
-    reference/lab-sheet-design-doc.md: Identity, titled with the lab's name,
+    Features, Rooms), Inventory (Raw Vis/Equipment & Stores/Books), Diary. The panel holds
+    Identity, titled with the lab's name,
     in two columns with the Aura below; then Characteristics in three
     columns (derived figures, then the 8 Characteristics four and four).
     Both stack their columns when the pane is too narrow (StackingColumns).

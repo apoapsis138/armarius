@@ -127,6 +127,16 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 4.11.2 — 2026-11-12
+
+### Illuminatio
+
+- **A charter's seals wrap.** On the covenant's Charter, a covenant with many magi pushed its row of seals past the edge of the page; the seals now run left to right and wrap onto further rows, so the page never needs scrolling sideways.
+
+### Fundamenta
+
+- **Tidier code notes.** Comments in the code no longer point to old reference notes that aren't part of the app.
+
 ## 4.11.1 — 2026-11-11
 
 ### Illuminatio

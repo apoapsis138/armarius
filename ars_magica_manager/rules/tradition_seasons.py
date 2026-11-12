@@ -30,8 +30,8 @@ with the unGifted rules of p. 14 (rules/mysteries).
 A tradition's own seasons (TraditionDef.activities) give Exposure in
 the Art or Ability worked, and name the Lab Total of the work.
 
-Rules: reference/rules-engine-reference.md §18 (Opening The Gift, each
-tradition's Opening, initiations and laboratory work).
+Rules: Opening The Gift; each Hedge Magic tradition's Opening,
+initiations and laboratory work.
 """
 
 from __future__ import annotations

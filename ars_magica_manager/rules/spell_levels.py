@@ -92,7 +92,7 @@ TARGET_STEPS: dict[str, int] = {
 @dataclass(frozen=True)
 class ExtraParameter:
     """A Range, Duration or Target beyond the standard ones, which a Virtue,
-    Mystery or breakthrough grants (reference/spell-parameters.md): it costs
+    Mystery or breakthrough grants: it costs
     the same magnitudes as a standard parameter, plus any it adds."""
 
     kind: str  # "range", "duration" or "target"

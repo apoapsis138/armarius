@@ -1,8 +1,7 @@
 """Character creation checks, step by step. Each
 function is registered for its worksheet step in rules.creation.
 
-Rules from reference/rules-engine-reference.md: §2 Creation order; §5
-Virtues and Flaws; §12 Starting age and pre-play aging.
+Rules: Creation order; Virtues and Flaws; Starting age and pre-play aging.
 """
 
 from __future__ import annotations
@@ -68,7 +67,7 @@ MYTHIC_PACKAGES: dict[str, tuple[tuple[tuple[str, ...], str], ...]] = {
     ),
 }
 
-#: Pre-play aging starts here (§12), and companions should be younger than
+#: Pre-play aging starts here, and companions should be younger than
 #: COMPANION_AGE.
 AGING_AGE = 35
 COMPANION_AGE = 30
@@ -126,8 +125,7 @@ def later_life_years(saga: Saga, character: Character) -> int:
 
 def pre_play_aging_rolls(saga: Saga, character: Character) -> int:
     """How many aging rolls the character makes before play: one for each
-    year from 35 (50 with Strong Faerie Blood) up to their starting age
-    (§12)."""
+    year from 35 (50 with Strong Faerie Blood) up to their starting age."""
     years = age(saga, character)
     if years is None:
         return 0

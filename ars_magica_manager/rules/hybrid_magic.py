@@ -38,7 +38,7 @@ magus of the saga, or when it is marked so.
 What the formulas can't apply (Holy Magic's words and gestures, Chthonic Magic's sinful acts,
 the faerie rite parameters) is shown as the books word it.
 
-Rules: reference/rules-engine-reference.md §18, Hybrid magic.
+Rules: Hybrid magic.
 """
 
 from __future__ import annotations

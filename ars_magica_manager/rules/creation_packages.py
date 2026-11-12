@@ -10,7 +10,7 @@ Failed Apprentice needs that Virtue.
 The worksheet records a package's xp as "package" entries whose note names
 the package, its length and which time it was taken ("Soldier:5:1").
 
-Rules: reference/rules-engine-reference.md §3 Training packages (Grogs).
+Rules: Training packages (Grogs).
 """
 
 from __future__ import annotations

@@ -74,7 +74,7 @@ class ArcaneConnection:
 
 
 #: What a laboratory Diary entry can record, for its Activity Type: the lab
-#: activities of reference/lab-sheet-design-doc.md, then the rest of a
+#: activities, then the rest of a
 #: season's lab work, and Other. A Diary entry's `activity` is one of these
 #: or "" (not set -- every entry written before Activity Type existed).
 LAB_ACTIVITIES: tuple[str, ...] = (
@@ -101,8 +101,8 @@ LAB_ACTIVITIES: tuple[str, ...] = (
 )
 
 
-#: The 8 Activity Specializations a laboratory can have (ArM5 p.115 and
-#: reference/laboratory-features-reference.md); with the 15 Arts they make
+#: The 8 Activity Specializations a laboratory can have (ArM5 p.115); with
+#: the 15 Arts they make
 #: every Specialization.
 LAB_ACTIVITY_SPECIALIZATIONS: tuple[str, ...] = (
     "Experimentation",
@@ -117,8 +117,7 @@ LAB_ACTIVITY_SPECIALIZATIONS: tuple[str, ...] = (
 LAB_SPECIALIZATIONS: tuple[str, ...] = (*LAB_ACTIVITY_SPECIALIZATIONS, *ARTS)
 
 
-#: The lab Virtues a Feature is built on, and the points each gives it
-#: (reference/laboratory-features-reference.md).
+#: The lab Virtues a Feature is built on, and the points each gives it.
 FEATURE_VIRTUE_POINTS: dict[str, int] = {
     "labvf_lesser_feature": 1,
     "labvf_greater_feature": 3,

@@ -29,9 +29,8 @@ or a Supernatural Ability's score; Greater Magical Defenses doubles it,
 No Magical Defenses takes them all. They never add up: only the best one
 against an effect applies.
 
-Rules: reference/rules-engine-reference.md §18 (Generic Supernatural
-Ability casting, Limits of Magic and Magical Defenses, each tradition's
-Casting), §3 (Ceremony).
+Rules: Generic Supernatural Ability casting, Limits of Magic and Magical
+Defenses, each Hedge Magic tradition's Casting; Ceremony.
 
 No screen uses best_defense(), ability_effect_level(),
 leaderless_modifier() yet: they are the rules for screens still to come, and

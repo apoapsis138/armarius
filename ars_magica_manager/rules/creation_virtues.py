@@ -2,8 +2,7 @@
 budget by character type, the book's hard limits (musts) and its guidelines
 (shoulds, shown as advice with how many too many or too few).
 
-Rules: reference/rules-engine-reference.md §5 Point costs and general
-limits; Budgets by character type; Types of Virtue and Flaw.
+Rules: Point costs and general limits; Budgets by character type; Types of Virtue and Flaw.
 """
 
 from __future__ import annotations

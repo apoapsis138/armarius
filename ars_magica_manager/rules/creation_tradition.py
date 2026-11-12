@@ -12,8 +12,7 @@ leaves the minimum scores the book sets.
 Each tradition's rules are data on its catalog record, read by the
 functions here, as a House's are (creation_virtues.house_benefit).
 
-Rules: reference/rules-engine-reference.md §18, each Hedge Magic
-tradition's Character Creation.
+Rules: each Hedge Magic tradition's Character Creation.
 """
 
 from __future__ import annotations

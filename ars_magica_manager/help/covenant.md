@@ -412,7 +412,9 @@ covenant's magi have sealed it, when and in what standing: each seal is
 pressed in red wax with the magus's House symbol, his name and year
 beneath (or his standing, when it isn't full member), an expelled
 magus's seal is struck through, and a magus who hasn't sworn yet shows
-as an empty dashed ring. **Use a Template**, **Save as Template**,
+as an empty dashed ring. The seals run left to right, those still to
+swear last, and wrap onto further rows when there are more than the
+page is wide. **Use a Template**, **Save as Template**,
 **Forget a Template** and **End Membership** are its other buttons.
 <!-- /gui -->
 

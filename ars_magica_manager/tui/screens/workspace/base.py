@@ -406,8 +406,7 @@ class WorkspaceBase(Screen[None]):
     (_commit), and the a / e / d plumbing. The per-record actions live in the
     mixins WorkspaceScreen combines."""
 
-    #: One verb per key, everywhere (see reference/
-    #: UI_Conventions.md): a / e / d act on whatever has focus -- the
+    #: One verb per key, everywhere: a / e / d act on whatever has focus -- the
     #: highlighted row of a list, a section, or the record itself. What only
     #: a few sections can do is in More (m); what can be made is in New (n).
     #: The footer shows the first group at its left and GLOBAL_ACTIONS at
