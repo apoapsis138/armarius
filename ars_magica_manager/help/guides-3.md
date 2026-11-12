@@ -154,7 +154,7 @@ Giving a laboratory to a magus who already had one frees their old laboratory, a
 <!-- help: guide-getting-started-help -->
 
 <!-- tui -->
-Press `?` anywhere for help on the part of the screen that has focus; in a dialog where you are typing, press F1. The Help screen lists THIS SCREEN first, then the REFERENCE pages (About this App; What's New, which shows what changed by feature and edition, then every version in its Chronicle; and Keys), the HOW-TO GUIDES and ALL PAGES. Filtering finds About and What's New by their titles too. The arrow keys choose a topic, `/` filters the topics, Tab moves between the list and the page, and Esc closes Help.
+Press `?` anywhere for help on the part of the screen that has focus; in a dialog where you are typing, press F1. The Help screen lists THIS SCREEN first, then the REFERENCE pages (About this App; What's New, which shows any changes not yet in a release, then what changed by feature and edition, then every version in its Chronicle; and Keys), the HOW-TO GUIDES and ALL PAGES. Filtering finds About and What's New by their titles too. The arrow keys choose a topic, `/` filters the topics, Tab moves between the list and the page, and Esc closes Help.
 
 On a topic about a tab or section of a sheet, `g` (Go there) closes Help and opens that tab on the record you were looking at, with the section focused. Some steps in the guides end with a **Go there** link that does the same when clicked. If the record on show has no such tab (Lab Totals while you look at a covenant), Help stays open and says which sheet it is on.
 <!-- /tui -->
