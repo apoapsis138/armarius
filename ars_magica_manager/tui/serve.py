@@ -16,17 +16,15 @@ from __future__ import annotations
 import argparse
 import asyncio
 import sys
-from pathlib import Path
 
 from aiohttp import web
 from textual_serve import server as serve_module
 from textual_serve.server import Server
 
 from .. import hosting as core_hosting
+from .. import launch
 from ..remote.identity import NoKeychainError
 from . import hosting
-
-MAIN = Path(__file__).resolve().parent.parent.parent / "main.py"
 
 # textual-serve builds each browser copy's service by this name.
 setattr(serve_module, "AppService", hosting.HostedAppService)  # noqa: B010 (pyright: not exported)
@@ -64,7 +62,7 @@ def main(argv: list[str] | None = None) -> None:
                 args.host, insist=f"add {core_hosting.ALLOW_PUBLIC}"
             )
         )
-    command = f'"{sys.executable}" "{MAIN}"'
+    command = launch.command_line(launch.PLAY)
     server = Server(command, host=args.host, port=args.port, title="Armarius")
     server.initialize_logging()
     allowed = core_hosting.allowed_hosts(args.host, args.port)

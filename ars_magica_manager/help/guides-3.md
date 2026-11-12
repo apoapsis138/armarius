@@ -1,3 +1,34 @@
+# How to download and run the app
+<!-- help: guide-download -->
+
+You don't need Python to run Armarius. Each Release on the app's GitHub page, under **Releases**, has a download for Windows and one for Linux, such as `Armarius-4.12.0-windows.zip`. It holds the whole app, with its books' catalogs, the Tribunal packs and the tutorials. Your sagas are never inside it: they are kept in your own save folder, which the [saga picker](help:saga-picker) shows, so a newer download finds them.
+
+### Windows
+<!-- help: guide-download-windows -->
+
+1. Download the Windows zip, right-click it and choose **Extract All**. Put the folder it makes, `Armarius-4.12.0`, wherever you keep programs, such as your Documents.
+2. Open the folder and double-click **Armarius** to start the desktop app. **armarius-terminal** in the same folder starts the terminal version.
+3. The first time, Windows may say "Windows protected your PC". The app isn't signed with a paid certificate, so Windows doesn't know it yet. Click **More info**, then **Run anyway**. It asks only once for each version.
+4. To pin it, right-click **Armarius** and choose **Pin to Start**, or **Send to**, then **Desktop (create shortcut)**.
+
+### Linux
+<!-- help: guide-download-linux -->
+
+1. Download the Linux zip and unzip it: `unzip Armarius-4.12.0-linux.zip`.
+2. Run `./Armarius-4.12.0/Armarius` for the desktop app, or `./Armarius-4.12.0/armarius-terminal` in a terminal for the terminal version.
+
+It runs on Linux from Ubuntu 22.04 (and other systems of that age) on. The desktop app needs the usual desktop libraries; if it won't start, run it from a terminal to see which one is missing.
+
+### A newer version
+<!-- help: guide-download-update -->
+
+Download the newer zip, unzip it beside the old folder and start the new one. Your sagas and settings carry over, since they aren't in the app's folder. Delete the old folder once the new one works. An older version still opens a saga the newer one saved, but says so, and can't show what only the newer one knows: if your troupe shares a saga, move to the new version together.
+
+### Hosting from a download
+<!-- help: guide-download-hosting -->
+
+Hosting works from a download as it does from the source: see [How to host a saga for your troupe](help:guide-hosting). The first time, Windows asks whether to let **armarius-terminal** through the firewall, as it does for Python otherwise: allow it on **private** networks. Players who join with Remote seats need the same version of Armarius as you.
+
 # Getting started
 <!-- help: guide-getting-started -->
 
@@ -123,12 +154,12 @@ Giving a laboratory to a magus who already had one frees their old laboratory, a
 <!-- help: guide-getting-started-help -->
 
 <!-- tui -->
-Press `?` anywhere for help on the part of the screen that has focus; in a dialog where you are typing, press F1. The Help screen lists THIS SCREEN first, then the HOW-TO GUIDES, the REFERENCE pages (About this App; What's New, which shows what changed by feature and edition, then every version in its Chronicle; and Keys) and ALL PAGES. The arrow keys choose a topic, `/` filters the topics, Tab moves between the list and the page, and Esc closes Help.
+Press `?` anywhere for help on the part of the screen that has focus; in a dialog where you are typing, press F1. The Help screen lists THIS SCREEN first, then the REFERENCE pages (About this App; What's New, which shows what changed by feature and edition, then every version in its Chronicle; and Keys), the HOW-TO GUIDES and ALL PAGES. Filtering finds About and What's New by their titles too. The arrow keys choose a topic, `/` filters the topics, Tab moves between the list and the page, and Esc closes Help.
 
 On a topic about a tab or section of a sheet, `g` (Go there) closes Help and opens that tab on the record you were looking at, with the section focused. Some steps in the guides end with a **Go there** link that does the same when clicked. If the record on show has no such tab (Lab Totals while you look at a covenant), Help stays open and says which sheet it is on.
 <!-- /tui -->
 <!-- gui -->
-Click **Help** in the top bar, or press `?` or F1, for help on the page and chapter on show. Help lists THIS SCREEN first, then the HOW-TO GUIDES, the REFERENCE pages (such as About this App, and What's New, which shows what changed by feature and edition, then every version in its Chronicle) and ALL PAGES; the box above the list filters them. Click a topic to read it, and a link to follow it. Esc, or the trail, leads back to the page you came from, and `q` quits the app.
+Click **Help** in the top bar, or press `?` or F1, for help on the page and chapter on show. Help lists THIS SCREEN first, then the REFERENCE pages (such as About this App, and What's New, which shows what changed by feature and edition, then every version in its Chronicle), the HOW-TO GUIDES and ALL PAGES; the box above the list filters them, and finds About and What's New by their titles too. Click a topic to read it, and a link to follow it. Esc, or the trail, leads back to the page you came from, and `q` quits the app.
 
 On a topic about a chapter of the page you came from, **Go there** under the topic list goes back to that page, open at that chapter. Some steps in the guides end with a **Go there** link that does the same. If the page you came from has no such chapter, Help stays open and says which page it is on.
 <!-- /gui -->

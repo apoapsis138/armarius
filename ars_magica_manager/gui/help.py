@@ -2,8 +2,8 @@
 (help_text.py), opened with ? or F1 or the top bar's Help on the help for the
 page on show.
 
-The topics are listed on the left under THIS PAGE, HOW-TO GUIDES,
-REFERENCE and ALL PAGES (help_text.contents), with a box that filters
+The topics are listed on the left under THIS PAGE, REFERENCE, HOW-TO
+GUIDES and ALL PAGES (help_text.contents), with a box that filters
 them; the chosen topic's page is on the right, drawn from its Markdown
 and scrolled to the topic. A `help:` link shows that topic; a web link
 opens in the browser. Go there (the button under the list, or a `go:`
