@@ -137,6 +137,10 @@ change in it.
 - **Releases.** Changes now gather on a development branch and are listed here under Unreleased; a release gives them one version together, instead of a new version for every change. The repository checks every change on Windows and Linux, and each tagged release is published on GitHub with its notes from this page.
 - **Steadier checks.** The tests no longer touch the computer's own keychain, so they run the same on a machine without one, and three tests that sometimes failed on a busy machine wait for the screen they act on.
 
+### Scriptorum
+
+- **No crash closing a window as it opens.** A window closed, or the app quit, at the very moment the season's results, a menu, a yes/no question, a books chooser or a file chooser opened could crash while choosing what to focus.
+
 ### Glossa
 
 - **Unreleased work on What's New.** What's New shows changes not yet in a release first, as Unreleased (in development).
