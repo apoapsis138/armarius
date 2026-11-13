@@ -78,6 +78,24 @@ saga in play.
 
 ## Getting started
 
+### Download the app
+
+Each [Release](https://github.com/apoapsis138/Armarius/releases) has a
+download for Windows and one for Linux, which need no Python:
+
+1. Download `Armarius-X.Y.Z-windows.zip` (or `-linux.zip`) and unzip it.
+2. Start **Armarius** in the folder it makes for the desktop version, or
+   **armarius-terminal** for the terminal version.
+
+On Windows the first start may show **Windows protected your PC**: the
+app isn't signed with a paid certificate, so Windows doesn't know it yet.
+Click **More info**, then **Run anyway**. The Linux build runs on Ubuntu
+22.04 and newer (or another system of that age). There's no macOS build
+yet. Your sagas aren't kept in the app's folder, so a newer download
+finds them.
+
+### Run from the source
+
 Requires Python 3.14+ and [`uv`](https://docs.astral.sh/uv/). Armarius is
 tested on Windows and Linux, and should run on macOS.
 
@@ -114,6 +132,7 @@ only. To report a security problem, see [SECURITY.md](SECURITY.md).
 ```bash
 uv run python tools/story_check.py          # the tests for what changed, ruff and pyright
 uv run python tools/story_check.py --full   # the whole suite, in parallel
+uv run --group build pyinstaller armarius.spec --noconfirm   # a Build, in dist/Armarius
 ```
 
 The core (`ars_magica_manager/`) holds the models, rules, storage, sheets'

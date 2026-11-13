@@ -105,8 +105,9 @@ class SeasonSummaryScreen(ModalDialog[None]):
             with Horizontal(id="summary-buttons"):
                 yield Button("Close", id="btn-close", variant="primary")
 
-    def on_mount(self) -> None:
-        self.query_one("#btn-close", Button).focus()
+    #: Focused once composed (Textual's own auto focus). An on_mount lookup
+    #: could run after the screen was already closed, and find no button.
+    AUTO_FOCUS = "#btn-close"
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         event.stop()

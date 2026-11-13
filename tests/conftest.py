@@ -2,6 +2,9 @@ import os
 import sys
 from pathlib import Path
 
+import keyring
+import keyring.backend
+import keyring.errors
 import pytest
 from tiers import is_screen_test_file
 
@@ -78,6 +81,34 @@ def isolated_sagas_dir(tmp_path, monkeypatch):
 #: still waiting is one no test will answer: without this the test, and its
 #: worker, would wait forever.
 MODAL_WAIT_MS = 5000
+
+
+class _MemoryKeyring(keyring.backend.KeyringBackend):
+    """A keychain that lives only for one test: no test reads or writes the
+    computer's own (Credential Manager, Keychain, Secret Service), and a
+    machine without one, such as a CI runner, runs the same tests."""
+
+    priority = 1  # type: ignore[assignment]
+
+    def __init__(self) -> None:
+        super().__init__()
+        self._items: dict[tuple[str, str], str] = {}
+
+    def get_password(self, service: str, username: str) -> str | None:
+        return self._items.get((service, username))
+
+    def set_password(self, service: str, username: str, password: str) -> None:
+        self._items[(service, username)] = password
+
+    def delete_password(self, service: str, username: str) -> None:
+        if self._items.pop((service, username), None) is None:
+            raise keyring.errors.PasswordDeleteError(username)
+
+
+@pytest.fixture(autouse=True)
+def memory_keychain():
+    """Each test starts with an empty keychain of its own."""
+    keyring.set_keyring(_MemoryKeyring())
 
 
 @pytest.fixture(autouse=True)

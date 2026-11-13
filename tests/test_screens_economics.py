@@ -18,7 +18,7 @@ from screen_helpers import (
     _wait_for_screen,
     _wait_until_active,
 )
-from support import build_all_tabs, choose, menu, quiet, wait_until
+from support import build_all_tabs, choose, click_when_shown, menu, quiet, wait_until
 from textual.widgets import (
     Button,
     Collapsible,
@@ -700,7 +700,7 @@ async def test_a_saga_can_still_be_created_after_deleting_all_of_them():
         app.screen.query_one("#fld-name", Input).value = "Old"  # the same name
         app.screen.query_one("#fld-storyguide", Input).value = "Alex"
         app.screen.query_one("#fld-year", Input).value = "1220"
-        await pilot.click("#btn-save")
+        await click_when_shown(pilot, "#btn-save")
         await _wait_for_screen(pilot, app, SagaPickerScreen)
         assert isinstance(app.screen, SagaPickerScreen)
 
