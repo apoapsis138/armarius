@@ -135,6 +135,7 @@ change in it.
 ### Fundamenta
 
 - **Releases.** Changes now gather on a development branch and are listed here under Unreleased; a release gives them one version together, instead of a new version for every change. The repository checks every change on Windows and Linux, and each tagged release is published on GitHub with its notes from this page.
+- **How Armarius is made.** The README now says plainly that Armarius is built with Claude Code as a coding assistant, what the maintainer designed and does, and that none of its art is generative AI.
 
 ### Glossa
 
