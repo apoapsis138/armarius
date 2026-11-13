@@ -32,7 +32,7 @@ from pathlib import Path
 from typing import IO, ClassVar, Protocol
 from urllib.parse import urlsplit
 
-from . import paths, settings, shapes
+from . import ROOT, launch, paths, settings, shapes
 
 #: How a hosted copy is reached, told to it in this environment variable:
 #: "web" (a browser) or "ssh".
@@ -44,9 +44,6 @@ DEFAULT_PORT = 8000
 DEFAULT_SSH_PORT = 2222
 LOCALHOST = "localhost"
 
-#: The module the host process runs (python -m), from the package's folder.
-SERVER_MODULE = "ars_magica_manager.tui.serve"
-_PACKAGE_PARENT = Path(__file__).resolve().parent.parent
 
 #: How long a starting host has to begin listening (the server loads
 #: Textual's web driver first).
@@ -75,7 +72,8 @@ class Hosting(Protocol):
     time. Plan is the browser and SSH host; remote.plan.RemotePlan the
     listener for Remote seats."""
 
-    module: ClassVar[str]
+    #: What the host process runs: one of launch's words.
+    word: ClassVar[str]
 
     @property
     def address(self) -> str: ...
@@ -98,7 +96,7 @@ class Plan:
     ssh_port: int | None = None
     public_ok: bool = False
 
-    module: ClassVar[str] = SERVER_MODULE
+    word: ClassVar[str] = launch.HOST
 
     def ports(self) -> list[int]:
         return [self.port] + ([self.ssh_port] if self.ssh_port is not None else [])
@@ -349,17 +347,6 @@ def _listening(address: str, port: int) -> bool:
         return False
 
 
-def _python() -> str:
-    """The Python to run the server with: never pythonw, whose copies
-    would have no console streams for the server to hand on."""
-    executable = Path(sys.executable)
-    if executable.stem.lower() == "pythonw":
-        console = executable.with_name("python" + executable.suffix)
-        if console.exists():
-            return str(console)
-    return str(executable)
-
-
 class Host:
     """The host for players, if this copy of the app has started one."""
 
@@ -394,8 +381,8 @@ class Host:
         errors = tempfile.TemporaryFile()  # noqa: SIM115 (kept while the host runs)
         try:
             process = subprocess.Popen(
-                [_python(), "-m", plan.module, *plan.arguments()],
-                cwd=_PACKAGE_PARENT,
+                launch.command(plan.word, *plan.arguments()),
+                cwd=ROOT,
                 stdin=subprocess.DEVNULL,
                 stdout=subprocess.DEVNULL,
                 stderr=errors,

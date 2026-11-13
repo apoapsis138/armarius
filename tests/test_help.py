@@ -599,6 +599,7 @@ GUIDES = [
     "guide-covenant",
     "guide-advancement",
     "guide-lab-planning",
+    "guide-download",
     "guide-getting-started",
     "guide-creation",
     "guide-familiars",
@@ -717,3 +718,12 @@ def test_a_long_page_is_cut_at_headings_into_pieces_that_join_up():
     assert len(pieces) > 1 and "".join(pieces) == text
     assert all(piece.startswith("## ") for piece in pieces[1:])
     assert page_chunks("# Short\n\n## A\n\ntext\n") == ["# Short\n\n## A\n\ntext\n"]
+
+
+def test_reference_comes_before_the_guides_and_the_filter_finds_whats_new() -> None:
+    book = ht.book(ht.GUI)
+    headings = [heading for heading, _ in ht.contents(book, [])]
+    assert headings.index("REFERENCE") < headings.index("HOW-TO GUIDES")
+    for query, topic_id in (("what's new", ht.WHATS_NEW), ("about this", ht.ABOUT)):
+        [(_, found)] = ht.contents(book, [], query)
+        assert found[0].id == topic_id, query
