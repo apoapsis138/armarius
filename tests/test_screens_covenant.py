@@ -27,6 +27,7 @@ from support import (
     close_worksheet,
     menu,
     quiet,
+    shown,
     strip_markup,
     wait_until,
 )
@@ -313,16 +314,21 @@ async def test_set_date_sets_an_arbitrary_date_from_the_saga_level():
         await menu(pilot, app, "m", "Set Date")
         await pilot.pause()
         assert _is_form(app.screen, "Set the Saga's Date")
-        app.screen.query_one("#fld-season", Select).value = "Winter"
+        (await shown(pilot, "#fld-season", Select)).value = "Winter"
         app.screen.query_one("#fld-year", Input).value = "1195"
         app.screen.query_one("#btn-save", Button).press()
-        await pilot.pause()
+        # The form closes, then the workspace's subtitle shows the new date.
+        assert await wait_until(
+            pilot, lambda: "Winter 1195" in (app.screen.sub_title or "")
+        )
 
-        assert "Winter 1195" in app.screen.sub_title
-        # The saga summary pane (shown at saga level) refreshes too.
-        detail = app.screen.query_one("#detail-pane")
-        text = " ".join(str(static.render()) for static in detail.query(Static))
-        assert "Current date: Winter 1195" in text
+        # The saga summary pane (shown at saga level) refreshes too, once
+        # it is drawn again.
+        def summary() -> str:
+            detail = app.screen.query_one("#detail-pane")
+            return " ".join(str(static.render()) for static in detail.query(Static))
+
+        assert await wait_until(pilot, lambda: "Current date: Winter 1195" in summary())
 
     saga = storage.load_saga("test_saga")
     assert (saga.current_season, saga.current_year) == ("Winter", 1195)

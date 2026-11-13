@@ -6,6 +6,7 @@ import keyring
 import keyring.backend
 import keyring.errors
 import pytest
+import shards
 from tiers import is_screen_test_file
 
 from ars_magica_manager import (
@@ -23,6 +24,15 @@ os.environ["ARMARIUS_SOUNDS"] = "off"
 os.environ["ARMARIUS_MOTION"] = "off"
 
 
+def pytest_addoption(parser):
+    parser.addoption(
+        "--shard",
+        default="",
+        metavar="K/N",
+        help="run only the K-th of N shards of about equal time (tools/shards.py)",
+    )
+
+
 def pytest_configure(config):
     config.addinivalue_line(
         "markers",
@@ -35,6 +45,22 @@ def pytest_collection_modifyitems(config, items):
     for item in items:
         if is_screen_test_file(item.path):
             item.add_marker(pytest.mark.ui)
+    if config.getoption("--shard"):
+        _keep_shard(config, items)
+
+
+def _keep_shard(config, items) -> None:
+    """--shard=k/n: leave only the tests of the files in shard k."""
+    try:
+        k, n = shards.parse_shard(config.getoption("--shard"))
+    except ValueError as error:
+        raise pytest.UsageError(str(error)) from error
+    file_of = {item: item.nodeid.split("::", 1)[0] for item in items}
+    placed = shards.assign(file_of.values(), n, shards.load_durations())
+    keep = [item for item in items if placed[file_of[item]] == k]
+    drop = [item for item in items if placed[file_of[item]] != k]
+    config.hook.pytest_deselected(items=drop)
+    items[:] = keep
 
 
 #: Each worker's test under way, one file per worker, so a run stopped at
