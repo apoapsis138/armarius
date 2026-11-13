@@ -117,9 +117,15 @@ overrides it.
 
 ## Status
 
-Armarius is a personal project. Bug reports are welcome as issues; pull
-requests are open to invited collaborators only. To report a security problem, see
-[SECURITY.md](SECURITY.md).
+Armarius is a personal project, built with Claude Code (Anthropic's AI
+coding assistant) writing much of the code. I write code too. I designed
+the architecture and design patterns, the data model, how each rule is
+applied (checked against the books, Definitive Edition first) and the
+security model for connecting players through the app, and I arranged the
+licensing with Atlas Games. I review and test every change. No generative
+AI was used for any of its art (see [NOTICE.md](NOTICE.md)). Bug reports
+are welcome as issues; pull requests are open to invited collaborators
+only. To report a security problem, see [SECURITY.md](SECURITY.md).
 
 ## Developing
 

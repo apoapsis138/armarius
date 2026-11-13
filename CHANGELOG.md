@@ -137,6 +137,7 @@ change in it.
 - **Download the app.** Each Release now has a download for Windows and one for Linux that runs without Python: unzip it and start Armarius (the desktop) or armarius-terminal (the terminal version). Help's new guide, How to download and run the app, covers Windows' "Windows protected your PC" warning and moving to a newer version.
 - **Hosting from a download.** A downloaded copy can host a saga for players, in a browser, over SSH or with Remote seats, just as a copy run from the source can.
 - **Releases.** Changes now gather on a development branch and are listed here under Unreleased; a release gives them one version together, instead of a new version for every change. The repository checks every change on Windows and Linux, and each tagged release is published on GitHub with its notes from this page.
+- **How Armarius is made.** The README now says plainly that Armarius is built with Claude Code as a coding assistant, what the maintainer designed and does, and that none of its art is generative AI.
 - **Steadier checks.** The tests no longer touch the computer's own keychain, so they run the same on a machine without one, and three tests that sometimes failed on a busy machine wait for the screen they act on.
 
 ### Scriptorum
