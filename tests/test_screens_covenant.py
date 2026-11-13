@@ -23,6 +23,7 @@ from screen_helpers import (
 )
 from support import (
     build_all_tabs,
+    click_when_shown,
     close_worksheet,
     menu,
     quiet,
@@ -441,7 +442,7 @@ async def test_lab_can_be_created_unassigned_or_in_a_covenant():
         assert _is_form(app.screen, "Create a New Laboratory")
         assert app.screen.query_one("#fld-covenant_id", Select).value == Select.NULL
         app.screen.query_one("#fld-name", Input).value = "Loose Lab"
-        await pilot.click("#btn-save")
+        await click_when_shown(pilot, "#btn-save")
         await pilot.pause()
         await close_worksheet(pilot, app)
         assert app.screen.selected_laboratory.name == "Loose Lab"
@@ -452,7 +453,7 @@ async def test_lab_can_be_created_unassigned_or_in_a_covenant():
         await pilot.pause()
         assert app.screen.query_one("#fld-covenant_id", Select).value == "cov2"
         app.screen.query_one("#fld-name", Input).value = "Fenghold Lab"
-        await pilot.click("#btn-save")
+        await click_when_shown(pilot, "#btn-save")
         await pilot.pause()
         await close_worksheet(pilot, app)
 

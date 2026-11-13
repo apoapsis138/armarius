@@ -21,7 +21,15 @@ from screen_helpers import (
     _select_laboratory,
     _wait_for_picker_ready,
 )
-from support import choose, menu, picker_rows, strip_markup, wait_until
+from support import (
+    choose,
+    click_when_shown,
+    menu,
+    picker_rows,
+    shown,
+    strip_markup,
+    wait_until,
+)
 from textual.widgets import Input, Select, Static
 
 from ars_magica_manager import section_verbs, storage
@@ -72,9 +80,8 @@ async def test_add_virtue_flaw_with_parameters_to_character():
         assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
 
         # An {art} is picked from the fifteen Arts.
-        assert await wait_until(pilot, lambda: bool(app.screen.query("#fld-art")))
-        app.screen.query_one("#fld-art", Select).value = "creo"
-        await pilot.click("#btn-save")
+        (await shown(pilot, "#fld-art", Select)).value = "creo"
+        await click_when_shown(pilot, "#btn-save")
         assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
 
         assert "Affinity with Creo" in _character_vf_labels(
@@ -202,7 +209,7 @@ async def test_create_laboratory_flow_saves_laboratory():
         app.screen.query_one("#fld-name", Input).value = "The Alchemical Tower"
         app.screen.query_one("#fld-size", Input).value = "1"
 
-        await pilot.click("#btn-save")
+        await click_when_shown(pilot, "#btn-save")
         # A new laboratory opens its Creation Worksheet; closing it shows
         # the new lab's sheet.
         assert await wait_until(
@@ -236,7 +243,7 @@ async def test_add_ability_with_parameters_to_character():
         assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
 
         app.screen.query_one("#fld-craft", Input).value = "Blacksmith"
-        await pilot.click("#btn-save")
+        await click_when_shown(pilot, "#btn-save")
         await pilot.pause()
 
         assert isinstance(app.screen, FieldsDialog)
@@ -244,7 +251,7 @@ async def test_add_ability_with_parameters_to_character():
 
         app.screen.query_one("#fld-xp", Input).value = "15"
 
-        await pilot.click("#btn-save")
+        await click_when_shown(pilot, "#btn-save")
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)

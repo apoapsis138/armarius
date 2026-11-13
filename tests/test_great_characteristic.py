@@ -7,7 +7,7 @@ from screen_helpers import (
     _saga_with_bare_character,
     _select_character,
 )
-from support import choose, strip_markup, wait_until
+from support import choose, click_when_shown, shown, strip_markup, wait_until
 from textual.widgets import Select, Static
 
 from ars_magica_manager import storage
@@ -115,14 +115,11 @@ async def test_taking_great_raises_the_score_and_offers_only_scores_at_three():
         await _open_picker(pilot, app)
         await choose(pilot, app, "Great (Characteristic)")
         assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
-        assert await wait_until(
-            pilot, lambda: bool(app.screen.query("#fld-characteristic"))
-        )
-        select = app.screen.query_one("#fld-characteristic", Select)
+        select = await shown(pilot, "#fld-characteristic", Select)
         offered = [value for _, value in select._options if isinstance(value, str)]
         assert offered == ["intelligence", "strength"]
         select.value = "intelligence"
-        await pilot.click("#btn-save")
+        await click_when_shown(pilot, "#btn-save")
         assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
 
     [corvinus] = storage.load_saga("test_saga").characters
