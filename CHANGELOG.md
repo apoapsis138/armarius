@@ -130,7 +130,7 @@ change in it.
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
-## Unreleased
+## 4.12.0 — 2026-11-12
 
 ### Fundamenta
 
