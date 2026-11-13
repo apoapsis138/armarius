@@ -366,6 +366,9 @@ ABOUT = "about"
 WHATS_NEW = "whats-new"
 #: The pages under REFERENCE, after the generated About and What's New.
 REFERENCE = ("keys",)
+#: The pages Help makes rather than reads from a file, with their titles:
+#: listed first under REFERENCE, and found by the filter by title.
+GENERATED = ((ABOUT, "About this App"), (WHATS_NEW, "What's New"))
 #: How-to guides are the pages whose id starts with this.
 GUIDE_PREFIX = "guide-"
 
@@ -375,8 +378,9 @@ def is_guide(topic_id: str) -> bool:
 
 
 def whats_new_text() -> str:
-    """The What's New page: CHANGELOG.md's latest editions, each feature
-    with its editions, and the Chronicle of every version."""
+    """The What's New page: CHANGELOG.md's work not yet released, its
+    latest editions, each feature with its editions, and the Chronicle of
+    every version."""
     try:
         text = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
     except OSError:
@@ -384,13 +388,22 @@ def whats_new_text() -> str:
     return changelog.whats_new(text)
 
 
+#: Where the app's source is kept: each Release is tagged there.
+SOURCE_URL = "https://github.com/apoapsis138/Armarius"
+
+
 def about_text() -> str:
-    """The About page: the version, then NOTICE.md."""
+    """The About page: the version, where its source is (the GPL asks that
+    anyone given the program can get it), then NOTICE.md."""
     try:
         notice = (ROOT / "NOTICE.md").read_text(encoding="utf-8")
     except OSError:
         notice = "NOTICE.md is missing: see the repository for licences."
-    return f"# Armarius v{__version__}\n\nA saga manager for Ars Magica.\n\n{notice}"
+    source = f"The source of this version: {SOURCE_URL}/tree/v{__version__}"
+    return (
+        f"# Armarius v{__version__}\n\nA saga manager for Ars Magica.\n\n"
+        f"{source}\n\n{notice}"
+    )
 
 
 def page_text(help_book: HelpBook, topic_id: str) -> tuple[str, str] | None:
@@ -422,14 +435,20 @@ def contents(
     help_book: HelpBook, here: list[str], query: str = ""
 ) -> list[tuple[str, list[Entry]]]:
     """Help's topic list as (heading, entries) groups: with a `query`,
-    the topics found; otherwise THIS SCREEN (`here`, the topics for where
-    Help was opened, most specific first), HOW-TO GUIDES, REFERENCE and
-    ALL PAGES."""
+    the topics found (About and What's New among them, though they aren't
+    written pages); otherwise THIS SCREEN (`here`, the topics for where
+    Help was opened, most specific first), REFERENCE, HOW-TO GUIDES and
+    ALL PAGES. REFERENCE comes before the long list of guides so What's
+    New is in reach without scrolling."""
     if query.strip():
-        found = help_book.search(query)
-        return [
-            (f"FOUND ({len(found)})", [Entry("found", t.id, t.title) for t in found])
+        words = query.casefold().split()
+        made = [
+            Entry("found", topic_id, title)
+            for topic_id, title in GENERATED
+            if all(word in title.casefold() for word in words)
         ]
+        found = made + [Entry("found", t.id, t.title) for t in help_book.search(query)]
+        return [(f"FOUND ({len(found)})", found)]
     groups: list[tuple[str, list[Entry]]] = []
     shown = [t for t in dict.fromkeys(here) if t in help_book.topics]
     if shown:
@@ -439,17 +458,11 @@ def contents(
                 [Entry("here", t, help_book.topics[t].title) for t in shown],
             )
         )
-    guides = [p for p in help_book.pages.values() if is_guide(p.id)]
-    if guides:
-        groups.append(
-            ("HOW-TO GUIDES", [Entry("guide", p.id, p.title) for p in guides])
-        )
     groups.append(
         (
             "REFERENCE",
             [
-                Entry("ref", ABOUT, "About this App"),
-                Entry("ref", WHATS_NEW, "What's New"),
+                *(Entry("ref", topic_id, title) for topic_id, title in GENERATED),
                 *(
                     Entry("ref", t, help_book.topics[t].title)
                     for t in REFERENCE
@@ -458,6 +471,11 @@ def contents(
             ],
         )
     )
+    guides = [p for p in help_book.pages.values() if is_guide(p.id)]
+    if guides:
+        groups.append(
+            ("HOW-TO GUIDES", [Entry("guide", p.id, p.title) for p in guides])
+        )
     groups.append(
         (
             "ALL PAGES",

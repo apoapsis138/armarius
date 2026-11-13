@@ -23,6 +23,7 @@ from screen_helpers import (
 from support import (
     build_all_tabs,
     choose,
+    click_when_shown,
     close_worksheet,
     menu,
     screen_lines,
@@ -92,7 +93,7 @@ async def test_edit_arts_prefills_existing_scores_and_saves_full_grid():
             app.screen.query_one("#art-score-rego", Label).render()
         )
 
-        await pilot.click("#btn-save")
+        await click_when_shown(pilot, "#btn-save")
         await _wait_for_screen(pilot, app, WorkspaceScreen)
 
         assert isinstance(app.screen, WorkspaceScreen)
@@ -236,7 +237,7 @@ async def test_edit_arts_grid_fits_default_terminal_and_accepts_real_typing():
             await pilot.pause()
             assert field.value == "28"
 
-        await pilot.click("#btn-save")
+        await click_when_shown(pilot, "#btn-save")
         await pilot.pause()
 
     saga = storage.load_saga("test_saga")
@@ -327,7 +328,7 @@ async def test_creating_a_second_character_after_viewing_the_first_works():
         await menu(pilot, app, "n", "New Character")
         await pilot.pause()
         app.screen.query_one("#fld-name", Input).value = "Leandro"
-        await pilot.click("#btn-save")
+        await click_when_shown(pilot, "#btn-save")
         await pilot.pause()
         await close_worksheet(pilot, app)
         assert app.screen.selected_character.name == "Leandro"
@@ -340,7 +341,7 @@ async def test_creating_a_second_character_after_viewing_the_first_works():
         await menu(pilot, app, "n", "New Character")
         await pilot.pause()
         app.screen.query_one("#fld-name", Input).value = "Guillame"
-        await pilot.click("#btn-save")
+        await click_when_shown(pilot, "#btn-save")
         await pilot.pause()
         await close_worksheet(pilot, app)
 
@@ -388,7 +389,7 @@ async def test_a_renamed_characters_title_is_not_read_as_markup():
         await pilot.press("e")
         await wait_until(pilot, lambda: _is_form(app.screen, "Edit Character Info"))
         app.screen.query_one("#fld-name", Input).value = "Tim [the] Bold [/]"
-        await pilot.click("#btn-save")
+        await click_when_shown(pilot, "#btn-save")
         await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
         await pilot.pause()
         title = app.screen._character_sheet_view.query_one(
@@ -414,7 +415,7 @@ async def test_edit_character_info_updates_name_covenant_and_laboratory():
         app.screen.query_one("#fld-confidence_score", Input).value = "2"
         app.screen.query_one("#fld-confidence_points", Input).value = "5"
 
-        await pilot.click("#btn-save")
+        await click_when_shown(pilot, "#btn-save")
         await _wait_for_screen(pilot, app, WorkspaceScreen)
 
         assert isinstance(app.screen, WorkspaceScreen)
@@ -461,7 +462,7 @@ async def test_edit_ability_updates_existing_entry():
 
         app.screen.query_one("#fld-xp", Input).value = "105"
 
-        await pilot.click("#btn-save")
+        await click_when_shown(pilot, "#btn-save")
         await _wait_for_screen(pilot, app, WorkspaceScreen)
 
         assert isinstance(app.screen, WorkspaceScreen)

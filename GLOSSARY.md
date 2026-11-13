@@ -513,7 +513,17 @@ _Avoid_: Ticket, task, issue
 **Edition**:
 A finished round of work on a feature, given a name and the version it was
 finished in.
-_Avoid_: Release, milestone
+_Avoid_: Milestone
+
+**Release**:
+A version of the app published for people to download, with a **Build**
+attached for each platform.
+_Avoid_: Edition (a feature's finished round, not a version), drop
+
+**Build**:
+The app packed to run on one platform without installing Python, given out
+as one download.
+_Avoid_: Binary, executable, installer, package
 
 ## Book terms
 

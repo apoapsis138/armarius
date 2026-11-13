@@ -142,7 +142,10 @@ class ConfirmScreen(ModalDialog[bool]):
                 yield Button("No", id="btn-no")
 
     def on_mount(self) -> None:
-        self.query_one("#btn-yes" if self.safe_answer else "#btn-no", Button).focus()
+        # A query, not query_one: the screen may already have been closed
+        # (and emptied) by the time its Mount is handled.
+        for button in self.query("#btn-yes" if self.safe_answer else "#btn-no"):
+            button.focus()
 
     def action_cancel(self) -> None:
         """Escape: the answer a stray key should give."""

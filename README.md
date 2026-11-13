@@ -78,6 +78,24 @@ saga in play.
 
 ## Getting started
 
+### Download the app
+
+Each [Release](https://github.com/apoapsis138/Armarius/releases) has a
+download for Windows and one for Linux, which need no Python:
+
+1. Download `Armarius-X.Y.Z-windows.zip` (or `-linux.zip`) and unzip it.
+2. Start **Armarius** in the folder it makes for the desktop version, or
+   **armarius-terminal** for the terminal version.
+
+On Windows the first start may show **Windows protected your PC**: the
+app isn't signed with a paid certificate, so Windows doesn't know it yet.
+Click **More info**, then **Run anyway**. The Linux build runs on Ubuntu
+22.04 and newer (or another system of that age). There's no macOS build
+yet. Your sagas aren't kept in the app's folder, so a newer download
+finds them.
+
+### Run from the source
+
 Requires Python 3.14+ and [`uv`](https://docs.astral.sh/uv/). Armarius is
 tested on Windows and Linux, and should run on macOS.
 
@@ -99,15 +117,22 @@ overrides it.
 
 ## Status
 
-Armarius is a personal project. Bug reports are welcome as issues; pull
-requests are open to invited collaborators only. To report a security problem, see
-[SECURITY.md](SECURITY.md).
+Armarius is a personal project, built with Claude Code (Anthropic's AI
+coding assistant) writing much of the code. I write code too. I designed
+the architecture and design patterns, the data model, how each rule is
+applied (checked against the books, Definitive Edition first) and the
+security model for connecting players through the app, and I arranged the
+licensing with Atlas Games. I review and test every change. No generative
+AI was used for any of its art (see [NOTICE.md](NOTICE.md)). Bug reports
+are welcome as issues; pull requests are open to invited collaborators
+only. To report a security problem, see [SECURITY.md](SECURITY.md).
 
 ## Developing
 
 ```bash
 uv run python tools/story_check.py          # the tests for what changed, ruff and pyright
 uv run python tools/story_check.py --full   # the whole suite, in parallel
+uv run --group build pyinstaller armarius.spec --noconfirm   # a Build, in dist/Armarius
 ```
 
 The core (`ars_magica_manager/`) holds the models, rules, storage, sheets'
@@ -115,6 +140,10 @@ text and forms, and never imports a UI library; `ars_magica_manager/tui/`
 and `ars_magica_manager/gui/` draw them. [CONTRIBUTING.md](CONTRIBUTING.md)
 has the working rules, [DESIGN.md](DESIGN.md) the architecture and
 [docs/adr/](docs/adr/) the reasons for each lasting decision.
+
+Work happens on the `dev` branch, and pull requests go into it; `main`
+is always the latest release, each one listed on the repository's
+Releases page with its notes from [CHANGELOG.md](CHANGELOG.md).
 
 ## Licence and credits
 

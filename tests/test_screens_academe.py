@@ -7,7 +7,7 @@ from screen_helpers import (
     _select_character,
     _wait_for_screen,
 )
-from support import wait_until
+from support import click_when_shown, wait_until
 
 from ars_magica_manager import storage
 from ars_magica_manager.models import Character
@@ -26,7 +26,7 @@ async def test_more_s_disputatio_is_rolled_and_kept_in_both_diaries():
         app.screen._run_more("disputatio")  # type: ignore[attr-defined]
         await _wait_for_screen(pilot, app, FieldsDialog)
         assert "Hugh" in str(app.screen.query_one("#fields-live").render())
-        await pilot.click("#btn-save")
+        await click_when_shown(pilot, "#btn-save")
         assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
         await _confirm(pilot, app, "y")
 

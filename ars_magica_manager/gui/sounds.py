@@ -84,7 +84,12 @@ class AwakeLink:
     held. A device that refuses just leaves it unheld: the sounds play as
     they would without it."""
 
+    _winmm: ctypes.CDLL
+    _header: _WaveHeader
+
     def __init__(self) -> None:
+        if sys.platform != "win32":
+            raise OSError("AwakeLink plays through Windows' own audio")
         self._winmm = ctypes.WinDLL("winmm")
         self._device: wintypes.HANDLE | None = None
         self._silence = ctypes.create_string_buffer(_RATE)
