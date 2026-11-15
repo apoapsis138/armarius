@@ -781,6 +781,13 @@ vis stores.
   type and Technique and Form in a season, such as inventing several
   spells or instilling several effects. The app offers it only for Lab
   Texts; plan the others one at a time.
+- **A General spell's Lab Text** teaches the level it records: a General
+  spell is known at the level of the version learned (DE p. 313). Set the
+  text's **Level** in the library first; a text with none can't be used.
+  Each magus who learns from it gets a version of his own at that level,
+  even from the same text (DE p. 226), named "Lab Text: ..." as its source,
+  and the Lab Text he writes teaches that version. A teacher who knows a
+  General spell at no recorded level can't teach it.
 - **Learn spells from a teacher** asks for the **Teacher**, any other magus
   who knows spells, and the **Spells taught**, of any Techniques and Forms.
   Scheduling plans the teacher's season as Teach. The levels taught are at

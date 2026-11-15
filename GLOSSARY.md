@@ -771,6 +771,12 @@ Auram, Corpus, Herbam, Ignem, Imaginem, Mentem, Terram, Vim.
 A single working of magic; a Hermetic spell has a Technique, a Form and a
 level. (DE pp. 6, 213)
 
+**General spell**:
+A spell printed with no fixed level (Gen), which may be learned at any level:
+the higher, the stronger. A magus knows it at the level of the version he
+invented or learned, and needs a new version to go higher. (DE p. 313)
+_Avoid_: Gen-level spell, levelless spell
+
 **Spell guideline**:
 The base level the books give for one kind of effect in a Technique and
 Form, from which a spell's level is worked out. (DE p. 313)
