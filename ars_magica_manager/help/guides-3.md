@@ -19,6 +19,8 @@ You don't need Python to run Armarius. Each Release on the app's GitHub page, un
 
 It runs on Linux from Ubuntu 22.04 (and other systems of that age) on. The desktop app needs the usual desktop libraries; if it won't start, run it from a terminal to see which one is missing.
 
+On GNOME, the desktop app draws its windows through X11 (GNOME's XWayland) rather than Wayland, because on Wayland GNOME showed a busy cursor for about 15 seconds after each change of window. If you'd rather use Wayland anyway, start it with `QT_QPA_PLATFORM=wayland ./Armarius`.
+
 ### A newer version
 <!-- help: guide-download-update -->
 
@@ -163,6 +165,8 @@ Click **Help** in the top bar, or press `?` or F1, for help on the page and chap
 
 On a topic about a chapter of the page you came from, **Go there** under the topic list goes back to that page, open at that chapter. Some steps in the guides end with a **Go there** link that does the same. If the page you came from has no such chapter, Help stays open and says which page it is on.
 <!-- /gui -->
+
+The desktop's help and its guides are also on the [Armarius website](https://apoapsis138.github.io/armarius/), with how to install the app and answers to common setup questions: handy on another screen, or before you install.
 
 ### Where to go next
 <!-- help: guide-getting-started-next -->

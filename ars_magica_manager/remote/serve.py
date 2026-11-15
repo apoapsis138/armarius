@@ -28,12 +28,20 @@ from .audit import AuditLog, audit_path
 from .changes import SeatChanges
 from .devices import DeviceBook, devices_path
 from .host import RemoteHost
-from .identity import KeychainStore, KeyStore, NoKeychainError, load_or_create
+from .identity import KeyStore, NoKeychainError, load_or_create
 from .invites import InviteBook, book_path
+from .key_files import key_store
 from .limits import Limits
 from .passcode_change import passcode_specs
 from .passcodes import RemotePasscodes, passcodes_path
-from .plan import CLOUDFLARE, DEFAULT_PORT, LISTEN_ADDRESS, TUNNELS, identity_name
+from .plan import (
+    CLOUDFLARE,
+    DEFAULT_PORT,
+    LISTEN_ADDRESS,
+    SAGA_VARIABLE,
+    TUNNELS,
+    identity_name,
+)
 from .records import SeatSnapshots, picture_from_disk, seat_registry
 from .redemption import door_registry
 from .season_undo import undo_specs
@@ -75,14 +83,15 @@ def build(
     player_of: Callable[[str], Player | None] | None = None,
 ) -> tuple[RemoteHost, DeviceBook]:
     """The listener for `saga_id` and the devices book it checks. Raises
-    NoKeychainError with no keychain, OSError or ValueError if the saga
+    NoKeychainError with no keychain (or no safe key folder, with
+    ARMARIUS_KEYSTORE=file), OSError or ValueError if the saga
     or one of its Remote seat files can't be read."""
     name = storage.load_saga(saga_id).name
     log = AuditLog(audit_path(name))
     book = InviteBook(book_path(name), log=log)
     devices = DeviceBook(devices_path(name), log=log)
     passcodes = RemotePasscodes(passcodes_path(name))
-    identity = load_or_create(store or KeychainStore(), identity_name(saga_id))
+    identity = load_or_create(store or key_store(), identity_name(saga_id))
     limits = Limits()
     registry = door_registry(
         limits.max_message,
@@ -137,7 +146,13 @@ async def _serve(host: RemoteHost, devices: DeviceBook, port: int) -> None:
 
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description="Host a saga for Remote seats.")
-    parser.add_argument("--saga", required=True, help="the saga's id")
+    named = os.environ.get(SAGA_VARIABLE, "").strip()
+    parser.add_argument(
+        "--saga",
+        required=not named,
+        default=named or None,
+        help=f"the saga's id (else ${SAGA_VARIABLE}, as a container sets it)",
+    )
     parser.add_argument("--port", type=int, default=DEFAULT_PORT)
     parser.add_argument("--tunnel", choices=sorted(TUNNELS), default=CLOUDFLARE)
     args = parser.parse_args(argv)

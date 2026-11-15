@@ -20,7 +20,7 @@ from pathlib import Path
 
 from .. import players, shapes
 from ..files import write_atomic
-from ..models import Player
+from ..models import Player, Saga
 from .folder import SharedFile, remote_file
 
 
@@ -78,6 +78,22 @@ class RemotePasscodes(SharedFile):
             self._salts[player.id] = salt
             self._save()
 
+    def carry_over(self, saga: Saga, salts: dict[str, str]) -> list[str]:
+        """Take on another host's notes (`salts`, as `read_notes` gives
+        them) for `saga`, when a saga moves from one host to another: only
+        a note whose salt is the one the player's passcode has now in
+        `saga`, so a note can vouch only for the passcode it was made for.
+        The names of the players carried over."""
+        kept = {
+            player.id: salt
+            for player in saga.players
+            if (salt := salts.get(player.id)) and salt == _salt(player)
+        }
+        with self._fresh():
+            self._salts.update(kept)
+            self._save()
+        return [p.name for p in saga.players if p.id in kept]
+
     def forget(self, player_id: str) -> None:
         """A player was deleted."""
         with self._fresh():
@@ -111,6 +127,14 @@ def _salt(player: Player) -> str:
     except ValueError:
         return ""
     return salt.hex()
+
+
+def read_notes(path: Path) -> dict[str, str]:
+    """The notes in another host's passcodes file (a saga's moving here),
+    shape-checked: OSError if it can't be read, ValueError naming what is
+    wrong if it isn't one."""
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return shapes.build(PasscodesFile, data).salts
 
 
 def passcodes_path(saga_name: str) -> Path:

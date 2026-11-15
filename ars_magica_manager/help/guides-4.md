@@ -537,6 +537,11 @@ theirs to change. The full list is in the app's threat model
 (`docs/threat-model-remote-seats.md` beside its source), and what the
 players are told in [What keeps you safe](help:join-game-safety).
 
+**Hosting from a box that is always on.** Instead of this computer, a
+NAS, a small Linux machine or a rented server can host the saga for
+Remote seats day and night, with no window: see [How to host on your own
+box](help:guide-self-hosting).
+
 ### Tailscale
 <!-- help: guide-hosting-tailscale -->
 
@@ -580,6 +585,367 @@ Players connect with `ssh -p 2222 player@ADDRESS` from Windows Terminal (Windows
 - Everyone's changes reach the others within a few seconds. See [Signing in](help:sign-in).
 
 **See also:** [Players](help:tab-content-players), [Signing in](help:sign-in), [Saga picker](help:saga-picker)
+
+# How to host on your own box
+<!-- help: guide-self-hosting -->
+
+A box that is always on (a NAS, a small Linux computer, or a rented
+server) can host one saga for Remote seats (players joining from their own
+Armarius, over the internet) day and night, so your players can reach it when your own computer is
+off. It runs the app's container image with no window: the listener for
+Remote seats, and beside it a tunnel that brings players in. Nothing on
+the box is opened to the internet; the tunnel connects out. You look
+after it with the **admin** word, in a terminal on the box.
+
+Only Remote seats are hosted this way: players need Armarius on their
+own computers. Hosting for browsers and SSH stays on your desktop, until
+the app can cap how many copies a host runs for them.
+
+You will need: the box, with Docker and its compose plugin (most NAS
+systems have a Docker app; on Linux, Docker Engine); a domain on
+Cloudflare for the tunnel (or Tailscale, below); the saga's file from
+your desktop; and a terminal on the box (SSH). The steps below use the
+example address `saga.example.com`: use your own.
+
+### The files and folders
+<!-- help: guide-self-hosting-files -->
+
+Make a folder for it on the box (say `armarius`) and put in it, from the
+app's source on GitHub (its `deploy` folder, at the version you run):
+`compose.yaml`, `example.env` and `tunnel.env.example`. Then, in that
+folder:
+
+1. `cp example.env .env` and fill it in: `ARMARIUS_VERSION` (the version
+   to run, such as `4.13.0`; always a number, never "latest") and
+   `ARMARIUS_SAGA` (the saga's id: the name of its file in your save
+   folder's `sagas`, without `.json`).
+2. `cp tunnel.env.example tunnel.env`; the token goes in later.
+   `chmod 600 .env tunnel.env`.
+3. Make the three folders, owned by the app's own user (number 10001)
+   and private: `sudo install -d -o 10001 -g 10001 -m 700 data keys
+   backups`. `keys` holds the host key: on a Linux box, an encrypted
+   disk is a good home for it (set `KEYS_DIR` in `.env` to it); a NAS's
+   encrypted shared folder is not (see the UGREEN section).
+
+The compose file runs the app locked down: as its own user, with its
+system files read-only, no extra privileges, 512 MB of memory at most,
+and no port published.
+
+### A Linux box or a small rented server
+<!-- help: guide-self-hosting-linux -->
+
+Any always-on Linux computer will do: an old laptop, a mini PC, a
+Raspberry Pi 4 or 5 (the image has an ARM version), or the smallest
+server a hosting company rents (one processor and 1 GB is plenty).
+
+1. Install Docker Engine and the compose plugin, following Docker's own
+   guide for your system (docs.docker.com, Install Docker Engine).
+2. Make the files and folders above. On a home computer, put `keys` on
+   an encrypted disk if the system offers one.
+3. On a rented server, its company can read its disks: the key is safer
+   at home. If you rent one anyway, choose one with disk encryption, and
+   let no one else onto it. Close every port in its firewall but SSH: the
+   tunnel needs none.
+
+Then bring the saga in, set up the tunnel and start it, as below.
+
+### A UGREEN NAS
+<!-- help: guide-self-hosting-nas -->
+
+A UGREEN NAS (the DXP2800, for one) runs it in the Docker app of UGOS
+Pro. Its Intel processor takes the image's ordinary (amd64) version, and
+its memory is far more than the 512 MB the app may use. Checked on UGOS
+Pro 1.21; menu names may move in later versions.
+
+1. In Control Panel, **Service**, turn on **SSH** (Terminal), port 22.
+   Set it to turn itself off after a few hours: you only need it while
+   setting up and for admin chores.
+2. In the Files app, make an ordinary shared folder, `armarius`, and copy
+   the three files into it (the Files app's upload works; so does
+   `\\NAS-ADDRESS\armarius` in Explorer once SMB is on, under Service).
+3. Sign in with SSH (`ssh YOU@NAS-ADDRESS`) and go to the folder:
+   `cd /volume1/armarius` (`ls -d /volume*/armarius` finds it).
+4. Make the three folders the app's own, and strip UGOS's access lists
+   from them (UGOS shows those as a `+` after the modes; they open a
+   folder to every NAS account, and the app refuses a key folder others
+   can open): `sudo mkdir -p data keys backups`, `sudo chown
+   10001:10001 data keys backups`, `sudo setfacl -b data keys backups`,
+   then `sudo chmod 700 data keys backups` (last, since stripping the
+   lists can reset the modes). `ls -ld data keys backups` should show
+   `drwx------ ... 10001 10001` with no `+`.
+5. Leave `KEYS_DIR=./keys` in `.env`, and `sudo chmod 600 .env
+   tunnel.env`.
+
+**Not UGOS's encrypted shared folders, for the keys.** They look like
+the right home for a key, but the app's user can't use one: UGOS mounts
+it as a filesystem of its own (`fuse.uggocryptfs`) that answers user
+10001 with "Input/output error", reports every folder in it as open to
+all (`rwxrwxrwx`) whatever its modes, and stripping its access lists sets
+it to no access at all. Keep the keys in the ordinary `keys` folder
+above, private to the app's user. What that gives up: someone who steals
+the NAS's drive could read the key, and then you would rotate it and
+send everyone a new Invite.
+
+Then bring the saga in, set up the tunnel and start it, as below. Over
+SSH, `sudo docker compose ...` works from the `armarius` folder; the
+Docker app's **Project** view shows the same containers.
+
+### Bringing the saga in
+<!-- help: guide-self-hosting-move -->
+
+The saga moves to the box; your desktop's copy becomes history.
+
+1. On your desktop, make sure you are a Player in the saga with the
+   **Storyguide** role and a passcode of 14 characters or more: you will
+   join your own saga from the desktop like everyone else. Stop hosting
+   there.
+2. Copy two files from your save folder (the [saga picker](help:saga-picker)
+   shows where it is) to the box, into the `armarius` folder: the saga's
+   file, in `sagas`, and its passcode records, `remote/NAME-passcodes.json`
+   (NAME being the saga's name). The records let players keep their
+   passcodes; without them, every passcode must be set again on the box.
+   On a NAS, files copied in belong to your NAS account and its access
+   lists, which the app's user can't read ("Permission denied"): give
+   them to it first, `sudo chown 10001:10001 FILES`, `sudo setfacl -b
+   FILES`, `sudo chmod 600 FILES`.
+3. On the box, bring them in (the file names are yours to fill in):
+   `docker compose run --rm -v "$PWD/SAGA.json:/in/saga.json:ro" -v
+   "$PWD/NAME-passcodes.json:/in/passcodes.json:ro" armarius admin saga
+   import /in/saga.json --passcodes /in/passcodes.json`. The saga is
+   checked as the app checks any saga it opens. A passcode record comes
+   over only for the very passcode it was made for, so one for a
+   passcode changed since is dropped. Then delete the copied files
+   (`sudo rm`, since they now belong to the app's user).
+4. The box makes a host key of its own, so every Invite and seat from
+   your desktop has ended: issue everyone a new Invite, your own
+   desktop's storyguide seat included. `admin players list` names anyone
+   whose passcode must still be set again (`admin players set-passcode
+   NAME`, below).
+5. Leave the desktop's copy alone from now on, or rename its file: a
+   change made there never reaches the box.
+
+### The tunnel
+<!-- help: guide-self-hosting-tunnel -->
+
+**Cloudflare Tunnel** (the compose file's own). In Cloudflare's
+dashboard, under Networking, Tunnels (older dashboards: Zero Trust,
+Networks, Tunnels), create a tunnel of the cloudflared kind and name it
+(`armarius`, or `nas-armarius` if your desktop already has a tunnel of
+its own: give the box its own tunnel, never a second connector on the
+desktop's, or Cloudflare would share players between the two hosts). Cloudflare shows a command to
+install it, holding a long token: copy only the token into `tunnel.env`
+after `TUNNEL_TOKEN=`. Give the tunnel a public hostname,
+`saga.example.com`, whose service is `http://localhost:8790` (the
+tunnel shares the app's network, so "localhost" is the app). Whoever has
+the token can serve your saga's address: keep `tunnel.env` like the key.
+Where to go: developers.cloudflare.com, Cloudflare Tunnel.
+
+**Tailscale Funnel** instead (no domain needed). In the compose file,
+put a `tailscale/tailscale` service in place of `cloudflared`, with the
+same `network_mode: "service:armarius"`, an auth key in its own env file,
+and a Funnel serve setting that sends `https://` traffic to
+`http://127.0.0.1:8790`. Tell the listener which tunnel it is behind:
+give the armarius service `command: ["seats", "--tunnel", "other"]` and
+run `admin tunnel --tunnel other`. Where to go: tailscale.com/docs,
+Tailscale in Docker and Tailscale Funnel.
+
+### Starting it
+<!-- help: guide-self-hosting-start -->
+
+1. `docker compose up -d` (or start the Project in the NAS's Docker
+   app). `docker compose ps` shows the app **healthy** within a minute.
+2. Tell it the tunnel's address, which Invites carry:
+   `docker exec armarius python main.py admin tunnel --url
+   https://saga.example.com`.
+3. Set passcodes, `docker exec -it armarius python main.py admin
+   players set-passcode NAME` (the `-it` lets it ask without showing
+   what you type), then issue Invites: `... admin invites issue NAME`.
+   Approve each device on the call as on the desktop, with `admin
+   invites pending` and `admin approve ID`.
+
+`docker compose logs armarius` shows what the app said if it won't
+start: it names what is wrong (a key folder others can read, a saga it
+can't find).
+
+### When a step goes wrong
+<!-- help: guide-self-hosting-trouble -->
+
+- **"Permission denied" reading a file, or a key folder refused as
+  open to others:** the NAS's own access lists (a `+` after the modes in
+  `ls -l`). Give it to the app's user and strip them: `sudo chown
+  10001:10001 PATH`, `sudo setfacl -b PATH`, then `sudo chmod 700 PATH`
+  (a folder) or `600` (a file). Check with `ls -ld PATH`.
+- **"The key folder ... isn't there":** the app never makes the key
+  folder itself, so that a volume not yet unlocked (after a restart, say)
+  can't be given a fresh key in its place. Unlock the volume, or, the
+  first time, make the folder as the message says.
+- **"Input/output error" or "Not a directory" in the keys folder:** it
+  is an encrypted shared folder of the NAS's, which the app's user
+  can't use. Use an ordinary folder (see the UGREEN section).
+- **A folder shows `d---------` after `setfacl -b`:** set its modes
+  again with `sudo chmod 700 PATH`.
+- **Testing as the app's user:** `sudo -u` can't, since the NAS has no
+  account 10001. Ask the image instead: `sudo docker run --rm --user
+  10001:10001 -v PATH:/keys --entrypoint sh armarius:VERSION -c 'ls -lnd
+  /keys; touch /keys/t && ls -ln /keys/t; rm -f /keys/t'`.
+- **`\\NAS-ADDRESS\armarius` won't open in Explorer:** the shared
+  folder doesn't exist yet, or Windows file sharing (SMB) is off on the
+  NAS. Upload through the NAS's Files app instead.
+- **`.env` missing after copying:** Windows hides names starting with a
+  dot; turn on View, Show, Hidden items before copying.
+- **`rm` asks about a "write-protected" file:** it belongs to the app's
+  user now; answer `y`, or use `sudo rm`.
+- **Where's the tunnel's token?** On the tunnel's setup page choose
+  **Docker** as the system: the command shown ends with the token (it
+  starts `eyJ`). Copy only the token, and don't run the command: the
+  compose file runs cloudflared. The page's Continue button stays grey
+  until the box connects, so add the public hostname after starting it.
+  If the tunnel shows Healthy but "No routes", open it and add a route
+  (Routes, Add route, Published application): the hostname, and as
+  Service URL `http://localhost:8790` (newer dashboards have no
+  separate type box: the `http://` says it). Until the route exists
+  the address has no DNS record, and a player's Join says to check the
+  storyguide is hosting. Add the route before anyone tries to join: a
+  home router remembers "no such name" for up to half an hour, even
+  after the route exists. To tell that apart from a broken tunnel, ask
+  Cloudflare's own DNS (`nslookup NAME 1.1.1.1`): if it answers there,
+  only the router's memory is in the way, so wait or restart the router.
+- **The token didn't save in `tunnel.env`:** in Windows Terminal, paste
+  into `nano` with a right-click or Ctrl+Shift+V. Check without
+  showing it: `sudo awk -F= '{print NR": "$1"  length="length($0)}'
+  tunnel.env` should show one `TUNNEL_TOKEN` line of about 200
+  characters (13 means it is empty).
+
+### Looking after it: the admin word
+<!-- help: guide-hosting-admin -->
+
+A host with no screen does what the Host for Players window does with the
+**admin** word, typed in a terminal on that computer (in a container:
+`docker exec -it armarius python main.py admin ...`; from a source
+checkout: `uv run python main.py admin ...`). It reads and writes the
+saga's files there and nothing goes over the network. `--saga` names the
+saga by its id or name; with only one saga, or `ARMARIUS_SAGA` set, it
+can be left out. `admin --help` lists everything; `--help` after any word
+says more.
+
+- `admin sagas` lists the sagas. `admin saga import FILE` brings a saga
+  file in (checked as the app checks any saga it opens), with
+  `--passcodes FILE` for the old host's passcode records; `admin saga
+  delete` deletes one after you type its name.
+- `admin players list` says who may have a Remote seat; `admin players
+  set-passcode NAME` asks for a new passcode twice, without showing it
+  (it is never typed on the command line, where others could see it);
+  `admin players set-role NAME storyguide` (or `player`).
+- `admin tunnel --url https://saga.example.com` sets the address
+  Invites carry; `admin tunnel` shows it, and where to point the tunnel.
+- `admin invites issue NAME` prints the Invite to send and the six words
+  to read on the call; `admin words` prints the words again. `admin
+  invites pending` lists what waits: who asks, from which device, its
+  three words to check on the call, and under each the exact command
+  that approves it or turns it down, ready to copy (with a short form
+  of the request's id).
+- `admin devices list` lists the seats, each live one with the command
+  that revokes it; `admin devices revoke ID` does so;
+  `admin log` (with `--player NAME` or `--limit N`) for the Log.
+- `admin rotate-key` gives the host a new key; restart the listener
+  afterwards (`docker compose restart armarius`) so it uses it.
+- `admin backup` copies the saga and its Remote seat files (Invites,
+  seats, the Log, the tunnel address) into one zip in the backups folder
+  (`--to FOLDER`, or `ARMARIUS_BACKUPS`, which the container sets to
+  `/backups`), named for the saga and the time. It is safe while players
+  play: each file is copied whole, between saves. It keeps the newest 30
+  (`--keep N` to change that) and never holds the host key. To restore,
+  unzip it into the data folder with the listener stopped.
+
+Anything that changes a seat asks first; add `--yes` to skip the
+question in a script. The checks are the window's own: a passcode under
+14 characters, an Invite for a player with no passcode, or an approval
+of a request that has lapsed is refused the same way.
+
+### The host key on the box
+<!-- help: guide-hosting-headless-key -->
+
+On a desktop the host key lives in the computer's keychain. A box with
+no screen has none, so the app keeps it in a file instead, but only
+when told to: `ARMARIUS_KEYSTORE=file`, with `ARMARIUS_KEYS` naming the
+folder (`/keys` if left out). The container image sets both; a desktop
+never needs them.
+
+The folder must be one of its own, never inside the data folder, so the
+keys never travel with the saga or its backups. The app makes it private
+(only the app's own user may open it) and refuses to start if anyone else
+can read the folder or a key in it, if it belongs to another user, or if
+the app runs as the administrator (root). Whoever can read that folder
+can pretend to be your host: on a NAS that is its administrators, and
+anyone who may run Docker there. Keep it on an encrypted folder.
+
+When it refuses, it says the fix: `sudo chown 10001:10001 FOLDER` for a
+folder made by another user (as a NAS's web pages make them), `chmod 700`
+for the folder or `chmod 600` for a key others can read, and for root,
+starting it as the image's own user (no `user: root`).
+
+### Backups off the box
+<!-- help: guide-self-hosting-backups -->
+
+**On the box, every night.** The compose file's `backup` service runs
+`admin backup` when the project starts and then once a day, keeping the
+newest 30 (`BACKUP_EVERY`, in seconds, and `BACKUPS_KEPT` in `.env`
+change that). It needs no scheduler on the box, never sees the keys, and
+has no network. `docker compose logs backup` shows each one; the zips
+are in `backups`. A NAS's own snapshots of the `armarius` folder are a
+good extra, but they stay on the same disks, and they hold the `keys`
+folder too: never copy them off the box.
+
+**Off the box.** `admin backup` keeps copies on the box; a second copy
+elsewhere survives the box. **restic** does it well: it encrypts everything before it leaves
+the box, so the copy can sit on your desktop or in a cloud folder.
+
+1. Install restic on the box (its website, restic.net, has the steps; on
+   a NAS, its Docker image `restic/restic` works the same way). Keep its
+   password in a file only you can read (`chmod 600`), and a copy of it
+   somewhere safe: without it the backups can't be opened.
+2. Make a repository. On your desktop, over SSH:
+   `restic -r sftp:you@desktop:/backups/armarius init`. In OneDrive (or
+   another cloud folder), through rclone (rclone.org, set up a remote
+   called `onedrive` first): `restic -r rclone:onedrive:armarius init`.
+3. Each night, after the backup service has run (from `cron` on a
+   Linux box): `restic -r REPOSITORY backup backups`, then `restic -r
+   REPOSITORY forget --keep-daily 14 --keep-weekly 8 --prune`.
+
+Back the `keys` folder up apart, to a different restic repository with a
+different password, or not at all: a lost key costs only new Invites for
+everyone, while a leaked one lets someone pretend to be your host.
+
+### If the key or the token leaks
+<!-- help: guide-self-hosting-leak -->
+
+If the `keys` folder, `tunnel.env`, or a backup of either may have been
+seen by someone else:
+
+1. `docker exec -it armarius python main.py admin rotate-key`, then
+   `docker compose restart armarius`. Every Invite and seat ends at once.
+2. In Cloudflare's dashboard, make the tunnel a new token (or delete the
+   tunnel and make another), put it in `tunnel.env`, and
+   `docker compose up -d`.
+3. Issue everyone a new Invite, your own desktop's seat included, and
+   read each of them the new six words on a call.
+4. Read the Log (`admin log`) for sign-ins from before you rotated that
+   you don't recognise.
+
+### A newer version
+<!-- help: guide-self-hosting-update -->
+
+The box never updates itself. To move to a newer version, read its notes
+on the Releases page, take a backup (`admin backup`), set
+`ARMARIUS_VERSION` in `.env` to it, then `docker compose pull` and
+`docker compose up -d`. Within the same first number (4.13 to 4.14,
+say) seats keep working; a new first number (5.0) means every player
+moves to it too, since a seat refuses a host of another major version.
+
+**See also:** [How to host a saga](help:guide-hosting)
+<!-- gui -->
+**And:** [Remote seats: hosting safely](help:guide-hosting-safety), which the box's own hosting follows too.
+<!-- /gui -->
 
 # How to start a saga from a sourcebook
 <!-- help: guide-book-packs -->

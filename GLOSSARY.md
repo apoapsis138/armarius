@@ -117,6 +117,50 @@ _Avoid_: absent, no-show
 A Session not yet played, and one that has been. The next planned Session is the earliest unplayed one; its date may be blank.
 _Avoid_: upcoming, past
 
+**Under way**:
+Said of a Session between Begin Session and End Session.
+_Avoid_: in play, live, running
+
+**Chronicle**:
+A Session's record of everything said, rolled, set and shown while it is Under way, kept with the Session afterwards.
+_Avoid_: log, Session log, feed, chat, transcript
+
+**Scene**:
+A part of a Session at one place and time, with who is present and its aura, prepared ahead or made on the night. It may name the Story chapter it plays.
+_Avoid_: encounter
+
+**Public roll**:
+A roll everyone at the Session sees.
+_Avoid_: open roll
+
+**Private roll**:
+A roll only the roller and the Session's storyguide see.
+_Avoid_: secret roll, hidden roll
+
+**Blind roll**:
+A roll whose number only the Session's storyguide sees; the roller sees only that it was rolled. Only a storyguide asks for one.
+_Avoid_: secret roll, GM roll
+
+**Roll request**:
+A storyguide's call for one or more characters to roll, with what it is for.
+_Avoid_: check, prompt
+
+**Void**:
+The storyguide's striking of a roll from the count, with a reason. The roll stays in the Chronicle.
+_Avoid_: delete, undo
+
+**Typed die**:
+A die a person rolled by hand and typed in, allowed by a saga option and marked as typed.
+_Avoid_: manual roll
+
+**Whisper**:
+A message to chosen people at the Session. The Session's storyguide always sees it, and everyone is told so.
+_Avoid_: DM, private message
+
+**Condition**:
+A named state a spell or effect leaves on a character for a duration (Paralysed, Blinded, Flying), shown on the sheet until it lapses.
+_Avoid_: status, buff
+
 **Solo**:
 A saga with no Player in the player role: one person storyguides and plays any character (a storyguide-role Player record doesn't end it). Attendance, Stewards and absences are never asked.
 _Avoid_: single-player
@@ -442,6 +486,18 @@ covenant's Diary), or to take that back.
 The saga shown as the players may read it, with Secrets and unknown records
 left out; a signed-in player always sees it this way.
 _Avoid_: Player mode, spoiler mode
+
+**Show**:
+To put a record, picture or Handout on chosen Players' screens as it is at that moment, without telling the troupe of it (that is Reveal).
+_Avoid_: push, share
+
+**Handout**:
+Something the characters find or are given (a letter, a picture of a place), shown to chosen Players, who keep it.
+_Avoid_: prop, attachment
+
+**Stationery**:
+The look a Handout is drawn on (vellum, a sealed letter, a proclamation).
+_Avoid_: paper, template, theme
 
 **Bookmark**:
 A record a reader has marked to keep at hand, kept on their own computer

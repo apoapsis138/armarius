@@ -6,7 +6,9 @@ rebuilt from it on every start, so there is nothing else to keep safe and
 a certificate that has aged out costs nothing (the pin is on the key).
 
 The key lives only in the keychain, never in the synced data folder. With
-no keychain there is no identity, and Remote seats are refused.
+no keychain there is no identity, and Remote seats are refused, unless a
+headless host asks for a file store with ARMARIUS_KEYSTORE=file
+(`key_files.key_store`, ADR 0022).
 """
 
 from __future__ import annotations
@@ -71,7 +73,9 @@ class KeychainStore:
 _NO_KEYCHAIN = (
     "This computer has no keychain to keep the host's key in, so Remote seats "
     "cannot be offered. Install or unlock one (Credential Manager, Keychain, or "
-    "a Secret Service such as GNOME Keyring) and try again."
+    "a Secret Service such as GNOME Keyring) and try again. On a headless host "
+    "(a server or NAS container) set ARMARIUS_KEYSTORE=file to keep it in a "
+    "private folder instead."
 )
 
 

@@ -145,9 +145,28 @@ class SplitFooter(Footer):
         #: is already waiting for the next refresh.
         self._shown: tuple[Any, ...] | None = None
         self._rebuild_pending = False
+        #: While held (see hold), whether the keys were asked to change.
+        self._held = False
+        self._asked_while_held = False
         #: How many times the keys were rebuilt (the performance guard tests
         #: count these).
         self.rebuilds = 0
+
+    def hold(self) -> None:
+        """Wait to rebuild until release(): for a change made in several
+        steps, such as a tab switch (the old tab hides, losing focus, then a
+        tab built on its first visit mounts, then focus moves into it), so
+        a slow PC, which refreshes between the steps, rebuilds once too."""
+        self._held = True
+
+    def release(self) -> None:
+        """End a hold(), rebuilding once if the keys were asked to change."""
+        self._held = False
+        if self._asked_while_held:
+            self._asked_while_held = False
+            # Through this Footer's own queue: the caller may be another
+            # widget or the app, and compose binds to the one running it.
+            self.call_later(self._rebuild_after_refresh)
 
     def bindings_changed(self, screen: Screen) -> None:
         """Rebuild the keys when they changed -- once per refresh, however
@@ -156,7 +175,19 @@ class SplitFooter(Footer):
         self._bindings_ready = True
         if not screen.app.app_focus:
             return
-        if self.is_attached and screen is self.screen and not self._rebuild_pending:
+        if self.is_attached and screen is self.screen:
+            if self._held:
+                self._asked_while_held = True
+            else:
+                self._rebuild_after_refresh()
+
+    @staticmethod
+    def of(screen: Screen) -> SplitFooter | None:
+        """`screen`'s SplitFooter, if it has one."""
+        return next(iter(screen.query(SplitFooter)), None)
+
+    def _rebuild_after_refresh(self) -> None:
+        if self.is_attached and not self._rebuild_pending:
             self._rebuild_pending = True
             self.call_after_refresh(self._rebuild_if_changed)
 

@@ -1,7 +1,8 @@
 """Start the terminal version, or, given one of launch's words first, the
 copy of the app that word names: `host` (the host for players), `seats`
-(the listener for Remote seats) or `play` (a player's copy, the same as no
-word). A Build's terminal program is this script, and hosting runs it
+(the listener for Remote seats), `admin` (the host's chores from a plain
+terminal, for a host with no window) or `play` (a player's copy, the same
+as no word). A Build's terminal program is this script, and hosting runs it
 with a word in place of `python -m` (see launch.py)."""
 
 import sys
@@ -50,12 +51,20 @@ def _play(argv: list[str]) -> None:
     main()
 
 
+def _admin(argv: list[str]) -> None:
+    # Imported here to keep start-up quick, as in _host.
+    from ars_magica_manager import admin
+
+    admin.main(argv)
+
+
 #: What each word runs, given the arguments after it (Command: one
 #: function per word, looked up by name).
 WORDS: dict[str, Callable[[list[str]], None]] = {
     launch.HOST: _host,
     launch.SEATS: _seats,
     launch.PLAY: _play,
+    launch.ADMIN: _admin,
 }
 
 
