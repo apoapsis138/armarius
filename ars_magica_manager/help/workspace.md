@@ -9,11 +9,16 @@ The page the app opens on: the illuminated A and the name Armarius, the tagline,
 - **Learn** shows two more ways on in their place, with **Back** to return:
   - **Tutorials** goes to the saga picker and opens Start a Tutorial: a ready-made saga for one of the walkthrough guides, opened once it is made (see [How to learn with the tutorials](help:guide-tutorials)).
   - **General Help** opens Help. `?` (or F1 on the desktop) opens it from the title page too.
+<!-- tui -->
+- **Update**, last and in the accent colour, is there only while a newer version of Armarius is out, with "Armarius X.Y.Z is available" beside it (in the warning colour when it brings security fixes). It opens the [Update screen](help:update-screen). See [How to check for an App update](help:guide-app-update).
+<!-- /tui -->
 
 <!-- tui -->
 Enter takes the first of them. Choose with the arrow keys and Enter, and `q` quits. A player's copy of a hosted saga skips the title page and opens on the saga picker, where they sign in.
 <!-- /tui -->
 <!-- gui -->
+While a newer version of Armarius is out, "! Armarius X.Y.Z is available" shows beside the version line, after a small gilded seal, and glows softly once (not with Reduce motion on). It reads "…, with security fixes" in the theme's warning colour when the new version brings them. Click it to open the [Settings window](help:settings-window) at its Update row. See [How to check for an App update](help:guide-app-update).
+
 Click one; Enter takes the first of them, as the line under the buttons says. The window's own buttons, at its top right, minimise, maximise and close it.
 
 The window opens fitted to the screen: as large as the app likes, but never more than nine tenths of the screen's free space, and centred on it. On a small screen, or one set to a large display scale, the title page draws its initial, name and buttons smaller so it all fits; given room again, it draws them full size. See [How to fit the window to your screen](help:guide-window-size).
@@ -26,6 +31,20 @@ The same illuminated A is the app's icon, on the Windows taskbar and in Alt-Tab.
 **The app works out:** which saga you had open last, which it remembers in the settings each time you open one.
 
 **See also:** [Saga picker](help:saga-picker), [Getting started](help:guide-getting-started)
+
+### The Update screen
+<!-- help: update-screen; tui -->
+
+Opened by **Update** on the title page, or by Ctrl+P and **Update**. It says whether a newer version of Armarius is out, and holds the setting that looks for one, since the terminal app has no Settings window (the desktop app shares the setting).
+
+- **The notice**: "! Armarius X.Y.Z is available", with its date and the first lines of its notes. It is in the warning colour, "with security fixes", when the new version's notes have a Security heading. A new major version adds a line saying players who join by Remote seat must move to it too. A version you skipped is shown faintly.
+- **What's new** shows the new version's whole notes. Esc closes them.
+- **Download page** opens the Release's page in your browser. A copy run from the source says to pull `main` instead.
+- **Skip this version** hides the notice until a newer Release. A security update can't be skipped.
+- **Check for updates when Armarius starts**: the app asks GitHub at most once a day, sending only its version. Untick it to stop, and to hide the notice.
+- **Check now** asks at once and says what it found, or "Couldn't reach GitHub" and why.
+
+While a notice waits, the first saga you open shows its short line once at the foot of the screen, beside the theme's name. Esc closes the screen. See [How to check for an App update](help:guide-app-update).
 
 # How to fit the window to your screen
 <!-- help: guide-window-size; gui -->
@@ -233,8 +252,9 @@ The pages move a little, never in your way: the Inspector's new item inks in on 
 ### The Settings window
 <!-- help: settings-window; gui -->
 
-The gear at the right of the top bar opens the Settings window. It stays open beside the page while you go on working; close it with **Close** or its title bar's close button, and the gear brings it back.
+The gear at the right of the top bar opens the Settings window. It stays open beside the page while you go on working; close it with **Close** or its title bar's close button, and the gear brings it back. While a newer version of Armarius is out, the gear wears a small "!" seal.
 
+- **Update**, at the top, says whether a newer version is out: "! Armarius X.Y.Z is available", with its date and the first lines of its notes (in the warning colour, "with security fixes", when its notes have a Security heading; faint once you've skipped it). **What's new** shows all its notes in Help, **Download page** opens its Release in your browser (a copy run from the source says to pull `main` instead), and **Skip this version** hides the notice until a newer one (not for security fixes). In a joined saga whose host runs another minor version, it says so instead, with **Update** when yours is the older. **Check for updates when Armarius starts** asks GitHub at most once a day, sending only the app's version; untick it to stop, and to hide the notice. **Check now** asks at once and says what it found, or "Couldn't reach GitHub" and why. See [How to check for an App update](help:guide-app-update).
 - **Theme** is a drop-down showing the look the app is drawn in: a small sample of its page, with the House's mark, its name and a few words on it. Open it for every look: Scriptorum and Scriptorum Dark first, the House themes under their House family (True Lineages, Mystery Cults, Societates), and House Diedne last, on its own under Renounced. Choose one and the whole app is drawn in it at once, the window included; there is nothing to confirm. With the drop-down closed but chosen, the up and down arrow keys step from theme to theme (past the family headings), each drawn as you reach it, to compare them quickly. A record In Creation is drawn on the theme's own drafting page, cooler and ruled. Printed pages stay in Scriptorum.
 - **Sounds** turns the app's sounds on or off.
 - **Reduce motion** stills the pages' movements, the season dial and the seal.
@@ -1363,7 +1383,7 @@ Leave the Passcode blank when adding someone who only sits at the table: a **tab
 The list of players, with the details panel below it.
 <!-- /tui -->
 <!-- gui -->
-The list of players, in Saga Management, with whether each can sign in from a Remote seat; the Inspector shows the one last clicked. **Issue Invite** invites the chosen player.
+The list of players, in Saga Management, with whether each can sign in from a Remote seat; the Inspector shows the one last clicked. **Issue Invite** invites the chosen player. When a player last joined by Remote seat on another version of Armarius than yours, their Remote seat says so, as "4.13.1, not tested with yours". They can still play.
 <!-- /gui -->
 
 ### What a signed-in player can do

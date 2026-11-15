@@ -14,9 +14,11 @@ from textual.widgets import Footer, OptionList, Static
 from textual.widgets.option_list import Option
 
 from ... import title_page as tp
+from ... import updates
 from ...markup import escape
 from .help import HelpContext, HelpScreen, shown_keys
 from .saga_picker import SagaPickerScreen
+from .update import UpdateScreen
 
 #: Block letters four rows high, for the name.
 _LETTERS = {
@@ -35,12 +37,31 @@ def banner(word: str) -> str:
     return "\n".join("  ".join(letter[row] for letter in letters) for row in range(4))
 
 
-def _options(choices: tuple[tp.TitleChoice, ...]) -> list[Option]:
-    """Each way on as a row: its name, then where it goes."""
-    return [
+#: The Update row's id: last on the title page while an App update notice
+#: waits.
+UPDATE = "update"
+
+
+def _options(
+    choices: tuple[tp.TitleChoice, ...], notice: updates.Notice | None = None
+) -> list[Option]:
+    """Each way on as a row: its name, then where it goes; last, while an
+    App update notice waits (and isn't skipped), Update in the accent (the
+    warning colour for security fixes), with what is available."""
+    rows = [
         Option(f"  {choice.label:<14}{escape(choice.detail)}", id=choice.key)
         for choice in choices
     ]
+    if notice is not None and notice.shown:
+        colour = "$text-warning" if notice.kind != updates.UPDATE else "$accent"
+        rows.append(
+            Option(
+                f"  [bold {colour}]{'Update':<14}[/][{colour}]"
+                f"{escape(notice.headline)}[/]",
+                id=UPDATE,
+            )
+        )
+    return rows
 
 
 class TitleScreen(Screen[None]):
@@ -104,6 +125,8 @@ class TitleScreen(Screen[None]):
     def __init__(self, page: tp.TitlePage) -> None:
         super().__init__()
         self.page = page
+        #: The ways on on show (the page's, or Learn's own).
+        self.shown = page.choices
 
     def compose(self) -> ComposeResult:
         page = self.page
@@ -128,11 +151,24 @@ class TitleScreen(Screen[None]):
         choices = self.query_one(OptionList)
         choices.highlighted = 0
         choices.focus()
+        self.watch(self.app, "update_notice", self._notice_changed, init=True)
+
+    def _notice(self) -> updates.Notice | None:
+        notice = getattr(self.app, "update_notice", None)
+        return notice if isinstance(notice, updates.Notice) else None
+
+    def _notice_changed(self, _notice: object) -> None:
+        """The App update notice changed: the page's own ways on gain or
+        lose their Update row."""
+        if self.shown == self.page.choices:
+            self.show_choices(self.page.choices)
 
     def on_option_list_option_selected(self, event: OptionList.OptionSelected) -> None:
         event.stop()
         key = event.option.id or tp.SAGAS
-        if key == tp.LEARN:
+        if key == UPDATE:
+            self.app.push_screen(UpdateScreen())
+        elif key == tp.LEARN:
             self.show_choices((*tp.LEARN_CHOICE.then, tp.BACK_CHOICE))
         elif key == tp.BACK_CHOICE.key:
             self.show_choices(self.page.choices)
@@ -143,9 +179,14 @@ class TitleScreen(Screen[None]):
         """List `choices` in place of those on show (Learn's own, with
         Back to the page's), the first highlighted."""
         listed = self.query_one(OptionList)
+        at = listed.highlighted if choices == self.shown else 0
+        self.shown = choices
         listed.clear_options()
-        listed.add_options(_options(choices))
-        listed.highlighted = 0
+        rows = _options(
+            choices, self._notice() if choices == self.page.choices else None
+        )
+        listed.add_options(rows)
+        listed.highlighted = min(at or 0, len(rows) - 1)
 
     def choose(self, key: str) -> None:
         """Leave the title page for the saga picker, then take the way on

@@ -51,7 +51,8 @@ ENV PATH="/app/.venv/bin:${PATH}" \
     ARMARIUS_KEYSTORE=file \
     ARMARIUS_KEYS=/keys \
     ARMARIUS_BACKUPS=/backups \
-    ARMARIUS_SOUNDS=off
+    ARMARIUS_SOUNDS=off \
+    ARMARIUS_UPDATES=off
 USER 10001:10001
 VOLUME ["/data", "/keys", "/backups"]
 # Healthy while the listener takes connections on this container's own

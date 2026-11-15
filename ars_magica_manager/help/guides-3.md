@@ -26,6 +26,8 @@ On GNOME the desktop app draws its windows through X11. If you'd rather use Wayl
 ### A newer version
 <!-- help: guide-download-update -->
 
+The app tells you when a newer version is out: a notice on the title page, with **Check now** to ask at once and **Skip this version** to set one aside (see [How to check for an App update](help:guide-app-update)). Getting it is done by hand, as before:
+
 1. **Unzip the new one.** Download the newer zip and unzip it beside the old folder.
 2. **Start the new one.** Your sagas and settings carry over, since they aren't in the app's folder.
 3. **Delete the old folder** once the new one works.

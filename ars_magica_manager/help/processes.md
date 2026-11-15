@@ -1781,6 +1781,28 @@ passcode.
 
 The saga then stays on your shelf, marked **Hosted elsewhere**.
 
+### When your version and the host's differ
+<!-- help: join-game-versions; gui -->
+
+Joining compares your Armarius with your storyguide's, from the host's
+greeting (nothing is asked of GitHub).
+
+- **Another major version** (the first number differs) stops you joining.
+  If yours is the older, it says the host runs Armarius X and you run Y, so
+  update to the host's major version, and **Update** opens the app's
+  Releases page. If the host's is the older, it says "Your storyguide's
+  Armarius is older (X). Ask them to update.", with no button.
+- **Another minor version** (only the second or third number differs) lets
+  you play. In the joined saga, the settings gear wears its "!" seal and
+  the Settings window's Update row says "Your host runs Armarius A, and you
+  run B. You can play, but these versions haven't been tested together, so
+  some things may behave oddly." It offers **Update** when yours is the
+  older.
+
+On the storyguide's side, the Players list in Saga Management notes a
+player who last joined on another version, as "4.13.1, not tested with
+yours". Nothing is ever blocked by it.
+
 ### Coming back, and leaving
 <!-- help: join-game-again; gui -->
 

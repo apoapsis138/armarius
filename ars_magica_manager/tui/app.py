@@ -2,18 +2,22 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from typing import ClassVar
 
-from textual.app import App
+from textual.app import App, SystemCommand
 from textual.binding import Binding, BindingType
+from textual.reactive import reactive
+from textual.screen import Screen
 
-from .. import __version__, hosting, paths, title_page
+from .. import __version__, hosting, paths, title_page, updates
 from ..markup import escape
 from ..models import Player
 from ..settings import load_settings, update_settings
 from .screens import SagaPickerScreen
 from .screens.help import HelpScreen, help_context
 from .screens.title import TitleScreen
+from .screens.update import UpdateChecked, UpdateScreen
 from .style import APP_CSS
 from .themes import SCRIPTORUM, SCRIPTORUM_DARK, app_variable_defaults
 
@@ -62,6 +66,60 @@ class ArsMagicaManagerApp(App[None]):
     #: not a player's hosted copy).
     show_title: bool = False
 
+    #: How this copy treats App updates (main.py chooses; a copy built
+    #: any other way, such as a test's, never checks).
+    update_copy: updates.Copy = updates.Quiet()
+    #: The App update notice to show (None for none): the title page's
+    #: Update row, a saga's status line and the Update screen watch it.
+    update_notice: reactive[updates.Notice | None] = reactive(None)
+    #: What the last Check now found, in words.
+    update_outcome: reactive[str] = reactive("")
+    #: The status line that has shown the notice this sitting (its id):
+    #: it is shown once, in the first saga opened.
+    update_line_owner: int | None = None
+
+    def refresh_update_notice(self) -> None:
+        """Read the notice again from what the last check found."""
+        self.update_notice = updates.notice(self.update_copy)
+
+    def check_for_update(self, *, now_asked: bool = False) -> None:
+        """Ask GitHub for the latest Release, in a thread of its own: at
+        start-up only if a day has passed (silent if it fails); Check now
+        whenever, saying what it found."""
+        if not self.update_copy.checks:
+            if now_asked:
+                self.update_outcome = updates.outcome_text(updates.Result(False))
+            return
+        copy = self.update_copy
+
+        def run() -> None:
+            result = updates.check(copy, now_asked=now_asked)
+            self.post_message(UpdateChecked(result, now_asked))
+
+        self.run_worker(run, thread=True, exclusive=True, group="update-check")
+
+    def on_update_checked(self, message: UpdateChecked) -> None:
+        if message.now_asked:
+            self.update_outcome = updates.outcome_text(message.result)
+        if message.result.ran and not message.result.problem:
+            self.refresh_update_notice()
+
+    def action_open_update(self) -> None:
+        """Open the Update screen (the title page's Update, or Update in
+        the command list)."""
+        if not isinstance(self.screen, UpdateScreen):
+            self.push_screen(UpdateScreen())
+
+    def get_system_commands(self, screen: Screen) -> Iterable[SystemCommand]:
+        yield from super().get_system_commands(screen)
+        if self.update_copy.checks:
+            notice = self.update_notice
+            yield SystemCommand(
+                "Update",
+                notice.headline if notice is not None else "Check for an App update",
+                self.action_open_update,
+            )
+
     def on_mount(self) -> None:
         # A hosted copy has no command palette (Ctrl+P): it is Textual's,
         # not the app's, and its theme choice would write the host's
@@ -84,8 +142,10 @@ class ArsMagicaManagerApp(App[None]):
             else DEFAULT_THEME
         )
         self.push_screen(SagaPickerScreen())
+        self.refresh_update_notice()
         if self.show_title:
             self.push_screen(TitleScreen(title_page.title_page()))
+        self.check_for_update()
 
     def watch_theme(self, theme_name: str) -> None:
         # The settings are the storyguide's: only their own window saves
