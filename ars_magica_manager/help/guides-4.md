@@ -1,12 +1,12 @@
 # How to bind and keep a familiar
 <!-- help: guide-familiars -->
 
-This guide follows a familiar from the magus's first meeting with the creature to a bond strengthened with powers. Use it when a magus in your saga is ready to bind a familiar, or when you are adding a magus who already has one. The rules are in Ars Magica Definitive Edition, Chapter 8: Laboratory, Familiars.
+Your magus has won over a raven, and it has agreed to the bond. Now it needs a page of its own, a season of lab work to bind it and, later, powers (Ars Magica Definitive Edition, Chapter 8: Laboratory, Familiars).
 
 ### Finding the familiar
 <!-- help: guide-familiars-finding -->
 
-Finding a suitable creature and winning it over is a matter for your stories, not for the app. Play it out at the table; the app only comes in once the creature has agreed to the bond.
+Finding a suitable creature and winning it over is a matter for your stories, not for the app. Play it out at the table, and come to the app once the creature has agreed to the bond.
 
 A magus can have one familiar at a time, so Bind Familiar is only offered while at least one magus in the saga has none. A Bjornaer, whose heartbeast takes its place, can't bind one (DE p. 234).
 
@@ -14,19 +14,24 @@ A magus can have one familiar at a time, so Bind Familiar is only offered while 
 <!-- help: guide-familiars-record -->
 
 <!-- tui -->
-1. In the tree, select the magus's node (or the saga, a covenant or a Characters node).
-2. Press `n` (New) and choose **Bind Familiar**.
-3. In the Bind a New Familiar form, type the familiar's **Name** and choose its **Magus Partner**. When you started from the magus's own node, they are already chosen. Choose **Create**.
-4. The familiar's sheet opens. In the tree, the magus's node now has the familiar beneath it, as "Familiar: " and its name; select it there to come back to the [Familiar sheet](help:familiar) later.
-
-**Bound already** starts ticked for a magus still In Creation and unticked for one in play. Ticked (a familiar bound before play), making the record grants the bond at once: both the magus and the familiar gain the True Friend Virtue and a Loyal (Partner) +3 Personality Trait. Unticked, the familiar is bound by lab work: the bond comes when that season is played, as the book has it (DE p. 267). You can see them on the magus's [Virtues & Flaws tab](help:tab-vf) (`3`) and the familiar's [Identity & Cords tab](help:tab-fam-identity) (`1`).
+1. **Choose where to start.** In the tree, select the magus's node, or the saga, a covenant or a Characters node.
+2. **Open Bind Familiar.** Press `n` (New) and choose **Bind Familiar**.
+3. **Name it.** In the Bind a New Familiar form, type the familiar's **Name** and choose its **Magus Partner**. If you started from the magus's own node, they're already chosen. Choose **Create**.
+4. **Find it again.** The familiar's sheet opens. In the tree, the magus's node now has "Familiar: " and its name beneath it. Select it there to come back to the [Familiar sheet](help:familiar) later.
 <!-- /tui -->
 <!-- gui -->
-1. Open the magus's sheet and its **Description** chapter, and click the **Bind Familiar** card in the Familiar section. Or open the magus's laboratory, its **Seasons** chapter, and click **Bind Familiar** in the Planning section.
-2. In the Bind a New Familiar form, type the familiar's **Name**; its **Magus Partner** is already chosen. Choose **Create**.
-3. The familiar's page opens. The magus's Description chapter now shows the familiar as a card in its Familiar section; click it to come back to the [Familiar page](help:familiar) later.
+1. **Open Bind Familiar.** Open the magus's sheet and its **Description** chapter, and click the **Bind Familiar** card in the Familiar section. Or open the magus's laboratory, its **Seasons** chapter, and click **Bind Familiar** in the Planning section.
+2. **Name it.** In the Bind a New Familiar form, type the familiar's **Name**. Its **Magus Partner** is already chosen. Choose **Create**.
+3. **Find it again.** The familiar's page opens. The magus's Description chapter now shows the familiar as a card in its Familiar section. Click it to come back to the [Familiar page](help:familiar) later.
+<!-- /gui -->
 
-**Bound already** starts ticked for a magus still In Creation and unticked for one in play. Ticked (a familiar bound before play), making the record grants the bond at once: both the magus and the familiar gain the True Friend Virtue and a Loyal (Partner) +3 Personality Trait. Unticked, the familiar is bound by lab work: the bond comes when that season is played, as the book has it (DE p. 267). You can see them in the magus's [Virtues & Flaws chapter](help:tab-vf) and the familiar's [Virtues & Flaws](help:tab-fam-vf) and [Identity & Cords](help:tab-fam-identity) chapters.
+**Bound already** starts ticked for a magus still In Creation and unticked for one in play. Ticked, for a familiar bound before play, making the record grants the bond at once. Both the magus and the familiar gain the True Friend Virtue and a Loyal (Partner) +3 Personality Trait. Unticked, the familiar is bound by lab work, and the bond comes when that season is played, as the book has it (DE p. 267).
+
+<!-- tui -->
+You can see them on the magus's [Virtues & Flaws tab](help:tab-vf) (`3`) and the familiar's [Identity & Cords tab](help:tab-fam-identity) (`1`).
+<!-- /tui -->
+<!-- gui -->
+You can see them in the magus's [Virtues & Flaws chapter](help:tab-vf) and the familiar's [Virtues & Flaws](help:tab-fam-vf) and [Identity & Cords](help:tab-fam-identity) chapters.
 <!-- /gui -->
 
 ### Describing the creature
@@ -35,18 +40,18 @@ A magus can have one familiar at a time, so Bind Familiar is only offered while 
 Type in the creature's statistics as the rules or your storyguide give them.
 
 <!-- tui -->
-1. On the [Familiar Info](help:section-fam-info) panel at the top, press `e` and fill in its Species / Description, Magic Might Score, Current Might Pool, Size and Wound Multiplier. The binding below needs the Might and Size.
-2. On the [Characteristics tab](help:tab-fam-characteristics) (`2`), press `e` to type the eight Characteristics, Base Soak and Magic Resistance. [Go there](go:tab-fam-characteristics)
-3. On the [Combat & Health tab](help:tab-fam-combat) (`3`), add its natural weapons with `a` in [Natural Weapons & Attacks](help:section-fam-natural-weapons). [Go there](go:tab-fam-combat)
-4. On the [Abilities tab](help:tab-fam-abilities) (`4`), add its Abilities with `a`. It shares its magus's Language scores, so there is no need to add those. [Go there](go:tab-fam-abilities)
-5. Back on the Identity & Cords tab, add its Virtues and Flaws with `a` in [Virtues](help:section-fam-vf-virtues) and [Flaws](help:section-fam-vf-flaws), and any [Personality Traits](help:section-fam-personality-traits) and [Reputations](help:section-fam-reputations).
+1. **Fill in its info.** On the [Familiar Info](help:section-fam-info) panel at the top, press `e` and fill in its Species / Description, Magic Might Score, Current Might Pool, Size and Wound Multiplier. The binding below needs the Might and Size.
+2. **Type its Characteristics.** On the [Characteristics tab](help:tab-fam-characteristics) (`2`), press `e` to type the eight Characteristics, Base Soak and Magic Resistance. [Go there](go:tab-fam-characteristics)
+3. **Add its weapons.** On the [Combat & Health tab](help:tab-fam-combat) (`3`), add its natural weapons with `a` in [Natural Weapons & Attacks](help:section-fam-natural-weapons). [Go there](go:tab-fam-combat)
+4. **Add its Abilities.** On the [Abilities tab](help:tab-fam-abilities) (`4`), add its Abilities with `a`. It shares its magus's Language scores, so there's no need to add those. [Go there](go:tab-fam-abilities)
+5. **Add its Virtues and Flaws.** Back on the Identity & Cords tab, add them with `a` in [Virtues](help:section-fam-vf-virtues) and [Flaws](help:section-fam-vf-flaws), and any [Personality Traits](help:section-fam-personality-traits) and [Reputations](help:section-fam-reputations).
 <!-- /tui -->
 <!-- gui -->
-1. Click **Edit** in the familiar's header to fill in its [Familiar Info](help:section-fam-info): Species / Description, Magic Might Score, Current Might Pool, Size and Wound Multiplier. The binding below needs the Might and Size.
-2. Click **Characteristics** in the header to type the eight [Characteristics](help:tab-fam-characteristics), Base Soak and Magic Resistance.
-3. In the [Combat & Health chapter](help:tab-fam-combat), add its natural weapons with **Add** in [Natural Weapons & Attacks](help:section-fam-natural-weapons). [Go there](go:tab-fam-combat)
-4. In the [Abilities chapter](help:tab-fam-abilities), add its Abilities with **Add**. It shares its magus's Language scores, so there is no need to add those. [Go there](go:tab-fam-abilities)
-5. In the [Virtues & Flaws chapter](help:tab-fam-vf), add its Virtues and Flaws with **Add** under each, and in the Identity & Cords chapter any [Personality Traits](help:section-fam-personality-traits) and [Reputations](help:section-fam-reputations). [Go there](go:tab-fam-vf)
+1. **Fill in its info.** Click **Edit** in the familiar's header to fill in its [Familiar Info](help:section-fam-info): Species / Description, Magic Might Score, Current Might Pool, Size and Wound Multiplier. The binding below needs the Might and Size.
+2. **Type its Characteristics.** Click **Characteristics** in the header to type the eight [Characteristics](help:tab-fam-characteristics), Base Soak and Magic Resistance.
+3. **Add its weapons.** In the [Combat & Health chapter](help:tab-fam-combat), add its natural weapons with **Add** in [Natural Weapons & Attacks](help:section-fam-natural-weapons). [Go there](go:tab-fam-combat)
+4. **Add its Abilities.** In the [Abilities chapter](help:tab-fam-abilities), add its Abilities with **Add**. It shares its magus's Language scores, so there's no need to add those. [Go there](go:tab-fam-abilities)
+5. **Add its Virtues and Flaws.** In the [Virtues & Flaws chapter](help:tab-fam-vf), add them with **Add** under each. In the Identity & Cords chapter, add any [Personality Traits](help:section-fam-personality-traits) and [Reputations](help:section-fam-reputations). [Go there](go:tab-fam-vf)
 <!-- /gui -->
 
 ### Binding it in the laboratory
@@ -55,40 +60,44 @@ Type in the creature's statistics as the rules or your storyguide give them.
 Binding the familiar is a season of lab work, planned in the magus's laboratory. The laboratory must have the magus as its owner.
 
 <!-- tui -->
-1. Select the laboratory in the tree and open its [Planning tab](help:tab-lab-planning) (`1`). [Go there](go:tab-lab-planning)
-2. Choose the season and press `e`. The [Invent Spell screen](help:invent-spell) opens.
+1. **Open the laboratory's Planning.** Select the laboratory in the tree and open its [Planning tab](help:tab-lab-planning) (`1`). [Go there](go:tab-lab-planning)
+2. **Choose the season.** Choose the season and press `e`. The [Invent Spell screen](help:invent-spell) opens.
 <!-- /tui -->
 <!-- gui -->
-1. Open the laboratory's page and its **Seasons** chapter. The Planning section at the top lists the owner's seasons.
-2. Click the season, then **Plan**. The lab work form opens in a window.
+1. **Open the laboratory's Seasons.** Open the laboratory's page and its **Seasons** chapter. The Planning section at the top lists the owner's seasons.
+2. **Choose the season.** Click the season, then **Plan**. The lab work form opens in a window.
 <!-- /gui -->
-3. In **Lab work**, choose **Bind or strengthen a familiar**.
-4. Choose the **Technique** and **Form** the bond is made with (strengthening it later uses the same two, DE p. 267), and type the **Golden cord**, **Silver cord** and **Bronze cord** scores you want, each 0 to 5. The Arts must suit the animal or its powers (DE p. 266): once both are chosen, the line under the form gives the book's Suggested Familiars for each and says whether either names the familiar's kind (its Species line). That is advice, since a bird suits Auram and any magical animal Vim; the app binds with any pair.
-5. In **Vis from**, choose whose raw vis pays (the laboratory's, the magus's own or the covenant's stores), and in **Art** whether it is vis of the Technique or the Form.
+3. **Choose the work.** In **Lab work**, choose **Bind or strengthen a familiar**.
+4. **Choose the Arts.** Choose the **Technique** and **Form** the bond is made with. Strengthening it later uses the same two (DE p. 267).
+5. **Set the cords.** Type the **Golden cord**, **Silver cord** and **Bronze cord** scores you want, each 0 to 5.
+6. **Choose the vis.** In **Vis from**, choose whose raw vis pays: the laboratory's, the magus's own or the covenant's stores. In **Art**, choose vis of the Technique or of the Form.
 <!-- tui -->
-6. Check the Lab Total panel.
+7. **Check the Lab Total panel.** It shows whether the Lab Total is enough (see below). You can tick Experiment, as for other lab work.
 <!-- /tui -->
 <!-- gui -->
-6. Check the lines under the fields.
+7. **Check the lines under the fields.** They show whether the Lab Total is enough (see below). You can tick Experiment, as for other lab work.
 <!-- /gui -->
-The binding needs a Lab Total of at least 25 + Might + 5 x Size, and the Lab Total also pays for the cords (0, 5, 15, 30, 50 and 75 points for scores 0 to 5). The vis is a fifth of the Lab Total, rounded up, and the magus can handle no more than twice their Magic Theory in a season. You can tick Experiment, as for other lab work.
-7. Choose **Schedule**. If something is wrong, the screen says what.
+8. **Schedule it.** Choose **Schedule**. If something is wrong, the screen says what.
 <!-- tui -->
-8. Press `t` to [advance the season](help:advance-season) when the troupe is ready.
+9. **Play the season.** Press `t` to [advance the season](help:advance-season) when the troupe is ready.
 <!-- /tui -->
 <!-- gui -->
-8. Click **Advance Season**, under the chapters on the left, to [advance the season](help:advance-season) when the troupe is ready.
+9. **Play the season.** Click **Advance Season**, under the chapters on the left, to [advance the season](help:advance-season) when the troupe is ready.
 <!-- /gui -->
 
-When the season is applied, the app fills in the [Binding & Cords](help:section-fam-binding) section: the Arts used, the Lab Total, the binding level, the vis spent and the three cords. It also sets the season and year bound if they were blank.
+**What the binding needs.** The Lab Total must be at least 25 + Might + 5 x Size, and it also pays for the cords: 0, 5, 15, 30, 50 and 75 points for scores 0 to 5. The vis is a fifth of the Lab Total, rounded up, and the magus can handle no more than twice their Magic Theory in a season.
+
+**Which Arts suit it.** The Arts must suit the animal or its powers (DE p. 266). Once both are chosen, the line under the form gives the book's Suggested Familiars for each, and says whether either names the familiar's kind from its Species line. That's advice, since a bird suits Auram and any magical animal Vim. The app binds with any pair.
+
+When the season is applied, the app fills in the [Binding & Cords](help:section-fam-binding) section with the Arts used, the Lab Total, the binding level, the vis spent and the three cords. It also sets the season and year bound if they were blank.
 
 To strengthen the bond later, plan **Bind or strengthen a familiar** again with higher cords. The vis already spent on the bond is taken off what the new binding costs.
 
 <!-- tui -->
-A familiar bound before play starts can skip the lab work: on the Identity & Cords tab, press `e` on Binding & Cords and type the details and cords in.
+A familiar bound before play starts can skip the lab work. On the Identity & Cords tab, press `e` on Binding & Cords and type the details and cords in.
 <!-- /tui -->
 <!-- gui -->
-A familiar bound before play starts can skip the lab work: in the Identity & Cords chapter, click **Edit** in The Bond and type the details and cords in.
+A familiar bound before play starts can skip the lab work. In the Identity & Cords chapter, click **Edit** in The Bond and type the details and cords in.
 <!-- /gui -->
 
 ### Giving the bond powers
@@ -97,24 +106,24 @@ A familiar bound before play starts can skip the lab work: in the Identity & Cor
 Bond powers are instilled much like an effect in an enchanted device, and can take several seasons.
 
 <!-- tui -->
-1. On the familiar's [Bond Powers tab](help:tab-fam-powers) (`5`), press `a`. Type the Power Name, Level, Technique, Form and the rest, and set **Instilling (blank = finished)** to 0. [Go there](go:tab-fam-powers)
-2. In the laboratory's Planning tab, choose a season and press `e`.
+1. **Add the power.** On the familiar's [Bond Powers tab](help:tab-fam-powers) (`5`), press `a`. Type the Power Name, Level, Technique, Form and the rest, and set **Instilling (blank = finished)** to 0. [Go there](go:tab-fam-powers)
+2. **Plan the season.** In the laboratory's Planning tab, choose a season and press `e`.
 <!-- /tui -->
 <!-- gui -->
-1. In the familiar's [Bond Powers chapter](help:tab-fam-powers), click **Add**. Type the Power Name, Level, Technique, Form and the rest, and set **Instilling (blank = finished)** to 0. [Go there](go:tab-fam-powers)
-2. In the laboratory's Seasons chapter, click a season in Planning, then **Plan**.
+1. **Add the power.** In the familiar's [Bond Powers chapter](help:tab-fam-powers), click **Add**. Type the Power Name, Level, Technique, Form and the rest, and set **Instilling (blank = finished)** to 0. [Go there](go:tab-fam-powers)
+2. **Plan the season.** In the laboratory's Seasons chapter, click a season in Planning, then **Plan**.
 <!-- /gui -->
-In **Lab work**, choose **Empower the familiar's bond**, then choose the power in **Bond power** and the vis Art.
-3. Choose **Schedule**. The Lab Total must be above the power's level. Each season adds the Lab Total less the level in points, and the vis (a tenth of the level, rounded up) is paid in the first season. The app plans the following seasons the work is projected to need.
+3. **Choose the power.** In **Lab work**, choose **Empower the familiar's bond**, then the power in **Bond power** and the vis Art.
+4. **Schedule it.** Choose **Schedule**. The Lab Total must be above the power's level. The app plans the following seasons the work is projected to need.
 
-When the power's points reach its level, the power is finished. A power the familiar already had can be added with Instilling left blank.
+Each season adds the Lab Total less the level in points. The vis, a tenth of the level rounded up, is paid in the first season. When the power's points reach its level, the power is finished. A power the familiar already had can be added with Instilling left blank.
 
 ### What the app works out, and what it doesn't
 <!-- help: guide-familiars-limits -->
 
 The app works out the point cost of each cord, whether a binding or empowerment can be done, its Lab Total, its vis, and the progress of a power over several seasons. The Bronze Cord is taken off the magus's aging roll each Winter.
 
-Most of the familiar's own figures are typed in: its Soak, Magic Resistance and Might, its wounds and penalties, and each bond power's figures. The Golden Cord takes its botch dice off casting totals (a hedge power's too); the Silver Cord is added by Roll beside Personality Traits (a trait roll, resisting mental influence, or the familiar freeing its magus's mind), and the True Friend Virtue is recorded but has no effect the app applies.
+Most of the familiar's own figures are typed in, such as its Soak, Magic Resistance and Might, its wounds and penalties, and each bond power's figures. The Golden Cord takes its botch dice off casting totals, a hedge power's too. The Silver Cord is added by Roll beside Personality Traits, for a trait roll, resisting mental influence, or the familiar freeing its magus's mind. The True Friend Virtue is recorded, but the app applies no effect for it.
 
 Deleting the magus also deletes their familiar, and exporting the magus takes the familiar with them.
 <!-- tui -->
@@ -130,86 +139,70 @@ Then the bond is broken, and the magus loses True Friend, Loyal (Partner) and an
 # How to initiate a character into a Mystery
 <!-- help: guide-initiation -->
 
-This guide follows a Mystery Initiation from the Script to the new Virtue on the Initiate's sheet. Use it when a character joins a Mystery cult, takes the next step in their House's Mysteries, or initiates themselves into a Virtue. The rules are in Ars Magica Definitive Edition, Chapter 10: Long-Term Events, Mystery Initiation; The Mysteries Revised Edition and Houses of Hermes: Mystery Cults give the full treatment, and the Definitive Edition wins where they differ.
+Your magus has found a Mystagogue willing to lead them into the cult's next Mystery, and the Script is agreed. The Initiation is one season, planned like any other, and ends with the new Virtue on the Initiate's sheet.
+
+The rules are in Ars Magica Definitive Edition, Chapter 10: Long-Term Events, Mystery Initiation. The Mysteries Revised Edition and Houses of Hermes: Mystery Cults give the full treatment, and the Definitive Edition wins where they differ.
 
 ### Before the season
 <!-- help: guide-initiation-before -->
 
-An Initiation needs three things, settled at the table first:
+An Initiation needs three things, settled at the table first.
 
-- **A Mystagogue** who knows the cult's Lore (House Bjornaer Lore, Mithraic Lore and so on). A character can be their own Mystagogue: a self-initiation uses the Initiate's own scores.
+- **A Mystagogue** who knows the cult's Lore, such as House Bjornaer Lore or Mithraic Lore. A character can be their own Mystagogue, and a self-initiation uses the Initiate's own scores.
 <!-- tui -->
-- **The Lore.** The Initiate needs the same Lore at 1 or more, unless it is the Lore of their own House. Add it on the [Abilities tab](help:tab-abilities) (`2`) once they have learnt it, for example with a season of Be taught. [Go there](go:tab-abilities)
+- **The Lore.** The Initiate needs the same Lore at 1 or more, unless it's the Lore of their own House. Add it on the [Abilities tab](help:tab-abilities) (`2`) once they've learnt it, for example with a season of Be taught. [Go there](go:tab-abilities)
 <!-- /tui -->
 <!-- gui -->
-- **The Lore.** The Initiate needs the same Lore at 1 or more, unless it is the Lore of their own House. Add it in the [Abilities chapter](help:tab-abilities) once they have learnt it, for example with a season of Be taught. [Go there](go:tab-abilities)
+- **The Lore.** The Initiate needs the same Lore at 1 or more, unless it's the Lore of their own House. Add it in the [Abilities chapter](help:tab-abilities) once they've learnt it, for example with a season of Be taught. [Go there](go:tab-abilities)
 <!-- /gui -->
-- **A Script**, written like a Lab Text. Its bonus is the sum of its components, as the storyguide agrees them: +3 for a special place at a special time, +3 for each Quest, +1 for serving the cult (once), +1 for a sacrifice of wealth, +3 to +6 for a sacrifice of something of great value, and the Ordeal's +3 (a Minor Flaw, or losing a Minor Virtue), +6 (raising a Minor Flaw to Major) or +9 (a Major Flaw, or losing a Major Virtue). Quests and other sacrifices are played out in their own seasons or stories.
+- **A Script**, written like a Lab Text. Its bonus is the sum of its components, as the storyguide agrees them (see [Script components](help:guide-initiation-scripts)). Quests and other sacrifices are played out in their own seasons or stories.
 
 ### Planning the Initiation
 <!-- help: guide-initiation-plan -->
 
-The Initiation is the Initiate's season, planned like any other.
+<!-- tui -->
+1. **Open the Initiate's plan.** Open the Initiate's sheet and their Planning tab (`6` for a magus, `5` for anyone else), and press `e` in [This Season](help:section-char-season). A covenant's [Seasons tab](help:tab-cov-seasons) opens the same form.
+<!-- /tui -->
+<!-- gui -->
+1. **Open the Initiate's plan.** Open the Initiate's sheet and their **Planning** chapter, and click **Plan** in [This Season](help:section-char-season), or **Edit** if a plan is there already. **Plan** in a covenant's [Seasons chapter](help:tab-cov-seasons) opens the same form.
+<!-- /gui -->
+2. **Choose the activity.** In **Activity**, choose **Undergo an Initiation**.
+3. **Choose the Mystagogue.** In **Teacher / master**, choose the Mystagogue. Leave it blank for a self-initiation.
+4. **Give the Script.** Type the **Script bonus** and the **Mystagogue's Lore**, spelt as it is in the Mystagogue's Abilities. To list the Script's parts instead of one figure, use **Script components** (see [Script components](help:guide-initiation-scripts)).
+5. **Name the sacrifice.** When the Script makes a sacrifice, choose what's given up in **Sacrificed**, such as a device, a book or vis. It's made when the season is played (see [Sacrifices](help:guide-initiation-scripts)).
+6. **Vary the Script, if the Mystagogue does.** Choose the change in **Vary the Script** (see [Varying the Script](help:guide-initiation-limits)).
+<!-- tui -->
+7. **Choose the Virtue.** Choose **Virtue initiated**. It opens the Virtues & Flaws picker on Virtues. Search, filter by type or tier, and press Enter. A Virtue that names something, such as Affinity with an Art or Puissant with an Ability, asks for it.
+<!-- /tui -->
+<!-- gui -->
+7. **Choose the Virtue.** Click **Virtue initiated**. It opens a list of Virtues. Type in the search box to narrow it, and double-click the one you want, or click it and Choose. A Virtue that names something, such as Affinity with an Art or Puissant with an Ability, asks for it.
+<!-- /gui -->
+8. **Choose the Ordeal.** If the Script has an Ordeal, choose what it costs in **Ordeal** (see below). Leave it blank for none.
+<!-- tui -->
+9. **Check the total.** Watch the line above Save. It shows the Initiation Total, the Mystagogue's Presence + Lore + Script bonus, against the Target Level, and whether the Initiation will succeed. Save refuses a plan that's missing something or breaks a rule, and says why.
+<!-- /tui -->
+<!-- gui -->
+9. **Check the total.** Watch the line under the fields. It shows the Initiation Total, the Mystagogue's Presence + Lore + Script bonus, against the Target Level, and whether the Initiation will succeed. Save refuses a plan that's missing something or breaks a rule, and says why.
+<!-- /gui -->
+
+**The Ordeal.** Each choice asks for what it costs.
+
+- **Gains a Flaw** asks for the **Flaw gained**, from the same picker, on Flaws.
+- **Loses a Virtue** asks for the **Virtue lost**, one of the Initiate's own Minor or Major Virtues.
+- **Raises a Minor Flaw to Major** asks for the **Minor Flaw raised**, one of their own, and for the related Major Flaw it becomes as the **Flaw gained**.
+
+The Ordeal's size follows from what it costs. A Minor Flaw or Virtue makes a Minor Ordeal, a Major one a Major Ordeal, and a raised Flaw a Medium one.
 
 <!-- tui -->
-1. Open the Initiate's sheet and their Planning tab (`6` for a magus, `5` for anyone else), and press `e` in [This Season](help:section-char-season). A covenant's [Seasons tab](help:tab-cov-seasons) opens the same form.
-<!-- /tui -->
-<!-- gui -->
-1. Open the Initiate's sheet and their **Planning** chapter, and click **Plan** (or **Edit**, if a plan is there already) in [This Season](help:section-char-season). **Plan** in a covenant's [Seasons chapter](help:tab-cov-seasons) opens the same form.
-<!-- /gui -->
-2. In **Activity**, choose **Undergo an Initiation**.
-3. In **Teacher / master**, choose the Mystagogue. Leave it blank for a self-initiation.
-4. Type the **Script bonus** and the **Mystagogue's Lore**, spelt as it is in the Mystagogue's Abilities. To vary the Script, choose the change in **Vary the Script** (see below). When the Script makes a sacrifice, choose in **Sacrificed** what is given up: one of the initiate's devices (a talisman among them), carried items, books or familiar, an apprentice, mundane wealth, vis, or a season serving the cult. It is made when the season is played, Initiation or not, and the Diary says so. A device, item, book or familiar is gone, so it can't be sacrificed twice; a season of service takes the next season as Other, unless it is planned already; vis is taken from the initiate's own raw vis, as many pawns of the Art as **Vis of** and **Pawns sacrificed** say. A plan whose vis isn't there to give is refused: a Sacrifice that isn't made invalidates the whole Script (The Mysteries Revised Edition p. 16). The bonus it brings is the Script's Sacrifice component (The Mysteries Revised Edition pp. 12, 15-16).
-<!-- tui -->
-5. Choose **Virtue initiated**. It opens the Virtues & Flaws picker on Virtues: search, filter by type or tier, and press Enter.
-<!-- /tui -->
-<!-- gui -->
-5. Click **Virtue initiated**. It opens a list of Virtues: type in the search box to narrow it, and double-click the one you want (or click it and Choose).
-<!-- /gui -->
-A Virtue that names something, such as Affinity with an Art or Puissant with an Ability, asks for it.
-6. If the Script has an Ordeal, choose what it costs in **Ordeal**: **Gains a Flaw** asks for the **Flaw gained** (the same picker, on Flaws); **Loses a Virtue** asks for the **Virtue lost**, one of the Initiate's own Minor or Major Virtues; **Raises a Minor Flaw to Major** asks for the **Minor Flaw raised**, one of their own, and the related Major Flaw it becomes as the **Flaw gained**. The Ordeal's size follows from what it costs: a Minor Flaw or Virtue makes a Minor Ordeal, a Major one a Major Ordeal, and a raised Flaw a Medium one. Leave Ordeal blank for none.
-<!-- tui -->
 Delete on a chosen field clears it.
-7. Watch the line above Save.
 <!-- /tui -->
 <!-- gui -->
 A chosen Virtue or Flaw field's **Clear** button clears it.
-7. Watch the line under the fields.
 <!-- /gui -->
-It shows the Initiation Total (the Mystagogue's Presence + Lore + Script bonus) against the Target Level, and whether the Initiation will succeed. Save refuses a plan that is missing something or breaks a rule, and says why.
 
-There is no die: the Initiation succeeds when the total reaches the Target Level. The Target is 15 for a Minor Virtue and 21 for a Major one, or 18 and 30 when the Mystagogue doesn't have the Virtue (always so for a self-initiation into a Virtue the character lacks).
+**The Target.** There's no die. The Initiation succeeds when the total reaches the Target Level, which is 15 for a Minor Virtue and 21 for a Major one. It's 18 and 30 when the Mystagogue doesn't have the Virtue, which is always so for a self-initiation into a Virtue the character lacks.
 
-**House Verditius.** Every magus with Verditius Magic can follow the House's sample Scripts, listed under House Verditius (Mystery Cult) on the Initiation's Script field: one for each of the eight Inner Mysteries, the Outer Mystery and four confraternities' (Houses of Hermes: Mystery Cults pp. 118-135). The Lore is Mystery Cult Lore: Verditius (the book's Verditius Cult Lore). The Initiate needs it at 3 for a Minor Inner Mystery and 5 for a Major (p. 118). The first Inner Mystery always brings the Flaw Hubris as a Minor Ordeal: the season adds the Flaw and says what to set the Hubris trait to (1, +1 with Proud, +3 with Proud as a Major Flaw), and each Inner Mystery's note gives the Hubris experience it earns (1 Minor, 3 Major; DE p. 242). The House's own Ordeals may each be suffered once; Prone to Chance and Averse to Risk exclude each other, and no one in the Primus's line may Sever the Ties that Bind (pp. 120-121).
-
-**House Merinita.** Every magus with Faerie Magic belongs to the House and can follow its lineages' sample Scripts, listed under House Merinita (Mystery Cult) on the Initiation's Script field: the Line of Quendalon's Animae Magic, the Heirs to Merlin's Charm Magic, the Followers of Pendule's Spell Timing, the Shadow-Masters' Glamour, the Vestals' Nature Lore (as Lares Lore) and the True Merinitae's Wilding (Houses of Hermes: Mystery Cults pp. 83-106). The Lore is Mystery Cult Lore: Merinita (the book's House Merinita Lore); an Initiate needs it at 1 for an Inner Mystery (p. 88). The Arcadian, Folk and Illusion Mysteries need Faerie Magic; Binding the Gift is the House's own; the Nature Mysteries (Awakening, Wilding, Guardian of Nature) need Nature Lore instead and not the House's Lore (pp. 86, 102-104). Glamour always brings the Major Flaw Vulnerable Magic as its Ordeal: the season adds it, unless the plan's Ordeal names it already, and a Script written out as components counts its Major Ordeal. Type its condition on the plan (Vulnerable Magic's condition): it must be one the magus doesn't have the Flaw for already, since the Flaw is taken again only with a new condition (pp. 87, 102). Perpetuity's season notes that it usually brings Unnatural Magic.
-
-**House Bjornaer.** Every magus with the Heartbeast can follow the House's Scripts, listed under House Bjornaer (Mystery Cult) on the Initiation's Script field (Houses of Hermes: Mystery Cults pp. 24-33). The Lore is Mystery Cult Lore: Bjornaer (the book's House Bjornaer Lore, which the rules also read, the Initiation Total included: a character with either name scores it; HoH:MC pp. 28, 30, Errata p. 54). **The Ritual of Twelve Years** gives the Heartbeast: Target 15, Script +6, plus the Participation Modifier typed as the other modifier, +1 for each witness (the Mystagogue included) whose heartbeast shares the probationer's temperament and -1 for each opposed (sanguine opposes melancholic, choleric phlegmatic; p. 26). Choose Heartbeast as the Virtue initiated: the season then adds Heartbeast 1, and the familiar forgone counts as a Minor Ordeal. It fails for one who has ever bound a familiar, even one since dead (DE p. 234; p. 24): one bound to him now, or a familiar season in his Diary; tick Has ever bound a familiar on the plan for one the app can't see and is refused to an Initiate of another House's Mystery (p. 18), and it is never repeated. Clan Ilfetu leads the Ritual and the House Mysteries, Secret Name (+8), Theriomorphy (+6) and Sensory Magic (+9) (p. 25); a Clan Mystery's Trial, Deed or Oath (+7, the Trial +13 with a Major Ordeal) needs a Mystagogue with Presence + the Lore 8, less the Initiate's past Ordeal's reduction. **The Mystery of the Inner Heartbeast** (Epitome, Chimera or Anima) needs the Lore 5: Target 21, Script +13, its Ordeal a Major Hermetic or Supernatural Flaw, or for a magus who changes shape the loss of his Skinchanger or Shapeshifter (pp. 17, 28-30). With no Mystagogue chosen, the Great Beast leads it, with Presence +2 and the Lore 8. The Epitome raises one Characteristic: the inner heartbeast's to the species' + 3 and the human form's by 1; the outer heartbeast changes only through that +1, combined as usual (pp. 23, 30). So the book's example ends with an inner Perception of +5 and an outer +2 (the eagle's own, one above where it started). The app follows this rule text: Errata p. 54 gives the outer heartbeast +5, but that is the inner figure and contradicts the rule, and Through the Aegis p. 14 (Hilde Oddfish, Strength +7 outer and +10 inner) applies the rule as written. **Refinements** of the inner heartbeast are the magus's own: the embryonic Script (+7, and +3 where his inner heartbeast resonates: an Epitome with Virtues and Characteristics, a Chimera with Qualities and Size, an Anima with Powers) against 15 (a Quality), 18 (Size, a Characteristic, a Minor Virtue), 21 (a Minor Power) or 30 (a Major Virtue or Power), lowered by past Ordeals as usual. Each earlier increase of the same Size or Characteristic adds 3: take 3 from the other modifier for each. The season notes the vis eaten (a pawn per three points of the Ease Factor) and the Warping Point; a Refinement changes only the inner heartbeast, so it is noted on the sheet by hand (pp. 32-33).
-
-**House Criamon.** A Criamon magus's paths are listed under House Criamon
-(Mystery Cult) on the Initiation's Script field, one Script for each
-avenue (Houses of Hermes: Mystery Cults pp. 61-71; Errata p. 55), and The
-Enigma's Follow an Avenue plans one. The Lore is Mystery Cult Lore:
-Criamon (the book's House Criamon Lore, which counts too); a station
-needs it at its place on the path + 1. Each avenue's Target is a Major
-Virtue's 21, as the book prints it whether or not the guide holds the
-station, lowered by past Ordeals as usual. With no Mystagogue chosen, the
-guide the House provides guides at Presence + Lore 6, the printed
-Scripts' assumption, or a ghostly Primus (Lore 9, with the Presence set on
-Change Path) when The Enigma names him (p. 60). The Mystagogue need only
-know House Criamon Lore (DE p. 387); the app notes one not of the House
-as unusual, its own reading. When the plan names no Ordeal of its own, the station's
-Ordeal Flaws are added (a Major Pious replacing Vow or Higher Purpose),
-and the Ordeal counts at the size the book's next Targets show; the
-avenues are followed in order along a path. Some stations add catalogue
-Virtues too: Clear Thinker, Common Sense and Keen Vision; the Gentle Gift,
-or the Blatant Gift lifted to an ordinary Gift; Free Expression and
-Inspirational (pp. 64, 70-71). His aptitude for a path, from a head bound
-in infancy, adds +3 to its first station (p. 51).
-
-**Script components.** A Hermetic Mystery's Script can be written out on the plan as its **Script components** (The Mysteries Revised Edition pp. 15-16; DE p. 388): a special place at a special time +3 (once), each specific Quest +3 (a unique Quest +6), the Initiate's time serving the cult +1 (once), material goods +1 (once), something of great symbolic value +3 to +6 (a talisman, familiar or powerful device), the Mystagogue's time +3, and the sympathy of the rite to the Virtue, usually 0 to +3 but -5 to +5, agreed with the storyguide. The Ordeal's own bonus is added from the plan's **Ordeal**: +3 for a Minor Flaw gained or Minor Virtue lost (a Minor Virtue replaced by its Major one counts as that), +6 for a Minor Flaw raised to Major, +9 for a Major Flaw or Virtue; a Verditius's first Inner Mystery counts its Hubris as a Minor Ordeal when no other is named. The **Script bonus** typed above is added to the components. A component listed twice that may be held once, or a size out of its range, invalidates the whole Script (TMRE p. 16). With no components listed, the typed bonus is the whole Script, as before, except that a Verditius's first Inner Mystery adds its Hubris Ordeal's +3 to it (and to a catalog Script's printed bonus), since that Ordeal always comes and the bonus can't know of it (Houses of Hermes: Mystery Cults pp. 117-118). A Verditius Initiate is also offered the House's own components (Houses of Hermes: Mystery Cults p. 117): a lesser enchanted item of the 4th magnitude sacrificed +3, a greater one of the 7th or his talisman +6, the Mystagogue's wealth +1 (once), and the Outer Mystery given as the Arts are opened +6. A hedge or House Script from the catalog keeps its printed bonus; the season's note lists its components as the book gives them (the Verditius Outer Mystery's add to 14, though the book prints +12, which is used).
-
-The House's Hubris is now kept on the sheet: the first Inner Mystery makes the Hubris Personality Trait (1, +1 with Proud, +3 with Proud as a Major Flaw), each Inner Mystery adds its experience (1 Minor, 3 Major), and the Increased Hubris Ordeal adds enough for one more point (Houses of Hermes: Mystery Cults p. 121). Hubris grows like an Ability: its experience toward the next point is kept with the trait. A confraternity's Script also notes the Mystery and Flaw it gives its members, their Craft and the confraternity's path (Roland, Balento, Irene the Younger, Himinis the Mad; pp. 121-123). See [Hubris](help:verditius-hubris) for what a sale, the Contest or a vendetta does to it.
+Some Houses add their own Scripts and rules, such as Verditius's Hubris or the Bjornaer Ritual of Twelve Years. See [House Mysteries](help:guide-initiation-houses).
 
 ### When the season is advanced
 <!-- help: guide-initiation-advance -->
@@ -220,37 +213,155 @@ Press `t` to [advance the season](help:advance-season).
 <!-- gui -->
 Click **Advance Season**, under the chapters on the left, to [advance the season](help:advance-season).
 <!-- /gui -->
-For a successful Initiation, the app adds the Virtue (with what it names) to the Initiate's [Virtues & Flaws](help:tab-vf) and applies the Ordeal: it adds the Flaw gained, takes away the Virtue lost, or replaces the Minor Flaw raised with its Major Flaw. A Great Characteristic Virtue gained raises the score, and one lost lowers it again. A failed Initiation changes nothing, and its Ordeal is not suffered: the Mystagogue sees that a Script will fail before any sacrifice is made. Two failures still cost the Ordeal: one that distractions made fail (The Mysteries Revised Edition p. 12), and an experimental Script whose rite fails, since its Ordeals are suffered before the rite is checked (p. 18). Either way, the Diary records the Initiation Total against the Target.
+
+For a successful Initiation, the app adds the Virtue, with what it names, to the Initiate's [Virtues & Flaws](help:tab-vf) and applies the Ordeal. It adds the Flaw gained, takes away the Virtue lost, or replaces the Minor Flaw raised with its Major Flaw. A Great Characteristic Virtue gained raises the score, and one lost lowers it again.
+
+A failed Initiation changes nothing, and its Ordeal isn't suffered, since the Mystagogue sees that a Script will fail before any sacrifice is made. Two failures still cost the Ordeal. One is an Initiation that distractions made fail (The Mysteries Revised Edition p. 12). The other is an experimental Script whose rite fails, since its Ordeals are suffered before the rite is checked (p. 18). Either way, the Diary records the Initiation Total against the Target.
 
 ### Past Ordeals make later Initiations easier
 <!-- help: guide-initiation-ordeals -->
 
-An Ordeal lowers the Target Level of the Initiate's next three Initiations, never below 9 (DE p. 388): by 3, 2 and 1 after a Minor Ordeal, 6, 4 and 2 after a Medium one, and 9, 6 and 3 after a Major one. It doesn't help the Initiation it was suffered in. When the Initiate has suffered several, only the one that lowers the Target most counts: a Major Ordeal followed by a Minor one still takes 6 off the next Initiation. The app keeps every Ordeal and counts each one down after each Initiation that gives its Virtue; a failed Initiation uses up no step. The book doesn't say whether a failed one counts among "the next three" (DE p. 388), so that is the app's reading. An unGifted Initiate's past Ordeals lower nothing (Hedge Magic Revised Edition p. 14). The Initiate's [This Season](help:section-char-season) section lists the past Ordeals still counting and what they take off the next Target. Flaws taken at character creation don't count as Ordeals.
+An Ordeal lowers the Target Level of the Initiate's next three Initiations, never below 9 (DE p. 388). It takes off 3, 2 and 1 after a Minor Ordeal, 6, 4 and 2 after a Medium one, and 9, 6 and 3 after a Major one. It doesn't help the Initiation it was suffered in.
+
+When the Initiate has suffered several, only the one that lowers the Target most counts. So a Major Ordeal followed by a Minor one still takes 6 off the next Initiation. The app keeps every Ordeal and counts each one down after each Initiation that gives its Virtue, and a failed Initiation uses up no step. The book doesn't say whether a failed one counts among "the next three" (DE p. 388), so that's the app's reading.
+
+An unGifted Initiate's past Ordeals lower nothing (Hedge Magic Revised Edition p. 14). Flaws taken at character creation don't count as Ordeals. The Initiate's [This Season](help:section-char-season) section lists the past Ordeals still counting and what they take off the next Target.
 
 ### What the app works out, and what it doesn't
 <!-- help: guide-initiation-limits -->
 
-**The app works out:** the Initiation Total and Target Level, whether the Mystagogue has the Virtue, the largest reduction among past Ordeals, the checks on the Lore and the Ordeal, the Ordeal's size, and the Virtues and Flaws added or taken away on success.
+**The app works out** the Initiation Total and Target Level, whether the Mystagogue has the Virtue, and the largest reduction among past Ordeals. It also checks the Lore and the Ordeal, works out the Ordeal's size, and adds or takes away the Virtues and Flaws on success.
 
-**Varying the Script:** the Mystagogue may make one change in an Initiation. Choose it in **Vary the Script** (add a component, Ease 9; change one, 12; remove one, 15) and type in **The change adds** what it does to the Script bonus (negative when removing). When the season is applied the app rolls a stress die + the Mystagogue's Intelligence + Lore: success adds the change to the Script bonus, and failure fails the Initiation, with no Virtue and no Ordeal, though the Script as it was may be tried another season (DE pp. 388-389). Before then, the line under the form gives the roll the change needs and the Initiation Total if it works. The Mysteries Revised Edition (p. 17) says instead that the original Script still works; the Definitive Edition wins, so this isn't a bug. Removing a component (Ease 15) is The Mysteries Revised's own addition, and it doesn't let a Minor Virtue's Script become a Major one.
+**You type** the Script bonus, as the storyguide agrees it. For an experimental Script, you also type the proposed bonus, the risk and the storyguide's sympathy bonus. Which Major Flaw a Minor Flaw is related to is the troupe's call, and the app checks only that it's a Major Flaw.
 
-**Overlapping Scripts:** a Script that shares Quests or Ordeals with one the Initiate already followed can't be used as it is: the Mystagogue changes the shared component (**Change a component**, Ease 12) or puts a different one in its place (**Replace a component**, Ease 15), and types in **The change adds** what that does to the bonus (Legends of Hermes pp. 50-51). Each Quest a Script written out as components names (its note) is recorded on the Initiate when the rite is carried out, and shown as **Quests performed** on the Initiate's This Season, beside the past Ordeals; an Initiation whose Script names one again says so on the plan and the season, and that Quest gives the Script nothing, since a Quest counts toward one Initiation only (The Mysteries Revised Edition p. 16): change the Script first. An Ordeal is spotted the same way by the Flaw the Initiate already has.
+**Varying the Script.** The Mystagogue may make one change in an Initiation. Choose it in **Vary the Script**. Adding a component is Ease 9, changing one 12 and removing one 15. Type in **The change adds** what it does to the Script bonus, negative when removing. When the season is applied the app rolls a stress die + the Mystagogue's Intelligence + Lore. Success adds the change to the Script bonus. Failure fails the Initiation, with no Virtue and no Ordeal, though the Script as it was may be tried another season (DE pp. 388-389). Before then, the line under the form gives the roll the change needs and the Initiation Total if it works.
 
-**An experimental Script:** with no Script, or one that falls short, tick **Experimental Script**, type the proposed rite's components in **Script bonus**, and choose a **Risk** of 0 to 3 (The Mysteries Revised Edition p. 18). When the season is applied the app rolls a stress die + risk on the Extraordinary Results chart (with 1 + risk botch dice) and reads it for a rite: side effects and minor flaws or benefits become Personality Traits of the Script, a major flaw an extra Ordeal Flaw with no bonus, a major benefit a stronger Virtue or a second Minor one, a Discovery experience for the Mystagogue, a modified effect a different Virtue (the Diary says what to add by hand); a fatal flaw or a complete failure gives no Virtue, No Benefit takes the risk off the total, and Disaster fails the rite and gives the Mystagogue and the Initiate each a Major Flaw. Then it rolls the rite's validity: a simple die + risk + the Mystagogue's Intelligence + Lore against 9 + the proposed bonus, or 15 + it when the Initiate is someone else; a failure gives no Virtue. Any failure still costs the rite's Ordeal. The Initiation Total adds the storyguide's **Sympathy bonus** and the risk; the Script written down afterwards keeps the sympathy but not the risk. An experimental Script isn't also varied.
+The Mysteries Revised Edition (p. 17) says instead that the original Script still works. The Definitive Edition wins, so this isn't a bug. Removing a component (Ease 15) is The Mysteries Revised's own addition, and it doesn't let a Minor Virtue's Script become a Major one.
 
-**UnGifted Initiates:** an unGifted Initiate's Initiation must include an Ordeal, his past Ordeals don't lower its Target, and an unGifted Mystagogue must know the power, so an unGifted character can't initiate himself (Hedge Magic Revised Edition p. 14). The app applies this to every Initiation, Hermetic cults' included. A magus counts as Gifted.
+**Overlapping Scripts.** A Script that shares Quests or Ordeals with one the Initiate already followed can't be used as it is. The Mystagogue changes the shared component (**Change a component**, Ease 12) or puts a different one in its place (**Replace a component**, Ease 15). Type in **The change adds** what that does to the bonus (Legends of Hermes pp. 50-51).
 
-**Hedge Scripts:** to follow one of a hedge tradition's printed Scripts, choose it in **Hedge Script** (the list holds the Scripts of the traditions someone in the saga belongs to). The tradition's Characteristic and Lore are used instead of Presence and the Lore typed, the Script's own bonus is used and anything typed in **Script bonus** is added to it, and its Ease Factor is the Target. When the Mystagogue doesn't know the power the Ease Factor rises by 3 for a Minor Virtue, 9 for a Major (Hedge Magic Revised Edition p. 13). The app counts him as knowing it when he has the **Virtue initiated**; when the power is an Ability (a gruagach's Give, say), tick **Mystagogue knows the power**. The Mystagogue must belong to the tradition, a tradition without self-initiation can't initiate itself, and a Script for the Gifted needs a Gifted Initiate. With a hedge Script the **Virtue initiated** may be left blank: the Diary then names what the Script gives, to add by hand. Past Ordeals lower a hedge Script's Ease Factor too, never below 9, and never an Ease Factor already lower.
+Each Quest that a Script written out as components names in its note is recorded on the Initiate when the rite is carried out. It's shown as **Quests performed** on the Initiate's This Season, beside the past Ordeals. An Initiation whose Script names one again says so on the plan and the season, and that Quest gives the Script nothing, since a Quest counts toward one Initiation only (The Mysteries Revised Edition p. 16). Change the Script first. An Ordeal is spotted the same way, by the Flaw the Initiate already has.
 
-**Who may be Initiated:** two Mysteries check it. **Secret Name** fails for a magus with a talisman or a familiar (DE p. 235), and **Faerie Magic** needs one touched by the fay, by a fay Virtue or Flaw or a Warping Point from a faerie (DE p. 236). The app can't tell where Warping came from, so any Warping Point counts.
+**An experimental Script.** With no Script, or one that falls short, tick **Experimental Script**, type the proposed rite's components in **Script bonus**, and choose a **Risk** of 0 to 3 (The Mysteries Revised Edition p. 18). When the season is applied the app rolls a stress die + risk on the Extraordinary Results chart, with 1 + risk botch dice, and reads it for a rite.
 
-**Distractions:** **Months lost** on the plan takes a third of the Initiation Total a month, rounded up. If that makes the Initiation fail, the Ordeal is still suffered and the Initiation must be repeated (The Mysteries Revised Edition p. 12).
+- Side effects and minor flaws or benefits become Personality Traits of the Script.
+- A major flaw becomes an extra Ordeal Flaw with no bonus.
+- A major benefit gives a stronger Virtue or a second Minor one.
+- A Discovery gives the Mystagogue experience.
+- A modified effect gives a different Virtue, and the Diary says what to add by hand.
+- A fatal flaw or a complete failure gives no Virtue.
+- No Benefit takes the risk off the total.
+- Disaster fails the rite and gives the Mystagogue and the Initiate each a Major Flaw.
 
-**You type:** the Script bonus, as the storyguide agrees it. For an experimental Script, the proposed bonus, the risk and the storyguide's sympathy bonus. Which Major Flaw a Minor Flaw is related to is the troupe's call: the app checks only that it is a Major Flaw.
+Then it rolls the rite's validity. That's a simple die + risk + the Mystagogue's Intelligence + Lore against 9 + the proposed bonus, or 15 + it when the Initiate is someone else. A failure gives no Virtue, and any failure still costs the rite's Ordeal. The Initiation Total adds the storyguide's **Sympathy bonus** and the risk. The Script written down afterwards keeps the sympathy but not the risk. An experimental Script isn't also varied.
 
-A Mystagogue who spends a whole season on the Script (teaching a Supernatural Ability, say) plans **Act as Mystagogue**, and a season spent on a Quest is **Serve a Mystagogue / Quest season**; both need The Mysteries Revised Edition in play.
+**UnGifted Initiates.** An unGifted Initiate's Initiation must include an Ordeal, and their past Ordeals don't lower its Target. An unGifted Mystagogue must know the power, so an unGifted character can't initiate themselves (Hedge Magic Revised Edition p. 14). The app applies this to every Initiation, Hermetic cults' included. A magus counts as Gifted.
 
-**See also:** [Plan Season](help:plan-season), [Virtues & Flaws](help:tab-vf), [Advancing a season](help:advance-season), [How the app handles advancement](help:guide-advancement)
+**Hedge Scripts.** To follow one of a hedge tradition's printed Scripts, choose it in **Hedge Script**. The list holds the Scripts of the traditions someone in the saga belongs to. The tradition's Characteristic and Lore are used instead of Presence and the Lore typed. The Script's own bonus is used, anything typed in **Script bonus** is added to it, and its Ease Factor is the Target.
+
+When the Mystagogue doesn't know the power, the Ease Factor rises by 3 for a Minor Virtue and 9 for a Major (Hedge Magic Revised Edition p. 13). The app counts the Mystagogue as knowing it when they have the **Virtue initiated**. When the power is an Ability, a gruagach's Give say, tick **Mystagogue knows the power**. The Mystagogue must belong to the tradition, a tradition without self-initiation can't initiate itself, and a Script for the Gifted needs a Gifted Initiate. With a hedge Script the **Virtue initiated** may be left blank, and the Diary then names what the Script gives, to add by hand. Past Ordeals lower a hedge Script's Ease Factor too, never below 9, and never an Ease Factor already lower.
+
+**Who may be Initiated.** Two Mysteries check it. **Secret Name** fails for a magus with a talisman or a familiar (DE p. 235). **Faerie Magic** needs one touched by the fay, by a fay Virtue or Flaw or a Warping Point from a faerie (DE p. 236). The app can't tell where Warping came from, so any Warping Point counts.
+
+**Distractions.** **Months lost** on the plan takes a third of the Initiation Total a month, rounded up. If that makes the Initiation fail, the Ordeal is still suffered and the Initiation must be repeated (The Mysteries Revised Edition p. 12).
+
+**Other seasons.** A Mystagogue who spends a whole season on the Script, teaching a Supernatural Ability say, plans **Act as Mystagogue**. A season spent on a Quest is **Serve a Mystagogue / Quest season**. Both need The Mysteries Revised Edition in play.
+
+### Script components
+<!-- help: guide-initiation-scripts -->
+
+A Hermetic Mystery's Script can be written out on the plan as its **Script components** (The Mysteries Revised Edition pp. 15-16; DE p. 388).
+
+- A special place at a special time, +3, once.
+- Each specific Quest, +3, or +6 for a unique Quest.
+- The Initiate's time serving the cult, +1, once.
+- Material goods, +1, once.
+- Something of great symbolic value, +3 to +6, such as a talisman, familiar or powerful device.
+- The Mystagogue's time, +3.
+- The sympathy of the rite to the Virtue, usually 0 to +3 but -5 to +5, agreed with the storyguide.
+
+The Ordeal's own bonus is added from the plan's **Ordeal**. It's +3 for a Minor Flaw gained or Minor Virtue lost, and a Minor Virtue replaced by its Major one counts as that. It's +6 for a Minor Flaw raised to Major, and +9 for a Major Flaw or Virtue. A Verditius's first Inner Mystery counts its Hubris as a Minor Ordeal when no other is named.
+
+The **Script bonus** typed on the plan is added to the components. A component listed twice that may be held once, or a size out of its range, invalidates the whole Script (TMRE p. 16).
+
+With no components listed, the typed bonus is the whole Script. The one exception is a Verditius's first Inner Mystery, which adds its Hubris Ordeal's +3 to the typed bonus and to a catalog Script's printed bonus. That Ordeal always comes, and the bonus can't know of it (Houses of Hermes: Mystery Cults pp. 117-118).
+
+A Verditius Initiate is also offered the House's own components (Houses of Hermes: Mystery Cults p. 117).
+
+- A lesser enchanted item of the 4th magnitude sacrificed, +3.
+- A greater one of the 7th, or the Initiate's talisman, +6.
+- The Mystagogue's wealth, +1, once.
+- The Outer Mystery given as the Arts are opened, +6.
+
+A hedge or House Script from the catalog keeps its printed bonus, and the season's note lists its components as the book gives them. The Verditius Outer Mystery's components add to 14, though the book prints +12, which is used.
+
+**Sacrifices.** When the Script makes a sacrifice, choose in **Sacrificed** what's given up.
+
+- One of the Initiate's devices, a talisman among them.
+- Their carried items, books or familiar.
+- An apprentice.
+- Mundane wealth.
+- Vis.
+- A season serving the cult.
+
+The sacrifice is made when the season is played, Initiation or not, and the Diary says so. A device, item, book or familiar is gone, so it can't be sacrificed twice. A season of service takes the next season as Other, unless it's planned already. Vis is taken from the Initiate's own raw vis, as many pawns of the Art as **Vis of** and **Pawns sacrificed** say.
+
+A plan whose vis isn't there to give is refused, since a Sacrifice that isn't made invalidates the whole Script (The Mysteries Revised Edition p. 16). The bonus it brings is the Script's Sacrifice component (The Mysteries Revised Edition pp. 12, 15-16).
+
+### House Mysteries
+<!-- help: guide-initiation-houses -->
+
+Four Houses' Scripts are listed under the House's name on the Initiation's Script field, and each brings rules of its own.
+
+**House Verditius** (Houses of Hermes: Mystery Cults pp. 118-135)
+
+- **Scripts.** Every magus with Verditius Magic can follow the House's sample Scripts, listed under House Verditius (Mystery Cult). There's one for each of the eight Inner Mysteries, the Outer Mystery and four confraternities'.
+- **Lore.** The Lore is Mystery Cult Lore: Verditius, the book's Verditius Cult Lore. The Initiate needs it at 3 for a Minor Inner Mystery and 5 for a Major (p. 118).
+- **Hubris.** The first Inner Mystery always brings the Flaw Hubris as a Minor Ordeal. The season adds the Flaw and sets the Hubris Personality Trait to 1, +1 with Proud, or +3 with Proud as a Major Flaw.
+- **Hubris experience.** Each Inner Mystery adds its Hubris experience, 1 for a Minor and 3 for a Major (DE p. 242). The Increased Hubris Ordeal adds enough for one more point (Houses of Hermes: Mystery Cults p. 121). Hubris grows like an Ability, and its experience toward the next point is kept with the trait. See [Hubris](help:verditius-hubris) for what a sale, the Contest or a vendetta does to it.
+- **The House's Ordeals.** Each may be suffered once. Prone to Chance and Averse to Risk exclude each other, and no one in the Primus's line may Sever the Ties that Bind (pp. 120-121).
+- **Confraternities.** A confraternity's Script also notes the Mystery and Flaw it gives its members, their Craft and the confraternity's path, for Roland, Balento, Irene the Younger and Himinis the Mad (pp. 121-123).
+
+**House Merinita** (Houses of Hermes: Mystery Cults pp. 83-106)
+
+- **Scripts.** Every magus with Faerie Magic belongs to the House and can follow its lineages' sample Scripts, listed under House Merinita (Mystery Cult).
+  - The Line of Quendalon's Animae Magic.
+  - The Heirs to Merlin's Charm Magic.
+  - The Followers of Pendule's Spell Timing.
+  - The Shadow-Masters' Glamour.
+  - The Vestals' Nature Lore, as Lares Lore.
+  - The True Merinitae's Wilding.
+- **Lore.** The Lore is Mystery Cult Lore: Merinita, the book's House Merinita Lore. An Initiate needs it at 1 for an Inner Mystery (p. 88).
+- **What each needs.** The Arcadian, Folk and Illusion Mysteries need Faerie Magic, and Binding the Gift is the House's own. The Nature Mysteries, such as Awakening, Wilding and Guardian of Nature, need Nature Lore instead, not the House's Lore (pp. 86, 102-104).
+- **Glamour** always brings the Major Flaw Vulnerable Magic as its Ordeal. The season adds it, unless the plan's Ordeal names it already, and a Script written out as components counts its Major Ordeal.
+- **Vulnerable Magic's condition.** Type it on the plan. It must be one the magus doesn't have the Flaw for already, since the Flaw is taken again only with a new condition (pp. 87, 102).
+- **Perpetuity.** Its season notes that it usually brings Unnatural Magic.
+
+**House Bjornaer** (Houses of Hermes: Mystery Cults pp. 24-33)
+
+- **Scripts.** Every magus with the Heartbeast can follow the House's Scripts, listed under House Bjornaer (Mystery Cult).
+- **Lore.** The Lore is Mystery Cult Lore: Bjornaer. The rules also read the book's House Bjornaer Lore, the Initiation Total included, so a character with either name scores it (HoH:MC pp. 28, 30, Errata p. 54).
+- **The Ritual of Twelve Years** gives the Heartbeast, Target 15, Script +6. Type the Participation Modifier as the other modifier. It's +1 for each witness, the Mystagogue included, whose heartbeast shares the probationer's temperament, and -1 for each opposed. Sanguine opposes melancholic, and choleric phlegmatic (p. 26).
+- **Heartbeast.** Choose Heartbeast as the Virtue initiated. The season then adds Heartbeast 1, and the familiar forgone counts as a Minor Ordeal.
+- **Who can't take the Ritual.** It fails for one who has ever bound a familiar, even one since dead (DE p. 234; p. 24). The app sees a familiar bound to them now, or a familiar season in their Diary. Tick **Has ever bound a familiar** on the plan for one it can't see. The Ritual is refused to an Initiate of another House's Mystery (p. 18), and it's never repeated.
+- **Clan Ilfetu** leads the Ritual and the House Mysteries, Secret Name +8, Theriomorphy +6 and Sensory Magic +9 (p. 25). A Clan Mystery's Trial, Deed or Oath is +7, or the Trial +13 with a Major Ordeal. It needs a Mystagogue with Presence + the Lore 8, less the Initiate's past Ordeal's reduction.
+- **The Mystery of the Inner Heartbeast**, the Epitome, Chimera or Anima, needs the Lore 5. It's Target 21, Script +13. Its Ordeal is a Major Hermetic or Supernatural Flaw or, for a magus who changes shape, the loss of their Skinchanger or Shapeshifter (pp. 17, 28-30). With no Mystagogue chosen, the Great Beast leads it, with Presence +2 and the Lore 8.
+- **The Epitome** raises one Characteristic. The inner heartbeast's rises to the species' + 3 and the human form's by 1. The outer heartbeast changes only through that +1, combined as usual (pp. 23, 30). So the book's example ends with an inner Perception of +5 and an outer +2, the eagle's own, one above where it started.
+- **The app's reading of the Epitome.** The app follows the rule text above. Errata p. 54 gives the outer heartbeast +5, but that's the inner figure and contradicts the rule. Through the Aegis p. 14, with Hilde Oddfish's Strength +7 outer and +10 inner, applies the rule as written.
+- **Refinements** of the inner heartbeast are the magus's own. The embryonic Script is +7, and +3 where the inner heartbeast resonates: an Epitome with Virtues and Characteristics, a Chimera with Qualities and Size, an Anima with Powers.
+- **A Refinement's Target** is 15 for a Quality, 18 for Size, a Characteristic or a Minor Virtue, 21 for a Minor Power and 30 for a Major Virtue or Power, lowered by past Ordeals as usual. Each earlier increase of the same Size or Characteristic adds 3, so take 3 from the other modifier for each.
+- **After a Refinement.** The season notes the vis eaten, a pawn per three points of the Ease Factor, and the Warping Point. A Refinement changes only the inner heartbeast, so note it on the sheet by hand (pp. 32-33).
+
+**House Criamon** (Houses of Hermes: Mystery Cults pp. 61-71; Errata p. 55)
+
+- **Scripts.** A Criamon magus's paths are listed under House Criamon (Mystery Cult), one Script for each avenue. The Enigma's Follow an Avenue plans one, and the avenues are followed in order along a path.
+- **Lore, guide and Target.** The Lore is Mystery Cult Lore: Criamon, and the book's House Criamon Lore counts too. A station needs it at its place on the path + 1. Each avenue's Target is a Major Virtue's 21, as the book prints it whether or not the guide holds the station, lowered by past Ordeals as usual.
+- **The guide.** With no Mystagogue chosen, the guide the House provides leads at Presence + Lore 6, the printed Scripts' assumption. A ghostly Primus leads instead when The Enigma names one, at Lore 9 with the Presence set on Change Path (p. 60). The Mystagogue need only know House Criamon Lore (DE p. 387). The app notes one not of the House as unusual, which is its own reading. See [The path](help:section-char-criamon-path).
+- **Ordeals.** When the plan names no Ordeal of its own, the station's Ordeal Flaws are added, a Major Pious replacing Vow or Higher Purpose. The Ordeal counts at the size the book's next Targets show.
+- **Virtues from stations.** Some stations add catalog Virtues too, such as Clear Thinker, Common Sense and Keen Vision, the Gentle Gift or the Blatant Gift lifted to an ordinary Gift, and Free Expression and Inspirational (pp. 64, 70-71).
+- **Aptitude.** An aptitude for a path, from a head bound in infancy, adds +3 to its first station (p. 51).
+
+**See also:** [Plan Season](help:plan-season), [Virtues & Flaws](help:tab-vf), [Advancing a season](help:advance-season), [How the app handles advancement](help:guide-advancement), [The Enigma](help:tab-criamon), [Hubris](help:verditius-hubris)
 
 # How to import and export
 <!-- help: guide-import-export -->
@@ -1418,63 +1529,90 @@ Library books, creatures and Lab Texts are the saga's records, not catalog entri
 # How to hold a Tribunal
 <!-- help: guide-tribunal -->
 
-This guide walks one meeting from the roll call to the Closing: a Rhine Tribunal meeting in Summer 1228 with one charge on its docket, Fengheld v. Keep (Fengheld says Keep took the vis of the Rhine ford), and one motion. The rules are Ars Magica Definitive Edition, Chapter 2: The Order of Hermes, Tribunals, with Houses of Hermes: True Lineages (House Guernicus, Tribunal Procedures) for hearing a case and Houses of Hermes: Societates (House Tytalus, The Fine Art of Debate, pp. 90-92) for the debate. [Hold Tribunal](help:hold-tribunal) has every step in full.
+The Rhine Tribunal meets in Summer 1228, with one charge on its docket and one motion. The charge is Fengheld v. Keep, since Fengheld says Keep took the vis of the Rhine ford. Here's that meeting, from the roll call to the Closing.
+
+The rules are Ars Magica Definitive Edition, Chapter 2: The Order of Hermes, Tribunals. Houses of Hermes: True Lineages (House Guernicus, Tribunal Procedures) covers hearing a case, and Houses of Hermes: Societates (House Tytalus, The Fine Art of Debate, pp. 90-92) the debate. [Hold Tribunal](help:hold-tribunal) has every step in full.
 
 ### Before the meeting
 <!-- help: guide-tribunal-before -->
 
-Put the cases on the Tribunal's [Docket](help:tab-trib-docket): who brings each, who it is against, its Evidence (one testimony a line) and, if you know them, its prosecutor and defender. Notice of a case is due a season before the meeting. Set the Tribunal's Praeco and Presiding Quaesitor on its sheet: neither votes at the meeting.
-
+1. **Put the cases on the Docket.** On the Tribunal's [Docket](help:tab-trib-docket), add each case with who brings it, who it's against, and its Evidence, one testimony a line. Add its prosecutor and defender if you know them. Notice of a case is due a season before the meeting.
+2. **Name the officers.** Set the Tribunal's Praeco and Presiding Quaesitor on its sheet. Neither votes at the meeting.
 <!-- tui -->
-Open the Tribunal's sheet and its [Meeting tab](help:tab-trib-meeting) (`4`). Before the meeting opens, the [Order of Business](help:section-meeting-business) lists the steps it would hold, day by day, and the top says "Not yet opened".
+3. **Open the Meeting.** Open the Tribunal's sheet and its [Meeting tab](help:tab-trib-meeting) (`4`). Before the meeting opens, the [Order of Business](help:section-meeting-business) lists the steps it would hold, day by day, and the top says "Not yet opened".
 <!-- /tui -->
 <!-- gui -->
-Open the Tribunal's page and its [Meeting](help:tab-trib-meeting) chapter. Before the meeting opens, the [Order of Business](help:section-meeting-business) lists the steps it would hold, day by day, and the top says "Not yet opened".
+3. **Open the Meeting.** Open the Tribunal's page and its [Meeting](help:tab-trib-meeting) chapter. Before the meeting opens, the [Order of Business](help:section-meeting-business) lists the steps it would hold, day by day, and the top says "Not yet opened".
 <!-- /gui -->
 
 ### Moving through the meeting
 <!-- help: guide-tribunal-moving -->
 
 <!-- tui -->
-Press `e` on the Order of Business. Each step is a form that starts by saying where you are ("Step 3 of 9") and what comes next, then **Worked out for you** (what the app does at this step) and **What you enter changes**. Saving a step holds it and opens the next straight away, so you can go from the roll call to the Closing in one sitting. `Escape` (Cancel) stops; the meeting is saved after every step and waits at the step in hand, and `e` later carries on from there. At the top of the tab, **Now** names the step in hand and **Then** the one after it.
+1. **Start holding it.** Press `e` on the Order of Business.
 <!-- /tui -->
 <!-- gui -->
-Click **Hold** under the Order of Business. Each step is a form that starts by saying where you are ("Step 3 of 9") and what comes next, then **Worked out for you** (what the app does at this step) and **What you enter changes**. Saving a step holds it and opens the next straight away, so you can go from the roll call to the Closing in one sitting. Cancel stops; the meeting is saved after every step and waits at the step in hand, and **Hold** later carries on from there. At the top of the chapter, **Now** names the step in hand and **Then** the one after it.
+1. **Start holding it.** Click **Hold** under the Order of Business.
+<!-- /gui -->
+2. **Read where you are.** Each step is a form that starts by saying where you are ("Step 3 of 9") and what comes next. Then come **Worked out for you**, what the app does at this step, and **What you enter changes**.
+3. **Save to go on.** Saving a step holds it and opens the next straight away, so you can go from the roll call to the Closing in one sitting.
+<!-- tui -->
+4. **Stop when you like.** `Escape` (Cancel) stops. The meeting is saved after every step and waits at the step in hand, and `e` later carries on from there.
+<!-- /tui -->
+<!-- gui -->
+4. **Stop when you like.** Cancel stops. The meeting is saved after every step and waits at the step in hand, and **Hold** later carries on from there.
 <!-- /gui -->
 
-To change a step already held, choose it in the Order of Business and hold it again: it is held anew, and saving it goes on to the step in hand.
+<!-- tui -->
+At the top of the tab, **Now** names the step in hand and **Then** the one after it.
+<!-- /tui -->
+<!-- gui -->
+At the top of the chapter, **Now** names the step in hand and **Then** the one after it.
+<!-- /gui -->
+
+To change a step already held, choose it in the Order of Business and hold it again. It's held anew, and saving it goes on to the step in hand.
 
 ### The roll call
 <!-- help: guide-tribunal-roll -->
 
-The first step calls the roll, and saving it opens the meeting. Each covenant's magi are listed with **all present** ticked. Untick it for Keep and tick only the magi who came: Leandro stayed home. For a sketch covenant, say how many of its unnamed magi came. Then the proxies each covenant carries (Fengheld carries one sigil) and whether the Presiding Quaesitor allows them.
+1. **Call the roll.** The first step lists each covenant's magi with **all present** ticked. Saving it opens the meeting.
+2. **Mark who came.** Untick **all present** for Keep and tick only the magi who came, since Leandro stayed home. For a sketch covenant, say how many of its unnamed magi came.
+3. **Count the proxies.** Give the proxies each covenant carries (Fengheld carries one sigil) and whether the Presiding Quaesitor allows them.
 
-Worked out for you: the votes in the hall (one a magus present and one an allowed proxy, but none for the Praeco or the Presiding Quaesitor), and the quorum: twelve magi in person from four covenants, and a Quaesitor. The top of the Meeting shows **Present** ("4 votes, 1 by proxy") and **Quorum**. Only magi ticked present can speak at a hearing.
+The app works out the votes in the hall, one for each magus present and each allowed proxy, but none for the Praeco or the Presiding Quaesitor. It also checks the quorum, which needs twelve magi in person from four covenants, and a Quaesitor. The top of the Meeting shows **Present** ("4 votes, 1 by proxy") and **Quorum**. Only magi ticked present can speak at a hearing.
 
 <!-- gui -->
-On the desktop a card announces the meeting as it opens; close it, and the next step opens.
+On the desktop a card announces the meeting as it opens. Close it, and the next step opens.
 <!-- /gui -->
 
 ### Opening and the days
 <!-- help: guide-tribunal-opening -->
 
-Say where the meeting is held and how many days it lasts (3). Each case and motion is given a day, spread over every day but the last, which is kept for the rulings and the Closing; change a case's day to move its hearing and vote.
+1. **Set the place and the days.** Say where the meeting is held and how many days it lasts (3). Each case and motion is given a day, spread over every day but the last, which is kept for the rulings and the Closing.
+2. **Move a hearing, if you like.** Change a case's day to move its hearing and vote.
 
 ### Hearing a case
 <!-- help: guide-tribunal-hearing -->
 
-Fengheld v. Keep comes on its day. Choose the **Prosecutor** and **Defender** from the drop-downs: the magi present, each with their covenant. Leandro is absent, so the defence starts as **A Guernicus advocate**, who defends an accused who didn't come; a charge no one else will prosecute can be brought by **The Presiding Quaesitor**. The book has a Quaesitor step in only for a high crime, and drops a low crime no one prosecutes (True Lineages p. 56); the app offers the Quaesitor for any charge. A speaker with no debate scores written down (the advocate, or a sketch magus) gets **debates as**: Middling, Able or Formidable.
+1. **Choose the speakers.** Fengheld v. Keep comes on its day. Choose the **Prosecutor** and **Defender** from the drop-downs, which list the magi present, each with their covenant.
+2. **Fill an empty side.** Leandro is absent, so the defence starts as **A Guernicus advocate**, who defends an accused who didn't come. A charge no one else will prosecute can be brought by **The Presiding Quaesitor**.
+3. **Rate a speaker with no scores.** A speaker with no debate scores written down, such as the advocate or a sketch magus, gets **debates as**: Middling, Able or Formidable.
+4. **Debate.** Leave **Levels lost** blank and the debate is rolled, round by round. Or play the debate out at the table and enter both sides' levels lost. Either way, the side that loses fewer wins, and the difference is its Argument Strength.
+5. **Or settle it in private.** If both sides accept the Presiding Quaesitor's view at the private hearing, tick **Settled in private** instead. The case has no debate and no vote, and goes straight on to its ruling.
+6. **Hear the motion.** For the motion, the proposer speaks for it and **The Tribunal** against, since a motion is debated against the whole hall.
 
-Leave **Levels lost** blank and the debate is rolled, round by round: the speakers' Communication and Intelligence with their best debating Abilities (by lot among equals each round), the case's Evidence backing the prosecution and the **Defence testimony** the defence. Or play the debate out at the table and enter both sides' levels lost. Either way, the side that loses fewer wins, and the difference is its Argument Strength.
+The book has a Quaesitor step in only for a high crime, and drops a low crime no one prosecutes (True Lineages p. 56). The app offers the Quaesitor for any charge.
 
-If both sides accept the Presiding Quaesitor's view at the private hearing, tick **Settled in private** instead: the case has no debate and no vote, and goes straight on to its ruling.
-
-For the motion, the proposer speaks for it and **The Tribunal** against: a motion is debated against the whole hall.
+A rolled debate uses the speakers' Communication and Intelligence with their best debating Abilities, chosen by lot among equals each round. The case's Evidence backs the prosecution, and the **Defence testimony** the defence.
 
 ### Calling the vote
 <!-- help: guide-tribunal-vote -->
 
-The vote follows its hearing. Each covenant is listed with its leaning and why: "the case is against it", "Warm (+1) toward Fengheld, which brings it". Change a leaning if the story says otherwise; the tally under the form follows as you do. The debate's victor wins a share of the undecided votes when the covenants are called. If the votes tie, choose how the Praeco casts.
+1. **Read the leanings.** The vote follows its hearing. Each covenant is listed with its leaning and why, such as "the case is against it" or "Warm (+1) toward Fengheld, which brings it".
+2. **Change a leaning if the story says otherwise.** The tally under the form follows as you do.
+3. **Break a tie.** If the votes tie, choose how the Praeco casts.
+
+The debate's victor wins a share of the undecided votes when the covenants are called.
 
 <!-- gui -->
 **Call the Vote** in The Hall shows the covenants called one by one, their seats filling.
@@ -1483,18 +1621,23 @@ The vote follows its hearing. Each covenant is listed with its leaning and why: 
 ### Rulings and their terms
 <!-- help: guide-tribunal-rulings -->
 
-On the last day, each case is ruled on. A ruling can be **Written out** (it starts as "Carried, 3 to 1") or made from a **ruling template**. Choose **Holds for a term** for Fengheld v. Keep, set any fine (3 pawns of Aquam, paid by Keep) and whether it goes into the Peripheral Code, and save: the template's blanks come next. Fill them in, and the sentence under the form shows the ruling as you go:
+1. **Choose how to rule.** On the last day, each case is ruled on. A ruling can be **Written out**, which starts as "Carried, 3 to 1", or made from a **ruling template**. Choose **Holds for a term** for Fengheld v. Keep.
+2. **Set the fine and the Code.** Set any fine (3 pawns of Aquam, paid by Keep) and whether the ruling goes into the Peripheral Code, and save.
+3. **Fill in the blanks.** The template's blanks come next. Fill them in, and the sentence under the form shows the ruling as you go.
 
 > Keep holds the Rhine ford's vis for 7 years, until it is debated again.
 
-The {years} blank sets a term. With a written-out ruling, its **term** (in years) sets one the same way. The templates are the saga's own: add or change them in the saga's settings, **Ruling templates**, where any word in braces is a blank to fill.
+The {years} blank sets a term. With a written-out ruling, its **term** in years sets one the same way. The templates are the saga's own. Add or change them in the saga's settings, **Ruling templates**, where any word in braces is a blank to fill.
 
 ### Closing, and what comes back
 <!-- help: guide-tribunal-closing -->
 
-The Treasury step shows the balance and the loans due. Closing then decides each case with a ruling (the fine owed to the treasury, though the book gives a third of it to the prosecutor, True Lineages p. 57; the ruling into the Peripheral Code, a party's attitude moved, the term set), writes the Acta into the Tribunal's Diary and sets the next meeting. Each step held has already written its minutes there.
+1. **Check the treasury.** The Treasury step shows the balance and the loans due.
+2. **Close the meeting.** Closing decides each case with a ruling, writes the Acta into the Tribunal's Diary and sets the next meeting. Each step held has already written its minutes there.
 
-The term comes back on its own. [Ahead](help:section-ahead) lists the season before it ends (Spring 1235) and the season it ends (Summer 1235). Advancing into Spring 1235 says the term ends next season; advancing into Summer 1235 says it has ended and puts "Fengheld v. Keep (debated again)" on the Docket, with the old ruling in its charge, for the next meeting.
+Closing carries out each ruling: the ruling into the Peripheral Code, a party's attitude moved, the term set and the fine owed to the treasury. The book gives a third of the fine to the prosecutor (True Lineages p. 57), but the app records it as owed to the treasury.
+
+The term comes back on its own. [Ahead](help:section-ahead) lists the season before it ends (Spring 1235) and the season it ends (Summer 1235). Advancing into Spring 1235 says the term ends next season. Advancing into Summer 1235 says it has ended and puts "Fengheld v. Keep (debated again)" on the Docket for the next meeting, with the old ruling in its charge.
 
 **See also:** [Hold Tribunal](help:hold-tribunal), [Meeting](help:tab-trib-meeting), [Docket](help:tab-trib-docket)
 
@@ -1541,32 +1684,32 @@ There are no headings, tables or links. The sheets give each piece of text its o
 # How to install a magic item in a laboratory
 <!-- help: guide-lab-magic-item -->
 
-An enchanted device kept in a laboratory can improve the laboratory itself (Ars Magica Definitive Edition, Chapter 8: Laboratory, Magic Items for Laboratories, p. 298; Covenants p. 121). This guide covers the two kinds of benefit, installing an item in play and while a laboratory is being set up, and when an item is a Feature instead.
+Your magus has a cauldron that always stays at the right heat, and it belongs in the laboratory, not on a shelf. An enchanted device kept in a laboratory can improve the laboratory itself (Ars Magica Definitive Edition, Chapter 8: Laboratory, Magic Items for Laboratories, p. 298; Covenants p. 121).
 
 ### Two kinds of benefit
 <!-- help: guide-lab-magic-item-kinds -->
 
-The item is installed as a **Magic Item** Virtue, which is Free (Minor, and so takes a point of space, when the item is very large), or as an **Enchantment** of the laboratory itself, also Free. One Virtue covers all of an item's effects. Each effect then gives one of two things:
+The item is installed as a **Magic Item** Virtue, which is Free, or as an **Enchantment** of the laboratory itself, also Free. A very large item's Magic Item Virtue is Minor instead, and so takes a point of space. One Virtue covers all of an item's effects, and each effect then gives one of two things.
 
-- **A Virtue or Flaw it duplicates.** An effect that does what a laboratory Virtue or Flaw does (a cauldron that always stays at the right heat, say) simply grants it. The laboratory gains it with no space cost, and so no Build Points at creation, and its modifications apply as usual.
-- **Points bought by its level.** Otherwise the effect's final level buys one Specialization point for every 10 levels, or one Characteristic point for every 20: a level 20 lectern's effect could give Texts +2, or Safety +1. These points need no Virtue at all beyond the Free Magic Item.
+- **A Virtue or Flaw it duplicates.** An effect that does what a laboratory Virtue or Flaw does, such as the cauldron's, simply grants it. The laboratory gains it with no space cost, and so no Build Points at creation, and its modifications apply as usual.
+- **Points bought by its level.** Otherwise the effect's final level buys one Specialization point for every 10 levels, or one Characteristic point for every 20. A level 20 lectern's effect could give Texts +2, or Safety +1. These points need no Virtue at all beyond the Free Magic Item.
 
-An effect must be new to the laboratory: one that grants a Virtue the laboratory has already is flagged. A benefit counts only while its device is kept in the laboratory: move the device elsewhere and its points and the Virtue it grants stop counting, and its row says so, until the device comes back.
+An effect must be new to the laboratory, so one that grants a Virtue the laboratory has already is flagged. A benefit counts only while its device is kept in the laboratory. Move the device elsewhere and its points and the Virtue it grants stop counting, and its row says so, until the device comes back.
 
 ### Install one in play
 <!-- help: guide-lab-magic-item-play -->
 
 <!-- tui -->
-1. The device must be kept in the laboratory: press `5` for the laboratory's Inventory tab and `a` in [Enchanted Devices](help:section-lab-devices) to add it with its effects, or set an existing device's **Held by** to the laboratory.
-2. Press `4` for the [Attributes tab](help:tab-lab-attributes) and `a` in [Magic Items](help:section-lab-magic-items).
-3. Choose the **Effect**, how the item is **Installed as**, and what it **Gives**, then press Next.
-4. For a Virtue or Flaw, pick it from the catalog (Feature Virtues and Focus Flaws aren't offered: those are Features). For points, choose up to three Specializations and two Characteristics with their points. The form says the effect's level, and refuses more points than the level buys.
+1. **Keep the device in the laboratory.** Press `5` for the laboratory's Inventory tab and `a` in [Enchanted Devices](help:section-lab-devices) to add it with its effects. Or set an existing device's **Held by** to the laboratory.
+2. **Open Magic Items.** Press `4` for the [Attributes tab](help:tab-lab-attributes) and `a` in [Magic Items](help:section-lab-magic-items).
+3. **Describe the install.** Choose the **Effect**, how the item is **Installed as**, and what it **Gives**, then press Next.
+4. **Choose what it gives.** For a Virtue or Flaw, pick it from the catalog. Feature Virtues and Focus Flaws aren't offered, since those are Features. For points, choose up to three Specializations and two Characteristics with their points. The form says the effect's level, and refuses more points than the level buys.
 <!-- /tui -->
 <!-- gui -->
-1. The device must be kept in the laboratory: choose **Stores** in the laboratory's rail and add it under [Enchanted Devices](help:section-lab-devices) with its effects, or set an existing device's **Held by** to the laboratory.
-2. Choose **Specializations** in the rail and click **Add** under [Magic Items](help:section-lab-magic-items).
-3. Choose the **Effect**, how the item is **Installed as**, and what it **Gives**, then click Next.
-4. For a Virtue or Flaw, pick it from the catalog (Feature Virtues and Focus Flaws aren't offered: those are Features). For points, choose up to three Specializations and two Characteristics with their points. The form says the effect's level, and refuses more points than the level buys.
+1. **Keep the device in the laboratory.** Choose **Stores** in the laboratory's rail and add it under [Enchanted Devices](help:section-lab-devices) with its effects. Or set an existing device's **Held by** to the laboratory.
+2. **Open Magic Items.** Choose **Specializations** in the rail and click **Add** under [Magic Items](help:section-lab-magic-items).
+3. **Describe the install.** Choose the **Effect**, how the item is **Installed as**, and what it **Gives**, then click Next.
+4. **Choose what it gives.** For a Virtue or Flaw, pick it from the catalog. Feature Virtues and Focus Flaws aren't offered, since those are Features. For points, choose up to three Specializations and two Characteristics with their points. The form says the effect's level, and refuses more points than the level buys.
 <!-- /gui -->
 
 The Virtues & Flaws list shows a granted Virtue as "from" its item, and the Magic Item Virtue with its item's name. The points join the laboratory's Specializations and Characteristics, each named "(magic item)" where its sources are listed.
@@ -1574,23 +1717,27 @@ The Virtues & Flaws list shows a granted Virtue as "from" its item, and the Magi
 ### Install one while setting up a laboratory
 <!-- help: guide-lab-magic-item-creation -->
 
-On a new laboratory's **Setting Up** step, **Install a magic item** offers **A new enchanted device**, or a device already kept in the laboratory. A new device is made in three forms: the device (kept in this laboratory), its effect, then what the effect gives, as above. The device and its effect are kept as each is saved, so cancelling later leaves them in the laboratory's Enchanted Devices, ready to install another time. The step lists what each magic item gives.
+1. **Choose Install a magic item.** On a new laboratory's **Setting Up** step, **Install a magic item** offers **A new enchanted device**, or a device already kept in the laboratory.
+2. **Fill in the three forms.** A new device takes three forms, one after another. The first is the device, kept in this laboratory, then its effect, then what the effect gives, as above.
+3. **Check the list.** The step lists what each magic item gives.
 
-For a starting laboratory, the covenant's Build Points pay for the device as for any enchanted item (2 for every 5 levels of each effect), on the covenant's Resources step under Enchanted items, and its effects count against the Power Level's highest effect level. A Virtue the item grants costs no Build Points.
+The device and its effect are kept as each is saved. So cancelling later leaves them in the laboratory's Enchanted Devices, ready to install another time.
+
+For a starting laboratory, the covenant's Build Points pay for the device as for any enchanted item, 2 for every 5 levels of each effect, on the covenant's Resources step under Enchanted items. Its effects count against the Power Level's highest effect level. A Virtue the item grants costs no Build Points.
 
 ### When the item is a Feature
 <!-- help: guide-lab-magic-item-feature -->
 
-An item can instead be made a Feature: a Lesser or Greater Feature, with the Aesthetics and the Specializations a Feature brings. Then it is not installed here: add it under [Features](help:section-lab-features), and its Feature Virtue takes space and costs Build Points as usual. The usual reason to choose a Feature is for what a Feature gives that points bought by level don't, such as Aesthetics or a Focus.
+An item can instead be made a Lesser or Greater Feature, with the Aesthetics and the Specializations a Feature brings. Then it isn't installed here. Add it under [Features](help:section-lab-features), and its Feature Virtue takes space and costs Build Points as usual. The usual reason to choose a Feature is for what a Feature gives that points bought by level don't, such as Aesthetics or a Focus.
 
 ### What the app does for you
 <!-- help: guide-lab-magic-item-app -->
 
-**The app works out:** the effect's final level, how many points it can buy, the space and Build Points each Virtue takes (none for a granted one, a Minor Virtue's for a very large item), the Specializations and Characteristics with the item's points added, and the Build Points of a starting laboratory's devices.
+**The app works out** the effect's final level, how many points it can buy, and the space and Build Points each Virtue takes. That's none for a granted Virtue, and a Minor Virtue's for a very large item. It also works out the Specializations and Characteristics with the item's points added, and the Build Points of a starting laboratory's devices.
 
-**You type:** the device and its effects, how the item is installed, and what each effect gives.
+**You type** the device and its effects, how the item is installed, and what each effect gives.
 
-When the device or one of its effects is deleted or destroyed, what it gave goes with it, and the Magic Item Virtue once no other effect uses it.
+When the device or one of its effects is deleted or destroyed, what it gave goes with it, and the Magic Item Virtue goes once no other effect uses it.
 
 **See also:** [Magic Items](help:section-lab-magic-items), [Enchanted Devices](help:section-lab-devices), [Set up a laboratory](help:guide-creation-lab), [How lab planning works](help:guide-lab-planning)
 
