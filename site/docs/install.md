@@ -75,12 +75,11 @@ Your sagas, their backups, exports and your settings live in your **save
 folder**, not in the app's folder, so you can update or reinstall Armarius
 without losing anything.
 
-- With **OneDrive** on the computer, the save folder is `Armarius` at the
-  top of your OneDrive (for example `C:\Users\you\OneDrive\Armarius`),
-  where OneDrive backs it up.
-- Without OneDrive, it is `Armarius` in your app data folder
+- The save folder is `Armarius` in your app data folder
   (`C:\Users\you\AppData\Local\Armarius` on Windows,
   `~/.local/share/Armarius` on Linux).
+- If an older version saved somewhere else by default (such as
+  `Armarius` at the top of your OneDrive), Armarius keeps saving there.
 
 The **Sagas** page shows the folder in use at its foot. **Change Save
 Folder** there moves it somewhere else and can carry your saves across. The

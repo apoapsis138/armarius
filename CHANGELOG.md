@@ -132,6 +132,12 @@ change in it.
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## Unreleased
+
+### Fundamenta
+
+- **Sagas saved on this computer by default.** A new install keeps its sagas in your app data folder (`C:\Users\you\AppData\Local\Armarius` on Windows, `~/.local/share/Armarius` on Linux), not in OneDrive, where a sync could catch a save half-written. If you already use Armarius, nothing moves: it goes on saving where it always has, now shown as a folder you chose. Change save folder on the saga picker moves it.
+
 ## 4.13.0 — 2026-11-14
 
 ### Castellum

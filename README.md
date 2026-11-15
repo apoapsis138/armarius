@@ -115,8 +115,7 @@ how-to guides walk through the rest. Hosting a saga for players is in
 Help's guide to sharing.
 
 Your sagas, backups, exports and settings live in your **save folder**,
-by default `Armarius` at the top of your OneDrive (or your app data folder
-without one). The saga picker shows where it is, and More (`m`) there has
+by default `Armarius` in your app data folder. The saga picker shows where it is, and More (`m`) there has
 **Change save folder**. The `ARMARIUS_DATA` environment variable
 overrides it.
 
