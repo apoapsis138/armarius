@@ -265,12 +265,29 @@ def test_an_unwritable_data_folder_falls_back_to_the_saves_in_the_repo(blocked):
     assert (old / "sagas" / "a.json").exists()
 
 
-def test_with_no_saves_in_the_repo_it_falls_back_to_app_data(blocked):
-    # The fallback is the app data folder, which is now the default too:
-    # the app says it can't be used, and goes on with it.
+def test_a_blocked_default_with_no_saves_in_the_repo_has_no_fallback(blocked):
+    # The fallback would be the app data folder, the one blocked: the app
+    # says so and doesn't pretend to fall back.
     problem = paths.settle_data_dir(blocked / "empty_repo_data")
+    assert paths.source() == "default"
     assert paths.data_dir() == blocked / "AppData" / "Armarius"
-    assert problem is not None
+    assert problem is not None and "Change save folder" in problem
+    assert "Using" not in problem
+
+
+def test_a_blocked_chosen_folder_falls_back_to_app_data(no_choice, monkeypatch):
+    chosen = no_choice / "OneDrive" / "Armarius"
+    paths.remember_data_dir(chosen)
+    paths.use_data_dir(None)
+    real = paths.writable
+    monkeypatch.setattr(
+        paths, "writable", lambda folder: folder != chosen and real(folder)
+    )
+    problem = paths.settle_data_dir(no_choice / "empty_repo_data")
+    fallback = paths.data_dir()
+    monkeypatch.setattr(paths, "_fallback", None)
+    assert fallback == no_choice / "AppData" / "Armarius"
+    assert problem is not None and f"Using {fallback} instead" in problem
 
 
 def test_a_writable_data_folder_needs_no_fallback(no_choice):

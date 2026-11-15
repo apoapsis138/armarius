@@ -32,7 +32,8 @@ or renamed, and nobody is asked.
 If the folder can't be made or written to -- on Windows, Defender's
 Controlled folder access blocks python.exe from writing in protected folders
 such as Documents -- settle_data_dir() falls back to where the data already
-is.
+is, or to the app data folder; when the app data folder is the one blocked,
+there is nowhere to fall back to, and it says so.
 """
 
 from __future__ import annotations
@@ -217,7 +218,16 @@ def settle_data_dir(legacy: Path = DATA_DIR) -> str | None:
     if any((legacy / SAGAS).glob("*.json")):
         _fallback = legacy
     else:
-        _fallback = Path(platformdirs.user_data_dir(APP_NAME, appauthor=False))
+        app_data = Path(platformdirs.user_data_dir(APP_NAME, appauthor=False))
+        if app_data.resolve() == wanted.resolve() or not writable(app_data):
+            # Nowhere better to go: say so rather than pretend to fall back.
+            return (
+                f"Couldn't save in {wanted} (on Windows, Controlled folder "
+                "access in Windows Security may be blocking it). Choose "
+                "another folder with Change save folder, in More (m) on the "
+                "saga picker."
+            )
+        _fallback = app_data
     return (
         f"Couldn't use {wanted} (on Windows, Controlled folder access in "
         f"Windows Security may be blocking it). Using {_fallback} instead; "

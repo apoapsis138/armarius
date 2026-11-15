@@ -263,12 +263,12 @@ This guide covers moving records between sagas, bringing books and spells in fro
 <!-- tui -->
 1. In the tree, select the covenant, laboratory or character you want to move. Leave focus on its tree node or on the panel at the top of its sheet.
 2. Press `m` (More) and choose **Export**.
-3. In the Export dialog, check the **File**. It starts in the app's exports folder (`exports`, in your save folder) with a name made from the record's name; `.amm.json` is added if you give no `.json` ending. A character with a portrait goes as a zip, `.amm.zip`, holding the file and the portrait. The line above Export warns when the file exists and will be replaced.
+3. In the Export dialog, check the **File**. It starts in the app's exports folder (`exports`, in Armarius in your OneDrive folder) with a name made from the record's name; `.amm.json` is added if you give no `.json` ending. A character with a portrait goes as a zip, `.amm.zip`, holding the file and the portrait. The line above Export warns when the file exists and will be replaced.
 <!-- /tui -->
 <!-- gui -->
 1. Open the page of the covenant, laboratory or character you want to move.
 2. Open its **Manage** chapter and click **Export**.
-3. In the Export form, check the **File**. It starts in the app's exports folder (`exports`, in your save folder) with a name made from the record's name; `.amm.json` is added if you give no `.json` ending. A character with a portrait goes as a zip, `.amm.zip`, holding the file and the portrait. The line under the fields warns when the file exists and will be replaced.
+3. In the Export form, check the **File**. It starts in the app's exports folder (`exports`, in Armarius in your OneDrive folder) with a name made from the record's name; `.amm.json` is added if you give no `.json` ending. A character with a portrait goes as a zip, `.amm.zip`, holding the file and the portrait. The line under the fields warns when the file exists and will be replaced.
 <!-- /gui -->
 4. For a covenant, tick **With its laboratories and characters** to take them too.
 5. Choose **Export**.
@@ -355,7 +355,7 @@ When an imported book or spell has the name of one already in the saga, the app 
 ### Keeping backups
 <!-- help: guide-import-export-backups -->
 
-Each saga is saved as one file, the saga's id followed by `.json`, in the `sagas` folder of your save folder (Change save folder on the saga picker moves it elsewhere). The app saves every change as you make it.
+Each saga is saved as one file, the saga's id followed by `.json`, in the `sagas` folder of Armarius in your OneDrive folder (see the README to keep it elsewhere). The app saves every change as you make it.
 
 - Before each season (or downtime run) is applied, the app copies the saga to `sagas/backups`, keeping the last five (the newest has the saga's own file name; older ones end `.1.json` to `.4.json`), each with a copy just after it (`.after.json`). **Undo Last Season** uses them (see [Undoing a mistake](help:guide-seasons-undo)).
 - That is the only backup the app keeps, so for anything older, copy the saga's file yourself from time to time.
