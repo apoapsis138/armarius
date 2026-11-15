@@ -1413,7 +1413,7 @@ The term comes back on its own. [Ahead](help:section-ahead) lists the season bef
 # How to format your notes
 <!-- help: guide-formatting -->
 
-The longer text you write yourself, such as a Biography, a covenant's Description, a record's Secrets or a book's Description, can carry a little formatting. A field that takes it says so in the hint under its box. You type the marks into the box as plain text, and they turn into formatting wherever the app shows what you wrote.
+You'd like a covenant's Secrets to read as a tidy list, with each name in bold. The longer text you write yourself, such as a Biography, a covenant's Description, a record's Secrets or a book's Description, can carry a little formatting. A field that takes it says so in the hint under its box. You type the marks into the box as plain text, and they turn into formatting wherever the app shows what you wrote.
 
 ### The marks
 <!-- help: guide-formatting-marks -->
@@ -1429,7 +1429,7 @@ The longer text you write yourself, such as a Biography, a covenant's Descriptio
 | two spaces before the `- ` or `1. ` | an item nested under the one above |
 | a blank line | a new paragraph |
 
-A mark needs words right beside it: `5 * 3` stays as written, and so does a mark left unclosed. To show a mark itself, put a backslash before it: `\*` shows `*`. Emphasis stops at a blank line and at the next list item, so a stray mark can't run on through the rest of the text.
+A mark needs words right beside it, so `5 * 3` stays as written, and so does a mark left unclosed. To show a mark itself, put a backslash before it: `\*` shows `*`. Emphasis stops at a blank line and at the next list item, so a stray mark can't run on through the rest of the text.
 
 ### An example
 <!-- help: guide-formatting-example -->
@@ -1448,7 +1448,7 @@ The sheet shows the first line as written, then two bulleted items, each opening
 ### What it doesn't do
 <!-- help: guide-formatting-limits -->
 
-There are no headings, tables or links: the sheets give each piece of text its own heading already. Fields that are read one entry a line, such as a case's Evidence or a random table's Rows, take no formatting, since the app reads their lines itself. The box you type in shows the marks, not the formatting; save to see it.
+There are no headings, tables or links. The sheets give each piece of text its own heading already. Fields that are read one entry a line, such as a case's Evidence or a random table's Rows, take no formatting, since the app reads their lines itself. The box you type in shows the marks, not the formatting. Save to see it.
 
 # How to install a magic item in a laboratory
 <!-- help: guide-lab-magic-item -->
@@ -1509,34 +1509,58 @@ When the device or one of its effects is deleted or destroyed, what it gave goes
 # How to run Mythic Locations' set pieces
 <!-- help: guide-mythic-locations -->
 
-Mythic Locations gives four set pieces with rules of their own. The app holds the Temple of Mercury's rituals as catalog spells with their rules; the other three are run at the table, and this page sums up their rules.
+The troupe is heading for the Cursewood, or the Temple of Mercury, and the site has rules of its own. Mythic Locations gives four such set pieces. The app holds the Temple of Mercury's rituals as catalog spells with their rules, and the other three are run at the table, with their rules summed up here.
 
 ### The Mercurian rituals
 <!-- help: guide-ml-mercurian -->
 
-The Temple of Mercury's library holds Lab Texts for nine rituals (Mythic Locations pp. 96-100). They are in the spell catalog with source ML, and a ritual's details panel says how it is learned.
+The Temple of Mercury's library holds Lab Texts for nine rituals (Mythic Locations pp. 96-100). They're in the spell catalog with source ML, and a ritual's details panel says how it's learned.
 
 - **Reading** one for its gist takes a day and needs Latin and a Magic Theory score. It gives the Arts, the magnitude and roughly what the ritual does, but can't be cast or invented from (p. 97).
-- **Translating** it into a Hermetic Lab Text is lab work. Each season adds the Lab Total in the ritual's Arts less its level; at twice the level the copy is done. That means a Lab Total above the level, and three times the level for a single season. Later translations get a bonus equal to the highest magnitude of any ritual already translated (one bonus, not a sum), but invention doesn't. Experimenting is allowed (p. 97).
-- **Inventing** it from the Hermetic copy is the usual Lab Text rule: one season when the Lab Total is at least the level. Range, Duration and Target can't be changed. Any magus with the copy may invent it (p. 97).
+- **Translating** it into a Hermetic Lab Text is lab work. Each season adds the Lab Total in the ritual's Arts less its level, and at twice the level the copy is done. That means a Lab Total above the level, and three times the level for a single season. Later translations get a bonus equal to the highest magnitude of any ritual already translated (one bonus, not a sum), but invention doesn't. Experimenting is allowed (p. 97).
+- **Inventing** it from the Hermetic copy is the usual Lab Text rule, one season when the Lab Total is at least the level. Range, Duration and Target can't be changed. Any magus with the copy may invent it (p. 97).
 - **Casting** is as a Hermetic Ritual of its Arts. It can be dispelled like one, but anyone with Magic Theory sees it isn't Hermetic (p. 97).
 
-Most rituals need a temple consecrated to Mercury, made by Consecration of Mercury's House, which also gives the temple a Magic aura of 1 where it had none (p. 99). Purification takes off a Decrepitude score, five years of apparent age and up to five Aging Points; it can't be cast on oneself (pp. 97-98). The player chooses which Characteristics the Aging Points come off, as the Definitive Edition also leaves to the player (DE pp. 391-392); the app takes them off those with the most first unless another choice is given. Transformation of Flesh to Spirit raises the aura by one, to at most 10, only if none of the caster's Arts is under twice the aura and the Penetration is above five times it (p. 99). Wizard's Initiation never works, and adds a botch die (pp. 99, 101).
+Most rituals need a temple consecrated to Mercury, made by Consecration of Mercury's House, which also gives the temple a Magic aura of 1 where it had none (p. 99).
 
-Five integrations open from these rituals, offered as research goals: a CrVi 50 aura-making guideline, a CrVi 55 aura-raising one and a Cr(Re)Vi 20 regio entrance (30 points each), the Mercurian Magic Virtue (45), and a mended Wizard's Initiation that gives The Gift (60) (pp. 100-101). Their kinds follow the Definitive Edition's sizes for a breakthrough: about 30 points for a Minor, 45 for a Major and 60 for a Hermetic (DE p. 277; Houses of Hermes: True Lineages p. 28).
+- **Purification** takes off a Decrepitude score, five years of apparent age and up to five Aging Points. It can't be cast on oneself (pp. 97-98). The player chooses which Characteristics the Aging Points come off, as the Definitive Edition also leaves to the player (DE pp. 391-392). The app takes them off those with the most first unless another choice is given.
+- **Transformation of Flesh to Spirit** raises the aura by one, to at most 10. It works only if none of the caster's Arts is under twice the aura and the Penetration is above five times it (p. 99).
+- **Wizard's Initiation** never works, and adds a botch die (pp. 99, 101).
 
-The aqueduct that fills the Scrying Pool takes 20 man-years to repair and five workers every season to keep running. Each season without them, roll a simple die against 3 + the seasons neglected in a row; under it, the aqueduct clogs. Its spring gives 5 pawns of Aquam vis each Summer solstice (pp. 96-97).
+Five integrations open from these rituals, offered as research goals (pp. 100-101):
+
+- a CrVi 50 aura-making guideline, 30 points
+- a CrVi 55 aura-raising guideline, 30 points
+- a Cr(Re)Vi 20 regio entrance, 30 points
+- the Mercurian Magic Virtue, 45 points
+- a mended Wizard's Initiation that gives The Gift, 60 points
+
+Their kinds follow the Definitive Edition's sizes for a breakthrough, about 30 points for a Minor, 45 for a Major and 60 for a Hermetic (DE p. 277; Houses of Hermes: True Lineages p. 28).
+
+The aqueduct that fills the Scrying Pool takes 20 man-years to repair and five workers every season to keep running. Each season without them, roll a simple die against 3 + the seasons neglected in a row. Under it, the aqueduct clogs. Its spring gives 5 pawns of Aquam vis each Summer solstice (pp. 96-97).
 
 ### Trekking in the Cursewood
 <!-- help: guide-ml-cursewood -->
 
-The Cursewood is crossed in five stages, each costing a Long-Term Fatigue level (Mythic Locations pp. 37-40). Choose a leader and a guide for each stage. Together they can lead as many people as their Leadership scores added together; each person over that adds a hazard.
+The Cursewood is crossed in five stages, each costing a Long-Term Fatigue level (Mythic Locations pp. 37-40). Choose a leader and a guide for each stage. Together they can lead as many people as their Leadership scores added together, and each person over that adds a hazard.
 
-Each stage, the guide rolls for the terrain: forest trail Sta + Survival, forest floor Per + Survival, swamp wading Sta + Athletics, boat Dex + Profession: Boating, swimming Str + Swimming, hill path Dex + Athletics, hill climb Str + Athletics. The roll takes -1 for each member besides the leader and guide, +1 for each other member who has the Ability, less the heaviest Encumbrance, and less the guide's Wound and Fatigue penalties (p. 37).
+Each stage, the guide rolls for the terrain (p. 37):
+
+| Terrain | Roll |
+|---|---|
+| Forest trail | Sta + Survival |
+| Forest floor | Per + Survival |
+| Swamp wading | Sta + Athletics |
+| Boat | Dex + Profession: Boating |
+| Swimming | Str + Swimming |
+| Hill path | Dex + Athletics |
+| Hill climb | Str + Athletics |
+
+The roll takes -1 for each member besides the leader and guide, and +1 for each other member who has the Ability. It also takes off the heaviest Encumbrance and the guide's Wound and Fatigue penalties (p. 37).
 
 | Roll | Result |
 |---|---|
-| 0 or botch | Lost: no progress, four hazards |
+| 0 or botch | Lost, with no progress and four hazards |
 | 3 | Four hazards |
 | 6 | Three hazards |
 | 9 | Two hazards |
@@ -1545,7 +1569,7 @@ Each stage, the guide rolls for the terrain: forest trail Sta + Survival, forest
 
 A stage takes an hour for each hazard, at least one. Retreating takes an hour a stage, without rolls. Short-Term Fatigue takes twice as long to recover here. A hazard during the night means no Fatigue is recovered. Eating or drinking anything from the wood gives a Light Wound (p. 38).
 
-The wood is an Infernal aura of 5: -5 to Recovery rolls, +5 to Damage, and five extra botch dice on physical rolls, the trek rolls included (p. 40). Its spirit's direct attacks must Penetrate, with +7 from his Magic regio, against Magic Resistance at -5 (p. 39). Forest Lore 3 or more tells a character more about the spirit, and from 7 lets them pass alone unhindered (p. 37).
+The wood is an Infernal aura of 5. That's -5 to Recovery rolls, +5 to Damage, and five extra botch dice on physical rolls, the trek rolls included (p. 40). Its spirit's direct attacks must Penetrate, with +7 from the spirit's Magic regio, against Magic Resistance at -5 (p. 39). Forest Lore 3 or more tells a character more about the spirit, and from 7 lets them pass alone unhindered (p. 37).
 
 ### The Faerie Toy Market
 <!-- help: guide-ml-toy-market -->
@@ -1554,53 +1578,77 @@ The merchants of Devil's Lane sell faerie toys made like Hermetic items (Mythic 
 
 - **Prices** are in vis, of any Form and any realm's taint. The lowest price is the pawns the item would take to make, +1, and +1 more for an effect of the sixth magnitude or higher. A charged item costs at least a pawn a charge, a mundane item 1 pawn. Merchants open at twice that and haggle down. They ask for odd payments that hold the right vis, and refuse one whose vis was taken out first (p. 107).
 - **Commissions** cost twice the vis, in Arts that suit the item, paid in advance. The opening price is four times the vis (p. 107).
-- **Lifetime:** every toy is glamour and stops working seven years after purchase, charges included (p. 107).
-- **The workshops** do a Lab Total of 100 of work a season for each merchant. A character can negotiate up to that much for themselves; unused work doesn't carry over, and characters can't pool theirs. The elves can make any Hermetic item, faerie Ranges, Durations and Targets included, but not a talisman (p. 112).
-- **Walter the book merchant** sells glamour books that last seven years: 1 pawn for a tractatus, 1 a level for a summa. A season with one is practice at Quality 5. His exercise slates last a year and a day, for 1 pawn (p. 109).
+- **Lifetime.** Every toy is glamour and stops working seven years after purchase, charges included (p. 107).
+- **The workshops** do a Lab Total of 100 of work a season for each merchant. A character can negotiate up to that much for themselves. Unused work doesn't carry over, and characters can't pool theirs. The elves can make any Hermetic item, faerie Ranges, Durations and Targets included, but not a talisman (p. 112).
+- **Walter the book merchant** sells glamour books that last seven years, at 1 pawn for a tractatus and 1 a level for a summa. A season with one is practice at Quality 5. His exercise slates last a year and a day, for 1 pawn (p. 109).
 
 ### Hunted by wolves
 <!-- help: guide-ml-wolves -->
 
-A wolf hunt has five phases (Mythic Locations pp. 139-142).
+A wolf hunt has five phases, in this order (Mythic Locations pp. 139-142).
 
-1. **The stalk.** The pack finds the trail with Per + Awareness and follows it with Per + Hunt, usually against 9. A group is 3 easier to follow; a lone, careful quarry adds its Stealth. Then the pack rolls Dex + Stealth against the prey's Per + Awareness. Each success brings it 10 + Qik paces closer. Two failures in a row, three in all, or getting within ten paces moves the hunt to the encounter (p. 140).
-2. **The encounter.** Prey that holds its ground is attacked; prey that runs starts the rush (p. 140).
-3. **The rush.** Rounds of six seconds. Each side rolls Qik + Athletics - Encumbrance + stress die. The winner moves the gap by 10 + Qik - Encumbrance paces on four legs, or 6 + Qik - Encumbrance on two. Both roll Sta + Athletics - Encumbrance against 9 each round, or lose a Short-Term Fatigue level. At zero paces comes the kill. Wolves usually turn to the chase when they lose a Fatigue level, or once the gap passes 100 paces (p. 140).
-4. **The chase.** Rounds of five to thirty minutes. Each round both roll Sta + Athletics - Encumbrance against 12, or lose a Long-Term Fatigue level. A group rolls for its most tired member, but wolves for their freshest. The wolves' Pursuit Total is Per + Hunt - Fatigue + modifier + stress die: +3 against two-legged prey, -3 for two-legged hunters of four-legged prey. The prey's Evasion Total is Dex + Athletics - Fatigue + stress die, with -6 to +6 for who knows the ground. Four rounds won by the prey and it escapes; four won by the wolves and it is cornered (p. 141).
-5. **The kill.** The pack attacks as a trained group led by its leader, and the rest cut off escape. A wolf may try a trip: Brawl Attack against Defense. A fleeing or unaware target defends only with Brawl or Evasion. Beating it by 3 or more knocks the target down, and its Defense is Qik - Encumbrance + stress die until it stands (pp. 141-142).
+**The stalk.** The pack finds the trail with Per + Awareness and follows it with Per + Hunt, usually against 9. A group is 3 easier to follow, and a lone, careful quarry adds its Stealth. Then the pack rolls Dex + Stealth against the prey's Per + Awareness. Each success brings it 10 + Qik paces closer. Two failures in a row, three in all, or getting within ten paces moves the hunt to the encounter (p. 140).
+
+**The encounter.** Prey that holds its ground is attacked. Prey that runs starts the rush (p. 140).
+
+**The rush.** Rounds of six seconds. Each side rolls Qik + Athletics - Encumbrance + stress die. The winner moves the gap by 10 + Qik - Encumbrance paces on four legs, or 6 + Qik - Encumbrance on two. Both roll Sta + Athletics - Encumbrance against 9 each round, or lose a Short-Term Fatigue level. At zero paces comes the kill. Wolves usually turn to the chase when they lose a Fatigue level, or once the gap passes 100 paces (p. 140).
+
+**The chase.** Rounds of five to thirty minutes. Each round both roll Sta + Athletics - Encumbrance against 12, or lose a Long-Term Fatigue level. A group rolls for its most tired member, but wolves for their freshest. The wolves' Pursuit Total is Per + Hunt - Fatigue + modifier + stress die, with +3 against two-legged prey and -3 for two-legged hunters of four-legged prey. The prey's Evasion Total is Dex + Athletics - Fatigue + stress die, with -6 to +6 for who knows the ground. If the prey wins four rounds, it escapes. If the wolves win four, it's cornered (p. 141).
+
+**The kill.** The pack attacks as a trained group led by its leader, and the rest cut off escape. A wolf may try a trip, a Brawl Attack against Defense. A fleeing or unaware target defends only with Brawl or Evasion. Beating it by 3 or more knocks the target down, and its Defense is Qik - Encumbrance + stress die until it stands (pp. 141-142).
 
 # How to follow a staged Hermetic Project
 <!-- help: guide-staged-project -->
 
-A Burning City, an Intangible Assassin or a Living Corpse is followed stage by stage (Hermetic Projects pp. 9-118).
+Your magi mean to raise a covenant in the heart of a volcano, and it'll take years of lab work in a set order. A Burning City, an Intangible Assassin or a Living Corpse is followed stage by stage (Hermetic Projects pp. 9-118).
 
-1. **Begin it.** Begin Project in Undertakings on the covenant's Seasons chapter (or Add in its Projects), and choose the kind. It starts with its chapter's stages.
-2. **Show it.** With more than one project, choose it on the projects list and use Show Project: Projects then shows its facts and rules, its stages and their works.
-3. **Spend seasons on a stage.** Plan a magus's lab work as usual (inventing a spell, enchanting a device) and choose the stage under **Spent on a project's stage**. When the season is played, it is kept with that stage's works. Work done at the table is Added on the works list.
-4. **Use the chapter's own rules.** A Burning City's hazards are on Take Harm, and More's Warning Bell rolls the bell. An Intangible Assassin's tunnels are Open a Tunnel's; More's Gather a Connection and Lower an Aegis keep a connection and face the Aegis. A Living Corpse's More's Death Roll is the magus's death.
-5. **Tick a stage done** with Edit on the stages list. The facts show the stage now and the seasons spent.
+1. **Begin it.**
+<!-- tui -->
+   Press `m` (More) on the covenant and choose Begin Project,
+<!-- /tui -->
+<!-- gui -->
+   Choose Begin Project in Undertakings on the covenant's Seasons chapter,
+<!-- /gui -->
+   then choose the kind. Once a project is begun, Add in its Projects starts another. Each starts with the stages its chapter of the book sets out.
+2. **Show it.** With more than one project, choose it on the projects list and use Show Project. Projects then shows its facts and rules, its stages and their works.
+3. **Spend seasons on a stage.** Plan a magus's lab work as usual, such as inventing a spell or enchanting a device, and choose the stage under **Spent on a project's stage**. When the season is played, it's kept with that stage's works. Add work done at the table on the works list.
+4. **Use a Burning City's rules.** Its hazards are on Take Harm, and **Warning Bell**, in More, rolls the bell.
+5. **Use an Intangible Assassin's rules.** Its tunnels come from Open a Tunnel. In More, **Gather a Connection** keeps a connection, and **Lower an Aegis** faces the Aegis.
+6. **Use a Living Corpse's rules.** **Death Roll**, in More, is the magus's death.
+7. **Tick a stage done.** Edit it on the stages list. The facts then show the stage now and the seasons spent.
 
 **See also:** [The staged project](help:section-cov-staged), [Stages](help:section-cov-staged-stages), [Take Harm](help:take-harm)
 
-# Which faith actions can he take?
+# How to see what a character's faith allows
 <!-- help: guide-religion -->
 
-A character's faith decides what the [Religion](help:tab-religion) offers him: the saints and the Church for a Christian, God's aid for a Jew or a Muslim, a yazata for a Mazdean. Each action is offered only to one the books allow.
+Your companion is about to face a demon, and you want to know what their faith lets them try. A character's faith decides what [Religion](help:tab-religion) offers them: the saints and the Church for a Christian, God's aid for a Jew or a Muslim, a yazata for a Mazdean. Each action is offered only to one the books allow.
 
 <!-- tui -->
-1. **Set his religion.** Open his Religion tab, focus Faith and press `e` (or set Religion on Biographical Detail). Blank counts as Christian. The tab is there while Realms of Power: The Divine, The Church or another book that gives the faiths their rites is in play (Saga Content).
-2. **See what he may do.** With focus in Faith, press `m` (More). Only the actions his faith offers him, and that he qualifies for, are listed.
+1. **Set their religion.** Open their Religion tab, focus Faith and press `e`, or set Religion on Biographical Detail. Blank counts as Christian. The tab is there while Realms of Power: The Divine, The Church or another book that gives the faiths their rites is in play (Saga Content).
+2. **See what they may do.** With focus in Faith, press `m` (More). Only the actions their faith offers them, and that they qualify for, are listed.
 <!-- /tui -->
 <!-- gui -->
-1. **Set his religion.** Open his Religion chapter (after Virtues & Flaws) and click Edit Religion beside Faith, or set Religion on Biographical Detail. Blank counts as Christian. The chapter is there while Realms of Power: The Divine, The Church or another book that gives the faiths their rites is in play (Saga Content).
-2. **See what he may do.** The buttons beside Faith are the actions his faith offers him, and that he qualifies for.
+1. **Set their religion.** Open their Religion chapter, after Virtues & Flaws, and click Edit Religion beside Faith, or set Religion on Biographical Detail. Blank counts as Christian. The chapter is there while Realms of Power: The Divine, The Church or another book that gives the faiths their rites is in play (Saga Content).
+2. **See what they may do.** The buttons beside Faith are the actions their faith offers them, and that they qualify for.
 <!-- /gui -->
-3. **Anyone of his faith.** A Christian may Invoke a Saint (no Ability or Virtue needed, RoP: The Divine p. 87), choose his Patron Saint (anyone may have one), and with The Church in play take an Indulgence, Vigil or Fast (The Church pp. 11-13). Devotion Points are for one who holds a Devotion or has a positive Pious trait (or the Pious Flaw) to begin one (pp. 12-13). A Mazdean invokes a yazata the same way, with The Cradle and the Crescent.
-4. **Only once something happens.** Threaten a Saint comes only after a saint has refused his invocation (RoP: The Divine p. 87): invoke first, and if the saint doesn't answer, Threaten appears with that saint.
-5. **A Muslim's own.** Invoke Baraka seeks a holy forbear's blessing at his shrine (the Qur'an anywhere), and The Hajj gives Pious +3 and 3 Faith Points (RoP: The Divine pp. 103-108).
-6. **Only with a Virtue or a trait.** Mystic Path needs a positive Pious trait and a tie to the Divine: True Faith, a Divine Supernatural Ability or Divine Warping (The Church p. 21). Invoke God's Aid needs one who may spend a Confidence Point: not a grog, nor Low Self-Esteem, unless he has True Faith (RoP: The Divine p. 41). Holy Influence needs spiritual authority: clergy, a monk, a rabbi, Temporal Influence or Inspirational (pp. 38, 75, 125); the app also accepts True Faith or Dominion Lore, its own reading.
-7. **The Church's sections.** With The Church in play a Christian has Petitions and the Canon Court; Add on each makes one (anyone may petition the Church, p. 46, and the canon courts hear laymen and clergy alike, p. 36). Holy Orders and Ordinations are there for one with a clerical Social Status (Clerk, Priest, Religious, Senior Clergy, Mendicant Friar) or a grade on record, and Perform an Exorcism for a clergyman only (p. 34). Only a Christian may plan an Ordination season, which is how a layman begins.
-8. **A pagan.** The books give no rite of his own: his faith is in a magic spirit (a Spirit Votary, DE p. 58) or in faerie (Realms of Power: Faerie p. 134), dealt with by the faerie actions in his Deeds chapter, under Dealings with Faerie.
+
+What's offered, and to whom:
+
+- **Anyone of their faith.** A Christian may Invoke a Saint, with no Ability or Virtue needed (RoP: The Divine p. 87), and choose a Patron Saint, since anyone may have one. With The Church in play they may also take an Indulgence, Vigil or Fast (The Church pp. 11-13). Devotion Points are for one who holds a Devotion, or who has a positive Pious trait or the Pious Flaw to begin one (pp. 12-13). A Mazdean invokes a yazata the same way, with The Cradle and the Crescent.
+- **Only once something happens.** Threaten a Saint comes only after a saint has refused the character's invocation (RoP: The Divine p. 87). Invoke first, and if the saint doesn't answer, Threaten appears with that saint.
+- **A Muslim's own.** Invoke Baraka seeks a holy forbear's blessing at the forbear's shrine, or with the Qur'an anywhere. The Hajj gives Pious +3 and 3 Faith Points (RoP: The Divine pp. 103-108).
+- **Only with a Virtue or a trait.** Mystic Path needs a positive Pious trait and a tie to the Divine, through True Faith, a Divine Supernatural Ability or Divine Warping (The Church p. 21). Invoke God's Aid needs one who may spend a Confidence Point, so never a grog, nor one with Low Self-Esteem, unless they have True Faith (RoP: The Divine p. 41).
+- **Only with spiritual authority.** Holy Influence needs a member of the clergy, a monk or a rabbi, or one with Temporal Influence or Inspirational (RoP: The Divine pp. 38, 75, 125). The app also accepts True Faith or Dominion Lore, its own reading.
+- **The Church's sections.** With The Church in play, a Christian has Petitions and the Canon Court, and Add on each makes one. Anyone may petition the Church (The Church p. 46), and the canon courts hear laymen and clergy alike (p. 36).
+- **Holy orders.** Holy Orders and Ordinations are there for one with a clerical Social Status or a grade on record. The clerical statuses are Clerk, Priest, Religious, Senior Clergy and Mendicant Friar. Perform an Exorcism is for a clergyman only (The Church p. 34). Only a Christian may plan an Ordination season, which is how a layman begins.
+- **A pagan.** The books give pagans no rite of their own. Their faith is in a magic spirit (a Spirit Votary, DE p. 58) or in faerie (Realms of Power: Faerie p. 134). They deal with it through the faerie actions under Dealings with Faerie,
+<!-- tui -->
+  in More on their record.
+<!-- /tui -->
+<!-- gui -->
+  in their Deeds chapter.
+<!-- /gui -->
 
 **See also:** [Devotion and the Saints](help:devotion), [Mystic Paths](help:mystic-path), [Invoking God's Aid](help:gods-aid), [Holy Influence](help:holy-influence)
 
@@ -1608,30 +1656,30 @@ A character's faith decides what the [Religion](help:tab-religion) offers him: t
 <!-- help: guide-threat-clock -->
 
 A threat can move on whenever the troupe fails something the saga asks
-of it, as a clock fills in a Powered by the Apocalypse game: the
+of it, as a clock fills in a Powered by the Apocalypse game. The
 Watchtower's due to Abnoba each Winter, unpaid, brings the Hollow Crown
 a step nearer.
 
-1. **Make the threat move along a track.** New Threat (or Edit) with
-   **Moves by** set to *A track* (or *An omen count*), and its position
-   where it stands now (0 for a fresh one).
-2. **Give its stages their steps.** Add each stage with **Comes at**:
-   the step it comes at (2, 4, 6). The last stage's step is the clock's
-   size: the threat's page shows ■■□□□□ 2 of 6.
-3. **Tie a place's trigger to it.** In the place's Regio, add (or
-   edit) a dated trigger, such as *Abnoba's due*, Winter, each year.
-   Choose the threat in **Moves a threat**, and how many steps failing
-   it moves the threat.
+1. **Make the threat move along a track.** Make a New Threat, or Edit
+   one, and set **Moves by** to *A track* or *An omen count*. Set its
+   position to where it stands now, 0 for a fresh one.
+2. **Give its stages their steps.** Add each stage with the step it
+   **Comes at**, such as 2, 4 and 6. The last stage's step is the
+   clock's size, so the threat's page shows ■■□□□□ 2 of 6.
+3. **Tie a place's trigger to it.** In the place's Regio, add or edit a
+   dated trigger, such as *Abnoba's due*, Winter, each year. Choose the
+   threat in **Moves a threat**, and how many steps failing it moves the
+   threat.
 4. **Play the seasons.** When the trigger's season is played, Advance
-   Season asks: **Failed** moves the threat on, **Kept** leaves it.
+   Season asks. **Failed** moves the threat on, and **Kept** leaves it.
    Either is written in the threat's Diary and the place's, and the
    stage it reaches comes.
 5. **Push it back when the troupe acts.** If the troupe thwarts it some
    other way, choose **Delay or Hasten** in the threat's More and move it
    back, with the reason.
 
-A threat moving by fixed dates has a clock too (a square for each
-stage), and Delay or Hasten moves all its stages still to come by the
+A threat moving by fixed dates has a clock too, with a square for each
+stage. Delay or Hasten moves all its stages still to come by the
 seasons you give.
 
 **See also:** [A threat](help:tab-nb-threat), [Triggers](help:section-nb-triggers), [The World Turns](help:world-turns), [Delay or Hasten](help:threat-delay)
@@ -1639,43 +1687,46 @@ seasons you give.
 # How to follow a story from its start to a threat
 <!-- help: guide-story-hook -->
 
-A season's work can start a story that comes later: a salamander drawn
+A season's work can start a story that comes later. A salamander drawn
 by Aurelia's fire spell hangs about her laboratory, and may want to
 become her familiar (a story event may come some time after the
-experiment, DE p. 276). The app keeps each one as an open Story Event until it is
-told, or grows into a threat.
+experiment, DE p. 276). The app keeps each one as an open Story Event
+until it's told, or grows into a threat.
 
-1. **Where they come from.** An experiment's story event writes one in
-   the covenant's Diary, concerning the magus, and a Disaster's
-   covenant story one concerning the covenant (DE p. 275); Suggest a
-   Story on a covenant's Hooks writes one when accepted. Add your own
-   in the covenant's Diary: a Story Event, Open, with what it
-   **Concerns**.
-2. **Find them.** The Region's [Open Stories](help:section-region-stories)
-   lists every open one of the troupe's covenants; a character's or
+1. **See where stories come from.** An experiment's story event writes
+   one in the covenant's Diary, concerning the magus. A Disaster's
+   covenant story writes one concerning the covenant (DE p. 275), and
+   Suggest a Story on a covenant's Hooks writes one when it's accepted.
+2. **Add your own.** In the covenant's Diary, add a Story Event, Open,
+   with what it **Concerns**.
+3. **Find them.** The Region's [Open Stories](help:section-region-stories)
+   lists every open one of the troupe's covenants. A character's or
    laboratory's Connections lists its own.
-3. **Take it up.** Each time the troupe plays some of it, **Take Up the
-   Tale** writes a chapter: the season, and what was done, met or
+4. **Take it up.** Each time the troupe plays some of it, **Take Up the
+   Tale** writes a chapter with the season, and what was done, met or
    avoided (see [Take Up the Tale](help:take-up-tale)). The story's
    details list its chapters.
-4. **Tell it.** When the troupe plays it out, Edit it and mark it
-   **Resolved**: the app asks for its last chapter, how it ended.
-5. **Or let it grow.** Left alone, it can become a threat of the Region:
+5. **Tell it.** When the troupe plays it out, Edit it and mark it
+   **Resolved**. The app asks for its last chapter, how it ended.
+6. **Or let it grow.** Left alone, it can become a threat of the Region.
    **Grow into a Threat** makes one from its words, and marks the story
-   Grown. Add the threat's stages, and give it a clock if a place's
-   trigger should move it (see
-   [How to set up a threat's clock](help:guide-threat-clock)). From then
-   on, take up the tale on the threat: its chapters go in its Diary, and
-   recording a stage's outcome can take one too (What the troupe did).
+   Grown.
+7. **Give the threat its stages.** Add them, and give it a clock if a
+   place's trigger should move it (see
+   [How to set up a threat's clock](help:guide-threat-clock)).
+8. **Take up the tale on the threat.** From then on, its chapters go in
+   the threat's Diary. Recording a stage's outcome can take one too, in
+   What the troupe did.
 
 **See also:** [Diary](help:tab-cov-diary), [Grow into a Threat](help:grow-story), [A threat](help:tab-nb-threat)
 
 # How to clear what needs you
 <!-- help: guide-needs-you -->
 
-The saga leaves things for the storyguide to settle: a story an
-experiment started, a side effect still to be named, a threat's stage
-whose season has passed. Needs You gathers them in one list.
+The saga leaves things for the storyguide to settle, such as a story an
+experiment started, a side effect still to be named or a threat's stage
+whose season has passed. Needs
+You gathers them in one list.
 
 1. **Look.** On the Seasons page,
 <!-- tui -->
@@ -1694,14 +1745,14 @@ whose season has passed. Needs You gathers them in one list.
 <!-- gui -->
    **Open**
 <!-- /gui -->
-   goes to the record: the covenant for a story (its Diary), the magus
-   for a spell, the holder for an enchanted item, the familiar for a
-   bond power, the threat for a stage.
-3. **Deal with it.** Tell or grow the story, or change its Revisit year;
-   describe each experimental effect on its form; record what became of
-   the stage, or delay the threat.
-4. **It goes.** The row leaves the list as soon as nothing is left to
-   do: there is nothing to mark as read.
+   goes to the record: the covenant for a story, at its Diary, the
+   magus for a spell, the holder for an enchanted item, the familiar for
+   a bond power, the threat for a stage.
+3. **Deal with it.** Tell or grow the story, or change its Revisit
+   year. Describe each experimental effect on its form. Record what
+   became of the stage, or delay the threat.
+4. **Watch it go.** The row leaves the list as soon as nothing is left
+   to do. There's nothing to mark as read.
 
 **See also:** [Open Stories](help:section-region-stories), [How to follow a story from its start to a threat](help:guide-story-hook), [Delay or Hasten](help:threat-delay)
 
@@ -1712,19 +1763,26 @@ Your troupe wants a royal tomb of your own to explore. Any place can be one,
 with *Lands of the Nile* in play.
 
 1. **Make the place.** In The Region, add a Place and tick its **Tomb** box.
-   A Tomb appears on it, a tab on the terminal and a chapter on the desktop.
-2. **Say whose it is.** Edit the [Tomb](help:tab-nb-tomb)'s block: its kind
+<!-- tui -->
+   A Tomb tab appears on it.
+<!-- /tui -->
+<!-- gui -->
+   A Tomb chapter appears on it.
+<!-- /gui -->
+2. **Say whose it is.** Edit the [Tomb](help:tab-nb-tomb)'s block. Its kind
    gives the base aura and Build Points, and the centuries of burials and any
    decay change the aura. Add Boons, and up to 10 points of Hooks.
 3. **Guard it.** Add curses, talismans and wards, and traps, each to its own
-   list. Each form shows the Build Points it costs, and the Tomb shows what is
+   list. Each form shows the Build Points it costs, and the Tomb shows what's
    left to spend.
 4. **Run it.** With a trap chosen, More's **Overcome It** walks through springing
    it: who is in danger, a look for it by the light there, each character's action,
    and the trap last. Talismans and wards work the same way.
 
-A tomb stays as you built it. Only the rolls change each time. Puzzles are
-written in the place's Description or Secrets: the book's minigame isn't a rule.
+A tomb stays as you built it, and only the rolls change each time. Write puzzles
+in the place's Description or Secrets, since the book's minigame isn't a rule.
+
+**See also:** [Tomb](help:tab-nb-tomb), [Overcome It](help:overcome-trap)
 
 # How to keep a covenant on the move
 <!-- help: guide-mobile-covenant -->
@@ -1734,29 +1792,38 @@ harvesting vis at auspicious times. It has the Constantly Mobile Hook.
 
 1. **Mark the water.** The book packs already mark their ports, anchorages and
    seas. For anywhere else, add the sea and the harbours it uses as Places in
-   The Region: an **Open water** Place with no aura, and **Port** or
-   **Anchorage** in the **Waters** field of the rest. A town isn't a Place, so
-   give a harbour town a Place of its own, with the town's aura: Divine 3 for a
-   town or city, 2 for a village.
-2. **Log where it is.** With its Mobile Hook,
-   [Whereabouts](help:section-cov-whereabouts) shows on its Overview: Add a Stop
-   there at the Place it is at now. Its aura is that Place's from now on. A
+   The Region. Make the sea an **Open water** Place with no aura, and set
+   **Port** or **Anchorage** in the **Waters** field of the rest.
+2. **Give a harbour town its own Place.** A town isn't a Place, so add one for
+   its harbour, with the town's aura. That's Divine 3 for a town or city, 2 for
+   a village.
+3. **Log where it is.** With its Mobile Hook,
+   [Whereabouts](help:section-cov-whereabouts) shows on its Overview. Add a Stop
+   there at the Place it's at now, and its aura is that Place's from now on. A
    covenant without a Mobile Hook isn't offered Add a Stop.
-3. **Plan the route.** Plan Route lists each leg and the seasons to stay. Tick
+4. **Plan the route.** Plan Route lists each leg and the seasons to stay. Tick
    **Circuit** if it goes round for ever.
-4. **Bring its own aura, if it has one.** Edit the Place that holds that aura or
+5. **Bring its own aura, if it has one.** Edit the Place that holds that aura or
    regio and set **Travels with**. Place the covenant there, and its laboratories
-   in the regio's level. Aura Boons act on the covenant's own Place, so they
-   need that travelling Place: without it, they do nothing away from home. Name
-   what carries the aura: a ship's timbers, a magestone, a spirit. The books'
-   travelling auras are small and strongly anchored, as Favonius's ships and
-   Delos are, so give anything above 3 or 4 a strong anchor of that kind.
-5. **Advance the season.** Advance Season asks: move on, stay, or go somewhere
-   else. Whatever you answer is logged as a stop.
-6. **Mind the Aegis.** A move leaves the Aegis behind, and a fleet can hold one
+   in the regio's level. Aura Boons act on the covenant's own Place, so without
+   that travelling Place they do nothing away from home.
+6. **Name what carries the aura.** A ship's timbers, a magestone or a spirit,
+   say. The books' travelling auras are small and strongly anchored, as
+   Favonius's ships and Delos are, so give anything above 3 or 4 a strong anchor
+   of that kind.
+7. **Advance the season.** Advance Season asks whether to move on, stay, or go
+   somewhere else. Whatever you answer is logged as a stop.
+8. **Mind the Aegis.** A move leaves the Aegis behind, and a fleet can hold one
    only at a Port. Cast it there, and it lasts as long as the fleet stays.
-7. **Send a ship away.** To part the fleet, set the ship's **Laboratory aboard**,
-   then choose her on Inventory (Possessions in the terminal) and **Detach**. **Rejoin** brings her back.
+9. **Send a ship away.** To part the fleet, set the ship's **Laboratory aboard**.
+   Then choose her on
+<!-- tui -->
+   Possessions
+<!-- /tui -->
+<!-- gui -->
+   Inventory
+<!-- /gui -->
+   and **Detach**. **Rejoin** brings her back.
 
 **See also:** [Whereabouts](help:section-cov-whereabouts), [Ships](help:section-pos-ship)
 
@@ -1764,26 +1831,32 @@ harvesting vis at auspicious times. It has the Constantly Mobile Hook.
 <!-- help: guide-guest-stay -->
 
 Flavia of Fengheld spends three years at a Rhine covenant to read its
-library: she pays three pawns of vis a year, studies its summae, and the
+library. She pays three pawns of vis a year, studies its summae, and the
 storyguide asks the fee each year.
 
 1. **Make her a guest.** On Flavia's Casting Scores, choose **Stay as
-   Guest** (More; on the desktop, under Current Location). Choose the
-   host in **Staying at**: a Rhine covenant fills in three years and
-   three pawns of vis a year (Guardians of the Forests p. 20). Elsewhere,
-   type the terms the troupe agrees. Tick **May study and copy from its
-   library**.
-2. **Cast and study there.** Her Casting Scores now count the host's
+   Guest**
+<!-- tui -->
+   in More (`m`).
+<!-- /tui -->
+<!-- gui -->
+   under Current Location.
+<!-- /gui -->
+2. **Choose the host.** Choose it in **Staying at**. A Rhine covenant
+   fills in three years and three pawns of vis a year (Guardians of the
+   Forests p. 20). Elsewhere, type the terms the troupe agrees. Tick
+   **May study and copy from its library**.
+3. **Cast and study there.** Her Casting Scores now count the host's
    aura. In her season's plan, the host's books are offered beside her
    own, to study or copy.
-3. **Pay the fee.** On the host's Inhabitants (a sketch covenant's
-   Overview), [Guests](help:section-cov-guests) shows her fee as *Due*.
-   Choose her and **Pay the Fee**: the vis goes from her to the
+4. **Pay the fee.** On the host's Inhabitants, or a sketch covenant's
+   Overview, [Guests](help:section-cov-guests) shows her fee as *Due*.
+   Choose her and **Pay the Fee**. The vis goes from her to the
    covenant, and both Diaries say so.
-4. **Bring a gift.** Give the host something with [Give](help:give):
-   courtesy asks it, and House Jerbiton's code counts it (Houses of
+5. **Bring a gift.** Give the host something with [Give](help:give).
+   Courtesy asks it, and House Jerbiton's code counts it (Houses of
    Hermes: Societates p. 51).
-5. **Go home.** When the stay ends, open Stay as Guest again and choose
+6. **Go home.** When the stay ends, open Stay as Guest again and choose
    **Not a guest anywhere**.
 
 **See also:** [Stay as Guest](help:guest-stay), [Current Location](help:whereabouts)
@@ -1791,32 +1864,40 @@ storyguide asks the fee each year.
 # How to find an action
 <!-- help: guide-find-action -->
 
-The sheet's sections keep their own Add, Edit and Delete and the Definitive
-Edition's actions (Take Harm on Health, Place Aging Points on Aging, Share
-Spell on Known Spells). What a supplement brings is found by what it is:
+Your knight is riding in a tournament's melee tonight, and you can't see
+where the app keeps it. The sheet's sections keep their own Add, Edit and
+Delete and the Definitive Edition's actions, such as Take Harm on Health,
+Place Aging Points on Aging and Share Spell on Known Spells. What a
+supplement brings is found by what it is.
 
 <!-- gui -->
 1. **Done in a story?** Open the [Deeds chapter](help:tab-deeds) and look
    under its interest: a tournament's Melee Event under Knightly, a
    disputation under Scholarly, a grog's pension under Covenfolk.
-2. **Takes a season?** It is in A Season's Work, under This Season on the
-   Planning chapter: a career, a season on the tourney circuit, Greek Fire.
-3. **A matter of faith?** The Religion chapter's Faith: the saints, the
-   icons, a mother's curse.
-4. **Hermetic magic?** The Hermetic Magic chapter's Magic Outside the Lab.
+2. **Takes a season?** It's in A Season's Work, under This Season on the
+   Planning chapter, such as a career, a season on the tourney circuit or
+   Greek Fire.
+3. **A matter of faith?** Look in the Religion chapter's Faith, for the
+   saints, the icons or a mother's curse.
+4. **Hermetic magic?** Look in the Hermetic Magic chapter's Magic Outside
+   the Lab.
 <!-- /gui -->
 <!-- tui -->
 1. **Press More (`m`)** on the character's record. Its actions are listed
    with the Definitive Edition's first, then each interest's under its
-   name (Knightly, Scholarly, Covenfolk...).
-2. **Some live in their section**: End of Session and Melee Event in More
-   on Reputations, the season's work in More on This Season.
+   name, such as Knightly, Scholarly or Covenfolk.
+2. **Look in the section.** Some actions live there: End of Session and
+   Melee Event in More on Reputations, the season's work in More on This
+   Season.
 <!-- /tui -->
 
-Nothing there? Its book may be out of play: Saga Content's Books chapter
-puts it back. Its interest may be unticked: [Interests](help:interests)
-ticks it again. Or it may not fit the character yet (The Gauntlet waits for
-an apprentice).
+Nothing there? A few things can hide an action:
+
+- Its book may be out of play. Saga Content's
+  [Books](help:tab-content-books) puts it back.
+- Its interest may be unticked. [Interests](help:interests) ticks it
+  again.
+- It may not fit the character yet. The Gauntlet waits for an apprentice.
 
 <!-- gui -->
 **See also:** [Deeds](help:tab-deeds), [Planning](help:tab-planning)
@@ -1829,31 +1910,35 @@ an apprentice).
 <!-- help: guide-charter -->
 
 Four magi found Dammërstein in the Rhine and swear the Charter of Arae
-Flaviae; years later one of them breaks it.
+Flaviae. Years later, one of them breaks it.
 
 1. **Start from a template.** In the covenant's Charter, choose
    **Use a Template** (More on the charter) and the Charter of Arae
-   Flaviae: its oath, its 25 clauses under the charter's sections and its
+   Flaviae. Its oath, its 25 clauses under the charter's sections and its
    seven-season probation are filled in with the covenant's and the
    Tribunal's names. Used unaltered, it counts as ratified (Covenants p.
    33).
 2. **Swear it.** **Edit Charter** sets when it was sworn and its Official
-   Seal. **Seal the Charter** ticks each founder, with the season and his
-   standing; a newcomer sealed as a probationary member serves the
-   charter's probation, and the charter tells you when it has run.
-3. **Make it yours.** Amend clauses with Edit, or add your own. Any change
+   Seal.
+3. **Seal it.** **Seal the Charter** ticks each founder, with the season
+   and their standing. A newcomer sealed as a probationary member serves
+   the charter's probation, and the charter tells you when it has run.
+4. **Make it yours.** Amend clauses with Edit, or add your own. Any change
    ends the automatic ratification, so tick **Notarized by a Quaesitor**
    once one has seen it. To reuse it for another covenant, **Save as
    Template**, for any Tribunal or the Rhine's alone.
-4. **Record a breach.** Choose the clause and **Break a Clause**: when,
-   and how. Then **Censure** says what the covenant did: privileges
-   withheld (not his laboratory, unless the charter says so), his
-   standing lowered, or expulsion.
-5. **Expel, and tidy up.** On expulsion the app asks whether to take him
-   off the covenant's lists now. Say No to move his books and vis first;
-   the charter reminds you, and Advance Season asks again each season.
-6. **Take it to Tribunal.** A charter that binds under the Peripheral
-   Code (notarized, or sworn in Provence) can be broken as a Low Crime:
+5. **Record a breach.** Choose the clause and **Break a Clause**, then say
+   when and how.
+6. **Censure the breaker.** **Censure** says what the covenant did. That
+   may be privileges withheld, their standing lowered, or expulsion.
+   Withheld privileges don't take their laboratory, unless the charter
+   says so.
+7. **Expel, and tidy up.** On expulsion the app asks whether to take them
+   off the covenant's lists now. Say No to move their books and vis
+   first. The charter reminds you, and Advance Season asks again each
+   season.
+8. **Take it to Tribunal.** A charter that binds under the Peripheral
+   Code, notarized or sworn in Provence, can be broken as a Low Crime.
    **Charge at Tribunal** puts the case on the Tribunal's docket.
 
 **See also:** [The charter](help:section-cov-charter), [Clauses](help:section-cov-clauses)
