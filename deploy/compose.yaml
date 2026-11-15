@@ -1,6 +1,6 @@
 # Armarius hosting one saga for Remote seats on a headless host, with a
 # Cloudflare Tunnel beside it (ADR 0022, STORY-2284). Help's guide "How to
-# host on your own box" walks through it.
+# self-host a saga" walks through it.
 #
 # Before the first start, in this folder:
 #   cp example.env .env              and set ARMARIUS_VERSION and ARMARIUS_SAGA

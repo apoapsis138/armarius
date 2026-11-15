@@ -480,33 +480,48 @@ Each saga is one file, the saga's id followed by `.json`, in the `sagas` folder 
 # How to host a saga for your troupe
 <!-- help: guide-hosting -->
 
-The storyguide can let the players open the saga in a web browser on their own computers, while it stays on the storyguide's. The app and the saga file never leave your computer; each player who opens the page gets their own copy of the app, running on your machine.
-
-You need a private network that you and the players share. The app doesn't come with one: use your home network, **Tailscale** or **ZeroTier** (recipes below). Never host on an address the whole internet can reach: anyone who reaches the address gets a copy of the app and its sign-in, and the browser page isn't encrypted beyond what the network adds. The app refuses such an address (and "every address", `0.0.0.0`) unless you tick **I know this is reachable from the internet**. What can go wrong this way, and what the app does about it, is in the app's threat model (`docs/threat-model-browser-and-ssh-hosting.md` beside its source).
-
-**What the app does for you.** The host answers only requests addressed to the address you chose, and the app's own connection only from its own page, so a web page from another site can't open a copy. Three wrong passcodes for one name are free; after that each try waits, longer each time (30 seconds, then 2 minutes, 10 minutes and an hour), in every tab at once. A passcode shorter than 14 characters signs in once more and asks for a new one (see [Signing in](help:sign-in)). A copy opened from a browser or over SSH has no command palette, can't change your settings, and its file chooser (Import, for a storyguide who signs in) shows only your exports folder.
+The troupe can't all sit at your table, but everyone wants the saga open on their own screen. You keep the saga on your computer, and the players reach it from theirs.
 
 <!-- gui -->
-What the players get in their browser (or over SSH) is the terminal version of the app, so their screens look like it rather than like this window. You keep using the desktop window while you host: it and the players' copies all save into the same saga file, each change merged with the others.
+There are two ways, and you choose one in the **Host for Players** window, from the saga page's **Saga Management** chapter.
+
+- **Browser or terminal, on your private network.** Players open the saga in a web browser, or over SSH, and install nothing but the network. It suits a troupe on one home network, or one willing to join Tailscale or ZeroTier. See [How to host for browsers and SSH](help:guide-hosting-local).
+- **Remote seats, over the internet.** Each player runs Armarius on their own computer and joins through a tunnel you set up, such as Cloudflare Tunnel. It suits players spread far apart who'll install the app. See [How to host for Remote seats](help:guide-hosting-internet).
+<!-- /gui -->
+<!-- tui -->
+The terminal app hosts for players who open the saga in a web browser, or over SSH, on a private network you share with them, such as your home network, Tailscale or ZeroTier. See [How to host for browsers and SSH](help:guide-hosting-local). Players who'd rather run Armarius on their own computers join with Remote seats, which the desktop app hosts.
+<!-- /tui -->
+
+To keep a saga open for Remote seats day and night, even when your computer is off, host it on a server or NAS instead. See [How to self-host a saga](help:guide-self-hosting).
+
+**See also:** [Players](help:tab-content-players), [Signing in](help:sign-in), [Saga picker](help:saga-picker)
+
+# How to host for browsers and SSH
+<!-- help: guide-hosting-local -->
+
+Everyone's at home on the same network, or on Tailscale, and nobody wants to install the app. The players open the saga in a web browser while it stays on your computer.
+
+The app and the saga file never leave your computer. Each player who opens the page gets their own copy of the app, running on your machine.
+
+You need a private network that you and the players share. The app doesn't come with one, so use your home network, **Tailscale** or **ZeroTier** (recipes below). Never host on an address the whole internet can reach. Anyone who reaches it gets a copy of the app and its sign-in, and the page isn't encrypted beyond what the network adds. The app refuses such an address, and "every address" (`0.0.0.0`), unless you tick **I know this is reachable from the internet**. What can go wrong, and what the app does about it, is in the app's threat model (`docs/threat-model-browser-and-ssh-hosting.md` beside its source).
+
+<!-- gui -->
+What the players get in their browser, or over SSH, is the terminal version of the app, so their screens look like it rather than like this window. You keep using the desktop window while you host. It and the players' copies all save into the same saga file, each change merged with the others.
 <!-- /gui -->
 
 ### Before the first session
 <!-- help: guide-hosting-setup -->
 
 <!-- tui -->
-1. Open the saga and select **Saga Content**, then its [Players tab](help:tab-content-players). Add each player with `a`:
+1. **Add the players.** Open the saga, select **Saga Content**, then its [Players tab](help:tab-content-players). Add each player with `a`: a name, the Role *Player*, and a passcode you give them yourself. Add a *Storyguide* too if another storyguide will sign in from a browser.
+2. **Say who plays whom.** For each player's characters, open the character, edit its Biographical Detail and tick who it's **Played by**. Tick several players, or everyone in the troupe, for a shared character.
 <!-- /tui -->
 <!-- gui -->
-1. Open the saga page's **Saga Management** chapter: the [Players](help:section-players) are there, beside Host for Players. Add each player with **Add**:
+1. **Add the players.** Open the saga page's **Saga Management** chapter, where the [Players](help:section-players) sit beside Host for Players. Add each with **Add**: a name, the Role *Player*, and a passcode you give them yourself. Add a *Storyguide* too if another storyguide will sign in from a browser.
+2. **Say who plays whom.** For each player's characters, open the character, click **Edit** on Biographical Detail in its Description chapter, and tick who it's **Played by**. Tick several players, or everyone in the troupe, for a shared character.
 <!-- /gui -->
-a name, the Role *Player*, and a passcode you give them yourself. Add a *Storyguide* there too if another storyguide will sign in from a browser.
-<!-- tui -->
-2. For each player's characters, open the character, edit its Biographical Detail and tick who it's **Played by** (several players, or everyone in the troupe, for a shared character). Tick **May change covenants** on a player who should keep the covenant's books.
-<!-- /tui -->
-<!-- gui -->
-2. For each player's characters, open the character and click **Edit** on Biographical Detail, in its Description chapter, and tick who it's **Played by** (several players, or everyone in the troupe, for a shared character). Tick **May change covenants** on a player who should keep the covenant's books.
-<!-- /gui -->
-3. Set up the private network (Tailscale or ZeroTier below) and note your computer's address on it.
+3. **Let them keep the books.** Tick **May change covenants** on a player who should keep the covenant's books.
+4. **Join the network.** Set up the private network ([Tailscale](help:guide-hosting-tailscale) or [ZeroTier](help:guide-hosting-zerotier) below) and note your computer's address on it.
 
 ### Keeping secrets from the players
 <!-- help: guide-hosting-secrets -->
@@ -519,161 +534,40 @@ tab (its last; `a` there adds one),
 <!-- gui -->
 chapter (**Add** there),
 <!-- /gui -->
-not in its summary or notes, one secret at a time. A player who signs
-in sees only the secrets you reveal, in the record's Known section, and a
-record they export carries only those; everything else on the sheet they
-can read. A record they mustn't know of at all yet (a hidden
-grove, a rival covenant) you hide with **Hide from the Players**, and
-reveal when they learn of it: see [Player view](help:player-view) and
-[How to reveal a record](help:guide-reveal). The [Roll Tables](help:tab-nb-tables) of places,
-threats, factions and lords are yours alone too: a player doesn't see
-that tab and can't roll, and a row's "(SG: ...)" note shows on your roll
-but never in the Diary line it writes.
+one secret at a time, not in its summary or notes. A player who signs in
+sees only the secrets you reveal, in the record's Known section, and a
+record they export carries only those. Everything else on the sheet they
+can read.
 
-### Starting and stopping
-<!-- help: guide-hosting-start -->
+A record they mustn't know of at all yet, such as a hidden grove or a
+rival covenant, you hide with **Hide from the Players**. Reveal it when
+they learn of it (see [Player view](help:player-view) and
+[How to reveal a record](help:guide-reveal)).
 
-<!-- tui -->
-1. Open the saga, select the saga node and choose **Host for Players** from More (`m`, then `h`). Choose your **Address** on the private network (the Tailscale one is marked; **Another address...** lets you type one), and the **Browser port** (8000 unless another program has it). Tick **Also over SSH** to take SSH clients too (see below). The line under the fields says what players will open. Press **Host**.
-<!-- /tui -->
-<!-- gui -->
-1. Open the saga and, in its **Saga Management** chapter, click **Host for Players**. In the [Host for Players](help:host-for-players-window) window, choose **A browser or terminal, on your private network**, then click **Host**. Choose your **Address** on the private network (the Tailscale one is marked; **Another address...** lets you type one), and the **Browser port** (8000 unless another program has it). Tick **Also over SSH** to take SSH clients too (see below). The line under the fields says what players will open. Click **Host**.
-<!-- /gui -->
-2. The first time, Windows asks whether to let Python (**armarius-terminal**, in a [downloaded copy](help:guide-download)) through the firewall: allow it on **private** networks.
-3. Players open `http://ADDRESS:8000` in their browser, choose the saga and sign in. Saga Management (and, on the desktop, the Host for Players window) says the address for as long as you host. The form remembers what you chose for next time.
-4. Keep your computer awake while people play: nobody can reach the saga while it sleeps.
-<!-- tui -->
-5. To stop, choose **Stop Hosting** from More on the saga node. Every player's copy closes at once; what they saved is kept. Quitting the app stops hosting too.
-<!-- /tui -->
-<!-- gui -->
-5. To stop, click **Stop Hosting** in the Host for Players window. Every player's copy closes at once; what they saved is kept. Closing the app stops hosting too, after asking.
-
-Players with Armarius on their own computers can join over the internet instead: choose **Remote seats** in the same window (see [Host for Players](help:host-for-players-window) and [Remote seats](help:guide-hosting-remote)).
-<!-- /gui -->
-
-If you choose an address the computer doesn't have, or a port another program is using, the app says so and nothing starts. An address the internet can reach is refused too, until you tick **I know this is reachable from the internet** (the box shows only for such an address, or one you type); the tick is never remembered.
-
-Players must open the address you host on, as Saga Management shows it: the host refuses a request made to another name for your computer (its Windows name, say), to keep hostile web pages out.
-
-Every few seconds each player's copy picks up what the others saved. If it finds the saga file damaged (edited by hand, or cut short by another program), it says so once and goes on with its own data; its next save writes the whole file again.
-
-**From a terminal instead.** The same host runs in a terminal in the app's folder with `uv run python tools/serve.py --host ADDRESS`, or, in a [downloaded copy](help:guide-download), `armarius-terminal host --host ADDRESS` (add `--port 8001` for another port, `--ssh-port 2222` for SSH). It hosts until you press Ctrl+C there, whichever window of the app you have open. It refuses an address the internet can reach unless you add `--allow-public`.
-
-### Remote seats: players with their own Armarius
-<!-- help: guide-hosting-remote; gui -->
-
-With your own tunnel (Cloudflare Tunnel, or another) pointed at this computer, host for **Remote seats** in the Host for Players window and **Issue Invite** to each player. They paste it into **Join a Saga** on their title page or Sagas shelf, check your six words on the call, read you their device's three words, and you **Approve**. Their steps are in [Join a Saga](help:join-game), and what they can expect of you in [What a host can and can't see or do](help:what-a-host-sees). Choosing a tunnel, issuing and revoking safely, and the Log are in [Remote seats: hosting safely](help:guide-hosting-safety).
-
-### Remote seats: hosting safely
-<!-- help: guide-hosting-safety; gui -->
-
-The app on your computer listens to **this computer only** (port 8790
-unless you change it): nothing on your network or the internet can reach
-it directly. A **tunnel** carries players to it: a small program on your
-computer that keeps one connection open to a company's servers, which
-give you an https address. Inside the tunnel the app runs its own
-encryption, locked to your host's key, so the tunnel company carries what
-it cannot read (it sees that someone connected, and when, not what
-passed). Choose one of the tunnels below; the steps are as of November
-2026, and each service changes its pages from time to time, so follow its
-own guide where these differ.
-
-- **Cloudflare Tunnel** (free; you need a domain on Cloudflare). Install
-  `cloudflared`, then `cloudflared tunnel login`, `cloudflared tunnel
-  create armarius`, and `cloudflared tunnel route dns armarius
-  saga.example.com`. In its `config.yml`, point the hostname at
-  `http://localhost:8790`, then `cloudflared tunnel run armarius` (or
-  install it as a service so it starts with Windows). In Host for
-  Players choose **Cloudflare Tunnel** and the address
-  `https://saga.example.com`. Where to go: developers.cloudflare.com,
-  Cloudflare Tunnel. Its quick tunnels (`trycloudflare.com`) change
-  address each time, so every Invite would be lost: use a named tunnel.
-- **Tailscale Funnel** (free; no domain needed). Install Tailscale and
-  sign in; in the admin console's DNS page turn on HTTPS and Funnel. Then
-  `tailscale funnel --bg 8790` publishes it at
-  `https://YOUR-PC.YOUR-TAILNET.ts.net` (the public side must be port
-  443, 8443 or 10000; the 8790 is your computer's). `tailscale funnel
-  8790 off` stops it. In Host for Players choose **Another tunnel**.
-  Where to go: tailscale.com/docs, Tailscale Funnel.
-- **ngrok** (a free account gets one fixed address). Install ngrok, add
-  your token, then `ngrok http 8790 --url YOUR-NAME.ngrok-free.dev`. A
-  random address changes each time, so use your fixed one. Choose
-  **Another tunnel**. Where to go: ngrok.com/docs.
-- **Your own server** (a small rented server with a domain). On it, run
-  a web server that adds https and passes the player's address on, such
-  as Caddy (`reverse_proxy localhost:8790`); from your computer, open a
-  reverse SSH tunnel to it: `ssh -N -R 8790:localhost:8790 you@server`.
-  Choose **Another tunnel**.
-- **Port forwarding on your router** is not offered: the app won't
-  listen beyond this computer, and opening your router would show every
-  player (and anyone who finds it) your home address. If you must, put a
-  web server such as Caddy on this computer in front of it, as on your
-  own server above, and forward only port 443 to that.
-
-Whichever you use, the address goes in **Tunnel address** (`https://`,
-nothing after the name), and the tunnel points at `http://localhost:8790`.
-The address is not secret; the Invite carries it, always as a secure
-`wss://` address, and a player's app refuses an Invite naming a plain
-`ws://` one anywhere but on its own computer. The app tells players
-apart by the address the tunnel passes on (Cloudflare's own header, or
-the last `X-Forwarded-For` entry, which ngrok and Caddy add); a tunnel
-that passes on none makes the limits count every player as one.
-
-**Issuing and revoking.** Issue each player their own Invite, and send it
-by a different way from your call if you can (a chat message, an email).
-It works once, on one device, for 24 hours. On the call, read all six of
-your words, and have the player check every one; approve a device only
-when its player reads you the three words your screen shows. A changed
-passcode, or one you reset, ends every seat still signed in with the old
-one at once. If a device is lost or a player leaves, **Revoke** its
-seat at once (Seats): it is cut off within a second. A storyguide's
-device sees everything in the saga, so revoke it as soon as it is lost.
-If you think your host key itself has leaked (a copy of your keychain),
-**Rotate Host Key**: every Invite and seat ends, and everyone needs a new
-Invite and new six words. Seats nobody uses stop working after the days
-you set in **Idle Expiry** (90 unless you change it).
-
-**The Log** (Host for Players) records who did what and when: Invites
-issued and redeemed, approvals and rejections, sign-ins and wrong
-passcodes, lock-outs, revokes, which records each seat read or changed,
-passcode changes and resets asked, role changes, and seasons advanced or
-undone by a storyguide. It never holds a passcode, a credential, an
-Invite's code or what was typed, and it lives in your save folder, not in
-the saga, so players never receive it. It keeps a year.
-
-**What the app does for you.** A wrong passcode slows that device down
-(three free tries, then growing waits), without locking anyone else out.
-A connection that floods, sends what the app doesn't understand, or stays
-silent too long is closed. Each player's seat receives only what that
-player may see, and every change they send is checked against what is
-theirs to change. The full list is in the app's threat model
-(`docs/threat-model-remote-seats.md` beside its source), and what the
-players are told in [What keeps you safe](help:join-game-safety).
-
-**Hosting from a box that is always on.** Instead of this computer, a
-NAS, a small Linux machine or a rented server can host the saga for
-Remote seats day and night, with no window: see [How to host on your own
-box](help:guide-self-hosting).
+The [Roll Tables](help:tab-nb-tables) of places, threats, factions and
+lords are yours alone too. A player doesn't see them and can't roll. A
+row's "(SG: ...)" note shows on your roll but never in the Diary line it
+writes.
 
 ### Tailscale
 <!-- help: guide-hosting-tailscale -->
 
 Everyone, you and each player, installs Tailscale and signs in with an existing Google, Microsoft, GitHub or Apple account.
 
-1. On your computer, Tailscale shows its address (it starts with `100.`). That is the ADDRESS to host on.
-2. In Tailscale's admin page, share your computer with each player by their email. They accept the invite, and can then reach only your computer.
-3. Players open `http://ADDRESS:8000`.
+1. **Find your address.** On your computer, Tailscale shows its address, starting with `100.`. That's the ADDRESS to host on.
+2. **Share your computer.** In Tailscale's admin page, share your computer with each player by their email. They accept the invite, and can then reach only your computer.
+3. **Open the saga.** Players open `http://ADDRESS:8000`.
 
 ### ZeroTier
 <!-- help: guide-hosting-zerotier -->
 
-Only you need a ZeroTier account; players just install the ZeroTier app.
+Only you need a ZeroTier account. Players just install the ZeroTier app.
 
-1. On ZeroTier's website, create a network and copy its 16-character Network ID. Keep it Private.
-2. On your computer, join that network from the ZeroTier icon, then on the website tick **Auth** for your computer and note its Managed IP: that is the ADDRESS to host on.
-3. Windows often marks the ZeroTier connection as a Public network; set it to Private in Windows' network settings, or the firewall keeps players out.
-4. Each player installs ZeroTier, joins with the Network ID, and you tick **Auth** for their device.
-5. On a ZeroTier network every device can reach every other one. To let players reach only the app on your computer, set the network's Flow Rules along these lines (with your address), then check a player can still connect:
+1. **Make a network.** On ZeroTier's website, create a network and copy its 16-character Network ID. Keep it Private.
+2. **Join it yourself.** On your computer, join that network from the ZeroTier icon. On the website, tick **Auth** for your computer and note its Managed IP. That's the ADDRESS to host on.
+3. **Make it Private in Windows.** Windows often marks the ZeroTier connection as a Public network. Set it to Private in Windows' network settings, or the firewall keeps players out.
+4. **Let the players in.** Each player installs ZeroTier and joins with the Network ID, and you tick **Auth** for their device.
+5. **Fence it.** On a ZeroTier network every device can reach every other one. To let players reach only the app on your computer, set the network's Flow Rules along these lines, with your address, then check a player can still connect.
 
 ```
 accept ethertype arp;
@@ -682,354 +576,457 @@ accept ipsrc ADDRESS/32 and ipprotocol tcp and sport 8000;
 drop;
 ```
 
+### Starting and stopping
+<!-- help: guide-hosting-start -->
+
+<!-- tui -->
+1. **Open Host for Players.** Open the saga, select the saga node and choose **Host for Players** from More (`m`, then `h`).
+<!-- /tui -->
+<!-- gui -->
+1. **Open Host for Players.** Open the saga and, in its **Saga Management** chapter, click **Host for Players**. In the [Host for Players](help:host-for-players-window) window, choose **Browser or terminal** (On your private network), then click **Host**.
+<!-- /gui -->
+2. **Choose where.** Choose your **Address** on the private network. The Tailscale one is marked, and **Another address...** lets you type one. Leave the **Browser port** at 8000 unless another program has it. Tick **Also over SSH** to take SSH clients too ([see below](help:guide-hosting-ssh)).
+3. **Host.** The line under the fields says what players will open. Click or press **Host**. The form remembers what you chose for next time.
+4. **Let it through the firewall.** The first time, Windows asks whether to let Python (**armarius-terminal**, in a [downloaded copy](help:guide-download)) through the firewall. Allow it on **private** networks.
+5. **Send the players in.** Players open `http://ADDRESS:8000` in their browser, choose the saga and sign in. Saga Management (and, on the desktop, the Host for Players window) shows the address for as long as you host.
+6. **Keep your computer awake** while people play. Nobody can reach the saga while it sleeps.
+<!-- tui -->
+7. **Stop.** Choose **Stop Hosting** from More on the saga node. Every player's copy closes at once, and what they saved is kept. Quitting the app stops hosting too.
+<!-- /tui -->
+<!-- gui -->
+7. **Stop.** Click **Stop Hosting** in the Host for Players window. Every player's copy closes at once, and what they saved is kept. Closing the app stops hosting too, after asking.
+<!-- /gui -->
+
+If you choose an address the computer doesn't have, or a port another program is using, the app says so and nothing starts. An address the internet can reach is refused too, until you tick **I know this is reachable from the internet**. That tick shows only for such an address, or one you type, and it's never remembered.
+
+Players must open the address you host on, as Saga Management shows it. The host refuses a request made to another name for your computer, such as its Windows name, to keep hostile web pages out.
+
+Every few seconds each player's copy picks up what the others saved. If it finds the saga file damaged, say edited by hand or cut short by another program, it says so once and goes on with its own data. Its next save writes the whole file again.
+
+**From a terminal instead.** The same host runs in a terminal in the app's folder with `uv run python tools/serve.py --host ADDRESS`, or, in a [downloaded copy](help:guide-download), `armarius-terminal host --host ADDRESS`. Add `--port 8001` for another port, or `--ssh-port 2222` for SSH. It hosts until you press Ctrl+C there, whichever window of the app you have open. It refuses an address the internet can reach unless you add `--allow-public`.
+
 ### Over SSH instead of a browser
 <!-- help: guide-hosting-ssh -->
 
-A player who prefers a terminal can connect with SSH instead. Tick **Also over SSH** when you start hosting (the SSH port is 2222 unless you change it; from a terminal, add `--ssh-port 2222`); the browser page keeps working alongside. The SSH server is the app's own: no Windows accounts are involved, and any user name is accepted, because who the player is comes from the same sign-in as in a browser. The first time, the app makes a host key and keeps it in your computer's keychain (Windows Credential Manager, macOS Keychain or a Linux Secret Service), never in the save folder, which a cloud service may sync; players' SSH clients ask once whether to trust it. A key an older version left in the save folder (`ssh_host_key`) is moved into the keychain and the file deleted, so players' clients still know your computer. With no keychain, SSH hosting is refused and says why.
+A player who prefers a terminal can connect with SSH. Tick **Also over SSH** when you start hosting, and the browser page keeps working alongside. The SSH port is 2222 unless you change it (from a terminal, add `--ssh-port 2222`).
 
-Players connect with `ssh -p 2222 player@ADDRESS` from Windows Terminal (Windows 10 and 11 include `ssh`), macOS Terminal or any Linux terminal, and get the same saga list and sign-in. Their terminal should be at least 120 columns by 45 rows and support true colour and Unicode: Windows Terminal, iTerm2, macOS Terminal and the usual Linux terminals do; the old Windows console does not. Over SSH, Export isn't offered, since the file could only land on your computer.
+The SSH server is the app's own. No Windows accounts are involved, and any user name is accepted, because who the player is comes from the same sign-in as in a browser.
+
+The first time, the app makes a host key and keeps it in your computer's keychain, such as Windows Credential Manager, macOS Keychain or a Linux Secret Service. It's never kept in the save folder, which a cloud service may sync. Players' SSH clients ask once whether to trust it. A key an older version left in the save folder (`ssh_host_key`) is moved into the keychain and the file deleted, so players' clients still know your computer. With no keychain, SSH hosting is refused and says why.
+
+Players connect with `ssh -p 2222 player@ADDRESS` from Windows Terminal (Windows 10 and 11 include `ssh`), macOS Terminal or any Linux terminal. They get the same saga list and sign-in. Their terminal should be at least 120 columns by 45 rows, with true colour and Unicode. Windows Terminal, iTerm2, macOS Terminal and the usual Linux terminals have both, and the old Windows console doesn't. Over SSH, Export isn't offered, since the file could only land on your computer.
 
 ### What players see
 <!-- help: guide-hosting-players -->
 
-- The app fills the browser window. It is laid out for at least 120 columns by 45 rows: on a 1080p screen, add `?fontsize=12` to the address (`http://ADDRESS:8000/?fontsize=12`) or zoom the browser out.
-- The browser keeps some keys for itself (Ctrl+W, Ctrl+T, F5), so don't use them in the app.
-- A player changes only the characters they play and what belongs to them; everything else they can look at and Export, which downloads in their browser. See [Players](help:tab-content-players).
+- The app fills the browser window. It's laid out for at least 120 columns by 45 rows. On a 1080p screen, add `?fontsize=12` to the address (`http://ADDRESS:8000/?fontsize=12`) or zoom the browser out.
+- The browser keeps some keys for itself, such as Ctrl+W, Ctrl+T and F5, so don't use them in the app.
+- A player changes only the characters they play and what belongs to them. Everything else they can look at and Export, which downloads in their browser. See [Players](help:tab-content-players).
 - Everyone's changes reach the others within a few seconds. See [Signing in](help:sign-in).
 
-**See also:** [Players](help:tab-content-players), [Signing in](help:sign-in), [Saga picker](help:saga-picker)
+**What the app does for you.** The host answers only requests addressed to the address you chose, and the app's own connection only from its own page, so a web page from another site can't open a copy. Three wrong passcodes for one name are free. After that each try waits longer (30 seconds, then 2 minutes, 10 minutes and an hour), in every browser at once. A passcode shorter than 14 characters signs in once more and asks for a new one (see [Signing in](help:sign-in)). A copy opened from a browser or over SSH has no command palette and can't change your settings. Its file chooser (Import, for a storyguide who signs in) shows only your exports folder.
 
-# How to host on your own box
+**See also:** [How to host a saga for your troupe](help:guide-hosting), [Players](help:tab-content-players), [Signing in](help:sign-in), [Saga picker](help:saga-picker)
+
+# How to host for Remote seats
+<!-- help: guide-hosting-internet; gui -->
+
+Your players live in three different towns, and each has Armarius on their own computer. They join your saga over the internet while it stays on yours.
+
+The app on your computer listens to **this computer only**, on port 8790 unless you change it. Nothing on your network or the internet can reach it directly. A **tunnel** carries players to it. Players need the same major version of Armarius as you.
+
+### Hosting and inviting
+<!-- help: guide-hosting-remote; gui -->
+
+1. **Add the players.** Add each player on Saga Management's [Players](help:section-players) and say who plays whom, as in [Before the first session](help:guide-hosting-setup). Their passcodes need at least 14 characters.
+2. **Set up a tunnel.** Choose one from [Choosing a tunnel](help:guide-hosting-tunnels) and point it at `http://localhost:8790`.
+3. **Host.** In Saga Management click **Host for Players**, choose **Remote seats**, and click **Host**. Give the **Tunnel address**, which **Tunnel** it is, and the **Port** (see [Host for Remote Seats](help:host-remote-seats)).
+4. **Issue Invites.** **Issue Invite** to each player and send it by chat or email (see [Issue Invite](help:issue-invite)).
+5. **Check the words on the call.** Each player pastes the Invite into **Join a Saga** on their title page or Sagas shelf, and checks your six words. They read you their device's three words.
+6. **Approve.** If the three words match your screen, **Approve** the device under Requests.
+7. **Keep it running.** Keep your computer awake and the tunnel running while people play.
+8. **Stop.** Click **Stop Hosting** in the Host for Players window. Closing the app asks first, as it ends every player's connection.
+
+The players' side is in [Join a Saga](help:join-game), and what they can expect of you in [What a host can and can't see or do](help:what-a-host-sees).
+
+### Choosing a tunnel
+<!-- help: guide-hosting-tunnels; gui -->
+
+A tunnel is a small program on your computer that keeps one connection open to a company's servers, which give you an https address. Inside the tunnel the app runs its own encryption, locked to your host's key. The tunnel company carries what it can't read. It sees that someone connected, and when, but not what passed.
+
+Choose one of these. The steps are as of November 2026, and each service changes its pages from time to time, so follow its own guide where these differ.
+
+- **Cloudflare Tunnel** (free, but you need a domain on Cloudflare). Install
+  `cloudflared`, then `cloudflared tunnel login`, `cloudflared tunnel
+  create armarius`, and `cloudflared tunnel route dns armarius
+  saga.example.com`. In its `config.yml`, point the hostname at
+  `http://localhost:8790`, then `cloudflared tunnel run armarius`, or
+  install it as a service so it starts with Windows. In Host for
+  Players choose **Cloudflare Tunnel** and the address
+  `https://saga.example.com`. Where to go: developers.cloudflare.com,
+  Cloudflare Tunnel. Its quick tunnels (`trycloudflare.com`) change
+  address each time, so every Invite would be lost. Use a named tunnel.
+- **Tailscale Funnel** (free, and no domain needed). Install Tailscale and
+  sign in. In the admin console's DNS page, turn on HTTPS and Funnel.
+  Then `tailscale funnel --bg 8790` publishes it at
+  `https://YOUR-PC.YOUR-TAILNET.ts.net`. The public side must be port
+  443, 8443 or 10000, and the 8790 is your computer's. `tailscale funnel
+  8790 off` stops it. In Host for Players choose **Another tunnel**.
+  Where to go: tailscale.com/docs, Tailscale Funnel.
+- **ngrok** (a free account gets one fixed address). Install ngrok, add
+  your token, then `ngrok http 8790 --url YOUR-NAME.ngrok-free.dev`. A
+  random address changes each time, so use your fixed one. Choose
+  **Another tunnel**. Where to go: ngrok.com/docs.
+- **A server you rent**, a small one with a domain. On it, run a web
+  server that adds https and passes the player's address on, such as
+  Caddy (`reverse_proxy localhost:8790`). From your computer, open a
+  reverse SSH tunnel to it: `ssh -N -R 8790:localhost:8790 you@server`.
+  Choose **Another tunnel**.
+- **Port forwarding on your router** isn't offered. The app won't
+  listen beyond this computer, and opening your router would show every
+  player, and anyone who finds it, your home address. If you must, put
+  a web server such as Caddy on this computer in front of it, as on a
+  rented server above, and forward only port 443 to that.
+
+Whichever you use, the address goes in **Tunnel address** (`https://`,
+nothing after the name), and the tunnel points at `http://localhost:8790`.
+The address isn't secret. The Invite carries it, always as a secure
+`wss://` address, and a player's app refuses an Invite naming a plain
+`ws://` one anywhere but on its own computer.
+
+The app tells players apart by the address the tunnel passes on:
+Cloudflare's own header, or the last `X-Forwarded-For` entry, which ngrok
+and Caddy add. A tunnel that passes on none makes the limits count every
+player as one.
+
+### Remote seats: hosting safely
+<!-- help: guide-hosting-safety; gui -->
+
+**Issuing and revoking.** Issue each player their own Invite, and send it
+a different way from your call if you can, such as a chat message or an
+email. It works once, on one device, for 24 hours. On the call, read all
+six of your words, and have the player check every one. Approve a device
+only when its player reads you the three words your screen shows.
+
+A changed passcode, or one you reset, ends every seat still signed in
+with the old one at once. If a device is lost or a player leaves,
+**Revoke** its seat at once, under Seats. It's cut off within a second. A
+storyguide's device sees everything in the saga, so revoke it as soon as
+it's lost.
+
+If you think your host key itself has leaked, say through a copy of your
+keychain, **Rotate Host Key**. Every Invite and seat ends, and everyone
+needs a new Invite and new six words. Seats nobody uses stop working
+after the days you set in **Idle Expiry** (90 unless you change it).
+
+**The Log**, in Host for Players, records who did what and when. That
+covers Invites issued and redeemed, approvals and rejections, sign-ins
+and wrong passcodes, lock-outs and revokes. It also notes which records
+each seat read or changed, passcode changes and resets asked, role
+changes, and seasons advanced or undone by a storyguide. It never holds a
+passcode, a credential, an Invite's code or what was typed. It lives in
+your save folder, not in the saga, so players never receive it, and it
+keeps a year.
+
+**What the app does for you.** A wrong passcode slows that device down,
+with three free tries and then growing waits, without locking anyone else
+out. A connection that floods, sends what the app doesn't understand, or
+stays silent too long is closed. Each player's seat receives only what
+that player may see, and every change they send is checked against what's
+theirs to change. The full list is in the app's threat model
+(`docs/threat-model-remote-seats.md` beside its source), and what the
+players are told is in [What keeps you safe](help:join-game-safety).
+
+**Hosting from a computer that's always on.** Instead of this computer, a
+NAS, a small Linux computer or a rented server can host the saga for
+Remote seats day and night, with no window. See
+[How to self-host a saga](help:guide-self-hosting).
+
+**See also:** [How to host a saga for your troupe](help:guide-hosting), [Host for Players](help:host-for-players-window), [Join a Saga](help:join-game), [Players](help:tab-content-players)
+
+# How to self-host a saga
 <!-- help: guide-self-hosting -->
 
-A box that is always on (a NAS, a small Linux computer, or a rented
-server) can host one saga for Remote seats (players joining from their own
-Armarius, over the internet) day and night, so your players can reach it when your own computer is
-off. It runs the app's container image with no window: the listener for
-Remote seats, and beside it a tunnel that brings players in. Nothing on
-the box is opened to the internet; the tunnel connects out. You look
-after it with the **admin** word, in a terminal on the box.
+Your players want to fill in their seasons on a Tuesday night, when your own computer is off. A server or NAS that's always on can host the saga for them, day and night.
 
-Only Remote seats are hosted this way: players need Armarius on their
-own computers. Hosting for browsers and SSH stays on your desktop, until
-the app can cap how many copies a host runs for them.
+It hosts one saga for Remote seats, players joining from their own Armarius over the internet. It runs the app's container image with no window: the listener for Remote seats, and beside it a tunnel that brings players in. Nothing on the server is opened to the internet, since the tunnel connects out. You look after it with the `admin` command, in a terminal on the server.
 
-You will need: the box, with Docker and its compose plugin (most NAS
-systems have a Docker app; on Linux, Docker Engine); a domain on
-Cloudflare for the tunnel (or Tailscale, below); the saga's file from
-your desktop; and a terminal on the box (SSH). The steps below use the
-example address `saga.example.com`: use your own.
+Only Remote seats are hosted this way, so players need Armarius on their own computers. Hosting for browsers and SSH stays on your desktop, until the app can cap how many copies a host runs for them.
+
+You'll need the server or NAS, with Docker and its compose plugin, a domain on Cloudflare for the tunnel (or Tailscale, below), the saga's file from your desktop, and a terminal on the server over SSH. The steps use the example address `saga.example.com`. Use your own.
+
+The recipe below works anywhere Docker runs. On a NAS, run each `docker` command as `sudo docker`, and see [A UGREEN NAS](help:guide-self-hosting-nas) for the steps that differ.
+
+1. **Install Docker.** Install Docker and its compose plugin ([on Linux](help:guide-self-hosting-linux), Docker Engine; most NAS systems have a Docker app).
+2. **Make a folder.** Make a folder for it on the server, say `armarius`. Into it, put `compose.yaml`, `example.env` and `tunnel.env.example`, from the `deploy` folder of the app's source on GitHub, at the version you run.
+3. **Fill in `.env`.** In that folder, `cp example.env .env` and fill it in (see [The files and folders](help:guide-self-hosting-files)).
+4. **Make `tunnel.env`.** `cp tunnel.env.example tunnel.env`. The token goes in later. Then `chmod 600 .env tunnel.env`.
+5. **Make the three folders.** `sudo install -d -o 10001 -g 10001 -m 700 data keys backups`. On a NAS, use [its steps](help:guide-self-hosting-nas) instead.
+6. **Get your seat ready.** On your desktop, make sure you're a Player in the saga with the **Storyguide** role and a passcode of 14 characters or more. Stop hosting there.
+7. **Copy the saga over.** Copy the saga's file and its passcode records from your save folder into the `armarius` folder on the server (see [Bringing the saga in](help:guide-self-hosting-move)).
+8. **Bring it in.** Run the `admin saga import` command shown in [Bringing the saga in](help:guide-self-hosting-move), then delete the copied files.
+9. **Move the desktop's copy away.** Move the desktop's copy of the saga file out of the `sagas` folder, for example into a folder of old copies. Don't just rename it.
+10. **Make the tunnel.** Create a Cloudflare tunnel, put its token in `tunnel.env`, and give it the hostname `saga.example.com` pointing at `http://localhost:8790` (see [The tunnel](help:guide-self-hosting-tunnel)).
+11. **Start it.** `docker compose up -d`, then tell it the tunnel's address and issue the Invites (see [Starting it](help:guide-self-hosting-start)).
 
 ### The files and folders
 <!-- help: guide-self-hosting-files -->
 
-Make a folder for it on the box (say `armarius`) and put in it, from the
-app's source on GitHub (its `deploy` folder, at the version you run):
-`compose.yaml`, `example.env` and `tunnel.env.example`. Then, in that
-folder:
+In `.env`, set `ARMARIUS_VERSION`, the version to run, such as `4.13.0`. Always give a number, never "latest". Set `ARMARIUS_SAGA` to the saga's id, which is the name of its file in your save folder's `sagas`, without `.json`.
 
-1. `cp example.env .env` and fill it in: `ARMARIUS_VERSION` (the version
-   to run, such as `4.13.0`; always a number, never "latest") and
-   `ARMARIUS_SAGA` (the saga's id: the name of its file in your save
-   folder's `sagas`, without `.json`).
-2. `cp tunnel.env.example tunnel.env`; the token goes in later.
-   `chmod 600 .env tunnel.env`.
-3. Make the three folders, owned by the app's own user (number 10001)
-   and private: `sudo install -d -o 10001 -g 10001 -m 700 data keys
-   backups`. `keys` holds the host key: on a Linux box, an encrypted
-   disk is a good home for it (set `KEYS_DIR` in `.env` to it); a NAS's
-   encrypted shared folder is not (see the UGREEN section).
+The three folders, `data`, `keys` and `backups`, are owned by the app's own user (number 10001) and private to it:
 
-The compose file runs the app locked down: as its own user, with its
-system files read-only, no extra privileges, 512 MB of memory at most,
-and no port published.
+```
+sudo install -d -o 10001 -g 10001 -m 700 data keys backups
+```
 
-### A Linux box or a small rented server
+`keys` holds the host key. On a Linux computer, an encrypted disk is a good home for it (set `KEYS_DIR` in `.env` to it). A NAS's encrypted shared folder isn't (see [A UGREEN NAS](help:guide-self-hosting-nas)).
+
+The compose file runs the app locked down. It runs as its own user, with its system files read-only, no extra privileges, 512 MB of memory at most, and no port published.
+
+### A Linux computer or rented server
 <!-- help: guide-self-hosting-linux -->
 
-Any always-on Linux computer will do: an old laptop, a mini PC, a
-Raspberry Pi 4 or 5 (the image has an ARM version), or the smallest
-server a hosting company rents (one processor and 1 GB is plenty).
+Any always-on Linux computer will do, such as an old laptop, a mini PC, a Raspberry Pi 4 or 5 (the image has an ARM version), or the smallest server a hosting company rents. One processor and 1 GB is plenty.
 
-1. Install Docker Engine and the compose plugin, following Docker's own
-   guide for your system (docs.docker.com, Install Docker Engine).
-2. Make the files and folders above. On a home computer, put `keys` on
-   an encrypted disk if the system offers one.
-3. On a rented server, its company can read its disks: the key is safer
-   at home. If you rent one anyway, choose one with disk encryption, and
-   let no one else onto it. Close every port in its firewall but SSH: the
-   tunnel needs none.
+- **Docker.** Install Docker Engine and the compose plugin, following Docker's own guide for your system (docs.docker.com, Install Docker Engine).
+- **The key at home.** On a home computer, put `keys` on an encrypted disk if the system offers one.
+- **A rented server.** Its company can read its disks, so the key is safer at home. If you rent one anyway, choose one with disk encryption, and let no one else onto it. Close every port in its firewall but SSH. The tunnel needs none.
 
-Then bring the saga in, set up the tunnel and start it, as below.
+Then follow the recipe above.
 
 ### A UGREEN NAS
 <!-- help: guide-self-hosting-nas -->
 
-A UGREEN NAS runs it in the Docker app of UGOS Pro. Docker picks the
-image's version for the NAS's processor (amd64 for Intel, arm64 for ARM),
-and the app uses at most 512 MB of memory. The steps follow UGOS Pro
-1.21; menu names may move in later versions.
+A UGREEN NAS runs it in the Docker app of UGOS Pro. Docker picks the image's version for the NAS's processor (amd64 for Intel, arm64 for ARM), and the app uses at most 512 MB of memory. The steps follow UGOS Pro 1.21, and menu names may move in later versions.
 
-1. In Control Panel, **Service**, turn on **SSH** (Terminal), port 22.
-   Set it to turn itself off after a few hours: you only need it while
-   setting up and for admin chores.
-2. In the Files app, make an ordinary shared folder, `armarius`, and copy
-   the three files into it (the Files app's upload works; so does
-   `\\NAS-ADDRESS\armarius` in Explorer once SMB is on, under Service).
-3. Sign in with SSH (`ssh YOU@NAS-ADDRESS`) and go to the folder:
-   `cd /volume1/armarius` (`ls -d /volume*/armarius` finds it).
-4. Make the three folders the app's own, and strip UGOS's access lists
-   from them (UGOS shows those as a `+` after the modes; they open a
-   folder to every NAS account, and the app refuses a key folder others
-   can open): `sudo mkdir -p data keys backups`, `sudo chown
-   10001:10001 data keys backups`, `sudo setfacl -b data keys backups`,
-   then `sudo chmod 700 data keys backups` (last, since stripping the
-   lists can reset the modes). `ls -ld data keys backups` should show
-   `drwx------ ... 10001 10001` with no `+`.
-5. Leave `KEYS_DIR=./keys` in `.env`, and `sudo chmod 600 .env
-   tunnel.env`.
+1. **Turn on SSH.** In Control Panel, **Service**, turn on **SSH** (Terminal), port 22. Set it to turn itself off after a few hours, since you only need it while setting up and for admin chores.
+2. **Make the shared folder.** In the Files app, make an ordinary shared folder, `armarius`, and copy the three files into it. The Files app's upload works, and so does `\\NAS-ADDRESS\armarius` in Explorer once SMB is on, under Service.
+3. **Go to the folder.** Sign in with SSH (`ssh YOU@NAS-ADDRESS`) and run `cd /volume1/armarius`. `ls -d /volume*/armarius` finds it.
+4. **Make the three folders.** `sudo mkdir -p data keys backups`, then `sudo chown 10001:10001 data keys backups`.
+5. **Strip UGOS's access lists.** `sudo setfacl -b data keys backups`. UGOS shows these lists as a `+` after the modes. They open a folder to every NAS account, and the app refuses a key folder others can open.
+6. **Make them private.** `sudo chmod 700 data keys backups`, last, since stripping the lists can reset the modes. `ls -ld data keys backups` should show `drwx------ ... 10001 10001` with no `+`.
+7. **Protect the settings.** Leave `KEYS_DIR=./keys` in `.env`, and run `sudo chmod 600 .env tunnel.env`.
 
 **Not UGOS's encrypted shared folders, for the keys.** They look like
-the right home for a key, but the app's user can't use one: UGOS mounts
+the right home for a key, but the app's user can't use one. UGOS mounts
 it as a filesystem of its own (`fuse.uggocryptfs`) that answers user
-10001 with "Input/output error", reports every folder in it as open to
+10001 with "Input/output error". It reports every folder in it as open to
 all (`rwxrwxrwx`) whatever its modes, and stripping its access lists sets
 it to no access at all. Keep the keys in the ordinary `keys` folder
 above, private to the app's user. What that gives up: someone who steals
-the NAS's drive could read the key, and then you would rotate it and
-send everyone a new Invite.
+the NAS's drive could read the key, and then you'd rotate it and send
+everyone a new Invite.
 
-Then bring the saga in, set up the tunnel and start it, as below. Over
-SSH, `sudo docker compose ...` works from the `armarius` folder; the
-Docker app's **Project** view shows the same containers.
+Over SSH, `sudo docker compose ...` works from the `armarius` folder, and
+the Docker app's **Project** view shows the same containers.
 
 ### Bringing the saga in
 <!-- help: guide-self-hosting-move -->
 
-The saga moves to the box; your desktop's copy becomes history.
+The saga moves to the server, and your desktop's copy becomes history.
 
-1. On your desktop, make sure you are a Player in the saga with the
-   **Storyguide** role and a passcode of 14 characters or more: you will
-   join your own saga from the desktop like everyone else. Stop hosting
-   there.
-2. Copy two files from your save folder (the [saga picker](help:saga-picker)
-   shows where it is) to the box, into the `armarius` folder: the saga's
-   file, in `sagas`, and its passcode records, `remote/NAME-passcodes.json`
-   (NAME being the saga's name). The records let players keep their
-   passcodes; without them, every passcode must be set again on the box.
-   On a NAS, files copied in belong to your NAS account and its access
-   lists, which the app's user can't read ("Permission denied"): give
-   them to it first, `sudo chown 10001:10001 FILES`, `sudo setfacl -b
-   FILES`, `sudo chmod 600 FILES`.
-3. On the box, bring them in (the file names are yours to fill in):
-   `docker compose run --rm -v "$PWD/SAGA.json:/in/saga.json:ro" -v
-   "$PWD/NAME-passcodes.json:/in/passcodes.json:ro" armarius admin saga
-   import /in/saga.json --passcodes /in/passcodes.json`. The saga is
-   checked as the app checks any saga it opens. A passcode record comes
-   over only for the very passcode it was made for, so one for a
-   passcode changed since is dropped. Then delete the copied files
-   (`sudo rm`, since they now belong to the app's user).
-4. The box makes a host key of its own, so every Invite and seat from
-   your desktop has ended: issue everyone a new Invite, your own
-   desktop's storyguide seat included. `admin players list` names anyone
-   whose passcode must still be set again (`admin players set-passcode
-   NAME`, below).
-5. Move the desktop's copy of the saga file out of the `sagas` folder,
-   for example into a folder of old copies. A change made there never
-   reaches the box, and a copy only renamed inside `sagas` can save
-   itself back under the saga's own name.
+1. **Be a storyguide in it.** On your desktop, make sure you're a Player in the saga with the **Storyguide** role and a passcode of 14 characters or more. You'll join your own saga from the desktop like everyone else. Stop hosting there.
+2. **Copy two files.** From your [save folder](help:saga-picker), copy the saga's file, in `sagas`, and its passcode records, `remote/NAME-passcodes.json` (NAME being the saga's name), into the `armarius` folder on the server. The records let players keep their passcodes. Without them, every passcode must be set again.
+3. **On a NAS, hand them over.** Files copied in belong to your NAS account and its access lists, which the app's user can't read ("Permission denied"). Give them to it first: `sudo chown 10001:10001 FILES`, `sudo setfacl -b FILES`, `sudo chmod 600 FILES`.
+4. **Import them.** Run the command below, with your own file names. The saga is checked as the app checks any saga it opens. A passcode record comes over only for the very passcode it was made for, so one for a passcode changed since is dropped.
+5. **Delete the copies.** Delete the copied files with `sudo rm`, since they now belong to the app's user.
+6. **Issue new Invites.** The server makes a host key of its own, so every Invite and seat from your desktop has ended. Issue everyone a new Invite, your own desktop's storyguide seat included. `admin players list` names anyone whose passcode must still be set again (`admin players set-passcode NAME`, below).
+7. **Move the desktop's copy out.** Move the desktop's copy of the saga file out of the `sagas` folder, for example into a folder of old copies. A change made there never reaches the server, and a copy only renamed inside `sagas` can save itself back under the saga's own name.
+
+The import command:
+
+```
+docker compose run --rm -v "$PWD/SAGA.json:/in/saga.json:ro" -v "$PWD/NAME-passcodes.json:/in/passcodes.json:ro" armarius admin saga import /in/saga.json --passcodes /in/passcodes.json
+```
 
 ### The tunnel
 <!-- help: guide-self-hosting-tunnel -->
 
-**Cloudflare Tunnel** (the compose file's own). In Cloudflare's
-dashboard, under Networking, Tunnels (older dashboards: Zero Trust,
-Networks, Tunnels), create a tunnel of the cloudflared kind and name it
-(`armarius`, or `nas-armarius` if your desktop already has a tunnel of
-its own: give the box its own tunnel, never a second connector on the
-desktop's, or Cloudflare would share players between the two hosts). Cloudflare shows a command to
-install it, holding a long token: copy only the token into `tunnel.env`
-after `TUNNEL_TOKEN=`. Give the tunnel a public hostname,
-`saga.example.com`, whose service is `http://localhost:8790` (the
-tunnel shares the app's network, so "localhost" is the app). Whoever has
-the token can serve your saga's address: keep `tunnel.env` like the key.
-Where to go: developers.cloudflare.com, Cloudflare Tunnel.
+**Cloudflare Tunnel**, the compose file's own:
 
-**Tailscale Funnel** instead (no domain needed). In the compose file,
+1. **Create it.** In Cloudflare's dashboard, under Networking, Tunnels (older dashboards: Zero Trust, Networks, Tunnels), create a tunnel of the cloudflared kind.
+2. **Name it.** Call it `armarius`, or `nas-armarius` if your desktop already has a tunnel. Give the server its own tunnel, never a second connector on the desktop's, or Cloudflare would share players between the two hosts.
+3. **Copy the token.** Cloudflare shows a command to install it, holding a long token. Copy only the token into `tunnel.env`, after `TUNNEL_TOKEN=`.
+4. **Give it a hostname.** Add a public hostname, `saga.example.com`, whose service is `http://localhost:8790`. The tunnel shares the app's network, so "localhost" is the app.
+
+Whoever has the token can serve your saga's address, so keep `tunnel.env`
+like the key. Where to go: developers.cloudflare.com, Cloudflare Tunnel.
+
+**Tailscale Funnel** instead, with no domain needed. In the compose file,
 put a `tailscale/tailscale` service in place of `cloudflared`, with the
 same `network_mode: "service:armarius"`, an auth key in its own env file,
 and a Funnel serve setting that sends `https://` traffic to
-`http://127.0.0.1:8790`. Tell the listener which tunnel it is behind:
-give the armarius service `command: ["seats", "--tunnel", "other"]` and
-run `admin tunnel --tunnel other`. Where to go: tailscale.com/docs,
-Tailscale in Docker and Tailscale Funnel.
+`http://127.0.0.1:8790`. Tell the listener which tunnel it's behind. Give
+the armarius service `command: ["seats", "--tunnel", "other"]` and run
+`admin tunnel --tunnel other`. Where to go: tailscale.com/docs, Tailscale
+in Docker and Tailscale Funnel.
 
 ### Starting it
 <!-- help: guide-self-hosting-start -->
 
-1. `docker compose up -d` (or start the Project in the NAS's Docker
-   app). `docker compose ps` shows the app **healthy** within a minute.
-2. Tell it the tunnel's address, which Invites carry:
-   `docker exec armarius python main.py admin tunnel --url
-   https://saga.example.com`.
-3. Set passcodes, `docker exec -it armarius python main.py admin
-   players set-passcode NAME` (the `-it` lets it ask without showing
-   what you type), then issue Invites: `... admin invites issue NAME`.
-   Approve each device on the call as on the desktop, with `admin
-   invites pending` and `admin approve ID`.
+1. **Start it.** Run `docker compose up -d`, or start the Project in the NAS's Docker app. `docker compose ps` shows the app **healthy** within a minute.
+2. **Give it the address.** Tell it the tunnel's address, which Invites carry: `docker exec armarius python main.py admin tunnel --url https://saga.example.com`.
+3. **Set passcodes.** `docker exec -it armarius python main.py admin players set-passcode NAME`. The `-it` lets it ask without showing what you type.
+4. **Issue Invites.** `... admin invites issue NAME` for each player.
+5. **Approve each device on the call**, as on the desktop, with `admin invites pending` and `admin approve ID`.
 
-`docker compose logs armarius` shows what the app said if it won't
-start: it names what is wrong (a key folder others can read, a saga it
-can't find).
+If it won't start, `docker compose logs armarius` shows what the app said.
+It names what's wrong, such as a key folder others can read or a saga it
+can't find.
 
 ### When a step goes wrong
 <!-- help: guide-self-hosting-trouble -->
 
 - **"Permission denied" reading a file, or a key folder refused as
-  open to others:** the NAS's own access lists (a `+` after the modes in
-  `ls -l`). Give it to the app's user and strip them: `sudo chown
-  10001:10001 PATH`, `sudo setfacl -b PATH`, then `sudo chmod 700 PATH`
-  (a folder) or `600` (a file). Check with `ls -ld PATH`.
-- **"The key folder ... isn't there":** the app never makes the key
-  folder itself, so that a volume not yet unlocked (after a restart, say)
+  open to others.** It's the NAS's own access lists (a `+` after the
+  modes in `ls -l`). Give it to the app's user and strip them:
+  `sudo chown 10001:10001 PATH`, `sudo setfacl -b PATH`, then
+  `sudo chmod 700 PATH` (a folder) or `600` (a file). Check with
+  `ls -ld PATH`.
+- **"The key folder ... isn't there".** The app never makes the key
+  folder itself, so that a volume not yet unlocked, after a restart say,
   can't be given a fresh key in its place. Unlock the volume, or, the
   first time, make the folder as the message says.
-- **"Input/output error" or "Not a directory" in the keys folder:** it
-  is an encrypted shared folder of the NAS's, which the app's user
-  can't use. Use an ordinary folder (see the UGREEN section).
-- **A folder shows `d---------` after `setfacl -b`:** set its modes
+- **"Input/output error" or "Not a directory" in the keys folder.** It's
+  an encrypted shared folder of the NAS's, which the app's user can't
+  use. Use an ordinary folder (see [A UGREEN NAS](help:guide-self-hosting-nas)).
+- **A folder shows `d---------` after `setfacl -b`.** Set its modes
   again with `sudo chmod 700 PATH`.
-- **Testing as the app's user:** `sudo -u` can't, since the NAS has no
+- **Testing as the app's user.** `sudo -u` can't, since the NAS has no
   account 10001. Ask the image instead: `sudo docker run --rm --user
   10001:10001 -v PATH:/keys --entrypoint sh armarius:VERSION -c 'ls -lnd
   /keys; touch /keys/t && ls -ln /keys/t; rm -f /keys/t'`.
-- **`\\NAS-ADDRESS\armarius` won't open in Explorer:** the shared
+- **`\\NAS-ADDRESS\armarius` won't open in Explorer.** The shared
   folder doesn't exist yet, or Windows file sharing (SMB) is off on the
   NAS. Upload through the NAS's Files app instead.
-- **`.env` missing after copying:** Windows hides names starting with a
-  dot; turn on View, Show, Hidden items before copying.
-- **`rm` asks about a "write-protected" file:** it belongs to the app's
-  user now; answer `y`, or use `sudo rm`.
+- **`.env` missing after copying.** Windows hides names starting with a
+  dot. Turn on View, Show, Hidden items before copying.
+- **`rm` asks about a "write-protected" file.** It belongs to the app's
+  user now. Answer `y`, or use `sudo rm`.
 - **Where's the tunnel's token?** On the tunnel's setup page choose
-  **Docker** as the system: the command shown ends with the token (it
-  starts `eyJ`). Copy only the token, and don't run the command: the
+  **Docker** as the system. The command shown ends with the token, which
+  starts `eyJ`. Copy only the token, and don't run the command, since the
   compose file runs cloudflared. The page's Continue button stays grey
-  until the box connects, so add the public hostname after starting it.
-  If the tunnel shows Healthy but "No routes", open it and add a route
-  (Routes, Add route, Published application): the hostname, and as
-  Service URL `http://localhost:8790` (newer dashboards have no
-  separate type box: the `http://` says it). Until the route exists
+  until the server connects, so add the public hostname after starting it.
+- **The tunnel shows Healthy but "No routes".** Open it and add a route
+  (Routes, Add route, Published application), with the hostname, and
+  `http://localhost:8790` as Service URL. Newer dashboards have no
+  separate type box, since the `http://` says it. Until the route exists
   the address has no DNS record, and a player's Join says to check the
-  storyguide is hosting. Add the route before anyone tries to join: a
-  home router remembers "no such name" for up to half an hour, even
-  after the route exists. To tell that apart from a broken tunnel, ask
-  Cloudflare's own DNS (`nslookup NAME 1.1.1.1`): if it answers there,
-  only the router's memory is in the way, so wait or restart the router.
-- **The token didn't save in `tunnel.env`:** in Windows Terminal, paste
-  into `nano` with a right-click or Ctrl+Shift+V. Check without
-  showing it: `sudo awk -F= '{print NR": "$1"  length="length($0)}'
-  tunnel.env` should show one `TUNNEL_TOKEN` line of about 200
-  characters (13 means it is empty).
+  storyguide is hosting.
+- **Add the route before anyone tries to join.** A home router remembers
+  "no such name" for up to half an hour, even after the route exists. To
+  tell that apart from a broken tunnel, ask Cloudflare's own DNS
+  (`nslookup NAME 1.1.1.1`). If it answers there, only the router's
+  memory is in the way, so wait or restart the router.
+- **The token didn't save in `tunnel.env`.** In Windows Terminal, paste
+  into `nano` with a right-click or Ctrl+Shift+V. Check without showing
+  it: `sudo awk -F= '{print NR": "$1"  length="length($0)}' tunnel.env`
+  should show one `TUNNEL_TOKEN` line of about 200 characters. 13 means
+  it's empty.
 
-### Looking after it: the admin word
+### Looking after it with the `admin` command
 <!-- help: guide-hosting-admin -->
 
 A host with no screen does what the Host for Players window does with the
-**admin** word, typed in a terminal on that computer (in a container:
-`docker exec -it armarius python main.py admin ...`; from a source
-checkout: `uv run python main.py admin ...`). It reads and writes the
-saga's files there and nothing goes over the network. `--saga` names the
-saga by its id or name; with only one saga, or `ARMARIUS_SAGA` set, it
-can be left out. `admin --help` lists everything; `--help` after any word
-says more.
+`admin` command, typed in a terminal on that computer. In a container,
+that's `docker exec -it armarius python main.py admin ...`, and from a
+source checkout `uv run python main.py admin ...`. It reads and writes the
+saga's files there, and nothing goes over the network.
 
-- `admin sagas` lists the sagas. `admin saga import FILE` brings a saga
-  file in (checked as the app checks any saga it opens), with
-  `--passcodes FILE` for the old host's passcode records; `admin saga
-  delete` deletes one after you type its name.
-- `admin players list` says who may have a Remote seat; `admin players
-  set-passcode NAME` asks for a new passcode twice, without showing it
-  (it is never typed on the command line, where others could see it);
-  `admin players set-role NAME storyguide` (or `player`).
-- `admin tunnel --url https://saga.example.com` sets the address
-  Invites carry; `admin tunnel` shows it, and where to point the tunnel.
-- `admin invites issue NAME` prints the Invite to send and the six words
-  to read on the call; `admin words` prints the words again. `admin
-  invites pending` lists what waits: who asks, from which device, its
-  three words to check on the call, and under each the exact command
-  that approves it or turns it down, ready to copy (with a short form
-  of the request's id).
-- `admin devices list` lists the seats, each live one with the command
-  that revokes it; `admin devices revoke ID` does so;
-  `admin log` (with `--player NAME` or `--limit N`) for the Log.
-- `admin rotate-key` gives the host a new key; restart the listener
-  afterwards (`docker compose restart armarius`) so it uses it.
-- `admin backup` copies the saga and its Remote seat files (Invites,
-  seats, the Log, the tunnel address) into one zip in the backups folder
-  (`--to FOLDER`, or `ARMARIUS_BACKUPS`, which the container sets to
-  `/backups`), named for the saga and the time. It is safe while players
-  play: each file is copied whole, between saves. It keeps the newest 30
-  (`--keep N` to change that) and never holds the host key. To restore,
-  unzip it into the data folder with the listener stopped.
+`--saga` names the saga by its id or name. With only one saga, or
+`ARMARIUS_SAGA` set, it can be left out. `admin --help` lists everything,
+and `--help` after any word says more.
 
-Anything that changes a seat asks first; add `--yes` to skip the
-question in a script. The checks are the window's own: a passcode under
-14 characters, an Invite for a player with no passcode, or an approval
-of a request that has lapsed is refused the same way.
+- **Sagas.** `admin sagas` lists the sagas. `admin saga import FILE`
+  brings a saga file in, checked as the app checks any saga it opens,
+  with `--passcodes FILE` for the old host's passcode records.
+  `admin saga delete` deletes one after you type its name.
+- **Players.** `admin players list` says who may have a Remote seat.
+  `admin players set-passcode NAME` asks for a new passcode twice, without
+  showing it. It's never typed on the command line, where others could
+  see it. `admin players set-role NAME storyguide` (or `player`) sets a
+  role.
+- **The tunnel.** `admin tunnel --url https://saga.example.com` sets the
+  address Invites carry. `admin tunnel` shows it, and where to point the
+  tunnel.
+- **Invites.** `admin invites issue NAME` prints the Invite to send and
+  the six words to read on the call. `admin words` prints the words
+  again. `admin invites pending` lists what waits: who asks, from which
+  device, and its three words to check on the call. Under each is the
+  exact command that approves it or turns it down, ready to copy, with a
+  short form of the request's id.
+- **Seats.** `admin devices list` lists the seats, each live one with the
+  command that revokes it. `admin devices revoke ID` does so.
+- **The Log.** `admin log`, with `--player NAME` or `--limit N`.
+- **A new key.** `admin rotate-key` gives the host a new key. Restart the
+  listener afterwards (`docker compose restart armarius`) so it uses it.
+- **Backups.** `admin backup` puts the saga and its Remote seat files
+  (Invites, seats, the Log, the tunnel address) into one zip in the
+  backups folder, named for the saga and the time. Give the folder with
+  `--to FOLDER`, or `ARMARIUS_BACKUPS`, which the container sets to
+  `/backups`. It's safe while players play, since each file is copied
+  whole, between saves. It keeps the newest 30 (`--keep N` to change
+  that) and never holds the host key. To restore, unzip it into the data
+  folder with the listener stopped.
 
-### The host key on the box
+Anything that changes a seat asks first. Add `--yes` to skip the
+question in a script. The checks are the window's own, so a passcode
+under 14 characters, an Invite for a player with no passcode, or an
+approval of a request that has lapsed is refused the same way.
+
+### The host key on a server
 <!-- help: guide-hosting-headless-key -->
 
-On a desktop the host key lives in the computer's keychain. A box with
-no screen has none, so the app keeps it in a file instead, but only
-when told to: `ARMARIUS_KEYSTORE=file`, with `ARMARIUS_KEYS` naming the
-folder (`/keys` if left out). The container image sets both; a desktop
-never needs them.
+On a desktop the host key lives in the computer's keychain. A server with
+no screen has none, so the app keeps it in a file instead, but only when
+told to: `ARMARIUS_KEYSTORE=file`, with `ARMARIUS_KEYS` naming the folder
+(`/keys` if left out). The container image sets both, and a desktop never
+needs them.
 
 The folder must be one of its own, never inside the data folder, so the
-keys never travel with the saga or its backups. The app makes it private
-(only the app's own user may open it) and refuses to start if anyone else
-can read the folder or a key in it, if it belongs to another user, or if
-the app runs as the administrator (root). Whoever can read that folder
-can pretend to be your host: on a NAS that is its administrators, and
-anyone who may run Docker there. Keep it on an encrypted folder.
+keys never travel with the saga or its backups. Only the app's own user
+may open it. The app refuses to start if anyone else can read the folder
+or a key in it, if it belongs to another user, or if the app runs as the
+administrator (root).
 
-When it refuses, it says the fix: `sudo chown 10001:10001 FOLDER` for a
-folder made by another user (as a NAS's web pages make them), `chmod 700`
-for the folder or `chmod 600` for a key others can read, and for root,
-starting it as the image's own user (no `user: root`).
+Whoever can read that folder can pretend to be your host. On a NAS that's
+its administrators, and anyone who may run Docker there. Keep it on an
+encrypted disk where the system offers one, but not on a NAS's encrypted
+shared folder, which the app's user can't use (see
+[A UGREEN NAS](help:guide-self-hosting-nas)).
 
-### Backups off the box
+When it refuses, it says the fix. That's `sudo chown 10001:10001 FOLDER`
+for a folder made by another user, as a NAS's web pages make them, and
+`chmod 700` for the folder or `chmod 600` for a key others can read. For
+root, start it as the image's own user (no `user: root`).
+
+### Backups off the server
 <!-- help: guide-self-hosting-backups -->
 
-**On the box, every night.** The compose file's `backup` service runs
+**On the server, every night.** The compose file's `backup` service runs
 `admin backup` when the project starts and then once a day, keeping the
-newest 30 (`BACKUP_EVERY`, in seconds, and `BACKUPS_KEPT` in `.env`
-change that). It needs no scheduler on the box, never sees the keys, and
-has no network. `docker compose logs backup` shows each one; the zips
-are in `backups`. A NAS's own snapshots of the `armarius` folder are a
-good extra, but they stay on the same disks, and they hold the `keys`
-folder too: never copy them off the box.
+newest 30. `BACKUP_EVERY`, in seconds, and `BACKUPS_KEPT` in `.env` change
+that. It needs no scheduler on the server, never sees the keys, and has
+no network. `docker compose logs backup` shows each one, and the zips are
+in `backups`.
 
-**Off the box.** `admin backup` keeps copies on the box; a second copy
-elsewhere survives the box. **restic** does it well: it encrypts everything before it leaves
-the box, so the copy can sit on your desktop or in a cloud folder.
+A NAS's own snapshots of the `armarius` folder are a good extra, but they
+stay on the same disks. They hold the `keys` folder too, so never copy
+them off the NAS.
 
-1. Install restic on the box (its website, restic.net, has the steps; on
-   a NAS, its Docker image `restic/restic` works the same way). Keep its
-   password in a file only you can read (`chmod 600`), and a copy of it
-   somewhere safe: without it the backups can't be opened.
-2. Make a repository. On your desktop, over SSH:
-   `restic -r sftp:you@desktop:/backups/armarius init`. In a cloud
-   drive such as Dropbox, Google Drive or OneDrive, through rclone
-   (rclone.org, set up a remote called `cloud` first):
-   `restic -r rclone:cloud:armarius init`.
-3. Each night, after the backup service has run (from `cron` on a
-   Linux box): `restic -r REPOSITORY backup backups`, then `restic -r
-   REPOSITORY forget --keep-daily 14 --keep-weekly 8 --prune`.
+**Off the server.** `admin backup` keeps copies on the server, and a
+second copy elsewhere survives the server. **restic** does it well. It
+encrypts everything before it leaves the server, so the copy can sit on
+your desktop or in a cloud folder.
+
+1. **Install restic** on the server (its website, restic.net, has the steps). On a NAS, its Docker image `restic/restic` works the same way. Keep its password in a file only you can read (`chmod 600`), and a copy of it somewhere safe. Without it the backups can't be opened.
+2. **Make a repository.** On your desktop, over SSH: `restic -r sftp:you@desktop:/backups/armarius init`. In a cloud drive such as Dropbox or Google Drive, go through rclone (rclone.org, after setting up a remote called `cloud`) with `restic -r rclone:cloud:armarius init`.
+3. **Back up each night**, after the backup service has run (from `cron` on a Linux computer): `restic -r REPOSITORY backup backups`, then `restic -r REPOSITORY forget --keep-daily 14 --keep-weekly 8 --prune`.
 
 Back the `keys` folder up apart, to a different restic repository with a
-different password, or not at all: a lost key costs only new Invites for
+different password, or not at all. A lost key costs only new Invites for
 everyone, while a leaked one lets someone pretend to be your host.
 
 ### If the key or the token leaks
@@ -1038,29 +1035,28 @@ everyone, while a leaked one lets someone pretend to be your host.
 If the `keys` folder, `tunnel.env`, or a backup of either may have been
 seen by someone else:
 
-1. `docker exec -it armarius python main.py admin rotate-key`, then
-   `docker compose restart armarius`. Every Invite and seat ends at once.
-2. In Cloudflare's dashboard, make the tunnel a new token (or delete the
-   tunnel and make another), put it in `tunnel.env`, and
-   `docker compose up -d`.
-3. Issue everyone a new Invite, your own desktop's seat included, and
-   read each of them the new six words on a call.
-4. Read the Log (`admin log`) for sign-ins from before you rotated that
-   you don't recognise.
+1. **Rotate the key.** `docker exec -it armarius python main.py admin rotate-key`, then `docker compose restart armarius`. Every Invite and seat ends at once.
+2. **Replace the token.** In Cloudflare's dashboard, make the tunnel a new token, or delete the tunnel and make another. Put it in `tunnel.env`, then run `docker compose up -d`.
+3. **Invite everyone again.** Issue everyone a new Invite, your own desktop's seat included, and read each of them the new six words on a call.
+4. **Read the Log.** Look in `admin log` for sign-ins from before you rotated that you don't recognise.
 
 ### A newer version
 <!-- help: guide-self-hosting-update -->
 
-The box never updates itself. To move to a newer version, read its notes
-on the Releases page, take a backup (`admin backup`), set
-`ARMARIUS_VERSION` in `.env` to it, then `docker compose pull` and
-`docker compose up -d`. Within the same first number (4.13 to 4.14,
-say) seats keep working; a new first number (5.0) means every player
-moves to it too, since a seat refuses a host of another major version.
+The server never updates itself. To move to a newer version:
+
+1. **Read its notes** on the Releases page.
+2. **Take a backup** with `admin backup`.
+3. **Set the version.** Set `ARMARIUS_VERSION` in `.env` to it.
+4. **Pull and restart.** `docker compose pull`, then `docker compose up -d`.
+
+Within the same first number (4.13 to 4.14, say) seats keep working. A new
+first number (5.0) means every player moves to it too, since a seat
+refuses a host of another major version.
 
 **See also:** [How to host a saga](help:guide-hosting)
 <!-- gui -->
-**And:** [Remote seats: hosting safely](help:guide-hosting-safety), which the box's own hosting follows too.
+**And:** [Remote seats: hosting safely](help:guide-hosting-safety), which a self-hosted saga follows too.
 <!-- /gui -->
 
 # How to start a saga from a sourcebook

@@ -1,35 +1,45 @@
 # How to download and run the app
 <!-- help: guide-download -->
 
-You don't need Python to run Armarius. Each Release on the app's GitHub page, under **Releases**, has a download for Windows and one for Linux, named like `Armarius-X.Y.Z-windows.zip`, where X.Y.Z is the version. It holds the whole app, with its books' catalogs, the Tribunal packs and the tutorials. Your sagas are never inside it: they are kept in your own save folder, which the [saga picker](help:saga-picker) shows, so a newer download finds them.
+You want Armarius on a new computer, or a friend at the table wants to try it. You don't need Python: each Release on the app's GitHub page, under **Releases**, has a download for Windows and one for Linux.
+
+Each is a zip named like `Armarius-X.Y.Z-windows.zip`, where X.Y.Z is the version. It holds the whole app, with its books' catalogs, the Tribunal packs and the tutorials. Your sagas are never inside it. They're kept in your [save folder](help:saga-picker), so a newer download finds them.
 
 ### Windows
 <!-- help: guide-download-windows -->
 
-1. Download the Windows zip, right-click it and choose **Extract All**. Put the folder it makes, `Armarius-X.Y.Z`, wherever you keep programs, such as your Documents.
-2. Open the folder and double-click **Armarius** to start the desktop app. **armarius-terminal** in the same folder starts the terminal version.
-3. The first time, Windows may say "Windows protected your PC". The app isn't signed with a paid certificate, so Windows doesn't know it yet. Click **More info**, then **Run anyway**. It asks only once for each version.
-4. To pin it, right-click **Armarius** and choose **Pin to Start**, or **Send to**, then **Desktop (create shortcut)**.
+1. **Unzip it.** Download the Windows zip, right-click it and choose **Extract All**. Put the folder it makes, `Armarius-X.Y.Z`, wherever you keep programs, such as your Documents.
+2. **Start it.** Open the folder and double-click **Armarius** for the desktop app. **armarius-terminal**, in the same folder, starts the terminal version.
+3. **Let Windows run it.** The first time, Windows may say "Windows protected your PC", because the app isn't signed with a paid certificate. Click **More info**, then **Run anyway**. It asks only once for each version.
+4. **Pin it.** Right-click **Armarius** and choose **Pin to Start**, or **Send to**, then **Desktop (create shortcut)**.
 
 ### Linux
 <!-- help: guide-download-linux -->
 
-1. Download the Linux zip and unzip it: `unzip Armarius-X.Y.Z-linux.zip`.
-2. Run `./Armarius-X.Y.Z/Armarius` for the desktop app, or `./Armarius-X.Y.Z/armarius-terminal` in a terminal for the terminal version.
+1. **Unzip it.** Download the Linux zip and run `unzip Armarius-X.Y.Z-linux.zip`.
+2. **Start it.** Run `./Armarius-X.Y.Z/Armarius` for the desktop app, or `./Armarius-X.Y.Z/armarius-terminal` in a terminal for the terminal version.
 
-It runs on Linux from Ubuntu 22.04 (and other systems of that age) on. The desktop app needs the usual desktop libraries; if it won't start, run it from a terminal to see which one is missing.
+It runs on Ubuntu 22.04 and other systems of that age or newer. The desktop app needs the usual desktop libraries. If it won't start, run it from a terminal to see which one is missing.
 
-On GNOME, the desktop app draws its windows through X11 (GNOME's XWayland) rather than Wayland, because on Wayland GNOME showed a busy cursor for about 15 seconds after each change of window. If you'd rather use Wayland anyway, start it with `QT_QPA_PLATFORM=wayland ./Armarius`.
+On GNOME the desktop app draws its windows through X11. If you'd rather use Wayland, start it with `QT_QPA_PLATFORM=wayland ./Armarius`.
 
 ### A newer version
 <!-- help: guide-download-update -->
 
-Download the newer zip, unzip it beside the old folder and start the new one. Your sagas and settings carry over, since they aren't in the app's folder. Delete the old folder once the new one works. An older version still opens a saga the newer one saved, but says so, and can't show what only the newer one knows: if your troupe shares a saga, move to the new version together.
+1. **Unzip the new one.** Download the newer zip and unzip it beside the old folder.
+2. **Start the new one.** Your sagas and settings carry over, since they aren't in the app's folder.
+3. **Delete the old folder** once the new one works.
+
+An older version still opens a saga the newer one saved, but says so, and can't show what only the newer one knows. If your troupe shares a saga, move to the new version together.
 
 ### Hosting from a download
 <!-- help: guide-download-hosting -->
 
-Hosting works from a download as it does from the source: see [How to host a saga for your troupe](help:guide-hosting). The first time, Windows asks whether to let **armarius-terminal** through the firewall, as it does for Python otherwise: allow it on **private** networks. Players who join with Remote seats need the same version of Armarius as you.
+Hosting works from a download just as it does from the source (see [How to host a saga for your troupe](help:guide-hosting)). The first time you host, Windows asks whether to let **armarius-terminal** through the firewall, as it asks about Python when you run from the source. Allow it on **private** networks.
+
+Players who join with Remote seats need the same major version of Armarius as you, the first number of the version (the 4 in 4.13.0).
+
+**See also:** [Saga picker](help:saga-picker), [Getting started](help:guide-getting-started), [How to host a saga for your troupe](help:guide-hosting)
 
 # Getting started
 <!-- help: guide-getting-started -->
