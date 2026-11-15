@@ -136,23 +136,4 @@ A peer-to-peer data channel (for example `aiortc`) would drop the tunnel. It is 
 
 ## 8. A self-hosted box (headless host)
 
-Added with [ADR 0022](adr/0022-a-headless-host-keeps-its-key-in-a-file.md) (STORY-2282). A headless host (a container on a NAS, an always-on Linux box, a small rented server) runs the same listener with no keychain, so its host key and SSH host key sit in files (`ARMARIUS_KEYSTORE=file`, folder `ARMARIUS_KEYS`, default `/keys`). Everything in sections 1 to 7 still holds; this section adds what changes when the key is a file on someone's disk.
-
-**Who can read the key.** Anyone who can read the key folder can stand in for the host: the box's root and its administrators (on a NAS, every admin account), anyone in the `docker` group (who can mount any folder into a container of their own), and whoever controls the container image. The app refuses a key folder or file that a group or others can access, one owned by another user, a folder inside or holding the data folder (resolved, so a link can't hide it), running as root, and Windows (desktops keep the keychain). It cannot defend against root on the box.
-
-**Listener compromise.** A flaw in the listener now runs inside the container: as a non-root user, on a read-only root filesystem, with every capability dropped and no new privileges. The key and the saga are exposed to it exactly as on a desktop, where the listener runs as the Storyguide's own user: the saga is its data and the key is how it proves itself. What is gained is that nothing else on the box is.
-
-**Theft of the disk, or a drive sent back for repair.** Keep the keys folder on an encrypted volume where the box offers one the app's user can use, so a drive pulled from the box gives up neither the key nor, if the data folder is encrypted too, the saga. UGOS Pro's encrypted shared folders (`fuse.uggocryptfs`, checked on 1.21) are not usable: they refuse a user the NAS doesn't know (Input/output error) and report every mode as 777, so on a UGREEN NAS the key sits unencrypted at rest, private to the app's user. Accepted for a home NAS; the remedy after a theft is the rotation runbook below.
-
-**The tunnel token.** The Cloudflare Tunnel token is as sensitive as the host key: whoever holds it can serve the host's address. Players' pins still refuse a host without the key, so a stolen token alone gives denial of service and metadata, not the saga; with the key too, it is a full impersonation. Keep it in an env file readable only by the box's admin, never in the repository or the image.
-
-**Backups.** The saga's backups never include the key folder. Back the keys (and the tunnel token) up separately and encrypted, or not at all: a lost key costs only a re-invite, a leaked one costs the saga's secrecy.
-
-**Rotation runbook** (a leaked key, token, or backup of either):
-
-1. Rotate the host key (Host for Players, **Rotate Host Key**, or the host's admin command): every Invite and seat ends at once.
-2. Issue a new tunnel token in Cloudflare and delete the old one; restart the tunnel with the new token.
-3. Re-invite everyone, the Storyguide's own desktop seat included, and check the six new words with each player on a call.
-4. Look through the Log for sign-ins you don't recognise before the rotation.
-
-Residual risks: root on the box, members of the `docker` group, and the NAS vendor's own software can read the key; an unencrypted disk gives it up; the key file is unwrapped at rest (a passphrase-wrapped key was deferred in ADR 0022 so the host can restart on its own).
+A headless host (a container on a NAS, an always-on Linux box, a small rented server) runs this same listener, so everything above holds there too. What changes when the host key is a file on the box, the code comes from a published image, and the host is looked after from a shell (the file key store, the container and its tunnel, the admin word, backups and the rotation runbook) has a model of its own: [Threat model: A headless host](threat-model-headless-host.md), designed in [ADR 0022](adr/0022-a-headless-host-keeps-its-key-in-a-file.md).
