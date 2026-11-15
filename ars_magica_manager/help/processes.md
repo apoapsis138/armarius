@@ -1298,52 +1298,6 @@ Open it from **Import** in the saga page's Saga Management chapter, then Spells.
 
 **See also:** [Spells](help:tab-content-spells), [Import Data](help:import-data), [How to import and export](help:guide-import-export)
 
-## Follow an Avenue
-<!-- help: follow-avenue -->
-
-Plans the Initiation season that follows an avenue to its station (Houses of Hermes: Mystery Cults pp. 59-60). Choose:
-
-- The avenue: the next on the magus's path, or the next on another path, which steps onto it.
-- The guide. It may be the guide the House provides, at Presence + House Criamon Lore 6, as the printed Scripts assume. Or it's a character of the saga with House Criamon Lore, one not of the House shown as unusual. Or it's a ghostly Primus at the Cave of Twisting Shadows, Lore 9 (p. 60).
-- Whether the Path of Seeming's third avenue gives up the magus's talisman in place of the special time and place. It's the same +3, not an added one (p. 64).
-- The season.
-
-A head bound in infancy for the path, set on Change Path, adds +3 to its first station only (p. 51).
-
-The Avenue shows:
-
-- the guide's Presence + Lore + the Script against the Target, 21 less the magus's past Ordeal's reduction
-- whether the magus's House Criamon Lore is enough, the station's place + 1
-- the avenue's story, a psychodrama. Failing, the magus may try again, and utter failure may bring a Twilight check (p. 59).
-- what success brings.
-
-**Plan** puts an Undergo an Initiation season on Planning, replacing a plan for that season. When it's played, the season adds the station's Virtue and its Ordeal's Flaws, such as a Major Pious replacing the magus's Vow. It also adds the Virtues some stations bring with them, none twice:
-
-- Clear Thinker, Common Sense and Keen Vision (Differentiation of Seeming). Trade Keen Vision for another sense by hand (p. 64).
-- the Gentle Gift, or the Blatant Gift lifted to an ordinary Gift (Service to Harmony, p. 70)
-- Free Expression and Inspirational (Expression, p. 71).
-
-It keeps the season on Stations, and reminds you to add the new stigma. A Flaw the book only describes, such as Incompatible Arts ("the equivalent of a Supernatural Nuisance"), is noted for you to add by hand.
-
-## Change Path
-<!-- help: change-path -->
-
-Sets the path the magus walks, or **As his stations show**, and their guide. For a ghostly Primus, give the Presence they had in life. Their House Criamon Lore is 9 (p. 60). Give too the path a head bound in infancy, or a like modification, suits, for +3 to its first station only. A cone suits Seeming, a double-lobed skull the Body (p. 51). Add any notes.
-
-Changing path sets aside the magus's stations on the old one (p. 58). The Path of the Mirror is offered only to the Primus (pp. 57, 59), a magus whose Hermetic background names them as the House's Primus.
-
-## Draft the Charter
-<!-- help: draft-charter -->
-
-A season's work by one side's notaries (Transforming Mythic Europe p. 36). The principal notary's Intelligence + Civil and Canon Law + a stress die is that side's Charter Strength. Tick **In England** for an English charter: its notaries use Common Law instead, and only it. The tick is kept on the lord, whose form has it too. There are 3 botch dice, one fewer for each notary beyond the first. A botch leaves the strength at 0, no legal defence.
-
-## Seek a Loophole
-<!-- help: seek-loophole -->
-
-A season examining the charter and its legal texts, then Intelligence + Civil and Canon Law + a stress die against the other side's Charter Strength (Transforming Mythic Europe p. 36). For a charter in England it's Common Law, and only it. Higher finds a loophole: legal grounds to break one or more of its provisions, noted on the lord. The other side's strength must be drafted, or typed, first.
-
-The book gives the search no botch dice, so the app rolls one. A botch is a total of 0, and something goes wrong as the storyguide decides (DE p. 7). It might be a false loophole the searcher believes in, or the other side learning of the search.
-
 # Delay or Hasten
 <!-- help: threat-delay -->
 

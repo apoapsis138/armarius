@@ -1118,6 +1118,18 @@ ships, or another, also serves.
 - *They throw naptha bombs*: +5 damage, and the ship is set alight.
   Water won't put it out, but a great deal of sand will (ToP p. 110).
 
+## Draft the Charter
+<!-- help: draft-charter -->
+
+A season's work by one side's notaries (Transforming Mythic Europe p. 36). The principal notary's Intelligence + Civil and Canon Law + a stress die is that side's Charter Strength. Tick **In England** for an English charter: its notaries use Common Law instead, and only it. The tick is kept on the lord, whose form has it too. There are 3 botch dice, one fewer for each notary beyond the first. A botch leaves the strength at 0, no legal defence.
+
+## Seek a Loophole
+<!-- help: seek-loophole -->
+
+A season examining the charter and its legal texts, then Intelligence + Civil and Canon Law + a stress die against the other side's Charter Strength (Transforming Mythic Europe p. 36). For a charter in England it's Common Law, and only it. Higher finds a loophole: legal grounds to break one or more of its provisions, noted on the lord. The other side's strength must be drafted, or typed, first.
+
+The book gives the search no botch dice, so the app rolls one. A botch is a total of 0, and something goes wrong as the storyguide decides (DE p. 7). It might be a false loophole the searcher believes in, or the other side learning of the search.
+
 # A town
 <!-- help: tab-nb-town -->
 
@@ -2110,7 +2122,7 @@ copy doesn't see them, as with Secrets (see
 [Keeping secrets from players](help:guide-hosting-secrets)). Played
 solo, the one player is the storyguide and sees everything.
 
-## Roll Tables
+### Writing and rolling a table
 <!-- help: section-nb-tables -->
 
 Each table names its die, such as a simple die, a stress die, a d6 or
@@ -2306,7 +2318,7 @@ weapon's Attack (p. 44).
 
 What has happened at the place.
 
-## Diary
+### The entries
 <!-- help: section-nb-place-diary -->
 
 What has happened at the place, or what the faction has done, a line
