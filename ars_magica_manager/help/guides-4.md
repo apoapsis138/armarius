@@ -1710,7 +1710,7 @@ Your troupe wants a royal tomb of your own to explore. Any place can be one,
 with *Lands of the Nile* in play.
 
 1. **Make the place.** In The Region, add a Place and tick its **Tomb** box.
-   A Tomb tab (a chapter on the desktop) appears on it.
+   A Tomb appears on it, a tab on the terminal and a chapter on the desktop.
 2. **Say whose it is.** Edit the [Tomb](help:tab-nb-tomb)'s block: its kind
    gives the base aura and Build Points, and the centuries of burials and any
    decay change the aura. Add Boons, and up to 10 points of Hooks.
