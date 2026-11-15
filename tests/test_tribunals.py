@@ -7,8 +7,9 @@ from __future__ import annotations
 import os
 
 import pytest
+from screen_helpers import _focus_section, _show_tab
 from support import everything_saga, wait_until
-from textual.widgets import Collapsible, TabbedContent, Tree
+from textual.widgets import Collapsible, Tree
 
 from ars_magica_manager import storage, transfer, tribunal_packages
 from ars_magica_manager import tribunals as trib
@@ -561,11 +562,14 @@ async def test_the_docket_keys_act_on_the_chosen_case():
             pilot, lambda: workspace._tribunal_sheet_view is not None
         )
         view = workspace._tribunal_sheet_view
-        view.query_one(TabbedContent).active = "tab-trib-docket"
-        assert await wait_until(pilot, lambda: bool(view.query("#trib-cases")))
-        view.query_one("#section-trib-cases", Collapsible).focus_section()
-        assert await wait_until(
-            pilot, lambda: workspace._active_section() == "section-trib-cases"
+        # The sheet's own first focus can land after the switch and take the
+        # tab back: the helpers wait for it and refocus.
+        await _show_tab(pilot, app, "tab-trib-docket")
+        await _focus_section(
+            pilot,
+            app,
+            view.query_one("#section-trib-cases", Collapsible),
+            "section-trib-cases",
         )
         await pilot.press("down")
         # More offers Withdraw and War's End for a chosen case.

@@ -7,7 +7,7 @@ import json
 import random
 from dataclasses import asdict
 
-from screen_helpers import _show_tab
+from screen_helpers import _focus_section, _show_tab
 from support import build_all_tabs, everything_saga, strip_markup, wait_until
 from textual.widgets import Button, Collapsible, Select, Static, TabbedContent, Tree
 
@@ -616,19 +616,14 @@ async def test_plan_a_season_from_the_covenant_seasons_tab():
         tree.select_node(_find(tree, ("covenant", "cov1")))
         await wait_until(pilot, lambda: app.screen._covenant_sheet_view is not None)
         view = app.screen._covenant_sheet_view
-        await wait_until(pilot, lambda: view.initial_tab_seen)
-        view.query_one(TabbedContent).active = "tab-cov-seasons"
-        # Let the tab's own focus (its first section, Magi) land first, or it
-        # can arrive after ours and take 'e' to the wrong list.
-        await wait_until(
-            pilot, lambda: app.screen._active_section() == "section-cov-seasons-magus"
-        )
-        section_stop(
-            view.query_one("#section-cov-seasons-companion", Collapsible)
-        ).focus()
-        await wait_until(
+        # The sheet's and the tab's own focus can land after ours and take
+        # 'e' to the wrong list: the helpers wait for them and refocus.
+        await _show_tab(pilot, app, "tab-cov-seasons")
+        await _focus_section(
             pilot,
-            lambda: app.screen._active_section() == "section-cov-seasons-companion",
+            app,
+            view.query_one("#section-cov-seasons-companion", Collapsible),
+            "section-cov-seasons-companion",
         )
         workspace = app.screen
         await pilot.press("e")  # the first Companion is chosen: Alys
