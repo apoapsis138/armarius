@@ -139,6 +139,10 @@ change in it.
 - **My sheet.** While Playing, your name on the Playing button (or `c`) opens your character's sheet from any page; the trail, Esc or `c` again takes you back.
 - **The trail's switcher.** The last crumb of the trail lists the other people, laboratories or covenants at its level.
 
+### Fundamenta
+
+- **Sagas saved on this computer by default.** A new install keeps its sagas in your app data folder (`C:\Users\you\AppData\Local\Armarius` on Windows, `~/.local/share/Armarius` on Linux), not in OneDrive, where a sync could catch a save half-written. If you already use Armarius, nothing moves: it goes on saving where it always has, now shown as a folder you chose. Change save folder on the saga picker moves it.
+
 ## 4.13.1 — 2026-11-15
 
 ### Glossa

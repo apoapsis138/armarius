@@ -14,15 +14,17 @@ def no_folder_in_use(monkeypatch):
     monkeypatch.setattr(paths, "_in_use", None)
 
 
-#: The real default (conftest points it at a temp folder for every test).
+#: The real default and old defaults (conftest points them at a temp
+#: folder, and at none, for every test).
 DEFAULT_DATA_DIR = paths.default_data_dir
-OLD_DEFAULT_DATA_DIR = paths.old_default_data_dir
+OLD_DEFAULT_FOLDERS = paths.old_default_folders
 
 
 @pytest.fixture
 def no_choice(tmp_path, monkeypatch):
     """No environment variable and no location file: the default, with
-    OneDrive at tmp_path/OneDrive (as on Windows)."""
+    OneDrive at tmp_path/OneDrive (as on Windows) and the app data folder
+    at tmp_path/AppData."""
     monkeypatch.delenv(paths.ENV_VAR, raising=False)
     for var in paths.ONEDRIVE_VARS:
         monkeypatch.delenv(var, raising=False)
@@ -33,32 +35,20 @@ def no_choice(tmp_path, monkeypatch):
         paths, "OLD_LOCATION_FILE", tmp_path / "old_config" / "location.json"
     )
     monkeypatch.setattr(paths, "default_data_dir", DEFAULT_DATA_DIR)
-    monkeypatch.setattr(paths, "old_default_data_dir", OLD_DEFAULT_DATA_DIR)
+    monkeypatch.setattr(paths, "old_default_folders", OLD_DEFAULT_FOLDERS)
     monkeypatch.setattr(
-        paths.platformdirs, "user_data_dir", lambda *a, **k: str(tmp_path / "AppData")
+        paths.platformdirs,
+        "user_data_dir",
+        lambda name, **_: str(tmp_path / "AppData" / name),
     )
     return tmp_path
 
 
-def test_the_data_folder_defaults_to_the_top_of_onedrive(no_choice):
-    assert paths.data_dir() == no_choice / "OneDrive" / "Armarius"
-
-
-def test_onedrive_is_found_wherever_it_is(no_choice, monkeypatch):
-    # OneDrive can be at D:\OneDrive, for one.
-    (no_choice / "D" / "OneDrive").mkdir(parents=True)
-    monkeypatch.delenv("OneDrive")
-    monkeypatch.setenv("OneDriveConsumer", str(no_choice / "D" / "OneDrive"))
-    assert paths.data_dir() == no_choice / "D" / "OneDrive" / "Armarius"
-
-
-def test_without_onedrive_the_data_folder_is_the_app_data_folder(
-    no_choice, monkeypatch
-):
-    monkeypatch.delenv("OneDrive")
-    assert paths.data_dir() == no_choice / "AppData"
-    monkeypatch.setenv("OneDrive", str(no_choice / "missing"))  # not a folder
-    assert paths.data_dir() == no_choice / "AppData"
+def test_the_data_folder_defaults_to_app_data_even_with_onedrive(no_choice):
+    assert paths.data_dir() == no_choice / "AppData" / "Armarius"
+    paths.keep_old_default_folder()  # no older folder: nothing recorded
+    assert paths.source() == "default"
+    assert not paths.LOCATION_FILE.exists()
 
 
 def test_a_location_file_chooses_another_folder(no_choice):
@@ -107,77 +97,87 @@ def test_a_folder_chosen_under_the_old_name_is_still_used(no_choice):
     assert paths.data_dir() == no_choice / "Again"
 
 
-def _old_default(root):
-    """The default folder under the app's old name, holding a saga."""
-    old = root / "OneDrive" / "Ars Magica Manager"
-    (old / "sagas").mkdir(parents=True)
-    (old / "sagas" / "a.json").write_text("A", encoding="utf-8")
-    (old / "sagas" / ".a.presence").write_text("", encoding="utf-8")
-    return old
+def _saga_folder(folder):
+    """`folder`, made and holding a saga."""
+    (folder / "sagas").mkdir(parents=True)
+    (folder / "sagas" / "a.json").write_text("A", encoding="utf-8")
+    return folder
 
 
-def test_the_old_default_folder_is_renamed_once(no_choice):
-    old = _old_default(no_choice)
-    new = no_choice / "OneDrive" / "Armarius"
-    note = paths.move_old_default_folder()
-    assert note == f"Moved your data folder from {old} to {new}."
-    assert not old.exists()
-    assert (new / "sagas" / "a.json").read_text(encoding="utf-8") == "A"
-    assert (new / "sagas" / ".a.presence").exists()  # everything moves
-    assert paths.data_dir() == new
-    assert paths.move_old_default_folder() is None  # once
+def _kept(folder):
+    """keep_old_default_folder() recorded `folder` as the chosen one, and
+    left it where it was."""
+    assert paths.source() == "chosen"
+    assert paths.data_dir() == folder
+    assert json.loads(paths.LOCATION_FILE.read_text(encoding="utf-8")) == {
+        "data_dir": str(folder)
+    }
+    assert (folder / "sagas" / "a.json").read_text(encoding="utf-8") == "A"
 
 
-def test_without_onedrive_the_old_app_data_folder_is_renamed(no_choice, monkeypatch):
-    monkeypatch.delenv("OneDrive")
-    monkeypatch.setattr(
-        paths.platformdirs,
-        "user_data_dir",
-        lambda name, **_: str(no_choice / "AppData" / name),
-    )
-    (no_choice / "AppData" / "Ars Magica Manager" / "sagas").mkdir(parents=True)
-    assert paths.move_old_default_folder() is not None
-    assert (no_choice / "AppData" / "Armarius" / "sagas").is_dir()
+def test_an_old_onedrive_armarius_folder_is_kept_as_chosen(no_choice, monkeypatch):
+    old = _saga_folder(no_choice / "OneDrive" / "Armarius")
+    paths.keep_old_default_folder()
+    _kept(old)
+    assert not (no_choice / "AppData" / "Armarius").exists()
+    # Emptying it later doesn't send the user to the new default.
+    monkeypatch.setattr(paths, "_in_use", None)
+    (old / "sagas" / "a.json").unlink()
+    paths.keep_old_default_folder()
+    assert paths.source() == "chosen"
+    assert paths.data_dir() == old
 
 
-def test_a_chosen_folder_keeps_the_old_default_where_it_is(no_choice, monkeypatch):
-    old = _old_default(no_choice)
-    monkeypatch.setenv(paths.ENV_VAR, str(no_choice / "FromEnv"))
-    assert paths.move_old_default_folder() is None
-    monkeypatch.delenv(paths.ENV_VAR)
-    paths.remember_data_dir(no_choice / "Chosen")
-    assert paths.move_old_default_folder() is None
-    assert (old / "sagas" / "a.json").exists()
+def test_an_old_onedrive_folder_keeps_its_old_name(no_choice):
+    old = _saga_folder(no_choice / "OneDrive" / "Ars Magica Manager")
+    paths.keep_old_default_folder()
+    _kept(old)
     assert not (no_choice / "OneDrive" / "Armarius").exists()
 
 
-def test_when_both_folders_exist_nothing_is_merged(no_choice):
-    old = _old_default(no_choice)
-    new = no_choice / "OneDrive" / "Armarius"
-    (new / "sagas").mkdir(parents=True)
-    note = paths.move_old_default_folder()
-    # Only the old folder has sagas: the app says where they are.
-    assert note is not None and str(old) in note
-    assert (old / "sagas" / "a.json").exists()
-    assert not (new / "sagas" / "a.json").exists()
-    assert paths.data_dir() == new
-    (new / "sagas" / "b.json").write_text("B", encoding="utf-8")
-    assert paths.move_old_default_folder() is None  # both in use: nothing said
+def test_an_old_app_data_folder_keeps_its_old_name(no_choice):
+    old = _saga_folder(no_choice / "AppData" / "Ars Magica Manager")
+    paths.keep_old_default_folder()
+    _kept(old)
+    assert not (no_choice / "AppData" / "Armarius").exists()
 
 
-def test_a_folder_that_cannot_be_renamed_goes_on_being_used(no_choice, monkeypatch):
-    old = _old_default(no_choice)
+def test_the_most_recent_old_default_wins(no_choice):
+    newest = _saga_folder(no_choice / "OneDrive" / "Armarius")
+    _saga_folder(no_choice / "OneDrive" / "Ars Magica Manager")
+    _saga_folder(no_choice / "AppData" / "Ars Magica Manager")
+    paths.keep_old_default_folder()
+    _kept(newest)
 
-    def refuse(self, target):
-        raise PermissionError("in use")
 
-    monkeypatch.setattr(paths.Path, "rename", refuse)
-    note = paths.move_old_default_folder()
-    assert note is not None and "in use" in note
-    assert paths.data_dir() == old
-    assert paths.settle_data_dir(no_choice / "repo") is None
-    assert paths.data_dir() == old  # settling keeps it
-    monkeypatch.setattr(paths, "_fallback", None)
+def test_an_existing_app_data_default_records_nothing(no_choice):
+    _saga_folder(no_choice / "OneDrive" / "Armarius")
+    (no_choice / "AppData" / "Armarius").mkdir(parents=True)
+    paths.keep_old_default_folder()
+    assert paths.source() == "default"
+    assert not paths.LOCATION_FILE.exists()
+    assert paths.data_dir() == no_choice / "AppData" / "Armarius"
+
+
+def test_a_chosen_folder_records_nothing(no_choice, monkeypatch):
+    _saga_folder(no_choice / "OneDrive" / "Armarius")
+    monkeypatch.setenv(paths.ENV_VAR, str(no_choice / "FromEnv"))
+    paths.keep_old_default_folder()
+    assert not paths.LOCATION_FILE.exists()
+    assert paths.data_dir() == no_choice / "FromEnv"
+    monkeypatch.delenv(paths.ENV_VAR)
+    paths.remember_data_dir(no_choice / "Chosen")
+    monkeypatch.setattr(paths, "_in_use", None)
+    paths.keep_old_default_folder()
+    assert paths.data_dir() == no_choice / "Chosen"
+
+
+def test_onedrive_set_to_a_missing_folder_is_ignored(no_choice, monkeypatch):
+    monkeypatch.setenv("OneDrive", str(no_choice / "missing"))  # not a folder
+    assert paths.old_default_folders() == [no_choice / "AppData" / "Ars Magica Manager"]
+    paths.keep_old_default_folder()
+    assert paths.source() == "default"
+    assert paths.data_dir() == no_choice / "AppData" / "Armarius"
 
 
 def _legacy(root):
@@ -242,13 +242,14 @@ async def test_the_app_says_what_moved_on_start():
 
 @pytest.fixture
 def blocked(no_choice, monkeypatch):
-    """The OneDrive folder can't be written to (as Controlled folder access
-    does to Documents); every other folder can."""
+    """The default app data folder can't be written to (as Controlled
+    folder access does to Documents); every other folder can."""
     real = paths.writable
+    blocked_folder = no_choice / "AppData" / "Armarius"
     monkeypatch.setattr(
         paths,
         "writable",
-        lambda folder: "OneDrive" not in folder.parts and real(folder),
+        lambda folder: folder != blocked_folder and real(folder),
     )
     yield no_choice
     monkeypatch.setattr(paths, "_fallback", None)
@@ -264,10 +265,29 @@ def test_an_unwritable_data_folder_falls_back_to_the_saves_in_the_repo(blocked):
     assert (old / "sagas" / "a.json").exists()
 
 
-def test_with_no_saves_in_the_repo_it_falls_back_to_app_data(blocked):
+def test_a_blocked_default_with_no_saves_in_the_repo_has_no_fallback(blocked):
+    # The fallback would be the app data folder, the one blocked: the app
+    # says so and doesn't pretend to fall back.
     problem = paths.settle_data_dir(blocked / "empty_repo_data")
-    assert paths.data_dir() == blocked / "AppData"
-    assert problem is not None
+    assert paths.source() == "default"
+    assert paths.data_dir() == blocked / "AppData" / "Armarius"
+    assert problem is not None and "Change save folder" in problem
+    assert "Using" not in problem
+
+
+def test_a_blocked_chosen_folder_falls_back_to_app_data(no_choice, monkeypatch):
+    chosen = no_choice / "OneDrive" / "Armarius"
+    paths.remember_data_dir(chosen)
+    paths.use_data_dir(None)
+    real = paths.writable
+    monkeypatch.setattr(
+        paths, "writable", lambda folder: folder != chosen and real(folder)
+    )
+    problem = paths.settle_data_dir(no_choice / "empty_repo_data")
+    fallback = paths.data_dir()
+    monkeypatch.setattr(paths, "_fallback", None)
+    assert fallback == no_choice / "AppData" / "Armarius"
+    assert problem is not None and f"Using {fallback} instead" in problem
 
 
 def test_a_writable_data_folder_needs_no_fallback(no_choice):

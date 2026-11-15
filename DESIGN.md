@@ -143,7 +143,7 @@ When the steps finish, `run` saves the saga and redraws the page.
 ## 4. Data
 
 - **One JSON file per saga**, human-readable, in `paths.data_dir()` (by
-  default `Armarius` at the top of OneDrive), never in the repo. Records
+  default `Armarius` in the user's app data folder), never in the repo. Records
   are flat lists linked by id (`covenant_id`, `owner_id`, `spell_id`),
   not nested; the dataclasses in `models/` are the field-by-field spec.
 - **Migrations run on load**, so old saves, exports and packs keep
