@@ -491,6 +491,125 @@ def test_every_lab_text_of_the_season_is_of_one_technique_and_form():
     ]
 
 
+def _general_text(saga, level, book_id="gen-text", name="Lab Text: Flame Ward"):
+    """A General CrIg spell (no level of its own) and a Lab Text of it at
+    `level`."""
+    if not any(s.id == "gen" for s in saga.spells):
+        saga.spells.append(
+            Spell("gen", "Flame Ward", "Creo", "Ignem", range="Touch", ritual=True)
+        )
+    saga.books.append(
+        Book(
+            book_id,
+            name,
+            "Lab Text",
+            owner_kind="covenant",
+            owner_id="cov",
+            spell_id="gen",
+            level=level,
+        )
+    )
+
+
+def _text_plan(book_id="gen-text", **kw):
+    return _plan(activity=lab_seasons.LAB_TEXT, book_id=book_id, **kw)
+
+
+def test_a_general_spells_lab_text_is_learned_at_the_texts_level():
+    saga = _saga()
+    _general_text(saga, 15)
+    found, work = _work(saga, _text_plan())
+    # Lab Total 15 against the text's level 15 (DE pp. 262, 313).
+    assert found == [] and work.level == 15 and work.finished
+    _general_text(saga, 20, book_id="gen-20", name="Lab Text: Flame Ward 20")
+    found, _ = _work(saga, _text_plan("gen-20"))
+    assert found == [
+        "Lab Total 15 is below Flame Ward's level 20: the Lab Text can't be used yet."
+    ]
+
+
+def test_a_general_spells_lab_text_must_record_a_level():
+    saga = _saga()
+    _general_text(saga, None)
+    found, _ = _work(saga, _text_plan())
+    assert found == [
+        "Lab Text: Flame Ward records no level for this General spell: set its "
+        "level on the Lab Text."
+    ]
+
+
+def test_each_learner_of_a_general_spell_gets_a_version_of_his_own():
+    saga = _saga()
+    _general_text(saga, 15)
+    other = Character(id="m2", name="Aurelia", type="magus", covenant_id="cov")
+    other.characteristics = Characteristics(intelligence=2)
+    other.abilities = [Ability("Magic Theory", xp=ability_xp(3))]
+    other.arts = {"creo": ArtScore(xp=art_xp(5)), "ignem": ArtScore(xp=art_xp(5))}
+    saga.characters.append(other)
+    saga.laboratories.append(
+        Laboratory(id="lab2", covenant_id="cov", name="Cellar", owner_id="m2")
+    )
+    seasons.set_plan(saga, _text_plan())
+    seasons.set_plan(
+        saga,
+        SeasonPlan(
+            "m2",
+            1220,
+            "Spring",
+            lab_seasons.LAB_TEXT,
+            lab_id="lab2",
+            book_id="gen-text",
+        ),
+    )
+    seasons.apply(saga, seasons.resolve(saga, random.Random(1)))
+    versions = []
+    for magus in (saga.character("m"), saga.character("m2")):
+        (mine,) = magus.invented_spells
+        assert (mine.name, mine.level, mine.range, mine.ritual, mine.source) == (
+            "Flame Ward",
+            15,
+            "Touch",
+            True,
+            "Lab Text: Flame Ward",
+        )
+        assert [k.spell_id for k in magus.spells_known] == [mine.id]
+        # The Lab Text he writes teaches his own version.
+        assert any(
+            b.spell_id == mine.id and b.author_id == magus.id for b in saga.books
+        )
+        versions.append(mine.id)
+    assert len(set(versions)) == 2
+    assert saga.spells[-1].level is None  # the General spell itself unchanged
+
+
+def test_a_general_spells_text_joins_a_season_of_lab_texts():
+    saga = _saga()
+    saga.character("m").arts["creo"] = ArtScore(xp=art_xp(10))
+    _general_text(saga, 5)
+    plan = _plan(
+        activity=lab_seasons.LAB_TEXT, book_id="text", more_book_ids=["gen-text"]
+    )
+    found, work = _work(saga, plan)
+    # Warm Hands 15 + the text's Flame Ward 5 = 20 (DE p. 262).
+    assert found == [] and work.level == 20
+    seasons.set_plan(saga, plan)
+    seasons.apply(saga, seasons.resolve(saga, random.Random(1)))
+    magus = saga.character("m")
+    (mine,) = magus.invented_spells
+    assert mine.level == 5
+    assert {"text-spell", mine.id} == {k.spell_id for k in magus.spells_known}
+
+
+def test_a_general_spell_known_at_no_level_is_listed_and_learned_from_a_text():
+    saga = _saga()
+    _general_text(saga, 15)
+    magus = saga.character("m")
+    magus.spells_known = [KnownSpell("gen")]
+    assert "gen-text" in [b.id for b in lab_seasons.lab_texts_at_hand(saga, magus)]
+    found, _ = _work(saga, _text_plan())
+    assert found == []
+
+
 def _teacher(saga):
     """Valeria: Creo 10, Ignem 10, Int 2, Magic Theory 3 -- CrIg Lab Total
     25 in the Tower; she knows Bolt, Warm Hands and Spark."""
@@ -547,6 +666,20 @@ def test_a_taught_spell_is_within_both_lab_totals():
         "30 levels of Creo Ignem: Valeria's Lab Total there is 25.",
         "30 levels in all: Valeria's highest Lab Total among them is 25.",
     ]
+
+
+def test_a_general_spell_known_at_no_level_cant_be_taught():
+    saga = _saga()
+    _teacher(saga)
+    saga.spells.append(Spell("gen", "Flame Ward", "Creo", "Ignem"))
+    saga.character("t").spells_known.append(KnownSpell("gen"))
+    plan = _plan(
+        activity=lab_seasons.TAUGHT_SPELLS, teacher_id="t", taught_spell_ids=["gen"]
+    )
+    seasons.set_plan(saga, plan)
+    pairs.make_pairs(saga, saga.character("m"), plan)
+    found, _ = _work(saga, plan)
+    assert found == ["Valeria knows Flame Ward at no recorded level: set it first."]
 
 
 async def test_the_lab_work_screen_plans_spells_from_a_teacher():
