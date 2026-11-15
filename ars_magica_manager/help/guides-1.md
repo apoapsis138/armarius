@@ -155,7 +155,7 @@ Anyone still left with nothing planned isn't lost: when the season is advanced, 
 <!-- /gui -->
 3. Choose **Advance**.
 4. The app may then ask a few questions: which contested vis or income sources whose security has lapsed were secured this season, and, for an experiment seeking a Discovery, whether to use the risk to move the roll. In Winter it first asks about any covenant in deficit (see below).
-5. Before anything is applied, the saga is backed up to `sagas/backups` in your data folder (Armarius in your OneDrive folder).
+5. Before anything is applied, the saga is backed up to `sagas/backups` in your [save folder](help:saga-picker).
 
 See [Advance Season](help:advance-season) for how the plans are applied.
 
@@ -209,7 +209,7 @@ Advancing Winter also closes the year:
 - **The whole season:** on the saga's page, choose **Seasons** in the rail and click **Undo Last Season** beside Set Date.
 <!-- /gui -->
   It puts the whole saga back as it was before the last Advance Season: the date, Wealth, Diaries and every result. It asks first, and names the records anyone changed since, as those changes go too. Each undo goes back one more advance, up to five; a downtime run undoes as one. It isn't offered after Set Date has moved the date since. A storyguide who joined from their own computer can use it too: the host's computer, which keeps the backups, does it.
-- **Undoing an undo:** the saga as it was just before the undo is kept as `<name>.undone.json` in `sagas/backups` (in Armarius in your OneDrive folder). With the app closed, copy it over the saga's file in `sagas` and rename it to the saga's name.
+- **Undoing an undo:** the saga as it was just before the undo is kept as `<name>.undone.json` in `sagas/backups` in your [save folder](help:saga-picker). With the app closed, copy it over the saga's file in `sagas` and rename it to the saga's name.
 
 ### What the app does for you
 <!-- help: guide-seasons-auto -->

@@ -424,7 +424,7 @@ Leave them as they are and **Continue** if nothing interrupted it. Once the seas
 
 Every plan's outcome is worked out first, from the saga as it stood before the season, and only then are they all applied. So one character's results can't change another's, or their own, in the same season: raising Magic Theory this season doesn't raise this season's Lab Total. Dice left blank on a plan are rolled now.
 
-Before anything is applied the saga is backed up to `sagas/backups` in your data folder (the last five are kept), so the season can be undone with **Undo Last Season** (see [Undoing a mistake](help:guide-seasons-undo)).
+Before anything is applied the saga is backed up to `sagas/backups` in your [save folder](help:saga-picker) (the last five are kept), so the season can be undone with **Undo Last Season** (see [Undoing a mistake](help:guide-seasons-undo)).
 
 Then, for each plan:
 

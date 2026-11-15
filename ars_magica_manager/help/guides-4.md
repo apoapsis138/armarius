@@ -263,12 +263,12 @@ This guide covers moving records between sagas, bringing books and spells in fro
 <!-- tui -->
 1. In the tree, select the covenant, laboratory or character you want to move. Leave focus on its tree node or on the panel at the top of its sheet.
 2. Press `m` (More) and choose **Export**.
-3. In the Export dialog, check the **File**. It starts in the app's exports folder (`exports`, in Armarius in your OneDrive folder) with a name made from the record's name; `.amm.json` is added if you give no `.json` ending. A character with a portrait goes as a zip, `.amm.zip`, holding the file and the portrait. The line above Export warns when the file exists and will be replaced.
+3. In the Export dialog, check the **File**. It starts in the `exports` folder of your [save folder](help:saga-picker) with a name made from the record's name; `.amm.json` is added if you give no `.json` ending. A character with a portrait goes as a zip, `.amm.zip`, holding the file and the portrait. The line above Export warns when the file exists and will be replaced.
 <!-- /tui -->
 <!-- gui -->
 1. Open the page of the covenant, laboratory or character you want to move.
 2. Open its **Manage** chapter and click **Export**.
-3. In the Export form, check the **File**. It starts in the app's exports folder (`exports`, in Armarius in your OneDrive folder) with a name made from the record's name; `.amm.json` is added if you give no `.json` ending. A character with a portrait goes as a zip, `.amm.zip`, holding the file and the portrait. The line under the fields warns when the file exists and will be replaced.
+3. In the Export form, check the **File**. It starts in the `exports` folder of your [save folder](help:saga-picker) with a name made from the record's name; `.amm.json` is added if you give no `.json` ending. A character with a portrait goes as a zip, `.amm.zip`, holding the file and the portrait. The line under the fields warns when the file exists and will be replaced.
 <!-- /gui -->
 4. For a covenant, tick **With its laboratories and characters** to take them too.
 5. Choose **Export**.
@@ -355,7 +355,7 @@ When an imported book or spell has the name of one already in the saga, the app 
 ### Keeping backups
 <!-- help: guide-import-export-backups -->
 
-Each saga is saved as one file, the saga's id followed by `.json`, in the `sagas` folder of Armarius in your OneDrive folder (to keep it elsewhere, use [Change Save Folder](help:saga-picker-actions) on the saga picker). The app saves every change as you make it.
+Each saga is saved as one file, the saga's id followed by `.json`, in the `sagas` folder of your [save folder](help:saga-picker) (to keep it elsewhere, use [Change Save Folder](help:saga-picker-actions) on the saga picker). The app saves every change as you make it.
 
 - Before each season (or downtime run) is applied, the app copies the saga to `sagas/backups`, keeping the last five (the newest has the saga's own file name; older ones end `.1.json` to `.4.json`), each with a copy just after it (`.after.json`). **Undo Last Season** uses them (see [Undoing a mistake](help:guide-seasons-undo)).
 - That is the only backup the app keeps, so for anything older, copy the saga's file yourself from time to time.
@@ -525,7 +525,7 @@ issued and redeemed, approvals and rejections, sign-ins and wrong
 passcodes, lock-outs, revokes, which records each seat read or changed,
 passcode changes and resets asked, role changes, and seasons advanced or
 undone by a storyguide. It never holds a passcode, a credential, an
-Invite's code or what was typed, and it lives in your data folder, not in
+Invite's code or what was typed, and it lives in your save folder, not in
 the saga, so players never receive it. It keeps a year.
 
 **What the app does for you.** A wrong passcode slows that device down
@@ -572,7 +572,7 @@ drop;
 ### Over SSH instead of a browser
 <!-- help: guide-hosting-ssh -->
 
-A player who prefers a terminal can connect with SSH instead. Tick **Also over SSH** when you start hosting (the SSH port is 2222 unless you change it; from a terminal, add `--ssh-port 2222`); the browser page keeps working alongside. The SSH server is the app's own: no Windows accounts are involved, and any user name is accepted, because who the player is comes from the same sign-in as in a browser. The first time, the app makes a host key and keeps it in your computer's keychain (Windows Credential Manager, macOS Keychain or a Linux Secret Service), never in the data folder, which a cloud folder may sync; players' SSH clients ask once whether to trust it. A key an older version left in the data folder (`ssh_host_key`) is moved into the keychain and the file deleted, so players' clients still know your computer. With no keychain, SSH hosting is refused and says why.
+A player who prefers a terminal can connect with SSH instead. Tick **Also over SSH** when you start hosting (the SSH port is 2222 unless you change it; from a terminal, add `--ssh-port 2222`); the browser page keeps working alongside. The SSH server is the app's own: no Windows accounts are involved, and any user name is accepted, because who the player is comes from the same sign-in as in a browser. The first time, the app makes a host key and keeps it in your computer's keychain (Windows Credential Manager, macOS Keychain or a Linux Secret Service), never in the save folder, which a cloud service may sync; players' SSH clients ask once whether to trust it. A key an older version left in the save folder (`ssh_host_key`) is moved into the keychain and the file deleted, so players' clients still know your computer. With no keychain, SSH hosting is refused and says why.
 
 Players connect with `ssh -p 2222 player@ADDRESS` from Windows Terminal (Windows 10 and 11 include `ssh`), macOS Terminal or any Linux terminal, and get the same saga list and sign-in. Their terminal should be at least 120 columns by 45 rows and support true colour and Unicode: Windows Terminal, iTerm2, macOS Terminal and the usual Linux terminals do; the old Windows console does not. Over SSH, Export isn't offered, since the file could only land on your computer.
 
@@ -652,10 +652,10 @@ Then bring the saga in, set up the tunnel and start it, as below.
 ### A UGREEN NAS
 <!-- help: guide-self-hosting-nas -->
 
-A UGREEN NAS (the DXP2800, for one) runs it in the Docker app of UGOS
-Pro. Its Intel processor takes the image's ordinary (amd64) version, and
-its memory is far more than the 512 MB the app may use. Checked on UGOS
-Pro 1.21; menu names may move in later versions.
+A UGREEN NAS runs it in the Docker app of UGOS Pro. Docker picks the
+image's version for the NAS's processor (amd64 for Intel, arm64 for ARM),
+and the app uses at most 512 MB of memory. The steps follow UGOS Pro
+1.21; menu names may move in later versions.
 
 1. In Control Panel, **Service**, turn on **SSH** (Terminal), port 22.
    Set it to turn itself off after a few hours: you only need it while
@@ -907,9 +907,10 @@ the box, so the copy can sit on your desktop or in a cloud folder.
    password in a file only you can read (`chmod 600`), and a copy of it
    somewhere safe: without it the backups can't be opened.
 2. Make a repository. On your desktop, over SSH:
-   `restic -r sftp:you@desktop:/backups/armarius init`. In OneDrive (or
-   another cloud folder), through rclone (rclone.org, set up a remote
-   called `onedrive` first): `restic -r rclone:onedrive:armarius init`.
+   `restic -r sftp:you@desktop:/backups/armarius init`. In a cloud
+   drive such as Dropbox, Google Drive or OneDrive, through rclone
+   (rclone.org, set up a remote called `cloud` first):
+   `restic -r rclone:cloud:armarius init`.
 3. Each night, after the backup service has run (from `cron` on a
    Linux box): `restic -r REPOSITORY backup backups`, then `restic -r
    REPOSITORY forget --keep-daily 14 --keep-weekly 8 --prune`.

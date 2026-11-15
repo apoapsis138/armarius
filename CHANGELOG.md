@@ -138,6 +138,7 @@ change in it.
 
 - **Help checked against the books.** The how-to guides' rules and page references were checked against the Definitive Edition, its errata and the supplements they cite. A few page references are corrected, and where the app makes its own call on something the book leaves open or reads differently (three subjects for an Adventure, Elemental Magic's share, a Presiding Quaesitor prosecuting any charge, galdramen without Twilight), the help now says so.
 - **Help matches the app.** The desktop's Advance Season card, the New Magus, New Companion and New Grog cards, chapters rather than tabs, the full list of optional rules, every pack's assumptions page, and moving (not renaming) a saga file once it's hosted on a server are now described as they are.
+- **Your save folder, wherever it is.** The how-to guides now say "your save folder" and point to the Sagas page, which shows where it is, instead of assuming it's in OneDrive.
 
 ## 4.13.0 — 2026-11-14
 
