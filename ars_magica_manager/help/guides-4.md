@@ -255,112 +255,114 @@ A Mystagogue who spends a whole season on the Script (teaching a Supernatural Ab
 # How to import and export
 <!-- help: guide-import-export -->
 
-This guide covers moving records between sagas, bringing books and spells in from spreadsheet (CSV) files, and keeping copies of your saga safe. Use it when a player brings a character from another saga, when you want to type a long list of books or spells in a spreadsheet, or before you try something you might want to undo.
+A player brings their magus over from another saga, or you'd rather type forty books into a spreadsheet than one by one. Here's how to move records between sagas, bring books and spells in from CSV files, and keep your saga safe.
 
 ### Exporting a covenant, laboratory or character
 <!-- help: guide-import-export-export -->
 
 <!-- tui -->
-1. In the tree, select the covenant, laboratory or character you want to move. Leave focus on its tree node or on the panel at the top of its sheet.
-2. Press `m` (More) and choose **Export**.
-3. In the Export dialog, check the **File**. It starts in the `exports` folder of your [save folder](help:saga-picker) with a name made from the record's name; `.amm.json` is added if you give no `.json` ending. A character with a portrait goes as a zip, `.amm.zip`, holding the file and the portrait. The line above Export warns when the file exists and will be replaced.
+1. **Choose the record.** In the tree, select the covenant, laboratory or character you want to move. Leave focus on its tree node or on the panel at the top of its sheet.
+2. **Open Export.** Press `m` (More) and choose **Export**.
+3. **Check the File.** It starts in the `exports` folder of your [save folder](help:saga-picker), named after the record. `.amm.json` is added if you give no `.json` ending. The line above Export warns when the file exists and will be replaced.
 <!-- /tui -->
 <!-- gui -->
-1. Open the page of the covenant, laboratory or character you want to move.
-2. Open its **Manage** chapter and click **Export**.
-3. In the Export form, check the **File**. It starts in the `exports` folder of your [save folder](help:saga-picker) with a name made from the record's name; `.amm.json` is added if you give no `.json` ending. A character with a portrait goes as a zip, `.amm.zip`, holding the file and the portrait. The line under the fields warns when the file exists and will be replaced.
+1. **Open the record.** Open the page of the covenant, laboratory or character you want to move.
+2. **Open Export.** Open its **Manage** chapter and click **Export**.
+3. **Check the File.** It starts in the `exports` folder of your [save folder](help:saga-picker), named after the record. `.amm.json` is added if you give no `.json` ending. The line under the fields warns when the file exists and will be replaced.
 <!-- /gui -->
-4. For a covenant, tick **With its laboratories and characters** to take them too.
-5. Choose **Export**.
+4. **Take the rest of a covenant.** For a covenant, tick **With its laboratories and characters** to take them too.
+5. **Export.** Choose **Export**. A character with a portrait goes as a zip, `.amm.zip`, holding the file and the portrait.
 
-What goes with the record, and what stays behind, is listed under [Exporting](help:import-data-export). In short: a character takes their familiar, their enchanted devices, their books and their Diary; a laboratory takes its books and devices; and the saga's own spells and [House Rules](help:tab-content-house-rules) that these use go too. Season plans and lab work under way stay behind.
+A character takes their familiar, enchanted devices, books and Diary. A laboratory takes its books and devices. The saga's own spells and [House Rules](help:tab-content-house-rules) that these use go too. Season plans and lab work under way stay behind. See [Exporting](help:import-data-export) for the full list.
 
 ### Bringing a record's changes back from another computer
 <!-- help: guide-import-export-update -->
 
-1. Export the record where it was changed, and copy the file to this computer.
+1. **Export it there.** Export the record on the computer where it was changed, and copy the file to this one.
 <!-- tui -->
-2. Open its page here. Leave focus on its tree node or top panel and press `m` (More).
+2. **Open it here.** Open its page here. Leave focus on its tree node or top panel and press `m` (More).
 <!-- /tui -->
 <!-- gui -->
-2. Open its page here, and its **Manage** chapter.
+2. **Open it here.** Open its page here, and its **Manage** chapter.
 <!-- /gui -->
-3. Choose **Update from a File**, then the file.
-4. Read what would change, then choose **Update**.
+3. **Choose the file.** Choose **Update from a File**, then the file.
+4. **Update.** Read what would change, then choose **Update**.
 
-The record keeps its place in the saga; see [Updating a record from a file](help:import-data-update).
+The record keeps its place in the saga. See [Updating a record from a file](help:import-data-update).
 
 ### Importing a record into another saga
 <!-- help: guide-import-export-records -->
 
 <!-- tui -->
-1. Open the saga that should receive the record, and select [the saga](help:saga) at the top of the tree.
-2. Press `m` (More) and choose **Import**. The [Import Data](help:import-data) dialog opens.
-3. Choose **Characters**, **Covenants** or **Laboratories**, matching what the file holds.
-4. Choose the file, a `.amm.json` or a `.amm.zip`. The file picker starts in the exports folder; Enter opens a folder or picks a file, and you can also type a path in the box at the top.
+1. **Open the saga.** Open the saga that should receive the record, and select [the saga](help:saga) at the top of the tree.
+2. **Open Import.** Press `m` (More) and choose **Import**. The [Import Data](help:import-data) dialog opens.
+3. **Choose the kind.** Choose **Characters**, **Covenants** or **Laboratories**, matching what the file holds.
+4. **Choose the file.** Pick a `.amm.json` or a `.amm.zip`. The file picker starts in the exports folder. Enter opens a folder or picks a file, or you can type a path in the field at the top.
 <!-- /tui -->
 <!-- gui -->
-1. Open the saga that should receive the record, on [its page](help:saga).
-2. Open its **Saga Management** chapter and click **Import**. The [Import Data](help:import-data) list opens.
-3. Choose **Characters**, **Covenants** or **Laboratories**, matching what the file holds.
-4. Choose the file in the Open window, which starts in the exports folder.
+1. **Open the saga.** Open the saga that should receive the record, on [its page](help:saga).
+2. **Open Import.** Open its **Saga Management** chapter and click **Import**. The [Import Data](help:import-data) list opens.
+3. **Choose the kind.** Choose **Characters**, **Covenants** or **Laboratories**, matching what the file holds.
+4. **Choose the file.** Pick it in the Open window, which starts in the exports folder.
 <!-- /gui -->
-5. Read the preview and choose **Import**.
+5. **Import.** Read the preview, which lists what will be added, the links kept and the links dropped, and choose **Import**.
 
-The preview lists what will be added, the links kept and the links dropped. [Importing an exported record](help:import-data-records) explains the rules:
+[Importing an exported record](help:import-data-records) explains the rules. In short:
 
-- Everything imported gets new ids, so nothing in this saga is overwritten. A record with the same name as one already here is added beside it, and the preview says so.
-- A link to a record that isn't in the file, such as a character's covenant or a laboratory's owner, is kept only if this saga has exactly one record of that kind with that name. Otherwise it is dropped, and you can set it again on the sheet. The one exception is a character's or laboratory's covenant when this saga has none of that name: a covenant with that name and the aura it had is added, so the aura comes too.
-- A saga-made spell is matched to one here with the same name, Technique, Form and level. A House Rule is matched to one with the same name, type and tier. A saga Ability is matched to one here (the catalog's or the saga's) with the same name. Anything not matched is added.
+- **Nothing is overwritten.** Everything imported gets new ids. A record with the same name as one already here is added beside it, and the preview says so.
+- **Links outside the file.** A link to a record that isn't in the file, such as a character's covenant or a laboratory's owner, is kept only if this saga has exactly one record of that kind with that name. Otherwise it's dropped, and you can set it again on the sheet.
+- **A missing covenant.** When a character's or laboratory's covenant has no namesake in this saga, a covenant with that name and its old aura is added, so the aura comes too.
+- **Spells, House Rules and Abilities.** A saga-made spell is matched to one here with the same name, Technique, Form and level. A House Rule is matched by name, type and tier, and a saga Ability by name, against the catalog's and the saga's. Anything not matched is added.
 
 ### Importing books from a CSV file
 <!-- help: guide-import-export-books -->
 
-1. Make a CSV file with a header row. The columns are listed under [What can be imported](help:import-data-kinds); **name** and **type** are needed. The cost of each book is worked out by the app, so an owner or cost column is ignored.
+1. **Make the file.** Make a CSV file with a header row. The columns are listed under [What can be imported](help:import-data-kinds), and **name** and **type** are needed. The app works out each book's cost, so an owner or cost column is ignored.
 <!-- tui -->
-2. To import books with no owner, select the saga, press `m` (More), choose **Import**, then **Books**. They land in [the Armarium](help:armarium), unassigned: choose Holder **Unassigned** there to list them, mark several with Space and give them an owner with `e`.
-3. To import books straight into a covenant's library, open the covenant's [Library tab](help:tab-cov-library) (`8`) instead, and press `m` (More) and choose **Import** there. [Go there](go:tab-cov-library)
-4. Choose the file. This picker starts in the folder the app was started from.
+2. **Import books with no owner.** Select the saga, press `m` (More), choose **Import**, then **Books**. They land in [the Armarium](help:armarium), unassigned.
+3. **Give them an owner later.** In the Armarium, choose Holder **Unassigned** to list them, mark several with Space and press `e`.
+4. **Or import into a library.** To put books straight into a covenant's library, open its [Library tab](help:tab-cov-library) instead, press `m` (More) and choose **Import** there. [Go there](go:tab-cov-library)
+5. **Choose the file.** This picker starts in the folder the app was started from.
 <!-- /tui -->
 <!-- gui -->
-2. To import books with no owner, click **Import** in the saga page's **Saga Management** chapter, then choose **Books**. They land in [the Armarium](help:armarium), unassigned, where a new covenant can buy from them on its Creation Worksheet. To give them an owner, open the Armarium from the saga page's **Compendium** and use **Give** on a book, or **Change Owner** for several at once.
-3. To import books straight into a covenant's [library](help:tab-cov-library), open the covenant's page and click **Import** on its Library.
-4. Choose the file in the Open window, which starts in the folder the app was started from.
+2. **Import books with no owner.** In the saga page's **Saga Management** chapter, click **Import**, then choose **Books**. They land in [the Armarium](help:armarium), unassigned, where a new covenant can buy from them on its Creation Worksheet.
+3. **Give them an owner later.** Open the Armarium from the saga page's **Compendium**. Use **Give** on a book, or **Change Owner** for several at once.
+4. **Or import into a library.** To put books straight into a covenant's [library](help:tab-cov-library), open the covenant's page and click **Import** on its Library.
+5. **Choose the file.** Pick it in the Open window, which starts in the folder the app was started from.
 <!-- /gui -->
-5. Read the preview, which lists the books found and any rows skipped with the reason, and choose **Import**.
+6. **Import.** Read the preview, which lists the books found and any rows skipped with the reason, and choose **Import**.
 
-The app comes with one such file: `data/book_packages/ArM5_books_by_ability.csv`, the books of the ArM5 Books by Ability index (Lachie Hayes, 2009). It holds 286 books in 46 codices, with their specialty, date and source in each description; four have a Level or Quality still to be set ("var"), highlighted until you give them their numbers.
+The app comes with one such file, `data/book_packages/ArM5_books_by_ability.csv`. It holds the ArM5 Books by Ability index (Lachie Hayes, 2009), 286 books in 46 codices, with each one's specialty, date and source in its description. Four have a Level or Quality still to be set ("var"), highlighted until you give them their numbers.
 
 ### Importing spells from a CSV file
 <!-- help: guide-import-export-spells -->
 
 <!-- tui -->
-1. Select the saga, press `m` (More), choose **Import**, then **Spells**.
+1. **Open Import Spells.** Select the saga, press `m` (More), choose **Import**, then **Spells**. The [Import Spells](help:import-spells) helper opens and lists the columns it reads. **name**, **technique** and **form** are needed.
 <!-- /tui -->
 <!-- gui -->
-1. On the saga's page, click **Import** in its **Saga Management** chapter, then choose **Spells**.
+1. **Open Import Spells.** On the saga's page, click **Import** in its **Saga Management** chapter, then choose **Spells**. The [Import Spells](help:import-spells) helper opens and lists the columns it reads. **name**, **technique** and **form** are needed.
 <!-- /gui -->
-The [Import Spells](help:import-spells) helper opens and lists the columns it reads; **name**, **technique** and **form** are needed.
-2. If you have no file yet, tick **Save an example CSV instead** and choose **Choose CSV File**. It writes `spells_example.csv` with two example spells to the folder the app was started from. Edit it in a spreadsheet, save it as CSV, and start the import again.
-3. Choose **Choose CSV File** and pick the file.
-4. Read the preview and choose **Import**.
+2. **Start from an example.** If you have no file yet, tick **Save an example CSV instead** and choose **Choose CSV File**. It writes `spells_example.csv`, with two example spells, to the folder the app was started from. Edit it in a spreadsheet, save it as CSV, and start the import again.
+3. **Choose the file.** Choose **Choose CSV File** and pick it.
+4. **Import.** Read the preview and choose **Import**.
 
-The spells become the saga's own spells, which you can edit on [Spells](help:tab-content-spells).
+The spells become the saga's own, and you can edit them on [Spells](help:tab-content-spells).
 
 ### When a name is already taken
 <!-- help: guide-import-export-duplicates -->
 
-When an imported book or spell has the name of one already in the saga, the app asks about each one: **Skip** leaves it out, **Duplicate** adds it anyway, and **Skip All** and **Duplicate All** answer the same for the rest of that import. Spell names are compared in any case. Nothing is added until every question is answered, and cancelling a question imports nothing.
+When an imported book or spell has the name of one already in the saga, the app asks about each one. **Skip** leaves it out, and **Duplicate** adds it anyway. **Skip All** and **Duplicate All** give the same answer for the rest of that import. Spell names are compared in any case. Nothing is added until every question is answered, and cancelling a question imports nothing.
 
 ### Keeping backups
 <!-- help: guide-import-export-backups -->
 
-Each saga is saved as one file, the saga's id followed by `.json`, in the `sagas` folder of your [save folder](help:saga-picker) (to keep it elsewhere, use [Change Save Folder](help:saga-picker-actions) on the saga picker). The app saves every change as you make it.
+Each saga is one file, the saga's id followed by `.json`, in the `sagas` folder of your save folder. To keep it somewhere else, use [Change Save Folder](help:saga-picker-actions) on the saga picker. The app saves every change as you make it.
 
-- Before each season (or downtime run) is applied, the app copies the saga to `sagas/backups`, keeping the last five (the newest has the saga's own file name; older ones end `.1.json` to `.4.json`), each with a copy just after it (`.after.json`). **Undo Last Season** uses them (see [Undoing a mistake](help:guide-seasons-undo)).
-- That is the only backup the app keeps, so for anything older, copy the saga's file yourself from time to time.
-- To keep a single character, laboratory or covenant safe before a big change, export it as above.
-- Every saga file, export and pack is checked as it is read: a field holding the wrong kind of thing (a file edited by hand, or damaged) is named, and the saga isn't opened, nor changed. Copy a backup over its file to go back to before the damage.
+- **Before each season.** Before a season or downtime run is applied, the app copies the saga to `sagas/backups` and keeps the last five. The newest has the saga's own file name, and older ones end `.1.json` to `.4.json`. Each has a copy from just after the advance beside it, with `.after` in its name. **Undo Last Season** uses them (see [Undoing a mistake](help:guide-seasons-undo)).
+- **Anything older.** That's the only backup the app keeps, so copy the saga's file yourself from time to time.
+- **One record.** To keep a single character, laboratory or covenant safe before a big change, export it as above.
+- **A damaged file.** Every saga file, export and pack is checked as it's read. A field holding the wrong kind of thing, from a file edited by hand or damaged, is named, and the saga isn't opened or changed. Copy a backup over its file to go back to before the damage.
 
 **See also:** [Import Data](help:import-data), [Import Spells](help:import-spells), [The Armarium](help:armarium), [Library](help:tab-cov-library), [House Rules](help:tab-content-house-rules), [The saga](help:saga), [Advancing a season](help:advance-season)
 
