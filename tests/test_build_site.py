@@ -162,3 +162,15 @@ def test_every_guide_has_a_group_in_the_menu() -> None:
         and p.id not in named
     )
     assert not ungrouped, f"add these to build_site.GUIDE_GROUPS: {ungrouped}"
+
+
+def test_the_menu_glosses_screens_and_names_packs_by_their_book() -> None:
+    book = help_text.book(GUI)
+    named = set(build_site.MENU_GLOSSES) | set(build_site.MENU_TITLES)
+    unknown = sorted(named - {p.id for p in book.pages.values()})
+    assert not unknown, f"no help page has these ids: {unknown}"
+    nav = build_site.nav_yaml(book)
+    assert '"The Armarium: the saga\'s books"' in nav
+    assert "Assumptions made for" not in nav
+    assert '"Guardians of the Forests: The Rhine Tribunal"' in nav
+    assert '"Through the Aegis"' in nav
