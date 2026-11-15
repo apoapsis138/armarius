@@ -95,7 +95,7 @@ Here's what each activity gives (Ars Magica Definitive Edition, Chapter 10: Long
 
 The Advancement Total is the Source Quality plus or minus the Virtues and Flaws above. Each full month lost cuts it by a third, then Affinity multiplies it.
 
-A character with a Wound Penalty of -3 to -5 has the Advancement Total halved, before Affinity and the Gain Limit, and one at -6 or worse can do nothing productive (DE p. 405). The book halves it only when the penalty lasts a month or more of the season. The app halves it whenever the plan names such a penalty.
+A character with a Wound Penalty of -3 to -5 has the Advancement Total halved, before Affinity and the Gain Limit, and one at -6 or worse can do nothing productive (DE p. 405). The book halves it only when the penalty lasts a month or more of the season. The app halves it whenever the character's wounds give that penalty when the season is worked out.
 
 <!-- tui -->
 Grogs aren't planned season by season. On a grog's Planning tab, `e` sets up their [yearly update](help:grog-year), applied in Winter.

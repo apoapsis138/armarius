@@ -637,6 +637,10 @@ GUIDES = [
     "guide-store-find",
     "guide-tutorials",
     "guide-sessions",
+    "guide-update",
+    "guide-save-folder",
+    "guide-restore-backup",
+    "guide-player-goals",
 ]
 
 

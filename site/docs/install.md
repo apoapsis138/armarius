@@ -66,7 +66,7 @@ app's folder (see below). Delete the old folder once the new one works.
 If your troupe shares a saga, move to the new version together: an older
 version still opens a saga a newer one saved, but it says so and can't show
 what only the newer one knows. Players who join with Remote seats need the
-same version as the host. The app's guide,
+same major version as the host (4.x with 4.x). The app's guide,
 [How to download and run the app](help/guide-download/index.md), has the
 details.
 

@@ -2432,3 +2432,331 @@ books.
    theme.
 
 **See also:** [The Settings window](help:settings-window)
+
+# How to join a saga as a player
+<!-- help: guide-join-saga; gui -->
+
+Your storyguide hosts the saga on their own computer, and tonight you'll
+play from yours, over the internet.
+
+1. **Check your version.** Your Armarius needs the same major version as
+   the storyguide's, the first number (4 in 4.13.0). The title page shows
+   yours. If the two differ, joining stops and says which one to update
+   (see [How to update the app](help:guide-update)).
+2. **Get your Invite.** Your storyguide adds you as a Player with a
+   passcode of at least 14 characters, and tells you the passcode. Then
+   they send you an Invite, a line that begins `ARM1`, by chat or email.
+   It works once, on one computer, for 24 hours.
+3. **Open Join a Saga.** Click **Join a Saga** on the title page or on
+   the Sagas page. Paste the Invite and click **Continue**.
+4. **Check the six words.** On your call, your storyguide reads out six
+   words. Compare every one with the six on your screen, then click
+   **They match**. If any differs, click **They don't match**. Nothing is
+   sent, and you should ask for a new Invite, by another way if you can.
+5. **Name this computer.** Its own name is filled in. Change it if you
+   like, so your storyguide knows which device is asking, and click **Ask
+   for a Seat**.
+6. **Read your three words.** Read the three words on your screen to your
+   storyguide. When they match what their screen shows, they let you in,
+   and the window moves on by itself.
+7. **Type your passcode.** Type the passcode your storyguide gave you and
+   click **Sign In**. The saga opens.
+8. **Look around.** You see the saga as a player may. Your characters are
+   under **Your Characters** on The Troupe, and everything else is read
+   only. No character yet? Click **New Character** there to make your own.
+   What you change reaches your storyguide within seconds.
+9. **Come back next time.** The saga stays on your Sagas page, marked
+   **Hosted elsewhere**. Click it, or **Open Saga** on the title page if
+   you played it last, and type your passcode.
+
+**When it won't connect.** "The host can't be reached" means your
+storyguide isn't hosting just now, or their tunnel is down, so ask them on
+the call. If your seat has ended (they revoked it, or you didn't use it for
+a long while), the app says so, and you'll need a new Invite.
+
+**See also:** [Join a Saga](help:join-game), [What a host can and can't see or do](help:what-a-host-sees), [What keeps you safe](help:join-game-safety), [How to change or reset your passcode](help:guide-passcode)
+
+# How to invite a player to a Remote seat
+<!-- help: guide-invite-player; gui -->
+
+Clara lives two towns away and has her own Armarius. You'd like her at the
+table from her own computer.
+
+1. **Add her as a Player.** In the saga page's **Saga Management**
+   chapter, click **Add** on [Players](help:section-players). Type her
+   Name, set the Role to **Player**, and give her a passcode of at least
+   14 characters. A few words she'll remember, such as "grey owl over the
+   mill", are easiest.
+2. **Give her a character.** Tick **Plays** on her form for each
+   character she plays. Or tick none, and she can make her own once she's
+   in. The list shows **✓ Ready** when she can join.
+3. **Host for Remote seats.** Click **Host for Players**, choose
+   **Remote seats**, "Their own Armarius, over the internet", and click
+   **Host**. Give your **Tunnel address**, the **Tunnel** and
+   the **Port** (see [Host for Remote Seats](help:host-remote-seats)).
+   Setting up the tunnel is in
+   [Remote seats: hosting safely](help:guide-hosting-safety).
+4. **Issue her Invite.** Choose Clara on Players and click **Issue
+   Invite**. Host for Players shows her Invite, with **Copy**, and your six
+   words. It's shown only now, and works once, on one device, for 24 hours.
+5. **Send it.** Paste it into a chat message or an email to her, a
+   different way from your call if you can.
+6. **Read her the six words.** On your call, read all six, and have her
+   check every one before she goes on.
+7. **Approve her device.** Her request waits on **Requests**. She reads
+   you the three words her screen shows. Click **Approve**, and say
+   whether they match yours. **Reject** turns it away, and a request not
+   decided within an hour lapses.
+8. **Revoke a lost device.** If she loses the computer or leaves the
+   troupe, choose her seat on **Seats** and click **Revoke**. It's cut off
+   within a second.
+
+The **Log**, beside Requests and Seats, records each Invite, approval and
+sign-in, never a passcode.
+
+**See also:** [Host for Players](help:host-for-players-window), [Issue Invite](help:issue-invite), [Requests](help:remote-seats-requests), [How to join a saga as a player](help:guide-join-saga), [How to host a saga](help:guide-hosting)
+
+# How to change or reset your passcode
+<!-- help: guide-passcode; gui -->
+
+You joined from your own computer, and you'd like a passcode that's easier
+to remember. Or you've forgotten it altogether.
+
+1. **Change it.** On the Sagas page, click **Change Passcode** on the
+   saga's card. Type the passcode you have now, then the new one twice, at
+   least 14 characters. Click **Change**.
+2. **Use it everywhere.** From then on you sign in with the new one on
+   every computer you join from. A wrong current passcode counts toward
+   the lock-out, as signing in does.
+3. **Forgotten it? Ask.** Click the saga on the Sagas page, then **I've
+   forgotten my passcode** under the passcode. Your storyguide is asked.
+   Only a computer that already has a seat can ask.
+4. **Your storyguide checks.** The ask waits on **Requests** in their Host
+   for Players window, asking for *A new passcode*. They check it's really
+   you, on your call say, then click **Set New Passcode**, type a new one
+   and tell it to you. **Reject** leaves you the passcode you have.
+5. **Sign in with it.** Type the new passcode in the same window and
+   click **Sign In**. This computer keeps its seat, so you need no new
+   Invite.
+
+If your storyguide sets you a new passcode while you're signed in, the app
+can take you back to the Sagas page, and says so. Click the saga and sign in
+with the new one.
+
+**See also:** [Changing or forgetting your passcode](help:join-game-passcode), [Requests](help:remote-seats-requests), [How to join a saga as a player](help:guide-join-saga)
+
+# How to update the app
+<!-- help: guide-update -->
+
+A new version of Armarius is out, and the troupe wants to play on it
+before the next session.
+
+1. **Agree on it with the troupe.** Move to the new version together. An
+   older version still opens a saga a newer one saved, but it says so and
+   can't show what only the newer one knows. A player who joins by Remote
+   seat needs the same major version as the host, the first number.
+2. **See which version you have.** The title page shows it, and so does
+   the About page in Help.
+<!-- tui -->
+   The saga list shows it under the list too.
+<!-- /tui -->
+3. **Download the new one.** On the app's GitHub page, under **Releases**,
+   read the new version's notes. Then download the zip for your system,
+   named like `Armarius-X.Y.Z-windows.zip`.
+4. **Unzip it beside the old one.** Extract it next to the old version's
+   folder. It makes a folder of its own, `Armarius-X.Y.Z`.
+5. **Start the new version.** Start **Armarius** from the new folder, or
+   **armarius-terminal** for the terminal version. Windows may say
+   "Windows protected your PC" once for each version. Click **More info**,
+   then **Run anyway**.
+6. **Check your sagas.** They're kept in your
+   [save folder](help:saga-picker), not in the app's folder, so the new
+   version lists them as before, and keeps your settings too.
+7. **Delete the old folder** once the new version works.
+
+A saga hosted on a server or NAS is updated there, on its own (see
+[A newer version](help:guide-self-hosting-update)).
+
+### Running it from the source
+<!-- help: guide-update-source -->
+
+1. **Get the new source.** In the folder you cloned with git, run
+   `git pull`. The `main` branch is always the latest release. Or download
+   the release's **Source code (zip)** and extract it beside the old
+   folder.
+2. **Start it as before.** On Windows, double-click `run-gui.bat`. On any
+   system, run `uv run python gui.py` for the desktop version or
+   `uv run python main.py` for the terminal version, in the folder. Both
+   bring the app's libraries up to date first, so the first start after an
+   update takes longer.
+
+**See also:** [How to download and run the app](help:guide-download), [Saga picker](help:saga-picker)
+
+# How to change the save folder
+<!-- help: guide-save-folder -->
+
+You'd like your sagas on another drive, or in a folder your own backups
+already copy.
+
+1. **See where they are now.**
+<!-- tui -->
+   Under the saga list, **Save folder** names the folder and what chose
+   it.
+<!-- /tui -->
+<!-- gui -->
+   The line under the Sagas page's title names the folder.
+<!-- /gui -->
+   That folder holds your sagas and their backups, your exports, portraits
+   and settings.
+2. **Open Change Save Folder.**
+<!-- tui -->
+   On the saga list, press `m` for More and choose **Change save
+   folder**.
+<!-- /tui -->
+<!-- gui -->
+   Click **Change Save Folder** on the Sagas page.
+<!-- /gui -->
+3. **Choose the new folder.**
+<!-- tui -->
+   Choose **New folder** to open the folder browser. Enter opens a folder,
+   **Up** goes to its parent, or type a path. Then press **Choose**.
+<!-- /tui -->
+<!-- gui -->
+   Pick it in the folder window that opens.
+<!-- /gui -->
+   The app checks it can save there, and says so if it can't.
+4. **Move the saves, or not.** **Move the saves there** starts ticked, so
+   your sagas, their backups, exports and settings go across. Untick it to
+   start afresh in the new folder, with the old saves left where they are.
+   Then choose **Use this folder**.
+5. **Read what it did.** The app says how many files it moved. A file
+   with the same name already in the new folder is never overwritten. The
+   app names each one, and leaves the old file where it was.
+6. **Hosting with Remote seats?** With the app closed, copy the `remote`
+   folder from the old save folder into the new one yourself. It holds the
+   saga's Invites, seats and Log, and isn't moved with the saves.
+
+**Folders that refuse saves.** On Windows, Controlled folder access
+protects Documents and the Desktop, and a read-only or synced folder can
+refuse too. Choose another folder, or allow Armarius in Windows Security.
+
+**When ARMARIUS_DATA is set.** The ARMARIUS_DATA environment variable
+(or the older ARS_MAGICA_MANAGER_DATA) names the save folder and wins over
+one chosen in the app. While it's set, Change Save Folder says so and
+changes nothing. Unset it to choose a folder here.
+
+**When the folder can't be used.** If the app can't save in the save
+folder when it starts, it says so and uses another folder, moving nothing.
+Change Save Folder then chooses a better one.
+
+**See also:** [Saga picker](help:saga-picker), [Opening, creating and deleting](help:saga-picker-actions), [How to restore a saga from a backup](help:guide-restore-backup)
+
+# How to restore a saga from a backup
+<!-- help: guide-restore-backup -->
+
+Last season went badly wrong, or the saga won't open at all, and you want
+it back as it was.
+
+1. **Try Undo Last Season first.**
+<!-- tui -->
+   Choose the saga at the top of the tree, press `m` for More and choose
+   **Undo Last Season**.
+<!-- /tui -->
+<!-- gui -->
+   On the saga's page, choose **Seasons** in the rail and click **Undo
+   Last Season** beside Set Date.
+<!-- /gui -->
+   It goes back one advance at a time, up to five, with no files to copy
+   (see [Undoing a mistake](help:guide-seasons-undo)). Use the steps below
+   only when it can't help.
+2. **Close the app.** Close every window of Armarius on this computer. If
+   you're hosting the saga, that ends your players' connections too, so
+   tell them first.
+3. **Find the saga's file.** In your [save folder](help:saga-picker),
+   open `sagas`. Each saga is one file named after it, such as
+   `the_rhine_tribunal.json` for The Rhine Tribunal.
+4. **Copy it somewhere safe first.** Copy the saga's file out of the
+   `sagas` folder, to your Desktop say, before you change anything. Not
+   inside `sagas`, where the app would read it as a saga. If the backup
+   turns out worse, this copy puts you back where you started.
+5. **Choose the backup.** Open `sagas/backups`. The file with the saga's
+   own name is the newest backup, taken just before the last Advance
+   Season or downtime run. The one ending `.1.json` is from the advance
+   before, and so on back to `.4.json`. A file with `.after` in its name
+   is the saga just after that advance.
+6. **Undoing an undo?** The saga as it stood just before the last Undo
+   Last Season is kept there too, as `<name>.undone.json`. Use it as you
+   would a backup.
+7. **Copy it over the saga's file.** Copy the backup into `sagas` and give
+   it the saga's own file name, replacing the file there. A backup such as
+   `the_rhine_tribunal.2.json` becomes `the_rhine_tribunal.json`.
+8. **Open the saga.** Start the app and open the saga. Its date is the
+   season the backup was taken in. If the app says the saga can't be
+   opened, it says why. Try an older backup, or copy your safe copy back.
+
+The app keeps only the last five backups of each saga, so copy the saga's
+file somewhere else from time to time yourself (see
+[Keeping backups](help:guide-import-export-backups)). A saga hosted on a
+server or NAS has its own nightly backups (see
+[Backups off the server](help:guide-self-hosting-backups)).
+<!-- gui -->
+A saga you joined from your own computer is restored on the host's
+computer, by the storyguide who hosts it.
+<!-- /gui -->
+
+**See also:** [Undoing a mistake](help:guide-seasons-undo), [Keeping backups](help:guide-import-export-backups), [Advancing a season](help:advance-season)
+
+# How to set your character a goal
+<!-- help: guide-player-goals -->
+
+Your magus means to reach Creo 15 by 1230, and you'd like the app to plan
+the seasons that get there.
+
+1. **Find Notes & Goals.** Open your character's
+<!-- tui -->
+   Personality tab.
+<!-- /tui -->
+<!-- gui -->
+   Description chapter.
+<!-- /gui -->
+   **Notes & Goals** shows on a character a player plays or stewards. Its
+   first row is your private notes, and each goal follows.
+2. **Add the goal.**
+<!-- tui -->
+   Press `a`.
+<!-- /tui -->
+<!-- gui -->
+   Click **Add**.
+<!-- /gui -->
+   Type the **Goal** in your own words, such as "Become the covenant's
+   finest enchanter".
+3. **Give it a score to reach.** Choose the **Art or Ability**, type the
+   **Score**, and the year in **By the end of**. Leave Art or Ability
+   blank for a goal with no number to it.
+4. **Share it, or keep it.** Leave **Share with the troupe** unticked, and
+   only the character's players, its Steward and its storyguide read the
+   goal. Tick it, and anyone who reads the character does. Save the goal.
+5. **Plan the way there.** Choose the goal and
+<!-- tui -->
+   press `m` for More, then **Plan the Study Path**.
+<!-- /tui -->
+<!-- gui -->
+   click **Plan**.
+<!-- /gui -->
+   [Study Path](help:study-path) opens filled in from it. **Find** shows
+   the path, and **Plan These Seasons** plans it. Seasons already planned
+   stay as they are.
+6. **Write your notes.** Choose the **Private notes** row and
+<!-- tui -->
+   press `e`.
+<!-- /tui -->
+<!-- gui -->
+   click **Edit**.
+<!-- /gui -->
+   They're for plans and suspicions, such as what your magus really thinks
+   of the princeps, and take **bold** and *italic*.
+
+No other player sees your notes, nor that there are any, and an export
+leaves them out.
+
+**See also:** [Notes & Goals](help:section-char-notes), [Study Path](help:study-path), [Teaching Requests](help:teaching-requests)
