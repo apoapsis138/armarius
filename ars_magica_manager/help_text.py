@@ -362,6 +362,8 @@ def book(front_end: str) -> HelpBook:
 
 #: The About page: the version and NOTICE.md (licences, credits).
 ABOUT = "about"
+#: The user-docs website: this help, Install and FAQ (tools/build_site.py).
+WEBSITE = "https://apoapsis138.github.io/armarius/"
 #: What's New: CHANGELOG.md by feature and edition, then every version.
 WHATS_NEW = "whats-new"
 #: The pages under REFERENCE, after the generated About and What's New.
@@ -400,9 +402,13 @@ def about_text() -> str:
     except OSError:
         notice = "NOTICE.md is missing: see the repository for licences."
     source = f"The source of this version: {SOURCE_URL}/tree/v{__version__}"
+    website = (
+        "This help, with how to install the app and answers to common setup "
+        f"questions, is also on the [Armarius website]({WEBSITE})."
+    )
     return (
         f"# Armarius v{__version__}\n\nA saga manager for Ars Magica.\n\n"
-        f"{source}\n\n{notice}"
+        f"{source}\n\n{website}\n\n{notice}"
     )
 
 

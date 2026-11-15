@@ -169,6 +169,12 @@ Manufacturing Consent, © 2019 The Manufacturing Consent Project Authors;
 Cinzel, © 2020 The Cinzel Project Authors
 (https://github.com/NDISCOVER/Cinzel), from the Google Fonts repository.
 
+**The user-docs website** (built from `site/` by `tools/build_site.py`)
+serves EB Garamond, Cinzel and Uncial Antiqua unchanged, each with its
+licence beside it. It is built with MkDocs (BSD-2-Clause) and the theme
+Material for MkDocs (MIT), whose icons are Material Design Icons (Apache
+2.0); neither ships with the app.
+
 **The word list** in `ars_magica_manager/assets/words/english.txt` is the
 English list of [BIP-39](https://github.com/bitcoin/bips/blob/master/bip-0039/english.txt)
 (2,048 common words), under the MIT licence
