@@ -16,4 +16,4 @@ The Cloudflare tunnel token is as sensitive as the key: whoever holds it can sta
 ## Consequences
 
 - Rotation runbook: `admin rotate-key`, issue a new tunnel token, and re-invite every seat, since their pins name the old key.
-- The Remote seats threat model gains a self-hosted section: the NAS's admins and root, a compromised listener, theft of the disk, and backups kept separate and encrypted.
+- A headless host has a threat model of its own, [Threat model: A headless host](../threat-model-headless-host.md): the NAS's admins and root, a compromised listener, theft of the disk, and backups kept separate and encrypted. The Remote seats threat model points to it.

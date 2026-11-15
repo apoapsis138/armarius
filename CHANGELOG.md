@@ -132,6 +132,12 @@ change in it.
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## Unreleased
+
+### Castellum
+
+- **A threat model of its own for hosting on a box.** What can go wrong when a NAS or server hosts the saga (the container image, the tunnel, the key kept in a file, the `admin` command and the backups), what guards against each, and what is left to you, now has its own document, with a worked example for a UGREEN NAS. The Remote seats threat model, for hosting from your desktop, points to it.
+
 ## 4.13.0 — 2026-11-14
 
 ### Castellum
