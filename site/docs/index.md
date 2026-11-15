@@ -11,11 +11,11 @@ hide:
 
 ![The title page of the desktop version](assets/screenshots/gui-title.jpg){ .screenshot }
 
-It is free, it runs on your own computer (a download for Windows or Linux,
-with nothing else to install), and your sagas stay there. There
-are two versions over one shared core: a desktop version, drawn as an
-illuminated manuscript, and a terminal version that does the same things
-from the keyboard.
+It's free, it runs on your own computer, and your sagas stay there. The
+download for Windows or Linux needs nothing else installed. There are two
+versions over one shared core. The desktop version is drawn as an
+illuminated manuscript, and the terminal version does the same things from
+the keyboard.
 
 [Install Armarius](install.md){ .md-button .md-button--primary }
 [Getting started](help/guide-getting-started/index.md){ .md-button }
@@ -28,14 +28,15 @@ from the keyboard.
 - **Seasons** planned a year ahead and played out: study, teaching, lab
   work, books, enchanting, and each winter's aging and upkeep.
 - **Creation by the book**: covenants, laboratories and characters built
-  step by step, from templates if you like.
+  step by step, or from templates.
 - **The saga's world**: its Region, people, places and threats, the
   Tribunals and their meetings, coats of arms, and maps.
-- **Sourcebook packs**: start a saga from the Rhine, Normandy, Provence,
-  Theban, Transylvanian, Hibernian, Levant, Greater Alps, Stonehenge or
-  Novgorod Tribunal and more, each summarized in the app's own words.
+- **Sourcebook packs**: start a saga in a Tribunal already peopled, such
+  as the Rhine, Normandy or the Levant, each summarized in the app's own
+  words.
 - **Sharing with the troupe**: players join from their own copy over the
-  internet, or you host the saga for their browsers.
+  internet, or you host the saga for their browsers. It can run day and
+  night on a server or NAS.
 
 ## A look inside
 

@@ -76,8 +76,94 @@ FILE_TITLES = {
     "bestiary.md": "The Bestiary",
     "packs.md": "Sourcebook packs",
 }
-#: The guides the menu lists first; the rest follow in the help's order.
-FIRST_GUIDES = ("guide-getting-started",)
+#: The how-to guides in the menu, by what you're doing; a guide no group
+#: names goes under More guides, at the end.
+GUIDE_GROUPS: tuple[tuple[str, tuple[str, ...]], ...] = (
+    (
+        "Start here",
+        (
+            "guide-getting-started",
+            "guide-download",
+            "guide-update",
+            "guide-tutorials",
+            "guide-find-record",
+            "guide-find-action",
+            "guide-window-size",
+            "guide-themes",
+            "guide-formatting",
+        ),
+    ),
+    (
+        "Characters and magic",
+        (
+            "guide-creation",
+            "guide-advancement",
+            "guide-player-goals",
+            "guide-familiars",
+            "guide-initiation",
+            "guide-hedge-magic",
+            "guide-galdor",
+            "guide-religion",
+        ),
+    ),
+    (
+        "Seasons and the laboratory",
+        (
+            "guide-seasons",
+            "guide-lab-planning",
+            "guide-lab-magic-item",
+            "guide-staged-project",
+            "guide-needs-you",
+        ),
+    ),
+    (
+        "The covenant",
+        (
+            "guide-covenant",
+            "guide-charter",
+            "guide-mobile-covenant",
+            "guide-guest-stay",
+            "guide-store-find",
+        ),
+    ),
+    (
+        "The saga's world",
+        (
+            "guide-book-packs",
+            "guide-atlas",
+            "guide-bestiary",
+            "guide-faction",
+            "guide-threat-clock",
+            "guide-story-hook",
+            "guide-tomb",
+            "guide-mythic-locations",
+            "guide-homebrew-source",
+            "guide-reveal",
+        ),
+    ),
+    (
+        "Tribunals and conflict",
+        ("guide-tribunal", "guide-battle", "guide-fights", "guide-sieges"),
+    ),
+    (
+        "Playing together",
+        (
+            "guide-sessions",
+            "guide-troupe-storyguides",
+            "guide-join-saga",
+            "guide-invite-player",
+            "guide-passcode",
+            "guide-hosting",
+            "guide-hosting-local",
+            "guide-hosting-internet",
+            "guide-self-hosting",
+        ),
+    ),
+    (
+        "Your data",
+        ("guide-save-folder", "guide-restore-backup", "guide-import-export"),
+    ),
+)
 #: Files whose pages the menu lists elsewhere (the guides, Keys).
 UNLISTED_FILES = ("reference.md",)
 #: The generated reference pages, by help id.
@@ -242,9 +328,19 @@ def nav_yaml(book: HelpBook) -> str:
         "  - FAQ and troubleshooting: faq.md",
         "  - How-to guides:",
     ]
-    guides = [p for p in tops if help_text.is_guide(p.id)]
-    guides.sort(key=lambda p: p.id not in FIRST_GUIDES)
-    lines += [_entry(book, paths, p, "    ") for p in guides]
+    guides = {p.id: p for p in tops if help_text.is_guide(p.id)}
+    grouped: set[str] = set()
+    for title, ids in GUIDE_GROUPS:
+        shown = [guides[i] for i in ids if i in guides]
+        if not shown:
+            continue
+        lines.append(f"    - {json.dumps(title)}:")
+        lines += [_entry(book, paths, p, "      ") for p in shown]
+        grouped.update(p.id for p in shown)
+    rest = [p for i, p in guides.items() if i not in grouped]
+    if rest:
+        lines.append('    - "More guides":')
+        lines += [_entry(book, paths, p, "      ") for p in rest]
     lines.append("  - Help:")
     files = list(FILE_TITLES) + sorted(
         {p.file for p in tops} - set(FILE_TITLES) - set(UNLISTED_FILES)
