@@ -24,11 +24,14 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import posixpath
 import re
 import shutil
+import stat
 import subprocess
 import sys
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -269,12 +272,23 @@ def nav_yaml(book: HelpBook) -> str:
 # -- building -----------------------------------------------------------------
 
 
+def _writable_then_retry(
+    function: Callable[[str], object], path: str, error: BaseException
+) -> None:
+    """For rmtree: a file or folder marked read-only (as OneDrive and a copied
+    read-only font can leave it) is made writable and removed again."""
+    if not isinstance(error, PermissionError):
+        raise error
+    os.chmod(path, stat.S_IWRITE)
+    function(path)
+
+
 def write_sources(book: HelpBook, dest: Path = BUILD_SRC) -> Path:
     """Gather the MkDocs sources in `dest`: the hand-written pages, the
     help's pages, the screenshots and fonts, and mkdocs.yml with its menu.
     Returns the mkdocs.yml written."""
     if dest.exists():
-        shutil.rmtree(dest)
+        shutil.rmtree(dest, onexc=_writable_then_retry)
     docs = dest / "docs"
     shutil.copytree(SITE_DIR / "docs", docs)
     for page in export(book):

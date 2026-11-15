@@ -11,7 +11,8 @@ hide:
 
 ![The title page of the desktop version](assets/screenshots/gui-title.jpg){ .screenshot }
 
-It is free, it runs on your own computer, and your sagas stay there. There
+It is free, it runs on your own computer (a download for Windows or Linux,
+with nothing else to install), and your sagas stay there. There
 are two versions over one shared core: a desktop version, drawn as an
 illuminated manuscript, and a terminal version that does the same things
 from the keyboard.
@@ -55,8 +56,8 @@ from the keyboard.
 
 ## This site
 
-- [Install](install.md) walks you through putting Armarius on a Windows PC,
-  one step at a time.
+- [Install](install.md) walks you through downloading Armarius and
+  starting it, one step at a time.
 - [FAQ and troubleshooting](faq.md) answers the questions that come up
   while setting it up.
 - The **How-to guides** and **Help** are the app's own help, the same pages

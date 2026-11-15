@@ -6,7 +6,52 @@ Armarius. For how to *use* it, start with
 isn't here, please [open an issue](https://github.com/apoapsis138/armarius/issues)
 with what you did and what the window said.
 
-## Installing
+## The download
+
+### Which file do I download?
+
+On the [latest release](https://github.com/apoapsis138/armarius/releases/latest),
+under **Assets**: the one ending `-windows.zip` for Windows, or `-linux.zip`
+for Linux. **Source code (zip)** is the source, for
+[running from the source](install.md#run-from-the-source); it needs uv and
+isn't what you want otherwise.
+
+### Windows says it protected my PC { #smartscreen }
+
+That's SmartScreen, which warns about programs it hasn't seen often.
+Armarius isn't signed with a paid certificate, so each new version is new
+to Windows. If you downloaded it from
+[the project's Releases page](https://github.com/apoapsis138/armarius/releases),
+click **More info**, then **Run anyway**. It asks once per version.
+
+### Armarius won't start, or says it can't find its files { #inside-the-zip }
+
+The most common cause is starting it **from inside the zip**. Windows shows
+a zip's contents like a folder, but they aren't really there to run.
+Right-click the zip, choose **Extract All…**, and start **Armarius** from
+the extracted folder. Keep everything in that folder together: moving
+**Armarius** out on its own breaks it (to start it from elsewhere, pin it
+or make a shortcut instead).
+
+### Windows asks about the firewall
+
+That happens the first time you host a saga for your players: Windows asks
+whether to let **armarius-terminal** through. Allow it on **private**
+networks. See
+[How to host a saga for your troupe](help/guide-hosting/index.md).
+
+### The window is too big for my screen
+
+On a high-resolution screen with display scaling, the window might not fit.
+Since version 4.11.1 the window fits the screen it opens on; see
+[How to fit the window to your screen](help/guide-window-size/index.md) for
+what else you can change.
+
+## Running from the source
+
+These come up only when you
+[run Armarius from its source](install.md#run-from-the-source) with uv,
+not with the download.
 
 ### "python" is not recognized, or the Microsoft Store opens { #python-not-found }
 
@@ -47,12 +92,11 @@ were already open don't see the change.
    doesn't, the install didn't finish, so run it again and read what it
    prints.
 
-### run-gui.bat flashes and closes, or says it can't find files { #inside-the-zip }
+### run-gui.bat flashes and closes, or says it can't find files { #run-gui-from-zip }
 
-The most common cause is running it **from inside the zip**. Windows shows
-a zip's contents like a folder, but they aren't really there to run.
-Right-click the zip, choose **Extract All…**, and run `run-gui.bat` from
-the extracted folder.
+As with the download, the usual cause is running it **from inside the
+zip**: extract the source zip first and run `run-gui.bat` from the
+extracted folder.
 
 If the console stays open with an error and "Press any key", read the last
 lines: a network error means the first-time download was interrupted (run
@@ -60,23 +104,10 @@ it again); "uv is not recognized" is [above](#uv-is-not-recognized).
 
 ### The first start takes ages
 
-The first start downloads Python and the libraries the desktop draws with,
-a few hundred megabytes, so it takes a few minutes on a slow connection.
-Later starts take seconds. Don't close the console window while it works.
-
-### Windows says it protected my PC { #smartscreen }
-
-That's SmartScreen, which warns about programs it hasn't seen often.
-Armarius isn't signed with a paid certificate. If you downloaded it from
-[the project's Releases page](https://github.com/apoapsis138/armarius/releases),
-click **More info**, then **Run anyway**.
-
-### The window is too big for my screen
-
-On a high-resolution screen with display scaling, the window might not fit.
-Since version 4.11.1 the window fits the screen it opens on; see
-[How to fit the window to your screen](help/guide-window-size/index.md) for
-what else you can change.
+From the source, the first start downloads Python and the libraries the
+desktop draws with, a few hundred megabytes, so it takes a few minutes on a
+slow connection. Later starts take seconds. Don't close the console window
+while it works.
 
 ## Your sagas
 
@@ -110,10 +141,11 @@ is never overwritten. Armarius checks it can save in the folder first.
 ### Windows blocks saving in Documents or on the Desktop
 
 Windows Security's **Controlled folder access** protects Documents, the
-Desktop and some other folders from programs it doesn't know, Python
-included. Choose a save folder outside them (the default OneDrive or app
-data folder is fine), or allow Python in **Windows Security › Virus &
-threat protection › Ransomware protection › Allowed apps**.
+Desktop and some other folders from programs it doesn't know, Armarius
+(or Python, from the source) included. Choose a save folder outside them
+(the default OneDrive or app data folder is fine), or allow Armarius in
+**Windows Security › Virus & threat protection › Ransomware protection ›
+Allowed apps**.
 
 ### What is ARMARIUS_DATA? { #armarius-data }
 
