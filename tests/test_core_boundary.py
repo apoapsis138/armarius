@@ -197,6 +197,8 @@ LAYERS: tuple[tuple[str, frozenset[str]], ...] = (
                 "saga_overview",
                 "section_verbs",
                 "sheets",
+                # The records beside one on the trail (by saga_overview's groups).
+                "siblings",
                 "theban_meeting",
                 "troupe",
                 "worksheet",

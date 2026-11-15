@@ -61,27 +61,26 @@ The records that can be placed: every covenant, neighbour and creature with no p
 # How to add a map and place its records
 <!-- help: guide-atlas; gui -->
 
-This guide puts a Tribunal's map into the saga and pins its covenants and places on it. Use it when you have drawn or exported a map of your saga's region.
+You've drawn or exported a map of your saga's region, and you'd like its covenants and places pinned where they stand.
 
 ### Adding the map
 <!-- help: guide-atlas-map; gui -->
 
-1. Export the map as a PNG, WebP or JPEG from your drawing or cartography program. A map with a scale bar is best. No map drawn yet? Leave Picture blank in step 3: the Atlas draws a placeholder to pin on now, and the picture can be added later.
-2. Open the saga's page and its **The Atlas** chapter, and click **New Map**.
-3. Type the map's **Name**, choose its **Tribunal** (blank for a region with none), click **Picture** and choose the file, and type a **Credit** line if the map is shared. Choose **Add**.
-4. The Atlas shows the new map. Scroll to zoom and drag to look around.
+1. **Export the map.** Save it as a PNG, WebP or JPEG from your drawing or cartography program. A map with a scale bar is best. No map drawn yet? Leave Picture blank in step 3. The Atlas draws a placeholder to pin on now, and you can add the picture later.
+2. **Start a new map.** Open the saga's page and its **The Atlas** chapter, and click **New Map**.
+3. **Fill in the form.** Type the map's **Name** and choose its **Tribunal**, or leave it blank for a region with none. Click **Picture** and choose the file, and type a **Credit** line if the map is shared. Choose **Add**.
+4. **Look around.** The Atlas shows the new map. Scroll to zoom and drag to look around.
 
-To use a better export later, click **Edit Map** and choose the new picture: the pins keep their places.
+To use a better export later, click **Edit Map** and choose the new picture. The pins keep their places.
 
 ### Placing its records
 <!-- help: guide-atlas-place; gui -->
 
-1. Click **Place on Map**, and choose a covenant, neighbour or creature.
-2. Click where it is on the map. Its pin appears there.
-3. Drag a pin to move it, or right-click it to make it secret or take it off the map.
+1. **Choose a record.** Click **Place on Map**, and choose a covenant, neighbour or creature.
+2. **Pin it.** Click where it is on the map, and its pin appears there.
+3. **Move or hide a pin.** Drag a pin to move it, or right-click it to make it secret or take it off the map.
+4. **Set the scale.** If the map has a scale bar, click **Set Scale**, click the bar's two ends and type its length. Measure then shows distances, and the Travel calculator fills in its miles.
 
-If the map has a scale bar, click **Set Scale**, click the bar's two ends and type its length: Measure then shows distances, and the Travel calculator fills in its miles.
-
-Laboratories, and anything else that sits in a place, need no pins of their own: each shows at the pin of its covenant or place. Before showing the map to your players, turn on [Player view](help:player-view) with the eye in the title bar.
+Laboratories, and anything else that sits in a place, need no pins of their own. Each shows at the pin of its covenant or place. Before showing the map to your players, turn on [Player view](help:player-view) with the eye in the title bar.
 
 **See also:** [The Atlas](help:saga-atlas), [Pins](help:atlas-pins)

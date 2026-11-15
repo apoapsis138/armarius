@@ -139,6 +139,30 @@ change in it.
 - **A threat model of its own for hosting on a box.** What can go wrong when a NAS or server hosts the saga (the container image, the tunnel, the key kept in a file, the `admin` command and the backups), what guards against each, and what is left to you, now has its own document, with a worked example for a UGREEN NAS. The Remote seats threat model, for hosting from your desktop, points to it.
 - **Clearer advice on where to keep the host key.** The guide and the example settings no longer send the key to a NAS's encrypted shared folder without a caveat: keep it in a private folder of its own, encrypted where the box can (try the NAS's encrypted folder first, since UGOS's can't be used), and know that a plain folder doesn't protect it if the drives are stolen. Back the key and the tunnel token up apart from the nightly backups.
 
+### Illuminatio
+
+- **My sheet.** While Playing, your name on the Playing button (or `c`) opens your character's sheet from any page; the trail, Esc or `c` again takes you back.
+- **The trail's switcher.** The last crumb of the trail lists the other people, laboratories or covenants at its level.
+
+### Book of Hours
+
+- **General spells from a Lab Text.** A Lab Text for a General spell, such as Aegis of the Hearth, now teaches the level written on it instead of refusing with "has no level" (#16). The magus learns a version of his own at that level, with the text named as its source, and the Lab Text he writes teaches that version; two magi learning from the same text each get their own. A General spell's text with no level asks for one, and the Lab Work window gives its reason once, not twice.
+
+### Fundamenta
+
+- **Sagas saved on this computer by default.** A new install keeps its sagas in your app data folder (`C:\Users\you\AppData\Local\Armarius` on Windows, `~/.local/share/Armarius` on Linux), not in OneDrive, where a sync could catch a save half-written. If you already use Armarius, nothing moves: it goes on saving where it always has, now shown as a folder you chose. Change save folder on the saga picker moves it.
+
+## 4.13.1 — 2026-11-15
+
+### Glossa
+
+- **Help checked against the books.** The how-to guides' rules and page references were checked against the Definitive Edition, its errata and the supplements they cite. A few page references are corrected, and where the app makes its own call on something the book leaves open or reads differently (three subjects for an Adventure, Elemental Magic's share, a Presiding Quaesitor prosecuting any charge, galdramen without Twilight), the help now says so.
+- **Help matches the app.** The desktop's Advance Season card, the New Magus, New Companion and New Grog cards, chapters rather than tabs, the full list of optional rules, every pack's assumptions page, and moving (not renaming) a saga file once it's hosted on a server are now described as they are.
+- **Your save folder, wherever it is.** The how-to guides now say "your save folder" and point to the Sagas page, which shows where it is, instead of assuming it's in OneDrive.
+- **Guides that read more easily.** Every how-to guide opens on what you want to do and gives one action per step, with the book's rules kept on the reference pages they link to. Hosting is now a short page to choose a way, with a guide for browsers and SSH and one for Remote seats; "How to host on your own box" is now How to self-host a saga, and the faith guide is How to see what a character's faith allows. The sourcebook guide lists each pack in a line or two, and each pack's assumptions page now opens with what the pack brings.
+- **New guides.** How to join a saga as a player, invite a player, change or reset a passcode, update to a new version, change the save folder, restore a saga from a backup, and keep a player character's notes and goals.
+- **Remote seats need the same major version** as the host, not the very same version, as the guides now say.
+
 ## 4.13.0 — 2026-11-14
 
 ### Castellum

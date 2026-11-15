@@ -12,10 +12,10 @@ below.
 1. Go to the [latest release](https://github.com/apoapsis138/armarius/releases/latest)
    on GitHub.
 2. Under **Assets**, click the Windows zip, named like
-   `Armarius-4.12.0-windows.zip` (the number is the version). Your browser
+   `Armarius-X.Y.Z-windows.zip`, where X.Y.Z is the version. Your browser
    saves it in your Downloads folder.
 3. Open Downloads, **right-click the zip and choose Extract All…**, and
-   click **Extract**. It makes a folder named like `Armarius-4.12.0`. Move
+   click **Extract**. It makes a folder named like `Armarius-X.Y.Z`. Move
    that folder wherever you keep programs, such as your Documents.
 4. Open the folder and double-click **Armarius** to start the desktop
    version. **armarius-terminal**, beside it, starts the terminal version.
@@ -43,10 +43,11 @@ Once it's open, choose **New Saga** and follow
 ## Download it (Linux)
 
 1. From the [latest release](https://github.com/apoapsis138/armarius/releases/latest),
-   download the Linux zip, named like `Armarius-4.12.0-linux.zip`.
-2. Unzip it, for example `unzip Armarius-4.12.0-linux.zip`.
-3. Run `./Armarius-4.12.0/Armarius` for the desktop version, or
-   `./Armarius-4.12.0/armarius-terminal` in a terminal for the terminal
+   download the Linux zip, named like `Armarius-X.Y.Z-linux.zip`, where
+   X.Y.Z is the version.
+2. Unzip it, for example `unzip Armarius-X.Y.Z-linux.zip`.
+3. Run `./Armarius-X.Y.Z/Armarius` for the desktop version, or
+   `./Armarius-X.Y.Z/armarius-terminal` in a terminal for the terminal
    version.
 
 It runs on Ubuntu 22.04 and newer, or another system of that age. If the
@@ -65,7 +66,7 @@ app's folder (see below). Delete the old folder once the new one works.
 If your troupe shares a saga, move to the new version together: an older
 version still opens a saga a newer one saved, but it says so and can't show
 what only the newer one knows. Players who join with Remote seats need the
-same version as the host. The app's guide,
+same major version as the host (4.x with 4.x). The app's guide,
 [How to download and run the app](help/guide-download/index.md), has the
 details.
 
@@ -75,12 +76,11 @@ Your sagas, their backups, exports and your settings live in your **save
 folder**, not in the app's folder, so you can update or reinstall Armarius
 without losing anything.
 
-- With **OneDrive** on the computer, the save folder is `Armarius` at the
-  top of your OneDrive (for example `C:\Users\you\OneDrive\Armarius`),
-  where OneDrive backs it up.
-- Without OneDrive, it is `Armarius` in your app data folder
+- The save folder is `Armarius` in your app data folder
   (`C:\Users\you\AppData\Local\Armarius` on Windows,
   `~/.local/share/Armarius` on Linux).
+- If an older version saved somewhere else by default (such as
+  `Armarius` at the top of your OneDrive), Armarius keeps saving there.
 
 The **Sagas** page shows the folder in use at its foot. **Change Save
 Folder** there moves it somewhere else and can carry your saves across. The
@@ -127,10 +127,6 @@ is left alone.
 
 If you'd rather install Python yourself, get a 3.14 release from
 [python.org/downloads](https://www.python.org/downloads/).
-
-<p class="unverified">Not checked on a clean PC: the exact screens of
-python.org's Windows installer for 3.14, which has changed between
-versions. uv's own download of Python, above, is the tested path.</p>
 
 ### 3. Get the source
 

@@ -76,8 +76,9 @@ def test_planning_from_the_covenants_seasons(app):
     assert list(controls) == ["Plan", "Clear"]
     asked = answering(window, {"activity": "practice"})
     controls["Plan"].click()
-    # Practice needs a subject: refused, nothing saved.
-    assert asked[0].error.text()
+    # Practice needs a subject: refused, nothing saved. The line above the
+    # buttons gives the reason, so the error line doesn't repeat it.
+    assert asked[0].error.isHidden() and asked[0].live_line.text()
     assert _plans() == []
     answering(window, {"activity": "other", "details": "Hunting"})
     section_buttons(window.page(), "Magi")["Plan"].click()

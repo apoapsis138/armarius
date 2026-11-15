@@ -1533,21 +1533,33 @@ def _clean_copy(saga: Saga, magus: Character, flawed: Spell) -> Spell:
     """A new spell of the magus's own recreating `flawed` without its
     experimental effects. A Range, Duration or Target an effect changed
     stays as it now is, for the troupe to set back on the spell."""
-    spell = spl.add_invented_spell(
-        saga, magus, flawed.name, flawed.technique, flawed.form
-    )
+    return _own_copy(saga, magus, flawed, "Invented")
+
+
+def _own_copy(saga: Saga, magus: Character, model: Spell, source: str) -> Spell:
+    """A new spell of the magus's own, as `model` is, from `source`."""
+    spell = spl.add_invented_spell(saga, magus, model.name, model.technique, model.form)
     for attribute in (
         "level",
         "description",
-        "requisites",
         "range",
         "duration",
         "target",
         "ritual",
         "base_level",
     ):
-        setattr(spell, attribute, getattr(flawed, attribute))
-    spell.source = "Invented"
+        setattr(spell, attribute, getattr(model, attribute))
+    spell.requisites = list(model.requisites)
+    spell.source = source
+    return spell
+
+
+def _learned(saga: Saga, magus: Character, spell: Spell) -> Spell:
+    """The spell a magus knows for one learned from a Lab Text: a General
+    spell's version is a spell of his own at the text's level, apart from
+    any other magus's (DE pp. 226, 313); any other is the text's spell."""
+    if lab_seasons.general_version(saga, spell):
+        return _own_copy(saga, magus, spell, spell.source)
     return spell
 
 
@@ -1601,9 +1613,11 @@ def apply_lab_work(saga: Saga, magus: Character, outcome: rules.Outcome) -> None
             spell = _invented_spell(saga, magus, plan.design, fresh=bool(flawed))
         elif flawed and spell.id == flawed:
             spell = _clean_copy(saga, magus, spell)
+        else:
+            spell = _learned(saga, magus, spell)
         if carried:
             spell = _with_effects(saga, magus, spell, carried)
-        for learned in (spell, *work.more_spells):
+        for learned in (spell, *(_learned(saga, magus, s) for s in work.more_spells)):
             if not any(k.spell_id == learned.id for k in magus.spells_known):
                 magus.spells_known.append(KnownSpell(spell_id=learned.id))
         if flawed and work.retire_flawed and flawed != spell.id:
