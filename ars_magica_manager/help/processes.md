@@ -954,7 +954,7 @@ A new covenant, laboratory or character starts **In Creation**, with its tree no
 <!-- gui -->
 A new covenant, laboratory or character starts **In Creation**, shown in its page's header.
 <!-- /gui -->
-A character made from a template starts **In Play**, since the book's templates are fully made.
+A character made from one of the Definitive Edition's templates starts **In Play**, since those are fully made. One made from a Grogs, quick, Mythic Companion, supplement or animal template starts In Creation, to finish on its worksheet.
 
 <!-- tui -->
 The record's top panel has a button showing the mode; clicking it, or More's **In Creation / In Play**, switches between them after a confirmation.
@@ -1028,11 +1028,53 @@ Specialists bought with Build Points are checked too. Each one's score in the Ab
 
 **Virtues and Flaws:** With Apprentices in play: Child Virtues and Flaws are for characters of 20 and younger (p. 11, Errata p. 82); Inherited ones only for magi and companions, and they must have manifested by 21 (pp. 10-11); no Virtue that grants experience points (Warrior, Educated...) for a character made younger than 14 (p. 10); Turbulence Prone only with The Gift (p. 12).
 
-**Later Life:** Parent's vocation (Apprentices p. 14). From 6 to 14 a child may put xp in the Ability his same-sex parent earns a living by (a Craft or Profession, or a knight's Ride and Single Weapon), even one of a type he couldn't otherwise learn, but his score stays at most half the parent's until 14. "Parent's vocation" on this step names the Ability and the parent's score.
+**Later Life:** Parent's vocation (Apprentices p. 14). From 6 to 14 a child may put xp in the Ability their same-sex parent earns a living by (a Craft or Profession, or a knight's Ride and Single Weapon), even one of a type they couldn't otherwise learn, but their score stays at most half the parent's until 14. "Parent's vocation" on this step names the Ability and the parent's score.
 
 **Apprenticeship:** Standard apprenticeship model (a saga option, with Apprentices in play). A magus still in apprenticeship has, for each year so far, 19 xp for the first 12 years and then 6 xp and 40 spell levels a year for the last 3; xp may buy spell levels and spell levels xp, one for one. A Skilled Parens gives 5 xp and 10 levels a year more, a Weak Parens as much less (Apprentices pp. 10, 14). Parma Magica, Magic Theory and Latin are only advice until Gauntlet. A magus past Gauntlet keeps the Definitive Edition's 240 xp and 120 levels.
 
 A hedge wizard picks their tradition on Concept with **Choose tradition** (once the saga offers one: see [How to play a hedge wizard](help:guide-hedge-magic)), which also adds the Virtues the tradition requires. A magus may choose a Hermetic society there, and a magus of House Ex Miscellanea one of the House's traditions, whose Virtues become his free House Virtues. The tradition's free Virtues, such as a learned magician's Entreat the Powers or a vitki's Minor Virtue from the master, are outside the Virtue and Flaw balance, as a House's are. A crowned king (Church office "King (crowned)") whose race or nationality is Slavic, Magyar or Vlach holds Shapeshifter free, outside the balance, with the forms of a wolf, a lion and a dragon (Against the Dark p. 122); his Magic Resistance 10 is the crown's (DE p. 420). **Tradition Training** then spends the apprenticeship the book gives (a vitki's 290 xp counting the minimums, a folk witch's 200 (her ten years of it, from about age ten, are left out of Later Life), a gruagach's 160, or 64 unGifted), changed by Well-Trained and Poorly Trained; **Open the Arts** gives a Gifted member the tradition's Arts and Abilities at 0; and its checks ask for the minimum scores and any share the Arts must have. The spell levels it gives are shown but not yet learned there. Puissant never counts, since it adds only when the Ability is used. While a character is In Creation, the sheet's Edit Ability and Edit Arts say how much xp came from the worksheet: take that back on the worksheet, not by lowering the total. The checks follow Ars Magica Definitive Edition, Chapter 3: Characters, Detailed Character Creation Summary, for characters, and Ars Magica Definitive Edition, Chapter 6: Covenants, for covenants.
+
+**A covenant's Baseline.** The storyguide's Build Points must lie within the Power Level's range, and each magus who goes without a laboratory refunds 50 of them. Set starting income makes the covenant's sources of income by the rules. That's one Typical source (100 pounds a year) or two Lesser (40 each), or what a Poverty Hook or Wealth Boon allows. With the optional rule Starting income by number of magi, the income gains or loses 15 pounds a year for each magus over or under six, made once, to its main source. A covenant whose one source is Lesser gains or loses only 6 a magus (DE p. 189). A Secondary Income source isn't adjusted, and two Lesser sources share the 15 between them. The book doesn't say, so this is the app's reading.
+
+Choosing another Covenant Situation warns first, then removes the Boons and Hooks the earlier one brought and adds the new ones. The book's three base covenants are Weak (200 Build Points, Low), Medium (800, Medium) and Powerful (2000, High). A base covenant's books and vis come as placeholders, each with its level, quality or pawns but no subject or Art yet. Edit on its Resources row chooses them, and the name can be changed there too. Its Lab Text and enchanted item levels are an allowance the Resources step counts against what you add. Choosing another base covenant warns first and removes the placeholders the first one left unfilled.
+
+**A covenant's Resources.** A new covenant may buy Art summae up to level 20 and Ability summae up to level 8, each with its quality cap, tractatus up to quality 11, and Lab Texts and Casting Tablets up to the Power Level's highest level. Buying from the saga's books lists only the books within those limits, each with its Build Points. The checks list any of the covenant's books, a new one included, that go over them (DE p. 179). A book with no level or Quality yet is listed under Not priced yet. Lab Texts and Casting Tablets are bought as a pool of levels, so their category shows one row with the levels and Build Points, and each text is listed below it with its level.
+
+A specialist's Ability comes from the Ability picker, and it says where they belong among the covenant's inhabitants. A Craft makes a craftsperson (common or rare, and what it saves money on), a Martial Ability a member of the turb, and a teacher or anyone else a specialist. The Build Points rules call them all specialists, and the covenant's finances count them apart.
+
+**A covenant's Boons & Hooks.** The checks ask that the Boon and Hook points balance, and that an aura realm other than Magic comes with its Hook. A Contested, Indiscreet or Dwindling Resource Hook says it needs its source until Edit chooses one.
+
+**A covenant's Review.** It advises when the covenant has fewer servants or teamsters than its inhabitants need (Other Covenfolk among its inhabitants), since they cost no Build Points. It also says how many grogs and other covenfolk the baseline gives for free, about one grog and two others per magus. **Add the baseline's people** puts them among the covenant's inhabitants as a row of grogs and a row of servants and craftsmen, whose numbers you can change there (DE p. 179).
+
+**A character's Characteristics.** A free point from a heritage Virtue costs nothing and shows beside the budget. These are a Sidhe Faerie Blood's Presence (DE p. 79) or Bloodcap's Strength (Houses of Hermes: True Lineages p. 104), up to +3, or +4 with Faerie Legacy (Realms of Power: Faerie pp. 106, 109, 112), and Giant Blood's Strength and Stamina, up to +6 (DE p. 83). Uninspirational can't be taken while Presence or Communication is above 0. The arrays for **Fill from an array** come from Grogs p. 65, but are open to every character, whatever books are in play. The highest value starts on the Characteristic that's highest now, and Save refuses a value used twice or left out. With Improved or Weak Characteristics the budget isn't 7, so the arrays aren't offered and the step says why.
+
+**A character's Early Childhood.** With the Grogs book in play, Covenant Upbringing's Covenant-bred childhood may also buy Latin and Order of Hermes Lore. A Feral Upbringing's child has no Language and 120 childhood xp instead of 75 + 45, spent only on (Area) Lore, Animal Handling, Athletics, Awareness, Brawl, Hunt, Stealth, Survival and Swim (DE p. 130).
+
+**A character's Later Life.** A training package takes its years out of Later Life, and the step's line says so. A grog of 31 with a 5-year package reads "26 years: 5 in training packages, 21 years at 15 xp = 315 xp". The Failed Apprentice package needs that Virtue, as the (Academic), (Arcane) and (Martial) packages need a Virtue opening those Abilities. A Jurist needs no Virtue opening Academic Abilities for the Advocate package (Grogs p. 68).
+
+**A magus's Apprenticeship.** Skilled Parens gives 60 xp and 30 spell levels more, and Weak Parens as much less. Each spell learned is capped at its Lab Total, with an aura of 3, the Virtues that change a Lab Total, and +1 for a Magic Theory specialty in inventing spells or in one of its Arts (DE pp. 50, 168).
+
+**Finishing Touches.** The review expects Confidence 1 with 3 points, or 2 with 5 for Self-Confident or Heroic Personality, and none for Low Self-Esteem.
+
+**Specialties.** Each step that spends xp on Abilities advises (☞) giving every Ability a specialization, Spell Mastery aside (DE p. 157). Spend xp's Specialty box sets it, and the check names any left blank.
+
+**Virtues and Flaws that change creation** (Definitive Edition, Chapters Three to Five):
+
+- Savantism halves the creation xp and caps every Ability at 3 but its favoured one, at 6 (p. 143).
+- Foreign Upbringing halves the caps of Languages, Area and Organization Lores and the social Abilities (p. 131).
+- Sheltered Upbringing rules out Bargain, Charm, Etiquette, Folk Ken, Guile, Intrigue and Leadership (p. 144).
+- A Redcap's first fifteen Later Life years give 300 xp, the book's fifteen years of apprenticeship (p. 105).
+- Student of (Realm) opens its own realm's Lore, and Warped by Magic opens Magic Lore (pp. 110, 151).
+- A Devil Child takes three Virtue points free (p. 56).
+
+The review also advises:
+
+- Warped by Magic's five Warping Points.
+- A written language at 3 for Academic Abilities, Latin, Greek, Hebrew or Arabic (p. 158).
+- Mastered Spells' 50 xp of Mastery (p. 96).
+- Savantism's favoured Ability.
+- The Nephilim's Great Stamina and Strength (p. 58).
+- That a Gifted companion take only Hermetic Virtues of intrinsic ability, not of background or training (p. 64). The review counts these as training: Skilled and Weak Parens, Mastered Spells, Infamous and Tormenting Master, Hermetic Prestige, a House's Outer Mystery or membership (Heartbeast, The Enigma, Faerie Magic, Verditius Magic, Clan Ilfetu, Guest of House Criamon), Diedne and Mercurian Magic, and Flawed and Stockade Parma Magica.
 
 ### The Grogs Aging Chart
 <!-- help: creation-worksheet-aging-chart -->
