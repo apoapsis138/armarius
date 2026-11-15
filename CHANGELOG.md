@@ -136,23 +136,22 @@ change in it.
 
 ### Castellum
 
-- **Host from a server or NAS.** A computer with no screen and no keychain (a server, or a container on a NAS) can now keep the host's key, and the SSH host key, in a private folder of their own instead: set `ARMARIUS_KEYSTORE=file` and `ARMARIUS_KEYS` to the folder. The app refuses a folder that isn't there (it never makes one, so a volume not yet unlocked can't be given a fresh key), one others can read, one inside the data folder (so keys never travel with the saga or its backups), running as root, and Windows, where the keychain stays.
-- **Look after a hosted saga from a terminal.** A new `admin` word does what the Host for Players window does, for a host with no window: list players and set their roles and passcodes (asked for twice, never typed on the command line), set the tunnel address, issue Invites, approve or reject what waits, list and revoke seats, read the Log, rotate the host key, and bring a saga file in (with the old host's passcode records, so players keep their passcodes) or delete one. It runs the window's own checks, asks before changing a seat, and works on the computer's files only.
-- **A container image for your own box.** Each release now also publishes a container image (`ghcr.io/apoapsis138/armarius`, for Intel/AMD and ARM machines) that runs the Remote seats listener for one saga, with a compose file that runs it locked down (its own user, a read-only system, no extra privileges, a memory limit, no published ports) beside a Cloudflare Tunnel. The listener takes its saga from `ARMARIUS_SAGA`.
-- **Back up a hosted saga while it is in use.** `admin backup` copies the saga and its Remote seat files into one dated zip, each file whole even while players save, keeps the newest 30 (or as many as you say), and never includes the host key. The compose file runs it every night by itself, for a box with no scheduler of its own.
+- **Host a saga on a server or NAS.** Run Remote seats from an always-on box, such as a Linux computer, a UGREEN NAS or a small rented server, instead of your desktop. Each release now publishes a container image, `ghcr.io/apoapsis138/armarius` (Intel/AMD and ARM), with a locked-down compose file that runs it beside a Cloudflare Tunnel. A new guide in Help walks through the whole setup, from moving the saga over to joining it from your desktop as storyguide. Hosting for browsers and SSH stays on the desktop.
+- **Keys without a keychain.** On a box with no keychain, the host key and SSH host key live in a private folder you choose. Armarius refuses a folder that's missing, readable by others, or inside the data folder, so keys never travel with the saga or its backups.
+- **Run it from a terminal.** The new `admin` command does everything the Host for Players window does: players, roles and passcodes, invites and approvals, seats, the Log, rotating the host key, and bringing a saga in.
+- **Nightly backups.** `admin backup` zips the saga and its seat files safely while players are saving, keeps the newest 30, and never includes the host key. The compose file runs it every night.
 
 ### Glossa
 
-- **How to host on your own box.** A new guide in Help walks through hosting a saga for Remote seats on an always-on Linux computer, a UGREEN NAS or a small rented server: the files and folders, a private folder for the key, bringing the saga over from your desktop (and joining it from there as a storyguide), a Cloudflare Tunnel or Tailscale Funnel, every `admin` command, encrypted backups off the box with restic, what to do if the key or the tunnel's token leaks, and moving to a newer version. Hosting for browsers and SSH stays on the desktop.
-- **The help on the web.** Armarius has a website, https://apoapsis138.github.io/armarius/, with the desktop's help and how-to guides, a step-by-step guide to installing it (the download first, running from the source after it), and answers to common setup questions (Windows protected your PC, extracting the zip before running it, Python and uv when running from the source, the save folder and OneDrive). It is rebuilt from the app's own help with each release. Help's About page and Getting started point to it, as does the README.
+- **The help on the web.** [apoapsis138.github.io/armarius](https://apoapsis138.github.io/armarius/) has the desktop's help and how-to guides, a step-by-step install guide, and answers to common setup questions. It's rebuilt with each release.
 
 ### Fundamenta
 
-- **No busy cursor on GNOME.** On Linux under GNOME, the desktop app no longer leaves a busy cursor spinning for about 15 seconds at start and after moving between windows: it now draws through X11 (GNOME's XWayland), falling back to Wayland if X11 isn't there. Start it with `QT_QPA_PLATFORM=wayland` to use Wayland anyway; Help's download guide says so.
+- **No busy cursor on GNOME.** On Linux under GNOME, the app no longer shows a busy cursor for about 15 seconds at start and when switching windows. Set `QT_QPA_PLATFORM=wayland` if you'd rather it used Wayland.
 
 ### Scriptorum
 
-- **One redraw of the footer per tab switch.** Switching a sheet's tab redraws the footer's keys once, even on a busy computer: it waits until the tab is built and focus has moved into it, where a slow machine sometimes redrew them twice.
+- **Smoother tab switching.** Switching a sheet's tab now redraws the footer once, even on a slow computer.
 
 ## 4.12.0 — 2026-11-12
 
