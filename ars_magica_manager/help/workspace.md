@@ -62,7 +62,7 @@ Under the list, **Save folder** shows the folder the sagas are read from and wha
 <!-- gui -->
 The line under the page's title names the folder the sagas are read from. If the app ever closes itself without a word, `crash.log` in that folder records where it was; the file stays empty until then.
 <!-- /gui -->
-The default is Armarius at the top of your OneDrive. The app was called Ars Magica Manager before: the first time Armarius starts, it renames the default Ars Magica Manager folder to Armarius and says so (a folder you chose stays where it is, and when both folders exist nothing is merged and Armarius is used).
+The default is Armarius in your app data folder (C:\Users\you\AppData\Local\Armarius on Windows, ~/.local/share/Armarius on Linux). If an older version saved somewhere else by default (Armarius or Ars Magica Manager at the top of your OneDrive), Armarius keeps saving there, as a folder you chose; Change save folder moves it.
 
 **You type:** for a new saga, its Name and Storyguide (both required), the Start Year and Start Season, and an optional one-line Description.
 

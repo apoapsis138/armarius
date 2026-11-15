@@ -12,10 +12,11 @@ from ars_magica_manager import launch, paths
 
 
 def main() -> None:
-    # The data folder is settled first: the default folder takes the app's
-    # new name, and if the folder can't be used, another is, and the app
-    # says why. The app then keeps to that folder until another is chosen.
-    renamed = paths.move_old_default_folder()
+    # The data folder is settled first: an older version's default folder
+    # is kept as the chosen one, and if the folder can't be used, another
+    # is, and the app says why. The app then keeps to that folder until
+    # another is chosen.
+    paths.keep_old_default_folder()
     problem = paths.settle_data_dir()
     paths.use_data_dir(paths.data_dir())
     from ars_magica_manager import hosting
@@ -28,7 +29,7 @@ def main() -> None:
     # Saves made by older versions move from the repo's data/ folder to the
     # user's data folder, once.
     notes = [problem] if problem else paths.move_legacy_data()
-    app.startup_notes = tuple(([renamed] if renamed else []) + notes)
+    app.startup_notes = tuple(notes)
     app.run()
 
 
