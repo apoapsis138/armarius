@@ -143,10 +143,15 @@ change in it.
 ### Glossa
 
 - **How to host on your own box.** A new guide in Help walks through hosting a saga for Remote seats on an always-on Linux computer, a UGREEN NAS or a small rented server: the files and folders, a private folder for the key, bringing the saga over from your desktop (and joining it from there as a storyguide), a Cloudflare Tunnel or Tailscale Funnel, every `admin` command, encrypted backups off the box with restic, what to do if the key or the tunnel's token leaks, and moving to a newer version. Hosting for browsers and SSH stays on the desktop.
+- **The help on the web.** Armarius has a website, https://apoapsis138.github.io/armarius/, with the desktop's help and how-to guides, a step-by-step guide to installing it (the download first, running from the source after it), and answers to common setup questions (Windows protected your PC, extracting the zip before running it, Python and uv when running from the source, the save folder and OneDrive). It is rebuilt from the app's own help with each release. Help's About page and Getting started point to it, as does the README.
 
 ### Fundamenta
 
 - **No busy cursor on GNOME.** On Linux under GNOME, the desktop app no longer leaves a busy cursor spinning for about 15 seconds at start and after moving between windows: it now draws through X11 (GNOME's XWayland), falling back to Wayland if X11 isn't there. Start it with `QT_QPA_PLATFORM=wayland` to use Wayland anyway; Help's download guide says so.
+
+### Scriptorum
+
+- **One redraw of the footer per tab switch.** Switching a sheet's tab redraws the footer's keys once, even on a busy computer: it waits until the tab is built and focus has moved into it, where a slow machine sometimes redrew them twice.
 
 ## 4.12.0 — 2026-11-12
 
