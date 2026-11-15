@@ -955,62 +955,88 @@ moves to it too, since a seat refuses a host of another major version.
 # How to start a saga from a sourcebook
 <!-- help: guide-book-packs -->
 
-The app ships a content pack for each Tribunal sourcebook it covers, written in its own words from the book's open content: the Tribunal with its customs filled in, its covenants and the magi the book names, the forests, regiones and places of the region, its towns, lords, churches and factions, its Peripheral Code and the quarrels open at the book's date, and its history as Tribunal Diary entries. Use one to begin a saga in a Tribunal already peopled, or to add that Tribunal to a saga you are running. A region book, whose lands lie outside every Tribunal, has a pack with no Tribunal: its covenants belong to none, its history is in one covenant's Diary, and what is coming (a yearly council, say) is in the saga's calendar.
+Your troupe wants to play in the Rhine, and you'd rather not type in ten covenants and seventy magi before the first session.
+
+The app ships a content pack for each Tribunal sourcebook it covers, written in its own words from the book's open content. A pack brings the Tribunal with its customs, its covenants and named magi, the region's places, towns, lords, churches and factions, its Peripheral Code and open quarrels, and its history as Tribunal Diary entries. Use one to begin a saga in a Tribunal already peopled, or to add that Tribunal to a saga you're running.
+
+A region book, whose lands lie outside every Tribunal, has a pack with no Tribunal. Its covenants belong to none, its history is in one covenant's Diary, and what is coming (a yearly council, say) is in the saga's calendar.
 
 ### The packs
 <!-- help: guide-book-packs-packs -->
 
-- **Guardians of the Forests: the Rhine Tribunal** (spring 1220): the Rhine's ten covenants with the gilds they belong to, about seventy magi, the Black Forest and the great forests with their regiones, the Rhine cities and princes, the Peripheral Code, nine open cases for the Tribunal of 1221, and the Curse of the Rhine Gorge as a threat. Durenmar's Great Library comes as Book records.
-- **The Lion and the Lily: the Normandy Tribunal** (1220): fifteen covenants and the lines of fealty between them, about fifty magi, the duchy's places, lords and churches, the ruined covenants, the vis tenures under the Perthean Compact, the Tourney, the Peripheral Code and open cases, and the Tribunal's stories as threats.
-- **Faith & Flame: the Provençal Tribunal** (1220): eleven covenants with their votes, about sixty magi (Dama the Praeco and Rebecca as the book prints them), Toulouse, Gascony, the Pyrenees, the Narbonnais and the Arelat with their auras and vis, thirty ruined covenants and Val-Negra's regio, the Albigensian Crusade, the Peripheral Code and the docket for the Tribunal of 1221 at Glanum, and the Praeco's secret as a story.
-- **The Sundered Eagle: the Theban Tribunal** (1220): the thirteen covenants in their four phylai, each with its patron, about sixty magi (none with a printed stat block, so all are generated, learning the Art in Classical Greek), the archon Aiakia as Praeco and the Council of Magistrates, the tokens and shards the book implies, Greece, the Islands, Constantinople and Anatolia with their auras, regiones and vis, Delos where the Tribunal meets, twelve ruined or lost covenants, the Latin Empire, Nicaea and the Greek and Frankish lords, the Peripheral Code and the docket for the Tribunal of 1221, the book's creatures in the Bestiary, and Proximios's hidden infernalism as a story.
-- **Against the Dark: the Transylvanian Tribunal** (1220): the ten oppida where its magi live (each a covenant record, called an oppidum on the Tribunal's screens), with the zenodochia and Leviathan as sketches, the forty-two named magi with their privileges in the five legal covenants and each oppidum's aediles (Monica Ierne as the book prints her, the rest generated), Albertus the Praeco and Benilda the Presiding Quaesitor, Hungary, Bulgaria, the Slav lands and Transylvania's border peoples with their auras, regiones and vis, Tablinum's ten regio levels, the Teutonic Knights and the kings and churches around them, the hedge traditions as factions, the Peripheral Code and the docket for the Tribunal of 1221 at the Shipka Pass, the book's creatures in the Bestiary, and the Dragon War as the main story.
-- **The Contested Isle: the Hibernian Tribunal** (1220): the nine covenants and the two Mercer Houses, each with its cathach, the fifty named magi and Redcaps (Indrechtach as the book prints him, the rest generated), Milvia the Praeco and Visioturpis the Presiding Quaesitor, the five ambassadors and the Treaty of Cnoc Maol Réidh, the Coill Trí's túatha for the tithe of Gifted children, Munster, Leinster, Meath, Ulster and Connacht with their auras, regiones and vis, the High Roads, the English lordship and the Gaelic kings, the two churches, the Peripheral Code and the docket for the Tribunal of 1221 at Tara, the ruined covenants of the Schism War, the book's creatures and twelve saints in the Bestiary, and the fall of Praesis and Guillaume's push into Connacht as the main stories.
-- **Blood and Sand: the Levant Tribunal** (1220), with the stat blocks of its web companion *Secrets in Sand*: the twelve covenants with their stances on the Crusade, the four great ones rebuilt with their Boons, Hooks and Aegis, forty-nine named magi (the eight printed ones converted from the Fourth Edition, Wardat as a Hermetic Sahir with her bound jinn, Amber's familiar Luigi, the rest generated), Tau the Praeco and Scipio the Presiding Quaesitor, the Treaty of Baghdad in the Peripheral Code and its renewal on the docket for the Tribunal of 1221 at Domus Pacis, the Latin states, the Ayyubids, the caliph and the Nizaris, the churches, faiths and military orders, Jerusalem, Giza and the Levant's other places with their auras and regiones, the summae of the covenants' libraries, the book's jinn and creatures in the Bestiary, the Treaty's renewal and Aedes Veritatis's secret war on Foothold as the main stories, with the Fifth Crusade at Damietta. The records it shares with *The Cradle and the Crescent* and the Theban pack are built alike, so importing both never doubles them.
-- **Sanctuary of Ice: the Greater Alps Tribunal** (1220), a Fourth Edition book converted by the Definitive Edition's guide: its six covenants (the Cave of Twisting Shadows, the Icy North with its chapters, Journeys End, Sinews of Knowledge, the vanished Tarragon Vale and Valnastium) rebuilt with their Boons and Hooks, their chairs on the roster and the Tribunal's ostracism; about fifty named magi (Kentigern, Miklos, Ragoneda and Andru converted from their blocks, Muscaria and Andru as the Fifth Edition's *Houses of Hermes* has them, the rest generated), Cymena the Redcap and Valnastium's Larta as companions, Andru's familiar Crucifixo; Constance the Praeco and Athena Alpina the chief Quaesitor, the Peripheral Code with the rulings *The Wizard's Grimoire* dates, the Tribunal of 1221 at the Icy North and the Hermetic year in the calendar; the Western Alps, Bavaria and the Eastern Marches with their auras, regiones and vis, lords, bishops, abbeys and towns; the ghosts, Primi, barbegazi and Crucifixo in the Bestiary; and Athena's likely ostracism, the raids on the Bavarian Common and the Sicilian children's school as the stories under way, with eight more dormant. Basel and the duke of Bavaria are built as the Rhine pack builds them, so importing both never doubles them.
-- **Heirs to Merlin: the Stonehenge Tribunal** (1220), a Fourth Edition book that prints no statistics: the nine covenants as sketches, from Blackthorn, which hosts every meeting, to the wandering Semitae, with Cad Gadu as *Houses of Hermes: Societates* has it under Primus Ebroin; their 49 magi with generated stats, the five Redcaps of Mercer House and four natural magicians as companions; Talion the Praeco and Iudicium the presiding Quaesitor, the 1208 silver ruling and the Tribunal of 1222 at Blackthorn; the history of twenty fallen covenants in the Diary, with the ruins whose sites are known; Stonehenge, Avebury, Tintagel, Lyonesse and the other places of legend; Henry III and the triumvirate, Llywelyn, the great earls, the bishops, abbeys, towns and universities of England and Wales; and Gwrhyr's land suit, Voluntas against Ungulus and the eastern covenants' vis as the stories under way, with six more dormant. Henry III is built as the Normandy pack builds him, so importing both never doubles him.
-- **The Dragon and the Bear: the Novgorod Tribunal** (1220), a Fourth Edition book converted by the Definitive Edition's guide: its four covenants (Three Lakes, which hosts the meetings, Thousand Caves in the Urals, decaying Pripet Maior in its marsh and Leczyca in Poland) rebuilt with their Boons, Hooks and Aegis, and the two the book leaves blank counted on the roster; their 30 magi (the nine printed ones converted, Rehamchi and Lelya of the Volkhvy tradition, the rest generated), Yannes Kolski vanished; Miya Cossuri the Praeco and Andrei Soitkchin the chief Quaesitor, the Royal Embargo and the other rulings, the Tribunal's history in the Diary, and the trial of Pripet Maior for its raid on Thousand Caves on the docket for 1221; the Russian principalities, Poland and the Baltic with their princes, dukes, Church, towns, crusading orders and pagan peoples; Slavic Arcadia and the places of legend; the Slavic faeries, dragons, the vampire and Stolitzya the Swimmer in the Bestiary, their powers repriced by *Realms of Power: Faerie*; and the trial, the draining of the Pripet, Malincka's race to finish her spell and the return of Hermes as the stories under way, with six more dormant. The Mongols are the record the Cradle and Levant packs share, with this book's stages in Russia and Poland added.
-- **The Cradle and the Crescent** (1220), a region book with no Tribunal: Arabia, Mesopotamia, Persia, the Silk Road and the jinn's lands beyond them, with their provinces, towns, rulers and factions, auras, regiones and vis; the Order of Suleiman and its six families, and its thirteen houses of wisdom as covenants of no Tribunal, the Order's past in the Diary of the Dar al-Hikma and the yearly Majlis in the calendar; the five named sahirs as companions of the Sahirs tradition ('Arkhaman as the book prints him, with his seven spells and Kharrat, the jinni bound to him); the Mazdeans and their fire temples, the Nizaris, the yatus and the Mongols; 'Umar Khayyam's books; the book's jinn and beasts in the Bestiary; and ten stories, from the succession at the Majlis of 1220 to the saving of Merv's books (eight under way, two dormant), beside the Fifth Crusade and the Mongol conquest, with the story seeds on the records they belong to. Before making new sahirs, turn on its four traditions under Traditions Offered (see [Assumptions made for The Cradle and the Crescent](help:pack-assumptions-cradle)). Its records shared with the Levant pack are built alike, so importing both never doubles them.
+Each pack's assumptions page says what it brings, what it inferred, what it chose and where it corrects the book.
 
-More books follow in later versions.
+- **Guardians of the Forests: the Rhine Tribunal** (spring 1220): ten covenants with their gilds, about seventy magi, Durenmar's Great Library and the Curse of the Rhine Gorge. [Assumptions](help:pack-assumptions-rhine)
+- **The Lion and the Lily: the Normandy Tribunal** (1220): fifteen covenants and their lines of fealty, about fifty magi, the Tourney and the Perthean Compact. [Assumptions](help:pack-assumptions-normandy)
+- **Faith & Flame: the Provençal Tribunal** (1220): eleven covenants with their votes, about sixty magi, thirty ruined covenants and the Albigensian Crusade. [Assumptions](help:pack-assumptions-provence)
+- **The Sundered Eagle: the Theban Tribunal** (1220): thirteen covenants in four phylai, about sixty magi, all generated, and Delos where the Tribunal meets. [Assumptions](help:pack-assumptions-theban)
+- **Against the Dark: the Transylvanian Tribunal** (1220): ten oppida, forty-two named magi, Tablinum's ten regio levels and the Dragon War. [Assumptions](help:pack-assumptions-transylvania)
+- **The Contested Isle: the Hibernian Tribunal** (1220): nine covenants and two Mercer Houses, fifty magi and Redcaps, and the fall of Praesis. [Assumptions](help:pack-assumptions-hibernia)
+- **Blood and Sand: the Levant Tribunal** (1220), with *Secrets in Sand*: twelve covenants, forty-nine magi, the Treaty of Baghdad and the Fifth Crusade. [Assumptions](help:pack-assumptions-levant)
+- **Sanctuary of Ice: the Greater Alps Tribunal** (1220), converted from the Fourth Edition: six covenants, about fifty magi and Athena's likely ostracism. [Assumptions](help:pack-assumptions-alps)
+- **Heirs to Merlin: the Stonehenge Tribunal** (1220), a Fourth Edition book with no statistics: nine covenants as sketches, 49 magi and the places of legend. [Assumptions](help:pack-assumptions-stonehenge)
+- **The Dragon and the Bear: the Novgorod Tribunal** (1220), converted from the Fourth Edition: four covenants, 30 magi and the trial of Pripet Maior. [Assumptions](help:pack-assumptions-novgorod)
+- **The Cradle and the Crescent** (1220), a region book: the Order of Suleiman's thirteen houses of wisdom, five sahirs and the jinn. [Assumptions](help:pack-assumptions-cradle)
+- **Magi of Hermes**, set at a base year you choose: fifteen magi, each at every age the book prints (see below). [Assumptions](help:pack-assumptions-magi_of_hermes)
+- **Legends of Hermes**, for any saga: the sites, guardians and treasures of five legends, their stories dormant. [Assumptions](help:pack-assumptions-legends_of_hermes)
+- **Lands of the Nile** (1220), a region book: Egypt and the Nile, the tombs of Cleopatra and Arrakkamani, and three covenant sites. [Assumptions](help:pack-assumptions-nile)
+- **Between Sand and Sea** (1220), a region book: Africa from the Atlantic to Siwa, and the Tomb of Tin Hinan. [Assumptions](help:pack-assumptions-africa)
+- **Land of Fire and Ice** (1220), with *The Icelandic Wars*: Iceland, its galdramen and trollsynir, and two long stories. [Assumptions](help:pack-assumptions-iceland)
+- **Antagonists**, for any saga: ten recurring opponents, their stories dormant. [Assumptions](help:pack-assumptions-antagonists)
+
+Before making new sahirs with *The Cradle and the Crescent*, turn on its four traditions under Traditions Offered. More books follow in later versions.
 
 <!-- gui -->
-A pack can also bring its Tribunal's maps, with a pin for each of its covenants and places, to the saga's [Atlas](help:saga-atlas). Until a map's picture is drawn, it comes as a placeholder in the map's shape, its pins already on it. They are the pack's pins: move them, or take them off the map, and importing the pack again leaves them as you left them.
+A pack can also bring its Tribunal's maps, with a pin for each of its covenants and places, to the saga's [Atlas](help:saga-atlas). Until a map's picture is drawn, it comes as a placeholder in the map's shape, its pins already on it. They're the pack's pins. Move them, or take them off the map, and importing the pack again leaves them as you left them.
 <!-- /gui -->
 
 ### Starting a saga from a pack
 <!-- help: guide-book-packs-start -->
 
-1. On the saga list, choose **New Saga**.
-2. Fill in the name, storyguide and date as usual. The packs are written as of the book's own year (the Rhine's is 1220), so a saga at another date keeps its own date and the pack's records their years.
-3. In **Start from a pack**, pick the book. The list shows the shipped book packs first, then the saga starters (ready-made covenants and sagas shipped with the app, such as Dammërstein), then any pack in your exports folder. A saga starter built on a book pack (Dammërstein is built on the Rhine's) says so under the choice: the saga starts from that book pack first, with its stories and supplements asked about too, and the starter comes in over it, its records matched to the book's by name. A pack with an introduction shows it under the choice while it is chosen: what the pack sets up and where the saga begins (the form scrolls to read it all). Under it, a **Begin** tick for each of the pack's stories (its threats): untick the ones to keep for later, and they come in dormant, to begin from their More when you want them.
-4. Create the saga: it begins with everything in the pack, and the pack's book is put in play (see [The saga](help:saga)), so the book's rules and neighbour kinds show.
+1. **Start a new saga.** On the saga list, choose **New Saga**, and fill in the name, storyguide and date as usual. A pack is written as of its book's year (the Rhine's is 1220). A saga at another date keeps its own date, and the pack's records keep their years.
+2. **Pick the book.** In **Start from a pack**, choose it. The list shows the shipped book packs first, then the saga starters, such as Dammërstein, then any pack in your exports folder.
+3. **Read its introduction.** A pack with an introduction shows it under the choice while it's chosen: what the pack sets up and where the saga begins. The form scrolls to read it all.
+4. **Choose the stories that begin.** Under the introduction is a **Begin** tick for each of the pack's stories, its threats. Untick the ones to keep for later. They come in dormant, to begin from their More when you want them.
+5. **Create the saga.** It begins with everything in the pack, and the pack's book is put in play (see [The saga](help:saga)), so the book's rules and neighbour kinds show.
+
+A saga starter is a ready-made covenant or saga shipped with the app. One built on a book pack says so under the choice (Dammërstein is built on the Rhine's). The saga then starts from that book pack first, with its stories and supplements asked about too, and the starter comes in over it, its records matched to the book's by name.
 
 ### Adding a book to a saga you already have
 <!-- help: guide-book-packs-add -->
 
-1. In the saga, choose Import Data, **A Content Pack**, and pick the pack's file from the app's `data/packs` folder (next to the program).
-2. The form asks what to bring: untick the parts you don't want, such as the mundane world or the history; the Tribunal (if the pack has one) and its covenants always come (see [Choosing what a pack imports](help:import-pack)).
-3. Preview, then import. A covenant, character, place or neighbour the saga already has one of the same name of is kept as it is, so importing over a saga that already holds part of the Tribunal doubles nothing.
+1. **Import the pack.** In the saga, choose Import Data, **A Content Pack**, and pick the pack's file from the app's `data/packs` folder, next to the program.
+2. **Choose what to bring.** Untick the parts you don't want, such as the mundane world or the history. The Tribunal, if the pack has one, and its covenants always come (see [Choosing what a pack imports](help:import-pack)).
+3. **Preview, then import.** A covenant, character, place or neighbour the saga already has one of the same name of is kept as it is. So importing over a saga that already holds part of the Tribunal doubles nothing.
 
-A pack is a copy: a saga keeps what it imported and never reads the pack's file again, so a corrected pack in a new version of the app changes new sagas and new imports, not the sagas you have. Importing the corrected pack over a saga adds what the saga doesn't have and leaves what it has, your edits included, so a correction to a record it already holds doesn't come through, and a Tribunal it already has keeps its own Code, cases and Diary. A record the new pack has renamed comes in beside the old one: the preview lists what is added, so check it first.
+A pack is a copy. A saga keeps what it imported and never reads the pack's file again, so a corrected pack in a new version of the app changes new sagas and new imports, not the sagas you have.
+
+Importing the corrected pack over a saga adds what the saga doesn't have and leaves what it has, your edits included. So a correction to a record it already holds doesn't come through, and a Tribunal it already has keeps its own Code, cases and Diary. A record the new pack has renamed comes in beside the old one. The preview lists what's added, so check it first.
 
 ### Turning on a supplement
 <!-- help: guide-book-packs-overlay -->
 
-A supplement such as *Through the Aegis* sits on top of the Tribunal packs, so a saga without it matches the Tribunal book. Import its file from `data/packs` the same way, or tick **With Through the Aegis** on New Saga. It adds to each Tribunal the saga has and overwrites records where the two books differ; a form lists each overwrite, unticked if you have changed that record yourself. It stays on, so a Tribunal pack imported later takes its part too. See [Through the Aegis on top of the Tribunal packs](help:pack-overlay-through-the-aegis).
+A supplement such as *Through the Aegis* sits on top of the Tribunal packs, so a saga without it matches the Tribunal book.
+
+1. **Bring it in.** Import its file from `data/packs` the same way, or tick **With Through the Aegis** on New Saga.
+2. **Check the overwrites.** It adds to each Tribunal the saga has and overwrites records where the two books differ. A form lists each overwrite, unticked if you've changed that record yourself.
+
+It stays on, so a Tribunal pack imported later takes its part too. See [Through the Aegis on top of the Tribunal packs](help:pack-overlay-through-the-aegis).
 
 ### Bringing in the Magi of Hermes
 <!-- help: guide-book-packs-magi -->
 
-*Magi of Hermes* is a pack of fifteen magi with no Tribunal. Each is printed at Gauntlet and every fifteen years after, and all of those ages come with the pack. Import it the same way, and the form asks for a **Base year**, which starts on the saga's year, and an age for each magus, or **Leave out**. A magus's year of birth is the base year less the age you choose, so pick the age they have at that year.
+*Magi of Hermes* is a pack of fifteen magi with no Tribunal. Each is printed at Gauntlet and every fifteen years after, and all of those ages come with the pack.
 
-Conscientia joins Durenmar, whether the Rhine pack comes in first or later. If the Theban pack's sketch of Marcus Tauros is in the saga, the printed Marcus replaces it; without this pack the sketch stays.
+1. **Import it.** Import it the same way as any pack.
+2. **Set the base year.** The form asks for a **Base year**, which starts on the saga's year.
+3. **Choose each magus's age.** Pick an age for each magus, or **Leave out**. A magus's year of birth is the base year less the age you choose, so pick the age they have at that year.
+
+Conscientia joins Durenmar, whether the Rhine pack comes in first or later. If the Theban pack's sketch of Marcus Tauros is in the saga, the printed Marcus replaces it. Without this pack the sketch stays.
 
 ### Africa and the Nile
 <!-- help: guide-book-packs-africa -->
 
-*Lands of the Nile* and *Between Sand and Sea* are region packs with no Tribunal, as *The Cradle and the Crescent* is. They can be imported together: they share the Great Hunger, the Hope and the pact of 1225, and those come in once. Their stories come in dormant, except the Fifth Crusade.
+*Lands of the Nile* and *Between Sand and Sea* are region packs with no Tribunal, as *The Cradle and the Crescent* is. They can be imported together. They share the Great Hunger, the Hope and the pact of 1225, and those come in once. Their stories come in dormant, except the Fifth Crusade.
 
 ### Iceland
 <!-- help: guide-book-packs-iceland -->
@@ -1020,73 +1046,79 @@ Conscientia joins Durenmar, whether the Rhine pack comes in first or later. If t
 ### Antagonists
 <!-- help: guide-book-packs-antagonists -->
 
-*Antagonists* is a pack of ten recurring opponents, with no Tribunal, for any saga. Its stories come in dormant, and a person printed in two versions is a choice on the import form. With the book in play, its people with printed stats are also templates on **New Character**, named **Antagonist -**: pick one to start from a copy of the printed record.
+*Antagonists* is a pack of ten recurring opponents, with no Tribunal, for any saga. Its stories come in dormant, and a person printed in two versions is a choice on the import form. With the book in play, its people with printed stats are also templates on **New Character**, named **Antagonist -**. Pick one to start from a copy of the printed record.
 
 ### Legends of Hermes
 <!-- help: guide-book-packs-legends -->
 
-*Legends of Hermes* is a pack with no Tribunal: the sites, guardians and treasures of Conciatta, Fortunata, Hérisson, Hermanus and Thomae, with their stories dormant. Import it into any saga and begin a story from its More when you want it.
+*Legends of Hermes* is a pack with no Tribunal. It holds the sites, guardians and treasures of Conciatta, Fortunata, Hérisson, Hermanus and Thomae, with their stories dormant. Import it into any saga and begin a story from its More when you want it.
 
 ### What a pack puts where
 <!-- help: guide-book-packs-where -->
 
-- The Tribunal: its sheet, with the book's customs (the Rhine's gilds), its officers, its Peripheral Code under Rulings, the open quarrels under Cases, and its Hermetic history in the Diary. The mundane history is in its summary, by era.
-- Covenants: sketch records, not played, each with a summary, what matters (vis, income, tensions) and the magi the book names; the count of magi the book leaves unnamed is on the covenant.
-- Magi: every magus the book names is a full character. Those it prints a stat block for have the book's stats; the rest have stats inferred from what the book says of them (their House, age, favoured Arts, Virtues and Flaws) by the creation rules: not an official write-up, as their Biography says. Untick **Generated stats for magi** when importing to bring those magi in as sketches instead. Where the book gives no age, one is assumed from the magus's rank and noted there too.
-- Places: the regions and forests as places, with the regiones inside them and their levels and auras; covenants and towns sit in them.
-- The mundane world: lords, towns, churches, schools, factions and threats, with historical arms where they are known.
-- The Bestiary: the creatures the book prints a stat block for (such as the Rhine's boglins and bockmen, Normandy's korrigans, the Levant's jinn and Novgorod's dragons), each found at the place it haunts and linked from the threat or faction it belongs to. Untick **The Bestiary** when importing to leave them out.
-- Assumptions: where a book leaves a value out (an aura without a number, a founding year, a season), the pack fills it in, and importing it says so. Each pack's page lists what it inferred, what it chose and where it corrects the book: [the Rhine](help:pack-assumptions-rhine), [Normandy](help:pack-assumptions-normandy), [Provence](help:pack-assumptions-provence), [the Theban Tribunal](help:pack-assumptions-theban), [Transylvania](help:pack-assumptions-transylvania), [Hibernia](help:pack-assumptions-hibernia), [the Levant](help:pack-assumptions-levant), [the Greater Alps](help:pack-assumptions-alps), [Stonehenge](help:pack-assumptions-stonehenge), [Novgorod](help:pack-assumptions-novgorod), [The Cradle and the Crescent](help:pack-assumptions-cradle), [Magi of Hermes](help:pack-assumptions-magi_of_hermes), [Legends of Hermes](help:pack-assumptions-legends_of_hermes), [Lands of the Nile](help:pack-assumptions-nile), [Between Sand and Sea](help:pack-assumptions-africa), [Land of Fire and Ice](help:pack-assumptions-iceland) and [Antagonists](help:pack-assumptions-antagonists).
-- Secrets: what the book tells the storyguide and not the players is on each covenant's, magus's, Tribunal's, neighbour's or creature's [Secrets](help:tab-secrets). The few that belong to part of a record (a regio level, a case, an entry in the Tribunal's Diary, a book) are at the end of its text under a **Secrets** heading.
+- **The Tribunal.** Its sheet has the book's customs (the Rhine's gilds) and its officers. Its Peripheral Code is under Rulings, the open quarrels under Cases, and its Hermetic history in the Diary. The mundane history is in its summary, by era.
+- **Covenants.** Sketch records, not played, each with a summary, what matters (vis, income, tensions) and the magi the book names. The count of magi the book leaves unnamed is on the covenant.
+- **Magi.** Every magus the book names is a full character. Those it prints a stat block for have the book's stats. The rest have stats inferred by the creation rules from what the book says of them, such as their House, age and favoured Arts. That isn't an official write-up, as their Biography says.
+- **Sketches instead.** Untick **Generated stats for magi** when importing to bring those magi in as sketches. Where the book gives no age, one is assumed from the magus's rank and noted there too.
+- **Places.** The regions and forests are places, with the regiones inside them and their levels and auras. Covenants and towns sit in them.
+- **The mundane world.** Lords, towns, churches, schools, factions and threats, with historical arms where they're known.
+- **The Bestiary.** The creatures the book prints a stat block for, such as the Rhine's boglins and Novgorod's dragons. Each is found at the place it haunts and linked from the threat or faction it belongs to. Untick **The Bestiary** when importing to leave them out.
+- **Assumptions.** Where a book leaves a value out (an aura without a number, a founding year, a season), the pack fills it in, and importing it says so. Each pack's assumptions page, linked in the list above, lists those values.
+- **Secrets.** What the book tells the storyguide and not the players is on the [Secrets](help:tab-secrets) of each covenant, magus, Tribunal, neighbour or creature. The few that belong to part of a record, such as a regio level, a case or a Diary entry, are at the end of its text under a **Secrets** heading.
 
-The packs follow the Definitive Edition where a book's numbers differ from it; each pack's assumptions page lists the corrections it makes.
+The packs follow the Definitive Edition where a book's numbers differ from it. Each pack's assumptions page lists the corrections it makes.
 
 **See also:** [Content packs](help:export-pack), [Choosing what a pack imports](help:import-pack), [Tribunal](help:tribunal), [How to import and export](help:guide-import-export)
-
 
 # How to add a creature from a book
 <!-- help: guide-bestiary -->
 
-The [Bestiary](help:bestiary) holds the saga's creatures with their stat blocks. A Tribunal book's pack brings the creatures it describes, and the Definitive Edition's own are offered by **Start from the book** in New Creature; this guide is for one you copy from another book yourself, such as a beast from Realms of Power: Magic.
+The grogs flush a beast out of the marsh, and its stat block is in Realms of Power: Magic, not in your saga yet.
+
+The [Bestiary](help:bestiary) holds the saga's creatures with their stat blocks. A Tribunal book's pack brings the creatures it describes, and the Definitive Edition's own are offered by **Start from the book** in New Creature. For one from any other book, you copy the stat block yourself.
 
 ### Making the record
 <!-- help: guide-bestiary-record -->
 
 <!-- tui -->
-1. Press `n` (New) on the saga or the Bestiary and choose **New Creature**.
-2. Give its name. For a kind that comes in numbers (a pack of wolves, a swarm of boglins) tick **Many** and say how many.
-3. Choose its **Realm** and type its **Might** and the Might's Form, as the stat block's first line gives them ("Magic Might 8 (Animal)"). Leave the Realm blank for a mundane beast. For a demon, type its Order, Hierarchy and Weakness too; for anything with them, its Age and Confidence.
-4. Type its **Size**, and choose where it is **found**: a place in the Region, and a level of it if it lives in a regio.
-5. Create it. Its sheet opens; in the tree it sits under the Bestiary.
+1. **Start a new creature.** Press `n` (New) on the saga or the Bestiary and choose **New Creature**.
 <!-- /tui -->
 <!-- gui -->
-1. On the saga's page, open **Compendium** and click the New Creature card under the Bestiary.
-2. Give its name. For a kind that comes in numbers (a pack of wolves, a swarm of boglins) tick **Many** and say how many.
-3. Choose its **Realm** and type its **Might** and the Might's Form, as the stat block's first line gives them ("Magic Might 8 (Animal)"). Leave the Realm blank for a mundane beast. For a demon, type its Order, Hierarchy and Weakness too; for anything with them, its Age and Confidence.
-4. Type its **Size**, and choose where it is **found**: a place in the Region, and a level of it if it lives in a regio.
-5. Create it. Its page opens.
+1. **Start a new creature.** On the saga's page, open **Compendium** and click the New Creature card under the Bestiary.
+<!-- /gui -->
+2. **Name it.** For a kind that comes in numbers, such as a pack of wolves or a swarm of boglins, tick **Many** and say how many.
+3. **Give its Realm and Might.** Choose its **Realm** and type its **Might** and the Might's Form, as the stat block's first line gives them, such as "Magic Might 8 (Animal)". Leave the Realm blank for a mundane beast.
+4. **Add what its kind needs.** For a demon, type its Order, Hierarchy and Weakness too. For anything that has them, type its Age and Confidence.
+5. **Give its Size and home.** Type its **Size**, and choose where it's **found**: a place in the Region, and a level of it if it lives in a regio.
+<!-- tui -->
+6. **Create it.** Its sheet opens. In the tree it sits under the Bestiary.
+<!-- /tui -->
+<!-- gui -->
+6. **Create it.** Its page opens.
 <!-- /gui -->
 
 ### Copying the stat block
 <!-- help: guide-bestiary-stats -->
 
-Work down the stat block, a heading at a time:
+Work down the stat block, a heading at a time.
 
 <!-- tui -->
-1. **Characteristics, Soak, Fatigue levels and Encumbrance:** on the [Traits tab](help:tab-cr-traits) (`1`), press `e` in [Characteristics](help:section-cr-characteristics). Tick **Cunning** when the block gives Cun in place of Int, and untick **Can tire** or **Can be wounded** when the book says it does neither. [Go there](go:tab-cr-traits)
-2. **Virtues and Flaws, Qualities and Inferiorities:** add each with `a` in [Virtues, Flaws and Qualities](help:section-cr-virtues-flaws). Then the [Personality Traits](help:section-cr-personality-traits), [Reputations](help:section-cr-reputations) and [Abilities](help:section-cr-abilities).
-3. **Combat:** on the [Combat tab](help:tab-cr-combat) (`2`), add each natural weapon with `a` in [Combat](help:section-cr-attacks), typing the totals the book prints. The Wound Penalties follow from the Size, so there is nothing to type for them; check them against the book's. [Go there](go:tab-cr-combat)
-4. **Powers:** on the [Powers & Vis tab](help:tab-cr-powers) (`3`), add each with `a` in [Powers](help:section-cr-powers): its Might cost, Initiative, Form, Range, Duration and Target, and what it does. The Penetration is worked out, its Penetration Ability included; if the book's still differs, type the difference as the power's Penetration bonus. [Go there](go:tab-cr-powers)
-5. **Vis:** add the pawns in its body with `a` in [Vis in its body](help:section-cr-vis).
-6. **Appearance:** on the [Description tab](help:tab-cr-description) (`4`), press `e` in [Description](help:section-cr-description) for its appearance, equipment and notes. [Go there](go:tab-cr-description)
+1. **Characteristics, Soak, Fatigue and Encumbrance.** On the [Traits tab](help:tab-cr-traits) (`1`), press `e` in [Characteristics](help:section-cr-characteristics). Tick **Cunning** when the block gives Cun in place of Int. Untick **Can tire** or **Can be wounded** when the book says it does neither. [Go there](go:tab-cr-traits)
+2. **Virtues, Flaws, Qualities and Inferiorities.** Add each with `a` in [Virtues, Flaws and Qualities](help:section-cr-virtues-flaws). Then add the [Personality Traits](help:section-cr-personality-traits), [Reputations](help:section-cr-reputations) and [Abilities](help:section-cr-abilities).
+3. **Combat.** On the [Combat tab](help:tab-cr-combat) (`2`), add each natural weapon with `a` in [Combat](help:section-cr-attacks), typing the totals the book prints. The Wound Penalties follow from the Size, so there's nothing to type for them. Check them against the book's. [Go there](go:tab-cr-combat)
+4. **Powers.** On the [Powers & Vis tab](help:tab-cr-powers) (`3`), add each with `a` in [Powers](help:section-cr-powers). Give its Might cost, Initiative, Form, Range, Duration and Target, and what it does. [Go there](go:tab-cr-powers)
+5. **Check the Penetration.** It's worked out, its Penetration Ability included. If the book's still differs, type the difference as the power's Penetration bonus.
+6. **Vis.** Add the pawns in its body with `a` in [Vis in its body](help:section-cr-vis).
+7. **Appearance.** On the [Description tab](help:tab-cr-description) (`4`), press `e` in [Description](help:section-cr-description) for its appearance, equipment and notes. [Go there](go:tab-cr-description)
 <!-- /tui -->
 <!-- gui -->
-1. **Characteristics, Soak, Fatigue levels and Encumbrance:** in the [Traits chapter](help:tab-cr-traits), click **Edit** in [Characteristics](help:section-cr-characteristics). Tick **Cunning** when the block gives Cun in place of Int, and untick **Can tire** or **Can be wounded** when the book says it does neither. [Go there](go:tab-cr-traits)
-2. **Virtues and Flaws, Qualities and Inferiorities:** add each with **Add** in [Virtues, Flaws and Qualities](help:section-cr-virtues-flaws). Then the [Personality Traits](help:section-cr-personality-traits), [Reputations](help:section-cr-reputations) and [Abilities](help:section-cr-abilities).
-3. **Combat:** in the [Combat chapter](help:tab-cr-combat), add each natural weapon with **Add** in [Combat](help:section-cr-attacks), typing the totals the book prints. The Wound Penalties follow from the Size, so there is nothing to type for them; check them against the book's. [Go there](go:tab-cr-combat)
-4. **Powers:** in the [Powers & Vis chapter](help:tab-cr-powers), add each with **Add** in [Powers](help:section-cr-powers): its Might cost, Initiative, Form, Range, Duration and Target, and what it does. The Penetration is worked out, its Penetration Ability included; if the book's still differs, type the difference as the power's Penetration bonus. [Go there](go:tab-cr-powers)
-5. **Vis:** add the pawns in its body with **Add** in [Vis in its body](help:section-cr-vis).
-6. **Appearance:** in the [Description chapter](help:tab-cr-description), click **Edit** in [Description](help:section-cr-description) for its appearance, equipment and notes. [Go there](go:tab-cr-description)
+1. **Characteristics, Soak, Fatigue and Encumbrance.** In the [Traits chapter](help:tab-cr-traits), click **Edit** in [Characteristics](help:section-cr-characteristics). Tick **Cunning** when the block gives Cun in place of Int. Untick **Can tire** or **Can be wounded** when the book says it does neither. [Go there](go:tab-cr-traits)
+2. **Virtues, Flaws, Qualities and Inferiorities.** Add each with **Add** in [Virtues, Flaws and Qualities](help:section-cr-virtues-flaws). Then add the [Personality Traits](help:section-cr-personality-traits), [Reputations](help:section-cr-reputations) and [Abilities](help:section-cr-abilities).
+3. **Combat.** In the [Combat chapter](help:tab-cr-combat), add each natural weapon with **Add** in [Combat](help:section-cr-attacks), typing the totals the book prints. The Wound Penalties follow from the Size, so there's nothing to type for them. Check them against the book's. [Go there](go:tab-cr-combat)
+4. **Powers.** In the [Powers & Vis chapter](help:tab-cr-powers), add each with **Add** in [Powers](help:section-cr-powers). Give its Might cost, Initiative, Form, Range, Duration and Target, and what it does. [Go there](go:tab-cr-powers)
+5. **Check the Penetration.** It's worked out, its Penetration Ability included. If the book's still differs, type the difference as the power's Penetration bonus.
+6. **Vis.** Add the pawns in its body with **Add** in [Vis in its body](help:section-cr-vis).
+7. **Appearance.** In the [Description chapter](help:tab-cr-description), click **Edit** in [Description](help:section-cr-description) for its appearance, equipment and notes. [Go there](go:tab-cr-description)
 <!-- /gui -->
 
 ### Tying it into the saga
@@ -1096,40 +1128,44 @@ Link the creature to the neighbours it belongs with, such as the threat it serve
 
 **See also:** [The Bestiary](help:bestiary), [A creature](help:creature)
 
-
 # How to set up a faction's leader and members
 <!-- help: guide-faction -->
 
-A faction's page can name its leader and list its members, each a link to its record, so the troupe can follow the court from its queen to her courtiers and back. The same works for a lord and his vassals, or a bishop and his churches.
+The troupe keeps running into the faerie court, and you want its page to lead from the queen to her courtiers and back.
+
+A faction's page can name its leader and list its members, each a link to its record. The same works for a lord and the vassals, or a bishop and the churches.
 
 ### The leader
 <!-- help: guide-faction-leader -->
 
-1. Make the leader's record first, if the saga has none: a character for a mortal, a neighbour for another company, or a creature in the [Bestiary](help:bestiary) for a faerie, a demon or a beast (see [How to add a creature from a book](help:guide-bestiary)).
+1. **Make the leader's record first**, if the saga has none. Make a character for a mortal, a neighbour for another company, or a creature in the [Bestiary](help:bestiary) for a faerie, a demon or a beast (see [How to add a creature from a book](help:guide-bestiary)).
 <!-- tui -->
-2. On the faction's sheet press `e`, and choose **Ruler or leader**. Pick the leader from the list (it is headed Characters, Neighbours and Bestiary; type to search), or choose **Type a name...** for one the saga has no record of yet.
+2. **Choose the leader.** On the faction's sheet press `e`, and choose **Ruler or leader**. Pick the leader from the list, headed Characters, Neighbours and Bestiary (type to search). Or choose **Type a name...** for one the saga has no record of yet.
 <!-- /tui -->
 <!-- gui -->
-2. On the faction's page click **Edit**, and click **Ruler or leader**. Pick the leader from the list (it is headed Characters, Neighbours and Bestiary; type to search), or choose **Type a name...** for one the saga has no record of yet.
+2. **Choose the leader.** On the faction's page click **Edit**, and click **Ruler or leader**. Pick the leader from the list, headed Characters, Neighbours and Bestiary (type to search). Or choose **Type a name...** for one the saga has no record of yet.
 <!-- /gui -->
-3. Save. The leader's name on the faction's page now opens their record, and the leader lists the faction under **Rules**: a character in their sheet's [Connections](help:section-connections), a creature or neighbour on its page.
+3. **Save.** The leader's name on the faction's page now opens their record. The leader lists the faction under **Rules**, a character in their sheet's [Connections](help:section-connections), a creature or neighbour on its page.
 
 ### The members
 <!-- help: guide-faction-members -->
 
+A member with a record can be a character, a covenant, a Bestiary creature, or a neighbour such as a courtier or a branch of the gild.
+
 <!-- tui -->
-- **A member with a record** (a character, a covenant, a Bestiary creature, or a neighbour such as a courtier or a branch of the gild): on the faction's Faction tab, go to **Members** and press `a`. Choose their record (filter by Kind, or type to search) and type their **Role** in it.
+1. **Add a member.** On the faction's Faction tab, go to **Members** and press `a`.
 <!-- /tui -->
 <!-- gui -->
-- **A member with a record** (a character, a covenant, a Bestiary creature, or a neighbour such as a courtier or a branch of the gild): on the faction's Faction chapter, click **Add** on **Members**. Choose their record (filter by Kind, or type to search) and type their **Role** in it.
+1. **Add a member.** In the faction's Faction chapter, click **Add** on **Members**.
 <!-- /gui -->
-- Their page then lists the faction under **Member of**, with the role (a character's in its [Connections](help:section-connections)). One record can be a member of several factions.
-- **Members with no record**: type how many there are in the faction's **Members**.
+2. **Choose their record.** Filter by Kind, or type to search, and type their **Role** in the faction.
+3. **Save.** Their page now lists the faction under **Member of**, with the role. A character's shows it in their [Connections](help:section-connections). One record can be a member of several factions.
+4. **Count the rest.** For members with no record, type how many there are in the faction's **Members**.
 
 ### Following them
 <!-- help: guide-faction-follow -->
 
-Every name the faction's page links opens that record (see [Following a record's links](help:record-links)), and a member's Connections lead back to the faction, so you can go from the court to a courtier and on to every other faction they belong to.
+Every name the faction's page links opens that record (see [Following a record's links](help:record-links)). A member's Connections lead back to the faction, so you can go from the court to a courtier and on to every other faction they belong to.
 <!-- gui -->
 Click it, and **Back** brings you to the faction again.
 <!-- /gui -->
@@ -1140,192 +1176,244 @@ Click it, or press `m` and choose **Go To** for a list of them all.
 ### Its history
 <!-- help: guide-faction-diary -->
 
-What the faction does over the saga goes in its **Diary**, a line a season, rather than in its summary (see [Diary](help:tab-nb-faction-diary)). Add an entry for each season it acts: a scheme begun, a member lost, a quarrel with a covenant.
+What the faction does over the saga goes in its **Diary**, a line a season, rather than in its summary (see [Diary](help:tab-nb-faction-diary)). Add an entry for each season it acts, such as a scheme begun, a member lost or a quarrel with a covenant.
 
 **See also:** [A faction](help:tab-nb-faction), [Ruler or Leader](help:neighbour-ruler), [A neighbour](help:neighbour)
-
 
 # How to fight a battle
 <!-- help: guide-battle -->
 
-Lords of Men plays a battle as a few events, each a fight with a player character at its heart, rather than every blow. The app keeps the battle in the saga's Conflicts, between two armies, and shows it in the **Fief** of each lord it names; it works out each event's total.
+The baron's knights meet the count's levies at the ford, and one of your companions is in the thick of it.
+
+Lords of Men plays a battle as a few events, each a fight with a player character at its heart, rather than every blow. The app keeps the battle in the saga's Conflicts, between two armies, and shows it in the **Fief** of each lord it names. It works out each event's total.
 
 ### Before the battle
 <!-- help: guide-battle-setup -->
 
-1. Open the lord's sheet (a neighbour of the lord kind) and go to its **Fief** (a tab on the terminal, a chapter on the desktop), or open **Conflicts**.
 <!-- tui -->
-2. In [Battles](help:section-nb-battles), press `a`.
+1. **Open the battles.** Open the lord's sheet, a neighbour of the lord kind, and go to its **Fief** tab. Or open **Conflicts**.
+2. **Add a battle.** In [Battles](help:section-nb-battles), press `a`.
 <!-- /tui -->
 <!-- gui -->
-2. Under [Battles](help:section-nb-battles), click **Add**.
+1. **Open the battles.** Open the lord's page, a neighbour of the lord kind, and go to its **Fief** chapter. Or open **Conflicts**.
+2. **Add a battle.** Under [Battles](help:section-nb-battles), click **Add**.
 <!-- /gui -->
-3. Name the battle and choose its two armies: each a lord, town or other power of the Region, a covenant, or just a name. Added from a lord's Fief, the first army is his. To pit two lords against each other, choose both.
-4. Leave an army's **combat groups** blank and a lord's title fills them in (the groups of five his knights, serjeants, infantry and levies make, the levies only when he fights on his home ground, which the form asks); then add his allies (a Presence + Leadership + Affinity roll: 6 adds half his forces, 12 as many again, 18 double, 24 treble) and the mercenaries he hires. Type a covenant's or a named army's groups.
-5. Each commander rolls Intelligence + Area Lore + a stress die for a **Deployment Total**; type both. The difference is the first army's **Ground** in every event, and the second's as much below 0.
-6. Leave **baggage groups** blank for as many as each army needs (one for every ten combat groups), or type fewer. Save.
+3. **Name it and choose the armies.** Each army is a lord, town or other power of the Region, a covenant, or just a name. Added from a lord's Fief, the first army is that lord's. To pit two lords against each other, choose both.
+4. **Fill in the combat groups.** Leave a lord's army's **combat groups** blank and the lord's title fills them in, in groups of five. Levies come only when the lord fights on home ground, which the form asks. Type a covenant's or a named army's groups.
+5. **Add allies and mercenaries.** Add the allies the lord raises and the mercenaries they hire (see [Muster and Aftermath](help:battle-muster)).
+6. **Type the Deployment Totals.** Each commander rolls Intelligence + Area Lore + a stress die. Type both. The difference is the first army's **Ground** in every event, and the second's as much below 0.
+7. **Set the baggage and save.** Leave **baggage groups** blank for as many as each army needs (one for every ten combat groups), or type fewer. Save.
 
 ### Each event
 <!-- help: guide-battle-events -->
 
 <!-- tui -->
-1. With the battle chosen, press `m` and choose **Battle Event**.
+1. **Open the event.** With the battle chosen, press `m` and choose **Battle Event**.
 <!-- /tui -->
 <!-- gui -->
-1. Choose the battle and click **Battle Event**.
+1. **Open the event.** Choose the battle and click **Battle Event**.
 <!-- /gui -->
-2. Choose the character at the heart of the event, the army they fight for, and its Maneuver, Enemy and Size. The line above Record shows the Event Total and whether it reaches this stage's Ease Factor (9, then 12, then 15). A total too low can't win, so pick a smaller task or give up the initiative for +1.
-3. Play the event out as an ordinary fight with the character and the enemies it names.
-4. Back in the form, say who won, type the losing commander's Morale roll (and, if it failed, his rally at the next event), and click **Record**. The losing side loses combat groups, and the battle's line shows the new numbers for the next event.
+2. **Choose who leads it.** Choose the character at the heart of the event, the army they fight for, and its Maneuver, Enemy and Size.
+3. **Check the total.** The line above Record shows the Event Total and whether it reaches this stage's Ease Factor (see [Battle Event](help:battle-event)). A total too low can't win, so pick a smaller task, or give up the initiative for +1.
+4. **Play it out.** Play the event as an ordinary fight with the character and the enemies it names. Tick **Play it out as a fight** to have the app make it a fight in Conflicts.
+5. **Record the result.** Back in the form, say who won and type the losing commander's Morale roll, and their rally at the next event if it failed. Click **Record**. The losing side loses combat groups, and the battle's line shows the new numbers for the next event.
 
-Most battles take three events. When one side has won enough of them, or its commander fails a Morale roll and then his rally, the battle is over. Each event is already written in each army's lord's or covenant's Diary; add a line there saying how the battle ended. See [Battle Event](help:battle-event).
+Most battles take three events. The battle is over when one side has won enough of them, or its commander fails a Morale roll and then the rally. Each event is already written in the Diary of each army's lord or covenant. Add a line there saying how the battle ended.
 
-**See also:** [Battles](help:section-nb-battles), [A lord](help:tab-nb-fief)
-
+**See also:** [Battles](help:section-nb-battles), [Battle Event](help:battle-event), [Muster and Aftermath](help:battle-muster), [A lord](help:tab-nb-fief)
 
 # How to run a fight
 <!-- help: guide-fights -->
 
+Bandits rush the magus and two grogs on the road home, and you want the blows worked out at the table.
+
 <!-- tui -->
-1. Select **Conflicts** in the tree. In the Fights list press `a`, name the fight and its two sides, and save.
-2. With the fight chosen, press `m` and choose **Add Combatant** for each fighter: the player characters with their weapons, Bestiary creatures (as many as you like at once), or a typed stat block.
-3. To make grogs fight together, press `m` > **Form a Group**, tick its members, and choose the vanguard (and, for a trained group, the leader).
-4. Press `m` > **Next Blow**. The first one rolls Initiative. Choose an action and a target; **The Blow to Come** box under the fields says what it will roll. Then **Strike**: the panel shows the blow worked out and the chronicle. A magus can **Cast a spell** there, and anyone holding a device can **Use a device**.
-5. **Next Round** plays the rest of a round for you. Keep going until one side has nobody standing.
+1. **Make the fight.** Select **Conflicts** in the tree. In the Fights list press `a`, name the fight and its two sides, and save.
+2. **Add the fighters.** With the fight chosen, press `m` and choose **Add Combatant** for each fighter: the player characters with their weapons, Bestiary creatures (as many as you like at once), or a typed stat block.
+3. **Group the grogs.** To make grogs fight together, press `m` > **Form a Group**, tick its members, and choose the vanguard, and for a trained group the leader.
+4. **Take the first blow.** Press `m` > **Next Blow**. The first one rolls Initiative. Choose an action and a target. **The Blow to Come** box under the fields says what it will roll.
+5. **Strike.** Choose **Strike**. The panel shows the blow worked out and the chronicle. A magus can **Cast a spell** there, and anyone holding a device can **Use a device**.
+6. **Play on.** **Next Round** plays the rest of a round for you. Keep going until one side has nobody standing.
 <!-- /tui -->
 <!-- gui -->
-1. On the saga's page, open the **Conflicts** chapter and click **Add** on Fights. Name the fight and its two sides, and save; then open the fight.
-2. Click **Add Combatant** for each fighter: the player characters with their weapons, Bestiary creatures (as many as you like at once), or a typed stat block.
-3. To make grogs fight together, click **Form a Group**, tick its members, and choose the vanguard (and, for a trained group, the leader).
-4. Click **Next Blow**. The first one rolls Initiative; the ribbon at the top then shows the order of blows, as medallions in the saga's set. Choose an action and a target; **The Blow to Come** at the foot of the form says what it will roll. Then **Strike**: The Blow shows the working, and the chronicle below grows a line. A magus can **Cast a spell** there, and anyone holding a device can **Use a device**.
-5. **Next Round** plays the rest of a round for you. Keep going until one side has nobody standing.
+1. **Make the fight.** On the saga's page, open the **Conflicts** chapter and click **Add** on Fights. Name the fight and its two sides, and save. Then open the fight.
+2. **Add the fighters.** Click **Add Combatant** for each fighter: the player characters with their weapons, Bestiary creatures (as many as you like at once), or a typed stat block.
+3. **Group the grogs.** To make grogs fight together, click **Form a Group**, tick its members, and choose the vanguard, and for a trained group the leader.
+4. **Take the first blow.** Click **Next Blow**. The first one rolls Initiative, and the ribbon at the top then shows the order of blows, as medallions in the saga's set. Choose an action and a target. **The Blow to Come** at the foot of the form says what it will roll.
+5. **Strike.** Click **Strike**. The Blow shows the working, and the chronicle below grows a line. A magus can **Cast a spell** there, and anyone holding a device can **Use a device**.
+6. **Play on.** **Next Round** plays the rest of a round for you. Keep going until one side has nobody standing.
 <!-- /gui -->
 
-For a knight on horseback, tick **Mounted** when you add him; for shield
-grogs, set **Defends** to the magus on each grog. If the sides start apart,
-set **Range increments** on Edit Fight: only missiles strike until you set
-it back to 0 as they close.
+A few fighters need one more setting:
 
-Wounds the characters take go straight onto their sheets, so after the
-fight, recover from them as usual (Health's Recovery Roll).
+- **A knight on horseback.** Tick **Mounted** when you add them.
+- **Shield grogs.** Set **Defends** to the magus on each grog.
+- **Sides that start apart.** Set **Range increments** on Edit Fight. Only missiles strike until you set it back to 0 as they close.
+
+Wounds the characters take go straight onto their sheets. After the fight, recover from them as usual, with Health's Recovery Roll.
 
 **See also:** [A fight](help:fights), [Conflicts](help:conflicts)
 
 # How to run a siege
 <!-- help: guide-sieges -->
 
-1. Add a siege to the Sieges list in Conflicts, or in the besieging lord's Fief. Give the castle's Size, Garrison, Defenses and Supplies (the form's hints give each step's interval and bonus), the besiegers' miners, engines and soldiers, where each side stands at the four walls, and the experts' totals. For one lord besieging another, link **The castle in the Region** to the lord holding it and **The besieging lord** to the attacker: leave the Garrison and the soldiers blank and their armies fill them in, and the siege shows in both lords' Fiefs.
-2. Play it with **Next Siege Event**. Each time, choose the besiegers' move (or the garrison's sally), and for an escalade or a sally play the battlefield event out and say who won.
-3. The siege moves on by the castle's interval each time, and any supplies roll that comes due is made for you, each an interval after the last. Each line of the chronicle gives the day of the siege it came on; the siege's page shows every event, and the page scrolls.
-4. When the castle surrenders or is breached, the siege says so. If the besiegers give up, edit it and set Ended to Raised.
+The count's army has ringed the castle, the garrison won't come out, and the troupe wants to know how long the walls will hold.
+
+1. **Add the siege.** Add a siege to the Sieges list in Conflicts, or in the besieging lord's Fief.
+2. **Describe the castle.** Give its Size, Garrison, Defenses and Supplies. The form's hints give each step's interval and bonus.
+3. **Describe the besiegers.** Give their miners, engines and soldiers, where each side stands at the four walls, and the experts' totals.
+4. **Link two lords.** For one lord besieging another, link **The castle in the Region** to the lord holding it and **The besieging lord** to the attacker. Leave the Garrison and the soldiers blank, and their armies fill them in. The siege then shows in both lords' Fiefs.
+5. **Play an event.** Choose **Next Siege Event**, then the besiegers' move or the garrison's sally. For an escalade or a sally, play the battlefield event out and say who won.
+6. **Watch the days pass.** The siege moves on by the castle's interval each time, and any supplies roll that comes due is made for you, each an interval after the last. Each line of the chronicle gives the day of the siege it came on. The siege's page shows every event, and the page scrolls.
+7. **End it.** When the castle surrenders or is breached, the siege says so. If the besiegers give up, edit it and set Ended to Raised.
 
 **See also:** [A siege](help:sieges), [How to fight a battle](help:guide-battle-events)
-
 
 # How to play a hedge wizard
 <!-- help: guide-hedge-magic -->
 
-A hedge wizard belongs to a non-Hermetic tradition, such as the folk witches, the gruagachan or the vitkir, with Arts and Abilities of their own. The app has the six traditions of Hedge Magic Revised Edition and those of the Realms of Power books, Houses of Hermes: Societates (as Ex Miscellanea traditions), the Tribunal and regional books, Rival Magic and Ancient Magic: each is offered once its book is in play and the saga turns it on.
+A player wants a folk witch for the troupe, someone with a craft of their own rather than a Hermetic Gift and a laboratory.
+
+A hedge wizard belongs to a non-Hermetic tradition, such as the folk witches, the gruagachan or the vitkir, with Arts and Abilities of their own. Each tradition is offered once its book is in play and the saga turns it on. The app has the traditions of these books:
+
+- the six traditions of Hedge Magic Revised Edition
+- the Realms of Power books, the Tribunal and regional books, Rival Magic and Ancient Magic
+- Houses of Hermes: Societates, as Ex Miscellanea traditions
 
 ### Offering the tradition
 <!-- help: guide-hedge-magic-offer -->
 
 <!-- tui -->
-1. Put Hedge Magic Revised Edition in play: on [Saga Content](help:section-books-in-play), press `e` in Books in Play and tick it.
-2. Its traditions are offered at once. To keep the pickers short, open [Traditions Offered](help:section-traditions), below the books, press `e` and untick the traditions your saga doesn't use.
+1. **Put the book in play.** On [Saga Content](help:section-books-in-play), press `e` in Books in Play and tick Hedge Magic Revised Edition.
+2. **Trim the list.** Its traditions are offered at once. To keep the pickers short, open [Traditions Offered](help:section-traditions), below the books, press `e` and untick the traditions your saga doesn't use.
 <!-- /tui -->
 <!-- gui -->
-1. Put Hedge Magic Revised Edition in play: on [Saga Content](help:section-books-in-play), click its card's **Not in play** chip (under Non-Hermetic Magic), or click **Edit** in Books in Play and tick it.
-2. Its traditions are offered at once. To keep the pickers short, flip the switches of the ones your saga doesn't use in the [Traditions](help:section-traditions) chapter, or the book's heading switch to offer none and then the few you want.
+1. **Put the book in play.** On [Saga Content](help:section-books-in-play), click the **Not in play** chip on Hedge Magic Revised Edition's card, under Non-Hermetic Magic. Or click **Edit** in Books in Play and tick it.
+2. **Trim the list.** Its traditions are offered at once. To keep the pickers short, flip the switches of the ones your saga doesn't use in the [Traditions](help:section-traditions) chapter. Or flip the book's heading switch to offer none, then turn on the few you want.
 <!-- /gui -->
 
 ### Joining it
 <!-- help: guide-hedge-magic-join -->
 
-A new hedge wizard is made on the [Creation Worksheet](help:creation-worksheet): on Concept, **Choose tradition** makes them a member and adds the tradition's Virtues; a Gifted member also takes The Gift there. The **Tradition Training** step then spends the apprenticeship the book gives and, with **Open the Arts**, gives a Gifted member the tradition's Arts at 0. To add a tradition to a character already made, or one In Play:
+A new hedge wizard is made on the [Creation Worksheet](help:creation-worksheet). On Concept, **Choose tradition** makes them a member and adds the tradition's Virtues, and a Gifted member also takes The Gift there. The **Tradition Training** step then spends the apprenticeship the book gives. With **Open the Arts**, it gives a Gifted member the tradition's Arts at 0.
+
+To add a tradition to a character already made, or one In Play:
 
 <!-- tui -->
-1. Make the character as usual (`n`, **New Character**): a hedge wizard is usually a companion, never a magus.
-2. On their sheet's top panel, press `m` (More) and choose **Traditions**. Tick theirs. A tab named after the tradition's magic appears, such as Folk Witch Magic.
-3. Add the tradition's Virtues in [Virtues & Flaws](help:tab-vf): its Social Status (Folk Witch, Gruagach, Vitki...) and the powers the character has.
-4. In the tradition's tab, press `a` to add each Art or Ability they have and type its XP.
+1. **Make the character.** Make them as usual (`n`, **New Character**). A hedge wizard is usually a companion, never a magus.
+2. **Choose the tradition.** On their sheet's top panel, press `m` (More) and choose **Traditions**. Tick theirs. A tab named after the tradition's magic appears, such as Folk Witch Magic.
+3. **Add its Virtues.** In [Virtues & Flaws](help:tab-vf), add the tradition's Social Status (Folk Witch, Gruagach, Vitki...) and the powers the character has.
+4. **Add the Arts.** In the tradition's tab, press `a` to add each Art or Ability they have and type its XP.
 <!-- /tui -->
 <!-- gui -->
-1. Make the character as usual: a hedge wizard is usually a companion, never a magus.
-2. In their Abilities chapter, click **Traditions** and tick theirs. A chapter named after the tradition's magic appears, such as Folk Witch Magic.
-3. Add the tradition's Virtues in [Virtues & Flaws](help:tab-vf): its Social Status (Folk Witch, Gruagach, Vitki...) and the powers the character has.
-4. In the tradition's chapter, click **Add** for each Art or Ability they have and type its XP.
+1. **Make the character.** Make them as usual. A hedge wizard is usually a companion, never a magus.
+2. **Choose the tradition.** In their Abilities chapter, click **Traditions** and tick theirs. A chapter named after the tradition's magic appears, such as Folk Witch Magic.
+3. **Add its Virtues.** In [Virtues & Flaws](help:tab-vf), add the tradition's Social Status (Folk Witch, Gruagach, Vitki...) and the powers the character has.
+4. **Add the Arts.** In the tradition's chapter, click **Add** for each Art or Ability they have and type its XP.
 <!-- /gui -->
 
 ### What the app works out
 <!-- help: guide-hedge-magic-app -->
 
-Each Art's score comes from its XP on the table its book gives it: most hedge Arts and the vitkir's runes advance on the Art table, as Hermetic Arts do, and a Difficult Art (Elementalist Fire, the gruagach's Give and Take, the learned magicians' Techniques) on the Ability table. The [chapter](help:tradition-chapter) works out the rest: each power's Casting Score and Lab Total, the tradition's Magical Defenses, its gatherings' bonuses (a folk witch's sabbat) and the guidelines for its effects; More's [Cast a Power](help:hedge-cast) rolls a casting there and then. At creation, Tradition Training spends the apprenticeship the book gives, and the ten years of it that a folk witch spends from about age ten are left out of Later Life, as a magus's are (Hedge Magic RE p. 34). Sorginak and bouda train as folk witches do (Faith and Flame pp. 93-94; Between Sand and Sea p. 119), and settuten for ten years from 7 to 12, which the app takes as 10 (Between Sand and Sea pp. 95-96). The Bedouin hakima's book gives no years, so none are left out.
+Each Art's score comes from its XP on the table its book gives it. Most hedge Arts and the vitkir's runes advance on the Art table, as Hermetic Arts do. A Difficult Art, such as Elementalist Fire, the gruagach's Give and Take or the learned magicians' Techniques, advances on the Ability table.
+
+The [chapter](help:tradition-chapter) works out the rest, such as each power's Casting Score and Lab Total, the tradition's Magical Defenses, its gatherings' bonuses (a folk witch's sabbat) and the guidelines for its effects. More's [Cast a Power](help:hedge-cast) rolls a casting there and then.
+
+At creation, Tradition Training spends the apprenticeship the book gives. The ten years of it that a folk witch spends from about age ten are left out of Later Life, as a magus's are (Hedge Magic RE p. 34). Sorginak and bouda train as folk witches do (Faith and Flame pp. 93-94; Between Sand and Sea p. 119). Settuten train for ten years from 7 to 12, which the app takes as 10 (Between Sand and Sea pp. 95-96). The Bedouin hakima's book gives no years, so none are left out.
 
 **See also:** [A tradition's chapter](help:tradition-chapter), [Traditions Offered](help:section-traditions), [Abilities](help:tab-abilities)
-
 
 # How to play a galdraman
 <!-- help: guide-galdor -->
 
-Iceland's two magus-equivalents are hedge wizards here. They are Gifted companions, the equal of a magus at the table (Hedge Magic RE p. 11), with no Magic Resistance and no Twilight, as Hedge Magic gives every hedge tradition (p. 10). That is the app's conversion: *Land of Fire and Ice*, written for the 4th edition, lets galdramen enter Twilight (p. 50) and gives trollsynir Magic Resistance (p. 53). Both come with *Land of Fire and Ice* in play.
+Your saga sails to Iceland, and a player wants a galdraman who sings the land spirits into service.
 
-**A traditional galdraman** takes the tradition Traditional Galdramen, whose chapter is Galdor. His Virtues come free: Free Expression, Second Sight, Premonitions, Galdor Conjuring and Galdor Enchantment. On the worksheet, give him The Gift, then use the Concept step's Add the tradition's Virtues. Take Deleterious Circumstances (touching the ground) as well; the totals are halved on the ground either way. Spend his xp on Galdor Wisdom, Music, Bargain and two Song Talents; a Song can't pass Galdor Wisdom. It goes up by practice and experience, never by teaching.
+Iceland's two magus-equivalents are hedge wizards here, and both come with *Land of Fire and Ice* in play. They're Gifted companions, the equal of a magus at the table (Hedge Magic RE p. 11). They have no Magic Resistance and no Twilight, as Hedge Magic gives every hedge tradition (p. 10). That's the app's conversion. *Land of Fire and Ice*, written for the 4th edition, lets galdramen enter Twilight (p. 50) and gives trollsynir Magic Resistance (p. 53).
+
+### A traditional galdraman
+<!-- help: guide-galdor-traditional -->
+
+1. **Make a Gifted companion.** On the worksheet, give the character The Gift.
+2. **Join the tradition.** Choose the tradition Traditional Galdramen, whose chapter is Galdor. Then use the Concept step's **Add the tradition's Virtues**. Its Virtues come free: Free Expression, Second Sight, Premonitions, Galdor Conjuring and Galdor Enchantment.
+3. **Take the ground's Flaw.** Take Deleterious Circumstances (touching the ground) as well. The totals are halved on the ground either way.
+4. **Spend their xp.** Spend it on Galdor Wisdom, Music, Bargain and two Song Talents. A Song can't pass Galdor Wisdom, and it goes up by practice and experience, never by teaching.
+
+In play, a galdraman works in three ways:
 
 1. **Sing** with [Conjure a Spirit](help:galdor-conjure) for anything up to Concentration.
 2. **Go to a lord** with [Bargain with a Lord](help:galdor-bargain) for anything longer. The deal stays in Bound Beings, with the vis it tithes a year.
 3. **Make things** with [Bind an Item](help:galdor-bind), after a deal.
 
-For longevity, strike a deal with biarg-galdor, conjure the biarg spirit as a ritual, and enter the conjuring total as a Longevity Ritual on his sheet; the mead takes a pawn a decade of his age each year. The app doesn't track Galdor Wisdom falling to 0 in another country.
+For longevity, strike a deal with biarg-galdor, conjure the biarg spirit as a ritual, and enter the conjuring total as a Longevity Ritual on the character's sheet. The mead takes a pawn a decade of their age each year. The app doesn't track Galdor Wisdom falling to 0 in another country.
 
 Curse and Hamfarir roll through [Cast a Power](help:hedge-cast). Curse has its Ease Factors as guidelines. A nidstong is a Curse that rolls daily while it stands.
 
-**A trollson** takes the tradition Trollsynir, whose chapter is Trollskap. He casts as a gruagach, with Jotnar for Pictish (see [hedge wizards](help:guide-hedge-magic)). He must have Giant Blood (*Land of Fire and Ice* p. 52) and, as the app's conversion to a gruagach, No Tattoo Magic.
+### A trollson
+<!-- help: guide-galdor-trollson -->
 
-**Fylgjur.** Premonitions brings a fylgja, of Might 10 and Size -3 at most; a trollson's is the Fetch. Take Mighty Fylgja as often as you like (the book makes it one Virtue with points put into it, p. 54; the app takes it again for each) for 10 Might and the next of Phantom, Spirit Voice and Corporeality, and Large Fylgja for its Size: the first allows Size 0, and each more +1. The chapter's Bound Beings shows what he has. Hamfarir is the Virtue that lets him use them.
+A trollson takes the tradition Trollsynir, whose chapter is Trollskap. They cast as a gruagach does, with Jotnar for Pictish (see [hedge wizards](help:guide-hedge-magic)). They must have Giant Blood (*Land of Fire and Ice* p. 52) and, as the app's conversion to a gruagach, No Tattoo Magic.
 
-**Other Icelanders.** A schooled galdraman is a Learned Magician and a seithkona a Folk Witch with Hamfarir. A bondi, a landowner or a godi takes that Social Status, which sits beside Galdraman if he is both.
+### Fylgjur
+<!-- help: guide-galdor-fylgja -->
+
+Premonitions brings a fylgja, of Might 10 and Size -3 at most. A trollson's is the Fetch.
+
+- **Mighty Fylgja** gives 10 Might and the next of Phantom, Spirit Voice and Corporeality. Take it as often as you like. The book makes it one Virtue with points put into it (p. 54), and the app takes it again for each.
+- **Large Fylgja** sets its Size. The first allows Size 0, and each more +1.
+
+The chapter's Bound Beings shows the fylgjur a character has. Hamfarir is the Virtue that lets them use them.
+
+### Other Icelanders
+<!-- help: guide-galdor-others -->
+
+A schooled galdraman is a Learned Magician, and a seithkona a Folk Witch with Hamfarir. A bondi, a landowner or a godi takes that Social Status, which sits beside Galdraman for a character who is both.
+
+**See also:** [How to play a hedge wizard](help:guide-hedge-magic), [A tradition's chapter](help:tradition-chapter), [How to start a saga from a sourcebook](help:guide-book-packs-iceland)
 
 # How to keep homebrew in a source
 <!-- help: guide-homebrew-source -->
 
-A saga source is a book of your own: a house-rules list, a fan supplement, or a book the app doesn't have yet. Whatever cites it goes in and out of play with it, as a supplement's entries do, so a set of homebrew can be tried and set aside without deleting anything.
+Your troupe wants to try a handful of house-rule Virtues for a season or two, and set them aside again if they don't work.
+
+A saga source is a book of your own, such as a house-rules list, a fan supplement, or a book the app doesn't have yet. Whatever cites it goes in and out of play with it, as a supplement's entries do, so a set of homebrew can be tried and set aside without deleting anything.
 
 ### Making the source
 <!-- help: guide-homebrew-source-make -->
 
 <!-- tui -->
-1. On [Saga Content](help:tab-content-books), go to Saga Sources and press `a`. Give it a short Abbreviation (HR, say) and a Title.
-2. It starts in play, and appears among the books in Books in Play.
+1. **Add the source.** On [Saga Content](help:tab-content-books), go to Saga Sources and press `a`. Give it a short Abbreviation (HR, say) and a Title.
+2. **Find it in play.** It starts in play, and appears among the books in Books in Play.
 <!-- /tui -->
 <!-- gui -->
-1. On [Saga Content](help:tab-content-books)'s Books chapter, click **Add** in Saga Sources. Give it a short Abbreviation (HR, say) and a Title.
-2. It starts in play, with a card under The Saga's Own Sources in Books in Play.
+1. **Add the source.** On [Saga Content](help:tab-content-books)'s Books chapter, click **Add** in Saga Sources. Give it a short Abbreviation (HR, say) and a Title.
+2. **Find it in play.** It starts in play, with a card under The Saga's Own Sources in Books in Play.
 <!-- /gui -->
 
 ### Putting entries in it
 <!-- help: guide-homebrew-source-cite -->
 
-Once the saga has a source, the forms for its own entries have a **Source**: House Rules (Virtues, Flaws, Boons, Hooks and Abilities), its own spells, its own goods and its Mystery Cults. Choose the source there as you add or edit each one.
+Once the saga has a source, the forms for its own entries have a **Source**. That covers House Rules (Virtues, Flaws, Boons, Hooks and Abilities), its own spells, its own goods and its Mystery Cults.
 
+1. **Cite it on a new entry.** Choose the source in **Source** as you add or edit each one.
 <!-- tui -->
-To move House Rules you already made, press `m` (More) on House Rules and choose **Move to Source**: choose the source, tick the entries and save.
+2. **Move entries you already made.** Press `m` (More) on House Rules and choose **Move to Source**. Choose the source, tick the entries and save.
 <!-- /tui -->
 <!-- gui -->
-To move House Rules you already made, click **Move to Source** on House Rules: choose the source, tick the entries and save.
+2. **Move entries you already made.** Click **Move to Source** on House Rules. Choose the source, tick the entries and save.
 <!-- /gui -->
 
 ### Taking it out of play
 <!-- help: guide-homebrew-source-play -->
 
-Take the source out of play as you would a book, in [Books in Play](help:section-books-in-play). The pickers then leave out its House Rules, the spell lists its spells and Initiation its cults' Scripts, and its goods are marked "(not in play)". What characters, covenants and laboratories already hold stays. Put it back in play and everything returns.
+1. **Take it out of play.** Do it as you would a book, in [Books in Play](help:section-books-in-play). The pickers then leave out its House Rules, the spell lists its spells and Initiation its cults' Scripts. Its goods are marked "(not in play)".
+2. **Check what stays.** What characters, covenants and laboratories already hold stays.
+3. **Bring it back.** Put it back in play and everything returns.
 
-A source can't be deleted while anything cites it: the message names what does. Renaming its abbreviation carries to all of them.
+A source can't be deleted while anything cites it, and the message names what does. Renaming its abbreviation carries to all of them.
 
 Library books, creatures and Lab Texts are the saga's records, not catalog entries, so they don't cite a source.
 
 **See also:** [Saga Sources](help:section-saga-sources), [House Rules](help:section-house-rules), [Books in Play](help:section-books-in-play)
-
 
 # How to hold a Tribunal
 <!-- help: guide-tribunal -->
