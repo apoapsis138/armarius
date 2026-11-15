@@ -780,7 +780,7 @@ The three folders, `data`, `keys` and `backups`, are owned by the app's own user
 sudo install -d -o 10001 -g 10001 -m 700 data keys backups
 ```
 
-`keys` holds the host key. On a Linux computer, an encrypted disk is a good home for it (set `KEYS_DIR` in `.env` to it). A NAS's encrypted shared folder isn't (see [A UGREEN NAS](help:guide-self-hosting-nas)).
+`keys` holds the host key. An encrypted disk or volume is the best home for it (set `KEYS_DIR` in `.env` to it). A NAS's encrypted shared folder will do if the app's user can use it: try it first, and if it can't, use a plain private folder instead. UGOS's can't (see [A UGREEN NAS](help:guide-self-hosting-nas)).
 
 The compose file runs the app locked down. It runs as its own user, with its system files read-only, no extra privileges, 512 MB of memory at most, and no port published.
 
@@ -889,8 +889,9 @@ can't find.
   can't be given a fresh key in its place. Unlock the volume, or, the
   first time, make the folder as the message says.
 - **"Input/output error" or "Not a directory" in the keys folder.** It's
-  an encrypted shared folder of the NAS's, which the app's user can't
-  use. Use an ordinary folder (see [A UGREEN NAS](help:guide-self-hosting-nas)).
+  an encrypted shared folder of the NAS's that the app's user can't use
+  (as on UGOS). Use a plain private folder instead (see
+  [A UGREEN NAS](help:guide-self-hosting-nas)).
 - **A folder shows `d---------` after `setfacl -b`.** Set its modes
   again with `sudo chmod 700 PATH`.
 - **Testing as the app's user.** `sudo -u` can't, since the NAS has no
@@ -992,10 +993,27 @@ or a key in it, if it belongs to another user, or if the app runs as the
 administrator (root).
 
 Whoever can read that folder can pretend to be your host. On a NAS that's
-its administrators, and anyone who may run Docker there. Keep it on an
-encrypted disk where the system offers one, but not on a NAS's encrypted
-shared folder, which the app's user can't use (see
-[A UGREEN NAS](help:guide-self-hosting-nas)).
+its administrators, and anyone who may run Docker there.
+
+Where to keep it:
+
+- **A private folder of its own.** Outside the data folder, owned by the
+  app's user (10001) with modes 700, and with any NAS access lists
+  stripped (`sudo setfacl -b FOLDER`). That much is required: the app
+  refuses anything less.
+- **Encrypted, where the server can.** A disk or volume the system
+  encrypts protects the key if someone takes the server's drives. A
+  NAS's encrypted shared folder works too, if the app's user can read
+  and write it. Try it first ([When a step goes wrong](help:guide-self-hosting-trouble)
+  has a test). On UGOS it can't (see [A UGREEN NAS](help:guide-self-hosting-nas)),
+  so use a plain private folder there.
+- **What a plain folder gives up.** It keeps the key from everyone on
+  the server but its administrators, but not from someone who steals
+  the drives. They could read it, and you would rotate it and send
+  everyone a new Invite (see [If the key or the token leaks](help:guide-self-hosting-leak)).
+
+Back the `keys` folder and `tunnel.env` up apart from the nightly
+backups, which never hold them (see [Backups off the server](help:guide-self-hosting-backups)).
 
 When it refuses, it says the fix. That's `sudo chown 10001:10001 FOLDER`
 for a folder made by another user, as a NAS's web pages make them, and
@@ -1025,8 +1043,9 @@ your desktop or in a cloud folder.
 2. **Make a repository.** On your desktop, over SSH: `restic -r sftp:you@desktop:/backups/armarius init`. In a cloud drive such as Dropbox or Google Drive, go through rclone (rclone.org, after setting up a remote called `cloud`) with `restic -r rclone:cloud:armarius init`.
 3. **Back up each night**, after the backup service has run (from `cron` on a Linux computer): `restic -r REPOSITORY backup backups`, then `restic -r REPOSITORY forget --keep-daily 14 --keep-weekly 8 --prune`.
 
-Back the `keys` folder up apart, to a different restic repository with a
-different password, or not at all. A lost key costs only new Invites for
+Back the `keys` folder and `tunnel.env` up apart, to a different restic
+repository with a different password, or not at all. A lost key costs
+only new Invites for
 everyone, while a leaked one lets someone pretend to be your host.
 
 ### If the key or the token leaks

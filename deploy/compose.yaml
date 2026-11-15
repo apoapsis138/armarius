@@ -8,8 +8,8 @@
 #   chmod 600 .env tunnel.env
 #   sudo install -d -o 10001 -g 10001 -m 700 data keys backups
 # (on a NAS, also `sudo setfacl -b data keys backups`, then chmod 700
-# again; not a NAS's encrypted shared folder for keys: the app's user
-# can't use one. Help's guide has the details.)
+# again; a NAS's encrypted shared folder for keys only if the app's
+# user can use it, which UGOS's can't. Help's guide has the details.)
 # Then: docker compose up -d
 #
 # No port is published. The listener answers on 127.0.0.1 inside the
