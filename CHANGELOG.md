@@ -135,6 +135,9 @@ change in it.
 ### Scriptorum
 
 - **One redraw of the footer per tab switch.** Switching a sheet's tab redraws the footer's keys once, even on a busy computer: it waits until the tab is built and focus has moved into it, where a slow machine sometimes redrew them twice.
+### Glossa
+
+- **The help on the web.** Armarius has a website, https://apoapsis138.github.io/armarius/, with the desktop's help and how-to guides, a step-by-step guide to installing it (the download first, running from the source after it), and answers to common setup questions (Windows protected your PC, extracting the zip before running it, Python and uv when running from the source, the save folder and OneDrive). It is rebuilt from the app's own help with each release. Help's About page and Getting started point to it, as does the README.
 
 ## 4.12.0 — 2026-11-12
 
