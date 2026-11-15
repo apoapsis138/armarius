@@ -1,5 +1,5 @@
 ---
-status: proposed
+status: accepted
 ---
 
 # A headless host keeps its key in a file on its own volume

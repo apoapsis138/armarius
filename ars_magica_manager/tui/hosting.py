@@ -30,7 +30,8 @@ from textual_serve.download_manager import DownloadManager
 
 from .. import paths
 from ..hosting import TRANSPORT_VAR, request_allowed
-from ..remote.identity import KeychainStore, KeyStore
+from ..remote.identity import KeyStore
+from ..remote.key_files import key_store
 
 
 class HostedAppService(AppService):
@@ -255,13 +256,13 @@ async def start_ssh_server(
     command: str, host: str, port: int, store: KeyStore | None = None
 ) -> asyncssh.SSHAcceptor:
     """Listen for SSH clients on `host`:`port`; each session runs `command`
-    (the app) as its own copy. The host key is kept in `store` (the
-    keychain unless given)."""
+    (the app) as its own copy. The host key is kept in `store` (unless
+    given, the keychain, or a key folder with ARMARIUS_KEYSTORE=file)."""
     downloads = DownloadManager()
     return await asyncssh.create_server(
         lambda: _Server(command, downloads),
         host,
         port,
-        server_host_keys=[host_key(store or KeychainStore())],
+        server_host_keys=[host_key(store or key_store())],
         encoding=None,
     )

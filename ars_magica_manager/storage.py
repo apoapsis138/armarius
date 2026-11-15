@@ -316,6 +316,14 @@ def _saga_lock(saga_id: str) -> Iterator[None]:
         yield
 
 
+def saga_text_now(saga_id: str) -> str:
+    """The saga's file as it stands, read under the lock every save holds,
+    so a copy taken while another program saves is the whole of one save,
+    never half of two. OSError if it can't be read."""
+    with _saga_lock(saga_id):
+        return saga_path(saga_id).read_text(encoding="utf-8")
+
+
 #: How many backups backup_saga() keeps of each saga: the newest, plus older
 #: ones numbered 1 (the one before) upwards.
 BACKUPS_KEPT = 5

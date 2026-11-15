@@ -22,12 +22,16 @@ HOST = "host"
 SEATS = "seats"
 #: One player's copy of the terminal app (main.py).
 PLAY = "play"
+#: The host's chores from a plain terminal, for a host with no window
+#: (admin.py).
+ADMIN = "admin"
 
 #: What each word runs from a checkout: Python's arguments.
 _FROM_SOURCE: dict[str, list[str]] = {
     HOST: ["-m", "ars_magica_manager.tui.serve"],
     SEATS: ["-m", "ars_magica_manager.remote.serve"],
     PLAY: [str(ROOT / "main.py")],
+    ADMIN: ["-m", "ars_magica_manager.admin"],
 }
 WORDS: frozenset[str] = frozenset(_FROM_SOURCE)
 

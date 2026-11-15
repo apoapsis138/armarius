@@ -1,0 +1,16 @@
+# What deploy/Dockerfile may see of the repository (BuildKit reads this
+# file beside the Dockerfile in place of a .dockerignore): nothing but the
+# app itself, so no virtual environment, cache, notes, key or saga of
+# anyone's is ever sent to the builder.
+*
+!pyproject.toml
+!uv.lock
+!README.md
+!LICENSE
+!NOTICE.md
+!CHANGELOG.md
+!main.py
+!ars_magica_manager/
+!data/
+**/__pycache__
+**/*.pyc

@@ -26,6 +26,9 @@ PATH = "/remote"
 #: The port the tunnel points at unless the Storyguide chose another.
 DEFAULT_PORT = 8790
 LISTEN_ADDRESS = "127.0.0.1"
+#: The saga a headless host serves and looks after when no --saga is
+#: given (its container sets it).
+SAGA_VARIABLE = "ARMARIUS_SAGA"
 
 CLOUDFLARE, OTHER_TUNNEL = "cloudflare", "other"
 #: Each tunnel the listener knows: its label, and the header it puts the

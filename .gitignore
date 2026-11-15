@@ -37,3 +37,11 @@ tests/test_prefer_tools_hook.py
 HANDOFF.md
 # Rules notes and source PDFs live outside the repo.
 reference/
+
+# A headless host's own settings, tunnel token, saga, keys and backups,
+# if it is run from deploy/ in a checkout: never committed.
+deploy/.env
+deploy/tunnel.env
+deploy/data/
+deploy/keys/
+deploy/backups/

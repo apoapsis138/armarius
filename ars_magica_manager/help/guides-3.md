@@ -19,6 +19,8 @@ You don't need Python to run Armarius. Each Release on the app's GitHub page, un
 
 It runs on Linux from Ubuntu 22.04 (and other systems of that age) on. The desktop app needs the usual desktop libraries; if it won't start, run it from a terminal to see which one is missing.
 
+On GNOME, the desktop app draws its windows through X11 (GNOME's XWayland) rather than Wayland, because on Wayland GNOME showed a busy cursor for about 15 seconds after each change of window. If you'd rather use Wayland anyway, start it with `QT_QPA_PLATFORM=wayland ./Armarius`.
+
 ### A newer version
 <!-- help: guide-download-update -->
 
