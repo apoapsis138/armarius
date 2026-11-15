@@ -51,9 +51,9 @@ def test_help_opens_on_the_chapter_on_show_and_goes_back(app):
     page = _help(window)
     assert window.crumb_names()[-2:] == ["Leandro", "Help"]
     entries = page.entries()
-    assert entries[:3] == ["THIS SCREEN", "Hermetic Magic tab", "Character sheet"]
+    assert entries[:3] == ["THIS SCREEN", "Hermetic Magic", "Character sheet"]
     assert page.topic_id == "tab-hermetic"
-    assert "Hermetic Magic tab" in page.shown_text()
+    assert "Hermetic Magic" in page.shown_text()
     # The trail leads back to the sheet.
     window.go(window.trail[:-1])
     assert isinstance(window.page(), CharacterSheet)

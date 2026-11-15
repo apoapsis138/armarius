@@ -55,6 +55,22 @@ def test_the_last_section_runs_to_the_end():
     )
 
 
+def test_each_feature_heading_has_its_plain_name_first():
+    text = (
+        "# Changelog\n\n## Features\n\n"
+        "| Feature | Plain name | What it is |\n| --- | --- | --- |\n"
+        "| Help | Help | Help and its guides |\n"
+        "| Packs | Sourcebook packs | The Tribunal packs |\n\n"
+        + SAMPLE.split("\n", 1)[1]
+    )
+    notes = release_notes.notes(text, "1.2.0")
+    # A plain name the same as the feature's own isn't said twice.
+    assert notes.startswith("### Help\n\n- **How-to guides.**")
+    assert "### Sourcebook packs (Packs)\n\n- **A pack fix.**" in notes
+    # With no Plain name column, the headings stay as written.
+    assert "### Packs\n" in release_notes.notes(SAMPLE, "1.2.0")
+
+
 def test_a_missing_version_fails():
     with pytest.raises(LookupError, match="no '## 1.3.0"):
         release_notes.notes(SAMPLE, "1.3.0")
