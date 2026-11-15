@@ -1580,7 +1580,7 @@ chapter's Faith.
   Plan the painting itself as a season's Create a work of art.
 - **Venerate an Icon**: an eikon venerated adds its Aesthetic Quality / 5,
   rounded up, to invoking its saint (see [Devotion](help:devotion)), or
-  God's aid for an icon of Christ (p. 136). Veneration takes an hour of
+  God's aid for an icon of Christ (pp. 133-134). Veneration takes an hour of
   contemplation. In an
   emergency it takes a Fatigue level and Presence + Concentration + a
   stress die against 15. The saint's miracle comes when the saint decides.
@@ -1857,9 +1857,15 @@ it. The roll and what each Revelation needs are in
 <!-- help: holy-influence -->
 
 Leading others to virtue, or tempering a Divine aura (Realms of Power: The
-Divine, Holy Influence and Tempers, pp. 38-41). The Faith section of
-[Religion](help:tab-religion) offers it to a Christian, Jew or Muslim of
-holy standing. That's clergy, a monk, True Faith, Temporal Influence,
+Divine, Holy Influence and Tempers, pp. 38-41). It's offered to a
+Christian, Jew or Muslim of holy standing,
+<!-- tui -->
+in More on the character's sheet.
+<!-- /tui -->
+<!-- gui -->
+in the Faith section of [Religion](help:tab-religion).
+<!-- /gui -->
+Holy standing is clergy, a monk, True Faith, Temporal Influence,
 Inspirational, or Dominion Lore. A rabbi has it over their community
 (p. 125).
 
@@ -2729,7 +2735,7 @@ Two or more Warping Points at once roll the tradition's answer straight away, as
 
 - **Divine Ascent**, for a holy tradition's member or anyone with a holy Method or Power (Realms of Power: The Divine pp. 63-65). The roll is Presence + Concentration (or Meditation) + stress die against Warping Score + the points + True Faith + the aura + stress die. Only the character's own die can botch. Failing, they gain the margin in Warping Points more. They ascend for Warping Score + every point gained - True Faith days, at least 1, or months from Warping Score 6. The Diary gives what each of the three forms brings: Gloom, Form and Unity.
 - **Vituperation**, for an infernalist (Realms of Power: The Infernal p. 95). Failing, they're torn away as long as Twilight's table gives their Warping Score. The app writes the Aging roll they must make, adding their Warping Score. They gain a Confidence Point a Warping Point at once, unless they botched the avoidance roll. Once the ordeal is over, their Confidence Score rises by 1 if it's below their Warping Score or their Decrepitude. When it's already below the Warping Score, the Diary says so outright. Otherwise it says it depends on the Aging roll's Decrepitude, for you to change on the Character Info form.
-- **Faerie Calling**, for a Faerie tradition's member (Realms of Power: Faerie p. 120). It gives the Ease Factor to act while dazed, the roll that resolves it (a stress die that can botch), and the Faerie Rank from which it's a good Calling. The app keeps no Faerie Rank.
+- **Faerie Calling**, for a Faerie tradition's member (Realms of Power: Faerie p. 120). It gives the Ease Factor to act while dazed, the roll that resolves it (a stress die that can botch), and the Faerie Rank from which it's a good Calling. The character's own Faerie Rank shows under [Aging & Warping](help:section-aging).
 
 **Enter Twilight willingly** skips the roll for an Ascent or a Vituperation too.
 

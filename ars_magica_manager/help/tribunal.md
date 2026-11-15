@@ -11,14 +11,16 @@ A Tribunal follows either the core rules or one region's customs, from
 that region's sourcebook, never a mix. Choose them as **Customs** in Edit
 Tribunal. A region's customs are offered while its book is in play.
 Customs can add lists of their own to the sheet, add a column to the
-roster, and change when notice of a case is due. Switching customs hides
+roster, and could change when notice of a case is due, though none of
+the books' customs does. Switching customs hides
 what the old ones recorded, and switching back shows it again. The
 Rhine, Theban, Transylvanian, Levant, Greater Alps, Stonehenge, Novgorod
 and Hibernian books' Tribunals of 1220 ship as content packs (see [How to
 start a saga from a sourcebook](help:guide-book-packs)).
 
 - **Core rules.** The Definitive Edition's Tribunal. Notice of a case is
-  due a season before the meeting.
+  due a season before the meeting: three months, from Houses of Hermes:
+  True Lineages p. 56, since the Definitive Edition gives no period.
 - **Rhine: Gilds** (Guardians of the Forests). The Rhine's magi band
   together in gilds, each with its leaders and agenda. The sheet gains a
   Gilds list, and the roster a Gild column. Notice is due as under the
