@@ -132,6 +132,13 @@ change in it.
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## Unreleased
+
+### Illuminatio
+
+- **My sheet.** While Playing, your name on the Playing button (or `c`) opens your character's sheet from any page; the trail, Esc or `c` again takes you back.
+- **The trail's switcher.** The last crumb of the trail lists the other people, laboratories or covenants at its level.
+
 ## 4.13.0 — 2026-11-14
 
 ### Castellum

@@ -101,6 +101,15 @@ AREA_TESTS: dict[str, tuple[str, ...]] = {
         "test_gui_stores.py",
     ),
     "ars_magica_manager/gui/stores.py": ("test_gui_stores.py", "test_gui_finder.py"),
+    # My sheet and the trail's switcher: the title bar's chip, the switcher
+    # dropped from the last crumb, and the keys and seats around them.
+    "ars_magica_manager/gui/seat_chip.py": (
+        "test_gui_my_sheet.py",
+        "test_gui_seat.py",
+        "test_gui_join.py",
+    ),
+    "ars_magica_manager/gui/finder.py": ("test_gui_finder.py", "test_gui_my_sheet.py"),
+    "ars_magica_manager/hotkeys.py": ("test_gui_hotkeys.py", "test_gui_my_sheet.py"),
     "ars_magica_manager/tui/screens/sheets/stores.py": (
         "test_list_flows.py",
         "test_finder.py",

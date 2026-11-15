@@ -554,6 +554,16 @@ The window the settings gear opens, holding the theme and the app's other
 settings.
 _Avoid_: Preferences, options, settings menu
 
+**Trail**:
+The row of crumbs across the top of the desktop app, from Sagas down to the
+page on show; each crumb opens its page again.
+_Avoid_: breadcrumbs, path
+
+**My sheet**:
+The sheet of a character you play, one click or key away from any page
+while you are Playing.
+_Avoid_: home, my character page
+
 ### Building the app
 
 **Feature**:
