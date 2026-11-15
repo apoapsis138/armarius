@@ -572,8 +572,8 @@ _Avoid_: home, my character page
 
 **App update**:
 A Release of Armarius newer than the one running, with a Build for this
-platform. A security App update is one whose changelog section has a
-Security heading.
+platform. A security App update is one whose changelog has a bullet marked
+Security:.
 _Avoid_: a bare "Update" (taken by Yearly update and Update from a File),
 patch, upgrade, new version
 

@@ -250,7 +250,7 @@ def test_a_skipped_version_is_hidden_until_a_newer_one(checking: updates.Copy) -
 def test_a_security_update_stands_out_and_cannot_be_skipped(
     checking: updates.Copy,
 ) -> None:
-    body = "### Sodales\n\n- Fixes.\n\n### Security\n\n- **A hole closed.**"
+    body = "### Sodales\n\n- Fixes.\n- **Security:** A hole closed."
     updates.check(checking, now_asked=True, fetch=Fake(_answer("v4.14.0", body)))
     updates.skip("4.14.0")
     notice = updates.notice(checking, running="4.13.1")
@@ -260,11 +260,12 @@ def test_a_security_update_stands_out_and_cannot_be_skipped(
     assert not notice.can_skip and notice.shown
 
 
-def test_only_a_heading_named_security_counts() -> None:
-    assert updates.has_security_heading("## Security")
-    assert updates.has_security_heading("text\n#### security fixes")
-    assert not updates.has_security_heading("- **Security review.** Done.")
-    assert not updates.has_security_heading("Security, mentioned")
+def test_only_a_bullet_marked_security_counts() -> None:
+    assert updates.has_security_marker("- **Security:** A hole closed.")
+    assert updates.has_security_marker("### Sodales\n\n  * **security:** fixed")
+    assert not updates.has_security_marker("### Security\n\n- Closed.")
+    assert not updates.has_security_marker("- **Security review.** Done.")
+    assert not updates.has_security_marker("Security: mentioned in text")
 
 
 def test_a_new_major_version_tells_of_remote_seats(checking: updates.Copy) -> None:

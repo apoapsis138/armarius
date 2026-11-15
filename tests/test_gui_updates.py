@@ -102,7 +102,7 @@ def test_skip_hides_the_line_and_the_badge_but_settings_shows_it_faintly() -> No
 
 @pytest.mark.usefixtures("app", "found")
 def test_a_security_update_uses_the_warning_colour() -> None:
-    remember("99.0.0", "### Security\n\n- Closed.")
+    remember("99.0.0", "### Sodales\n\n- **Security:** Closed.")
     window = _titled()
     assert window.title is not None
     line = window.title.update_line

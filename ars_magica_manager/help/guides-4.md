@@ -2638,8 +2638,8 @@ watching its GitHub page.
 6. **Check now.** **Check now** asks GitHub at once, whenever you like,
    and says what it found, or "Couldn't reach GitHub" and why.
 
-**Security fixes.** When a Release's notes have a Security heading, the
-notice reads "Armarius X.Y.Z is available, with security fixes", in the
+**Security fixes.** When a Release's notes mark a security fix (a line
+starting **Security:**), the notice reads "Armarius X.Y.Z is available, with security fixes", in the
 theme's warning colour, and it can't be skipped. Move to it soon.
 
 **A new major version.** When the first number changes (4 to 5), the

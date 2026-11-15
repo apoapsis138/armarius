@@ -149,11 +149,8 @@ change in it.
 
 - **Told when a newer version is out.** Once a day at most, when it starts, the app asks GitHub for the latest Release, sending only its own version, and never holding up the start. When a newer one is out, the desktop's title page says "! Armarius X.Y.Z is available" beside the version, and the settings gear wears a small "!" seal; the terminal's title page lists **Update** last, and the first saga you open shows the same line once. Nothing is downloaded or installed: getting the new version is done as before.
 - **The Update row.** At the top of the desktop's Settings window, or on the terminal's new Update screen: the new version, its date and the first lines of its notes, with **What's new** for all of them, **Download page** (a copy run from the source says to pull main instead) and **Skip this version**. **Check now** asks at once and says what it found, or that GitHub couldn't be reached and why. **Check for updates when Armarius starts** turns the daily check off, and `ARMARIUS_UPDATES=off` turns every check off.
-- **Security fixes stand out.** A new version whose notes have a Security heading is shown in the theme's warning colour, "with security fixes", and can't be skipped. A new major version says that players who join by Remote seat must move to it too.
+- **Security fixes stand out.** A new version whose notes have a bullet marked **Security:** is shown in the theme's warning colour, "with security fixes", and can't be skipped. A new major version says that players who join by Remote seat must move to it too.
 - **Never on a host.** A copy a host runs for a player, the hosts themselves, the admin command and the container image never check.
-
-### Sodales
-
 - **Version mismatches told plainly.** Joining a host on another major version still stops, and now offers **Update** when yours is the older, or says "Your storyguide's Armarius is older" when theirs is. On another minor version you can play, and the gear's seal and the Settings window say the two versions haven't been tested together. The storyguide's Players list notes a player who last joined on another version.
 
 ### Fundamenta

@@ -67,8 +67,8 @@ Version = tuple[int, int, int]
 
 _TAG = re.compile(r"v?(\d{1,4})\.(\d{1,4})\.(\d{1,6})")
 _DATE = re.compile(r"(\d{4}-\d{2}-\d{2})")
-#: A Markdown heading that names security fixes.
-_SECURITY_HEADING = re.compile(r"^\s{0,3}#{1,6}\s*security\b", re.IGNORECASE)
+#: A changelog bullet marked as a security fix: `- **Security:** ...`.
+_SECURITY_MARKER = re.compile(r"^\s*[-*]\s+\*\*security:\*\*", re.IGNORECASE)
 #: Characters a note never keeps: control characters other than newline and
 #: tab, and the marks that reorder text on screen.
 _UNSAFE = re.compile(
@@ -230,10 +230,11 @@ def plain(text: object, limit: int = MAX_NOTES) -> str:
     return text[:limit].strip()
 
 
-def has_security_heading(notes: str) -> bool:
+def has_security_marker(notes: str) -> bool:
     """Whether the notes (a version's section of the changelog) have a
-    heading named Security."""
-    return any(_SECURITY_HEADING.match(line) for line in notes.splitlines())
+    bullet marked as a security fix: one that starts `**Security:**`,
+    under any feature's heading."""
+    return any(_SECURITY_MARKER.match(line) for line in notes.splitlines())
 
 
 @dataclass(frozen=True)
@@ -248,7 +249,7 @@ class Release:
 
     @property
     def security(self) -> bool:
-        return has_security_heading(self.notes)
+        return has_security_marker(self.notes)
 
     def as_setting(self) -> dict[str, str]:
         return {
