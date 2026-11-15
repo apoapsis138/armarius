@@ -130,6 +130,12 @@ change in it.
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## Unreleased
+
+### Scriptorum
+
+- **One redraw of the footer per tab switch.** Switching a sheet's tab redraws the footer's keys once, even on a busy computer: it waits until the tab is built and focus has moved into it, where a slow machine sometimes redrew them twice.
+
 ## 4.12.0 — 2026-11-12
 
 ### Fundamenta
