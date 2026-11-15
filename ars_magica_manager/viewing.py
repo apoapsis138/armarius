@@ -29,8 +29,9 @@ role."""
 
 from __future__ import annotations
 
+import contextlib
 import re
-from collections.abc import Iterable, Sequence
+from collections.abc import Generator, Iterable, Sequence
 from dataclasses import dataclass, replace
 from typing import Any
 
@@ -301,6 +302,18 @@ def use(viewer: Viewer, saga: Saga | None = None) -> None:
     _others.clear()
 
 
+@contextlib.contextmanager
+def reading_as(viewer: Viewer, saga: Saga | None) -> Generator[None]:
+    """Read as `viewer` while the block runs (a printed copy built for
+    someone other than whoever is looking), then as before."""
+    before = (_in_use, _saga)
+    use(viewer, saga)
+    try:
+        yield
+    finally:
+        use(*before)
+
+
 def current() -> Viewer:
     """Who is looking in this copy of the app."""
     return _in_use
@@ -510,6 +523,8 @@ LOOKING_ACTIONS: frozenset[str] = frozenset(
         "quit",
         "more",
         "export_record",
+        # A sheet as Markdown: it only reads, as its copy's reader may.
+        "export_markdown",
         "go_to",
         "find",
         # A character's changes since the last Session: it only reads.
@@ -740,6 +755,24 @@ def secret_words(record: Any) -> str:
     looks in ("" for a record that keeps none)."""
     found = getattr(record, "secrets", None)
     return words_of(found) if isinstance(found, list) else ""
+
+
+def as_read_by(record: Any, viewer: Viewer, saga: Saga | None = None) -> Any:
+    """`record` as `viewer` may read it, for something that copies it out
+    (a printed sheet): a copy with each Secret they may not read taken out
+    (those not revealed, unless they read it whole) and, on a character,
+    the private notes and unshared goals left off unless they read those.
+    The record itself is left as it is."""
+    changes: dict[str, Any] = {}
+    secrets = getattr(record, "secrets", None)
+    if isinstance(secrets, list) and not holds(viewer, record, saga):
+        changes["secrets"] = [s for s in secrets if s.revealed]
+    if isinstance(record, Character) and not reads_private(viewer, record, saga):
+        changes |= {
+            "private_notes": "",
+            "goals": [g for g in record.goals if g.shared],
+        }
+    return replace(record, **changes) if changes else record
 
 
 # -- facts that name records --

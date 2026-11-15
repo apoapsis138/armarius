@@ -77,6 +77,15 @@ def escape(text: str) -> str:
     return text.replace("[", "\\[")
 
 
+#: A markup tag ([b], [i $label], [/], ...); "\\[" is a literal bracket.
+TAG = re.compile(r"(?<!\\)\[(/?)([^\[\]\n]*)\]")
+
+
+def plain(text: str) -> str:
+    """`text` without its markup: plain words, for a list row or paper."""
+    return TAG.sub("", text).replace("\\[", "[")
+
+
 _EMPHASIS_OPEN = {"*": "[i]", "**": "[b]", "~~": "[s]"}
 _EMPHASIS_CLOSE = {"*": "[/i]", "**": "[/b]", "~~": "[/s]"}
 

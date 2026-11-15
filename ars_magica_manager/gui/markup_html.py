@@ -14,10 +14,9 @@ from __future__ import annotations
 import html
 import re
 
-from ..markup import BULLET, LIST_LINE
+from ..markup import BULLET, LIST_LINE, plain
+from ..markup import TAG as _TAG
 from .themes import Palette
-
-_TAG = re.compile(r"(?<!\\)\[(/?)([^\[\]\n]*)\]")
 
 
 def _open(spec: str, palette: Palette) -> tuple[str, str]:
@@ -109,11 +108,6 @@ def _looks_like_markup(spec: str) -> bool:
     return all(
         word in ("b", "i", "s", "dim") or word.startswith("$") for word in spec.split()
     )
-
-
-def plain(text: str) -> str:
-    """`text` without its markup, for a list row."""
-    return _TAG.sub("", text).replace("\\[", "[")
 
 
 def struck(text: str) -> bool:

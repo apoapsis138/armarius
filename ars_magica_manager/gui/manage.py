@@ -46,6 +46,7 @@ Moded = Character | Covenant | Laboratory
 #: The icon of each entry of the Manage chapter (artwork.ICON_NAMES).
 ICONS: dict[str, str] = {
     "export_record": "export",
+    "export_markdown": "export",
     "update_record": "update",
     "edit_interests": "deeds",
     "show_on_map": "atlas",

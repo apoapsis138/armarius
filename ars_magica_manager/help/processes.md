@@ -1202,36 +1202,166 @@ when it is imported.
 On the desktop, a covenant's, laboratory's, character's or familiar's
 **Manage** chapter has **Print to PDF**. It first asks a few options, then
 where to save the file (it starts in the exports folder, named after the
-record). The options you choose are kept for next time.
+record). The options you choose are kept for next time, all but the
+copy.
 
+- **Copy** (asked only of someone who reads the whole saga, the host or
+  a storyguide): **Player copy**, what the players may read,
+  or **Storyguide copy**, everything, Secrets too. It starts at the Player
+  copy every time, so nothing secret goes out by accident. Anyone else,
+  a player signed in included, always gets the Player copy and isn't
+  asked. A Player copy leaves off each Secret not yet revealed (a
+  Storyguide Notes secret too) and anything the players don't know of; a
+  player printing their own character still gets their own notes and
+  goals.
+- **Sheet** (characters only): **Play sheet**, a page or two to play
+  from, or **Full record**, everything.
 - **Paper size:** US Letter, or A4 outside North America.
-- **Spells in the Grimoire** (characters only): **Short**, just each
-  spell's Arts and level, Range, Duration and Target, Casting Total and
-  Mastery; or **Full description**, which adds each spell's text.
-- **Background** (characters only): **Textured parchment**, or **Plain
-  white** to save ink.
+- **Theme:** **Each in its House's colours** (a magus, their laboratory
+  and familiar in their House's theme; covenants, companions and grogs in
+  Scriptorum), or any theme by name, for everything you print. The page
+  takes the theme's colours, its paper and its House's mark beside the
+  title and in the running head, with the mark large and faint behind
+  the first page's title (the Order's sigil in Scriptorum).
+- **Background:** **The theme's paper**, or **Plain white** to save ink.
+  A dark theme's paper takes a lot of ink; on plain white a dark theme
+  prints in its light colours (Scriptorum Dark as Scriptorum; a dark
+  House theme in Scriptorum's colours with its own mark, until it has a
+  light version), so there is never pale ink on white. The faint mark is
+  left off plain white.
 
 A character prints as a sheet laid out for paper, not a picture of the
 screen. Their name is set in the title lettering, with a bound edge down
-the left of each page. Nothing is cut by the page edge: a table that fits
-on a page is never split, and a heading always stays with what it heads.
-A magus's Hermetic Arts, Grimoire, and Biography & Story each start a new
-page; companions and grogs have no magic pages. Each Art and Ability has
-its symbol beside it. The Grimoire lists the spells by Form. A Virtue or
-Flaw taken more than once is printed once with its count, as **Great
-Intelligence × 2**; the screens still show each one. Combat & Condition
-follows the published character sheet. It has a box for each Fatigue
-level and five for each Light, Medium and Heavy Wound, with the current
-ones ticked. It also has blank lines to pencil in weapons, armor and
-equipment, with the character's own already filled in. Empty sections
-are left off.
+the left of each page. Whatever the theme, nothing on the page carries
+meaning by colour alone.
 
-Covenants, laboratories and familiars still print their page as it looks
-on screen: the header, then each chapter under its name, in the
-Scriptorum parchment colours, with the buttons left off. Manage, Planning
-and Seasons are left off, since they are for the screen.
+The **play sheet** is about a page for a companion or grog and two for a
+magus. The first page has the Characteristics, the Virtues and Flaws by
+name, Personality Traits and Reputations, the Abilities and Combat &
+Condition; a magus's second has the Arts, Casting Scores, Raw Vis and
+the spells, a line each with their Arts and level, Range, Duration and
+Target, and Casting Total. It leaves off the description, biography,
+books and diary.
+
+The **full record** has everything, in this order:
+
+1. The Characteristics, Personality Traits and Reputations, the
+   Abilities and Combat & Condition.
+2. Whatever of Combat & Condition didn't fit, then the Virtues and
+   Flaws, each with what it does.
+3. For a magus, the Hermetic Background and Wizard's Sigil, then the
+   Arts, Casting Scores, Raw Vis and research goals. This follows on
+   from the Virtues and Flaws, and starts a page of its own when little
+   of the page is left.
+4. From a new page, the description and biography, the familiar in
+   short (its own sheet prints from its own page), books, diary, the
+   player's notes and goals, and the Secrets the copy may hold, each
+   marked revealed or not.
+5. Last, from a new page, the Grimoire: the spells by Form, each with
+   its full description. A spell is never split between pages; one that
+   won't fit starts the next page, and only a spell longer than a whole
+   page runs on, its name marked continued.
+
+Nothing else is cut by the page edge. A section runs on to the next page
+where the page ends: a table between its rows, with its header again,
+and the Virtues and the Flaws each down their own column. A heading
+always stays with what it heads, and the Combat box with Weapons and
+Equipment. Companions and grogs have no magic pages. The Abilities are
+set in two columns by category, and the Arts in three, the Techniques
+beside the Forms. Each Art and Ability has its symbol beside it. A
+Virtue or Flaw taken more than once is printed once with its count, as
+**Great Intelligence × 2**; the screens still show each one. Combat &
+Condition follows the published character sheet. It has a box for each
+Fatigue level and five for each Light, Medium and Heavy Wound, with the
+current ones ticked. It also has blank lines to pencil in weapons, armor
+and equipment, with the character's own already filled in. Empty
+sections are left off, except Raw Vis, which keeps lines to pencil in
+what is gathered in play.
+
+Covenants, laboratories and familiars print the same way, as a full
+record laid out for paper, real text you can search and copy:
+
+- **A covenant:** its aura and Charter figures, then the Overview (its
+  description, Reputations, and the Boons beside the Hooks), the Charter
+  and its clauses (a broken one marked Broken), People and Covenfolk,
+  the Laboratories a line each, the Library shelf by shelf, the Treasury,
+  the Inventory (vis sources, stores, every other possession and the
+  enchanted devices), the Diary and the History, every entry of each. A
+  Line or Sketch covenant prints what it is to the saga, its magi, What
+  Matters, its Charter and Diary.
+- **A laboratory:** its Characteristics, its owner's Lab Totals, its
+  Virtues and Flaws, Specializations, Features, magic items and rooms,
+  its stores (raw vis with lines to pencil in, equipment, Arcane
+  Connections, Lab Texts and books) and its Diary.
+- **A familiar:** its master, species, Characteristics and Might, the
+  Cords and the binding, Bond Powers, Combat & Condition, natural
+  weapons, Abilities, Virtues and Flaws and Personality Traits.
+
+Seasons, Planning, Build and Manage are left off, since they are for the
+screen, and so are empty sections. A record's Secrets go at the end, as
+the copy may hold them. Nothing on paper carries meaning by colour
+alone: the Lab Totals are plain numbers with the five best in bold, a
+Specialization's bar is its points (struck through when it is turned
+off), a contested source keeps its ! mark and its standing in words,
+and income it doesn't give this year is struck through beside what it
+does.
+
+**Print the Troupe**, on the saga page's The Troupe chapter, prints
+every player character into one PDF, in the order The Troupe lists
+them: each starts on a fresh page, and the PDF has a bookmark for each,
+so a reader's side panel lists them by name. It asks the same options,
+with **Sheet** choosing play sheets or full records for all of them, and
+**Theme** each magus in their House's colours (companions and grogs in
+Scriptorum) or everyone in one theme: Scriptorum, Scriptorum Dark, or a
+House's, for a saga of one House. A player printing the troupe always
+gets Player copies.
 
 The PDF can be printed or sent like any other.
+
+### Exporting a sheet as Markdown
+<!-- help: export-markdown -->
+
+**Export as Markdown** writes a character's, covenant's, laboratory's or
+familiar's sheet as a Markdown file (`.md`), plain text that any editor,
+wiki or notes app shows with its headings and tables: for your own notes,
+an Obsidian vault, or a message to the troupe.
+<!-- tui -->
+It is in More (`m`) on the record, beside Export. In a browser copy the
+file downloads to your own computer.
+<!-- /tui -->
+<!-- gui -->
+It is in the record's **Manage** chapter, beside Print to PDF.
+<!-- /gui -->
+
+It asks the same **Copy** as printing (only the host or a storyguide is
+asked; anyone else gets the Player copy) and, for a character, **Sheet**:
+a play sheet or the full record. Then the file, in the exports folder,
+named after the record.
+
+The file holds what the printed sheet does, laid out for text: the
+Characteristics and facts as short tables, each list as a table, Fatigue
+and Wounds as a small table each with the current Fatigue level marked
+◀ now, and the Grimoire's spells under their Form. What only paper needs
+is left off: the Art and Ability symbols, and the blank lines and boxes
+left to pencil in. See [How to export a sheet as Markdown](help:guide-export-markdown).
+
+### How to export a sheet as Markdown
+<!-- help: guide-export-markdown -->
+
+1. Open the record: a character, covenant, laboratory or familiar.
+<!-- tui -->
+2. Press `m` for More, then **Export as Markdown**.
+<!-- /tui -->
+<!-- gui -->
+2. Open its **Manage** chapter and click **Export as Markdown**.
+<!-- /gui -->
+3. Choose the **Copy** (if you are asked): **Player copy** to share it,
+   **Storyguide copy** for your own notes. For a character choose the
+   **Sheet**: a play sheet, or the full record.
+4. Check the **File**: it starts in the exports folder, named after the
+   record. Click **Export**.
+5. Open the `.md` file in any text editor, or drop it into a wiki or a
+   notes app such as Obsidian, which shows its tables.
 
 ### Giving to another record
 <!-- help: give -->

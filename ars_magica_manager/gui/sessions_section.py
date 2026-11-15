@@ -10,7 +10,7 @@ from pathlib import Path
 
 from PySide6.QtWidgets import QWidget
 
-from .. import cast_sheet, print_layout, section_verbs, storage
+from .. import cast_sheet, print_layout, print_records, section_verbs, storage
 from .. import sessions as ss
 from ..commands import ChooseFile, Command
 from ..forms import printing as print_forms
@@ -18,7 +18,7 @@ from ..forms import sessions as session_forms
 from ..models import Saga, Session
 from ..sections import SESSIONS_SECTION
 from ..sheets import saga_content as scs
-from . import print_sheet, printing
+from . import print_sheet
 from .character_sheet import section
 from .editing import Chooser, Run, choose_rows, verb_buttons
 from .menus import ICONS
@@ -92,14 +92,19 @@ def _to_pdf(
     def where(options: print_layout.PrintOptions) -> ChooseFile:
         def save(path: Path) -> list[str]:
             folder.mkdir(parents=True, exist_ok=True)
-            pages = print_sheet.print_document(document(), path, options)
+            theme = print_records.theme_for(None, None, options.theme)
+            pages = print_sheet.print_document(document(), path, options, theme)
             return [f"{pages} page{'s' if pages != 1 else ''} saved to {path}."]
 
         return ChooseFile(
-            title, ".pdf", folder / f"{printing.file_stem(stem)}.pdf", save, save=True
+            title,
+            ".pdf",
+            folder / f"{print_records.file_stem(stem)}.pdf",
+            save,
+            save=True,
         )
 
-    return print_forms.print_form(where, sheet=False)
+    return print_forms.print_form(where, character=False)
 
 
 def print_cast(saga: Saga, session: Session) -> Command:

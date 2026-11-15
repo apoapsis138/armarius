@@ -60,6 +60,7 @@ def test_a_characters_manage_chapter_exports_updates_and_deletes(app):
     window.show_character("char1")
     assert list(_manage(window)) == [
         "Export",
+        "Export as Markdown",
         "Update from a File",
         "Interests",
         "Demote",
@@ -69,11 +70,11 @@ def test_a_characters_manage_chapter_exports_updates_and_deletes(app):
     ]
 
 
-def test_a_familiar_can_only_be_printed_or_deleted(app):
+def test_a_familiar_can_only_be_written_out_or_deleted(app):
     window = _window(_saga_with_familiar())
     window.open_familiar("fam1")
     buttons = _manage(window)
-    assert list(buttons) == ["Print to PDF", "Delete Ashwing"]
+    assert list(buttons) == ["Export as Markdown", "Print to PDF", "Delete Ashwing"]
     answering(window, True)
     buttons["Delete Ashwing"].click()
     assert storage.load_saga("test_saga").familiars == []
