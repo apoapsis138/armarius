@@ -8,6 +8,8 @@ This amends the keychain-only rule of `remote/identity.py` (and ADR 0009) for a 
 
 The Cloudflare tunnel token is as sensitive as the key: whoever holds it can stand in for the host's address. Both are kept and backed up the same way, apart from the saga's backups.
 
+**Note, 2026-11-15:** an encrypted shared folder proved not always usable. UGOS Pro's (`fuse.uggocryptfs`, checked on 1.21) answer the app's user (uid 10001, unknown to the NAS) with "Input/output error" and report every mode as 777, so the key store refuses them. The rule is now: a private folder of its own, outside the data folder, owned by the app's user, mode 0700, with NAS access lists stripped (required, and checked by the app); encrypted where the box can, by a disk or volume, or by a NAS's encrypted shared folder the app's user can use; otherwise a plain private folder, which does not protect the key from someone who steals the drives. See [Threat model: A headless host](../threat-model-headless-host.md), section 6.
+
 ## Considered options
 
 - **Docker secrets:** mounted read-only, so rotating the key would need a write the container cannot make.

@@ -198,12 +198,14 @@ These are options for the board, not commitments; none has a story yet.
 2. Rebuild and republish the current version's image when its base image has a security fix, or say in the guide how to tell one is due.
 3. Have `admin backup` write a SHA-256 beside each zip, and the guide's restore step check it.
 4. Give the armarius container only the egress cloudflared needs, for example by moving the listener into a namespace of its own with cloudflared reaching it over an internal network, so a compromised listener can't send data out directly.
-5. Fix the guidance that still sends keys to an encrypted shared folder (section 11).
+## 11. Where to keep the key
 
-## 11. Found while modelling: guidance that disagrees with the code or the guide
+`deploy/example.env`, the compose file's comments, ADR 0022 (its note of 2026-11-15) and the help guide ("The host key on the box") all give the same advice:
 
-- `deploy/example.env:10-11` says "Keep KEYS_DIR in an encrypted shared folder", and ADR 0022 line 7 says the key is "meant to sit in an encrypted shared folder on the NAS". The UGREEN trial showed that UGOS's encrypted shared folders can't hold it, and the help guide now says so. Both should say "an encrypted disk where the box offers one the app's user can use; not a NAS's encrypted shared folder".
-- The help guide's "The host key on the box" ends "Keep it on an encrypted folder", the same advice without the NAS exception.
+- **Required, and checked by the app:** a private folder of its own, outside the data folder, owned by uid 10001, mode 0700, with NAS access lists stripped. The key store refuses one that is missing or that anyone else can open.
+- **Encrypted where the box can:** a disk or volume the system encrypts, or a NAS's encrypted shared folder if uid 10001 can use it. Try it first; UGOS Pro 1.21's can't be used (section 6), and the fallback is a plain private folder.
+- **The trade-off:** a plain folder keeps the key from everyone on the box but its administrators (actor G), not from someone who takes the drives (actor H).
+- **Backups:** the keys folder and `tunnel.env` are backed up apart from the nightly zips, encrypted, or not at all.
 
 ## Related
 

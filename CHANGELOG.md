@@ -137,6 +137,7 @@ change in it.
 ### Castellum
 
 - **A threat model of its own for hosting on a box.** What can go wrong when a NAS or server hosts the saga (the container image, the tunnel, the key kept in a file, the `admin` command and the backups), what guards against each, and what is left to you, now has its own document, with a worked example for a UGREEN NAS. The Remote seats threat model, for hosting from your desktop, points to it.
+- **Clearer advice on where to keep the host key.** The guide and the example settings no longer send the key to a NAS's encrypted shared folder without a caveat: keep it in a private folder of its own, encrypted where the box can (try the NAS's encrypted folder first, since UGOS's can't be used), and know that a plain folder doesn't protect it if the drives are stolen. Back the key and the tunnel token up apart from the nightly backups.
 
 ## 4.13.0 — 2026-11-14
 

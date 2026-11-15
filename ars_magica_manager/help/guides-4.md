@@ -623,9 +623,11 @@ folder:
    `chmod 600 .env tunnel.env`.
 3. Make the three folders, owned by the app's own user (number 10001)
    and private: `sudo install -d -o 10001 -g 10001 -m 700 data keys
-   backups`. `keys` holds the host key: on a Linux box, an encrypted
-   disk is a good home for it (set `KEYS_DIR` in `.env` to it); a NAS's
-   encrypted shared folder is not (see the UGREEN section).
+   backups`. `keys` holds the host key: an encrypted disk or volume is
+   the best home for it (set `KEYS_DIR` in `.env` to it), and a NAS's
+   encrypted shared folder will do if the app's user can use it. Try
+   it first; UGOS's can't be used (see the UGREEN section), and then a
+   plain private folder is the fallback.
 
 The compose file runs the app locked down: as its own user, with its
 system files read-only, no extra privileges, 512 MB of memory at most,
@@ -780,8 +782,9 @@ can't find).
   can't be given a fresh key in its place. Unlock the volume, or, the
   first time, make the folder as the message says.
 - **"Input/output error" or "Not a directory" in the keys folder:** it
-  is an encrypted shared folder of the NAS's, which the app's user
-  can't use. Use an ordinary folder (see the UGREEN section).
+  is an encrypted shared folder of the NAS's that the app's user
+  can't use (as on UGOS). Use a plain private folder instead (see the
+  UGREEN section).
 - **A folder shows `d---------` after `setfacl -b`:** set its modes
   again with `sudo chmod 700 PATH`.
 - **Testing as the app's user:** `sudo -u` can't, since the NAS has no
@@ -877,7 +880,27 @@ keys never travel with the saga or its backups. The app makes it private
 can read the folder or a key in it, if it belongs to another user, or if
 the app runs as the administrator (root). Whoever can read that folder
 can pretend to be your host: on a NAS that is its administrators, and
-anyone who may run Docker there. Keep it on an encrypted folder.
+anyone who may run Docker there.
+
+Where to keep it:
+
+- **A private folder of its own**, outside the data folder, owned by
+  the app's user (10001) with modes 700, and with any NAS access lists
+  stripped (`sudo setfacl -b FOLDER`). That much is required: the app
+  refuses anything less.
+- **Encrypted, where the box can.** A disk or volume encrypted by the
+  system protects the key if someone takes the box's drives. A NAS's
+  encrypted shared folder works too, if the app's user can read and
+  write it: try it first (When a step goes wrong, above, has a test). On
+  UGOS it can't (see the UGREEN section), so fall back to a plain
+  private folder.
+- **What a plain folder gives up.** It keeps the key from everyone on
+  the box but its administrators, but not from someone who steals the
+  drives: they can read it, and you would rotate it and send everyone
+  a new Invite (below).
+
+Back the `keys` folder and `tunnel.env` up apart from the nightly zips,
+which never hold them (see Backups off the box).
 
 When it refuses, it says the fix: `sudo chown 10001:10001 FOLDER` for a
 folder made by another user (as a NAS's web pages make them), `chmod 700`
@@ -912,8 +935,8 @@ the box, so the copy can sit on your desktop or in a cloud folder.
    Linux box): `restic -r REPOSITORY backup backups`, then `restic -r
    REPOSITORY forget --keep-daily 14 --keep-weekly 8 --prune`.
 
-Back the `keys` folder up apart, to a different restic repository with a
-different password, or not at all: a lost key costs only new Invites for
+Back the `keys` folder and `tunnel.env` up apart, to a different restic
+repository with a different password, or not at all: a lost key costs only new Invites for
 everyone, while a leaked one lets someone pretend to be your host.
 
 ### If the key or the token leaks
