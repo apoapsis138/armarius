@@ -20,7 +20,7 @@ Different people are planned in different places:
 - **A magus's other activities** (reading, practice, teaching, writing and so on), and **every season of a companion or Mythic Companion**, are planned on the character's [Planning tab](help:tab-planning) or on the covenant's [Seasons tab](help:tab-cov-seasons). Both open the same [Plan Season](help:plan-season) dialog.
 <!-- /tui -->
 <!-- gui -->
-- **A magus's laboratory work** (inventing a spell, enchanting, extracting vis, a Longevity Ritual, binding a familiar, setting up or refining a laboratory) is planned in the **Planning** section of their laboratory's **Seasons** chapter (see [Planning tab](help:tab-lab-planning)).
+- **A magus's laboratory work** (inventing a spell, enchanting, extracting vis, a Longevity Ritual, binding a familiar, setting up or refining a laboratory) is planned in the **Planning** section of their laboratory's **Seasons** chapter (see [Planning](help:tab-lab-planning)).
 - **A magus's other activities** (reading, practice, teaching, writing and so on), and **every season of a companion or Mythic Companion**, are planned in the character's [Planning](help:tab-planning) chapter or the covenant's [Seasons](help:tab-cov-seasons) chapter. Both open the same [Plan Season](help:plan-season) form.
 <!-- /gui -->
 - **Grogs** aren't planned season by season. Each has a [yearly update](help:grog-year), applied when Winter is advanced.
@@ -150,7 +150,7 @@ Anyone still left with nothing planned isn't lost: when the season is advanced, 
 2. Read its summary: how many planned seasons will be applied, who has nothing planned (they gain nothing this season), and any plan that can't be carried out, with the reason. To fix anything, choose Cancel, change the plan and press `t` again.
 <!-- /tui -->
 <!-- gui -->
-1. Click **Advance Season** at the top of the window, after the date (for example "Spring 1220 · Advance Season"). It can be clicked from any page of the saga. A question asks whether to advance from this season to the next.
+1. Click the **Advance Season** card at the foot of the chapters on the left, under the present season's medallion, its name and year. It is there on every page of the saga that has chapters. A question asks whether to advance from this season to the next.
 2. Read its summary: how many planned seasons will be applied, who has nothing planned (they gain nothing this season), and any plan that can't be carried out, with the reason. To fix anything, choose Cancel, change the plan and click Advance Season again.
 <!-- /gui -->
 3. Choose **Advance**.
@@ -397,7 +397,7 @@ The [History](help:tab-cov-history) chapter gathers everything dated about the c
 5. **Read one record's story.** Hide the other records' entries: untick them in the What It Shows block's Edit, or, on the desktop, click their chips above the list.
 6. **Change an entry** with Edit: it opens the entry where it is written.
 
-### The Seasons tab
+### The covenant's Seasons
 <!-- help: guide-covenant-seasons -->
 
 <!-- tui -->
@@ -414,4 +414,4 @@ The [Seasons](help:tab-cov-seasons) chapter is the covenant's planning board: ev
 
 **The app works out:** the magi, companions and sanctums listed from their own sheets, Loyalty, the points of inhabitants, laboratories and weapons and armour, every calculated cost and saving, the Surplus/Deficit, the yearly vis harvests and Wealth, and the Library's counts and Locations.
 
-**See also:** [Covenant sheet](help:covenant), [Build tab](help:tab-cov-build), [Advance Season](help:advance-season), [How to plan and run a season](help:guide-seasons)
+**See also:** [Covenant sheet](help:covenant), [Build](help:tab-cov-build), [Advance Season](help:advance-season), [How to plan and run a season](help:guide-seasons)

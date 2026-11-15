@@ -425,7 +425,7 @@ The Characters node under a covenant, or Unassigned Characters under the saga. I
 <!-- gui -->
 A covenant's People chapter, or Unassigned Characters in the saga's The Covenants chapter, shows the characters as cards; click one to open their sheet.
 
-**You type:** nothing here. The **New Character** card at the end of the cards makes one, with this covenant already chosen. A familiar is bound on its magus's page (or in their laboratory).
+**You type:** nothing here. In a covenant's People, each group ends in a New card (**New Magus**, **New Companion** or **New Grog**) that makes one with this covenant already chosen; Unassigned Characters ends in **New Character**. A familiar is bound on its magus's page (or in their laboratory).
 <!-- /gui -->
 
 **The app works out:** the count in the node's label.

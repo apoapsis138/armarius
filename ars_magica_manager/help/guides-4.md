@@ -125,7 +125,7 @@ To remove only the familiar, choose Delete in the **Manage** chapter of its page
 <!-- /gui -->
 Then the bond is broken, and the magus loses True Friend, Loyal (Partner) and any planned familiar seasons.
 
-**See also:** [Familiar sheet](help:familiar), [Binding & Cords](help:section-fam-binding), [Bond Powers tab](help:tab-fam-powers), [Planning tab](help:tab-lab-planning), [Invent Spell screen](help:invent-spell), [Advancing a season](help:advance-season)
+**See also:** [Familiar sheet](help:familiar), [Binding & Cords](help:section-fam-binding), [Bond Powers](help:tab-fam-powers), [Planning](help:tab-lab-planning), [Invent Spell screen](help:invent-spell), [Advancing a season](help:advance-season)
 
 # How to initiate a character into a Mystery
 <!-- help: guide-initiation -->
@@ -189,7 +189,7 @@ There is no die: the Initiation succeeds when the total reaches the Target Level
 **House Criamon.** A Criamon magus's paths are listed under House Criamon
 (Mystery Cult) on the Initiation's Script field, one Script for each
 avenue (Houses of Hermes: Mystery Cults pp. 61-71; Errata p. 55), and The
-Enigma tab's Follow an Avenue plans one. The Lore is Mystery Cult Lore:
+Enigma's Follow an Avenue plans one. The Lore is Mystery Cult Lore:
 Criamon (the book's House Criamon Lore, which counts too); a station
 needs it at its place on the path + 1. Each avenue's Target is a Major
 Virtue's 21, as the book prints it whether or not the guide holds the
@@ -197,8 +197,8 @@ station, lowered by past Ordeals as usual. With no Mystagogue chosen, the
 guide the House provides guides at Presence + Lore 6, the printed
 Scripts' assumption, or a ghostly Primus (Lore 9, with the Presence set on
 Change Path) when The Enigma names him (p. 60). The Mystagogue need only
-know House Criamon Lore; one not of the House is noted as unusual (p. 59;
-DE p. 387). When the plan names no Ordeal of its own, the station's
+know House Criamon Lore (DE p. 387); the app notes one not of the House
+as unusual, its own reading. When the plan names no Ordeal of its own, the station's
 Ordeal Flaws are added (a Major Pious replacing Vow or Higher Purpose),
 and the Ordeal counts at the size the book's next Targets show; the
 avenues are followed in order along a path. Some stations add catalogue
@@ -207,7 +207,7 @@ or the Blatant Gift lifted to an ordinary Gift; Free Expression and
 Inspirational (pp. 64, 70-71). His aptitude for a path, from a head bound
 in infancy, adds +3 to its first station (p. 51).
 
-**Script components.** A Hermetic Mystery's Script can be written out on the plan as its **Script components** (The Mysteries Revised Edition pp. 15-16; DE p. 388): a special place at a special time +3 (once), each specific Quest +3 (a unique Quest +6), the Initiate's time serving the cult +1 (once), material goods +1 (once), something of great symbolic value +3 to +6 (a talisman, familiar or powerful device), the Mystagogue's time +3, and the sympathy of the rite to the Virtue, usually 0 to +3 but -5 to +5, agreed with the storyguide. The Ordeal's own bonus is added from the plan's **Ordeal**: +3 for a Minor Flaw gained or Minor Virtue lost (a Minor Virtue replaced by its Major one counts as that), +6 for a Minor Flaw raised to Major, +9 for a Major Flaw or Virtue; a Verditius's first Inner Mystery counts its Hubris as a Minor Ordeal when no other is named. The **Script bonus** typed above is added to the components. A component listed twice that may be held once, or a size out of its range, invalidates the whole Script (TMRE p. 16). With no components listed, the typed bonus is the whole Script, as before, except that a Verditius's first Inner Mystery adds its Hubris Ordeal's +3 to it (and to a catalog Script's printed bonus), since that Ordeal always comes and the bonus can't know of it (Houses of Hermes: Mystery Cults p. 117). A Verditius Initiate is also offered the House's own components (Houses of Hermes: Mystery Cults p. 117): a lesser enchanted item of the 4th magnitude sacrificed +3, a greater one of the 7th or his talisman +6, the Mystagogue's wealth +1 (once), and the Outer Mystery given as the Arts are opened +6. A hedge or House Script from the catalog keeps its printed bonus; the season's note lists its components as the book gives them (the Verditius Outer Mystery's add to 14, though the book prints +12, which is used).
+**Script components.** A Hermetic Mystery's Script can be written out on the plan as its **Script components** (The Mysteries Revised Edition pp. 15-16; DE p. 388): a special place at a special time +3 (once), each specific Quest +3 (a unique Quest +6), the Initiate's time serving the cult +1 (once), material goods +1 (once), something of great symbolic value +3 to +6 (a talisman, familiar or powerful device), the Mystagogue's time +3, and the sympathy of the rite to the Virtue, usually 0 to +3 but -5 to +5, agreed with the storyguide. The Ordeal's own bonus is added from the plan's **Ordeal**: +3 for a Minor Flaw gained or Minor Virtue lost (a Minor Virtue replaced by its Major one counts as that), +6 for a Minor Flaw raised to Major, +9 for a Major Flaw or Virtue; a Verditius's first Inner Mystery counts its Hubris as a Minor Ordeal when no other is named. The **Script bonus** typed above is added to the components. A component listed twice that may be held once, or a size out of its range, invalidates the whole Script (TMRE p. 16). With no components listed, the typed bonus is the whole Script, as before, except that a Verditius's first Inner Mystery adds its Hubris Ordeal's +3 to it (and to a catalog Script's printed bonus), since that Ordeal always comes and the bonus can't know of it (Houses of Hermes: Mystery Cults pp. 117-118). A Verditius Initiate is also offered the House's own components (Houses of Hermes: Mystery Cults p. 117): a lesser enchanted item of the 4th magnitude sacrificed +3, a greater one of the 7th or his talisman +6, the Mystagogue's wealth +1 (once), and the Outer Mystery given as the Arts are opened +6. A hedge or House Script from the catalog keeps its printed bonus; the season's note lists its components as the book gives them (the Verditius Outer Mystery's add to 14, though the book prints +12, which is used).
 
 The House's Hubris is now kept on the sheet: the first Inner Mystery makes the Hubris Personality Trait (1, +1 with Proud, +3 with Proud as a Major Flaw), each Inner Mystery adds its experience (1 Minor, 3 Major), and the Increased Hubris Ordeal adds enough for one more point (Houses of Hermes: Mystery Cults p. 121). Hubris grows like an Ability: its experience toward the next point is kept with the trait. A confraternity's Script also notes the Mystery and Flaw it gives its members, their Craft and the confraternity's path (Roland, Balento, Irene the Younger, Himinis the Mad; pp. 121-123). See [Hubris](help:verditius-hubris) for what a sale, the Contest or a vendetta does to it.
 
@@ -225,7 +225,7 @@ For a successful Initiation, the app adds the Virtue (with what it names) to the
 ### Past Ordeals make later Initiations easier
 <!-- help: guide-initiation-ordeals -->
 
-An Ordeal lowers the Target Level of the Initiate's next three Initiations, never below 9 (DE p. 388): by 3, 2 and 1 after a Minor Ordeal, 6, 4 and 2 after a Medium one, and 9, 6 and 3 after a Major one. It doesn't help the Initiation it was suffered in. When the Initiate has suffered several, only the one that lowers the Target most counts: a Major Ordeal followed by a Minor one still takes 6 off the next Initiation. The app keeps every Ordeal and counts each one down after each Initiation that gives its Virtue; a failed Initiation is not one of "the next three", so it uses up no step (DE p. 388). An unGifted Initiate's past Ordeals lower nothing (Hedge Magic Revised Edition p. 14). The Initiate's [This Season](help:section-char-season) section lists the past Ordeals still counting and what they take off the next Target. Flaws taken at character creation don't count as Ordeals.
+An Ordeal lowers the Target Level of the Initiate's next three Initiations, never below 9 (DE p. 388): by 3, 2 and 1 after a Minor Ordeal, 6, 4 and 2 after a Medium one, and 9, 6 and 3 after a Major one. It doesn't help the Initiation it was suffered in. When the Initiate has suffered several, only the one that lowers the Target most counts: a Major Ordeal followed by a Minor one still takes 6 off the next Initiation. The app keeps every Ordeal and counts each one down after each Initiation that gives its Virtue; a failed Initiation uses up no step. The book doesn't say whether a failed one counts among "the next three" (DE p. 388), so that is the app's reading. An unGifted Initiate's past Ordeals lower nothing (Hedge Magic Revised Edition p. 14). The Initiate's [This Season](help:section-char-season) section lists the past Ordeals still counting and what they take off the next Target. Flaws taken at character creation don't count as Ordeals.
 
 ### What the app works out, and what it doesn't
 <!-- help: guide-initiation-limits -->
@@ -250,7 +250,7 @@ An Ordeal lowers the Target Level of the Initiate's next three Initiations, neve
 
 A Mystagogue who spends a whole season on the Script (teaching a Supernatural Ability, say) plans **Act as Mystagogue**, and a season spent on a Quest is **Serve a Mystagogue / Quest season**; both need The Mysteries Revised Edition in play.
 
-**See also:** [Plan Season](help:plan-season), [Virtues & Flaws tab](help:tab-vf), [Advancing a season](help:advance-season), [How the app handles advancement](help:guide-advancement)
+**See also:** [Plan Season](help:plan-season), [Virtues & Flaws](help:tab-vf), [Advancing a season](help:advance-season), [How the app handles advancement](help:guide-advancement)
 
 # How to import and export
 <!-- help: guide-import-export -->
@@ -355,14 +355,14 @@ When an imported book or spell has the name of one already in the saga, the app 
 ### Keeping backups
 <!-- help: guide-import-export-backups -->
 
-Each saga is saved as one file, the saga's id followed by `.json`, in the `sagas` folder of Armarius in your OneDrive folder (see the README to keep it elsewhere). The app saves every change as you make it.
+Each saga is saved as one file, the saga's id followed by `.json`, in the `sagas` folder of Armarius in your OneDrive folder (to keep it elsewhere, use [Change Save Folder](help:saga-picker-actions) on the saga picker). The app saves every change as you make it.
 
 - Before each season (or downtime run) is applied, the app copies the saga to `sagas/backups`, keeping the last five (the newest has the saga's own file name; older ones end `.1.json` to `.4.json`), each with a copy just after it (`.after.json`). **Undo Last Season** uses them (see [Undoing a mistake](help:guide-seasons-undo)).
 - That is the only backup the app keeps, so for anything older, copy the saga's file yourself from time to time.
 - To keep a single character, laboratory or covenant safe before a big change, export it as above.
 - Every saga file, export and pack is checked as it is read: a field holding the wrong kind of thing (a file edited by hand, or damaged) is named, and the saga isn't opened, nor changed. Copy a backup over its file to go back to before the damage.
 
-**See also:** [Import Data](help:import-data), [Import Spells](help:import-spells), [The Armarium](help:armarium), [Library tab](help:tab-cov-library), [House Rules](help:tab-content-house-rules), [The saga](help:saga), [Advancing a season](help:advance-season)
+**See also:** [Import Data](help:import-data), [Import Spells](help:import-spells), [The Armarium](help:armarium), [Library](help:tab-cov-library), [House Rules](help:tab-content-house-rules), [The saga](help:saga), [Advancing a season](help:advance-season)
 
 # How to host a saga for your troupe
 <!-- help: guide-hosting -->
@@ -721,8 +721,10 @@ The saga moves to the box; your desktop's copy becomes history.
    desktop's storyguide seat included. `admin players list` names anyone
    whose passcode must still be set again (`admin players set-passcode
    NAME`, below).
-5. Leave the desktop's copy alone from now on, or rename its file: a
-   change made there never reaches the box.
+5. Move the desktop's copy of the saga file out of the `sagas` folder,
+   for example into a folder of old copies. A change made there never
+   reaches the box, and a copy only renamed inside `sagas` can save
+   itself back under the saga's own name.
 
 ### The tunnel
 <!-- help: guide-self-hosting-tunnel -->
@@ -1030,11 +1032,11 @@ Conscientia joins Durenmar, whether the Rhine pack comes in first or later. If t
 - Magi: every magus the book names is a full character. Those it prints a stat block for have the book's stats; the rest have stats inferred from what the book says of them (their House, age, favoured Arts, Virtues and Flaws) by the creation rules: not an official write-up, as their Biography says. Untick **Generated stats for magi** when importing to bring those magi in as sketches instead. Where the book gives no age, one is assumed from the magus's rank and noted there too.
 - Places: the regions and forests as places, with the regiones inside them and their levels and auras; covenants and towns sit in them.
 - The mundane world: lords, towns, churches, schools, factions and threats, with historical arms where they are known.
-- The Bestiary: the creatures the book prints a stat block for (the Rhine's boglins, bockmen and great trees, Normandy's korrigans and the Boar King, Provence's faeries and demons), each found at the place it haunts and linked from the threat or faction it belongs to. Untick **The Bestiary** when importing to leave them out.
-- Assumptions: where a book leaves a value out (an aura without a number, a founding year, a season), the pack fills it in, and importing it says so. Each pack's page lists what it inferred, what it chose and where it corrects the book: [the Rhine](help:pack-assumptions-rhine), [Normandy](help:pack-assumptions-normandy), [Provence](help:pack-assumptions-provence), [the Theban Tribunal](help:pack-assumptions-theban) and [Transylvania](help:pack-assumptions-transylvania).
-- Secrets: what the book tells the storyguide and not the players is on each covenant's, magus's, Tribunal's, neighbour's or creature's [Secrets](help:tab-secrets) tab. The few that belong to part of a record (a regio level, a case, an entry in the Tribunal's Diary, a book) are at the end of its text under a **Secrets** heading.
+- The Bestiary: the creatures the book prints a stat block for (such as the Rhine's boglins and bockmen, Normandy's korrigans, the Levant's jinn and Novgorod's dragons), each found at the place it haunts and linked from the threat or faction it belongs to. Untick **The Bestiary** when importing to leave them out.
+- Assumptions: where a book leaves a value out (an aura without a number, a founding year, a season), the pack fills it in, and importing it says so. Each pack's page lists what it inferred, what it chose and where it corrects the book: [the Rhine](help:pack-assumptions-rhine), [Normandy](help:pack-assumptions-normandy), [Provence](help:pack-assumptions-provence), [the Theban Tribunal](help:pack-assumptions-theban), [Transylvania](help:pack-assumptions-transylvania), [Hibernia](help:pack-assumptions-hibernia), [the Levant](help:pack-assumptions-levant), [the Greater Alps](help:pack-assumptions-alps), [Stonehenge](help:pack-assumptions-stonehenge), [Novgorod](help:pack-assumptions-novgorod), [The Cradle and the Crescent](help:pack-assumptions-cradle), [Magi of Hermes](help:pack-assumptions-magi_of_hermes), [Legends of Hermes](help:pack-assumptions-legends_of_hermes), [Lands of the Nile](help:pack-assumptions-nile), [Between Sand and Sea](help:pack-assumptions-africa), [Land of Fire and Ice](help:pack-assumptions-iceland) and [Antagonists](help:pack-assumptions-antagonists).
+- Secrets: what the book tells the storyguide and not the players is on each covenant's, magus's, Tribunal's, neighbour's or creature's [Secrets](help:tab-secrets). The few that belong to part of a record (a regio level, a case, an entry in the Tribunal's Diary, a book) are at the end of its text under a **Secrets** heading.
 
-The packs follow the Definitive Edition where a book's numbers differ from it; the differences are listed in the project's notes.
+The packs follow the Definitive Edition where a book's numbers differ from it; each pack's assumptions page lists the corrections it makes.
 
 **See also:** [Content packs](help:export-pack), [Choosing what a pack imports](help:import-pack), [Tribunal](help:tribunal), [How to import and export](help:guide-import-export)
 
@@ -1135,7 +1137,7 @@ Click it, or press `m` and choose **Go To** for a list of them all.
 ### Its history
 <!-- help: guide-faction-diary -->
 
-What the faction does over the saga goes in its **Diary** tab, a line a season, rather than in its summary (see [Diary tab](help:tab-nb-faction-diary)). Add an entry for each season it acts: a scheme begun, a member lost, a quarrel with a covenant.
+What the faction does over the saga goes in its **Diary**, a line a season, rather than in its summary (see [Diary](help:tab-nb-faction-diary)). Add an entry for each season it acts: a scheme begun, a member lost, a quarrel with a covenant.
 
 **See also:** [A faction](help:tab-nb-faction), [Ruler or Leader](help:neighbour-ruler), [A neighbour](help:neighbour)
 
@@ -1143,19 +1145,19 @@ What the faction does over the saga goes in its **Diary** tab, a line a season, 
 # How to fight a battle
 <!-- help: guide-battle -->
 
-Lords of Men plays a battle as a few events, each a fight with a player character at its heart, rather than every blow. The app keeps the battle in the saga's Conflicts, between two armies, and shows it on the Fief tab of each lord it names; it works out each event's total.
+Lords of Men plays a battle as a few events, each a fight with a player character at its heart, rather than every blow. The app keeps the battle in the saga's Conflicts, between two armies, and shows it in the **Fief** of each lord it names; it works out each event's total.
 
 ### Before the battle
 <!-- help: guide-battle-setup -->
 
-1. Open the lord's sheet (a neighbour of the lord kind) and go to its **Fief** tab, or open **Conflicts**.
+1. Open the lord's sheet (a neighbour of the lord kind) and go to its **Fief** (a tab on the terminal, a chapter on the desktop), or open **Conflicts**.
 <!-- tui -->
 2. In [Battles](help:section-nb-battles), press `a`.
 <!-- /tui -->
 <!-- gui -->
 2. Under [Battles](help:section-nb-battles), click **Add**.
 <!-- /gui -->
-3. Name the battle and choose its two armies: each a lord, town or other power of the Region, a covenant, or just a name. Added from a lord's Fief tab, the first army is his. To pit two lords against each other, choose both.
+3. Name the battle and choose its two armies: each a lord, town or other power of the Region, a covenant, or just a name. Added from a lord's Fief, the first army is his. To pit two lords against each other, choose both.
 4. Leave an army's **combat groups** blank and a lord's title fills them in (the groups of five his knights, serjeants, infantry and levies make, the levies only when he fights on his home ground, which the form asks); then add his allies (a Presence + Leadership + Affinity roll: 6 adds half his forces, 12 as many again, 18 double, 24 treble) and the mercenaries he hires. Type a covenant's or a named army's groups.
 5. Each commander rolls Intelligence + Area Lore + a stress die for a **Deployment Total**; type both. The difference is the first army's **Ground** in every event, and the second's as much below 0.
 6. Leave **baggage groups** blank for as many as each army needs (one for every ten combat groups), or type fewer. Save.
@@ -1209,7 +1211,7 @@ fight, recover from them as usual (Health's Recovery Roll).
 # How to run a siege
 <!-- help: guide-sieges -->
 
-1. Add a siege to the Sieges list in Conflicts, or on the besieging lord's Fief tab. Give the castle's Size, Garrison, Defenses and Supplies (the form's hints give each step's interval and bonus), the besiegers' miners, engines and soldiers, where each side stands at the four walls, and the experts' totals. For one lord besieging another, link **The castle in the Region** to the lord holding it and **The besieging lord** to the attacker: leave the Garrison and the soldiers blank and their armies fill them in, and the siege shows on both lords' Fief tabs.
+1. Add a siege to the Sieges list in Conflicts, or in the besieging lord's Fief. Give the castle's Size, Garrison, Defenses and Supplies (the form's hints give each step's interval and bonus), the besiegers' miners, engines and soldiers, where each side stands at the four walls, and the experts' totals. For one lord besieging another, link **The castle in the Region** to the lord holding it and **The besieging lord** to the attacker: leave the Garrison and the soldiers blank and their armies fill them in, and the siege shows in both lords' Fiefs.
 2. Play it with **Next Siege Event**. Each time, choose the besiegers' move (or the garrison's sally), and for an escalade or a sally play the battlefield event out and say who won.
 3. The siege moves on by the castle's interval each time, and any supplies roll that comes due is made for you, each an interval after the last. Each line of the chronicle gives the day of the siege it came on; the siege's page shows every event, and the page scrolls.
 4. When the castle surrenders or is breached, the siege says so. If the besiegers give up, edit it and set Ended to Raised.
@@ -1257,13 +1259,13 @@ A new hedge wizard is made on the [Creation Worksheet](help:creation-worksheet):
 
 Each Art's score comes from its XP on the table its book gives it: most hedge Arts and the vitkir's runes advance on the Art table, as Hermetic Arts do, and a Difficult Art (Elementalist Fire, the gruagach's Give and Take, the learned magicians' Techniques) on the Ability table. The [chapter](help:tradition-chapter) works out the rest: each power's Casting Score and Lab Total, the tradition's Magical Defenses, its gatherings' bonuses (a folk witch's sabbat) and the guidelines for its effects; More's [Cast a Power](help:hedge-cast) rolls a casting there and then. At creation, Tradition Training spends the apprenticeship the book gives, and the ten years of it that a folk witch spends from about age ten are left out of Later Life, as a magus's are (Hedge Magic RE p. 34). Sorginak and bouda train as folk witches do (Faith and Flame pp. 93-94; Between Sand and Sea p. 119), and settuten for ten years from 7 to 12, which the app takes as 10 (Between Sand and Sea pp. 95-96). The Bedouin hakima's book gives no years, so none are left out.
 
-**See also:** [A tradition's chapter](help:tradition-chapter), [Traditions Offered](help:section-traditions), [Abilities tab](help:tab-abilities)
+**See also:** [A tradition's chapter](help:tradition-chapter), [Traditions Offered](help:section-traditions), [Abilities](help:tab-abilities)
 
 
 # How to play a galdraman
 <!-- help: guide-galdor -->
 
-Iceland's two magus-equivalents are hedge wizards here. They are Gifted companions, the equal of a magus at the table (Hedge Magic RE p. 11), with no Magic Resistance and no Twilight. Both come with *Land of Fire and Ice* in play.
+Iceland's two magus-equivalents are hedge wizards here. They are Gifted companions, the equal of a magus at the table (Hedge Magic RE p. 11), with no Magic Resistance and no Twilight, as Hedge Magic gives every hedge tradition (p. 10). That is the app's conversion: *Land of Fire and Ice*, written for the 4th edition, lets galdramen enter Twilight (p. 50) and gives trollsynir Magic Resistance (p. 53). Both come with *Land of Fire and Ice* in play.
 
 **A traditional galdraman** takes the tradition Traditional Galdramen, whose chapter is Galdor. His Virtues come free: Free Expression, Second Sight, Premonitions, Galdor Conjuring and Galdor Enchantment. On the worksheet, give him The Gift, then use the Concept step's Add the tradition's Virtues. Take Deleterious Circumstances (touching the ground) as well; the totals are halved on the ground either way. Spend his xp on Galdor Wisdom, Music, Bargain and two Song Talents; a Song can't pass Galdor Wisdom. It goes up by practice and experience, never by teaching.
 
@@ -1275,9 +1277,9 @@ For longevity, strike a deal with biarg-galdor, conjure the biarg spirit as a ri
 
 Curse and Hamfarir roll through [Cast a Power](help:hedge-cast). Curse has its Ease Factors as guidelines. A nidstong is a Curse that rolls daily while it stands.
 
-**A trollson** takes the tradition Trollsynir, whose chapter is Trollskap. He casts as a gruagach, with Jotnar for Pictish (see [hedge wizards](help:guide-hedge-magic)). He must have Giant Blood and No Tattoo Magic.
+**A trollson** takes the tradition Trollsynir, whose chapter is Trollskap. He casts as a gruagach, with Jotnar for Pictish (see [hedge wizards](help:guide-hedge-magic)). He must have Giant Blood (*Land of Fire and Ice* p. 52) and, as the app's conversion to a gruagach, No Tattoo Magic.
 
-**Fylgjur.** Premonitions brings a fylgja, of Might 10 and Size -3 at most; a trollson's is the Fetch. Take Mighty Fylgja as often as you like for 10 Might and the next of Phantom, Spirit Voice and Corporeality, and Large Fylgja for its Size: the first allows Size 0, and each more +1. The chapter's Bound Beings shows what he has. Hamfarir is the Virtue that lets him use them.
+**Fylgjur.** Premonitions brings a fylgja, of Might 10 and Size -3 at most; a trollson's is the Fetch. Take Mighty Fylgja as often as you like (the book makes it one Virtue with points put into it, p. 54; the app takes it again for each) for 10 Might and the next of Phantom, Spirit Voice and Corporeality, and Large Fylgja for its Size: the first allows Size 0, and each more +1. The chapter's Bound Beings shows what he has. Hamfarir is the Virtue that lets him use them.
 
 **Other Icelanders.** A schooled galdraman is a Learned Magician and a seithkona a Folk Witch with Hamfarir. A bondi, a landowner or a godi takes that Social Status, which sits beside Galdraman if he is both.
 
@@ -1325,7 +1327,7 @@ Library books, creatures and Lab Texts are the saga's records, not catalog entri
 # How to hold a Tribunal
 <!-- help: guide-tribunal -->
 
-This guide walks one meeting from the roll call to the Closing: a Rhine Tribunal meeting in Summer 1228 with one charge on its docket, Fengheld v. Keep (Fengheld says Keep took the vis of the Rhine ford), and one motion. The rules are Ars Magica Definitive Edition, Chapter 2: The Order of Hermes, Tribunals, with Houses of Hermes: True Lineages (House Guernicus, Tribunal Procedures) for hearing a case and Houses of Hermes: Societates (House Tytalus, The Fine Arts of Debate) for the debate. [Hold Tribunal](help:hold-tribunal) has every step in full.
+This guide walks one meeting from the roll call to the Closing: a Rhine Tribunal meeting in Summer 1228 with one charge on its docket, Fengheld v. Keep (Fengheld says Keep took the vis of the Rhine ford), and one motion. The rules are Ars Magica Definitive Edition, Chapter 2: The Order of Hermes, Tribunals, with Houses of Hermes: True Lineages (House Guernicus, Tribunal Procedures) for hearing a case and Houses of Hermes: Societates (House Tytalus, The Fine Art of Debate, pp. 90-92) for the debate. [Hold Tribunal](help:hold-tribunal) has every step in full.
 
 ### Before the meeting
 <!-- help: guide-tribunal-before -->
@@ -1356,7 +1358,7 @@ To change a step already held, choose it in the Order of Business and hold it ag
 
 The first step calls the roll, and saving it opens the meeting. Each covenant's magi are listed with **all present** ticked. Untick it for Keep and tick only the magi who came: Leandro stayed home. For a sketch covenant, say how many of its unnamed magi came. Then the proxies each covenant carries (Fengheld carries one sigil) and whether the Presiding Quaesitor allows them.
 
-Worked out for you: the votes in the hall (one a magus present and one an allowed proxy, but none for the Praeco or the Presiding Quaesitor), and the quorum: twelve magi in person from four covenants, and a Quaesitor. The top of the tab shows **Present** ("4 votes, 1 by proxy") and **Quorum**. Only magi ticked present can speak at a hearing.
+Worked out for you: the votes in the hall (one a magus present and one an allowed proxy, but none for the Praeco or the Presiding Quaesitor), and the quorum: twelve magi in person from four covenants, and a Quaesitor. The top of the Meeting shows **Present** ("4 votes, 1 by proxy") and **Quorum**. Only magi ticked present can speak at a hearing.
 
 <!-- gui -->
 On the desktop a card announces the meeting as it opens; close it, and the next step opens.
@@ -1370,7 +1372,7 @@ Say where the meeting is held and how many days it lasts (3). Each case and moti
 ### Hearing a case
 <!-- help: guide-tribunal-hearing -->
 
-Fengheld v. Keep comes on its day. Choose the **Prosecutor** and **Defender** from the drop-downs: the magi present, each with their covenant. Leandro is absent, so the defence starts as **A Guernicus advocate**, who defends an accused who didn't come; a charge no one else will prosecute can be brought by **The Presiding Quaesitor**. A speaker with no debate scores written down (the advocate, or a sketch magus) gets **debates as**: Middling, Able or Formidable.
+Fengheld v. Keep comes on its day. Choose the **Prosecutor** and **Defender** from the drop-downs: the magi present, each with their covenant. Leandro is absent, so the defence starts as **A Guernicus advocate**, who defends an accused who didn't come; a charge no one else will prosecute can be brought by **The Presiding Quaesitor**. The book has a Quaesitor step in only for a high crime, and drops a low crime no one prosecutes (True Lineages p. 56); the app offers the Quaesitor for any charge. A speaker with no debate scores written down (the advocate, or a sketch magus) gets **debates as**: Middling, Able or Formidable.
 
 Leave **Levels lost** blank and the debate is rolled, round by round: the speakers' Communication and Intelligence with their best debating Abilities (by lot among equals each round), the case's Evidence backing the prosecution and the **Defence testimony** the defence. Or play the debate out at the table and enter both sides' levels lost. Either way, the side that loses fewer wins, and the difference is its Argument Strength.
 
@@ -1399,11 +1401,11 @@ The {years} blank sets a term. With a written-out ruling, its **term** (in years
 ### Closing, and what comes back
 <!-- help: guide-tribunal-closing -->
 
-The Treasury step shows the balance and the loans due. Closing then decides each case with a ruling (the fine owed to the treasury, the ruling into the Peripheral Code, a party's attitude moved, the term set), writes the Acta into the Tribunal's Diary and sets the next meeting. Each step held has already written its minutes there.
+The Treasury step shows the balance and the loans due. Closing then decides each case with a ruling (the fine owed to the treasury, though the book gives a third of it to the prosecutor, True Lineages p. 57; the ruling into the Peripheral Code, a party's attitude moved, the term set), writes the Acta into the Tribunal's Diary and sets the next meeting. Each step held has already written its minutes there.
 
 The term comes back on its own. [Ahead](help:section-ahead) lists the season before it ends (Spring 1235) and the season it ends (Summer 1235). Advancing into Spring 1235 says the term ends next season; advancing into Summer 1235 says it has ended and puts "Fengheld v. Keep (debated again)" on the Docket, with the old ruling in its charge, for the next meeting.
 
-**See also:** [Hold Tribunal](help:hold-tribunal), [Meeting tab](help:tab-trib-meeting), [Docket](help:tab-trib-docket)
+**See also:** [Hold Tribunal](help:hold-tribunal), [Meeting](help:tab-trib-meeting), [Docket](help:tab-trib-docket)
 
 # How to format your notes
 <!-- help: guide-formatting -->
@@ -1448,7 +1450,7 @@ There are no headings, tables or links: the sheets give each piece of text its o
 # How to install a magic item in a laboratory
 <!-- help: guide-lab-magic-item -->
 
-An enchanted device kept in a laboratory can improve the laboratory itself (Ars Magica Definitive Edition, Chapter 8: Laboratory, and Covenants, Chapter 9: Magic Items for Laboratories). This guide covers the two kinds of benefit, installing an item in play and while a laboratory is being set up, and when an item is a Feature instead.
+An enchanted device kept in a laboratory can improve the laboratory itself (Ars Magica Definitive Edition, Chapter 8: Laboratory, Magic Items for Laboratories, p. 298; Covenants p. 121). This guide covers the two kinds of benefit, installing an item in play and while a laboratory is being set up, and when an item is a Feature instead.
 
 ### Two kinds of benefit
 <!-- help: guide-lab-magic-item-kinds -->
@@ -1512,7 +1514,7 @@ Mythic Locations gives four set pieces with rules of their own. The app holds th
 The Temple of Mercury's library holds Lab Texts for nine rituals (Mythic Locations pp. 96-100). They are in the spell catalog with source ML, and a ritual's details panel says how it is learned.
 
 - **Reading** one for its gist takes a day and needs Latin and a Magic Theory score. It gives the Arts, the magnitude and roughly what the ritual does, but can't be cast or invented from (p. 97).
-- **Translating** it into a Hermetic Lab Text is lab work. Each season adds the Lab Total in the ritual's Arts less its level; at twice the level the copy is done. That means a Lab Total above the level, and three times the level for a single season. Each ritual already translated adds its highest magnitude to later translations, but not to invention. Experimenting is allowed (p. 97).
+- **Translating** it into a Hermetic Lab Text is lab work. Each season adds the Lab Total in the ritual's Arts less its level; at twice the level the copy is done. That means a Lab Total above the level, and three times the level for a single season. Later translations get a bonus equal to the highest magnitude of any ritual already translated (one bonus, not a sum), but invention doesn't. Experimenting is allowed (p. 97).
 - **Inventing** it from the Hermetic copy is the usual Lab Text rule: one season when the Lab Total is at least the level. Range, Duration and Target can't be changed. Any magus with the copy may invent it (p. 97).
 - **Casting** is as a Hermetic Ritual of its Arts. It can be dispelled like one, but anyone with Magic Theory sees it isn't Hermetic (p. 97).
 
@@ -1569,8 +1571,8 @@ A wolf hunt has five phases (Mythic Locations pp. 139-142).
 
 A Burning City, an Intangible Assassin or a Living Corpse is followed stage by stage (Hermetic Projects pp. 9-118).
 
-1. **Begin it.** Begin Project in Undertakings on the covenant's Seasons chapter (or Add on its Projects tab), and choose the kind. It starts with its chapter's stages.
-2. **Show it.** With more than one project, choose it on the projects list and use Show Project: the tab then shows its facts and rules, its stages and their works.
+1. **Begin it.** Begin Project in Undertakings on the covenant's Seasons chapter (or Add in its Projects), and choose the kind. It starts with its chapter's stages.
+2. **Show it.** With more than one project, choose it on the projects list and use Show Project: Projects then shows its facts and rules, its stages and their works.
 3. **Spend seasons on a stage.** Plan a magus's lab work as usual (inventing a spell, enchanting a device) and choose the stage under **Spent on a project's stage**. When the season is played, it is kept with that stage's works. Work done at the table is Added on the works list.
 4. **Use the chapter's own rules.** A Burning City's hazards are on Take Harm, and More's Warning Bell rolls the bell. An Intangible Assassin's tunnels are Open a Tunnel's; More's Gather a Connection and Lower an Aegis keep a connection and face the Aegis. A Living Corpse's More's Death Roll is the magus's death.
 5. **Tick a stage done** with Edit on the stages list. The facts show the stage now and the seasons spent.
@@ -1580,7 +1582,7 @@ A Burning City, an Intangible Assassin or a Living Corpse is followed stage by s
 # Which faith actions can he take?
 <!-- help: guide-religion -->
 
-A character's faith decides what the [Religion tab](help:tab-religion) offers him: the saints and the Church for a Christian, God's aid for a Jew or a Muslim, a yazata for a Mazdean. Each action is offered only to one the books allow.
+A character's faith decides what the [Religion](help:tab-religion) offers him: the saints and the Church for a Christian, God's aid for a Jew or a Muslim, a yazata for a Mazdean. Each action is offered only to one the books allow.
 
 <!-- tui -->
 1. **Set his religion.** Open his Religion tab, focus Faith and press `e` (or set Religion on Biographical Detail). Blank counts as Christian. The tab is there while Realms of Power: The Divine, The Church or another book that gives the faiths their rites is in play (Saga Content).
@@ -1593,8 +1595,8 @@ A character's faith decides what the [Religion tab](help:tab-religion) offers hi
 3. **Anyone of his faith.** A Christian may Invoke a Saint (no Ability or Virtue needed, RoP: The Divine p. 87), choose his Patron Saint (anyone may have one), and with The Church in play take an Indulgence, Vigil or Fast (The Church pp. 11-13). Devotion Points are for one who holds a Devotion or has a positive Pious trait (or the Pious Flaw) to begin one (pp. 12-13). A Mazdean invokes a yazata the same way, with The Cradle and the Crescent.
 4. **Only once something happens.** Threaten a Saint comes only after a saint has refused his invocation (RoP: The Divine p. 87): invoke first, and if the saint doesn't answer, Threaten appears with that saint.
 5. **A Muslim's own.** Invoke Baraka seeks a holy forbear's blessing at his shrine (the Qur'an anywhere), and The Hajj gives Pious +3 and 3 Faith Points (RoP: The Divine pp. 103-108).
-6. **Only with a Virtue or a trait.** Mystic Path needs a positive Pious trait and a tie to the Divine: True Faith, a Divine Supernatural Ability or Divine Warping (The Church p. 21). Invoke God's Aid needs one who may spend a Confidence Point: not a grog, nor Low Self-Esteem, unless he has True Faith (RoP: The Divine p. 41). Holy Influence needs spiritual authority: clergy, a monk, a rabbi, True Faith, Temporal Influence, Inspirational or Dominion Lore (pp. 38, 125).
-7. **The Church's sections.** With The Church in play a Christian has Petitions and the Canon Court; Add on each makes one (anyone may petition the Church, and the canon courts hear laymen and clergy alike, pp. 36, 46). Holy Orders and Ordinations are there for one with a clerical Social Status (Clerk, Priest, Religious, Senior Clergy, Mendicant Friar) or a grade on record, and Perform an Exorcism for a clergyman only (p. 34). Only a Christian may plan an Ordination season, which is how a layman begins.
+6. **Only with a Virtue or a trait.** Mystic Path needs a positive Pious trait and a tie to the Divine: True Faith, a Divine Supernatural Ability or Divine Warping (The Church p. 21). Invoke God's Aid needs one who may spend a Confidence Point: not a grog, nor Low Self-Esteem, unless he has True Faith (RoP: The Divine p. 41). Holy Influence needs spiritual authority: clergy, a monk, a rabbi, Temporal Influence or Inspirational (pp. 38, 75, 125); the app also accepts True Faith or Dominion Lore, its own reading.
+7. **The Church's sections.** With The Church in play a Christian has Petitions and the Canon Court; Add on each makes one (anyone may petition the Church, p. 46, and the canon courts hear laymen and clergy alike, p. 36). Holy Orders and Ordinations are there for one with a clerical Social Status (Clerk, Priest, Religious, Senior Clergy, Mendicant Friar) or a grade on record, and Perform an Exorcism for a clergyman only (p. 34). Only a Christian may plan an Ordination season, which is how a layman begins.
 8. **A pagan.** The books give no rite of his own: his faith is in a magic spirit (a Spirit Votary, DE p. 58) or in faerie (Realms of Power: Faerie p. 134), dealt with by the faerie actions in his Deeds chapter, under Dealings with Faerie.
 
 **See also:** [Devotion and the Saints](help:devotion), [Mystic Paths](help:mystic-path), [Invoking God's Aid](help:gods-aid), [Holy Influence](help:holy-influence)
@@ -1613,7 +1615,7 @@ a step nearer.
 2. **Give its stages their steps.** Add each stage with **Comes at**:
    the step it comes at (2, 4, 6). The last stage's step is the clock's
    size: the threat's page shows ■■□□□□ 2 of 6.
-3. **Tie a place's trigger to it.** On the place's Regio tab, add (or
+3. **Tie a place's trigger to it.** In the place's Regio, add (or
    edit) a dated trigger, such as *Abnoba's due*, Winter, each year.
    Choose the threat in **Moves a threat**, and how many steps failing
    it moves the threat.
@@ -1663,7 +1665,7 @@ told, or grows into a threat.
    on, take up the tale on the threat: its chapters go in its Diary, and
    recording a stage's outcome can take one too (What the troupe did).
 
-**See also:** [Diary tab](help:tab-cov-diary), [Grow into a Threat](help:grow-story), [A threat](help:tab-nb-threat)
+**See also:** [Diary](help:tab-cov-diary), [Grow into a Threat](help:grow-story), [A threat](help:tab-nb-threat)
 
 # How to clear what needs you
 <!-- help: guide-needs-you -->
@@ -1707,12 +1709,12 @@ Your troupe wants a royal tomb of your own to explore. Any place can be one,
 with *Lands of the Nile* in play.
 
 1. **Make the place.** In The Region, add a Place and tick its **Tomb** box.
-   A Tomb tab appears on it.
-2. **Say whose it is.** Edit the [Tomb tab](help:tab-nb-tomb)'s block: its kind
+   A Tomb tab (a chapter on the desktop) appears on it.
+2. **Say whose it is.** Edit the [Tomb](help:tab-nb-tomb)'s block: its kind
    gives the base aura and Build Points, and the centuries of burials and any
    decay change the aura. Add Boons, and up to 10 points of Hooks.
 3. **Guard it.** Add curses, talismans and wards, and traps, each to its own
-   list. Each form shows the Build Points it costs, and the tab shows what is
+   list. Each form shows the Build Points it costs, and the Tomb shows what is
    left to spend.
 4. **Run it.** With a trap chosen, More's **Overcome It** walks through springing
    it: who is in danger, a look for it by the light there, each character's action,
@@ -1814,7 +1816,7 @@ ticks it again. Or it may not fit the character yet (The Gauntlet waits for
 an apprentice).
 
 <!-- gui -->
-**See also:** [Deeds tab](help:tab-deeds), [Planning tab](help:tab-planning)
+**See also:** [Deeds](help:tab-deeds), [Planning](help:tab-planning)
 <!-- /gui -->
 <!-- tui -->
 **See also:** [Planning tab](help:tab-planning)
@@ -1826,7 +1828,7 @@ an apprentice).
 Four magi found Dammërstein in the Rhine and swear the Charter of Arae
 Flaviae; years later one of them breaks it.
 
-1. **Start from a template.** On the covenant's Charter tab, choose
+1. **Start from a template.** In the covenant's Charter, choose
    **Use a Template** (More on the charter) and the Charter of Arae
    Flaviae: its oath, its 25 clauses under the charter's sections and its
    seven-season probation are filled in with the covenant's and the
