@@ -4,6 +4,7 @@ waits and passcode length."""
 
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 
 import pytest
@@ -108,8 +109,13 @@ def test_a_hosted_copys_chooser_keeps_to_the_exports_folder(
     )
     assert confined.find("Characters") == exports / "Characters"
     assert confined.find("exports") == exports
-    for escape in ("..", "exports/../..", str(outside), "C:/Windows", "../secret.json"):
+    for escape in ("..", "exports/../..", str(outside), "../secret.json"):
         assert confined.find(escape) is None, escape
+    drive = confined.find("C:/Windows")
+    if sys.platform == "win32":
+        assert drive is None
+    else:  # "C:" is only a folder's name here, and it stays inside exports
+        assert drive is None or drive.is_relative_to(exports)
 
 
 async def test_the_terminal_chooser_shows_and_takes_only_the_exports_folder(

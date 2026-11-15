@@ -1,22 +1,37 @@
-# The checks run before every change is handed over (CONTRIBUTING.md), on a
-# clean machine. Run by hand only (Actions tab -> Checks -> Run workflow),
-# since every change already runs them locally.
+# The checks every change must pass (CONTRIBUTING.md), on clean Windows and
+# Linux machines: formatting, lint and types once per system, and the full
+# test suite split four ways per system (pytest --shard, tools/shards.py),
+# the eight quarters running side by side. They run on every push and pull
+# request to dev (where work happens) and main (the latest release), and by
+# hand from the Actions tab. The last job, `checks`, passes only when all the
+# others did: it is the one status branch protection requires.
 name: Checks
 
 on:
+  push:
+    branches: [dev, main]
+  pull_request:
+    branches: [dev, main]
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 concurrency:
   group: checks-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  checks:
-    runs-on: windows-latest
-    timeout-minutes: 30
+  lint:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v6
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6.8.0
         with:
           enable-cache: true
       - name: Install Python and dependencies
@@ -27,5 +42,40 @@ jobs:
         run: uv run ruff check .
       - name: Type-check
         run: uv run pyright
-      - name: Tests
-        run: uv run pytest -q -n auto --dist worksteal
+
+  tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        shard: [1, 2, 3, 4]
+    name: tests (${{ matrix.os }}, ${{ matrix.shard }}/4)
+    runs-on: ${{ matrix.os }}
+    # A quarter of the suite takes about 5-10 minutes on a 4-core runner.
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Install Qt's system libraries (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libegl1 libgl1 libxkbcommon-x11-0 libdbus-1-3
+      - uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6.8.0
+        with:
+          enable-cache: true
+      - name: Install Python and dependencies
+        run: uv sync --locked
+      - name: Tests (shard ${{ matrix.shard }} of 4)
+        run: uv run pytest -q -n auto --dist worksteal --shard=${{ matrix.shard }}/4
+
+  checks:
+    if: always()
+    needs: [lint, tests]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Every job passed
+        env:
+          LINT: ${{ needs.lint.result }}
+          TESTS: ${{ needs.tests.result }}
+        run: |
+          echo "lint: $LINT, tests: $TESTS"
+          test "$LINT" = success && test "$TESTS" = success

@@ -17,6 +17,7 @@ from pathlib import Path
 from typing import ClassVar
 from urllib.parse import urlsplit
 
+from .. import launch
 from ..files import write_atomic
 from .folder import remote_file
 
@@ -34,9 +35,6 @@ TUNNELS: dict[str, tuple[str, str]] = {
     CLOUDFLARE: ("Cloudflare Tunnel", "CF-Connecting-IP"),
     OTHER_TUNNEL: ("Another tunnel (ngrok, Tailscale Funnel...)", "X-Forwarded-For"),
 }
-
-#: The module the listener process runs (python -m).
-SERVE_MODULE = "ars_magica_manager.remote.serve"
 
 
 def identity_name(saga_id: str) -> str:
@@ -69,7 +67,7 @@ class RemotePlan:
     port: int = DEFAULT_PORT
     tunnel: str = CLOUDFLARE
 
-    module: ClassVar[str] = SERVE_MODULE
+    word: ClassVar[str] = launch.SEATS
 
     @property
     def address(self) -> str:

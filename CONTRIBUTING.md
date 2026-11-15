@@ -159,15 +159,54 @@ what the books print: never invent lists or figures to fill a gap.
   screens) before and after.
 - Read a file once per flow, and pass the data along.
 
-## Versioning
+## Branches
 
-The version is `MAJOR.MINOR.PATCH`, set only in `pyproject.toml`. A change
-that adds or changes what the app does is MINOR; a fix, code-health, test
-or docs change is PATCH. With each release: bump it, run `uv lock`, and add
-a `## X.Y.Z — YYYY-MM-DD` entry at the top of CHANGELOG.md, in plain
-English for the user, each entry under a `### Feature` heading naming one
-of the Features table's features (`tests/test_version.py` and
-`tests/test_changelog.py` check both). Then tag the commit `vX.Y.Z`.
+- Branch from `dev`, and open pull requests into `dev`.
+- Never commit to `main`. It is the default branch and always the latest
+  release, and it changes only through a release pull request from `dev`,
+  when the maintainer calls a release.
+- The Checks workflow (`.github/workflows/checks.yml`) runs on Windows and
+  Linux for every push and pull request to `dev` and `main`: formatting,
+  lint and pyright once per system, and the full suite split into four
+  shards per system that run side by side (`pytest --shard=k/4`). Its last
+  job, `checks`, passes only when every other job did; it is the one status
+  to require in branch protection.
+- The shards are balanced by each test file's running time, from
+  `tools/test_durations.json`; a file not in it counts as a typical file of
+  its tier. When the suite has changed a lot, measure it again (the steps
+  are in `tools/shards.py`'s docstring) and commit the new file.
+
+## Changelog and versioning
+
+**With each change** add its lines under `## Unreleased` at the top of
+CHANGELOG.md (above the newest version; start the section if it isn't
+there), in plain English for the user, each entry under a `### Feature`
+heading naming one of the Features table's features. Don't change the
+version. `tests/test_changelog.py` holds the Unreleased section to the
+same rules as a version's, and fails if it isn't the first section above
+the newest version. What's New shows it as Unreleased (in development).
+
+**The version** is `MAJOR.MINOR.PATCH`, set only in `pyproject.toml`, and
+goes up once per release, by the largest change in it: a change that adds
+or changes what the app does is MINOR; a fix, code-health, test or docs
+change is PATCH. MAJOR marks a finished phase of the plan, when the maintainer says.
+
+**A release**, in order:
+
+1. On `dev`, one commit: rename `## Unreleased` to
+   `## X.Y.Z — YYYY-MM-DD`, set the version in `pyproject.toml`, and run
+   `uv lock`. `tests/test_version.py` checks that the newest version
+   heading is the one `pyproject.toml` names.
+2. Open a pull request from `dev` into `main`, and merge it once the
+   checks pass.
+3. Tag the merge on `main`: `git tag -a vX.Y.Z -m "..."` and push the tag.
+   The Release workflow (`.github/workflows/release.yml`) checks that the
+   tag matches `pyproject.toml` and is on `main`, then publishes the GitHub
+   Release with that version's section of CHANGELOG.md as its notes
+   (`tools/release_notes.py`).
+
+An urgent fix is just a small PATCH release made the same way: fix it on
+`dev`, then release.
 
 ## Seeing the screen
 

@@ -1292,8 +1292,9 @@ class SourcebookPickerScreen(ModalDialog[list[str] | None]):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def on_mount(self) -> None:
-        self.query_one("#books-list", SelectionList).focus()
+    #: Focused once composed (Textual's own auto focus), never looked up
+    #: after the screen may have closed.
+    AUTO_FOCUS = "#books-list"
 
     def action_tick_all(self) -> None:
         self.query_one("#books-list", SelectionList).select_all()
@@ -1421,8 +1422,8 @@ class CsvFilePickerScreen(ModalDialog[Path | None]):
                 yield Button("Open", id="btn-picker-open", variant="success")
                 yield Button("Cancel", id="btn-picker-cancel")
 
-    def on_mount(self) -> None:
-        self.query_one("#picker-tree", DirectoryTree).focus()
+    #: Focused once composed (see the books chooser's AUTO_FOCUS).
+    AUTO_FOCUS = "#picker-tree"
 
     def _show_folder(self, folder: Path) -> None:
         self.query_one("#picker-tree", DirectoryTree).path = folder

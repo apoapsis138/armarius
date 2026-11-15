@@ -426,7 +426,7 @@ but never in the Diary line it writes.
 <!-- gui -->
 1. Open the saga and, in its **Saga Management** chapter, click **Host for Players**. In the [Host for Players](help:host-for-players-window) window, choose **A browser or terminal, on your private network**, then click **Host**. Choose your **Address** on the private network (the Tailscale one is marked; **Another address...** lets you type one), and the **Browser port** (8000 unless another program has it). Tick **Also over SSH** to take SSH clients too (see below). The line under the fields says what players will open. Click **Host**.
 <!-- /gui -->
-2. The first time, Windows asks whether to let Python through the firewall: allow it on **private** networks.
+2. The first time, Windows asks whether to let Python (**armarius-terminal**, in a [downloaded copy](help:guide-download)) through the firewall: allow it on **private** networks.
 3. Players open `http://ADDRESS:8000` in their browser, choose the saga and sign in. Saga Management (and, on the desktop, the Host for Players window) says the address for as long as you host. The form remembers what you chose for next time.
 4. Keep your computer awake while people play: nobody can reach the saga while it sleeps.
 <!-- tui -->
@@ -444,7 +444,7 @@ Players must open the address you host on, as Saga Management shows it: the host
 
 Every few seconds each player's copy picks up what the others saved. If it finds the saga file damaged (edited by hand, or cut short by another program), it says so once and goes on with its own data; its next save writes the whole file again.
 
-**From a terminal instead.** The same host runs in a terminal in the app's folder with `uv run python tools/serve.py --host ADDRESS` (add `--port 8001` for another port, `--ssh-port 2222` for SSH). It hosts until you press Ctrl+C there, whichever window of the app you have open. It refuses an address the internet can reach unless you add `--allow-public`.
+**From a terminal instead.** The same host runs in a terminal in the app's folder with `uv run python tools/serve.py --host ADDRESS`, or, in a [downloaded copy](help:guide-download), `armarius-terminal host --host ADDRESS` (add `--port 8001` for another port, `--ssh-port 2222` for SSH). It hosts until you press Ctrl+C there, whichever window of the app you have open. It refuses an address the internet can reach unless you add `--allow-public`.
 
 ### Remote seats: players with their own Armarius
 <!-- help: guide-hosting-remote; gui -->

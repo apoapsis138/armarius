@@ -14,7 +14,7 @@ from screen_helpers import (
     _select_character,
     _select_covenant,
 )
-from support import close_worksheet, menu
+from support import click_when_shown, close_worksheet, menu
 from textual.widgets import Button, Collapsible, Input, ListView, Select, Static, Tree
 
 from ars_magica_manager import settings, storage
@@ -83,7 +83,7 @@ async def test_create_saga_flow_saves_and_returns_to_picker():
         form.query_one("#fld-storyguide", Input).value = "Alex"
         form.query_one("#fld-year", Input).value = "1220"
 
-        await pilot.click("#btn-save")
+        await click_when_shown(pilot, "#btn-save")
         await pilot.pause()
 
         assert isinstance(app.screen, SagaPickerScreen)
@@ -150,7 +150,7 @@ async def test_create_covenant_flow_saves_covenant():
         app.screen.query_one("#fld-name", Input).value = "Fengheld"
         app.screen.query_one("#fld-notes", Input).value = "A border covenant"
 
-        await pilot.click("#btn-save")
+        await click_when_shown(pilot, "#btn-save")
         await pilot.pause()
         await close_worksheet(pilot, app)
 
@@ -194,7 +194,7 @@ async def test_create_character_at_saga_level_is_unassigned_and_selectable():
         assert app.screen.query_one("#fld-covenant_id", Select).value == Select.NULL
         app.screen.query_one("#fld-name", Input).value = "Wandering Grog"
         app.screen.query_one("#fld-type", Select).value = "grog"
-        await pilot.click("#btn-save")
+        await click_when_shown(pilot, "#btn-save")
         await pilot.pause()
         await close_worksheet(pilot, app)
 
@@ -256,7 +256,7 @@ async def test_create_character_defaults_to_current_covenant():
 
         app.screen.query_one("#fld-name", Input).value = "Leandro"
 
-        await pilot.click("#btn-save")
+        await click_when_shown(pilot, "#btn-save")
         await pilot.pause()
         await close_worksheet(pilot, app)
 

@@ -689,8 +689,9 @@ class MenuScreen(ModalDialog[str | None]):
                 compact=True,
             )
 
-    def on_mount(self) -> None:
-        self.query_one("#menu-list", OptionList).focus()
+    #: Focused once composed (Textual's own auto focus), never looked up
+    #: after the screen may have closed.
+    AUTO_FOCUS = "#menu-list"
 
     def on_key(self, event: Key) -> None:
         for letter, key, _ in self.items:
@@ -777,8 +778,8 @@ class ListFieldScreen[ItemT](ModalDialog[list[ItemT] | None]):
                 yield Button("Done", id="btn-done", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def on_mount(self) -> None:
-        self.query_one("#list-field-list", SelectableList).focus()
+    #: Focused once composed (see MenuScreen.AUTO_FOCUS).
+    AUTO_FOCUS = "#list-field-list"
 
     def _chosen(self) -> int | None:
         index = self.query_one("#list-field-list", SelectableList).selected_data_index
