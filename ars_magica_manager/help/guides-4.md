@@ -25,7 +25,7 @@ A magus can have one familiar at a time, so Bind Familiar is only offered while 
 3. **Find it again.** The familiar's page opens. The magus's Description chapter now shows the familiar as a card in its Familiar section. Click it to come back to the [Familiar page](help:familiar) later.
 <!-- /gui -->
 
-**Bound already** starts ticked for a magus still In Creation and unticked for one in play. Ticked, for a familiar bound before play, making the record grants the bond at once. Both the magus and the familiar gain the True Friend Virtue and a Loyal (Partner) +3 Personality Trait. Unticked, the familiar is bound by lab work, and the bond comes when that season is played, as the book has it (DE p. 267).
+**Bound already** starts ticked for a magus still In Creation and unticked for one in play. Ticked, for a familiar bound before play, the bond's True Friend Virtue and Loyal (Partner) trait come at once. Unticked, they come when the binding season is played (see [Familiar sheet](help:familiar)).
 
 <!-- tui -->
 You can see them on the magus's [Virtues & Flaws tab](help:tab-vf) (`3`) and the familiar's [Identity & Cords tab](help:tab-fam-identity) (`1`).
@@ -121,9 +121,9 @@ Each season adds the Lab Total less the level in points. The vis, a tenth of the
 ### What the app works out, and what it doesn't
 <!-- help: guide-familiars-limits -->
 
-The app works out the point cost of each cord, whether a binding or empowerment can be done, its Lab Total, its vis, and the progress of a power over several seasons. The Bronze Cord is taken off the magus's aging roll each Winter.
+The app works out the point cost of each cord, whether a binding or empowerment can be done, its Lab Total, its vis, and the progress of a power over several seasons. The Bronze Cord is taken off the magus's aging roll each Winter, and what the other cords do is in [Binding & Cords](help:section-fam-binding).
 
-Most of the familiar's own figures are typed in, such as its Soak, Magic Resistance and Might, its wounds and penalties, and each bond power's figures. The Golden Cord takes its botch dice off casting totals, a hedge power's too. The Silver Cord is added by Roll beside Personality Traits, for a trait roll, resisting mental influence, or the familiar freeing its magus's mind. The True Friend Virtue is recorded, but the app applies no effect for it.
+Most of the familiar's own figures are typed in, such as its Soak, Magic Resistance and Might, its wounds and penalties, and each bond power's figures. The True Friend Virtue is recorded, but the app applies no effect for it.
 
 Deleting the magus also deletes their familiar, and exporting the magus takes the familiar with them.
 <!-- tui -->
@@ -132,7 +132,7 @@ To remove only the familiar, press `d` on it in the tree.
 <!-- gui -->
 To remove only the familiar, choose Delete in the **Manage** chapter of its page.
 <!-- /gui -->
-Then the bond is broken, and the magus loses True Friend, Loyal (Partner) and any planned familiar seasons.
+That breaks the bond (see [Familiar sheet](help:familiar)).
 
 **See also:** [Familiar sheet](help:familiar), [Binding & Cords](help:section-fam-binding), [Bond Powers](help:tab-fam-powers), [Planning](help:tab-lab-planning), [Invent Spell screen](help:invent-spell), [Advancing a season](help:advance-season)
 
@@ -191,7 +191,7 @@ An Initiation needs three things, settled at the table first.
 - **Loses a Virtue** asks for the **Virtue lost**, one of the Initiate's own Minor or Major Virtues.
 - **Raises a Minor Flaw to Major** asks for the **Minor Flaw raised**, one of their own, and for the related Major Flaw it becomes as the **Flaw gained**.
 
-The Ordeal's size follows from what it costs. A Minor Flaw or Virtue makes a Minor Ordeal, a Major one a Major Ordeal, and a raised Flaw a Medium one.
+Its size, Minor, Medium or Major, follows from what it costs (see [Activities offered](help:plan-season-activities)).
 
 <!-- tui -->
 Delete on a chosen field clears it.
@@ -200,7 +200,7 @@ Delete on a chosen field clears it.
 A chosen Virtue or Flaw field's **Clear** button clears it.
 <!-- /gui -->
 
-**The Target.** There's no die. The Initiation succeeds when the total reaches the Target Level, which is 15 for a Minor Virtue and 21 for a Major one. It's 18 and 30 when the Mystagogue doesn't have the Virtue, which is always so for a self-initiation into a Virtue the character lacks.
+**The Target.** There's no die. The Initiation succeeds when the total reaches the Target Level (see [Activities offered](help:plan-season-activities)). A self-initiation into a Virtue the character lacks always takes the higher Target, since the Mystagogue lacks it too.
 
 Some Houses add their own Scripts and rules, such as Verditius's Hubris or the Bjornaer Ritual of Twelve Years. See [House Mysteries](help:guide-initiation-houses).
 
@@ -230,9 +230,9 @@ An unGifted Initiate's past Ordeals lower nothing (Hedge Magic Revised Edition p
 ### What the app works out, and what it doesn't
 <!-- help: guide-initiation-limits -->
 
-**The app works out** the Initiation Total and Target Level, whether the Mystagogue has the Virtue, and the largest reduction among past Ordeals. It also checks the Lore and the Ordeal, works out the Ordeal's size, and adds or takes away the Virtues and Flaws on success.
+**The app works out** the totals, Targets and Ordeals above, and checks the Lore.
 
-**You type** the Script bonus, as the storyguide agrees it. For an experimental Script, you also type the proposed bonus, the risk and the storyguide's sympathy bonus. Which Major Flaw a Minor Flaw is related to is the troupe's call, and the app checks only that it's a Major Flaw.
+**You type** the Script bonus, as the storyguide agrees it, and for an experimental Script the proposed bonus, the risk and the sympathy bonus. Which Major Flaw a Minor Flaw is related to is the troupe's call, and the app checks only that it's a Major Flaw.
 
 **Varying the Script.** The Mystagogue may make one change in an Initiation. Choose it in **Vary the Script**. Adding a component is Ease 9, changing one 12 and removing one 15. Type in **The change adds** what it does to the Script bonus, negative when removing. When the season is applied the app rolls a stress die + the Mystagogue's Intelligence + Lore. Success adds the change to the Script bonus. Failure fails the Initiation, with no Virtue and no Ordeal, though the Script as it was may be tried another season (DE pp. 388-389). Before then, the line under the form gives the roll the change needs and the Initiation Total if it works.
 
@@ -259,7 +259,7 @@ Then it rolls the rite's validity. That's a simple die + risk + the Mystagogue's
 
 **Hedge Scripts.** To follow one of a hedge tradition's printed Scripts, choose it in **Hedge Script**. The list holds the Scripts of the traditions someone in the saga belongs to. The tradition's Characteristic and Lore are used instead of Presence and the Lore typed. The Script's own bonus is used, anything typed in **Script bonus** is added to it, and its Ease Factor is the Target.
 
-When the Mystagogue doesn't know the power, the Ease Factor rises by 3 for a Minor Virtue and 9 for a Major (Hedge Magic Revised Edition p. 13). The app counts the Mystagogue as knowing it when they have the **Virtue initiated**. When the power is an Ability, a gruagach's Give say, tick **Mystagogue knows the power**. The Mystagogue must belong to the tradition, a tradition without self-initiation can't initiate itself, and a Script for the Gifted needs a Gifted Initiate. With a hedge Script the **Virtue initiated** may be left blank, and the Diary then names what the Script gives, to add by hand. Past Ordeals lower a hedge Script's Ease Factor too, never below 9, and never an Ease Factor already lower.
+The Ease Factor rises when the Mystagogue doesn't know the power (see [Activities offered](help:plan-season-activities)). The app counts the Mystagogue as knowing it when they have the **Virtue initiated**. When the power is an Ability, a gruagach's Give say, tick **Mystagogue knows the power**. The Mystagogue must belong to the tradition, a tradition without self-initiation can't initiate itself, and a Script for the Gifted needs a Gifted Initiate. With a hedge Script the **Virtue initiated** may be left blank, and the Diary then names what the Script gives, to add by hand. Past Ordeals lower a hedge Script's Ease Factor too, never below 9, and never an Ease Factor already lower.
 
 **Who may be Initiated.** Two Mysteries check it. **Secret Name** fails for a magus with a talisman or a familiar (DE p. 235). **Faerie Magic** needs one touched by the fay, by a fay Virtue or Flaw or a Warping Point from a faerie (DE p. 236). The app can't tell where Warping came from, so any Warping Point counts.
 
@@ -354,12 +354,10 @@ Four Houses' Scripts are listed under the House's name on the Initiation's Scrip
 
 **House Criamon** (Houses of Hermes: Mystery Cults pp. 61-71; Errata p. 55)
 
-- **Scripts.** A Criamon magus's paths are listed under House Criamon (Mystery Cult), one Script for each avenue. The Enigma's Follow an Avenue plans one, and the avenues are followed in order along a path.
-- **Lore, guide and Target.** The Lore is Mystery Cult Lore: Criamon, and the book's House Criamon Lore counts too. A station needs it at its place on the path + 1. Each avenue's Target is a Major Virtue's 21, as the book prints it whether or not the guide holds the station, lowered by past Ordeals as usual.
-- **The guide.** With no Mystagogue chosen, the guide the House provides leads at Presence + Lore 6, the printed Scripts' assumption. A ghostly Primus leads instead when The Enigma names one, at Lore 9 with the Presence set on Change Path (p. 60). The Mystagogue need only know House Criamon Lore (DE p. 387). The app notes one not of the House as unusual, which is its own reading. See [The path](help:section-char-criamon-path).
+- **Scripts.** A Criamon magus's paths are listed under House Criamon (Mystery Cult), one Script for each avenue. The Enigma's [Follow an Avenue](help:follow-avenue) plans one, and the avenues are followed in order along a path.
+- **Lore, guide and Target.** The Lore each station needs, the guide (the House's own when no Mystagogue is chosen, or a ghostly Primus) and the Target are in [The path](help:section-char-criamon-path). The Target is a Major Virtue's 21 as the book prints it, whether or not the guide holds the station.
 - **Ordeals.** When the plan names no Ordeal of its own, the station's Ordeal Flaws are added, a Major Pious replacing Vow or Higher Purpose. The Ordeal counts at the size the book's next Targets show.
-- **Virtues from stations.** Some stations add catalog Virtues too, such as Clear Thinker, Common Sense and Keen Vision, the Gentle Gift or the Blatant Gift lifted to an ordinary Gift, and Free Expression and Inspirational (pp. 64, 70-71).
-- **Aptitude.** An aptitude for a path, from a head bound in infancy, adds +3 to its first station (p. 51).
+- **Virtues and aptitude.** The Virtues some stations add, and the +3 a head bound in infancy gives a path's first station, are in [Follow an Avenue](help:follow-avenue).
 
 **See also:** [Plan Season](help:plan-season), [Virtues & Flaws](help:tab-vf), [Advancing a season](help:advance-season), [How the app handles advancement](help:guide-advancement), [The Enigma](help:tab-criamon), [Hubris](help:verditius-hubris)
 
@@ -374,17 +372,17 @@ A player brings their magus over from another saga, or you'd rather type forty b
 <!-- tui -->
 1. **Choose the record.** In the tree, select the covenant, laboratory or character you want to move. Leave focus on its tree node or on the panel at the top of its sheet.
 2. **Open Export.** Press `m` (More) and choose **Export**.
-3. **Check the File.** It starts in the `exports` folder of your [save folder](help:saga-picker), named after the record. `.amm.json` is added if you give no `.json` ending. The line above Export warns when the file exists and will be replaced.
+3. **Check the File.** It starts in the `exports` folder of your [save folder](help:saga-picker), named after the record.
 <!-- /tui -->
 <!-- gui -->
 1. **Open the record.** Open the page of the covenant, laboratory or character you want to move.
 2. **Open Export.** Open its **Manage** chapter and click **Export**.
-3. **Check the File.** It starts in the `exports` folder of your [save folder](help:saga-picker), named after the record. `.amm.json` is added if you give no `.json` ending. The line under the fields warns when the file exists and will be replaced.
+3. **Check the File.** It starts in the `exports` folder of your [save folder](help:saga-picker), named after the record.
 <!-- /gui -->
 4. **Take the rest of a covenant.** For a covenant, tick **With its laboratories and characters** to take them too.
 5. **Export.** Choose **Export**. A character with a portrait goes as a zip, `.amm.zip`, holding the file and the portrait.
 
-A character takes their familiar, enchanted devices, books and Diary. A laboratory takes its books and devices. The saga's own spells and [House Rules](help:tab-content-house-rules) that these use go too. Season plans and lab work under way stay behind. See [Exporting](help:import-data-export) for the full list.
+What goes with the record, and what stays behind, is in [Exporting](help:import-data-export).
 
 ### Bringing a record's changes back from another computer
 <!-- help: guide-import-export-update -->
@@ -418,17 +416,14 @@ The record keeps its place in the saga. See [Updating a record from a file](help
 <!-- /gui -->
 5. **Import.** Read the preview, which lists what will be added, the links kept and the links dropped, and choose **Import**.
 
-[Importing an exported record](help:import-data-records) explains the rules. In short:
+Nothing here is overwritten. How names, links and a missing covenant are matched is in [Importing an exported record](help:import-data-records). A link that's dropped can be set again on the sheet.
 
-- **Nothing is overwritten.** Everything imported gets new ids. A record with the same name as one already here is added beside it, and the preview says so.
-- **Links outside the file.** A link to a record that isn't in the file, such as a character's covenant or a laboratory's owner, is kept only if this saga has exactly one record of that kind with that name. Otherwise it's dropped, and you can set it again on the sheet.
-- **A missing covenant.** When a character's or laboratory's covenant has no namesake in this saga, a covenant with that name and its old aura is added, so the aura comes too.
-- **Spells, House Rules and Abilities.** A saga-made spell is matched to one here with the same name, Technique, Form and level. A House Rule is matched by name, type and tier, and a saga Ability by name, against the catalog's and the saga's. Anything not matched is added.
+A saga-made spell is matched to one here with the same name, Technique, Form and level. A House Rule is matched by name, type and tier, and a saga Ability by name, against the catalog's and the saga's. Anything not matched is added.
 
 ### Importing books from a CSV file
 <!-- help: guide-import-export-books -->
 
-1. **Make the file.** Make a CSV file with a header row. The columns are listed under [What can be imported](help:import-data-kinds), and **name** and **type** are needed. The app works out each book's cost, so an owner or cost column is ignored.
+1. **Make the file.** Make a CSV file with a header row. The columns are listed under [What can be imported](help:import-data-kinds), and **name** and **type** are needed.
 <!-- tui -->
 2. **Import books with no owner.** Select the saga, press `m` (More), choose **Import**, then **Books**. They land in [the Armarium](help:armarium), unassigned.
 3. **Give them an owner later.** In the Armarium, choose Holder **Unassigned** to list them, mark several with Space and press `e`.
@@ -463,14 +458,14 @@ The spells become the saga's own, and you can edit them on [Spells](help:tab-con
 ### When a name is already taken
 <!-- help: guide-import-export-duplicates -->
 
-When an imported book or spell has the name of one already in the saga, the app asks about each one. **Skip** leaves it out, and **Duplicate** adds it anyway. **Skip All** and **Duplicate All** give the same answer for the rest of that import. Spell names are compared in any case. Nothing is added until every question is answered, and cancelling a question imports nothing.
+When an imported book or spell has the name of one already in the saga (spell names compared in any case), the app asks about each one, as [What can be imported](help:import-data-kinds) says. **Skip** leaves it out, and **Duplicate** adds it anyway. **Skip All** and **Duplicate All** give the same answer for the rest of that import.
 
 ### Keeping backups
 <!-- help: guide-import-export-backups -->
 
 Each saga is one file, the saga's id followed by `.json`, in the `sagas` folder of your save folder. To keep it somewhere else, use [Change Save Folder](help:saga-picker-actions) on the saga picker. The app saves every change as you make it.
 
-- **Before each season.** Before a season or downtime run is applied, the app copies the saga to `sagas/backups` and keeps the last five. The newest has the saga's own file name, and older ones end `.1.json` to `.4.json`. Each has a copy from just after the advance beside it, with `.after` in its name. **Undo Last Season** uses them (see [Undoing a mistake](help:guide-seasons-undo)).
+- **Before each season.** Before a season or downtime run is applied, the app copies the saga to `sagas/backups` and keeps the last five, named as [How to restore a saga from a backup](help:guide-restore-backup) shows. **Undo Last Season** uses them (see [Undoing a mistake](help:guide-seasons-undo)).
 - **Anything older.** That's the only backup the app keeps, so copy the saga's file yourself from time to time.
 - **One record.** To keep a single character, laboratory or covenant safe before a big change, export it as above.
 - **A damaged file.** Every saga file, export and pack is checked as it's read. A field holding the wrong kind of thing, from a file edited by hand or damaged, is named, and the saga isn't opened or changed. Copy a backup over its file to go back to before the damage.
@@ -624,7 +619,7 @@ Players connect with `ssh -p 2222 player@ADDRESS` from Windows Terminal (Windows
 - A player changes only the characters they play and what belongs to them. Everything else they can look at and Export, which downloads in their browser. See [Players](help:tab-content-players).
 - Everyone's changes reach the others within a few seconds. See [Signing in](help:sign-in).
 
-**What the app does for you.** The host answers only requests addressed to the address you chose, and the app's own connection only from its own page, so a web page from another site can't open a copy. Three wrong passcodes for one name are free. After that each try waits longer (30 seconds, then 2 minutes, 10 minutes and an hour), in every browser at once. A passcode shorter than 14 characters signs in once more and asks for a new one (see [Signing in](help:sign-in)). A copy opened from a browser or over SSH has no command palette and can't change your settings. Its file chooser (Import, for a storyguide who signs in) shows only your exports folder.
+**What the app does for you.** The host answers only requests addressed to the address you chose, and the app's own connection only from its own page, so a web page from another site can't open a copy. After three wrong passcodes for one name, each try waits longer, and a passcode shorter than 14 characters asks for a new one (see [Signing in](help:sign-in)). A copy opened from a browser or over SSH has no command palette and can't change your settings. Its file chooser (Import, for a storyguide who signs in) shows only your exports folder.
 
 **See also:** [How to host a saga for your troupe](help:guide-hosting), [Players](help:tab-content-players), [Signing in](help:sign-in), [Saga picker](help:saga-picker)
 
@@ -761,11 +756,11 @@ The recipe below works anywhere Docker runs. On a NAS, run each `docker` command
 2. **Make a folder.** Make a folder for it on the server, say `armarius`. Into it, put `compose.yaml`, `example.env` and `tunnel.env.example`, from the `deploy` folder of the app's source on GitHub, at the version you run.
 3. **Fill in `.env`.** In that folder, `cp example.env .env` and fill it in (see [The files and folders](help:guide-self-hosting-files)).
 4. **Make `tunnel.env`.** `cp tunnel.env.example tunnel.env`. The token goes in later. Then `chmod 600 .env tunnel.env`.
-5. **Make the three folders.** `sudo install -d -o 10001 -g 10001 -m 700 data keys backups`. On a NAS, use [its steps](help:guide-self-hosting-nas) instead.
-6. **Get your seat ready.** On your desktop, make sure you're a Player in the saga with the **Storyguide** role and a passcode of 14 characters or more. Stop hosting there.
-7. **Copy the saga over.** Copy the saga's file and its passcode records from your save folder into the `armarius` folder on the server (see [Bringing the saga in](help:guide-self-hosting-move)).
-8. **Bring it in.** Run the `admin saga import` command shown in [Bringing the saga in](help:guide-self-hosting-move), then delete the copied files.
-9. **Move the desktop's copy away.** Move the desktop's copy of the saga file out of the `sagas` folder, for example into a folder of old copies. Don't just rename it.
+5. **Make the three folders**, `data`, `keys` and `backups` (see [The files and folders](help:guide-self-hosting-files)). On a NAS, use [its steps](help:guide-self-hosting-nas) instead.
+6. **Get your seat ready.** On your desktop, be a Storyguide in the saga, and stop hosting there (see [Bringing the saga in](help:guide-self-hosting-move)).
+7. **Copy the saga over.** Copy the saga's file and its passcode records into the `armarius` folder on the server.
+8. **Bring it in.** Run the `admin saga import` command, then delete the copied files.
+9. **Move the desktop's copy away**, out of the `sagas` folder. Don't just rename it.
 10. **Make the tunnel.** Create a Cloudflare tunnel, put its token in `tunnel.env`, and give it the hostname `saga.example.com` pointing at `http://localhost:8790` (see [The tunnel](help:guide-self-hosting-tunnel)).
 11. **Start it.** `docker compose up -d`, then tell it the tunnel's address and issue the Invites (see [Starting it](help:guide-self-hosting-start)).
 
@@ -1132,7 +1127,7 @@ A saga starter is a ready-made covenant or saga shipped with the app. One built 
 
 1. **Import the pack.** In the saga, choose Import Data, **A Content Pack**, and pick the pack's file from the app's `data/packs` folder, next to the program.
 2. **Choose what to bring.** Untick the parts you don't want, such as the mundane world or the history. The Tribunal, if the pack has one, and its covenants always come (see [Choosing what a pack imports](help:import-pack)).
-3. **Preview, then import.** A covenant, character, place or neighbour the saga already has one of the same name of is kept as it is. So importing over a saga that already holds part of the Tribunal doubles nothing.
+3. **Preview, then import.** What the saga already has of the same name is kept as it is, so importing over part of the Tribunal doubles nothing.
 
 A pack is a copy. A saga keeps what it imported and never reads the pack's file again, so a corrected pack in a new version of the app changes new sagas and new imports, not the sagas you have.
 
@@ -1184,8 +1179,7 @@ Conscientia joins Durenmar, whether the Rhine pack comes in first or later. If t
 
 - **The Tribunal.** Its sheet has the book's customs (the Rhine's gilds) and its officers. Its Peripheral Code is under Rulings, the open quarrels under Cases, and its Hermetic history in the Diary. The mundane history is in its summary, by era.
 - **Covenants.** Sketch records, not played, each with a summary, what matters (vis, income, tensions) and the magi the book names. The count of magi the book leaves unnamed is on the covenant.
-- **Magi.** Every magus the book names is a full character. Those it prints a stat block for have the book's stats. The rest have stats inferred by the creation rules from what the book says of them, such as their House, age and favoured Arts. That isn't an official write-up, as their Biography says.
-- **Sketches instead.** Untick **Generated stats for magi** when importing to bring those magi in as sketches. Where the book gives no age, one is assumed from the magus's rank and noted there too.
+- **Magi.** Every magus the book names is a full character, with the book's stats or, where it prints none, stats inferred from its House, age and favoured Arts. Untick **Generated stats for magi** to bring those in as sketches (see [Choosing what a pack imports](help:import-pack)). Where the book gives no age, one is assumed from the magus's rank and noted on the sheet.
 - **Places.** The regions and forests are places, with the regiones inside them and their levels and auras. Covenants and towns sit in them.
 - **The mundane world.** Lords, towns, churches, schools, factions and threats, with historical arms where they're known.
 - **The Bestiary.** The creatures the book prints a stat block for, such as the Rhine's boglins and Novgorod's dragons. Each is found at the place it haunts and linked from the threat or faction it belongs to. Untick **The Bestiary** when importing to leave them out.
@@ -1213,7 +1207,7 @@ The [Bestiary](help:bestiary) holds the saga's creatures with their stat blocks.
 1. **Start a new creature.** On the saga's page, open **Compendium** and click the New Creature card under the Bestiary.
 <!-- /gui -->
 2. **Name it.** For a kind that comes in numbers, such as a pack of wolves or a swarm of boglins, tick **Many** and say how many.
-3. **Give its Realm and Might.** Choose its **Realm** and type its **Might** and the Might's Form, as the stat block's first line gives them, such as "Magic Might 8 (Animal)". Leave the Realm blank for a mundane beast.
+3. **Give its Realm and Might.** Choose its **Realm** and type its **Might** and the Might's Form, as the stat block's first line gives them, such as "Magic Might 8 (Animal)".
 4. **Add what its kind needs.** For a demon, type its Order, Hierarchy and Weakness too. For anything that has them, type its Age and Confidence.
 5. **Give its Size and home.** Type its **Size**, and choose where it's **found**: a place in the Region, and a level of it if it lives in a regio.
 <!-- tui -->
@@ -1324,10 +1318,10 @@ Lords of Men plays a battle as a few events, each a fight with a player characte
 1. **Open the battles.** Open the lord's page, a neighbour of the lord kind, and go to its **Fief** chapter. Or open **Conflicts**.
 2. **Add a battle.** Under [Battles](help:section-nb-battles), click **Add**.
 <!-- /gui -->
-3. **Name it and choose the armies.** Each army is a lord, town or other power of the Region, a covenant, or just a name. Added from a lord's Fief, the first army is that lord's. To pit two lords against each other, choose both.
-4. **Fill in the combat groups.** Leave a lord's army's **combat groups** blank and the lord's title fills them in, in groups of five. Levies come only when the lord fights on home ground, which the form asks. Type a covenant's or a named army's groups.
+3. **Name it and choose the armies.** To pit two lords against each other, choose both.
+4. **Fill in the combat groups.** Leave a lord's army's **combat groups** blank for its title to fill them in, and say whether it fights on home ground. Type a covenant's or a named army's groups.
 5. **Add allies and mercenaries.** Add the allies the lord raises and the mercenaries they hire (see [Muster and Aftermath](help:battle-muster)).
-6. **Type the Deployment Totals.** Each commander rolls Intelligence + Area Lore + a stress die. Type both. The difference is the first army's **Ground** in every event, and the second's as much below 0.
+6. **Type the Deployment Totals.** Type both commanders' totals. Their difference is the first army's **Ground** in every event (see [Battles](help:section-nb-battles)).
 7. **Set the baggage and save.** Leave **baggage groups** blank for as many as each army needs (one for every ten combat groups), or type fewer. Save.
 
 ### Each event
@@ -1441,7 +1435,7 @@ To add a tradition to a character already made, or one In Play:
 ### What the app works out
 <!-- help: guide-hedge-magic-app -->
 
-Each Art's score comes from its XP on the table its book gives it. Most hedge Arts and the vitkir's runes advance on the Art table, as Hermetic Arts do. A Difficult Art, such as Elementalist Fire, the gruagach's Give and Take or the learned magicians' Techniques, advances on the Ability table.
+Each Art's score comes from its XP on the table its book gives it, the Art table or, for a Difficult Art such as the learned magicians' Techniques, the Ability table (see [Abilities](help:tab-abilities)).
 
 The [chapter](help:tradition-chapter) works out the rest, such as each power's Casting Score and Lab Total, the tradition's Magical Defenses, its gatherings' bonuses (a folk witch's sabbat) and the guidelines for its effects. More's [Cast a Power](help:hedge-cast) rolls a casting there and then.
 
@@ -1467,7 +1461,7 @@ Iceland's two magus-equivalents are hedge wizards here, and both come with *Land
 In play, a galdraman works in three ways:
 
 1. **Sing** with [Conjure a Spirit](help:galdor-conjure) for anything up to Concentration.
-2. **Go to a lord** with [Bargain with a Lord](help:galdor-bargain) for anything longer. The deal stays in Bound Beings, with the vis it tithes a year.
+2. **Go to a lord** with [Bargain with a Lord](help:galdor-bargain) for anything longer.
 3. **Make things** with [Bind an Item](help:galdor-bind), after a deal.
 
 For longevity, strike a deal with biarg-galdor, conjure the biarg spirit as a ritual, and enter the conjuring total as a Longevity Ritual on the character's sheet. The mead takes a pawn a decade of their age each year. The app doesn't track Galdor Wisdom falling to 0 in another country.
@@ -1594,7 +1588,7 @@ To change a step already held, choose it in the Order of Business and hold it ag
 2. **Mark who came.** Untick **all present** for Keep and tick only the magi who came, since Leandro stayed home. For a sketch covenant, say how many of its unnamed magi came.
 3. **Count the proxies.** Give the proxies each covenant carries (Fengheld carries one sigil) and whether the Presiding Quaesitor allows them.
 
-The app works out the votes in the hall, one for each magus present and each allowed proxy, but none for the Praeco or the Presiding Quaesitor. It also checks the quorum, which needs twelve magi in person from four covenants, and a Quaesitor. The top of the Meeting shows **Present** ("4 votes, 1 by proxy") and **Quorum**. Only magi ticked present can speak at a hearing.
+The app works out the votes in the hall and checks the quorum (see [Hold Tribunal](help:hold-tribunal)). The top of the Meeting shows **Present** ("4 votes, 1 by proxy") and **Quorum**.
 
 <!-- gui -->
 On the desktop a card announces the meeting as it opens. Close it, and the next step opens.
@@ -1616,9 +1610,7 @@ On the desktop a card announces the meeting as it opens. Close it, and the next 
 5. **Or settle it in private.** If both sides accept the Presiding Quaesitor's view at the private hearing, tick **Settled in private** instead. The case has no debate and no vote, and goes straight on to its ruling.
 6. **Hear the motion.** For the motion, the proposer speaks for it and **The Tribunal** against, since a motion is debated against the whole hall.
 
-The book has a Quaesitor step in only for a high crime, and drops a low crime no one prosecutes (True Lineages p. 56). The app offers the Quaesitor for any charge.
-
-A rolled debate uses the speakers' Communication and Intelligence with their best debating Abilities, chosen by lot among equals each round. The case's Evidence backs the prosecution, and the **Defence testimony** the defence.
+The book has a Quaesitor step in only for a high crime, and drops a low crime no one prosecutes (True Lineages p. 56). The app offers the Quaesitor for any charge. How a rolled debate goes is in [Hold Tribunal](help:hold-tribunal).
 
 ### Calling the vote
 <!-- help: guide-tribunal-vote -->
@@ -1626,8 +1618,6 @@ A rolled debate uses the speakers' Communication and Intelligence with their bes
 1. **Read the leanings.** The vote follows its hearing. Each covenant is listed with its leaning and why, such as "the case is against it" or "Warm (+1) toward Fengheld, which brings it".
 2. **Change a leaning if the story says otherwise.** The tally under the form follows as you do.
 3. **Break a tie.** If the votes tie, choose how the Praeco casts.
-
-The debate's victor wins a share of the undecided votes when the covenants are called.
 
 <!-- gui -->
 **Call the Vote** in The Hall shows the covenants called one by one, their seats filling.
@@ -1642,7 +1632,7 @@ The debate's victor wins a share of the undecided votes when the covenants are c
 
 > Keep holds the Rhine ford's vis for 7 years, until it is debated again.
 
-The {years} blank sets a term. With a written-out ruling, its **term** in years sets one the same way. The templates are the saga's own. Add or change them in the saga's settings, **Ruling templates**, where any word in braces is a blank to fill.
+The {years} blank sets a term, as a written-out ruling's **term** in years does. The templates are the saga's own (see [Hold Tribunal](help:hold-tribunal)).
 
 ### Closing, and what comes back
 <!-- help: guide-tribunal-closing -->
@@ -1650,7 +1640,7 @@ The {years} blank sets a term. With a written-out ruling, its **term** in years 
 1. **Check the treasury.** The Treasury step shows the balance and the loans due.
 2. **Close the meeting.** Closing decides each case with a ruling, writes the Acta into the Tribunal's Diary and sets the next meeting. Each step held has already written its minutes there.
 
-Closing carries out each ruling: the ruling into the Peripheral Code, a party's attitude moved, the term set and the fine owed to the treasury. The book gives a third of the fine to the prosecutor (True Lineages p. 57), but the app records it as owed to the treasury.
+Closing carries out each ruling, the fine owed to the treasury among them. The book gives a third of the fine to the prosecutor (True Lineages p. 57), but the app records it as owed to the treasury.
 
 The term comes back on its own. [Ahead](help:section-ahead) lists the season before it ends (Spring 1235) and the season it ends (Summer 1235). Advancing into Spring 1235 says the term ends next season. Advancing into Summer 1235 says it has ended and puts "Fengheld v. Keep (debated again)" on the Docket for the next meeting, with the old ruling in its charge.
 
@@ -1704,12 +1694,7 @@ Your magus has a cauldron that always stays at the right heat, and it belongs in
 ### Two kinds of benefit
 <!-- help: guide-lab-magic-item-kinds -->
 
-The item is installed as a **Magic Item** Virtue, which is Free, or as an **Enchantment** of the laboratory itself, also Free. A very large item's Magic Item Virtue is Minor instead, and so takes a point of space. One Virtue covers all of an item's effects, and each effect then gives one of two things.
-
-- **A Virtue or Flaw it duplicates.** An effect that does what a laboratory Virtue or Flaw does, such as the cauldron's, simply grants it. The laboratory gains it with no space cost, and so no Build Points at creation, and its modifications apply as usual.
-- **Points bought by its level.** Otherwise the effect's final level buys one Specialization point for every 10 levels, or one Characteristic point for every 20. A level 20 lectern's effect could give Texts +2, or Safety +1. These points need no Virtue at all beyond the Free Magic Item.
-
-An effect must be new to the laboratory, so one that grants a Virtue the laboratory has already is flagged. A benefit counts only while its device is kept in the laboratory. Move the device elsewhere and its points and the Virtue it grants stop counting, and its row says so, until the device comes back.
+The item is installed as a Free **Magic Item** Virtue, or as an **Enchantment** of the laboratory itself, also Free. A very large item's Magic Item Virtue is Minor, and so takes a point of space. One Virtue covers all of an item's effects. Each effect then grants a laboratory Virtue or Flaw it duplicates, as the cauldron does, or buys points by its level, so a level 20 lectern could give Texts +2, or Safety +1. [Magic Items](help:section-lab-magic-items) gives the rules for both, and for a device kept elsewhere.
 
 ### Install one in play
 <!-- help: guide-lab-magic-item-play -->
@@ -1743,16 +1728,14 @@ For a starting laboratory, the covenant's Build Points pay for the device as for
 ### When the item is a Feature
 <!-- help: guide-lab-magic-item-feature -->
 
-An item can instead be made a Lesser or Greater Feature, with the Aesthetics and the Specializations a Feature brings. Then it isn't installed here. Add it under [Features](help:section-lab-features), and its Feature Virtue takes space and costs Build Points as usual. The usual reason to choose a Feature is for what a Feature gives that points bought by level don't, such as Aesthetics or a Focus.
+An item can instead be made a Lesser or Greater Feature, for what a Feature brings that points bought by level don't, such as Aesthetics or a Focus. Then add it under [Features](help:section-lab-features), not here, and its Feature Virtue takes space and costs Build Points as usual.
 
 ### What the app does for you
 <!-- help: guide-lab-magic-item-app -->
 
-**The app works out** the effect's final level, how many points it can buy, and the space and Build Points each Virtue takes. That's none for a granted Virtue, and a Minor Virtue's for a very large item. It also works out the Specializations and Characteristics with the item's points added, and the Build Points of a starting laboratory's devices.
+**The app works out** the effect's final level, the points it can buy, the space and Build Points each Virtue takes, and the laboratory's totals with the item's points added.
 
-**You type** the device and its effects, how the item is installed, and what each effect gives.
-
-When the device or one of its effects is deleted or destroyed, what it gave goes with it, and the Magic Item Virtue goes once no other effect uses it.
+**You type** the device and its effects, and the install as above. Deleting the device or an effect takes away what it gave (see [Magic Items](help:section-lab-magic-items)).
 
 **See also:** [Magic Items](help:section-lab-magic-items), [Enchanted Devices](help:section-lab-devices), [Set up a laboratory](help:guide-creation-lab), [How lab planning works](help:guide-lab-planning)
 
@@ -1883,16 +1866,12 @@ Your companion is about to face a demon, and you want to know what their faith l
 2. **See what they may do.** The buttons beside Faith are the actions their faith offers them, and that they qualify for.
 <!-- /gui -->
 
-What's offered, and to whom:
+What each faith is offered is listed in [Faith](help:section-char-faith), and each action's own page says who qualifies. A few things to know:
 
-- **Anyone of their faith.** A Christian may Invoke a Saint, with no Ability or Virtue needed (RoP: The Divine p. 87), and choose a Patron Saint, since anyone may have one. With The Church in play they may also take an Indulgence, Vigil or Fast (The Church pp. 11-13). Devotion Points are for one who holds a Devotion, or who has a positive Pious trait or the Pious Flaw to begin one (pp. 12-13). A Mazdean invokes a yazata the same way, with The Cradle and the Crescent.
-- **Only once something happens.** Threaten a Saint comes only after a saint has refused the character's invocation (RoP: The Divine p. 87). Invoke first, and if the saint doesn't answer, Threaten appears with that saint.
-- **A Muslim's own.** Invoke Baraka seeks a holy forbear's blessing at the forbear's shrine, or with the Qur'an anywhere. The Hajj gives Pious +3 and 3 Faith Points (RoP: The Divine pp. 103-108).
-- **Only with a Virtue or a trait.** Mystic Path needs a positive Pious trait and a tie to the Divine, through True Faith, a Divine Supernatural Ability or Divine Warping (The Church p. 21). Invoke God's Aid needs one who may spend a Confidence Point, so never a grog, nor one with Low Self-Esteem, unless they have True Faith (RoP: The Divine p. 41).
-- **Only with spiritual authority.** Holy Influence needs a member of the clergy, a monk or a rabbi, or one with Temporal Influence or Inspirational (RoP: The Divine pp. 38, 75, 125). The app also accepts True Faith or Dominion Lore, its own reading.
-- **The Church's sections.** With The Church in play, a Christian has Petitions and the Canon Court, and Add on each makes one. Anyone may petition the Church (The Church p. 46), and the canon courts hear laymen and clergy alike (p. 36).
-- **Holy orders.** Holy Orders and Ordinations are there for one with a clerical Social Status or a grade on record. The clerical statuses are Clerk, Priest, Religious, Senior Clergy and Mendicant Friar. Perform an Exorcism is for a clergyman only (The Church p. 34). Only a Christian may plan an Ordination season, which is how a layman begins.
-- **A pagan.** The books give pagans no rite of their own. Their faith is in a magic spirit (a Spirit Votary, DE p. 58) or in faerie (Realms of Power: Faerie p. 134). They deal with it through the faerie actions under Dealings with Faerie,
+- **Threaten a Saint** appears only after a saint has refused the character. Invoke first, and if the saint doesn't answer, Threaten appears with that saint.
+- **Holy Influence** also takes True Faith or Dominion Lore as holy standing. That's the app's own reading of RoP: The Divine pp. 38, 75 and 125.
+- **The Church's sections.** Add on Petitions or the Canon Court makes one. The canon courts hear laymen and clergy alike (The Church p. 36). Only a Christian may plan an Ordination season, which is how a layman begins.
+- **A pagan** has no rite of their own, and deals with their spirit or faerie through the faerie actions under Dealings with Faerie,
 <!-- tui -->
   in More on their record.
 <!-- /tui -->
@@ -2305,12 +2284,9 @@ The troupe meets Gottfried of Arnsberg again, and you need his page now.
    everything there, a Tribunal ("Rhine") for what lies in its lands, or
    a member's name for the factions they belong to. The reason shows
    beside each such match.
-5. **Find a book, spell or device.** Type its name: a spell opens the
-   page of the magus who knows it, at its row. For the storyguide, a
-   book opens [the Armarium](help:armarium) and a device
-   [the Custodia Mirabilium](help:custodia), at its row, held or
-   unassigned; for a player, it opens the page of whoever holds it, and
-   one nobody holds isn't listed.
+5. **Find a book, spell or device.** Type its name. It opens at its row,
+   on the page [Find](help:find) says, such as the page of the magus who
+   knows a spell.
 
 **See also:** [Find](help:find)
 
@@ -2434,21 +2410,14 @@ books.
 
 1. **Open Settings.** Click the **gear** at the right of the top bar. The
    Settings window opens beside the page, and stays open while you work.
-2. **Open the Theme drop-down.** Scriptorum and Scriptorum Dark come
-   first. The House themes follow, under their House family: True
-   Lineages, Mystery Cults, Societates; House Diedne comes last, under
-   Renounced. Each row shows a small sample of its page, the House's mark,
-   its name and a few words on it.
-3. **Choose one.** The whole app is drawn in it at once, the Settings
-   window too. There is nothing to confirm. To compare, leave the
-   drop-down closed and press the up and down arrow keys: each theme is
-   drawn as you reach it. Choose Scriptorum to go back.
-4. **Look at a record In Creation.** It is drawn on the theme's drafting
-   page, cooler and ruled, so a draft still stands out from a finished
-   record.
-5. **Close the window.** The app remembers the theme on this computer and
-   opens in it next time. Printed pages stay in Scriptorum whatever the
-   theme.
+2. **Open the Theme drop-down.** Scriptorum comes first, then the House
+   themes under their House families (see
+   [The Settings window](help:settings-window)).
+3. **Choose one.** The whole app is drawn in it at once. To compare,
+   leave the drop-down closed and step through with the up and down
+   arrow keys. Choose Scriptorum to go back.
+4. **Close the window.** The app remembers the theme on this computer and
+   opens in it next time.
 
 **See also:** [The Settings window](help:settings-window)
 
@@ -2468,30 +2437,20 @@ play from yours, over the internet.
    It works once, on one computer, for 24 hours.
 3. **Open Join a Saga.** Click **Join a Saga** on the title page or on
    the Sagas page. Paste the Invite and click **Continue**.
-4. **Check the six words.** On your call, your storyguide reads out six
-   words. Compare every one with the six on your screen, then click
-   **They match**. If any differs, click **They don't match**. Nothing is
-   sent, and you should ask for a new Invite, by another way if you can.
-5. **Name this computer.** Its own name is filled in. Change it if you
-   like, so your storyguide knows which device is asking, and click **Ask
-   for a Seat**.
-6. **Read your three words.** Read the three words on your screen to your
-   storyguide. When they match what their screen shows, they let you in,
-   and the window moves on by itself.
-7. **Type your passcode.** Type the passcode your storyguide gave you and
-   click **Sign In**. The saga opens.
-8. **Look around.** You see the saga as a player may. Your characters are
+4. **Check the words and sign in.** On your call, compare your
+   storyguide's six words, ask for a seat, read them your three words and
+   type your passcode, as [Join a Saga](help:join-game-first) sets out.
+   The saga opens.
+5. **Look around.** You see the saga as a player may. Your characters are
    under **Your Characters** on The Troupe, and everything else is read
    only. No character yet? Click **New Character** there to make your own.
    What you change reaches your storyguide within seconds.
-9. **Come back next time.** The saga stays on your Sagas page, marked
-   **Hosted elsewhere**. Click it, or **Open Saga** on the title page if
-   you played it last, and type your passcode.
+6. **Come back next time.** The saga stays on your Sagas page, marked
+   **Hosted elsewhere** (see [Coming back, and leaving](help:join-game-again)).
 
 **When it won't connect.** "The host can't be reached" means your
 storyguide isn't hosting just now, or their tunnel is down, so ask them on
-the call. If your seat has ended (they revoked it, or you didn't use it for
-a long while), the app says so, and you'll need a new Invite.
+the call. A seat that has ended needs a new Invite.
 
 **See also:** [Join a Saga](help:join-game), [What a host can and can't see or do](help:what-a-host-sees), [What keeps you safe](help:join-game-safety), [How to change or reset your passcode](help:guide-passcode)
 
@@ -2510,14 +2469,12 @@ table from her own computer.
    character she plays. Or tick none, and she can make her own once she's
    in. The list shows **✓ Ready** when she can join.
 3. **Host for Remote seats.** Click **Host for Players**, choose
-   **Remote seats**, "Their own Armarius, over the internet", and click
-   **Host**. Give your **Tunnel address**, the **Tunnel** and
-   the **Port** (see [Host for Remote Seats](help:host-remote-seats)).
-   Setting up the tunnel is in
-   [Remote seats: hosting safely](help:guide-hosting-safety).
+   **Remote seats**, and click **Host**, as in
+   [Hosting and inviting](help:guide-hosting-remote). Setting up the
+   tunnel is in [Choosing a tunnel](help:guide-hosting-tunnels).
 4. **Issue her Invite.** Choose Clara on Players and click **Issue
    Invite**. Host for Players shows her Invite, with **Copy**, and your six
-   words. It's shown only now, and works once, on one device, for 24 hours.
+   words. It's shown only now.
 5. **Send it.** Paste it into a chat message or an email to her, a
    different way from your call if you can.
 6. **Read her the six words.** On your call, read all six, and have her
@@ -2542,21 +2499,17 @@ You joined from your own computer, and you'd like a passcode that's easier
 to remember. Or you've forgotten it altogether.
 
 1. **Change it.** On the Sagas page, click **Change Passcode** on the
-   saga's card. Type the passcode you have now, then the new one twice, at
-   least 14 characters. Click **Change**.
-2. **Use it everywhere.** From then on you sign in with the new one on
-   every computer you join from. A wrong current passcode counts toward
-   the lock-out, as signing in does.
-3. **Forgotten it? Ask.** Click the saga on the Sagas page, then **I've
+   saga's card, type the old passcode and the new one twice, and click
+   **Change**. It works on every computer you join from (see
+   [Changing or forgetting your passcode](help:join-game-passcode)).
+2. **Forgotten it? Ask.** Click the saga on the Sagas page, then **I've
    forgotten my passcode** under the passcode. Your storyguide is asked.
-   Only a computer that already has a seat can ask.
-4. **Your storyguide checks.** The ask waits on **Requests** in their Host
+3. **Your storyguide checks.** The ask waits on **Requests** in their Host
    for Players window, asking for *A new passcode*. They check it's really
    you, on your call say, then click **Set New Passcode**, type a new one
    and tell it to you. **Reject** leaves you the passcode you have.
-5. **Sign in with it.** Type the new passcode in the same window and
-   click **Sign In**. This computer keeps its seat, so you need no new
-   Invite.
+4. **Sign in with it.** Type the new passcode in the same window and
+   click **Sign In**. This computer keeps its seat.
 
 If your storyguide sets you a new passcode while you're signed in, the app
 can take you back to the Sagas page, and says so. Click the saga and sign in
@@ -2648,16 +2601,16 @@ already copy.
    your sagas, their backups, exports and settings go across. Untick it to
    start afresh in the new folder, with the old saves left where they are.
    Then choose **Use this folder**.
-5. **Read what it did.** The app says how many files it moved. A file
-   with the same name already in the new folder is never overwritten. The
-   app names each one, and leaves the old file where it was.
+5. **Read what it did.** The app says how many files it moved, and names
+   each one it left where it was because the new folder had a file of
+   that name.
 6. **Hosting with Remote seats?** With the app closed, copy the `remote`
    folder from the old save folder into the new one yourself. It holds the
    saga's Invites, seats and Log, and isn't moved with the saves.
 
-**Folders that refuse saves.** On Windows, Controlled folder access
-protects Documents and the Desktop, and a read-only or synced folder can
-refuse too. Choose another folder, or allow Armarius in Windows Security.
+**Folders that refuse saves.** If a folder refuses, as some do (see
+[Opening, creating and deleting](help:saga-picker-actions)), choose another
+folder, or allow Armarius in Windows Security.
 
 **When ARMARIUS_DATA is set.** The ARMARIUS_DATA environment variable
 (or the older ARS_MAGICA_MANAGER_DATA) names the save folder and wins over
@@ -2713,8 +2666,7 @@ it back as it was.
    season the backup was taken in. If the app says the saga can't be
    opened, it says why. Try an older backup, or copy your safe copy back.
 
-The app keeps only the last five backups of each saga, so copy the saga's
-file somewhere else from time to time yourself (see
+Copy the saga's file somewhere else from time to time yourself (see
 [Keeping backups](help:guide-import-export-backups)). A saga hosted on a
 server or NAS has its own nightly backups (see
 [Backups off the server](help:guide-self-hosting-backups)).

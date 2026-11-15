@@ -164,11 +164,51 @@ def test_the_page_has_latest_then_each_feature_then_the_chronicle():
     assert "- The Rhine pack (1.1.0)\n- A pack can be chosen in part (1.1.0)" in page
 
 
+PLAIN = SAMPLE.replace(
+    "| Feature | What it is |\n| --- | --- |\n| Packs | The Tribunal packs |\n"
+    "| Help | Help and its guides |",
+    "| Feature | Plain name | What it is |\n| --- | --- | --- |\n"
+    "| Packs | Sourcebook packs | The Tribunal packs |\n"
+    "| Help | Help | Help and its guides |",
+)
+
+
+def test_a_plain_name_comes_first_wherever_the_page_names_a_feature():
+    log = cl.parse(PLAIN)
+    assert cl.parse(SAMPLE).feature("Packs").plain == ""
+    assert log.feature("Packs").label == "Sourcebook packs (Packs)"
+    # A plain name the same as the feature's own isn't said twice.
+    assert log.feature("Help").label == "Help"
+    page = cl.whats_new(PLAIN)
+    headings = [line for line in page.splitlines() if line.startswith("## ")]
+    assert headings == [
+        "## Latest",
+        "## Sourcebook packs (Packs)",
+        "## Help",
+        "## Chronicle",
+    ]
+    assert "### Sourcebook packs I: The Rhine" in page
+    assert "**Sourcebook packs II**, in progress" in page
+    assert "- **1.1.0** · Sourcebook packs I · The Rhine pack;" in page
+    # Its editions keep their own names, for the Editions table.
+    assert _edition(log, "Packs I").heading == "Packs I: The Rhine"
+
+
+def test_unreleased_work_is_headed_by_the_plain_name():
+    text = PLAIN.replace(
+        "## 1.4.0",
+        "## Unreleased\n\n### Packs\n\n- **A new pack.** Soon.\n\n## 1.4.0",
+    )
+    assert "### Sourcebook packs (Packs)\n\n- **A new pack.** Soon." in cl.whats_new(
+        text
+    )
+
+
 def test_the_chronicle_has_a_line_per_version_under_its_day():
     chronicle = cl.chronicle_text(_log())
-    assert chronicle.index("### Creo (1.x)\n\nThe first version.") < chronicle.index(
-        "#### 19 October 2026"
-    )
+    assert chronicle.index(
+        "### Version 1.x: Creo\n\nThe first version."
+    ) < chronicle.index("#### 19 October 2026")
     assert "#### 16 October 2026\n\n- **1.1.0** · Packs I · The Rhine pack;" in (
         chronicle
     )

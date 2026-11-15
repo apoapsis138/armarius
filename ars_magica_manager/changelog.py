@@ -152,6 +152,21 @@ class Version:
 class Feature:
     name: str
     about: str
+    #: What the feature is in plain words ("Help" for Glossa), shown
+    #: first wherever What's New names it; "" for none.
+    plain: str = ""
+
+    @property
+    def shown(self) -> str:
+        """The name a reader sees: the plain one, else the feature's own."""
+        return self.plain or self.name
+
+    @property
+    def label(self) -> str:
+        """ "Help (Glossa)": the plain name, then the feature's own."""
+        if self.plain and self.plain != self.name:
+            return f"{self.plain} ({self.name})"
+        return self.name
 
 
 @dataclass(frozen=True)
@@ -184,13 +199,23 @@ class Edition:
 
     @property
     def name(self) -> str:
-        return f"{self.feature} {numeral(self.number)}"
+        return self.named(self.feature)
 
     @property
     def heading(self) -> str:
+        return self.heading_as(self.feature)
+
+    def named(self, shown: str) -> str:
+        """Its name with `shown` for the feature: "Help IV"."""
+        return f"{shown} {numeral(self.number)}"
+
+    def heading_as(self, shown: str) -> str:
+        """ "Help IV: Each pack's assumptions", or "Help V, in progress",
+        with `shown` for the feature."""
+        name = self.named(shown)
         if not self.finished_in:
-            return f"{self.name}, in progress"
-        return f"{self.name}: {self.title}" if self.title else self.name
+            return f"{name}, in progress"
+        return f"{name}: {self.title}" if self.title else name
 
     @property
     def work(self) -> list[Part]:
@@ -252,6 +277,14 @@ class Changelog:
     def major(self, number: int) -> Major | None:
         return next((m for m in self.majors if m.number == number), None)
 
+    def feature(self, name: str) -> Feature:
+        found = next((f for f in self.features if f.name == name), None)
+        return found if found is not None else Feature(name, "")
+
+    def shown(self, edition: Edition) -> str:
+        """`edition`'s feature as a reader sees it."""
+        return self.feature(edition.feature).shown
+
 
 class ChangelogError(ValueError):
     pass
@@ -263,6 +296,17 @@ def _table(section: str) -> list[list[str]]:
         if line.startswith("|") and not re.match(r"^\|\s*-", line):
             rows.append([cell.strip() for cell in line.strip().strip("|").split("|")])
     return rows[1:]  # without the header row
+
+
+def _feature(row: list[str]) -> Feature:
+    """A Features table row: Feature | Plain name | What it is, or the
+    older Feature | What it is."""
+    if len(row) == 3:
+        name, plain, about = row
+        return Feature(name, about, plain)
+    if len(row) == 2:
+        return Feature(*row)
+    raise ChangelogError(f"Features row {row!r} has {len(row)} cells")
 
 
 def _sections(text: str) -> dict[str, str]:
@@ -310,7 +354,7 @@ def parse(text: str) -> Changelog:
     preamble = "\n".join(lines[1:top])  # after "# Changelog"
     sections = _sections(preamble)
     intro, _, about = preamble.split("\n## ", 1)[0].strip().partition("\n\n")
-    features = [Feature(name, about) for name, about in _table(sections["Features"])]
+    features = [_feature(row) for row in _table(sections["Features"])]
     known = {f.name for f in features}
     unreleased = (
         _parts(UNRELEASED, "", lines[pending[0] + 1 : starts[0]], known)
@@ -409,9 +453,13 @@ def latest_text(log: Changelog) -> str:
     )
     out = ["## Latest", ""]
     for edition in editions[:LATEST]:
+        shown = log.shown(edition)
         if edition.finished_in:
             when = long_date(edition.last.date)
-            out.append(f"- **{edition.heading}**, {when}. {_sentence(edition.brought)}")
+            out.append(
+                f"- **{edition.heading_as(shown)}**, {when}. "
+                f"{_sentence(edition.brought)}"
+            )
         else:
             since = long_date(edition.first.date)
             # Newest first, as many as a version's Chronicle line names.
@@ -420,7 +468,8 @@ def latest_text(log: Changelog) -> str:
             if len(news) > HEADLINES:
                 text += f"; and {len(news) - HEADLINES} more"
             out.append(
-                f"- **{edition.name}**, in progress since {since}. {_sentence(text)}"
+                f"- **{edition.named(shown)}**, in progress since {since}. "
+                f"{_sentence(text)}"
             )
     return "\n".join(out) + "\n"
 
@@ -428,14 +477,14 @@ def latest_text(log: Changelog) -> str:
 def feature_text(log: Changelog, feature: Feature) -> str:
     """A feature with its editions, oldest first: its newest edition with
     every entry in full, the earlier ones by their entries' headlines."""
-    out = [f"## {feature.name}", "", _sentence(feature.about), ""]
+    out = [f"## {feature.label}", "", _sentence(feature.about), ""]
     editions = [
         e
         for e in sorted(log.feature_editions(feature.name), key=lambda e: e.number)
         if e.parts
     ]
     for edition in editions:
-        out += [f"### {edition.heading}", ""]
+        out += [f"### {edition.heading_as(feature.shown)}", ""]
         about = f"{_sentence(edition.brought)} " if edition.brought else ""
         out += [f"{about}{_sentence(edition.span())}", ""]
         if edition is editions[-1]:
@@ -470,7 +519,9 @@ def chronicle_text(log: Changelog) -> str:
         number = version_key(version.number)[0]
         if number != major:
             major, named = number, log.major(number)
-            title = f"{named.name} ({number}.x)" if named else f"Version {number}.x"
+            title = (
+                f"Version {number}.x: {named.name}" if named else f"Version {number}.x"
+            )
             out += ["", f"### {title}", ""]
             if named:
                 out += [_sentence(named.marked[:1].upper() + named.marked[1:])]
@@ -480,7 +531,8 @@ def chronicle_text(log: Changelog) -> str:
             out += ["", f"#### {long_date(day)}", ""]
         names = []
         for part in version.parts:
-            name = log.edition_of(part).name
+            edition = log.edition_of(part)
+            name = edition.named(log.shown(edition))
             if name not in names:
                 names.append(name)
         headlines = [h for p in version.parts for h in p.headlines()]
@@ -504,7 +556,7 @@ def unreleased_text(log: Changelog) -> str:
         "Done since the last release, and coming in the next one.",
     ]
     for part in log.unreleased:
-        out += ["", f"### {part.feature}", "", part.text]
+        out += ["", f"### {log.feature(part.feature).label}", "", part.text]
     return "\n".join(out) + "\n"
 
 
