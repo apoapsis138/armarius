@@ -54,9 +54,10 @@ The desktop version is used with the mouse. Every action is a button on the page
 - `Esc` cancels an open form or question (see [In a form](help:keys-forms)). With none open, it goes back a page, to the one above in the trail (from Help, to the page you opened it on).
 - `q` quits Armarius. Everything is already saved.
 - `Ctrl+F` drops **Find** from the top bar, to open any record by its name (see [Find](help:find)).
-- `?` and `q` are typed as letters while you're typing in a box, and do nothing while a form or question is open, so they never act by accident. `Esc` and `F1` always work.
+- `c` (desktop only) opens My sheet, your character's sheet, while you're Playing, from any page, as clicking your name on the Playing button does. On that sheet, `c` again goes back to the page you came from (see [Jump to your sheet and back](help:guide-my-sheet)). It does nothing in your storyguide role or in a saga with no players.
+- `?`, `q` and `c` are typed as letters while you're typing in a box, and do nothing while a form or question is open, so they never act by accident. `Esc` and `F1` always work.
 - **Advance Season**, under the chapters on the left, advances the saga by one season (see [Advancing a season](help:advance-season)).
-- The trail at the top left goes back to any page above this one.
+- The trail at the top left goes back to any page above this one; the ▾ after its last crumb opens another person, laboratory or covenant at the same level.
 
 ### In a form
 <!-- help: keys-forms; gui -->

@@ -135,6 +135,19 @@ change in it.
 
 ## Unreleased
 
+### Illuminatio
+
+- **My sheet.** While Playing, your name on the Playing button (or `c`) opens your character's sheet from any page; the trail, Esc or `c` again takes you back.
+- **The trail's switcher.** The last crumb of the trail lists the other people, laboratories or covenants at its level.
+
+### Book of Hours
+
+- **General spells from a Lab Text.** A Lab Text for a General spell, such as Aegis of the Hearth, now teaches the level written on it instead of refusing with "has no level" (#16). The magus learns a version of his own at that level, with the text named as its source, and the Lab Text he writes teaches that version; two magi learning from the same text each get their own. A General spell's text with no level asks for one, and the Lab Work window gives its reason once, not twice.
+
+### Fundamenta
+
+- **Sagas saved on this computer by default.** A new install keeps its sagas in your app data folder (`C:\Users\you\AppData\Local\Armarius` on Windows, `~/.local/share/Armarius` on Linux), not in OneDrive, where a sync could catch a save half-written. If you already use Armarius, nothing moves: it goes on saving where it always has, now shown as a folder you chose. Change save folder on the saga picker moves it.
+
 ### Glossa
 
 - **Host for Players help** names the two ways players join as the window does (Remote seats; Browser or terminal) and links each to its guide, and the unplanned-seasons help gives the idle non-player setting's name for each version of the app.

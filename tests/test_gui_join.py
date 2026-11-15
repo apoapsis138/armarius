@@ -23,6 +23,7 @@ from ars_magica_manager import joined_games, picture_files, players, storage
 from ars_magica_manager.commands import Form
 from ars_magica_manager.gui import joined, pictures
 from ars_magica_manager.gui.join import JoinWindow
+from ars_magica_manager.gui.seat_chip import cut
 from ars_magica_manager.gui.themes import PALETTES
 from ars_magica_manager.gui.window import MainWindow
 from ars_magica_manager.remote import identity as ident
@@ -173,6 +174,27 @@ class _SilentHost:
 
     def close(self) -> None:
         self.answer.set()
+
+
+@pytest.mark.usefixtures("app")
+def test_a_players_desktop_has_my_sheet_in_the_seats_place(running: Running) -> None:
+    """A Joined game's Player has no seats to choose: the button in their
+    place is My sheet, its ▾ their characters alone."""
+    main, dialog = _joined_window(running)
+    assert dialog.session is not None
+    joined.open_joined(main, dialog.session)
+    saga = main.saga
+    assert saga is not None and main.player is not None
+    mine = players.my_characters(saga, main.player)
+    assert mine
+    chip = main.seat_button
+    assert not chip.isHidden() and chip.is_split()
+    assert chip.text().strip() == cut(mine[0].name)
+    names = [a.text() for a in main.characters_menu().actions()]
+    assert names == ["Your Characters", *(c.name for c in mine)]
+    chip.part.click()
+    assert main.character_id == mine[0].id
+    main.end_joined()
 
 
 @pytest.mark.usefixtures("app")

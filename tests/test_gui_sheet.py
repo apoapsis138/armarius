@@ -246,6 +246,27 @@ def test_selections_scroll_bars_and_the_inspector_are_gilded(app):
     sheet.window_.close()
 
 
+def test_a_form_refuses_once_when_its_live_line_gives_the_reason(app):
+    why = "Flame Ward has no level."
+    dialog = FieldsDialog(
+        "Lab Work",
+        [DialogField("name", "Name", "text", "")],
+        PALETTES[0],
+        validate=lambda v: why if not v["name"] else "Other reason.",
+        live=lambda v: (
+            f"[b]Lab Total[/] [dim]--[/]\n[$text-error]{why}[/]"
+            if not v["name"]
+            else ""
+        ),
+    )
+    dialog.try_save()
+    assert dialog.result() != dialog.DialogCode.Accepted
+    assert dialog.error.isHidden()  # the live line says it; not twice
+    dialog.set_value("name", "x")
+    dialog.try_save()
+    assert dialog.error.text() == "Other reason."
+
+
 def test_a_form_draws_its_fields_and_refuses_what_does_not_parse(app):
     dialog = FieldsDialog(
         "Edit Something",

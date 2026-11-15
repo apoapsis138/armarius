@@ -9,7 +9,9 @@ a Lab Text, in the magus's laboratory.
 - Inventing: the Lab Total must be above the spell's level; each season
   adds Lab Total - level points, and the spell is invented when they reach
   its level (so in one season when the Lab Total is at least twice it).
-- From a Lab Text: one season, if the Lab Total is at least the level.
+- From a Lab Text: one season, if the Lab Total is at least the level. A
+  General spell's text teaches the level it records, and the magus learns
+  a version of his own at that level (DE p. 313).
 - Every lab season gives Exposure (2 xp) in Magic Theory.
 
 One-season lab work:
@@ -30,7 +32,7 @@ One-season lab work:
 from __future__ import annotations
 
 from collections.abc import Callable, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from .. import catalog
 from ..arts import FORMS, TECHNIQUES
@@ -176,29 +178,57 @@ def lab_texts(saga: Saga, magus: Character) -> list[Book]:
     """The Lab Texts `magus` may work from: readable (their covenant's
     library, their own, their laboratory's) and naming a spell they don't
     know yet."""
-    known = {k.spell_id for k in magus.spells_known}
     return [
         b
         for b in saga.books
         if b.type == "Lab Text"
         and b.spell_id
-        and b.spell_id not in known
+        and _unknown_text(saga, magus, b)
         and library.can_read(saga, magus, b)
         and book_seasons.can_use_lab_text(magus, b)
     ]
+
+
+def _unknown_text(saga: Saga, magus: Character, text: Book) -> bool:
+    """Whether the text teaches `magus` something new: a spell he doesn't
+    know, or any General spell's text (each version learned is a spell of
+    its own, DE pp. 226, 313)."""
+    return general_text(saga, text) or all(
+        k.spell_id != text.spell_id for k in magus.spells_known
+    )
+
+
+#: The source of a General spell's version learned from a Lab Text, before
+#: the text's name.
+TEXT_SOURCE = "Lab Text: "
+
+
+def general_text(saga: Saga, text: Book) -> bool:
+    """Whether the Lab Text is of a General spell, the level its own."""
+    spell = catalog.find_spell(saga, text.spell_id)
+    return spell is not None and spell.level is None
+
+
+def general_version(saga: Saga, spell: Spell) -> bool:
+    """Whether `spell` is a General spell's version read from a Lab Text,
+    not yet anyone's: the text's level on a spell the catalog has at none.
+    Learning it gives the magus a spell of his own (text_spell)."""
+    if spell.level is None:
+        return False
+    record = catalog.find_spell(saga, spell.id)
+    return record is not None and record.level is None
 
 
 def lab_texts_at_hand(saga: Saga, magus: Character) -> list[Book]:
     """Every spell's Lab Text `magus` can get at and doesn't know the spell
     of -- readable or not (a picker shows them all, tagging the ones to
     decode first)."""
-    known = {k.spell_id for k in magus.spells_known}
     return [
         b
         for b in saga.books
         if b.type == "Lab Text"
         and b.spell_id
-        and b.spell_id not in known
+        and _unknown_text(saga, magus, b)
         and library.can_read(saga, magus, b)
     ]
 
@@ -332,6 +362,19 @@ def text_spell(saga: Saga, magus: Character, text: Book) -> tuple[str, Spell | N
     spell = catalog.find_spell(saga, text.spell_id)
     if spell is None:
         return f"{text.name} doesn't record a spell.", None
+    if spell.level is None:
+        # A General spell is known at the level of the version learned
+        # (DE p. 313): the one the text records.
+        level = library.level_of(text, saga)
+        if not level:
+            return (
+                f"{text.name} records no level for this General spell: set "
+                "its level on the Lab Text."
+            ), None
+        source = (
+            text.name if text.name.startswith(TEXT_SOURCE) else TEXT_SOURCE + text.name
+        )
+        return "", replace(spell, level=level, source=source)
     return "", spell
 
 
@@ -361,7 +404,9 @@ def _more_texts(
             return f"{spell.name} has no level.", []
         if spell.id == first.id or any(s.id == spell.id for s, _ in found):
             continue
-        if any(k.spell_id == spell.id for k in magus.spells_known):
+        if not general_version(saga, spell) and any(
+            k.spell_id == spell.id for k in magus.spells_known
+        ):
             return f"{magus.name} already knows {spell.name}.", []
         found.append((spell, spell_total(spell)))
     return "", found
@@ -510,7 +555,11 @@ def _spell_work(
         return found, None
     # Recreating a flawed spell invents the spell the magus knows again.
     flawed = recreated_spell(plan)
-    if spell.id != flawed and any(k.spell_id == spell.id for k in magus.spells_known):
+    if (
+        spell.id != flawed
+        and not general_version(saga, spell)
+        and any(k.spell_id == spell.id for k in magus.spells_known)
+    ):
         return [f"{magus.name} already knows {spell.name}."], None
     if needed := _mystery_needed(magus, spell, inventing=plan.activity == INVENT):
         return [needed], None
@@ -675,12 +724,16 @@ def _taught(
     taught: list[spell_teaching.Taught] = []
     totals: list[lab.LabTotal] = []
     for spell in spells:
-        if spell.level is None:
-            return [f"{spell.name} has no level."], None
         if any(k.spell_id == spell.id for k in magus.spells_known):
             return [f"{magus.name} already knows {spell.name}."], None
         if not any(k.spell_id == spell.id for k in teacher.spells_known):
             return [f"{teacher.name} doesn't know {spell.name}."], None
+        if spell.level is None:
+            # A General spell is taught at the level the teacher knows it
+            # (DE p. 313); one known at no level has none to teach.
+            return [
+                f"{teacher.name} knows {spell.name} at no recorded level: set it first."
+            ], None
         if needed := _mystery_needed(magus, spell):
             return [needed], None
         technique, form = requisite_arts(magus, spell)

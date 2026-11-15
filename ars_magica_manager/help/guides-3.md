@@ -207,6 +207,7 @@ The desktop's help and its guides are also on the [Armarius website](https://apo
 <!-- gui -->
 - [How to add a map and place its records](help:guide-atlas): the saga's Atlas.
 - [How to fit the window to your screen](help:guide-window-size): high-resolution screens and display scale.
+- [Jump to your sheet and back](help:guide-my-sheet): your character's sheet from any page while you are Playing.
 <!-- /gui -->
 
 **See also:** [Saga picker](help:saga-picker), [The workspace](help:workspace), [The saga](help:saga), [Keys](help:keys)

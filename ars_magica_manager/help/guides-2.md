@@ -287,6 +287,7 @@ As you type, the line under the fields gives the [Lab Total](help:invent-spell-t
 
 - **Inventing a spell** is done when the season's points, the Lab Total less the level, reach its level (see [When](help:invent-spell-when)).
 - **Inventing from a Lab Text** takes one season, if the Lab Total is at least the spell's level. So does **learning spells from a teacher**. See [Lab work](help:invent-spell-activity) for **More Lab Texts** and the teacher's limits.
+- **A General spell's Lab Text** (Aegis of the Hearth, Wizard's Communion, the Wards) teaches the level the text records. Set its **Level** on the Lab Text, or the form says so and won't schedule it. When the season is applied, the magus gets a version of their own at that level, with the text named as its source, and their new Lab Text teaches that version (DE pp. 226, 313).
 
 <!-- tui -->
 To compare Lab Totals before choosing, press `2` for the [Lab Totals tab](help:tab-lab-totals). It shows the owner's total for every Technique and Form in this laboratory, the Base Lab Total they share, and what each activity adds.

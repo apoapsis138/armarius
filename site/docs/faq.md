@@ -115,22 +115,24 @@ while it works.
 
 ### Where are my sagas saved? { #onedrive-and-the-save-folder }
 
-In your **save folder**: `Armarius` at the top of your OneDrive when the
-computer has OneDrive, otherwise `C:\Users\you\AppData\Local\Armarius`. The
-**Sagas** page shows the folder in use at its foot, and what chose it. Each
+In your **save folder**: by default `Armarius` in your app data folder
+(`C:\Users\you\AppData\Local\Armarius` on Windows,
+`~/.local/share/Armarius` on Linux). If an older version saved at the top
+of your OneDrive, Armarius keeps saving there. The **Sagas** page shows the folder in use at its foot, and what chose it. Each
 saga is one `.json` file there, beside its backups, exports and your
 settings.
 
-### Is OneDrive safe for my sagas?
+### Are cloud drives safe for my sagas?
 
-Yes: it's the default because OneDrive backs the folder up and keeps
-earlier versions of each file. A few things to know:
+Yes, if you choose a save folder in Google Drive, OneDrive, Dropbox or
+another synced folder: it backs the folder up and often keeps earlier
+versions of each file. A few things to know:
 
-- If you use Armarius on two computers through the same OneDrive, close it
-  on one before opening the same saga on the other, and give OneDrive a
+- If you use Armarius on two computers through the same drive, close it
+  on one before opening the same saga on the other, and give the drive a
   moment to sync. Two copies changed at once end up as two files.
-- If OneDrive has paused syncing or is signed out, your saves stay on this
-  computer until it catches up.
+- If the drive has paused syncing or is signed out, your saves stay on
+  this computer until it catches up.
 - Armarius also keeps its own backups, in the `backups` folder beside the
   sagas, before each season is applied.
 
@@ -145,7 +147,7 @@ is never overwritten. Armarius checks it can save in the folder first.
 Windows Security's **Controlled folder access** protects Documents, the
 Desktop and some other folders from programs it doesn't know, Armarius
 (or Python, from the source) included. Choose a save folder outside them
-(the default OneDrive or app data folder is fine), or allow Armarius in
+(the default app data folder is fine), or allow Armarius in
 **Windows Security › Virus & threat protection › Ransomware protection ›
 Allowed apps**.
 

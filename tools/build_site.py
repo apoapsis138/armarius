@@ -149,6 +149,7 @@ GUIDE_GROUPS: tuple[tuple[str, tuple[str, ...]], ...] = (
         "Playing together",
         (
             "guide-sessions",
+            "guide-my-sheet",
             "guide-troupe-storyguides",
             "guide-join-saga",
             "guide-invite-player",

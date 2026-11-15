@@ -184,7 +184,7 @@ def isolated_location_file(tmp_path, monkeypatch):
         paths, "OLD_LOCATION_FILE", tmp_path / "old_config" / "location.json"
     )
     monkeypatch.setattr(paths, "default_data_dir", lambda: tmp_path / "data")
-    monkeypatch.setattr(paths, "old_default_data_dir", lambda: tmp_path / "old_data")
+    monkeypatch.setattr(paths, "old_default_folders", list)
     monkeypatch.setattr(paths, "_fallback", None)
     monkeypatch.delenv(paths.ENV_VAR, raising=False)
     monkeypatch.delenv(paths.OLD_ENV_VAR, raising=False)

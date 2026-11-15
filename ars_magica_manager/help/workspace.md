@@ -41,6 +41,20 @@ On a 4K screen, 150% to 200% leaves the app plenty of room. At 300% the window a
 
 **See also:** [Title page](help:title-page), [Moving around](help:workspace-moving)
 
+# How to jump to your sheet and back
+<!-- help: guide-my-sheet; gui -->
+
+The Tribunal is debating your magus's case, and you need their Intrigue score now, without losing your place in the Meeting.
+
+1. **Jump.** Click your character's name on the **Playing** button at the top right of the window, or press `c`. Sitting as a player with Play as, click "Playing as" and the name.
+2. **See where you are.** Your sheet opens below the page you were on, and the trail marks the jump with ↪, such as "… › Rhine Tribunal ↪ Aurelia of Bonisagus".
+3. **Read.** The sheet opens at the chapter you last left it on. You can open your familiar or laboratory from there as usual, and My sheet then steps back up to your sheet.
+4. **Go back.** Click the crumb before your name, press `Esc`, or press `c` again. The page you jumped from opens at the chapter you left it on.
+
+The button opens the character you last opened from it, else your first. Those that name you come before those everyone plays, and its ▾ lists them all. `c` does nothing while you type in a box or a form is open, in your storyguide role, or in a saga with no players. With no character of your own, the button reads just "Playing".
+
+**See also:** [The trail and the pages](help:workspace-tree), [The Troupe](help:saga-troupe), [Keys](help:keys)
+
 # Saga picker
 <!-- help: saga-picker -->
 
@@ -62,7 +76,7 @@ Under the list, **Save folder** shows the folder the sagas are read from and wha
 <!-- gui -->
 The line under the page's title names the folder the sagas are read from. If the app ever closes itself without a word, `crash.log` in that folder records where it was. The file stays empty until then.
 <!-- /gui -->
-The default is Armarius at the top of your OneDrive. The app was called Ars Magica Manager before: the first time Armarius starts, it renames the default Ars Magica Manager folder to Armarius and says so (a folder you chose stays where it is, and when both folders exist nothing is merged and Armarius is used).
+The default is Armarius in your app data folder (C:\Users\you\AppData\Local\Armarius on Windows, ~/.local/share/Armarius on Linux). If an older version saved somewhere else by default (Armarius or Ars Magica Manager at the top of your OneDrive), Armarius keeps saving there, as a folder you chose; Change save folder moves it.
 
 **You type:** for a new saga, its Name and Storyguide (both required), the Start Year and Start Season, and an optional one-line Description.
 
@@ -171,6 +185,9 @@ The desktop shows one page at a time, the way a book is read: the Sagas, a saga,
 <!-- help: workspace-tree; gui -->
 
 The trail at the top left names the pages above the one on show, such as "Sagas › Matrix › Keep › Leandro". Click one to go back to it.
+
+- **A jump.** My sheet (your name on the Playing button, or `c`, while you are Playing) opens your character's sheet below the page on show, wherever that is, and the trail marks the jump with ↪ in place of ›: "… › Rhine Tribunal ↪ Aurelia of Bonisagus". The crumb before it, `Esc` or `c` again takes you back to that page, at the chapter you left it on. If the trail already passes through your sheet (from your familiar or your laboratory), My sheet steps back up to it instead. See [Jump to your sheet and back](help:guide-my-sheet).
+- **The switcher.** When the page on show is a character, a laboratory or a covenant, a ▾ follows its crumb. Click it for the others at the same level: a character's covenant's people by Magi, Companions and Grogs (those of no covenant, for one who belongs to none), the covenant's laboratories, or the saga's covenants, the troupe's first. The one on show is marked "on show". Click another, or choose it with Up and Down and press Enter, to open it in place of the last crumb; the crumbs above it stay. A person opens at the chapter on show if they have it, else where you last left them. A long list has a box at its top: type to narrow it. `Esc`, or a click outside, closes it. It lists only what you may read (in Player view, or a player's seat, what the players know).
 
 - **Sagas** shows every saga as a card. Click one to open it.
 - A saga's page opens on [The Troupe](help:saga-troupe), with the player characters, the troupe's covenants and the pages you've bookmarked. Its other chapters are listed under [The saga](help:saga).
@@ -409,6 +426,7 @@ The chapter is drawn the first time you open it, since a Tribunal pack can bring
 The saga page's first chapter, so the characters you play are a click away rather than inside their covenant's People.
 
 - **Next Session**: the next evening of play, with its storyguide, who's coming and who's Away, and who plays whom. Then come the other planned [Sessions](help:tab-content-sessions) and the three played most recently. Saga Management's Sessions adds and changes them.
+- **Your Characters**, while you're Playing or sit as a player: the characters you play, those that name you first, then those everyone plays. The Playing button, or `c`, opens the first of them, or the one you last opened from it (see [Jump to your sheet and back](help:guide-my-sheet)).
 - **Player Characters**: every character whose Biographical Detail, in their Description chapter, names their **Player**, or who is **Played by** one of the saga's [players](help:players-access). They're grouped by covenant, the troupe's covenants first, then the others, then those who belong to none. Click one to open their sheet.
 - **Stewards**: each Player's stewarded characters, and whether each has a plan for the current season. A [Steward](help:players-access) keeps a character with no Player of its own between Sessions. This isn't shown while the saga has no players.
 - **Troupe Covenants**: the covenants the troupe plays, marked ✦ as on The Covenants.
@@ -1511,6 +1529,8 @@ Only the storyguide, in your own window or signed in as Storyguide, can make any
 **On the desktop** a player's window opens on **Your Characters**, with a **New Character** card for one of their own. Then come the troupe's other characters, the troupe's covenants and the rest of what the players know. Their own characters show every button. Any other record is read only, with no Add, Edit or Delete, and Advance Season and Player view aren't there.
 
 To see it as a player does, click the **Play as** icon (two people) in the title bar, which appears once the saga has players, and pick a player. It then reads "Playing as" and their name. Pick **Storyguide** from it to come back.
+
+While the player you sit as has characters, the button is split. "Playing as" and the name opens their sheet (My sheet, or `c`), and its ▾ is the seat menu, with their characters at the top. A player's own desktop has the same button: their character's name, with a ▾ listing their characters (see [Jump to your sheet and back](help:guide-my-sheet)).
 <!-- /gui -->
 
 **See also:** [Signing in](help:sign-in), [How to host a saga](help:guide-hosting), [The saga](help:saga)

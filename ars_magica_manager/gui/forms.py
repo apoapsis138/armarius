@@ -571,11 +571,21 @@ class FieldsDialog(_Sheet):
             self.refuse(str(error))
             return
         problem = self.validate(values) if self.validate is not None else None
+        if problem and self._said_live(values, problem):
+            # The line above the buttons already gives the reason (Lab
+            # Work's does): refuse without saying it twice.
+            sounds.play("tock")
+            self.error.hide()
+            return
         if problem:
             self.refuse(problem)
             return
         self.values = values
         self.accept()
+
+    def _said_live(self, values: dict[str, Any], problem: str) -> bool:
+        """Whether the live line shows `problem` already."""
+        return self.live is not None and plain(problem) in plain(self.live(values))
 
 
 class _Held(QLabel):

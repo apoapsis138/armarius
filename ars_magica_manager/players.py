@@ -212,6 +212,30 @@ def characters_of(saga: Saga, player: Player) -> list[Character]:
     return [c for c in saga.characters if plays(c.background, player)]
 
 
+def my_characters(saga: Saga, player: Player | None) -> list[Character]:
+    """The characters `player` plays (the Troupe page's Your Characters),
+    those naming them first, then those everyone plays; none for no one
+    (the storyguide's role, or a saga with no players). A character they
+    only keep as its Steward isn't theirs."""
+    if player is None:
+        return []
+    mine = characters_of(saga, player)
+    named = [c for c in mine if player.id in c.background.player_ids]
+    return named + [c for c in mine if c not in named]
+
+
+def my_sheet(
+    saga: Saga, player: Player | None, last_opened: str | None = None
+) -> Character | None:
+    """The character whose sheet My sheet opens for `player` (None: the
+    storyguide's role, or a saga with no players): the one last opened, while
+    it is still theirs, else the first of my_characters; None if they have
+    none."""
+    mine = my_characters(saga, player)
+    last = next((c for c in mine if c.id == last_opened), None)
+    return last or (mine[0] if mine else None)
+
+
 def may_change(
     saga: Saga,
     player: Player | None,

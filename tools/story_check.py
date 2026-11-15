@@ -6,9 +6,13 @@
 
 Runs, in order: the tests (the slice's from `slice_tests.py`, or with
 --full the whole suite), ruff's import sorting (applied), `ruff format`,
-`ruff check` and `pyright`. Each
+`ruff check` and `pyright`, and with --full last `boot_smoke.py` (both
+front-ends start). Each
 prints one line (ok, or the failing test names / the first lines of the
 tool's output), and the exit code is nonzero if any failed.
+
+The folder is marked busy while it runs (`folder_busy.py`), so a thread
+sharing it waits before a stash, pull, branch switch or reset.
 
 A test run past its limit (FULL_LIMIT, SLICE_LIMIT) is stopped with
 every worker it started, and said; the conftest also fails a test whose
@@ -29,6 +33,8 @@ import re
 import subprocess
 import sys
 from pathlib import Path
+
+from folder_busy import marked
 
 ROOT = Path(__file__).resolve().parent.parent
 UV = ["uv", "run"]
@@ -243,6 +249,9 @@ def main(argv: list[str]) -> int:
         ("ruff check", [*UV, "ruff", "check", "."], 800),
         ("pyright", [*UV, "pyright"], 800),
     ]
+    if full:
+        # Both front-ends start, as a person would start them.
+        tools.append(("boot", [*UV, "python", "tools/boot_smoke.py"], 1600))
     for name, command, keep in tools:
         code, output = run(command)
         if code == 0:
@@ -264,4 +273,7 @@ def main(argv: list[str]) -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:]))
+    # The folder is marked busy for the whole run, so another thread
+    # sharing it waits before a stash or pull (folder_busy.py).
+    with marked("story_check " + " ".join(sys.argv[1:] or ["(slice)"])):
+        sys.exit(main(sys.argv[1:]))
