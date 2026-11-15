@@ -114,6 +114,7 @@ change in it.
 | Peregrinatio XVI | Between Sand and Sea | 3.60.0 | Mythic Africa as a region pack |
 | Peregrinatio XVII | Land of Fire and Ice | 3.61.0 | Iceland as a region pack, with The Icelandic Wars |
 | Peregrinatio XVIII | Antagonists | 3.61.0 | Ten recurring opponents for any saga, and templates from them |
+| Castellum I | Vigilo Confido | 4.13.0 | A saga hosted day and night on your own NAS or server: the admin word, nightly backups and a container image |
 
 ## Major versions
 
@@ -131,7 +132,7 @@ change in it.
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
-## Unreleased
+## 4.13.0 — 2026-11-14
 
 ### Castellum
 
