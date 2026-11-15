@@ -524,6 +524,12 @@ _Avoid_: TUI (in the help), console app
 The front-end drawn as a book, one page at a time.
 _Avoid_: GUI (in the help), window app
 
+**Save folder**:
+The folder on this computer holding a user's sagas, their backups, exports,
+portraits, maps and settings: by default the app data folder, or one
+chosen in the app or by ARMARIUS_DATA.
+_Avoid_: Data folder (the repo's data/ catalogs)
+
 **More**:
 The menu of a sheet's rarer actions.
 _Avoid_: Actions menu, overflow
