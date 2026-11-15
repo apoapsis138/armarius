@@ -10,6 +10,7 @@ from dataclasses import dataclass
 
 from support import NODES, everything_saga, strip_markup, wait_until
 from textual.screen import ModalScreen
+from textual.widget import Widget
 from textual.widgets import TabbedContent, Tree
 
 from ars_magica_manager import (
@@ -356,7 +357,7 @@ async def _open_virtue_change(ws) -> None:
     await until(lambda: view.query("#section-vf-virtues CollapsibleTitle"))
     view.refresh_all()
     index = len(magus.virtues_flaws) - 1
-    rows = view.query_one("#vf-virtues-list", scr.SelectableList)
+    rows = await mounted(view, "#vf-virtues-list", scr.SelectableList)
     await until(lambda: rows.select_data_index(index))
     await until(lambda: rows.selected_data_index == index)
     rows.focus()
@@ -380,7 +381,7 @@ async def _open_lab_virtue_change(ws) -> None:
     await until(lambda: view.query("#section-lab-vf-virtues CollapsibleTitle"))
     view.refresh_all()
     index = len(lab.virtues_flaws) - 1
-    rows = view.query_one("#lab-vf-virtues-list", scr.SelectableList)
+    rows = await mounted(view, "#lab-vf-virtues-list", scr.SelectableList)
     await until(lambda: rows.select_data_index(index))
     await until(lambda: rows.selected_data_index == index)
     rows.focus()
@@ -434,7 +435,7 @@ async def _grow_a_story(ws) -> None:
         )
     view = ws._current_sheet_view()
     view.refresh_all()
-    rows = view.query_one("#region-stories-list", scr.SelectableList)
+    rows = await mounted(view, "#region-stories-list", scr.SelectableList)
     await until(lambda: rows.row_count > 1)
     rows.select_data_index(0)
     await until(lambda: rows.selected_data_index == 0)
@@ -465,7 +466,7 @@ async def _grow_a_story_chosen(ws) -> None:
         )
     view = ws._current_sheet_view()
     view.refresh_all()
-    rows = view.query_one("#region-stories-list", scr.SelectableList)
+    rows = await mounted(view, "#region-stories-list", scr.SelectableList)
     await until(lambda: rows.row_count > 1)
     rows.select_data_index(0)
     rows.focus()
@@ -2413,6 +2414,14 @@ async def until(condition, timeout: float = 3.0) -> bool:
         await asyncio.sleep(0.02)
         elapsed += 0.02
     return bool(condition())
+
+
+async def mounted[W: Widget](view: Widget, selector: str, kind: type[W]) -> W:
+    """`view`'s `selector` once it is mounted. A section's title can be
+    mounted a moment before the list inside it, so waiting for the title
+    is not enough to look the list up."""
+    assert await until(lambda: bool(view.query(selector))), f"{selector} never mounted"
+    return view.query_one(selector, kind)
 
 
 async def wait_for_screen(app, cls, timeout: float = 3.0):

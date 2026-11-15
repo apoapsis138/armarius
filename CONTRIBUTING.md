@@ -166,7 +166,15 @@ what the books print: never invent lists or figures to fill a gap.
   release, and it changes only through a release pull request from `dev`,
   when the maintainer calls a release.
 - The Checks workflow (`.github/workflows/checks.yml`) runs on Windows and
-  Linux for every push and pull request to `dev` and `main`.
+  Linux for every push and pull request to `dev` and `main`: formatting,
+  lint and pyright once per system, and the full suite split into four
+  shards per system that run side by side (`pytest --shard=k/4`). Its last
+  job, `checks`, passes only when every other job did; it is the one status
+  to require in branch protection.
+- The shards are balanced by each test file's running time, from
+  `tools/test_durations.json`; a file not in it counts as a typical file of
+  its tier. When the suite has changed a lot, measure it again (the steps
+  are in `tools/shards.py`'s docstring) and commit the new file.
 
 ## Changelog and versioning
 

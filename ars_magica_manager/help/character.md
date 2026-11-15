@@ -3657,7 +3657,7 @@ Houses of Hermes: Mystery Cults pp. 115, 120). Each is kept in the Diary.
   Personality roll, or a Confidence Point spent to walk away: the troupe's.
 
 **See also:** [Personality Traits](help:section-personality-traits),
-[Script components](help:guide-initiation-plan)
+[Script components](help:guide-initiation-scripts)
 
 ## Divination
 <!-- help: tmre-divination -->

@@ -1,0 +1,86 @@
+# Armarius hosting one saga for Remote seats on a headless host, with a
+# Cloudflare Tunnel beside it (ADR 0022, STORY-2284). Help's guide "How to
+# self-host a saga" walks through it.
+#
+# Before the first start, in this folder:
+#   cp example.env .env              and set ARMARIUS_VERSION and ARMARIUS_SAGA
+#   cp tunnel.env.example tunnel.env and paste the tunnel's token
+#   chmod 600 .env tunnel.env
+#   sudo install -d -o 10001 -g 10001 -m 700 data keys backups
+# (on a NAS, also `sudo setfacl -b data keys backups`, then chmod 700
+# again; not a NAS's encrypted shared folder for keys: the app's user
+# can't use one. Help's guide has the details.)
+# Then: docker compose up -d
+#
+# No port is published. The listener answers on 127.0.0.1 inside the
+# armarius container only; cloudflared shares that container's network,
+# so it alone reaches the listener and carries players in from outside.
+
+name: armarius
+
+services:
+  armarius:
+    # A version, never "latest": a new version is pulled on purpose, and
+    # a seat refuses a host of another major version.
+    image: ghcr.io/apoapsis138/armarius:${ARMARIUS_VERSION:?set ARMARIUS_VERSION in .env}
+    container_name: armarius
+    restart: unless-stopped
+    environment:
+      ARMARIUS_SAGA: ${ARMARIUS_SAGA:?set ARMARIUS_SAGA in .env}
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 512m
+    pids_limit: 128
+    volumes:
+      - ${DATA_DIR:-./data}:/data
+      - ${KEYS_DIR:-./keys}:/keys
+      - ${BACKUPS_DIR:-./backups}:/backups
+
+  cloudflared:
+    image: cloudflare/cloudflared:2026.11.0
+    restart: unless-stopped
+    command: ["tunnel", "--no-autoupdate", "run"]
+    # TUNNEL_TOKEN, kept out of this file and out of the repository.
+    env_file: [tunnel.env]
+    network_mode: "service:armarius"
+    depends_on:
+      armarius:
+        condition: service_started
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 128m
+    pids_limit: 64
+
+  # The nightly backup (admin backup), for a box with no scheduler of its
+  # own: once at start, then every BACKUP_EVERY seconds (a day unless .env
+  # says), keeping the newest BACKUPS_KEPT. It never sees the keys, and has
+  # no network at all.
+  backup:
+    image: ghcr.io/apoapsis138/armarius:${ARMARIUS_VERSION:?set ARMARIUS_VERSION in .env}
+    restart: unless-stopped
+    environment:
+      ARMARIUS_SAGA: ${ARMARIUS_SAGA:?set ARMARIUS_SAGA in .env}
+      BACKUP_EVERY: ${BACKUP_EVERY:-86400}
+      BACKUPS_KEPT: ${BACKUPS_KEPT:-30}
+    entrypoint: ["sh", "-c"]
+    command:
+      - 'while true; do python main.py admin backup --keep "$$BACKUPS_KEPT"; sleep "$$BACKUP_EVERY"; done'
+    # The image's health check asks for the listener, which runs only in
+    # the armarius service.
+    healthcheck:
+      disable: true
+    network_mode: none
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 256m
+    pids_limit: 32
+    volumes:
+      - ${DATA_DIR:-./data}:/data
+      - ${BACKUPS_DIR:-./backups}:/backups

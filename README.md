@@ -78,6 +78,29 @@ saga in play.
 
 ## Getting started
 
+**New to this?** The [Armarius website](https://apoapsis138.github.io/armarius/)
+walks through [installing it](https://apoapsis138.github.io/armarius/install/)
+step by step, answers [common setup questions](https://apoapsis138.github.io/armarius/faq/),
+and has the app's whole help and how-to guides.
+
+### Download the app
+
+Each [Release](https://github.com/apoapsis138/Armarius/releases) has a
+download for Windows and one for Linux, which need no Python:
+
+1. Download `Armarius-X.Y.Z-windows.zip` (or `-linux.zip`) and unzip it.
+2. Start **Armarius** in the folder it makes for the desktop version, or
+   **armarius-terminal** for the terminal version.
+
+On Windows the first start may show **Windows protected your PC**: the
+app isn't signed with a paid certificate, so Windows doesn't know it yet.
+Click **More info**, then **Run anyway**. The Linux build runs on Ubuntu
+22.04 and newer (or another system of that age). There's no macOS build
+yet. Your sagas aren't kept in the app's folder, so a newer download
+finds them.
+
+### Run from the source
+
 Requires Python 3.14+ and [`uv`](https://docs.astral.sh/uv/). Armarius is
 tested on Windows and Linux, and should run on macOS.
 
@@ -92,22 +115,28 @@ how-to guides walk through the rest. Hosting a saga for players is in
 Help's guide to sharing.
 
 Your sagas, backups, exports and settings live in your **save folder**,
-by default `Armarius` at the top of your OneDrive (or your app data folder
-without one). The saga picker shows where it is, and More (`m`) there has
+by default `Armarius` in your app data folder. The saga picker shows where it is, and More (`m`) there has
 **Change save folder**. The `ARMARIUS_DATA` environment variable
 overrides it.
 
 ## Status
 
-Armarius is a personal project. Bug reports are welcome as issues; pull
-requests are open to invited collaborators only. To report a security problem, see
-[SECURITY.md](SECURITY.md).
+Armarius is a personal project, built with Claude Code (Anthropic's AI
+coding assistant) writing much of the code. I write code too. I designed
+the architecture and design patterns, the data model, how each rule is
+applied (checked against the books, Definitive Edition first) and the
+security model for connecting players through the app, and I arranged the
+licensing with Atlas Games. I review and test every change. No generative
+AI was used for any of its art (see [NOTICE.md](NOTICE.md)). Bug reports
+are welcome as issues; pull requests are open to invited collaborators
+only. To report a security problem, see [SECURITY.md](SECURITY.md).
 
 ## Developing
 
 ```bash
 uv run python tools/story_check.py          # the tests for what changed, ruff and pyright
 uv run python tools/story_check.py --full   # the whole suite, in parallel
+uv run --group build pyinstaller armarius.spec --noconfirm   # a Build, in dist/Armarius
 ```
 
 The core (`ars_magica_manager/`) holds the models, rules, storage, sheets'

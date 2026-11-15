@@ -54,6 +54,7 @@ change in it.
 | Hedge Magic | The non-Hermetic traditions: their Arts, chapters and rules |
 | Mappa Mundi | The Atlas: the saga's maps and the records pinned on them |
 | Liveries of the Houses | The desktop drawn in a House's own look: its family's form, colours, paper and mark |
+| Castellum | Hosting a saga on a box of your own: a NAS, a Linux computer or a rented server, with no window |
 | PDF Exports and Handouts | Sheets and handouts printed from the saga for the troupe |
 
 ## Editions
@@ -114,6 +115,7 @@ change in it.
 | Peregrinatio XVI | Between Sand and Sea | 3.60.0 | Mythic Africa as a region pack |
 | Peregrinatio XVII | Land of Fire and Ice | 3.61.0 | Iceland as a region pack, with The Icelandic Wars |
 | Peregrinatio XVIII | Antagonists | 3.61.0 | Ten recurring opponents for any saga, and templates from them |
+| Castellum I | Vigilo Confido | 4.13.0 | A saga hosted day and night on your own NAS or server: the admin word, nightly backups and a container image |
 
 ## Major versions
 
@@ -144,12 +146,69 @@ change in it.
 - **Print the Troupe.** The Troupe chapter has Print the Troupe: every player character's sheet in one PDF, each from a fresh page and in its own House's colours (or one theme for everyone), with a bookmark for each.
 - **Export as Markdown.** A character's, covenant's, laboratory's or familiar's sheet can be written as a Markdown file, on the terminal (More) and the desktop (Manage): the same copy and sheet as printing, with tables a wiki or notes app shows. Help has a how-to.
 
+### Illuminatio
+
+- **My sheet.** While Playing, your name on the Playing button (or `c`) opens your character's sheet from any page; the trail, Esc or `c` again takes you back.
+- **The trail's switcher.** The last crumb of the trail lists the other people, laboratories or covenants at its level.
+
+### Book of Hours
+
+- **General spells from a Lab Text.** A Lab Text for a General spell, such as Aegis of the Hearth, now teaches the level written on it instead of refusing with "has no level" (#16). The magus learns a version of his own at that level, with the text named as its source, and the Lab Text he writes teaches that version; two magi learning from the same text each get their own. A General spell's text with no level asks for one, and the Lab Work window gives its reason once, not twice.
+
 ### Fundamenta
 
-- **Releases.** Changes now gather on a development branch and are listed here under Unreleased; a release gives them one version together, instead of a new version for every change. The repository checks every change on Windows and Linux, and each tagged release is published on GitHub with its notes from this page.
+- **Sagas saved on this computer by default.** A new install keeps its sagas in your app data folder (`C:\Users\you\AppData\Local\Armarius` on Windows, `~/.local/share/Armarius` on Linux), not in OneDrive, where a sync could catch a save half-written. If you already use Armarius, nothing moves: it goes on saving where it always has, now shown as a folder you chose. Change save folder on the saga picker moves it.
+
+## 4.13.1 — 2026-11-15
 
 ### Glossa
 
+- **Help checked against the books.** The how-to guides' rules and page references were checked against the Definitive Edition, its errata and the supplements they cite. A few page references are corrected, and where the app makes its own call on something the book leaves open or reads differently (three subjects for an Adventure, Elemental Magic's share, a Presiding Quaesitor prosecuting any charge, galdramen without Twilight), the help now says so.
+- **Help matches the app.** The desktop's Advance Season card, the New Magus, New Companion and New Grog cards, chapters rather than tabs, the full list of optional rules, every pack's assumptions page, and moving (not renaming) a saga file once it's hosted on a server are now described as they are.
+- **Your save folder, wherever it is.** The how-to guides now say "your save folder" and point to the Sagas page, which shows where it is, instead of assuming it's in OneDrive.
+- **Guides that read more easily.** Every how-to guide opens on what you want to do and gives one action per step, with the book's rules kept on the reference pages they link to. Hosting is now a short page to choose a way, with a guide for browsers and SSH and one for Remote seats; "How to host on your own box" is now How to self-host a saga, and the faith guide is How to see what a character's faith allows. The sourcebook guide lists each pack in a line or two, and each pack's assumptions page now opens with what the pack brings.
+- **New guides.** How to join a saga as a player, invite a player, change or reset a passcode, update to a new version, change the save folder, restore a saga from a backup, and keep a player character's notes and goals.
+- **Remote seats need the same major version** as the host, not the very same version, as the guides now say.
+
+## 4.13.0 — 2026-11-14
+
+### Castellum
+
+- **Host a saga on a server or NAS.** Run Remote seats from an always-on box, such as a Linux computer, a UGREEN NAS or a small rented server, instead of your desktop. Each release now publishes a container image, `ghcr.io/apoapsis138/armarius` (Intel/AMD and ARM), with a locked-down compose file that runs it beside a Cloudflare Tunnel. A new guide in Help walks through the whole setup, from moving the saga over to joining it from your desktop as storyguide. Hosting for browsers and SSH stays on the desktop.
+- **Keys without a keychain.** On a box with no keychain, the host key and SSH host key live in a private folder you choose. Armarius refuses a folder that's missing, readable by others, or inside the data folder, so keys never travel with the saga or its backups.
+- **Run it from a terminal.** The new `admin` command does everything the Host for Players window does: players, roles and passcodes, invites and approvals, seats, the Log, rotating the host key, and bringing a saga in.
+- **Nightly backups.** `admin backup` zips the saga and its seat files safely while players are saving, keeps the newest 30, and never includes the host key. The compose file runs it every night.
+
+### Glossa
+
+- **The help on the web.** [apoapsis138.github.io/armarius](https://apoapsis138.github.io/armarius/) has the desktop's help and how-to guides, a step-by-step install guide, and answers to common setup questions. It's rebuilt with each release.
+
+### Fundamenta
+
+- **No busy cursor on GNOME.** On Linux under GNOME, the app no longer shows a busy cursor for about 15 seconds at start and when switching windows. Set `QT_QPA_PLATFORM=wayland` if you'd rather it used Wayland.
+
+### Scriptorum
+
+- **Smoother tab switching.** Switching a sheet's tab now redraws the footer once, even on a slow computer.
+
+## 4.12.0 — 2026-11-12
+
+### Fundamenta
+
+- **Download the app.** Each Release now has a download for Windows and one for Linux that runs without Python: unzip it and start Armarius (the desktop) or armarius-terminal (the terminal version). Help's new guide, How to download and run the app, covers Windows' "Windows protected your PC" warning and moving to a newer version.
+- **Hosting from a download.** A downloaded copy can host a saga for players, in a browser, over SSH or with Remote seats, just as a copy run from the source can.
+- **Releases.** Changes now gather on a development branch and are listed here under Unreleased; a release gives them one version together, instead of a new version for every change. The repository checks every change on Windows and Linux, and each tagged release is published on GitHub with its notes from this page.
+- **How Armarius is made.** The README now says plainly that Armarius is built with Claude Code as a coding assistant, what the maintainer designed and does, and that none of its art is generative AI.
+- **Steadier checks.** The tests no longer touch the computer's own keychain, so they run the same on a machine without one, and three tests that sometimes failed on a busy machine wait for the screen they act on.
+
+### Scriptorum
+
+- **No crash closing a window as it opens.** A window closed, or the app quit, at the very moment the season's results, a menu, a yes/no question, a books chooser or a file chooser opened could crash while choosing what to focus.
+
+### Glossa
+
+- **Where the source is.** Help's About page links the source of the version you're running.
+- **What's New in reach.** Help lists its REFERENCE pages (About this App, What's New and Keys) before the long list of how-to guides, and the filter box finds About and What's New by name.
 - **Unreleased work on What's New.** What's New shows changes not yet in a release first, as Unreleased (in development).
 
 ## 4.11.2 — 2026-11-12

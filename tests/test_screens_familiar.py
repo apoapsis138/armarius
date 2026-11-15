@@ -18,7 +18,7 @@ from screen_helpers import (
     _select_familiar,
     _wait_for_screen,
 )
-from support import build_all_tabs, choose, menu, wait_until
+from support import build_all_tabs, choose, click_when_shown, menu, wait_until
 from textual.widgets import Button, Checkbox, Input, Select, Static, Tree
 
 from ars_magica_manager import familiars as fam
@@ -285,7 +285,7 @@ async def test_familiar_abilities_use_generic_add_edit_remove():
         assert await wait_until(pilot, lambda: bool(app.screen.query("#fld-xp")))
         app.screen.query_one("#fld-xp", Input).value = "30"
         app.screen.query_one("#fld-specialty", Input).value = "Running"
-        await pilot.click("#btn-save")
+        await click_when_shown(pilot, "#btn-save")
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
@@ -302,7 +302,7 @@ async def test_familiar_abilities_use_generic_add_edit_remove():
         await pilot.pause()
         assert isinstance(app.screen, FieldsDialog)
         app.screen.query_one("#fld-xp", Input).value = "50"
-        await pilot.click("#btn-save")
+        await click_when_shown(pilot, "#btn-save")
         await pilot.pause()
         assert "Athletics (Running) 4 50/75" in _fam_ability_labels(view)
 

@@ -5,6 +5,7 @@ from ars_magica_manager.models import as_secrets
 import re
 
 from textual.content import Content
+from textual.widget import Widget
 from textual.widgets import OptionList
 
 from ars_magica_manager import catalog, traditions
@@ -137,6 +138,25 @@ async def wait_until(pilot, condition, timeout: float = 5.0, interval: float = 0
         await pilot.pause(interval)
         elapsed += interval
     return condition()
+
+
+async def shown[W: Widget](pilot, selector: str, kind: type[W] = Widget) -> W:
+    """The current screen's `selector`, once layout has given it a place.
+
+    A new dialog's widgets can be queried a moment before they are mounted
+    and laid out. A click then (region 0 x 0) lands on nothing, and setting
+    a Select's value then fails on its own parts, not mounted yet."""
+    widget = pilot.app.screen.query_one(selector, kind)
+    assert await wait_until(pilot, lambda: widget.region.area > 0), (
+        f"{selector} was never laid out"
+    )
+    return widget
+
+
+async def click_when_shown(pilot, selector: str) -> None:
+    """Click `selector` once it is laid out (see `shown`)."""
+    await shown(pilot, selector)
+    assert await pilot.click(selector), f"clicking {selector} hit nothing"
 
 
 async def menu(pilot, app, key: str, label: str) -> None:

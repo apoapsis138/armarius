@@ -77,12 +77,14 @@ def escape(text: str) -> str:
     return text.replace("[", "\\[")
 
 
-#: A markup tag ([b], [i $label], [/], ...); "\\[" is a literal bracket.
+#: One markup tag, opening or closing ([b], [/], [i $label]), not an
+#: escaped bracket: whether it closes, and what it sets.
 TAG = re.compile(r"(?<!\\)\[(/?)([^\[\]\n]*)\]")
 
 
 def plain(text: str) -> str:
-    """`text` without its markup: plain words, for a list row or paper."""
+    """`text` without its markup, its escaped brackets restored: for a list
+    row, paper, or what a plain terminal (the admin word) prints."""
     return TAG.sub("", text).replace("\\[", "[")
 
 

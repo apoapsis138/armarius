@@ -149,6 +149,7 @@ LAYERS: tuple[tuple[str, frozenset[str]], ...] = (
             {
                 "",
                 "arts",
+                "launch",
                 "lockout",
                 "markup",
                 "models",
@@ -183,6 +184,9 @@ LAYERS: tuple[tuple[str, frozenset[str]], ...] = (
             {
                 "acta",
                 "actions",
+                # The host's chores from a plain terminal: the forms' commands,
+                # run with the values given on its command line.
+                "admin",
                 "ahead",
                 "forms",
                 "hall",
@@ -196,6 +200,8 @@ LAYERS: tuple[tuple[str, frozenset[str]], ...] = (
                 "saga_overview",
                 "section_verbs",
                 "sheets",
+                # The records beside one on the trail (by saga_overview's groups).
+                "siblings",
                 "theban_meeting",
                 "troupe",
                 "worksheet",

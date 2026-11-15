@@ -7,7 +7,10 @@ The pages are the shelf of sagas, a saga's covenants, a covenant (its
 people, laboratories and seasons), a laboratory, a character's sheet and a
 familiar's. Where the
 reader is is a list of places, the trail; the page shown is built from
-the last one, so changing the theme just builds it again.
+the last one, so changing the theme just builds it again. The last crumb
+of a character, laboratory or covenant drops a switcher to the others at
+its level; My sheet (the Playing button, or c) opens the reader's own
+character below the page on show, a jump the trail marks ↪.
 
 A sheet's Edit buttons open the same forms the terminal shows
 (forms/character.py); saving one saves the saga, merged with whatever the
@@ -59,11 +62,13 @@ from .. import (
     hotkeys,
     joined_games,
     paths,
+    players,
     presence,
     print_records,
     references,
     saga_index,
     seat,
+    siblings,
     storage,
     stores,
     storyguides,
@@ -129,7 +134,7 @@ REMOTE_TICK_MS = 5000
 from .conflicts import FightPage, SiegePage
 from .covenant import CovenantPage
 from .familiar import FamiliarPage
-from .finder import FinderPanel, eye_icon, magnifier_icon
+from .finder import FinderPanel, SwitcherPanel, eye_icon, magnifier_icon
 from .forms import ConfirmDialog, NoticeDialog, ask_question, run_steps
 from .help import HelpPage
 
@@ -148,6 +153,7 @@ from .region import NeighbourPage
 from .saga_content import SagaContentPage
 from .season_panel import SeasonPanel
 from .seasons import SeasonsPage
+from .seat_chip import SeatChip, cut
 from .sessions_section import sessions_section
 from .settings_window import SettingsWindow
 from .stores import SPOT_LISTS, StorePage
@@ -362,6 +368,15 @@ class MainWindow(QMainWindow):
     last_asked: float = 0.0
     #: This window's presence id, once a saga with players is open.
     _presence_id: str | None = None
+    # My sheet and the trail's switcher, set on the instance as they change.
+    #: The character last opened from My sheet (the Playing or seat button,
+    #: or its menu), to open again (for this sitting only).
+    _last_mine: str | None = None
+    #: The trail My sheet jumped from, while the page on show is below it:
+    #: its next crumb is drawn ↪, and c goes back to it.
+    _jumped_from: list[Place] | None = None
+    #: The switcher dropped from the last crumb, while it is open.
+    switcher: SwitcherPanel | None = None
 
     def __init__(self, saga_ids: list[str] | None = None) -> None:
         super().__init__()
@@ -450,6 +465,9 @@ class MainWindow(QMainWindow):
         (season_panel.py)."""
         self.crumbs = QHBoxLayout()
         self.crumbs.setSpacing(2)
+        #: The last crumb, and its ▾ (the switcher) while it has one.
+        self.last_crumb: QPushButton | None = None
+        self.crumb_switch: QPushButton | None = None
         bar = QHBoxLayout()
         bar.setContentsMargins(12, 4, 8, 0)
         bar.addLayout(self.crumbs)
@@ -459,18 +477,16 @@ class MainWindow(QMainWindow):
         bar.addWidget(self._find_button())
         #: Player view, while a saga is open: the saga as the players see
         #: it (viewing.py), said in words beside the eye while it is on.
-        self.view_button = QPushButton()
-        self.view_button.setFlat(True)
+        #: Playing with characters of your own, it splits: your character's
+        #: name opens My sheet, its ▾ a menu (seat_chip.py).
+        self.view_button = SeatChip("Player view", self.toggle_player_view)
         self.view_button.setCheckable(True)
-        self.view_button.setAccessibleName("Player view")
-        self.view_button.clicked.connect(self.toggle_player_view)
         bar.addWidget(self.view_button)
         #: Play as, while a saga with players is open: the storyguide sits
-        #: in a player's seat to see their desktop (choose_seat).
-        self.seat_button = QPushButton()
-        self.seat_button.setFlat(True)
-        self.seat_button.setAccessibleName("Play as")
-        self.seat_button.clicked.connect(self.choose_seat)
+        #: in a player's seat to see their desktop (choose_seat). Split, as
+        #: the eye is, while the seat's player has characters; on a Joined
+        #: game's Player's desktop, only My sheet.
+        self.seat_button = SeatChip("Play as", self.choose_seat)
         bar.addWidget(self.seat_button)
         self.help = QPushButton("  Help")
         self.help.setFlat(True)
@@ -499,13 +515,14 @@ class MainWindow(QMainWindow):
         return bar
 
     def _bind_hotkeys(self) -> None:
-        """The keys that work on every page (hotkeys.py): Help, Back, Quit
-        and Find, each a shortcut on the whole window."""
+        """The keys that work on every page (hotkeys.py): Help, Back, Quit,
+        Find and My sheet, each a shortcut on the whole window."""
         handlers: dict[str, Callable[[], object]] = {
             hotkeys.HELP: self._help_key,
             hotkeys.BACK: self.back,
             hotkeys.QUIT: self.close,
             hotkeys.FIND: self.open_finder,
+            hotkeys.MY_SHEET: self.my_sheet_key,
         }
         for hotkey in hotkeys.HOTKEYS:
             act = handlers[hotkey.action]
@@ -1028,10 +1045,17 @@ class MainWindow(QMainWindow):
     def choose_seat(self) -> None:
         """The title bar's Play as: a menu of the storyguide and each
         player."""
+        if self.saga is not None:
+            self.seat_menu().exec(self.seat_button.under())
+
+    def seat_menu(self) -> QMenu:
+        """Play as's menu: the seated player's characters first, while they
+        have any (My sheet), then the storyguide and each player."""
+        menu = QMenu(self.seat_button)
         saga = self.saga
         if saga is None:
-            return
-        menu = QMenu(self.seat_button)
+            return menu
+        self._add_my_characters(menu)
         menu.addAction("Storyguide").triggered.connect(lambda: self.sit_as(None))
         for player in saga.players:
             if seat.runs_the_saga(player):
@@ -1044,18 +1068,100 @@ class MainWindow(QMainWindow):
             # stays one click away, and hosting goes on whoever sits here.
             menu.addSeparator()
             menu.addAction("Host for Players…").triggered.connect(self.open_hosting)
-        menu.exec(self.seat_button.mapToGlobal(self.seat_button.rect().bottomLeft()))
+        return menu
+
+    def view_menu(self) -> QMenu:
+        """The Playing button's ▾: your characters, then Switch to
+        Storyguide (what the button does while it isn't split)."""
+        menu = QMenu(self.view_button)
+        self._add_my_characters(menu)
+        menu.addAction("Switch to Storyguide").triggered.connect(
+            self.toggle_player_view
+        )
+        return menu
+
+    def characters_menu(self) -> QMenu:
+        """A Joined game's Player's ▾: their characters alone."""
+        menu = QMenu(self.seat_button)
+        self._add_my_characters(menu, separate=False)
+        return menu
+
+    def _add_my_characters(self, menu: QMenu, *, separate: bool = True) -> None:
+        """Your Characters at the top of `menu`, the one My sheet opens
+        ticked; nothing when you play none."""
+        saga = self.saga
+        mine = self._my_characters()
+        if saga is None or not mine:
+            return
+        menu.addSection("Your Characters")
+        shown = players.my_sheet(saga, self._me(), self._last_mine)
+        for character in mine:
+            action = menu.addAction(character.name or "(unnamed)")
+            action.setCheckable(True)
+            action.setChecked(character is shown)
+            action.triggered.connect(
+                lambda _checked=False, who=character.id: self.open_my_sheet(who)
+            )
+        if separate:
+            menu.addSeparator()
+
+    def _drop(self, menu: QMenu, chip: SeatChip) -> None:
+        """Drop `menu` under `chip`."""
+        menu.exec(chip.under())
+
+    def _me(self) -> Player | None:
+        """Who My sheet is for: the player whose characters the Troupe page
+        lists as Your Characters (seated as a player, or a storyguide
+        Playing); None in the storyguide's role or a saga with no players."""
+        viewer = viewing.current()
+        return viewer.player if viewer.kind == viewing.PLAYER else None
+
+    def _my_characters(self) -> list[Character]:
+        saga = self.saga
+        return players.my_characters(saga, self._me()) if saga is not None else []
 
     def _draw_seat_button(self) -> None:
         saga = self.saga
+        sheet = players.my_sheet(saga, self._me(), self._last_mine) if saga else None
+        if self.store.remote:
+            # A Joined game's reader is the Player: no one else's seat to
+            # take, but their own characters a click away.
+            self.seat_button.setVisible(
+                sheet is not None and not seat.runs_the_saga(self.player)
+            )
+            if sheet is not None:
+                self.seat_button.split(
+                    self.open_my_sheet,
+                    lambda: self._drop(self.characters_menu(), self.seat_button),
+                )
+                self.seat_button.setText(f"  {cut(sheet.name)}")
+                self.seat_button.setToolTip(
+                    f"{sheet.name}: open your character's sheet (c)."
+                )
+                self.seat_button.set_arrow_tip("Your characters")
+            else:
+                self.seat_button.split(None, None)
+            return
         has_players = saga is not None and any(
             not seat.runs_the_saga(p) for p in saga.players
         )
-        # A Joined game's reader is the Player: no one else's seat to take.
-        self.seat_button.setVisible(has_players and not self.store.remote)
+        self.seat_button.setVisible(has_players)
         self.seat_button.setText(
             f"  Playing as {self.player.name}" if self.player is not None else ""
         )
+        if self.player is not None and sheet is not None:
+            # The seat's name opens their sheet; the ▾ is the seat menu.
+            self.seat_button.split(
+                self.open_my_sheet,
+                lambda: self._drop(self.seat_menu(), self.seat_button),
+            )
+            self.seat_button.setToolTip(
+                f"See the saga as this player does. Click to open {sheet.name}'s "
+                "sheet (c); the ▾ chooses another seat."
+            )
+            self.seat_button.set_arrow_tip("Your characters, and the seats")
+            return
+        self.seat_button.split(None, None)
         self.seat_button.setToolTip(
             "See the saga as this player does. Click to choose another seat."
             if self.player is not None
@@ -1069,6 +1175,28 @@ class MainWindow(QMainWindow):
             # Playing and the storyguide's role (ADR 0015).
             playing = not viewing.current().is_storyguide
             self.view_button.setChecked(playing)
+            sheet = (
+                players.my_sheet(saga, self._me(), self._last_mine)
+                if saga is not None and playing
+                else None
+            )
+            if sheet is not None:
+                # Playing your own characters: the name opens My sheet, the
+                # ▾ lists them and switches to the storyguide's role.
+                self.view_button.split(
+                    self.open_my_sheet,
+                    lambda: self._drop(self.view_menu(), self.view_button),
+                )
+                self.view_button.setText(f"  {cut(sheet.name)}")
+                self.view_button.setToolTip(
+                    f"Playing {sheet.name}: click to open their sheet (c). The ▾ "
+                    "lists your characters and switches to your storyguide role."
+                )
+                self.view_button.set_arrow_tip(
+                    "Your characters, and Switch to Storyguide"
+                )
+                return
+            self.view_button.split(None, None)
             self.view_button.setText("  Playing" if playing else "  Storyguide")
             self.view_button.setToolTip(
                 "Playing: your characters as a player sees them. Click to "
@@ -1078,6 +1206,7 @@ class MainWindow(QMainWindow):
                 "storyguide, Secrets and all. Click to switch to Playing."
             )
             return
+        self.view_button.split(None, None)
         on = viewing.current().kind == viewing.TABLE
         self.view_button.setChecked(on)
         self.view_button.setText("  Player view" if on else "")
@@ -1228,6 +1357,107 @@ class MainWindow(QMainWindow):
             self.go(self.trail[: self.trail.index(place) + 1])
         else:
             self.go([*self.trail, place])
+
+    # My sheet and the trail's switcher
+
+    def open_my_sheet(self, character_id: str | None = None) -> None:
+        """My sheet: the sheet of a character you play (`character_id`, else
+        the one last opened, else your first: players.my_sheet), opened below
+        the page on show as a jump, so its crumb is drawn ↪ and the crumb
+        before it, Esc or c leads back. If the trail already passes through
+        it (from their familiar or laboratory), back up to it instead."""
+        saga = self.saga
+        if saga is None or self.title is not None:
+            return
+        me = self._me()
+        if character_id is None:
+            sheet = players.my_sheet(saga, me, self._last_mine)
+        else:
+            mine = players.my_characters(saga, me)
+            sheet = next((c for c in mine if c.id == character_id), None)
+        if sheet is None:
+            return
+        self._last_mine = sheet.id
+        place = Place(CHARACTER, sheet.id)
+        if place in self.trail:
+            self._visit(place)
+            return
+        self._jumped_from = list(self.trail)
+        self.go([*self.trail, place])
+
+    def my_sheet_key(self) -> None:
+        """c: on your own sheet reached by a jump, back to where you jumped
+        from; anywhere else, to My sheet. Nothing in the storyguide's role,
+        in a saga with no players, or for a player with no character."""
+        saga = self.saga
+        if saga is None or self.title is not None:
+            return
+        mine = {c.id for c in self._my_characters()}
+        if not mine:
+            return
+        here = self.trail[-1] if self.trail else None
+        if (
+            here is not None
+            and here.kind == CHARACTER
+            and here.id in mine
+            and self._jumped_from is not None
+            and self.trail[:-1] == self._jumped_from
+        ):
+            self.go(self.trail[:-1])
+            return
+        self.open_my_sheet()
+
+    def open_switcher(self) -> None:
+        """The last crumb's ▾: drop the list of the people, laboratories or
+        covenants beside the one on show (siblings.py), to open another."""
+        saga = self.saga
+        here = self.trail[-1] if self.trail else None
+        anchor = self.crumb_switch
+        if saga is None or here is None or anchor is None or self._step_open():
+            return
+        if here.kind not in siblings.KINDS:
+            return
+        if self.switcher is not None and shiboken6.isValid(self.switcher):
+            self.switcher.close()
+        found = list(siblings.siblings(saga, here.kind, here.id))
+        self.switcher = SwitcherPanel(
+            found, here.id, self.palette_, self.switch_to, self
+        )
+        self.switcher.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
+        self.switcher.drop_under(self.last_crumb or anchor)
+
+    def switch_to(self, record_id: str) -> None:
+        """Open `record_id` in place of the last crumb, the trail above it
+        kept. A sheet opens at the chapter on show if it has one, else
+        where it was last left."""
+        here = self.trail[-1] if self.trail else None
+        if here is None:
+            return
+        place = Place(here.kind, record_id)
+        if place == here:
+            return
+        chapter = self._chapter_on_show()
+        before = self._chapters.get(place)
+        if chapter is not None:
+            self._chapters[place] = chapter
+        self.go([*self.trail[:-1], place])
+        codex = getattr(self.page(), "codex", None)
+        if chapter is None or codex is None or chapter in codex.chapters():
+            return
+        # They have no such chapter: back to where they were last left.
+        if before is None:
+            self._chapters.pop(place, None)
+        else:
+            self._chapters[place] = before
+            if before in codex.chapters():
+                codex.open_chapter(before)
+
+    def _chapter_on_show(self) -> str | None:
+        """The name of the chapter the page on show is at, if it has
+        chapters."""
+        codex = getattr(self.page(), "codex", None)
+        item = codex.rail.currentItem() if codex is not None else None
+        return item.text() if item is not None else None
 
     def open_content(self) -> None:
         """Open the saga's Saga Content, below the saga."""
@@ -1591,6 +1821,14 @@ class MainWindow(QMainWindow):
             sounds.play("page-long")
         self._leave_chapter()
         self.trail = trail
+        jumped = self._jumped_from
+        if jumped is not None and not (
+            len(trail) > len(jumped) and trail[: len(jumped)] == jumped
+        ):
+            # Back where My sheet jumped from, or gone elsewhere: no jump.
+            self._jumped_from = None
+        if self.switcher is not None and shiboken6.isValid(self.switcher):
+            self.switcher.close()
         before = None
         if self.palette_ is not self._applied:
             # Into or out of a record In Creation: the colours change.
@@ -1930,9 +2168,18 @@ class MainWindow(QMainWindow):
                 old.hide()
                 old.deleteLater()
         label = self.palette_["label"]
+        # The crumb My sheet jumped to, below the page it jumped from.
+        jump = len(self._jumped_from) if self._jumped_from is not None else None
+        self.last_crumb = self.crumb_switch = None
         for i, place in enumerate(self.trail):
             if i:
-                arrow = QLabel("›")
+                arrow = QLabel("↪" if i == jump else "›")
+                if i == jump:
+                    arrow.setAccessibleName("jumped to")
+                    arrow.setToolTip(
+                        "Opened from the page before it: click that crumb, press "
+                        "Esc or c to go back"
+                    )
                 arrow.setStyleSheet(f"color:{label}; background:transparent")
                 self.crumbs.addWidget(arrow)
             crumb = QPushButton(self._name(place))
@@ -1944,6 +2191,26 @@ class MainWindow(QMainWindow):
                 lambda _checked=False, upto=i: self.go(self.trail[: upto + 1])
             )
             self.crumbs.addWidget(crumb)
+            if last:
+                self.last_crumb = crumb
+                if place.kind in siblings.KINDS and self.saga is not None:
+                    self.crumb_switch = self._switch_button(place.kind)
+                    self.crumbs.addWidget(self.crumb_switch)
+
+    def _switch_button(self, kind: str) -> QPushButton:
+        """The last crumb's ▾, which drops the switcher."""
+        others = {
+            CHARACTER: "person of this covenant",
+            LABORATORY: "laboratory of this covenant",
+            COVENANT: "covenant",
+        }
+        button = QPushButton("▾")
+        button.setObjectName("crumb")
+        button.setFlat(True)
+        button.setAccessibleName("Others here")
+        button.setToolTip(f"Open another {others.get(kind, 'record')}")
+        button.clicked.connect(self.open_switcher)
+        return button
 
     def menu_page(self) -> menu_forms.Page | None:
         """The page on show, as the actions it sets out see it."""
@@ -2019,10 +2286,9 @@ class MainWindow(QMainWindow):
 
     def _leave_chapter(self) -> None:
         """Note the chapter the page on show is at, to open it there again."""
-        codex = getattr(self.page(), "codex", None)
-        item = codex.rail.currentItem() if codex is not None else None
-        if self.trail and item is not None:
-            self._chapters[self.trail[-1]] = item.text()
+        chapter = self._chapter_on_show()
+        if self.trail and chapter is not None:
+            self._chapters[self.trail[-1]] = chapter
 
     def _open_spot(self, page: QWidget) -> None:
         """Turn `page` to the chapter of the row Find asked for, and

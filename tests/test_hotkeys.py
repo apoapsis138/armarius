@@ -39,8 +39,12 @@ def _bound(bindings) -> dict[str, str]:
 
 
 def test_the_terminal_binds_the_same_keys():
+    """Every key but the desktop's own (whose letters the terminal may use
+    for something else: its c folds a section)."""
     bound = _bound(WorkspaceBase.BINDINGS) | _bound(ArsMagicaManagerApp.BINDINGS)
     for hotkey in hotkeys.HOTKEYS:
+        if hotkey.desktop_only:
+            continue
         for key in hotkey.keys:
             assert bound.get(_TEXTUAL[key]) in _ACTIONS[hotkey.action], key
 
@@ -50,6 +54,23 @@ def test_the_desktop_keys_help_lists_every_key():
     for hotkey in hotkeys.HOTKEYS:
         for key in hotkey.keys:
             assert f"`{key}`" in text, key
+
+
+def test_the_desktop_keys_help_marks_its_own_keys():
+    lines = ht.book(ht.GUI).topics["keys-always"].text.splitlines()
+    for hotkey in hotkeys.HOTKEYS:
+        if not hotkey.desktop_only:
+            continue
+        for key in hotkey.keys:
+            line = next(line for line in lines if line.startswith(f"- `{key}`"))
+            assert "desktop only" in line, key
+
+
+def test_my_sheet_is_c_on_the_desktop_alone():
+    assert hotkeys.keys_for(hotkeys.MY_SHEET) == ("c",)
+    mine = next(h for h in hotkeys.HOTKEYS if h.action == hotkeys.MY_SHEET)
+    assert mine.desktop_only and hotkeys.is_typed("c")
+    assert not any(h.desktop_only for h in hotkeys.HOTKEYS if h is not mine)
 
 
 def test_typed_keys_are_the_letters_and_signs():
