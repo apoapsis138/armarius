@@ -606,6 +606,7 @@ GUIDES = [
     "guide-initiation",
     "guide-import-export",
     "guide-hosting",
+    "guide-hosting-local",
     "guide-self-hosting",
     "guide-book-packs",
     "guide-bestiary",
@@ -636,6 +637,10 @@ GUIDES = [
     "guide-store-find",
     "guide-tutorials",
     "guide-sessions",
+    "guide-update",
+    "guide-save-folder",
+    "guide-restore-backup",
+    "guide-player-goals",
 ]
 
 
