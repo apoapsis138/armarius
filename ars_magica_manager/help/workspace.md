@@ -30,12 +30,14 @@ The same illuminated A is the app's icon, on the Windows taskbar and in Alt-Tab.
 # How to fit the window to your screen
 <!-- help: guide-window-size; gui -->
 
-Use this guide when the window is too big or too small for your screen, as on a high-resolution (4K) screen set to a large display scale.
+You've opened the app on a high-resolution (4K) screen set to a large display scale, and the window is too big or too small for it.
 
-1. The window fits itself. It opens no larger than nine tenths of the screen's free space, centred, and every form opens inside the screen too. If the screen is too small for even the smallest the window can be drawn, it opens maximised.
-2. To fill the screen, double-click the strip along the top of the window (on the title page, the space beside the window's buttons; on a saga's page, the app's name in the middle of the top bar), or click the maximise button at the top right. Do the same again to restore it.
-3. To size it by hand, drag any edge or corner. On the title page, the initial, name and buttons shrink as the window does, down to the smallest size it allows.
-4. If everything looks too large or too small, change the display scale in Windows: **Settings > System > Display**, then **Scale** (under **Scale and layout** on Windows 10). On a 4K screen, 150% to 200% leaves the app plenty of room; at 300% the window and its pages still fit, but drawn small. Close and reopen the app after changing the scale.
+1. **Open the app.** The window fits itself. It opens no larger than nine tenths of the screen's free space, centred, and every form opens inside the screen too. If the screen is too small for even the smallest the window can be drawn, it opens maximised.
+2. **Fill the screen.** Double-click the strip along the top of the window, or click the maximise button at the top right. On the title page, that strip is the space beside the window's buttons. On a saga's page, it's the app's name in the middle of the top bar. Do the same again to restore it.
+3. **Size it by hand.** Drag any edge or corner. On the title page, the initial, name and buttons shrink as the window does, down to the smallest size it allows.
+4. **Change the display scale.** If everything looks too large or too small, open **Settings > System > Display** in Windows, then **Scale**. On Windows 10 it's under **Scale and layout**. Close and reopen the app after changing the scale.
+
+On a 4K screen, 150% to 200% leaves the app plenty of room. At 300% the window and its pages still fit, but drawn small.
 
 **See also:** [Title page](help:title-page), [Moving around](help:workspace-moving)
 
@@ -442,7 +444,7 @@ The Characters node under a covenant, or Unassigned Characters under the saga. I
 <!-- gui -->
 A covenant's People chapter, or Unassigned Characters in the saga's The Covenants chapter, shows the characters as cards; click one to open their sheet.
 
-**You type:** nothing here. The **New Character** card at the end of the cards makes one, with this covenant already chosen. A familiar is bound on its magus's page (or in their laboratory).
+**You type:** nothing here. In a covenant's People, each group ends in a New card (**New Magus**, **New Companion** or **New Grog**) that makes one with this covenant already chosen; Unassigned Characters ends in **New Character**. A familiar is bound on its magus's page (or in their laboratory).
 <!-- /gui -->
 
 **The app works out:** the count in the node's label.

@@ -3,6 +3,8 @@
 
 The Rhine pack follows the book wherever this page doesn't say otherwise: its founding years, ages, auras, Might scores and stat blocks are the book's, and where the book gives no value and nothing points to one, the record says "not given" and leaves it blank. These are the places where the pack had to infer a value from the text, make a judgement call where the book is silent, or correct the book. You can change any of them in your saga.
 
+**What it brings.** The pack is set in spring 1220. It brings the Rhine's ten covenants with the gilds they belong to and about seventy magi. It has the Black Forest and the great forests with their regiones, and the Rhine cities and princes. The Peripheral Code comes with nine open cases for the Tribunal of 1221, and the Curse of the Rhine Gorge is a threat. Durenmar's Great Library comes as Book records.
+
 ### Inferred from the text
 <!-- help: pack-assumptions-rhine-inferred -->
 
@@ -63,6 +65,8 @@ The Rhine pack follows the book wherever this page doesn't say otherwise: its fo
 
 The Normandy pack follows the book wherever this page doesn't say otherwise, including every printed age, aura, covenant season, founding year and stat block. These are the places where the pack had to infer a value from the text, make a judgement call where the book is silent, or correct the book. You can change any of them in your saga.
 
+**What it brings.** The pack is set in 1220. It brings fifteen covenants and the lines of fealty between them, about fifty magi, and the duchy's places, lords and churches. It has the ruined covenants, the vis tenures under the Perthean Compact and the Tourney. The Peripheral Code comes with its open cases, and the Tribunal's stories are threats.
+
 ### Inferred from the text
 <!-- help: pack-assumptions-normandy-inferred -->
 
@@ -111,6 +115,8 @@ The Normandy pack follows the book wherever this page doesn't say otherwise, inc
 <!-- help: pack-assumptions-provence -->
 
 The Provence pack follows the book wherever this page doesn't say otherwise: its names, dates, votes, auras, Might scores and stat blocks are the book's, and where the book gives no value and nothing in it points to one (Windgraven's aura, Stella Durus's founding year), the field is empty and the record says the book is silent. These are the places where the pack had to infer a value from the text, make a judgement call where the book is silent, or correct the book. You can change any of them in your saga.
+
+**What it brings.** The pack is set in 1220. It brings eleven covenants with their votes and about sixty magi, Dama the Praeco and Rebecca as the book prints them. It has Toulouse, Gascony, the Pyrenees, the Narbonnais and the Arelat with their auras and vis, thirty ruined covenants and Val-Negra's regio. The Albigensian Crusade is under way. The Peripheral Code comes with the docket for the Tribunal of 1221 at Glanum, and the Praeco's secret is a story.
 
 ### Inferred from the text
 <!-- help: pack-assumptions-provence-inferred -->
@@ -162,6 +168,8 @@ The Provence pack follows the book wherever this page doesn't say otherwise: its
 <!-- help: pack-assumptions-theban -->
 
 The Theban pack follows the book wherever this page doesn't say otherwise: every aura, Might score, vis source and stat block it prints is used as printed. These are the places where the pack had to infer a value from the text, make a judgement call where the book is silent, or correct the book. You can change any of them in your saga.
+
+**What it brings.** The pack is set in 1220. It brings the thirteen covenants in their four phylai, each with its patron, and about sixty magi. None has a printed stat block, so all are generated, learning the Art in Classical Greek. The archon Aiakia is Praeco, beside the Council of Magistrates, and the tokens and shards the book implies are there. It has Greece, the Islands, Constantinople and Anatolia with their auras, regiones and vis, Delos where the Tribunal meets, and twelve ruined or lost covenants. The Latin Empire, Nicaea and the Greek and Frankish lords are neighbours. The Peripheral Code comes with the docket for the Tribunal of 1221. The book's creatures are in the Bestiary, and Proximios's hidden infernalism is a story.
 
 ### Inferred from the text
 <!-- help: pack-assumptions-theban-inferred -->
@@ -222,6 +230,8 @@ The Theban pack follows the book wherever this page doesn't say otherwise: every
 
 The Transylvania pack follows the book wherever this page doesn't say otherwise: its names, dates, auras, Might scores, vis and stat blocks are the book's. The book's open text has no page numbers, so references name a chapter. These are the places where the pack had to infer a value from the text, make a judgement call where the book is silent, or correct the book. You can change any of them in your saga.
 
+**What it brings.** The pack is set in 1220. It brings the ten oppida where the Tribunal's magi live, each a covenant record called an oppidum on the Tribunal's screens, with the zenodochia and Leviathan as sketches. The forty-two named magi have their privileges in the five legal covenants, with each oppidum's aediles. Monica Ierne is as the book prints her, the rest generated. Albertus is the Praeco and Benilda the Presiding Quaesitor. It has Hungary, Bulgaria, the Slav lands and Transylvania's border peoples with their auras, regiones and vis, and Tablinum's ten regio levels. The Teutonic Knights and the kings and churches around them are neighbours, and the hedge traditions are factions. The Peripheral Code comes with the docket for the Tribunal of 1221 at the Shipka Pass. The book's creatures are in the Bestiary, and the Dragon War is the main story.
+
 ### Inferred from the text
 <!-- help: pack-assumptions-transylvania-inferred -->
 
@@ -278,6 +288,8 @@ The Transylvania pack follows the book wherever this page doesn't say otherwise:
 
 The Hibernia pack follows the book wherever this page doesn't say otherwise: its names, dates, auras, Might scores, vis and stat blocks are the book's. The book's open text has no page numbers, so references name a chapter. These are the places where the pack had to infer a value from the text, make a judgement call where the book is silent, or correct the book. You can change any of them in your saga.
 
+**What it brings.** The pack is set in 1220. It brings the nine covenants and the two Mercer Houses, each with its cathach, and the fifty named magi and Redcaps. Indrechtach is as the book prints him, the rest generated. Milvia is the Praeco and Visioturpis the Presiding Quaesitor. It has the five ambassadors and the Treaty of Cnoc Maol Réidh, and the Coill Trí's túatha for the tithe of Gifted children. Munster, Leinster, Meath, Ulster and Connacht come with their auras, regiones and vis, and the High Roads. The English lordship, the Gaelic kings and the two churches are neighbours. The Peripheral Code comes with the docket for the Tribunal of 1221 at Tara, beside the ruined covenants of the Schism War. The book's creatures and twelve saints are in the Bestiary. The fall of Praesis and Guillaume's push into Connacht are the main stories.
+
 ### Inferred from the text
 <!-- help: pack-assumptions-hibernia-inferred -->
 
@@ -326,6 +338,8 @@ The Hibernia pack follows the book wherever this page doesn't say otherwise: its
 <!-- help: pack-assumptions-levant -->
 
 The Levant pack is built from *Blood and Sand* and its free web companion *Secrets in Sand*, which holds seven of the eight printed stat blocks. *Blood and Sand* is a Fourth Edition book, so its numbers had to be converted: the stats follow the Definitive Edition's Fourth Edition conversion guide where it applies, and where the guide is silent the pack made a judgement call, each one listed on this page. Otherwise the pack follows the book: its names, dates, Might scores, libraries and vis stores are the book's. Where the book is silent or contradicts itself, the pack inferred a value from the text or chose one. You can change any of them in your saga.
+
+**What it brings.** The pack is set in 1220, with the stat blocks of the web companion *Secrets in Sand*. It brings the twelve covenants with their stances on the Crusade, the four great ones rebuilt with their Boons, Hooks and Aegis. It has forty-nine named magi. The eight printed ones are converted from the Fourth Edition, Wardat is a Hermetic Sahir with her bound jinn, Amber's familiar Luigi is there, and the rest are generated. Tau is the Praeco and Scipio the Presiding Quaesitor. The Treaty of Baghdad is in the Peripheral Code, and its renewal on the docket for the Tribunal of 1221 at Domus Pacis. The Latin states, the Ayyubids, the caliph and the Nizaris, the churches, faiths and military orders are neighbours. Jerusalem, Giza and the Levant's other places come with their auras and regiones, and the covenants' libraries with their summae. The book's jinn and creatures are in the Bestiary. The Treaty's renewal and Aedes Veritatis's secret war on Foothold are the main stories, with the Fifth Crusade at Damietta. The records it shares with *The Cradle and the Crescent* and the Theban pack are built alike, so importing both never doubles them.
 
 ### Inferred from the text
 <!-- help: pack-assumptions-levant-inferred -->
@@ -390,6 +404,8 @@ The Levant pack is built from *Blood and Sand* and its free web companion *Secre
 
 The Greater Alps pack is built from *Sanctuary of Ice*, a Fourth Edition book, so its numbers had to be converted: the stats follow the Definitive Edition's Fourth Edition conversion guide where it applies, and where the guide is silent the pack made a judgement call, each one listed on this page. Where a Fifth Edition book describes the same thing it wins: Muscaria as Prima of Criamon and the Cave's twelve living magi (*Houses of Hermes: Mystery Cults*), and Andru, Carmine, the Steward and Valnastium's auras (*Houses of Hermes: Societates*). You can change any of it in your saga.
 
+**What it brings.** The pack is set in 1220, a Fourth Edition book converted by the Definitive Edition's guide. It brings six covenants, rebuilt with their Boons and Hooks: the Cave of Twisting Shadows, the Icy North with its chapters, Journeys End, Sinews of Knowledge, the vanished Tarragon Vale and Valnastium. Their chairs are on the roster, with the Tribunal's ostracism. It has about fifty named magi. Kentigern, Miklos, Ragoneda and Andru are converted from their blocks, Muscaria and Andru are as the Fifth Edition's *Houses of Hermes* has them, and the rest are generated. Cymena the Redcap and Valnastium's Larta are companions, and Andru has his familiar Crucifixo. Constance is the Praeco and Athena Alpina the chief Quaesitor. The Peripheral Code has the rulings *The Wizard's Grimoire* dates, and the Tribunal of 1221 at the Icy North and the Hermetic year are in the calendar. The Western Alps, Bavaria and the Eastern Marches come with their auras, regiones and vis, lords, bishops, abbeys and towns. The ghosts, Primi, barbegazi and Crucifixo are in the Bestiary. Athena's likely ostracism, the raids on the Bavarian Common and the Sicilian children's school are the stories under way, with eight more dormant. Basel and the duke of Bavaria are built as the Rhine pack builds them, so importing both never doubles them.
+
 ### Inferred from the text
 <!-- help: pack-assumptions-alps-inferred -->
 
@@ -445,6 +461,8 @@ The Greater Alps pack is built from *Sanctuary of Ice*, a Fourth Edition book, s
 
 The Stonehenge pack is built from *Heirs to Merlin*, a Fourth Edition book that prints no statistics at all, by design: nothing needed converting, and every magus is built from the book's description. Where a Fifth Edition book describes the same thing it wins: Ebroin as Primus of House Ex Miscellanea, Immanola's Final Twilight, Gwrhyr and Cad Gadu's regio (the Definitive Edition and *Houses of Hermes: Societates*). Where the book is silent the pack inferred a value or chose one, and this page lists each. You can change any of it in your saga.
 
+**What it brings.** The pack is set in 1220, from a Fourth Edition book that prints no statistics. It brings the nine covenants as sketches, from Blackthorn, which hosts every meeting, to the wandering Semitae, with Cad Gadu as *Houses of Hermes: Societates* has it under Primus Ebroin. Their 49 magi have generated stats, and the five Redcaps of Mercer House and four natural magicians are companions. Talion is the Praeco and Iudicium the presiding Quaesitor, with the 1208 silver ruling and the Tribunal of 1222 at Blackthorn. The history of twenty fallen covenants is in the Diary, with the ruins whose sites are known. It has Stonehenge, Avebury, Tintagel, Lyonesse and the other places of legend. Henry III and the triumvirate, Llywelyn, the great earls, and the bishops, abbeys, towns and universities of England and Wales are neighbours. Gwrhyr's land suit, Voluntas against Ungulus and the eastern covenants' vis are the stories under way, with six more dormant. Henry III is built as the Normandy pack builds him, so importing both never doubles him.
+
 ### Inferred from the text
 <!-- help: pack-assumptions-stonehenge-inferred -->
 
@@ -484,6 +502,8 @@ The Stonehenge pack is built from *Heirs to Merlin*, a Fourth Edition book that 
 <!-- help: pack-assumptions-novgorod -->
 
 The Novgorod pack is built from *The Dragon and the Bear*, a Fourth Edition book, so its numbers had to be converted: the magi follow the Definitive Edition's Fourth Edition conversion guide, the faeries *Realms of Power: Faerie*, and where neither says the pack made a judgement call, each one listed on this page. No Fifth Edition book describes these covenants or magi; where one touches the Tribunal it wins (the Bjornaer Gathering of 1227, from *Guardians of the Forests*). You can change any of it in your saga.
+
+**What it brings.** The pack is set in 1220, a Fourth Edition book converted by the Definitive Edition's guide. It brings four covenants, rebuilt with their Boons, Hooks and Aegis: Three Lakes, which hosts the meetings, Thousand Caves in the Urals, decaying Pripet Maior in its marsh and Leczyca in Poland. The two the book leaves blank are counted on the roster. Their 30 magi are the nine printed ones converted, Rehamchi and Lelya of the Volkhvy tradition, and the rest generated, with Yannes Kolski vanished. Miya Cossuri is the Praeco and Andrei Soitkchin the chief Quaesitor. The Royal Embargo and the other rulings are in the Code, the Tribunal's history in the Diary, and the trial of Pripet Maior for its raid on Thousand Caves on the docket for 1221. The Russian principalities, Poland and the Baltic come with their princes, dukes, Church, towns, crusading orders and pagan peoples, beside Slavic Arcadia and the places of legend. The Slavic faeries, dragons, the vampire and Stolitzya the Swimmer are in the Bestiary, their powers repriced by *Realms of Power: Faerie*. The trial, the draining of the Pripet, Malincka's race to finish her spell and the return of Hermes are the stories under way, with six more dormant. The Mongols are the record the Cradle and Levant packs share, with this book's stages in Russia and Poland added.
 
 ### Inferred from the text
 <!-- help: pack-assumptions-novgorod-inferred -->
@@ -538,6 +558,8 @@ The Novgorod pack is built from *The Dragon and the Bear*, a Fourth Edition book
 <!-- help: pack-assumptions-cradle -->
 
 The Cradle and the Crescent pack is built from *The Cradle and the Crescent*, a Fifth Edition book, so nothing in it had to be converted: its names, dates, Might scores, stat blocks and vis are the book's. It is a region book, not a Tribunal book: Arabia, Mesopotamia, Persia and the Silk Road lie east of the Levant, outside every Hermetic Tribunal, so the pack holds no Tribunal, Praeco, Quaesitor, Peripheral Code or docket. Where the book is silent or contradicts itself, the pack inferred a value from the text or chose one, and this page lists each. You can change any of them in your saga.
+
+**What it brings.** The pack is set in 1220. It brings Arabia, Mesopotamia, Persia, the Silk Road and the jinn's lands beyond them, with their provinces, towns, rulers and factions, auras, regiones and vis. The Order of Suleiman comes with its six families, and its thirteen houses of wisdom are covenants of no Tribunal. The Order's past is in the Diary of the Dar al-Hikma, and the yearly Majlis is in the calendar. The five named sahirs are companions of the Sahirs tradition. 'Arkhaman is as the book prints him, with his seven spells and Kharrat, the jinni bound to him. The Mazdeans and their fire temples, the Nizaris, the yatus and the Mongols are there, with 'Umar Khayyam's books. The book's jinn and beasts are in the Bestiary. Ten stories run from the succession at the Majlis of 1220 to the saving of Merv's books, eight under way and two dormant, beside the Fifth Crusade and the Mongol conquest, with the story seeds on the records they belong to. Before making new sahirs, turn on its four traditions under Traditions Offered.
 
 ### Inferred from the text
 <!-- help: pack-assumptions-cradle-inferred -->
