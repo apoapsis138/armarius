@@ -247,7 +247,8 @@ NOTICE.md. Never art from an image generator, nor its mockups.
   one front-end only is marked `tui` or `gui`; `tests/test_help.py` fails
   on a missing topic.
 - **Global keys** (`hotkeys.py`): `?`/F1 Help, Esc cancels or goes back,
-  `q` quits; a typed key never acts while a field is being filled in.
+  `q` quits, and on the desktop alone (`desktop_only`) `c` My sheet; a
+  typed key never acts while a field is being filled in.
 
 **Terminal only** (Textual)
 
