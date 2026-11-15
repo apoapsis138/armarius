@@ -150,6 +150,7 @@ from ..widgets import (
     BottomBar,
     SelectableList,
     SheetSection,
+    SplitFooter,
     is_stop,
     section_of,
     section_stop,
@@ -1278,6 +1279,12 @@ class WorkspaceBase(Screen[None]):
         moved = self._focus_go_section() or self._focus_first_section(initial=initial)
         if not moved:
             self.refresh_bindings()
+        # The sheet held the Footer as its tab changed (SheetView's
+        # _tab_switching): let it rebuild once focus has landed. focus()
+        # moves focus in a call_later, which runs before this one.
+        footer = SplitFooter.of(self.screen)
+        if footer is not None:
+            self.app.call_later(footer.release)
 
     def go_to(self, place: str) -> bool:
         """Help's Go there: open `place` (a tab's or section's id, as the

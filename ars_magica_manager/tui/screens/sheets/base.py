@@ -48,6 +48,7 @@ from ..widgets import (
     DetailsPanel,
     SelectableList,
     SheetSection,
+    SplitFooter,
     fact_markup,
     first_stop,
 )
@@ -147,6 +148,8 @@ class SheetView(Vertical):
         #: The core's Add, Edit and Delete (commands.SectionOps) for each
         #: section in sections.CORE_SECTIONS this sheet shows.
         self.state_ops: dict[str, SectionOps] = {}
+        #: The Footer a tab switch is holding (see _tab_switching).
+        self._held_footer: SplitFooter | None = None
 
     def section_row(self, section_id: str) -> int | None:
         """The chosen row of `section_id`'s list, by its data index; 0 for a
@@ -265,6 +268,27 @@ class SheetView(Vertical):
                 yield from build()
 
         return scrolling
+
+    def on_mount(self) -> None:
+        for tabbed in self.query(TabbedContent):
+            self.watch(tabbed, "active", self._tab_switching, init=False)
+
+    def _tab_switching(self, active: str) -> None:
+        """Hold the Footer from the moment the tab changes until the
+        workspace has moved focus into the new tab (its handler of the
+        TabActivated this switch posts releases it): the keys change as the
+        old tab hides, as this one is built and as focus lands, and a slow
+        PC would otherwise rebuild the Footer between those steps."""
+        footer = SplitFooter.of(self.screen) if active else None
+        if footer is not None:
+            footer.hold()
+            self._held_footer = footer
+
+    def on_unmount(self) -> None:
+        # A sheet removed mid-switch never reaches the workspace's release.
+        footer, self._held_footer = self._held_footer, None
+        if footer is not None:
+            footer.release()
 
     async def on_tabbed_content_tab_activated(
         self, event: TabbedContent.TabActivated
