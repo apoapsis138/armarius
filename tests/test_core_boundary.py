@@ -183,6 +183,9 @@ LAYERS: tuple[tuple[str, frozenset[str]], ...] = (
             {
                 "acta",
                 "actions",
+                # The host's chores from a plain terminal: the forms' commands,
+                # run with the values given on its command line.
+                "admin",
                 "ahead",
                 "forms",
                 "hall",

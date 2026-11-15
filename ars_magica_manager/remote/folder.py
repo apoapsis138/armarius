@@ -19,11 +19,43 @@ from .. import paths
 from ..files import held_lock
 
 
+def _safe(saga_name: str) -> str:
+    return "".join(c if c.isalnum() or c in "-_" else "_" for c in saga_name)
+
+
+def remote_folder() -> Path:
+    return paths.data_dir() / "remote"
+
+
 def remote_file(saga_name: str, kind: str) -> Path:
     """The file of `kind` (its suffix, such as "devices.json") for the saga
     called `saga_name`, with the name made safe for a file name."""
-    safe = "".join(c if c.isalnum() or c in "-_" else "_" for c in saga_name)
-    return paths.data_dir() / "remote" / f"{safe}-{kind}"
+    return remote_folder() / f"{_safe(saga_name)}-{kind}"
+
+
+def lock_of(path: Path) -> Path:
+    """The lock file every reader and writer of `path` holds."""
+    return path.with_name(f".{path.name}.lock")
+
+
+#: Every kind of file a saga keeps here, as remote_file names them: its
+#: Invites, devices, passcodes noted, Log, tunnel plan, and the browser
+#: host's sign-in lockouts.
+KINDS = (
+    "invites.json",
+    "devices.json",
+    "passcodes.json",
+    "audit.jsonl",
+    "host.json",
+    "signin.json",
+)
+
+
+def saga_remote_files(saga_name: str) -> list[Path]:
+    """The files of KINDS the saga called `saga_name` has. Named one by
+    one, not matched by the name's start: "Rhine-" also starts another
+    saga's, "Rhine Gold"."""
+    return [path for kind in KINDS if (path := remote_file(saga_name, kind)).is_file()]
 
 
 class SharedFile:
@@ -45,7 +77,7 @@ class SharedFile:
         if self._depth:
             yield
             return
-        with held_lock(self._path.with_name(f".{self._path.name}.lock")):
+        with held_lock(lock_of(self._path)):
             self._depth += 1
             try:
                 self._load()

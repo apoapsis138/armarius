@@ -27,12 +27,12 @@ from ..remote.audit import AuditLog, audit_path
 from ..remote.devices import MAX_IDLE_DAYS, DeviceBook, devices_path
 from ..remote.identity import (
     HostIdentity,
-    KeychainStore,
     KeyStore,
     NoKeychainError,
     load_or_create,
 )
 from ..remote.invites import InviteBook, InviteError, book_path, encode_invite
+from ..remote.key_files import key_store
 from ..remote.passcodes import RemotePasscodes, passcodes_path
 from ..remote.plan import TUNNELS, RemotePlan, identity_name, last_plan, url_problem
 from ..remote.words import host_words, two_lines
@@ -81,10 +81,11 @@ def day(moment: float) -> str:
 @dataclass
 class SeatsDesk:
     """A saga's Remote seats as the Storyguide manages them. `store` is
-    where the host key is kept (the OS keychain; a stand-in in tests)."""
+    where the host key is kept (the OS keychain, or a key folder with
+    ARMARIUS_KEYSTORE=file; a stand-in in tests)."""
 
     saga: Saga
-    store: KeyStore = field(default_factory=KeychainStore)
+    store: KeyStore = field(default_factory=key_store)
     clock: Callable[[], float] = time.time
 
     # -- the books, read from their files each time ------------------------

@@ -606,6 +606,7 @@ GUIDES = [
     "guide-initiation",
     "guide-import-export",
     "guide-hosting",
+    "guide-self-hosting",
     "guide-book-packs",
     "guide-bestiary",
     "guide-faction",

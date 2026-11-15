@@ -54,6 +54,7 @@ change in it.
 | Hedge Magic | The non-Hermetic traditions: their Arts, chapters and rules |
 | Mappa Mundi | The Atlas: the saga's maps and the records pinned on them |
 | Liveries of the Houses | The desktop drawn in a House's own look: its family's form, colours, paper and mark |
+| Castellum | Hosting a saga on a box of your own: a NAS, a Linux computer or a rented server, with no window |
 
 ## Editions
 
@@ -129,6 +130,23 @@ change in it.
 | Milestone | Version | What it marked |
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
+
+## Unreleased
+
+### Castellum
+
+- **Host from a server or NAS.** A computer with no screen and no keychain (a server, or a container on a NAS) can now keep the host's key, and the SSH host key, in a private folder of their own instead: set `ARMARIUS_KEYSTORE=file` and `ARMARIUS_KEYS` to the folder. The app refuses a folder that isn't there (it never makes one, so a volume not yet unlocked can't be given a fresh key), one others can read, one inside the data folder (so keys never travel with the saga or its backups), running as root, and Windows, where the keychain stays.
+- **Look after a hosted saga from a terminal.** A new `admin` word does what the Host for Players window does, for a host with no window: list players and set their roles and passcodes (asked for twice, never typed on the command line), set the tunnel address, issue Invites, approve or reject what waits, list and revoke seats, read the Log, rotate the host key, and bring a saga file in (with the old host's passcode records, so players keep their passcodes) or delete one. It runs the window's own checks, asks before changing a seat, and works on the computer's files only.
+- **A container image for your own box.** Each release now also publishes a container image (`ghcr.io/apoapsis138/armarius`, for Intel/AMD and ARM machines) that runs the Remote seats listener for one saga, with a compose file that runs it locked down (its own user, a read-only system, no extra privileges, a memory limit, no published ports) beside a Cloudflare Tunnel. The listener takes its saga from `ARMARIUS_SAGA`.
+- **Back up a hosted saga while it is in use.** `admin backup` copies the saga and its Remote seat files into one dated zip, each file whole even while players save, keeps the newest 30 (or as many as you say), and never includes the host key. The compose file runs it every night by itself, for a box with no scheduler of its own.
+
+### Glossa
+
+- **How to host on your own box.** A new guide in Help walks through hosting a saga for Remote seats on an always-on Linux computer, a UGREEN NAS or a small rented server: the files and folders, a private folder for the key, bringing the saga over from your desktop (and joining it from there as a storyguide), a Cloudflare Tunnel or Tailscale Funnel, every `admin` command, encrypted backups off the box with restic, what to do if the key or the tunnel's token leaks, and moving to a newer version. Hosting for browsers and SSH stays on the desktop.
+
+### Fundamenta
+
+- **No busy cursor on GNOME.** On Linux under GNOME, the desktop app no longer leaves a busy cursor spinning for about 15 seconds at start and after moving between windows: it now draws through X11 (GNOME's XWayland), falling back to Wayland if X11 isn't there. Start it with `QT_QPA_PLATFORM=wayland` to use Wayland anyway; Help's download guide says so.
 
 ## 4.12.0 — 2026-11-12
 
