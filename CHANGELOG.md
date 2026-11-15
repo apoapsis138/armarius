@@ -1,7 +1,8 @@
 # Changelog
 
 What changed in Armarius (called Ars Magica Manager before 2.52.0), by
-feature. Each feature has a name that stays; each finished round of work
+feature. Each feature has a plain name, such as Help, and a name of its
+own that stays, such as Glossa; each finished round of work
 on it is an edition of that feature, numbered as a book's editions are
 (Peregrinatio I, II, III...), and work not yet finished is its next
 edition, in progress. The Chronicle lists every version, newest first,
@@ -35,26 +36,26 @@ change in it.
 
 ## Features
 
-| Feature | What it is |
-| --- | --- |
-| Pagina | The sheets for characters, covenants, laboratories and familiars |
-| Computus | The rules engine: scores, totals and the book's arithmetic |
-| Book of Hours | Seasons planned and played out: study, lab work, books and gifts |
-| Florilegium | The catalogs and what a saga offers from them |
-| Gauntlet | Creating covenants, laboratories and characters by the book |
-| Scriptorum | The terminal version: its keys, colours and readability |
-| Glossa | Help, its guides and this page |
-| Fundamenta | Your data, packaging, and the app's upkeep and checks |
-| Sodales | Sharing a saga with the troupe |
-| Illuminatio | The desktop version, drawn rather than printed |
-| Orbis | The saga's world: its region, people, places, threats and what lies ahead |
-| Concilium | Tribunals, their customs and their meetings |
-| Insignia | Heraldry and the app's artwork |
-| Peregrinatio | The Tribunal packs: each Tribunal book, ready to import |
-| Hedge Magic | The non-Hermetic traditions: their Arts, chapters and rules |
-| Mappa Mundi | The Atlas: the saga's maps and the records pinned on them |
-| Liveries of the Houses | The desktop drawn in a House's own look: its family's form, colours, paper and mark |
-| Castellum | Hosting a saga on a box of your own: a NAS, a Linux computer or a rented server, with no window |
+| Feature | Plain name | What it is |
+| --- | --- | --- |
+| Pagina | Sheets | The sheets for characters, covenants, laboratories and familiars |
+| Computus | Rules engine | The rules engine: scores, totals and the book's arithmetic |
+| Book of Hours | Seasons | Seasons planned and played out: study, lab work, books and gifts |
+| Florilegium | Catalogs | The catalogs and what a saga offers from them |
+| Gauntlet | Creation | Creating covenants, laboratories and characters by the book |
+| Scriptorum | Terminal version | The terminal version: its keys, colours and readability |
+| Glossa | Help | Help, its guides and this page |
+| Fundamenta | Your data and upkeep | Your data, packaging, and the app's upkeep and checks |
+| Sodales | Playing together | Sharing a saga with the troupe |
+| Illuminatio | Desktop version | The desktop version, drawn rather than printed |
+| Orbis | The saga's world | The saga's world: its region, people, places, threats and what lies ahead |
+| Concilium | Tribunals | Tribunals, their customs and their meetings |
+| Insignia | Heraldry and artwork | Heraldry and the app's artwork |
+| Peregrinatio | Sourcebook packs | The Tribunal packs: each Tribunal book, ready to import |
+| Hedge Magic | Hedge Magic | The non-Hermetic traditions: their Arts, chapters and rules |
+| Mappa Mundi | Atlas | The Atlas: the saga's maps and the records pinned on them |
+| Liveries of the Houses | House looks | The desktop drawn in a House's own look: its family's form, colours, paper and mark |
+| Castellum | Self-hosting | Hosting a saga on a server or NAS, such as a Linux computer or a rented server, with no window |
 
 ## Editions
 
@@ -131,6 +132,16 @@ change in it.
 | Milestone | Version | What it marked |
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
+
+## Unreleased
+
+### Glossa
+
+- **Host for Players help** names the two ways players join as the window does (Remote seats; Browser or terminal) and links each to its guide, and the unplanned-seasons help gives the idle non-player setting's name for each version of the app.
+- **What's New in plain words.** Each feature is headed by what it is first, then its name: Help (Glossa), Self-hosting (Castellum), Sourcebook packs (Peregrinatio). Its editions read Self-hosting I: Vigilo Confido, and the Chronicle's major versions Version 4.x: Sodalis. A Release's notes on GitHub are headed the same way.
+- **Every Help page rewritten.** The pages for each sheet, chapter, form and season step read like the how-to guides: short sentences, lists instead of long catalogues, "they" for any character, and each version's labels apart. Headings name the place without "tab", since the desktop has chapters. A few slips are fixed on the way: the familiar's Bond Powers say the level is worked out when ticked, a deep cover's Disguise roll is the one the app rolls (Houses of Hermes: Societates p. 87), Notes & Goals are on the Description, and Lands of the Nile's tomb curses, wards and traps are working records.
+- **The web help's menu by topic.** The how-to guides are grouped by what you're doing (Start here, Characters and magic, Seasons and the laboratory, The covenant, The saga's world, Tribunals and conflict, Playing together, Your data) instead of one long list.
+- **The web pages read like the guides.** The site's front page, install guide and FAQ give one action per step and plainer sentences, and point to the new guides for updating and for hosting browsers and SSH.
 
 ## 4.13.1 — 2026-11-15
 

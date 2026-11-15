@@ -52,11 +52,11 @@ Highlight one and press `e` to plan it the same way. `a` plans the first free on
 <!-- gui -->
 Click one and **Edit** to plan it the same way. **Plan** plans the first free one, and **Clear** clears one.
 <!-- /gui -->
-The form's **Season** field moves a plan to another season of the year. A season ahead's gains are worked out from the character as the seasons planned before it will leave them. See [Seasons Ahead](help:section-char-ahead).
+The form's **Season** field moves a plan to another season of the year. See [Seasons Ahead](help:section-char-ahead).
 
-**Long work.** Set the form's **For**. **Until it's done** plans reading a summa up to its Level, or writing, copying or translating a book, for every season it needs. **2 seasons** to **4 seasons** repeats any plan. Advance Season asks whether anything interrupted the work, then works out again how many seasons it still needs. See [For several seasons](help:plan-season-repeat).
+**Long work.** Set the form's **For** to **Until it's done**, or **2 seasons** to **4 seasons**. See [For several seasons](help:plan-season-repeat).
 
-**Teaching and assistants.** Teaching takes two plans, and the app makes the second for you. Saving **Be taught** plans the teacher's Teach for the same season, **Be trained** plans the master's season working at the Ability, and **Teach** with a **Student** plans the student's Be taught. Lab work naming an **Assistant** plans their **Assist in a laboratory**. Clearing either side clears both, after one question naming both people. See [Paired plans](help:plan-season-pairs).
+**Teaching and assistants.** Saving Be taught, Be trained, Teach with a Student, or lab work with an Assistant plans the other person's season too. See [Paired plans](help:plan-season-pairs).
 
 ### Finding an activity
 <!-- help: guide-seasons-find -->
@@ -88,7 +88,7 @@ The laboratory needs a magus as its owner before anything can be planned.
 2. **Choose the season.** The list shows the owner's seasons from the current one on, with "nothing planned" against a free season.
 3. **Start the work.** Press `e` to plan lab work for that season, or `a` to invent a new spell from a blank design. Either opens the [Invent Spell screen](help:invent-spell).
 4. **Choose the Lab work.** Pick it from its list grouped by Type (see [Finding an activity](help:guide-seasons-find)). The screen then asks only for what that work needs, and the Lab Total and the When panel update as you type.
-5. **Schedule it.** Press **Schedule**. For work that takes several seasons, the app also plans the following seasons it's projected to need.
+5. **Schedule it.** Press **Schedule** (see [Scheduling](help:invent-spell-schedule)).
 
 `d` clears the chosen season's plan, and any later seasons scheduled to continue it, after asking.
 <!-- /tui -->
@@ -98,7 +98,7 @@ The laboratory needs a magus as its owner before anything can be planned.
 3. **Start the work.** Click **Plan** to plan lab work for that season. The lab work form (see [Invent Spell screen](help:invent-spell)) opens in a window of its own, and grows as the work you choose asks for more.
 4. **Or invent a spell.** Click **New Spell** instead. It first asks for a spell to start from, the magus's own known spells first, or "A new spell (a blank design)", then opens the same form. The form's **Start from** changes it later.
 5. **Choose the Lab work.** Pick it from its list grouped by Type (see [Finding an activity](help:guide-seasons-find)). The form then asks only for what that work needs. The line under the fields shows the Lab Total and when the work is done, updated as you type.
-6. **Schedule it.** Click **Schedule**. For work that takes several seasons, the app also plans the following seasons it's projected to need.
+6. **Schedule it.** Click **Schedule** (see [Scheduling](help:invent-spell-schedule)).
 
 **Clear** clears the clicked season's plan, and any later seasons scheduled to continue it, after asking.
 <!-- /gui -->
@@ -140,7 +140,7 @@ People marked departed on the Inhabitants tab are left out of this tab and aren'
 People marked departed in the Covenfolk chapter are left out of this chapter and aren't planned.
 <!-- /gui -->
 
-Anyone still left with nothing planned isn't lost. When the season is advanced, the saga's default for their kind applies, set in the saga's settings as Work / Exposure or Nothing. Advance Season names the player characters with nothing planned and asks about each. Non-player characters take the default quietly, unless you tick
+Anyone left with nothing planned takes the saga's default, and Advance Season asks about each player character. Non-player characters take it quietly, unless you tick
 <!-- tui -->
 **Be notified when and which non-player characters do not have seasonal activity**.
 <!-- /tui -->
@@ -154,16 +154,14 @@ See [Unplanned seasons](help:advance-unplanned).
 
 <!-- tui -->
 1. **Press `t`.** It works from anywhere in the workspace. The **Advance Time** dialog asks whether to advance from this season to the next.
-2. **Read the summary.** It shows how many planned seasons will be applied, who has nothing planned and so gains nothing, and any plan that can't be carried out, with the reason. To fix something, choose Cancel, change the plan and press `t` again.
+2. **Read the summary** (see [The confirmation](help:advance-season-confirm)). To fix something, choose Cancel, change the plan and press `t` again.
 <!-- /tui -->
 <!-- gui -->
 1. **Click Advance Season.** The card is at the foot of the chapters on the left, under the present season's medallion, name and year, on every page of the saga that has chapters. A question asks whether to advance from this season to the next.
-2. **Read the summary.** It shows how many planned seasons will be applied, who has nothing planned and so gains nothing, and any plan that can't be carried out, with the reason. To fix something, choose Cancel, change the plan and click Advance Season again.
+2. **Read the summary** (see [The confirmation](help:advance-season-confirm)). To fix something, choose Cancel, change the plan and click Advance Season again.
 <!-- /gui -->
-3. **Choose Advance.** Before anything is applied, the saga is backed up to `sagas/backups` in your [save folder](help:saga-picker).
-4. **Answer any questions.** The app may ask which contested vis or income sources were secured this season, and whether an experiment seeking a Discovery uses its risk to move the roll. In Winter it first asks about any covenant in deficit (see below).
-
-See [Advance Season](help:advance-season) for how the plans are applied.
+3. **Choose Advance.** The saga is backed up first (see [How the season is applied](help:advance-season-apply)).
+4. **Answer any questions.** See [Questions along the way](help:advance-season-questions).
 
 ### Reading the results
 <!-- help: guide-seasons-results -->
@@ -196,8 +194,8 @@ Advancing Winter also closes the year.
 <!-- gui -->
 1. **Settle any deficit.** If a covenant spends more than it earns, the app asks whether to advance anyway. No leaves the date alone, so you can balance the books in the covenant's [Treasury](help:tab-cov-economics) chapter and advance again. Advance anyway rolls the year over.
 <!-- /gui -->
-2. **Read the year's changes.** Each grog's yearly update is applied, yearly Warping Points are added where due, and aging rolls are made for those who need them. They appear in the Season Summary and in each Diary.
-3. **Check the Wealth.** Each covenant's surplus is added to its Wealth, and a deficit Emergency Savings didn't cover is taken from it (DE p. 189; letting Wealth fall below 0, the covenant broke, is the app's house rule). Inflation grows a pound for every hundred pounds spent, unless spending fell (DE p. 193). Emergency Savings start again at 0.
+2. **Read the year's changes** in the Season Summary and each Diary (see [Winter: the end of the year](help:advance-season-winter)).
+3. **Check the Wealth.** It takes the year's surplus or deficit (see [Seasons](help:tab-cov-seasons)).
 
 ### Undoing a mistake
 <!-- help: guide-seasons-undo -->
@@ -221,9 +219,9 @@ Advancing Winter also closes the year.
 ### What the app does for you
 <!-- help: guide-seasons-auto -->
 
-**You type:** each plan's activity and details, the grogs' yearly updates, any dice rolled at the table, and your answers when advancing.
+**You type:** the plans, the grogs' yearly updates, any dice rolled at the table, and your answers when advancing.
 
-**The app works out:** what each plan will give before you save it, who has nothing planned, the dice left blank, and every result when the season is applied. It also writes the Diary entries and season record, adds vis harvests, and in Winter applies the grogs' updates, aging, Warping and each covenant's Wealth. Every plan is worked out from the saga as it stood before the season, so one result can't change another in the same season.
+**The app works out:** everything else above: each plan's result, the dice left blank, the Diaries, the season record, and the year's end.
 
 **See also:** [Plan Season](help:plan-season), [Grog's Yearly Update](help:grog-year), [Advance Season](help:advance-season), [Season Summary](help:season-summary), [Seasons](help:seasons), [Invent Spell screen](help:invent-spell), [How to manage the covenant](help:guide-covenant)
 
@@ -252,7 +250,7 @@ The [Inhabitants tab](help:tab-cov-inhabitants) (`3`) lists who lives at the cov
 5. **Mark someone departed.** `d` on a listed magus or companion marks them departed rather than deleting them. More's **Restore** brings them back.
 6. **Set the Loyalty.** [Loyalty](help:section-inh-loyalty) is at the top of the tab. Press `e` there to choose the Equipment, Money, Pension and other modifiers.
 
-The app works out the rest of Loyalty from the magi's Gifts, Living Conditions, specialists' roles, known Reputations and the Diary. Bad Reputations cost, and good local ones gain. The [Inhabitants](help:section-inh-population) section shows whether there are enough Teamsters and Servants.
+The app works out the rest of Loyalty. The [Inhabitants](help:section-inh-population) section shows whether there are enough Teamsters and Servants.
 <!-- /tui -->
 <!-- gui -->
 The **People** chapter shows the covenant's characters as cards. The [Covenfolk](help:tab-cov-inhabitants) chapter lists everyone who lives there.
@@ -264,7 +262,7 @@ The **People** chapter shows the covenant's characters as cards. The [Covenfolk]
 5. **Mark someone departed.** **Delete** on a listed magus or companion marks them departed rather than deleting them. To bring them back, **Add** on the same list offers them again, marked "(taken off the list)".
 6. **Set the Loyalty.** [Loyalty](help:section-inh-loyalty) is at the top of the chapter. Click its **Edit** to choose the Equipment, Money, Pension and other modifiers.
 
-The app works out the rest of Loyalty from the magi's Gifts, Living Conditions, specialists' roles, known Reputations and the Diary. Bad Reputations cost, and good local ones gain. [The Household](help:section-inh-population) shows whether there are enough Teamsters and Servants.
+The app works out the rest of Loyalty. [The Household](help:section-inh-population) shows whether there are enough Teamsters and Servants.
 <!-- /gui -->
 
 ### Resources
@@ -322,16 +320,16 @@ The [Treasury](help:tab-cov-economics) chapter shows a year's finances, with the
 7. **Buy something.** Go to [The Year's Purchases](help:section-eco-purchases). **Buy from Goods** picks from the Goods catalog, and **Add** enters anything else, with the price from Covenants p. 71. It all goes onto Sundry, and into the Diary when the year closes. Add what you bought to Inventory yourself.
 <!-- /gui -->
 
-**At the end of each year,** when Winter is advanced, the surplus is added to Wealth and Emergency Savings start again at 0.
+**At the end of each year,** see [Winter and the end of the year](help:guide-seasons-winter).
 
-**With a deficit,** the app asks before closing the year whether to advance anyway. To cover it from Wealth,
+**To cover a deficit from Wealth,**
 <!-- tui -->
 choose **Emergency Savings** on Cost Savings and press `e`.
 <!-- /tui -->
 <!-- gui -->
 click **Emergency Savings** on Cost Savings and then **Edit**.
 <!-- /gui -->
-The app offers to draw the deficit, or as much as Wealth holds, from Wealth. A covenant with no Wealth to draw is broke. Advancing anyway takes what's left of the deficit from Wealth.
+See [Cost Savings](help:section-eco-savings).
 
 ### Books
 <!-- help: guide-covenant-books -->
@@ -434,8 +432,8 @@ The [Seasons](help:tab-cov-seasons) chapter is the covenant's planning board, wi
 ### What the app does for you
 <!-- help: guide-covenant-auto -->
 
-**You type:** the people without a sheet, the Loyalty choices, each possession, Wealth and the income sources, the typed costs and savings, books, Boons and Hooks, and Diary entries.
+**You type:** what each step above asks for.
 
-**The app works out:** the magi, companions and sanctums listed from their own sheets, Loyalty, and the points of inhabitants, laboratories, weapons and armour. It also works out every calculated cost and saving, the Surplus/Deficit, the yearly vis harvests and Wealth, and the Library's counts and Locations.
+**The app works out:** the rest, as each step says, and the points of inhabitants, laboratories, weapons and armour.
 
 **See also:** [Covenant sheet](help:covenant), [Build](help:tab-cov-build), [Advance Season](help:advance-season), [How to plan and run a season](help:guide-seasons)
