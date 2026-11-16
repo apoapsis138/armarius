@@ -1,0 +1,1 @@
+**SSH players' copies end cleanly.** The host keeps track of each player's copy of the app reached over SSH. When it shuts down, it ends each one and waits for it to stop, instead of leaving them to stop on their own after it has gone.

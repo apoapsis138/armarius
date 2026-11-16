@@ -19,7 +19,7 @@ from __future__ import annotations
 
 import asyncio
 import sys
-from collections.abc import Awaitable, Callable, Mapping
+from collections.abc import Awaitable, Callable, Coroutine, Mapping
 from pathlib import Path
 
 import asyncssh
@@ -56,35 +56,41 @@ class HostedAppService(AppService):
         await self._download_manager.cancel_app_downloads(
             app_service_id=self.app_service_id
         )
-        await self.send_meta({"type": "quit"})
         try:
-            await asyncio.wait_for(asyncio.shield(self._task), timeout=2)
-        except TimeoutError:
+            await self.send_meta({"type": "quit"})
+            try:
+                await asyncio.wait_for(asyncio.shield(self._task), timeout=2)
+            except TimeoutError:
+                await self._end_process()
+                await self._task
+        finally:
+            self._task = None
             process = self._process
-            if process is not None and process.returncode is None:
-                if sys.platform == "win32":
-                    # The command runs through a shell: end the whole tree.
-                    killer = await asyncio.create_subprocess_exec(
-                        "taskkill",
-                        "/PID",
-                        str(process.pid),
-                        "/T",
-                        "/F",
-                        stdout=asyncio.subprocess.DEVNULL,
-                        stderr=asyncio.subprocess.DEVNULL,
-                    )
-                    await killer.wait()
-                else:
-                    process.kill()
-            await self._task
-        self._task = None
+            if process is not None:
+                # Its pipes are done with (the stderr one was still open):
+                # close them now rather than when they're collected, even
+                # when the copy ended in an error.
+                transport = getattr(process, "_transport", None)
+                if transport is not None:
+                    transport.close()
+
+    async def _end_process(self) -> None:
         process = self._process
-        if process is not None:
-            # Its pipes are done with (the stderr one was still open):
-            # close them now rather than when they're collected.
-            transport = getattr(process, "_transport", None)
-            if transport is not None:
-                transport.close()
+        if process is not None and process.returncode is None:
+            if sys.platform == "win32":
+                # The command runs through a shell: end the whole tree.
+                killer = await asyncio.create_subprocess_exec(
+                    "taskkill",
+                    "/PID",
+                    str(process.pid),
+                    "/T",
+                    "/F",
+                    stdout=asyncio.subprocess.DEVNULL,
+                    stderr=asyncio.subprocess.DEVNULL,
+                )
+                await killer.wait()
+            else:
+                process.kill()
 
 
 class _SshAppService(HostedAppService):
@@ -126,14 +132,35 @@ _DEFAULT_SIZE = (80, 24)
 
 
 class _Session(asyncssh.SSHServerSession):
-    """One SSH session: an app copy whose terminal is the client's."""
+    """One SSH session: an app copy whose terminal is the client's.
 
-    def __init__(self, command: str, downloads: DownloadManager) -> None:
+    The session owns the async work it starts (starting the copy, passing
+    it keys, stopping it) and keeps hold of each task, as ADR 0025 has
+    screens own theirs: nothing is left running unawaited. `ended` is
+    done once the copy has stopped and that work is over; the host waits
+    on it (SshHost)."""
+
+    def __init__(
+        self, command: str, downloads: DownloadManager, sessions: set[_Session]
+    ) -> None:
         self._command = command
         self._downloads = downloads
         self._chan: asyncssh.SSHServerChannel | None = None
         self._service: HostedAppService | None = None
         self._focused = False
+        self._tasks: set[asyncio.Task[object]] = set()
+        self._started: asyncio.Task[object] | None = None
+        self._ending = False
+        self.ended: asyncio.Future[None] = asyncio.get_running_loop().create_future()
+        self._sessions = sessions
+        sessions.add(self)
+
+    def _run(self, work: Coroutine[object, object, object]) -> asyncio.Task[object]:
+        """Start `work`, kept until it finishes."""
+        task = asyncio.create_task(work)
+        self._tasks.add(task)
+        task.add_done_callback(self._tasks.discard)
+        return task
 
     def connection_made(self, chan: asyncssh.SSHServerChannel) -> None:
         self._chan = chan
@@ -154,6 +181,8 @@ class _Session(asyncssh.SSHServerSession):
         assert chan is not None
 
         async def write(data: bytes) -> None:
+            if chan.is_closing():
+                return  # the client has gone: the copy is stopping
             chan.write(data)
             if not self._focused:
                 # The copy starts blurred (nothing has focus) until told the
@@ -161,7 +190,7 @@ class _Session(asyncssh.SSHServerSession):
                 # clicked. An SSH client always is: say so once the copy
                 # is up, after its start-up blur.
                 self._focused = True
-                asyncio.create_task(self._focus_soon())
+                self._run(self._focus_soon())
 
         async def write_str(data: str) -> None:
             pass  # a browser's messages (open a URL, a download): nothing here
@@ -177,7 +206,7 @@ class _Session(asyncssh.SSHServerSession):
             download_manager=self._downloads,
         )
         width, height, _, _ = chan.get_terminal_size() or (*_DEFAULT_SIZE, 0, 0)
-        asyncio.create_task(self._service.start(width or 80, height or 24))
+        self._started = self._run(self._service.start(width or 80, height or 24))
 
     async def _focus_soon(self) -> None:
         await asyncio.sleep(0.5)
@@ -186,13 +215,13 @@ class _Session(asyncssh.SSHServerSession):
 
     def data_received(self, data: bytes, datatype: int | None) -> None:
         if self._service is not None:
-            asyncio.create_task(self._service.send_bytes(data))
+            self._run(self._service.send_bytes(data))
 
     def terminal_size_changed(
         self, width: int, height: int, pixwidth: int, pixheight: int
     ) -> None:
         if self._service is not None:
-            asyncio.create_task(self._service.set_terminal_size(width, height))
+            self._run(self._service.set_terminal_size(width, height))
 
     def eof_received(self) -> bool:
         self._end()
@@ -201,25 +230,54 @@ class _Session(asyncssh.SSHServerSession):
     def connection_lost(self, exc: Exception | None) -> None:
         self._end()
 
+    def close(self) -> None:
+        """End the session as the host closes: its connection closes, and
+        its copy stops."""
+        if self._chan is not None:
+            self._chan.get_extra_info("connection").close()
+        else:
+            self._end()
+
     def _end(self) -> None:
+        if self._ending:
+            return  # the client's EOF, then its connection going
+        self._ending = True
         service, self._service = self._service, None
-        if service is not None:
-            asyncio.create_task(service.stop())
+        self._run(self._finish(service))
+
+    async def _finish(self, service: HostedAppService | None) -> None:
+        """Stop the copy, once it has started, then wait for the rest of
+        the session's work (keys on their way, the focus)."""
+        try:
+            if service is not None:
+                if self._started is not None:
+                    await asyncio.wait([self._started])
+                await service.stop()
+            others = self._tasks - {asyncio.current_task()}
+            if others:
+                await asyncio.wait(others)
+        finally:
+            self._sessions.discard(self)
+            if not self.ended.done():
+                self.ended.set_result(None)
 
 
 class _Server(asyncssh.SSHServer):
     """Lets anyone on the private network in: who they are is the app's
     sign-in, as in a browser (players.py). Each session is a _Session."""
 
-    def __init__(self, command: str, downloads: DownloadManager) -> None:
+    def __init__(
+        self, command: str, downloads: DownloadManager, sessions: set[_Session]
+    ) -> None:
         self._command = command
         self._downloads = downloads
+        self._sessions = sessions
 
     def begin_auth(self, username: str) -> bool:
         return False  # no SSH-level authentication
 
     def session_requested(self) -> asyncssh.SSHServerSession:
-        return _Session(self._command, self._downloads)
+        return _Session(self._command, self._downloads, self._sessions)
 
 
 #: The SSH host key's name in the keychain.
@@ -252,17 +310,49 @@ def host_key(store: KeyStore) -> asyncssh.SSHKey:
         raise ValueError("The SSH host key in the keychain cannot be read.") from exc
 
 
+class SshHost:
+    """A running SSH host: its listener and its live sessions.
+
+    Shut it down as an asyncio server, close() then wait_closed(). Closing
+    also ends every live session, and wait_closed() waits until each
+    session's app copy has stopped, so no copy, and none of its pipes,
+    outlives the host."""
+
+    def __init__(self, acceptor: asyncssh.SSHAcceptor, sessions: set[_Session]):
+        self._acceptor = acceptor
+        self._sessions = sessions
+
+    def get_port(self) -> int:
+        """The port it listens on (the one chosen, when asked for 0)."""
+        return self._acceptor.get_port()
+
+    def close(self) -> None:
+        """Stop listening, and end every live session."""
+        self._acceptor.close()
+        for session in list(self._sessions):
+            session.close()
+
+    async def wait_closed(self) -> None:
+        """Wait until every session's copy has stopped and the listener
+        has closed."""
+        while self._sessions:
+            await asyncio.wait({session.ended for session in self._sessions})
+        await self._acceptor.wait_closed()
+
+
 async def start_ssh_server(
     command: str, host: str, port: int, store: KeyStore | None = None
-) -> asyncssh.SSHAcceptor:
+) -> SshHost:
     """Listen for SSH clients on `host`:`port`; each session runs `command`
     (the app) as its own copy. The host key is kept in `store` (unless
     given, the keychain, or a key folder with ARMARIUS_KEYSTORE=file)."""
     downloads = DownloadManager()
-    return await asyncssh.create_server(
-        lambda: _Server(command, downloads),
+    sessions: set[_Session] = set()
+    acceptor = await asyncssh.create_server(
+        lambda: _Server(command, downloads, sessions),
         host,
         port,
         server_host_keys=[host_key(store or key_store())],
         encoding=None,
     )
+    return SshHost(acceptor, sessions)

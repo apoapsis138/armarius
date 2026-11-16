@@ -67,9 +67,19 @@ def main(argv: list[str] | None = None) -> None:
     server.initialize_logging()
     allowed = core_hosting.allowed_hosts(args.host, args.port)
 
+    ssh_host: hosting.SshHost | None = None
+
+    async def close_ssh(_app: web.Application) -> None:
+        # The host is shutting down: end each SSH player's copy and wait
+        # for it to stop.
+        if ssh_host is not None:
+            ssh_host.close()
+            await ssh_host.wait_closed()
+
     async def make_app() -> web.Application:
         app = await server._make_app()  # pyright: ignore[reportPrivateUsage]
         app.middlewares.append(hosting.addressed_to(allowed))
+        app.on_cleanup.append(close_ssh)
         return app
 
     loop = asyncio.new_event_loop()
@@ -77,7 +87,7 @@ def main(argv: list[str] | None = None) -> None:
     try:
         if args.ssh_port is not None:
             try:
-                loop.run_until_complete(
+                ssh_host = loop.run_until_complete(
                     hosting.start_ssh_server(command, args.host, args.ssh_port)
                 )
             except (NoKeychainError, ValueError) as problem:
