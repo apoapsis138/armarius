@@ -1,1 +1,1 @@
-**One main branch.** Changes now go straight into `main` through pull requests, and each release is a version tag. The help website is rebuilt only at a release, so it always matches the latest one.
+**One main branch.** Development now happens on `main` alone: changes go straight into it through pull requests, each release is a version tag, and the help website is rebuilt only when a version is released, so it always matches the latest release. A change to the docs alone gets a quicker set of checks.

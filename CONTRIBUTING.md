@@ -176,8 +176,9 @@ what the books print: never invent lists or figures to fill a gap.
   Branch from an up-to-date `main`, keep the branch short-lived (one
   change), and open a pull request into `main`. Never commit to `main`
   directly; it changes only through pull requests.
-- A release is a version tag on `main` (see "A release" below), made when
-  the maintainer calls a release; there is no release branch.
+- A release is a version tag on `main` (see "A release" and "Release
+  rhythm" below). Its `release/X.Y.Z` branch is an ordinary short-lived
+  one, gone once it merges; there is no long-lived release branch.
 - The Checks workflow (`.github/workflows/checks.yml`) runs on Windows and
   Linux for every push and pull request to `main`: formatting, lint and
   pyright once per system, and the full suite split into four shards per
@@ -206,7 +207,7 @@ entry, and never edit CHANGELOG.md's versions by hand
 feature's key from `[tool.towncrier]` in `pyproject.toml` (`glossa`,
 `fundamenta`, `castellum`, ...), one per feature in CHANGELOG.md's
 Features table. Write one paragraph in plain English for the user,
-starting with a bold headline (`**A new guide.** ...`), at most 40 words,
+starting with a bold headline (`**A new guide.** ...`), at most 60 words,
 with no bullet or heading: a release adds those. Don't change the
 version. `tests/test_changelog.py` checks every fragment, and builds a
 release from them to check that What's New, the release notes and the
@@ -219,27 +220,40 @@ goes up once per release, by the largest change in it: a change that adds
 or changes what the app does is MINOR; a fix, code-health, test or docs
 change is PATCH. MAJOR marks a finished phase of the plan, when the maintainer says.
 
-**A release**, when the maintainer calls one, in order:
+**A release**, in order (see "Release rhythm" for when):
 
-1. On a branch from an up-to-date `main`, one commit: run
-   `uv run towncrier build --yes --version X.Y.Z`, which writes the
-   fragments into CHANGELOG.md as `## X.Y.Z — YYYY-MM-DD` (today's date)
-   and deletes them; then set the version in `pyproject.toml` and run
-   `uv lock`. `tests/test_version.py` checks that the newest version
-   heading is the one `pyproject.toml` names. (`--draft` in place of
-   `--yes` shows the section without writing it.)
-2. Open a pull request into `main`, and merge it once the checks pass.
-3. Tag the merge commit on `main`: `git tag -a vX.Y.Z -m "..."` and push
-   the tag. The tag builds the rest: the Release workflow
-   (`.github/workflows/release.yml`) checks that the tag matches
-   `pyproject.toml` and is on `main`, then publishes the GitHub Release
-   with that version's section of CHANGELOG.md as its notes
-   (`tools/release_notes.py`); the Image workflow publishes the container
-   image; and the Pages workflow rebuilds the help site, so the site
-   matches the latest release.
+1. From an up-to-date `main` (`git switch main`, `git pull`), run
+   `uv run python tools/release.py X.Y.Z`. It refuses, changing nothing,
+   unless the working tree is clean, HEAD is `origin/main`, the version is
+   newer than `pyproject.toml`'s and `changelog.d/` has fragments. Then it
+   makes the branch `release/X.Y.Z`, builds the fragments into CHANGELOG.md
+   as `## X.Y.Z — YYYY-MM-DD` (`towncrier build`, which deletes them), sets
+   the version in `pyproject.toml`, runs `uv lock` and the tests that hold
+   the changelog and the version together (`tests/test_version.py`,
+   `tests/test_changelog.py`, `tests/test_release_notes.py`). It never
+   commits or pushes. (`uv run towncrier build --draft --version X.Y.Z`
+   shows the section beforehand without writing it.)
+2. Read the new section, then stage, commit and push as the script
+   prints, and open the pull request into `main` from the link it gives.
+   Merge it once the checks pass.
+3. Tag the merge commit on `main` with the commands the script printed
+   (`git tag -a vX.Y.Z -m "Armarius X.Y.Z"`, then push the tag). The tag
+   builds the rest: the Release workflow (`.github/workflows/release.yml`)
+   checks that the tag matches `pyproject.toml` and is on `main`, then
+   publishes the GitHub Release with that version's section of
+   CHANGELOG.md as its notes (`tools/release_notes.py`); the Image
+   workflow publishes the container image; and the Pages workflow
+   rebuilds the help site, so the site matches the latest release.
 
-An urgent fix is just a small PATCH release made the same way: merge the
-fix into `main`, then release.
+### Release rhythm
+
+- **Weekly.** The maintainer releases on Sunday morning, US Eastern time.
+  Whatever has merged into `main` by Saturday night ships in that release;
+  a week with no fragments has no release.
+- **Hotfixes any time.** An urgent fix ships as soon as it merges, as a
+  PATCH release made the same way.
+- **Every branch has a story** on the board, and the story moves to Done
+  when its pull request merges.
 
 ## Seeing the screen
 

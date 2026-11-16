@@ -40,7 +40,7 @@ Name the file `<slug>.<feature>.md`:
   | `folia` | Folia |
 
 Write one paragraph in plain English for the user: a bold headline, then
-what changed, at most 40 words, with no bullet or heading. For example,
+what changed, at most 60 words, with no bullet or heading. For example,
 `report-a-bug-guide.glossa.md`:
 
 ```markdown

@@ -359,6 +359,7 @@ AREA_TESTS: dict[str, tuple[str, ...]] = {
     ),
     # The changelog's fragments and the template a release builds them with.
     "changelog.d/": ("test_changelog.py",),
+    "tools/release.py": ("test_release_script.py",),
     "ars_magica_manager/changelog.py": ("test_help.py", "test_title_page.py"),
     # The Theban treasury and its coins.
     "ars_magica_manager/treasury.py": (
