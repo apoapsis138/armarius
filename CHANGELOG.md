@@ -137,6 +137,12 @@ change in it.
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## Unreleased
+
+### Glossa
+
+- **Reporting a bug.** New issues on GitHub open as a Bug report or a Feature request form, which ask for the version, where the app runs, the part of the app and, for a rules slip, the book and page; security problems go to a private report, and questions and ideas to Discussions. Help has a new guide, How to report a bug, under Getting help on the website: where the version and `crash.log` are, and why to attach an Export of the records involved rather than the whole saga file, since issues are public. The README and the security policy now say where the version really shows: the desktop app's title page, the terminal app's title bar, and Help's About page.
+
 ## 4.14.0 — 2026-11-15
 
 ### PDF Exports and Handouts
@@ -178,7 +184,6 @@ change in it.
 
 ### Glossa
 
-- **Reporting a bug.** New issues on GitHub open as a Bug report or a Feature request form, which ask for the version, where the app runs, the part of the app and, for a rules slip, the book and page; security problems go to a private report, and questions and ideas to Discussions. Help has a new guide, How to report a bug, under Getting help on the website: where the version and `crash.log` are, and why to attach an Export of the records involved rather than the whole saga file, since issues are public. The README and the security policy now say where the version really shows: the desktop app's title page, the terminal app's title bar, and Help's About page.
 - **Host for Players help** names the two ways players join as the window does (Remote seats; Browser or terminal) and links each to its guide, and the unplanned-seasons help gives the idle non-player setting's name for each version of the app.
 - **What's New in plain words.** Each feature is headed by what it is first, then its name: Help (Glossa), Self-hosting (Castellum), Sourcebook packs (Peregrinatio). Its editions read Self-hosting I: Vigilo Confido, and the Chronicle's major versions Version 4.x: Sodalis. A Release's notes on GitHub are headed the same way.
 - **Every Help page rewritten.** The pages for each sheet, chapter, form and season step read like the how-to guides: short sentences, lists instead of long catalogues, "they" for any character, and each version's labels apart. Headings name the place without "tab", since the desktop has chapters. A few slips are fixed on the way: the familiar's Bond Powers say the level is worked out when ticked, a deep cover's Disguise roll is the one the app rolls (Houses of Hermes: Societates p. 87), Notes & Goals are on the Description, and Lands of the Nile's tomb curses, wards and traps are working records.
