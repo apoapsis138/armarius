@@ -142,7 +142,8 @@ class ArsMagicaManagerApp(App[None]):
             else DEFAULT_THEME
         )
         self.push_screen(SagaPickerScreen())
-        self.refresh_update_notice()
+        if self.update_copy.checks:
+            self.refresh_update_notice()
         if self.show_title:
             self.push_screen(TitleScreen(title_page.title_page()))
         self.check_for_update()

@@ -65,13 +65,16 @@ class UpdateLine(Static):
     """
 
     def on_mount(self) -> None:
-        self.watch(self.app, "update_notice", self._show, init=True)
+        # A copy that never checks has no notice: nothing to watch.
+        if _app(self.app).update_copy.checks:
+            self.watch(self.app, "update_notice", self._show, init=True)
 
     def _show(self, notice: updates.Notice | None) -> None:
         app = _app(self.app)
         mine = app.update_line_owner in (None, id(self))
         if notice is None or not notice.shown or not mine:
-            self.display = False
+            if self.display:
+                self.display = False
             return
         app.update_line_owner = id(self)
         self.update(short_line(notice))

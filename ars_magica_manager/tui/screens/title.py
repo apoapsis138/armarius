@@ -159,8 +159,15 @@ class TitleScreen(Screen[None]):
 
     def _notice_changed(self, _notice: object) -> None:
         """The App update notice changed: the page's own ways on gain or
-        lose their Update row."""
-        if self.shown == self.page.choices:
+        lose their Update row (rebuilt only when the row changes)."""
+        listed = self.query_one(OptionList)
+        has_row = any(
+            listed.get_option_at_index(i).id == UPDATE
+            for i in range(listed.option_count)
+        )
+        notice = self._notice()
+        wants_row = notice is not None and notice.shown
+        if self.shown == self.page.choices and (wants_row or has_row):
             self.show_choices(self.page.choices)
 
     def on_option_list_option_selected(self, event: OptionList.OptionSelected) -> None:
