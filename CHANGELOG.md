@@ -138,10 +138,13 @@ change in it.
 
 ## Unreleased
 
+### Castellum
+
+- **Seeing it in UGOS's Docker app.** The self-hosting guide's UGREEN NAS steps say how to add a saga started from the command line to the Docker app's Projects, so you can start, stop and watch it there, and why it never shows as Updatable.
+
 ### Glossa
 
 - **The README lists every feature.** Its table now has Self-hosting, Printing and exports, Your data and upkeep, and App updates, each feature headed by its plain name as What's New is, and it says where to find the version you have.
-
 ## 4.14.0 — 2026-11-15
 
 ### PDF Exports and Handouts
