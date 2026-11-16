@@ -59,7 +59,7 @@ change in it.
 | Liveries of the Houses | House looks | The desktop drawn in a House's own look: its family's form, colours, paper and mark |
 | Castellum | Self-hosting | Hosting a saga on a server or NAS, such as a Linux computer or a rented server, with no window |
 | Renovatio | App updates | App updates: finding, checking and installing a newer Release |
-| PDF Exports and Handouts | Printing and exports | Sheets and handouts printed from the saga for the troupe |
+| Folia | Printing and exports | Sheets and handouts printed from the saga for the troupe |
 
 ## Editions
 
@@ -139,6 +139,10 @@ change in it.
 
 ## Unreleased
 
+### Folia
+
+- **A Latin name.** Printing and exports is now called Folia, the leaves handed round the table, like the app's other features; What's New, the release notes and the README show it as Printing and exports (Folia).
+
 ### Castellum
 
 - **Seeing it in UGOS's Docker app.** The self-hosting guide's UGREEN NAS steps say how to add a saga started from the command line to the Docker app's Projects, so you can start, stop and watch it there, and why it never shows as Updatable.
@@ -150,7 +154,7 @@ change in it.
 
 ## 4.14.0 — 2026-11-15
 
-### PDF Exports and Handouts
+### Folia
 
 - **Player and Storyguide copies.** Printing a character asks the host or a storyguide whether it's a Player copy or a Storyguide copy, starting at the Player copy each time. A Player copy leaves off every Secret not yet revealed and anything the players don't know of; a player always gets the Player copy, with their own character's notes and goals. The full record now prints the character's Secrets, each marked revealed or not, and the player's notes and goals.
 - **A new order for the full record.** Page 1 is the Characteristics, Personality Traits, Abilities and Combat & Condition; the Virtues and Flaws follow; then a magus's Hermetic Background and Arts, the story and diary, and last the Grimoire, each spell in full and never split between pages. The Spells in the Grimoire option is gone: the full record always gives each spell's description, and the play sheet a line each.

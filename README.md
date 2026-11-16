@@ -32,7 +32,7 @@ in the terminal version's title bar.
 | **Sourcebook packs** (Peregrinatio) | Sourcebooks ready to import as a new saga (below) |
 | **Playing together** (Sodales) | Sharing a saga with the troupe (below) |
 | **Self-hosting** (Castellum) | A saga hosted day and night on your own NAS or server, with nightly backups and a container image |
-| **Printing and exports** (PDF Exports and Handouts) | Sheets printed to PDF or written as Markdown, as a Player or Storyguide copy, in a House's colours, or the whole troupe at once |
+| **Printing and exports** (Folia) | Sheets printed to PDF or written as Markdown, as a Player or Storyguide copy, in a House's colours, or the whole troupe at once |
 | **Desktop version** (Illuminatio) | The desktop version, drawn as a manuscript |
 | **House looks** (Liveries of the Houses) | The desktop drawn in a House's own look: its colours, paper and mark |
 | **Terminal version** (Scriptorum) | One key per verb, readable at any size |
