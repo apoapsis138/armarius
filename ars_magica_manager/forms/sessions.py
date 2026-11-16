@@ -18,10 +18,10 @@ from __future__ import annotations
 
 from typing import Any
 
-from .. import cast_sheet, recap, story_aftermath, viewing, what_changed
+from .. import cast_sheet, chronicle, recap, story_aftermath, viewing, what_changed
 from .. import players as pl
 from .. import sessions as ss
-from ..commands import Confirm, Form, SectionOps, notes
+from ..commands import Confirm, Form, Refuse, SectionOps, notes
 from ..form_spec import DialogField
 from ..markup import escape
 from ..models import Casting, Character, Player, Saga, Session
@@ -331,6 +331,66 @@ def session_ops(saga: Saga) -> SectionOps:
         edit=lambda index: session_form(saga, ss.in_order(saga)[index]),
         remove=lambda index: delete_session(saga, ss.in_order(saga)[index]),
         rows=lambda: [ss.when(s) for s in ss.in_order(saga)],
+    )
+
+
+# -- Begin and End Session (the Virtual Tabletop preview) --
+
+CHRONICLE_HELP = "chronicle"
+
+
+def begin_session(saga: Saga, session: Session) -> Confirm | Refuse:
+    """Begin `session`: Under way, with its Chronicle open."""
+    problem = chronicle.why_not_begin(saga, session, chronicle.here())
+    if problem:
+        return Refuse("Begin Session", escape(problem))
+
+    def apply() -> None:
+        chronicle.begin(saga, session, by=chronicle.here())
+
+    return Confirm(
+        f"Begin the Session of {escape(ss.when(session))}? Its Chronicle opens, "
+        "and everyone at it sees what is rolled.",
+        apply,
+        yes_label="Begin",
+        title="Begin Session",
+    )
+
+
+def end_session(saga: Saga, session: Session) -> Confirm | Refuse:
+    """End `session`: Played, its Chronicle closed and kept to read. As
+    with ticking Played, the player characters are kept as they stand."""
+    problem = chronicle.why_not_end(session, chronicle.here(), saga)
+    if problem:
+        return Refuse("End Session", escape(problem))
+
+    def apply() -> list[str]:
+        was_played = session.played
+        chronicle.end(saga, session, by=chronicle.here())
+        if was_played:
+            return []
+        _keep_copies(saga, session)
+        return _unclosed(saga, session)
+
+    return Confirm(
+        f"End the Session of {escape(ss.when(session))}? It is marked Played, "
+        "and its Chronicle is closed: still read from its row, never added to.",
+        apply,
+        yes_label="End",
+        title="End Session",
+    )
+
+
+def read_chronicle(saga: Saga, session: Session) -> Form:
+    """`session`'s Chronicle, as whoever is looking may see it, to read."""
+    book = chronicle.read(saga, session)
+    words = chronicle.text(book.seen_by(chronicle.here(), session, saga), book)
+    return Form(
+        f"Chronicle: {escape(ss.when(session))}",
+        lambda: [DialogField("_chronicle", "", "info", words)],
+        lambda _values: None,
+        save_label="Close",
+        help_id=CHRONICLE_HELP,
     )
 
 

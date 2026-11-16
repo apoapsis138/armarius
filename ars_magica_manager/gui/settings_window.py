@@ -37,6 +37,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from .. import virtual_tabletop
 from . import motion, pictures, sounds
 from .choices import OwnRows, paint_choice
 from .forms import Sheet
@@ -230,10 +231,14 @@ class SettingsWindow(Sheet):
         choose: Callable[[str], None],
         parent: QWidget | None = None,
         update_row: QWidget | None = None,
+        redraw: Callable[[], None] = lambda: None,
     ) -> None:
         super().__init__(TITLE, p, "Close", parent)
         self.setModal(False)
         self.choose = choose
+        #: Draws the page on show again, for a setting that changes what
+        #: it offers (the Virtual Tabletop preview).
+        self.redraw = redraw
         #: The Update row at the top (gui/updates.UpdateRow), when given.
         self.update_row = update_row
         if update_row is not None:
@@ -274,6 +279,16 @@ class SettingsWindow(Sheet):
         self.motion.setChecked(motion.reduced())
         self.motion.toggled.connect(motion.set_reduced)
         self.column.addWidget(self.motion)
+        self.column.addSpacing(6)
+        self.column.addWidget(text("Preview", p["heading"], heading_font(14, p)))
+        self.virtual_tabletop = QCheckBox("Virtual Tabletop (Preview)")
+        self.virtual_tabletop.setToolTip(
+            "Try the Chronicle and Begin Session before 5.0; "
+            "Remote seats work without it"
+        )
+        self.virtual_tabletop.setChecked(virtual_tabletop.on())
+        self.virtual_tabletop.toggled.connect(self._virtual_tabletop)
+        self.column.addWidget(self.virtual_tabletop)
         self.column.addStretch(1)
         self.save.clicked.connect(self.close)
         self.cancel.hide()
@@ -304,6 +319,10 @@ class SettingsWindow(Sheet):
         name = self.themes.itemData(at, NAME_ROLE)
         if isinstance(name, str):
             self.choose(name)
+
+    def _virtual_tabletop(self, on: bool) -> None:
+        virtual_tabletop.set_on(on)
+        self.redraw()
 
     def _sounds(self, on: bool) -> None:
         sounds.set_enabled(on)

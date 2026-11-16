@@ -2411,7 +2411,7 @@ class MainWindow(QMainWindow):
             self.open_url,
         )
         shown = self._settings = SettingsWindow(
-            self.palette_, self.theme, self.choose_theme, self, row
+            self.palette_, self.theme, self.choose_theme, self, row, self.redraw
         )
         if where is not None:
             shown.setGeometry(where.geometry())

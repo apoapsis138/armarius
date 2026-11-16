@@ -1,0 +1,1 @@
+**Preview (off by default): a Session's Chronicle.** With Virtual Tabletop (Preview) on in Settings, a storyguide can Begin and End a Session. Its Chronicle records every roll with each die face, Public, Private or Blind, and is kept beside the saga and in its backups, to read from the Session's row.

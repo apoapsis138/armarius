@@ -1,7 +1,9 @@
 """The Sessions section of the saga page's Saga Management: the evenings
 of play, planned soonest first then played newest first, with Add, Edit
 and Delete (the core's SectionOps), Cast at a Glance and Print the Cast on
-the chosen row, and Previously On beside them."""
+the chosen row, and Previously On beside them. With the Virtual Tabletop
+(Preview) on, the chosen row also has Begin Session, End Session and its
+Chronicle (the core's forms, as the terminal's More offers them)."""
 
 from __future__ import annotations
 
@@ -10,7 +12,16 @@ from pathlib import Path
 
 from PySide6.QtWidgets import QWidget
 
-from .. import cast_sheet, print_layout, print_records, section_verbs, storage
+from .. import (
+    cast_sheet,
+    chronicle,
+    print_layout,
+    print_records,
+    section_verbs,
+    storage,
+    viewing,
+    virtual_tabletop,
+)
 from .. import sessions as ss
 from ..commands import ChooseFile, Command
 from ..forms import printing as print_forms
@@ -20,7 +31,7 @@ from ..sections import SESSIONS_SECTION
 from ..sheets import saga_content as scs
 from . import print_sheet
 from .character_sheet import section
-from .editing import Chooser, Run, choose_rows, verb_buttons
+from .editing import Chooser, RowVerb, Run, choose_rows, verb_buttons
 from .menus import ICONS
 from .themes import Palette
 from .widgets import cells_table, edit_button, serif, text
@@ -65,6 +76,7 @@ def sessions_section(saga: Saga, p: Palette, run: Run, inspect: Inspect) -> QWid
                 lambda row: print_cast(saga, shown[row]),
                 lambda row: bool(shown[row].castings),
             ),
+            *(chronicle_verbs(saga, shown) if virtual_tabletop.on() else []),
         ],
     ) + [
         edit_button(
@@ -81,6 +93,38 @@ def sessions_section(saga: Saga, p: Palette, run: Run, inspect: Inspect) -> QWid
         rows if shown else text("None yet.", p["dim"], serif(12.5, italic=True)),
         buttons=buttons,
     )
+
+
+def chronicle_verbs(saga: Saga, shown: list[Session]) -> list[RowVerb]:
+    """Begin Session, End Session and the Chronicle, each enabled on a row
+    the core allows it for (chronicle.py)."""
+
+    return [
+        (
+            "Begin Session",
+            "season",
+            lambda row: session_forms.begin_session(saga, shown[row]),
+            lambda row: (
+                viewing.offers("begin_session")
+                and chronicle.why_not_begin(saga, shown[row], chronicle.here()) is None
+            ),
+        ),
+        (
+            "End Session",
+            "season",
+            lambda row: session_forms.end_session(saga, shown[row]),
+            lambda row: (
+                viewing.offers("close_session")
+                and chronicle.why_not_end(shown[row], chronicle.here(), saga) is None
+            ),
+        ),
+        (
+            "Chronicle",
+            "history",
+            lambda row: session_forms.read_chronicle(saga, shown[row]),
+            lambda row: chronicle.has_chronicle(saga, shown[row]),
+        ),
+    ]
 
 
 def _to_pdf(

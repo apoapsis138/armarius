@@ -21,6 +21,7 @@ from . import (
     action_books,
     arms,
     catalog,
+    chronicle,
     connections,
     deeds,
     giving,
@@ -37,6 +38,7 @@ from . import (
     threats,
     traditions,
     viewing,
+    virtual_tabletop,
     world,
 )
 from . import book_value as bv
@@ -48,6 +50,7 @@ from . import inhabitants as inh
 from . import lab_texts as lt
 from . import mystery_cults as cults_core
 from . import mystic_paths as mystic_forms
+from . import sessions as ss
 from . import spells as spl
 from .forms import acclaim as acclaim_forms
 from .forms import careers, go_to, take_up
@@ -75,6 +78,7 @@ from .models import (
     Laboratory,
     Neighbour,
     Saga,
+    Session,
     Tribunal,
 )
 from .models.hermetic_projects import BURNING_CITY, INTANGIBLE_ASSASSIN, LIVING_CORPSE
@@ -352,6 +356,10 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("e", "end_session", "End of Session"),
     MenuItem("w", "what_changed", "What Changed Since the Last Session"),
     MenuItem("g", "cast_glance", "Cast at a Glance"),
+    # The Virtual Tabletop (Preview): a Session's Chronicle (chronicle.py).
+    MenuItem("b", "begin_session", "Begin Session"),
+    MenuItem("n", "close_session", "End Session"),
+    MenuItem("r", "read_chronicle", "Chronicle"),
     MenuItem("q", "teaching_requests", "Teaching Requests"),
     MenuItem("y", "study_path", "Study Path"),
     MenuItem("t", "tourney_season", "Tournament"),
@@ -614,6 +622,9 @@ MORE_SECTIONS: dict[str, str] = {
     "end_session": "section-reputations",
     "what_changed": "section-reputations",
     "cast_glance": SESSIONS_SECTION,
+    "begin_session": SESSIONS_SECTION,
+    "close_session": SESSIONS_SECTION,
+    "read_chronicle": SESSIONS_SECTION,
     "teaching_requests": "section-char-season",
     "study_path": "section-char-season",
     "tourney_season": "section-reputations",
@@ -1726,6 +1737,35 @@ def _chosen_secret(facts: ActionFacts, section: str) -> tuple[Any, int] | None:
     return record, row
 
 
+def _chosen_session(facts: ActionFacts, section: str) -> Session | None:
+    """The Session chosen in the Sessions list, while the Virtual Tabletop
+    (Preview) is on; None otherwise."""
+    if section != SESSIONS_SECTION or not virtual_tabletop.on():
+        return None
+    row = facts.chosen_row(section)
+    shown = ss.in_order(facts.saga)
+    return shown[row] if row is not None and 0 <= row < len(shown) else None
+
+
+def _begins_session(facts: ActionFacts, section: str) -> bool:
+    session = _chosen_session(facts, section)
+    return session is not None and (
+        chronicle.why_not_begin(facts.saga, session, chronicle.here()) is None
+    )
+
+
+def _ends_session(facts: ActionFacts, section: str) -> bool:
+    session = _chosen_session(facts, section)
+    return session is not None and (
+        chronicle.why_not_end(session, chronicle.here(), facts.saga) is None
+    )
+
+
+def _reads_chronicle(facts: ActionFacts, section: str) -> bool:
+    session = _chosen_session(facts, section)
+    return session is not None and chronicle.has_chronicle(facts.saga, session)
+
+
 def _on_secret(facts: ActionFacts, section: str, *, revealed: bool) -> bool:
     """Reveal the Secret (one not revealed) or Hide the Secret Again (one
     revealed), on the chosen row of a record's Secrets."""
@@ -2059,6 +2099,11 @@ _SECTION_RULES: dict[str, Callable[[ActionFacts, str], bool]] = {
     # A craftsman's sale of his finished goods, on This Season.
     "sell_goods": _works_for_labor(lambda c: bool(selling.crafts(c))),
     **{action: _in_more_section(action) for action in MORE_SECTIONS},
+    # A Session's Chronicle, with the Virtual Tabletop (Preview) on: these
+    # replace the plain in-section rule above.
+    "begin_session": _begins_session,
+    "close_session": _ends_session,
+    "read_chronicle": _reads_chronicle,
     # Lords of Men's Morale and Discipline, a saga option.
     "group_morale": _with_morale_rules("group_morale"),
     "rally_group": _with_morale_rules("rally_group"),

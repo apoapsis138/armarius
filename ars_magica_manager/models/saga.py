@@ -82,6 +82,8 @@ class Session:
     #: The real-world day, "YYYY-MM-DD", or "" when not set.
     real_date: str = ""
     played: bool = False
+    #: Begun and not yet ended: its Chronicle is open (chronicle.py).
+    under_way: bool = False
     #: The game date it is set in, if any: a season and a year.
     season: str = ""
     year: int | None = None
