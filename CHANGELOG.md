@@ -136,6 +136,12 @@ change in it.
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## Unreleased
+
+### Glossa
+
+- **The README lists every feature.** Its table now has Self-hosting, Printing and exports, Your data and upkeep, and App updates, each feature headed by its plain name as What's New is, and it says where to find the version you have.
+
 ## 4.14.0 — 2026-11-15
 
 ### PDF Exports and Handouts
