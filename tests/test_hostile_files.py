@@ -9,8 +9,8 @@ from dataclasses import asdict
 import pytest
 from support import everything_saga
 
-from ars_magica_manager import portraits, shapes, storage, transfer
-from ars_magica_manager.models import Character, Covenant, Laboratory, Saga
+from ars_magica_manager import books, creation, portraits, shapes, storage, transfer
+from ars_magica_manager.models import Character, Covenant, Laboratory, LabProject, Saga
 
 
 def _data() -> dict:
@@ -56,7 +56,7 @@ def test_a_hostile_link_is_refused_too():
 
 
 @pytest.mark.parametrize(
-    "wanted", ["ash_wand_of_ingrid-1", "session-1a2b3c4d", "mag1", "a" * 100]
+    "wanted", ["ash_wand_of_ingrid-1", "session-1a2b3c4d", "mag1", "a" * 200]
 )
 def test_plain_ids_open(wanted: str):
     data = _data()
@@ -66,7 +66,7 @@ def test_plain_ids_open(wanted: str):
 
 
 @pytest.mark.parametrize(
-    "wanted", ["Mag1", "-mag", "_mag", "mag 1", "mag.1", "a" * 101, "mág"]
+    "wanted", ["Mag1", "-mag", "_mag", "mag 1", "mag.1", "a" * 201, "mág"]
 )
 def test_ids_that_are_not_plain_names_are_refused(wanted: str):
     data = _data()
@@ -171,3 +171,58 @@ def test_an_export_with_a_hostile_id_inside_a_record_is_refused(tmp_path):
     ):
         transfer.plan_import(target, transfer.read(path))
     assert target.characters == []
+
+
+# -- what the app makes itself always opens again (review of PR 1) -------------
+
+
+def test_a_saga_with_lab_work_under_way_saves_and_opens_again():
+    saga = everything_saga()
+    magus = saga.characters[0]
+    saga.lab_projects = [
+        LabProject(magus.id, "design:ab12cd34ef56", 7),
+        LabProject(magus.id, f"decode:{magus.id}:Old Jacobus of Tytalus", 4),
+        LabProject(magus.id, "taming:The Grey Wolf of Rabenstein", 3),
+        LabProject(magus.id, "effect:0f1e2d3c4b5a", 2),
+    ]
+    storage.save_saga(saga)
+    opened = storage.load_saga(saga.id)
+    assert [p.spell_id for p in opened.lab_projects] == [
+        p.spell_id for p in saga.lab_projects
+    ]
+
+
+def test_a_saga_and_records_with_very_long_names_save_and_open_again():
+    name = "The Most Exceedingly Long and Wordy Name " * 6
+    saga = creation.new_saga(name, "Storyguide", "", 1220, "Spring")
+    covenant = creation.add_covenant(saga, name)
+    character = creation.add_character(saga, name, "magus", covenant.id)
+    book = books.add_book(saga, name, "Summa")
+    assert all(
+        shapes.is_plain_id(found)
+        for found in (saga.id, covenant.id, character.id, book.id)
+    )
+    storage.save_saga(saga)
+    assert storage.load_saga(saga.id).characters[0].id == character.id
+
+
+def test_ids_the_app_builds_from_a_long_character_id_stay_plain():
+    name = "Aurelianus Maximus Constantinus of the Tower by the Black Lake " * 3
+    saga = creation.new_saga("Lake", "Storyguide", "", 1220, "Spring")
+    magus = creation.add_character(saga, name, "magus", None)
+    built = f"labtext_longevity_{magus.id}_{'0f1e2d3c4b5a'}"
+    assert shapes.is_plain_id(built)
+
+
+def test_a_hosted_saga_brought_in_under_the_old_admin_rule_still_opens():
+    data = _data()
+    data["id"] = "MySaga"
+    _write("MySaga", data)
+    assert storage.load_saga("MySaga").id == "MySaga"
+
+
+def test_a_record_id_with_capitals_is_still_refused():
+    data = _data()
+    data["characters"][0]["id"] = "MySaga"
+    _write("odd", data)
+    assert _refused_on_open("odd").endswith(".id: not a plain id")

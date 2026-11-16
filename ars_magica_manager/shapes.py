@@ -11,8 +11,8 @@ saves (renamed keys, text that became a list) before the values are typed:
   `strict` (data from the network, written by the same version of the app),
   a key the record doesn't have is refused too, and no older shape is
   allowed. LEGACY lists the older shapes a `from_dict` still turns into the
-  current one. Every id field (a record's `id`, a link ending `_id`, a list
-  of links ending `_ids`) must hold a plain id or nothing (ADR 0028).
+  current one. A record's `id`, and each link to another record
+  (RECORD_LINKS), must hold a plain id or nothing (ADR 0028).
 * `check_built(record)`, after building: every value against its field's
   type, exactly (an int stands for a float; None only where a field allows
   it; a bool is not an int).
@@ -48,9 +48,45 @@ LEGACY: dict[str, tuple[type, ...]] = {
 }
 
 #: A plain id: lowercase letters, digits, _ and -, starting with a letter or
-#: digit, at most 100 characters. Ids name files and are joined into paths,
+#: digit, at most 200 characters. Ids name files and are joined into paths,
 #: so one from someone else's file must be no more than a name (ADR 0028).
-PLAIN_ID = re.compile(r"[a-z0-9][a-z0-9_-]{0,99}")
+PLAIN_ID = re.compile(r"[a-z0-9][a-z0-9_-]{0,199}")
+
+#: The links checked as plain ids besides each record's own `id`: those that
+#: point at another of the saga's records. Other fields ending `_id` hold
+#: catalog keys or keys the app puts together ("design:<key>", a lab
+#: project's), which never name a file.
+RECORD_LINKS = frozenset(
+    {
+        "saga_id",
+        "covenant_id",
+        "character_id",
+        "owner_id",
+        "lab_id",
+        "laboratory_id",
+        "assigned_lab_id",
+        "new_lab_id",
+        "author_id",
+        "teacher_id",
+        "student_id",
+        "maker_id",
+        "founder_id",
+        "creature_id",
+        "neighbour_id",
+        "tribunal_id",
+        "book_id",
+        "codex_id",
+        "device_id",
+        "more_book_ids",
+        "assistant_ids",
+        "handler_ids",
+    }
+)
+
+#: A saga's own id may also be one the headless admin's saga import took
+#: before plain ids (capitals allowed): still only a name, and its file is
+#: named for it already.
+_ADMIN_SAGA_ID = re.compile(r"[A-Za-z0-9_-]{1,200}")
 
 
 def is_plain_id(text: str) -> bool:
@@ -147,11 +183,10 @@ def _required(cls: type) -> tuple[str, ...]:
 
 @cache
 def _id_fields(cls: type) -> tuple[str, ...]:
-    """The fields of `cls` holding ids: its own, and its links."""
+    """The fields of `cls` holding ids: its own, and its links to other
+    records (RECORD_LINKS)."""
     return tuple(
-        name
-        for name, _ in _record(cls)
-        if name == "id" or name.endswith(("_id", "_ids"))
+        name for name, _ in _record(cls) if name == "id" or name in RECORD_LINKS
     )
 
 
@@ -159,10 +194,20 @@ def _plain_ids(data: dict[Any, Any], cls: type) -> None:
     for name in _id_fields(cls):
         value = data.get(name)
         found = value if isinstance(value, list) else [value]
-        if any(isinstance(v, str) and v and not is_plain_id(v) for v in found):
+        if any(isinstance(v, str) and v and not _plain(v, cls, name) for v in found):
             refused = _Refused("not a plain id")
             refused.parts.append(name)
             raise refused
+
+
+def _plain(value: str, cls: type, name: str) -> bool:
+    if is_plain_id(value):
+        return True
+    return (
+        cls.__name__ == "Saga"
+        and name == "id"
+        and bool(_ADMIN_SAGA_ID.fullmatch(value))
+    )
 
 
 @cache

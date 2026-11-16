@@ -44,9 +44,15 @@ def maps_dir() -> Path:
     return paths.data_dir() / paths.MAPS
 
 
+#: The most of a name an id made from it keeps: more than any shipped id
+#: needs, and short enough that an id built around one
+#: ("labtext_longevity_<id>_<hex>") stays a plain id (shapes.PLAIN_ID).
+SLUG_LENGTH = 120
+
+
 def slugify(text: str) -> str:
     slug = _SLUG_RE.sub("_", text.strip().lower()).strip("_")
-    return slug or "id"
+    return slug[:SLUG_LENGTH].rstrip("_") or "id"
 
 
 def generate_unique_id(name: str, existing_ids: Iterable[str]) -> str:

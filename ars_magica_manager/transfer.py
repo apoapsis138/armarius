@@ -36,7 +36,7 @@ from __future__ import annotations
 import json
 import zipfile
 from collections.abc import Callable, Iterable
-from dataclasses import asdict, dataclass, field, replace
+from dataclasses import asdict, dataclass, field, fields, is_dataclass, replace
 from pathlib import Path
 from typing import Any, TypedDict, cast
 
@@ -1567,27 +1567,17 @@ def _check_plain_ids(plan: ImportPlan) -> None:
     """Refuse (ValueError, naming it) an id that isn't plain anywhere in
     what `plan` adds. Each record's own id and its links were given plain
     ones (_Ids); this catches one the import keeps as it came, inside a
-    record (ADR 0028)."""
-    for name in (
-        "covenants",
-        "stub_covenants",
-        "tribunals",
-        "characters",
-        "laboratories",
-        "familiars",
-        "devices",
-        "books",
-        "codices",
-        "spells",
-        "neighbours",
-        "creatures",
-        "calendar",
-    ):
-        for record in getattr(plan, name):
-            _check_record(name, record)
-    for kind, added in plan.custom.items():
-        for record in added:
-            _check_record(kind, record)
+    record (ADR 0028). Every list of records the plan holds is walked, so
+    one added to ImportPlan later is checked too."""
+    for found in fields(plan):
+        value = getattr(plan, found.name)
+        groups = value.items() if isinstance(value, dict) else [(found.name, value)]
+        for name, group in groups:
+            if not isinstance(group, list):
+                continue
+            for record in group:
+                if is_dataclass(record) and not isinstance(record, type):
+                    _check_record(name, record)
 
 
 def _check_record(name: str, record: Any) -> None:

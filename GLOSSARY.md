@@ -238,8 +238,8 @@ _Avoid_: Validation (too broad: a form's own checks are not this)
 
 **Plain id**:
 An id made only of lowercase letters, digits, `_` and `-`, starting with a
-letter or digit, at most 100 characters. Every id coming in must be one,
-as ids name files.
+letter or digit, at most 200 characters. A record's id, and its links to
+other records, must be one when it comes in, as ids name files.
 _Avoid_: Safe id, slug (a slug is how a name becomes an id)
 
 **Saga Content**:
