@@ -1,1 +1,1 @@
-**The README lists every feature.** Its table now has Self-hosting, Printing and exports, Your data and upkeep, and App updates, each headed by its plain name as What's New is, and it says where to find your version.
+**The README lists every feature.** Its table now has Self-hosting, Printing and exports, Your data and upkeep, and App updates, each feature headed by its plain name as What's New is, and it says where to find the version you have.

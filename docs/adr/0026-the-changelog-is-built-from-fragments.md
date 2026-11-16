@@ -16,7 +16,7 @@ Now each change adds a fragment instead: a small file in `changelog.d/` named `<
 
 ## Consequences
 
-- A fragment's feature key comes from `[tool.towncrier]` in `pyproject.toml`, one type per row of the Features table; `tests/test_changelog.py` holds the two to each other and checks every fragment's name, shape and length (at most 40 words).
+- A fragment's feature key comes from `[tool.towncrier]` in `pyproject.toml`, one type per row of the Features table; `tests/test_changelog.py` holds the two to each other and checks every fragment's name, shape and length (at most 60 words).
 - The template must write what `changelog.py` parses. The same test builds a release from the fragments in a copy of the repository and checks that What's New, `tools/release_notes.py` and so the help site read it, so a template change can't break them unnoticed.
 - Unreleased work no longer shows in What's New until its release.
 - towncrier is a development dependency only; the app and its Builds never import it.

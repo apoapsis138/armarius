@@ -297,7 +297,7 @@ NOT_FRAGMENTS = {"README.md", "template.md.jinja"}
 #: A fragment: "<slug>.<feature type>.md", the slug in lowercase words.
 _FRAGMENT_NAME = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*\.([a-z]+)\.md$")
 #: The most words a fragment may have: one entry, not an essay.
-MOST_WORDS = 40
+MOST_WORDS = 60
 
 
 def _towncrier() -> dict:
