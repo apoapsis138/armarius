@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import asdict
 
 import pytest
-from support import everything_saga, wait_until
+from support import everything_saga, settled, wait_until
 from textual.widgets import Button, Checkbox, Input, ListView, Static, Tree
 
 from ars_magica_manager import players as pl
@@ -348,12 +348,14 @@ async def test_a_signed_in_player_changes_only_their_own(in_a_browser):
         ws = await _workspace_as(app, pilot, saga, ana)
 
         await _show(pilot, ws, ("character", "comp1"))  # Alys: not hers
+        await settled(pilot, ws)
         ws.query_one("#section-char-info").focus_section()
         await pilot.pause()
         assert [ws.check_action(a, ()) for a in _CHANGES] == [False] * 5
         assert ws._available("export_record")  # reading is fine
 
         await _show(pilot, ws, ("character", "mag1"))  # Leandro: hers
+        await settled(pilot, ws)
         ws.query_one("#section-char-info").focus_section()
         await pilot.pause()
         assert ws.check_action("edit", ()) is not False
@@ -362,6 +364,7 @@ async def test_a_signed_in_player_changes_only_their_own(in_a_browser):
         assert not ws._available("give")
 
         await _show(pilot, ws, ("saga",))
+        await settled(pilot, ws)
         assert ws.check_action("edit", ()) is False
         assert not ws._available("import_data")
 

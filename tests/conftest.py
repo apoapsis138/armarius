@@ -73,16 +73,48 @@ RUNNING = Path(__file__).resolve().parent.parent / ".pytest_cache" / "running"
 
 
 def _running_file() -> Path:
-    return RUNNING / f"{os.environ.get('PYTEST_XDIST_WORKER', 'main')}.txt"
+    # The process id too: two runs in one folder each have a "main" (and a
+    # "gw0"), and on Windows one can't replace or delete the other's file
+    # while it has it open (WinError 5 or 32).
+    worker = os.environ.get("PYTEST_XDIST_WORKER", "main")
+    return RUNNING / f"{worker}-{os.getpid()}.txt"
 
 
 def pytest_runtest_logstart(nodeid, location):
-    RUNNING.mkdir(parents=True, exist_ok=True)
-    _running_file().write_text(nodeid, encoding="utf-8")
+    try:  # only a note for story_check: never worth failing a test over
+        RUNNING.mkdir(parents=True, exist_ok=True)
+        _running_file().write_text(nodeid, encoding="utf-8")
+    except OSError:
+        pass
 
 
 def pytest_runtest_logfinish(nodeid, location):
-    _running_file().unlink(missing_ok=True)
+    try:
+        _running_file().unlink(missing_ok=True)
+    except OSError:
+        pass
+
+
+def note_failed(nodeid: str) -> None:
+    """Add a failed test's id to the file story_check named
+    (tools/story_check.py, FAILED_IDS_ENV), one per line, so it can rerun
+    the test by its exact id, spaces and all. Only the process that
+    reports (xdist's controller, or a run without workers) writes it."""
+    path = os.environ.get("STORY_CHECK_FAILED_IDS")
+    if not path or "PYTEST_XDIST_WORKER" in os.environ:
+        return
+    with open(path, "a", encoding="utf-8") as ids:
+        ids.write(nodeid + "\n")
+
+
+def pytest_runtest_logreport(report):
+    if report.failed:
+        note_failed(report.nodeid)
+
+
+def pytest_collectreport(report):
+    if report.failed:
+        note_failed(report.nodeid)
 
 
 @pytest.fixture(autouse=True)
