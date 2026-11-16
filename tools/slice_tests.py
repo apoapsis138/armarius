@@ -290,6 +290,14 @@ AREA_TESTS: dict[str, tuple[str, ...]] = {
     "ars_magica_manager/commands.py": ("test_activity_picker.py",),
     "ars_magica_manager/tui/screens/steps.py": ("test_activity_picker.py",),
     "ars_magica_manager/tui/screens/pickers.py": ("test_activity_picker.py",),
+    # Every dialog's base; the screens whose work outlives them use it.
+    "ars_magica_manager/tui/screens/closing.py": (
+        "test_screen_closing.py",
+        "test_help.py",
+        "test_spell_guidelines.py",
+        "test_creation_worksheet.py",
+        "test_fields_dialog.py",
+    ),
     "ars_magica_manager/tui/screens/invent_spell.py": ("test_spell_template.py",),
     "ars_magica_manager/forms/lab_plan.py": ("test_spell_template.py",),
     "ars_magica_manager/spell_parameters.py": ("test_spell_template.py",),

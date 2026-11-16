@@ -302,6 +302,8 @@ async def test_the_terminal_guideline_button_fills_the_design():
         await wait_until(pilot, lambda: bool(screen.query("#inv-guideline")))
         screen.query_one("#inv-guideline", Button).press()
         assert await wait_until(pilot, lambda: isinstance(app.screen, ChooseScreen))
+        # The picker is on top before it has built its search box.
+        assert await wait_until(pilot, lambda: bool(app.screen.query("#picker-search")))
         app.screen.query_one("#picker-search", Input).value = "Repair a crafted"
         await pilot.pause()
         await pilot.press("enter")
