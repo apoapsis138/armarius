@@ -18,17 +18,13 @@ A test run past its limit (FULL_LIMIT, SLICE_LIMIT) is stopped with
 every worker it started, and said; the conftest also fails a test whose
 window waits for an answer no test gives.
 
-A test that fails in the parallel run is run again once, alone. One that
-then passes is flaky: it is named, noted (with the date) in FLAKY_LOG, the
-list of flaky tests to fix, and the check still fails, since a flaky test
-is a bug in its waits (CONTRIBUTING.md, "Textual and Pilot gotchas"). One that
-fails again is real, and printed with why (its first `E ` line: a broken
-help file or a failed assertion, in full).
-
-The failed tests' ids come from the run itself: tests/conftest.py writes
-each one to the file named by FAILED_IDS_ENV, one per line, and each is
-rerun as one argument, so an id with spaces (`test_x[add magus]`) is rerun
-whole.
+A test that fails in the parallel run is run again once, alone, by its
+exact id (tools/rerun_once.py, shared with CI). One that then passes is
+flaky: it is named, noted (with the date) in FLAKY_LOG, the list of flaky
+tests to fix, and the check still fails, since a flaky test is a bug in
+its waits (CONTRIBUTING.md, "Textual and Pilot gotchas"). One that fails
+again is real, and printed with why (its first `E ` line: a broken help
+file or a failed assertion, in full).
 """
 
 from __future__ import annotations
@@ -37,12 +33,18 @@ import datetime
 import os
 import subprocess
 import sys
-import tempfile
-from pathlib import Path
 
 from folder_busy import marked
+from rerun_once import (
+    ROOT,
+    Failure,
+    Outcome,
+    RerunOnce,
+    failed_lines,
+    run,
+    summary,
+)
 
-ROOT = Path(__file__).resolve().parent.parent
 UV = ["uv", "run"]
 #: Where flaky tests are noted, one line each (pytest's own ignored cache).
 FLAKY_LOG = ROOT / ".pytest_cache" / "flaky_tests.txt"
@@ -53,75 +55,6 @@ PARALLEL = ["-q", "-n", "auto", "--dist", "worksteal"]
 #: worker with it: the full suite takes about four minutes.
 FULL_LIMIT = 600
 SLICE_LIMIT = 420
-
-
-class TimedOut(Exception):
-    """A run went past its limit; it and its workers were stopped."""
-
-
-def stop_tree(pid: int) -> None:
-    """End a process and every process it started (pytest's workers):
-    ending only the parent leaves the workers running, holding files."""
-    if sys.platform == "win32":
-        subprocess.run(
-            ["taskkill", "/T", "/F", "/PID", str(pid)],
-            check=False,
-            capture_output=True,
-        )
-    else:
-        subprocess.run(["pkill", "-KILL", "-P", str(pid)], check=False)
-        subprocess.run(["kill", "-KILL", str(pid)], check=False)
-
-
-def run(
-    command: list[str],
-    limit: float | None = None,
-    env: dict[str, str] | None = None,
-) -> tuple[int, str]:
-    """Run `command`; its exit code and output. TimedOut past `limit`."""
-    with subprocess.Popen(
-        command,
-        cwd=ROOT,
-        env=env,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-    ) as process:
-        try:
-            output, _ = process.communicate(timeout=limit)
-        except subprocess.TimeoutExpired:
-            stop_tree(process.pid)
-            process.communicate()
-            raise TimedOut from None
-        return process.returncode, output
-
-
-#: The environment variable naming the file tests/conftest.py writes each
-#: failed test's id to, one per line.
-FAILED_IDS_ENV = "STORY_CHECK_FAILED_IDS"
-
-
-def failed_tests(ids_file: Path) -> list[str]:
-    """The ids of the tests that failed, as the run wrote them, each once."""
-    if not ids_file.is_file():
-        return []
-    lines = ids_file.read_text(encoding="utf-8").splitlines()
-    return list(dict.fromkeys(line for line in lines if line.strip()))
-
-
-def reason(output: str) -> str:
-    """Why a test failed, from its run alone: the first `E ` line (an
-    assertion or the error raised), else the last line of output."""
-    for line in output.splitlines():
-        if line.startswith("E "):
-            return line[1:].strip()[:300]
-    return summary(output)
-
-
-def summary(output: str) -> str:
-    return output.strip().splitlines()[-1] if output.strip() else ""
 
 
 #: Each pytest worker's test under way, written by tests/conftest.py.
@@ -153,6 +86,36 @@ def stopped(limit: float) -> str:
     return "\n".join(lines)
 
 
+class LocalRerun(RerunOnce):
+    """On your machine: every failure is tried again, and a flaky test
+    fails the check as a real one does."""
+
+    python = (*UV, "python")
+
+    def reruns(self, failure: Failure) -> bool:
+        return True
+
+    def stopped(self, limit: float | None) -> str:
+        return stopped(limit or 0)
+
+    def verdict(self, outcome: Outcome) -> tuple[bool, str]:
+        flaky = [failure.nodeid for failure in outcome.flaky]
+        if flaky:
+            FLAKY_LOG.parent.mkdir(parents=True, exist_ok=True)
+            today = datetime.datetime.now(datetime.UTC).date().isoformat()
+            with FLAKY_LOG.open("a", encoding="utf-8") as log:
+                log.writelines(f"{today} {test}\n" for test in flaky)
+        lines = [f"FLAKY {test} (failed in the run, passed alone)" for test in flaky]
+        lines += failed_lines(outcome)
+        lines.append(summary(outcome.output))
+        if flaky:
+            lines.append(
+                f"{len(flaky)} flaky: a flaky test fails the check; fix its waits "
+                f"(the list to fix: {FLAKY_LOG.relative_to(ROOT).as_posix()})."
+            )
+        return not outcome.real and not flaky, "\n".join(lines)
+
+
 def tests_step(command: list[str], limit: float) -> tuple[bool, str]:
     """Run the tests; rerun each failure alone. (passed, what to print)."""
     if RUNNING.is_dir():
@@ -161,46 +124,8 @@ def tests_step(command: list[str], limit: float) -> tuple[bool, str]:
                 leftover.unlink(missing_ok=True)
             except OSError:  # another run's, still open
                 pass
-    with tempfile.TemporaryDirectory() as folder:
-        ids_file = Path(folder) / "failed.txt"
-        env = {**os.environ, FAILED_IDS_ENV: str(ids_file)}
-        try:
-            code, output = run(command, limit, env)
-        except TimedOut:
-            return False, stopped(limit)
-        failed = failed_tests(ids_file)
-    if code == 0:
-        return True, summary(output)
-    if not failed:
-        return False, summary(output)
-    real: list[tuple[str, str]] = []
-    flaky: list[str] = []
-    for test in failed:
-        try:
-            again, said = run(
-                [*UV, "python", "-m", "pytest", "-q", "-p", "no:xdist", test],
-                SLICE_LIMIT,
-            )
-        except TimedOut:
-            again, said = 1, f"stopped after {SLICE_LIMIT} s: stuck"
-        if again == 0:
-            flaky.append(test)
-        else:
-            real.append((test, reason(said)))
-    if flaky:
-        FLAKY_LOG.parent.mkdir(parents=True, exist_ok=True)
-        today = datetime.datetime.now(datetime.UTC).date().isoformat()
-        with FLAKY_LOG.open("a", encoding="utf-8") as log:
-            log.writelines(f"{today} {test}\n" for test in flaky)
-    lines = [f"FLAKY {test} (failed in the run, passed alone)" for test in flaky]
-    lines += [f"FAILED {test}\n      {why}" for test, why in real[:20]]
-    lines.append(summary(output))
-    if flaky:
-        lines.append(
-            f"{len(flaky)} flaky: a flaky test fails the check; fix its waits "
-            f"(the list to fix: {FLAKY_LOG.relative_to(ROOT).as_posix()})."
-        )
-    return not real and not flaky, "\n".join(lines)
+    # `run` looked up now, so a test can stand in for it.
+    return LocalRerun(lambda c, lim, env: run(c, lim, env)).check(command, limit)
 
 
 #: Regenerating the golden files: the sheet text in parallel, and the
