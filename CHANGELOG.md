@@ -139,6 +139,10 @@ change in it.
 
 ## Unreleased
 
+### Castellum
+
+- **Seeing it in UGOS's Docker app.** The self-hosting guide's UGREEN NAS steps say how to add a saga started from the command line to the Docker app's Projects, so you can start, stop and watch it there, and why it never shows as Updatable.
+
 ### Glossa
 
 - **Reporting a bug.** New issues on GitHub open as a Bug report or a Feature request form, which ask for the version, where the app runs, the part of the app and, for a rules slip, the book and page; security problems go to a private report, and questions and ideas to Discussions. Help has a new guide, How to report a bug, under Getting help on the website: where the version and `crash.log` are, and why to attach an Export of the records involved rather than the whole saga file, since issues are public. The README and the security policy now say where the version really shows: the desktop app's title page, the terminal app's title bar, and Help's About page.

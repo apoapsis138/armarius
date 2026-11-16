@@ -813,8 +813,20 @@ above, private to the app's user. What that gives up: someone who steals
 the NAS's drive could read the key, and then you'd rotate it and send
 everyone a new Invite.
 
-Over SSH, `sudo docker compose ...` works from the `armarius` folder, and
-the Docker app's **Project** view shows the same containers.
+Over SSH, `sudo docker compose ...` works from the `armarius` folder.
+
+**Optional: see it in UGOS's Docker app.** The Docker app lists only the
+projects it made, so one started from the command line isn't there at
+first. Once you've run `docker compose up -d` the first time, add it:
+
+1. **Make the project.** In the Docker app, **Project**, **Create**.
+2. **Name it `armarius`.** It must match the `name:` in `compose.yaml`, so the running containers are taken in.
+3. **Choose the folder.** Pick the `armarius` shared folder. UGOS loads the `compose.yaml` already there: leave it as it is, and leave the environment variables empty, since `.env` and `tunnel.env` are in the folder.
+4. **Create it.** The project shows 3/3 running.
+
+From there you can start it, stop it and watch it. It never shows
+"Updatable", because `.env` pins the version, so update it as before (see
+[A newer version](help:guide-self-hosting-update)).
 
 ### Bringing the saga in
 <!-- help: guide-self-hosting-move -->
