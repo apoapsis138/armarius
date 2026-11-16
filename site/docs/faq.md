@@ -3,8 +3,11 @@
 Answers to the questions that come up while installing and setting up
 Armarius. For how to *use* it, start with
 [Getting started](help/guide-getting-started/index.md). If your problem
-isn't here, please [open an issue](https://github.com/apoapsis138/armarius/issues)
-with what you did and what the window said.
+isn't here, ask in
+[Discussions](https://github.com/apoapsis138/armarius/discussions), or, if
+something is broken, [open an issue](https://github.com/apoapsis138/armarius/issues/new/choose):
+[How to report a bug](help/guide-report-bug/index.md) says what to put in
+it.
 
 ## The download
 
@@ -173,6 +176,19 @@ Yes. They live in the save folder, not with the program, and a newer
 version opens sagas saved by an older one.
 
 ## Other questions
+
+### How do I report a bug, or ask a question? { #report-a-bug }
+
+A bug goes in a [new issue](https://github.com/apoapsis138/armarius/issues/new/choose):
+choose **Bug report** and fill in the form.
+[How to report a bug](help/guide-report-bug/index.md) says where to find
+the version and `crash.log`, and why to attach an Export of the records
+involved, never your whole saga file: the repository is public. A
+security problem, such as a player seeing what they shouldn't, goes to
+the private
+[Report a vulnerability](https://github.com/apoapsis138/armarius/security/advisories/new)
+instead. Questions and ideas go to
+[Discussions](https://github.com/apoapsis138/armarius/discussions).
 
 ### Does it cost anything, or need an account?
 

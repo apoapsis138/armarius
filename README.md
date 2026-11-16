@@ -13,7 +13,8 @@ and keeps a record of what happened.
 ## What it does
 
 Each part of the app has a name; [CHANGELOG.md](CHANGELOG.md) lists what
-each version added to it (the current version is in the title bar).
+each version added to it (the version you have is on Help's About page, and on the desktop
+app's title page or the terminal app's title bar).
 
 | Feature | What it is |
 | --- | --- |

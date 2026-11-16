@@ -530,6 +530,11 @@ portraits, maps and settings: by default the app data folder, or one
 chosen in the app or by ARMARIUS_DATA.
 _Avoid_: Data folder (the repo's data/ catalogs)
 
+**Headless host**:
+A computer with nobody at it that keeps one hosted saga open for Remote
+seats, run from the Armarius image.
+_Avoid_: server, Host (which is the storyguide)
+
 **More**:
 The menu of a sheet's rarer actions.
 _Avoid_: Actions menu, overflow
