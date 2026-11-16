@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security problem
+    url: https://github.com/apoapsis138/armarius/security/advisories/new
+    about: If someone could see or change what they shouldn't, report it privately here, not in an issue.
+  - name: Questions and ideas
+    url: https://github.com/apoapsis138/armarius/discussions
+    about: Ask how to do something, or share an idea, before it becomes an issue.
+  - name: Setup questions (FAQ)
+    url: https://apoapsis138.github.io/armarius/faq/
+    about: Installing, starting and the save folder, answered.

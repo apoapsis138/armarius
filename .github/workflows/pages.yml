@@ -1,13 +1,16 @@
 # The user-docs website (https://apoapsis138.github.io/armarius/), built
 # from site/ and the app's help by tools/build_site.py and published to
-# GitHub Pages. main changes only through a release, so the site follows
-# each release; it can also be run by hand (Actions tab -> Pages -> Run
-# workflow). Settings -> Pages -> Source must be "GitHub Actions".
+# GitHub Pages. It is built when a version tag (vX.Y.Z) is pushed, beside
+# the Release and the container image, so the site matches the latest
+# release rather than whatever is on main; it can also be run by hand
+# (Actions tab -> Pages -> Run workflow). Settings -> Pages -> Source must
+# be "GitHub Actions", and the github-pages environment must allow
+# deployments from tags matching v*.*.*.
 name: Pages
 
 on:
   push:
-    branches: [main]
+    tags: ["v*.*.*"]
   workflow_dispatch:
 
 permissions:

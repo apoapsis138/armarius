@@ -28,8 +28,9 @@ a *codex* the bound book, and a *nomen novum* a new name.
 Versions are `MAJOR.MINOR.PATCH`: MAJOR marks a finished phase of the
 plan (1.0.0: Phase 1, the core tracker; 2.0.0: Phase 4, creation by the
 book; 3.0.0: Phase 5, the Saga World), a new or changed feature bumps MINOR, and a bug fix or
-behind-the-scenes improvement bumps PATCH. The version is shown in the
-app's title bar and on the saga picker, recorded in every saga file that
+behind-the-scenes improvement bumps PATCH. The version is shown on the
+desktop app's title page, in the terminal app's title bar and saga
+picker, and on Help's About page in both; it is recorded in every saga file that
 version saves, and tagged in git (`v0.2.0`, ...). Changes made since the
 last release are listed under Unreleased until the next release gives
 them a version; the version goes up once per release, by the largest
@@ -58,7 +59,7 @@ change in it.
 | Liveries of the Houses | House looks | The desktop drawn in a House's own look: its family's form, colours, paper and mark |
 | Castellum | Self-hosting | Hosting a saga on a server or NAS, such as a Linux computer or a rented server, with no window |
 | Renovatio | App updates | App updates: finding, checking and installing a newer Release |
-| PDF Exports and Handouts | Printing and exports | Sheets and handouts printed from the saga for the troupe |
+| Folia | Printing and exports | Sheets and handouts printed from the saga for the troupe |
 
 ## Editions
 
@@ -138,9 +139,22 @@ change in it.
 
 ## Unreleased
 
+### Fundamenta
+
+- **One main branch.** Development now happens on `main` alone: changes go straight into it through pull requests, each release is a version tag, and the help website is rebuilt only when a version is released, so it always matches the latest release. A change to the docs alone gets a quicker set of checks.
+
+### Folia
+
+- **A Latin name.** Printing and exports is now called Folia, the leaves handed round the table, like the app's other features; What's New, the release notes and the README show it as Printing and exports (Folia).
+
 ### Castellum
 
 - **Seeing it in UGOS's Docker app.** The self-hosting guide's UGREEN NAS steps say how to add a saga started from the command line to the Docker app's Projects, so you can start, stop and watch it there, and why it never shows as Updatable.
+
+### Glossa
+
+- **Reporting a bug.** New issues on GitHub open as a Bug report or a Feature request form, which ask for the version, where the app runs, the part of the app and, for a rules slip, the book and page; security problems go to a private report, and questions and ideas to Discussions. Help has a new guide, How to report a bug, under Getting help on the website: where the version and `crash.log` are, and why to attach an Export of the records involved rather than the whole saga file, since issues are public. The README and the security policy now say where the version really shows: the desktop app's title page, the terminal app's title bar, and Help's About page.
+- **The README lists every feature.** Its table now has Self-hosting, Printing and exports, Your data and upkeep, and App updates, each feature headed by its plain name as What's New is, and it says where to find the version you have.
 
 ### Scriptorum
 
@@ -148,7 +162,7 @@ change in it.
 
 ## 4.14.0 — 2026-11-15
 
-### PDF Exports and Handouts
+### Folia
 
 - **Player and Storyguide copies.** Printing a character asks the host or a storyguide whether it's a Player copy or a Storyguide copy, starting at the Player copy each time. A Player copy leaves off every Secret not yet revealed and anything the players don't know of; a player always gets the Player copy, with their own character's notes and goals. The full record now prints the character's Secrets, each marked revealed or not, and the player's notes and goals.
 - **A new order for the full record.** Page 1 is the Characteristics, Personality Traits, Abilities and Combat & Condition; the Virtues and Flaws follow; then a magus's Hermetic Background and Arts, the story and diary, and last the Grimoire, each spell in full and never split between pages. The Spells in the Grimoire option is gone: the full record always gives each spell's description, and the play sheet a line each.
