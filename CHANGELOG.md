@@ -1,7 +1,8 @@
 # Changelog
 
 What changed in Armarius (called Ars Magica Manager before 2.52.0), by
-feature. Each feature has a name that stays; each finished round of work
+feature. Each feature has a plain name, such as Help, and a name of its
+own that stays, such as Glossa; each finished round of work
 on it is an edition of that feature, numbered as a book's editions are
 (Peregrinatio I, II, III...), and work not yet finished is its next
 edition, in progress. The Chronicle lists every version, newest first,
@@ -18,7 +19,8 @@ apprentice a magus; a *scriptorium* is where books are written; a
 the storyguide; an *illuminatio* is the painted and gilded copy of a
 manuscript; the *orbis* is the world; a *concilium* is a council;
 *insignia* are marks of honour; a *peregrinatio* is a journey into
-other lands; a *mappa mundi* is a medieval map of the world; and a
+other lands; a *mappa mundi* is a medieval map of the world; a
+*renovatio* is a renewal; and a
 livery is the colours and badge a great household's people wore. Each major version has a name of its own: an *incipit* is
 the opening words of a manuscript, a *folio* a sheet folded into leaves,
 a *codex* the bound book, and a *nomen novum* a new name.
@@ -35,26 +37,28 @@ change in it.
 
 ## Features
 
-| Feature | What it is |
-| --- | --- |
-| Pagina | The sheets for characters, covenants, laboratories and familiars |
-| Computus | The rules engine: scores, totals and the book's arithmetic |
-| Book of Hours | Seasons planned and played out: study, lab work, books and gifts |
-| Florilegium | The catalogs and what a saga offers from them |
-| Gauntlet | Creating covenants, laboratories and characters by the book |
-| Scriptorum | The terminal version: its keys, colours and readability |
-| Glossa | Help, its guides and this page |
-| Fundamenta | Your data, packaging, and the app's upkeep and checks |
-| Sodales | Sharing a saga with the troupe |
-| Illuminatio | The desktop version, drawn rather than printed |
-| Orbis | The saga's world: its region, people, places, threats and what lies ahead |
-| Concilium | Tribunals, their customs and their meetings |
-| Insignia | Heraldry and the app's artwork |
-| Peregrinatio | The Tribunal packs: each Tribunal book, ready to import |
-| Hedge Magic | The non-Hermetic traditions: their Arts, chapters and rules |
-| Mappa Mundi | The Atlas: the saga's maps and the records pinned on them |
-| Liveries of the Houses | The desktop drawn in a House's own look: its family's form, colours, paper and mark |
-| Castellum | Hosting a saga on a box of your own: a NAS, a Linux computer or a rented server, with no window |
+| Feature | Plain name | What it is |
+| --- | --- | --- |
+| Pagina | Sheets | The sheets for characters, covenants, laboratories and familiars |
+| Computus | Rules engine | The rules engine: scores, totals and the book's arithmetic |
+| Book of Hours | Seasons | Seasons planned and played out: study, lab work, books and gifts |
+| Florilegium | Catalogs | The catalogs and what a saga offers from them |
+| Gauntlet | Creation | Creating covenants, laboratories and characters by the book |
+| Scriptorum | Terminal version | The terminal version: its keys, colours and readability |
+| Glossa | Help | Help, its guides and this page |
+| Fundamenta | Your data and upkeep | Your data, packaging, and the app's upkeep and checks |
+| Sodales | Playing together | Sharing a saga with the troupe |
+| Illuminatio | Desktop version | The desktop version, drawn rather than printed |
+| Orbis | The saga's world | The saga's world: its region, people, places, threats and what lies ahead |
+| Concilium | Tribunals | Tribunals, their customs and their meetings |
+| Insignia | Heraldry and artwork | Heraldry and the app's artwork |
+| Peregrinatio | Sourcebook packs | The Tribunal packs: each Tribunal book, ready to import |
+| Hedge Magic | Hedge Magic | The non-Hermetic traditions: their Arts, chapters and rules |
+| Mappa Mundi | Atlas | The Atlas: the saga's maps and the records pinned on them |
+| Liveries of the Houses | House looks | The desktop drawn in a House's own look: its family's form, colours, paper and mark |
+| Castellum | Self-hosting | Hosting a saga on a server or NAS, such as a Linux computer or a rented server, with no window |
+| Renovatio | App updates | App updates: finding, checking and installing a newer Release |
+| PDF Exports and Handouts | Printing and exports | Sheets and handouts printed from the saga for the troupe |
 
 ## Editions
 
@@ -131,6 +135,53 @@ change in it.
 | Milestone | Version | What it marked |
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
+
+## 4.14.0 — 2026-11-15
+
+### PDF Exports and Handouts
+
+- **Player and Storyguide copies.** Printing a character asks the host or a storyguide whether it's a Player copy or a Storyguide copy, starting at the Player copy each time. A Player copy leaves off every Secret not yet revealed and anything the players don't know of; a player always gets the Player copy, with their own character's notes and goals. The full record now prints the character's Secrets, each marked revealed or not, and the player's notes and goals.
+- **A new order for the full record.** Page 1 is the Characteristics, Personality Traits, Abilities and Combat & Condition; the Virtues and Flaws follow; then a magus's Hermetic Background and Arts, the story and diary, and last the Grimoire, each spell in full and never split between pages. The Spells in the Grimoire option is gone: the full record always gives each spell's description, and the play sheet a line each.
+- **A play sheet.** A character can print as a play sheet, about a page for a companion or grog and two for a magus: Characteristics, Virtues and Flaws by name, traits, Abilities, Combat & Condition, then the Arts, Casting Scores, Raw Vis and the spells a line each.
+- **Less empty paper.** Sections now run on to the next page instead of moving whole: tables between their rows, the Virtues and Flaws down their columns. The Abilities are set in two columns, the Arts in three, and the Arts start a new page only when little of the page is left. The Combat box stays with Weapons and Equipment. Raw Vis keeps lines to pencil in, and the familiar's box is short and points to its own sheet. A magus's full record takes about half the pages it did.
+- **Covenants, laboratories and familiars laid out for paper.** They now print as a record laid out for the page, like a character, instead of a picture of the screen: real text you can search, nothing cut off at the edge or shortened with "…", and every history entry, diary entry and book. Each asks for a Player or Storyguide copy and a background like a character. Colour no longer carries meaning on paper: the Lab Totals are numbers with the best in bold, and a turned-off Specialization is struck through. A table's long words now wrap onto a second line instead of shrinking.
+- **Printing in a theme.** Print options have a Theme: each magus (with their laboratory and familiar) in their House's colours, or any theme by name. The page takes the theme's colours and paper, with the House's mark beside the title and in the running head, and large and faint behind the first page's title. On plain white a dark theme prints in light colours, so there's never pale ink on white.
+- **Print the Troupe.** The Troupe chapter has Print the Troupe: every player character's sheet in one PDF, each from a fresh page and in its own House's colours (or one theme for everyone), with a bookmark for each.
+- **Export as Markdown.** A character's, covenant's, laboratory's or familiar's sheet can be written as a Markdown file, on the terminal (More) and the desktop (Manage): the same copy and sheet as printing, with tables a wiki or notes app shows. Help has a how-to.
+
+### Castellum
+
+- **A threat model of its own for hosting on a box.** What can go wrong when a NAS or server hosts the saga (the container image, the tunnel, the key kept in a file, the `admin` command and the backups), what guards against each, and what is left to you, now has its own document, with a worked example for a UGREEN NAS. The Remote seats threat model, for hosting from your desktop, points to it.
+- **Clearer advice on where to keep the host key.** The guide and the example settings no longer send the key to a NAS's encrypted shared folder without a caveat: keep it in a private folder of its own, encrypted where the box can (try the NAS's encrypted folder first, since UGOS's can't be used), and know that a plain folder doesn't protect it if the drives are stolen. Back the key and the tunnel token up apart from the nightly backups.
+
+### Illuminatio
+
+- **My sheet.** While Playing, your name on the Playing button (or `c`) opens your character's sheet from any page; the trail, Esc or `c` again takes you back.
+- **The trail's switcher.** The last crumb of the trail lists the other people, laboratories or covenants at its level.
+
+### Book of Hours
+
+- **General spells from a Lab Text.** A Lab Text for a General spell, such as Aegis of the Hearth, now teaches the level written on it instead of refusing with "has no level" (#16). The magus learns a version of their own at that level, with the text named as its source, and the Lab Text they write teaches that version; two magi learning from the same text each get their own. A General spell's text with no level asks for one, and the Lab Work window gives its reason once, not twice.
+
+### Renovatio
+
+- **Told when a newer version is out.** Once a day at most, when it starts, the app asks GitHub for the latest Release, sending only its own version, and never holding up the start. When a newer one is out, the desktop's title page says "! Armarius X.Y.Z is available" beside the version, and the settings gear wears a small "!" seal; the terminal's title page lists **Update** last, and the first saga you open shows the same line once. Nothing is downloaded or installed: getting the new version is done as before.
+- **The Update row.** At the top of the desktop's Settings window, or on the terminal's new Update screen: the new version, its date and the first lines of its notes, with **What's new** for all of them, **Download page** (a copy run from the source says to pull main instead) and **Skip this version**. **Check now** asks at once and says what it found, or that GitHub couldn't be reached and why. **Check for updates when Armarius starts** turns the daily check off, and `ARMARIUS_UPDATES=off` turns every check off.
+- **Security fixes stand out.** A new version whose notes have a bullet marked **Security:** is shown in the theme's warning colour, "with security fixes", and can't be skipped. A new major version says that players who join by Remote seat must move to it too.
+- **Never on a host.** A copy a host runs for a player, the hosts themselves, the admin command and the container image never check.
+- **Version mismatches told plainly.** Joining a host on another major version still stops, and now offers **Update** when yours is the older, or says "Your storyguide's Armarius is older" when theirs is. On another minor version you can play, and the gear's seal and the Settings window say the two versions haven't been tested together. The storyguide's Players list notes a player who last joined on another version.
+
+### Fundamenta
+
+- **Sagas saved on this computer by default.** A new install keeps its sagas in your app data folder (`C:\Users\you\AppData\Local\Armarius` on Windows, `~/.local/share/Armarius` on Linux), not in OneDrive, where a sync could catch a save half-written. If you already use Armarius, nothing moves: it goes on saving where it always has, now shown as a folder you chose. Change save folder on the saga picker moves it.
+
+### Glossa
+
+- **Host for Players help** names the two ways players join as the window does (Remote seats; Browser or terminal) and links each to its guide, and the unplanned-seasons help gives the idle non-player setting's name for each version of the app.
+- **What's New in plain words.** Each feature is headed by what it is first, then its name: Help (Glossa), Self-hosting (Castellum), Sourcebook packs (Peregrinatio). Its editions read Self-hosting I: Vigilo Confido, and the Chronicle's major versions Version 4.x: Sodalis. A Release's notes on GitHub are headed the same way.
+- **Every Help page rewritten.** The pages for each sheet, chapter, form and season step read like the how-to guides: short sentences, lists instead of long catalogues, "they" for any character, and each version's labels apart. Headings name the place without "tab", since the desktop has chapters. A few slips are fixed on the way: the familiar's Bond Powers say the level is worked out when ticked, a deep cover's Disguise roll is the one the app rolls (Houses of Hermes: Societates p. 87), Notes & Goals are on the Description, and Lands of the Nile's tomb curses, wards and traps are working records.
+- **The web help's menu by topic.** The how-to guides are grouped by what you're doing (Start here, Characters and magic, Seasons and the laboratory, The covenant, The saga's world, Tribunals and conflict, Playing together, Your data) instead of one long list. A screen whose name doesn't say what it holds has a few plain words after it (The Armarium: the saga's books), and each sourcebook pack is listed by its book's name.
+- **The web pages read like the guides.** The site's front page, install guide and FAQ give one action per step and plainer sentences, and point to the new guides for updating and for hosting browsers and SSH.
 
 ## 4.13.1 — 2026-11-15
 

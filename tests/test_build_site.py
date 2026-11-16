@@ -144,6 +144,33 @@ def test_the_menu_lists_every_page() -> None:
     paths = build_site.page_paths(book)
     missing = [path for path in paths.values() if f" {path}" not in nav]
     assert not missing, missing
-    # Getting started leads the guides.
-    guides = nav.split("  - How-to guides:\n", 1)[1]
-    assert guides.splitlines()[0].endswith(paths["guide-getting-started"])
+    # The guides come in groups by what you're doing, Getting started first.
+    guides = nav.split("  - How-to guides:\n", 1)[1].splitlines()
+    assert guides[0] == '    - "Start here":'
+    assert guides[1].endswith(paths["guide-getting-started"])
+
+
+def test_every_guide_has_a_group_in_the_menu() -> None:
+    """A new guide goes into one of the menu's groups, not More guides."""
+    book = help_text.book(GUI)
+    named = {i for _title, ids in build_site.GUIDE_GROUPS for i in ids}
+    ungrouped = sorted(
+        p.id
+        for p in book.pages.values()
+        if help_text.is_guide(p.id)
+        and build_site.parent_of(book, p) is None
+        and p.id not in named
+    )
+    assert not ungrouped, f"add these to build_site.GUIDE_GROUPS: {ungrouped}"
+
+
+def test_the_menu_glosses_screens_and_names_packs_by_their_book() -> None:
+    book = help_text.book(GUI)
+    named = set(build_site.MENU_GLOSSES) | set(build_site.MENU_TITLES)
+    unknown = sorted(named - {p.id for p in book.pages.values()})
+    assert not unknown, f"no help page has these ids: {unknown}"
+    nav = build_site.nav_yaml(book)
+    assert '"The Armarium: the saga\'s books"' in nav
+    assert "Assumptions made for" not in nav
+    assert '"Guardians of the Forests: The Rhine Tribunal"' in nav
+    assert '"Through the Aegis"' in nav

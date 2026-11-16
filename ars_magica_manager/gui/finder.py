@@ -6,11 +6,15 @@ field over the matches: each keystroke asks the core's index
 (saga_index.search) again and redraws the list (Observer: the field's
 textChanged is the only thing that fills it). Up and Down choose a
 match, Enter or a click opens it, and Esc or a click outside closes the
-panel, as a menu closes. It is never on show otherwise."""
+panel, as a menu closes. It is never on show otherwise.
+
+The trail's switcher (SwitcherPanel) is dropped the same way, in the same
+look, from the last crumb's ▾: the people, laboratories or covenants
+beside the one on show (siblings.py), to open another."""
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 
 from PySide6.QtCore import (
@@ -51,6 +55,7 @@ from PySide6.QtWidgets import (
 
 from .. import saga_index
 from ..models import Saga
+from ..siblings import Sibling
 from ..style.palettes import Palette
 
 #: How many matches the panel lists; more are counted under the list.
@@ -112,6 +117,9 @@ def eye_icon(colour: str, size: int = 20, ratio: float = 2.0) -> QIcon:
 _AFTER = Qt.ItemDataRole.UserRole + 1
 #: The role a row keeps the entry it opens in.
 _REF = Qt.ItemDataRole.UserRole
+#: The role that makes a row a group's heading (the switcher's Magi...),
+#: which is never chosen.
+_HEADING = Qt.ItemDataRole.UserRole + 2
 
 
 @dataclass(frozen=True)
@@ -168,6 +176,20 @@ class _MatchRow(QStyledItemDelegate):
         rect = option.rect
         state = option.state
         painter.save()
+        if index.data(_HEADING):
+            # A group's heading: small capitals in the heading ink.
+            font = QFont(option.font)
+            font.setBold(True)
+            font.setCapitalization(QFont.Capitalization.SmallCaps)
+            painter.setFont(font)
+            painter.setPen(QColor(self.p["heading"]))
+            painter.drawText(
+                rect.adjusted(6, 0, -10, 0),
+                Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft,
+                str(index.data(Qt.ItemDataRole.DisplayRole) or ""),
+            )
+            painter.restore()
+            return
         if state & QStyle.StateFlag.State_Selected:
             painter.fillRect(rect, QColor(self.p["selection"]))
             painter.fillRect(
@@ -347,6 +369,189 @@ class FinderPanel(QFrame):
         self.move(left, corner.y())
         self.show()
         self.field.setFocus()
+
+    def paintEvent(self, event: QPaintEvent) -> None:
+        super().paintEvent(event)
+        painter = QPainter(self)
+        painter.fillRect(0, 0, self.width(), TOP_RULE, QColor(self.p["primary"]))
+        painter.end()
+
+
+#: Past this many records, the switcher has a field to narrow them.
+FILTER_FROM = 15
+#: The switcher's width.
+SWITCHER_WIDTH = 340
+
+
+class SwitcherPanel(QFrame):
+    """The list the last crumb's ▾ drops, in the finder's look: the records
+    beside the one on show (siblings.py) under their groups' headings, the
+    one on show marked. Past FILTER_FROM records a field over the list
+    narrows it as you type. Up and Down choose, Enter or a click opens, Esc
+    or a click outside closes. `opens` is called with the chosen record's
+    id, after the panel has closed."""
+
+    def __init__(
+        self,
+        found: Sequence[Sibling],
+        current: str | None,
+        p: Palette,
+        opens: Callable[[str], None],
+        parent: QWidget,
+    ) -> None:
+        super().__init__(parent, Qt.WindowType.Popup)
+        self.setObjectName("finder")
+        self.p = p
+        self._found = list(found)
+        self._current = current
+        self._opens = opens
+        self.setFixedWidth(SWITCHER_WIDTH)
+        self.setAutoFillBackground(True)
+        self.setStyleSheet(
+            f"#finder {{ background: {p['surface']}; border: 1px solid {p['rule']};"
+            f" border-top: none; }}"
+            f"#finder QListWidget {{ background: transparent; border: none; }}"
+        )
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(10, 10 + TOP_RULE, 10, 8)
+        layout.setSpacing(6)
+        #: The field that narrows a long list; None for a short one.
+        self.field: QLineEdit | None = None
+        if len(self._found) > FILTER_FROM:
+            field = self.field = QLineEdit()
+            field.setPlaceholderText("Type to narrow the list")
+            field.setAccessibleName("Filter")
+            field.setClearButtonEnabled(True)
+            field.textChanged.connect(self._fill)
+            layout.addWidget(field)
+        self.matches = QListWidget()
+        self.matches.setAccessibleName("Others here")
+        self.matches.setItemDelegate(_MatchRow(p, self.matches))
+        self.matches.setUniformItemSizes(True)
+        self.matches.itemClicked.connect(self._open_item)
+        if self.field is not None:
+            self.matches.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+            self.field.installEventFilter(self)
+        else:
+            self.matches.installEventFilter(self)
+        self._row = QFontMetrics(self.font()).height() + 10
+        layout.addWidget(self.matches)
+        self._fill("")
+
+    # -- the list --
+
+    def _fill(self, text: str) -> None:
+        wanted = text.strip().casefold()
+        self.matches.clear()
+        group = None
+        for sibling in self._found:
+            if wanted and wanted not in sibling.name.casefold():
+                continue
+            if sibling.group and sibling.group != group:
+                heading = QListWidgetItem(sibling.group)
+                heading.setData(_HEADING, True)
+                heading.setFlags(Qt.ItemFlag.NoItemFlags)
+                heading.setSizeHint(QSize(0, self._row))
+                self.matches.addItem(heading)
+            group = sibling.group
+            item = QListWidgetItem(sibling.name)
+            item.setData(_REF, sibling.id)
+            if sibling.id == self._current:
+                item.setData(_AFTER, "on show")
+            item.setSizeHint(QSize(0, self._row))
+            self.matches.addItem(item)
+        rows = self._rows()
+        here = [n for n in rows if self.matches.item(n).data(_REF) == self._current]
+        if here or rows:
+            self.matches.setCurrentRow((here or rows)[0])
+        shown = min(max(self.matches.count(), 1), ROWS)
+        self.matches.setFixedHeight(shown * self._row + 4)
+        self.adjustSize()
+
+    def _rows(self) -> list[int]:
+        """The rows that can be chosen: every one but the headings."""
+        return [
+            n
+            for n in range(self.matches.count())
+            if not self.matches.item(n).data(_HEADING)
+        ]
+
+    def shown(self) -> list[str]:
+        """The names listed, in order, without the headings."""
+        return [self.matches.item(n).text() for n in self._rows()]
+
+    def headings(self) -> list[str]:
+        """The groups' headings listed, in order."""
+        return [
+            self.matches.item(n).text()
+            for n in range(self.matches.count())
+            if self.matches.item(n).data(_HEADING)
+        ]
+
+    def chosen(self) -> str:
+        """The name of the row chosen now ("" for none)."""
+        item = self.matches.currentItem()
+        return item.text() if item is not None else ""
+
+    # -- choosing and opening --
+
+    def eventFilter(self, watched: QObject, event: QEvent) -> bool:
+        if (
+            watched in (self.field, self.matches)
+            and event.type() == QEvent.Type.KeyPress
+            and isinstance(event, QKeyEvent)
+            and self._key(event)
+        ):
+            return True
+        return super().eventFilter(watched, event)
+
+    def _key(self, event: QKeyEvent) -> bool:
+        """Up, Down, Page Up/Down (over the headings), Enter and Esc."""
+        key = event.key()
+        steps = {
+            Qt.Key.Key_Up: -1,
+            Qt.Key.Key_Down: 1,
+            Qt.Key.Key_PageUp: -ROWS,
+            Qt.Key.Key_PageDown: ROWS,
+        }
+        rows = self._rows()
+        if key in steps and rows:
+            now = self.matches.currentRow()
+            at = rows.index(now) if now in rows else 0
+            at = max(0, min(at + steps[Qt.Key(key)], len(rows) - 1))
+            self.matches.setCurrentRow(rows[at])
+            return True
+        if key in (Qt.Key.Key_Return, Qt.Key.Key_Enter):
+            item = self.matches.currentItem()
+            if item is not None:
+                self._open_item(item)
+            return True
+        if key == Qt.Key.Key_Escape:
+            self.close()
+            return True
+        return False
+
+    def _open_item(self, item: QListWidgetItem) -> None:
+        record_id = item.data(_REF)
+        if item.data(_HEADING) or not isinstance(record_id, str):
+            return
+        self.close()
+        self._opens(record_id)
+
+    def drop_under(self, crumb: QWidget) -> None:
+        """Show the panel just under `crumb`, its left edge on the crumb's,
+        and put the cursor in its field (or its list)."""
+        self.adjustSize()
+        corner = crumb.mapToGlobal(QPoint(0, crumb.height()))
+        left = corner.x()
+        screen = crumb.screen()
+        if screen is not None:
+            # Kept on the screen when the window is narrow or near its edge.
+            area = screen.availableGeometry()
+            left = max(min(left, area.right() - self.width()), area.left())
+        self.move(left, corner.y())
+        self.show()
+        (self.field or self.matches).setFocus()
 
     def paintEvent(self, event: QPaintEvent) -> None:
         super().paintEvent(event)

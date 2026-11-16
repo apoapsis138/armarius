@@ -143,7 +143,7 @@ When the steps finish, `run` saves the saga and redraws the page.
 ## 4. Data
 
 - **One JSON file per saga**, human-readable, in `paths.data_dir()` (by
-  default `Armarius` at the top of OneDrive), never in the repo. Records
+  default `Armarius` in the user's app data folder), never in the repo. Records
   are flat lists linked by id (`covenant_id`, `owner_id`, `spell_id`),
   not nested; the dataclasses in `models/` are the field-by-field spec.
 - **Migrations run on load**, so old saves, exports and packs keep
@@ -247,7 +247,8 @@ NOTICE.md. Never art from an image generator, nor its mockups.
   one front-end only is marked `tui` or `gui`; `tests/test_help.py` fails
   on a missing topic.
 - **Global keys** (`hotkeys.py`): `?`/F1 Help, Esc cancels or goes back,
-  `q` quits; a typed key never acts while a field is being filled in.
+  `q` quits, and on the desktop alone (`desktop_only`) `c` My sheet; a
+  typed key never acts while a field is being filled in.
 
 **Terminal only** (Textual)
 

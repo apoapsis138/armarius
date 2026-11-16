@@ -64,7 +64,7 @@ A Virtue or Flaw made under House Rules is text only, so adjust its effect by ha
 1. **Open Plan Season.** On the character's sheet, choose **Planning** in the rail and click **Plan** (or **Edit**) in the [This Season](help:section-char-season) section. [Plan Season](help:plan-season) opens for the current season. A covenant's [Seasons](help:tab-cov-seasons) chapter opens the same form for anyone in its Magi or Companions list.
 <!-- /gui -->
 2. **Choose the activity.** Choose the **Activity**, then fill in what it asks. That may be **Experience in**, a **Book**, a **Teacher / master**, a **Source Quality**, **Vis from**, a **Stress die (blank: rolled)** or **Months lost (0-3)**.
-3. **Check the line above Save.** It shows each subject's Advancement Total, the xp gained and how the score and xp will change, for example "Latin: Advancement Total 4, +4 xp (score 3, 34 -> 38 xp)". A plan that breaks a rule shows why, and Save refuses it.
+3. **Check the line above Save.** It shows what each subject gains, or why Save refuses the plan (see [The line above Save](help:plan-season-preview)).
 4. **Save.** Choose **Save**. The This Season section now shows the plan and what it'll give.
 
 Here's what each activity gives (Ars Magica Definitive Edition, Chapter 10: Long-Term Events).
@@ -107,30 +107,30 @@ Grogs aren't planned season by season. In a grog's Planning chapter, **Yearly Up
 ### Seasons ahead
 <!-- help: guide-advancement-ahead -->
 
-A plan for a season ahead starts from the character as the seasons planned before it will leave them, worked out as Advance Season would. Nothing in the saga changes until those seasons are really advanced. So a magus who reads an Ignem summa in Spring and invents an Ignem spell in Summer sees the Summer's Lab Total with the higher Ignem, and a second season on the same summa starts from the xp the first leaves.
+A plan for a season ahead starts from the character as the seasons planned before it will leave them (see [Seasons Ahead](help:section-char-ahead)). Nothing in the saga changes until those seasons are really advanced. So a magus who reads an Ignem summa in Spring and invents an Ignem spell in Summer sees the Summer's Lab Total with the higher Ignem, and a second season on the same summa starts from the xp the first leaves.
 
-- **Where it shows**: the details under [Seasons Ahead](help:section-char-ahead), the line above Save in [Plan Season](help:plan-season) for a season ahead, the laboratory's [Planning](help:tab-lab-planning) and its lab work form, and the character's calendar, where each planned season says what it's expected to give.
+- **Where it shows**: the details under Seasons Ahead, the line above Save in [Plan Season](help:plan-season) for a season ahead, the laboratory's [Planning](help:tab-lab-planning) and its lab work form, and the character's calendar, where each planned season says what it's expected to give.
 <!-- tui -->
 - **The calendar** is the [Calendar](help:section-char-calendar) section at the bottom of the character's Planning tab.
 <!-- /tui -->
 <!-- gui -->
 - **The calendar** is Seasons, at the top of the character's [Diary](help:tab-diary). A planned season's pill gives its expected result after its activity, and clicking it shows it in the inspector.
 <!-- /gui -->
-- **A die not rolled yet** (study from vis, an experiment, a search) counts as gaining nothing. The seasons after it say "Counts nothing gained from ...: the die isn't rolled yet." Once the season is played, the later ones are worked out again from what it really gave.
-- **Not counted**: the year's end (aging, a grog's year, the covenant's harvests and upkeep), anything the storyguide adds, and seasons nobody planned. The saga's [default](help:advance-unplanned) for those is only filled in when the season is advanced.
+- **A die not rolled yet**, such as a search's, counts as gaining nothing. Once the season is played, the later ones are worked out again from what it really gave.
+- **Not counted**: the year's end, the covenant's upkeep, anything the storyguide adds, and seasons nobody planned. The saga's [default](help:advance-unplanned) for those is only filled in when the season is advanced.
 
 ### When the season is advanced
 <!-- help: guide-advancement-applying -->
 
 <!-- tui -->
-1. **Advance the season.** Press `t` anywhere in the workspace. The [Advance Season](help:advance-season) confirmation lists the plans that will be applied, who has nothing planned and any plan that can't be carried out.
+1. **Advance the season.** Press `t` anywhere in the workspace, and read the [Advance Season](help:advance-season) confirmation.
 <!-- /tui -->
 <!-- gui -->
-1. **Advance the season.** Click the **Advance Season** card at the foot of the chapters on the left, on any page of the saga that has chapters. The [Advance Season](help:advance-season) confirmation lists the plans that will be applied, who has nothing planned and any plan that can't be carried out.
+1. **Advance the season.** Click the **Advance Season** card at the foot of the chapters on the left, and read the [Advance Season](help:advance-season) confirmation.
 <!-- /gui -->
 2. **Confirm.** Choose Advance and answer any questions it asks.
 
-Every plan's outcome is worked out first, from the saga as it stood, and only then are they all applied. So xp gained this season doesn't change this season's other results. Dice left blank on a plan are rolled now. Then, for each character:
+Every plan is worked out from the saga as it stood, then applied (see [How the season is applied](help:advance-season-apply)). So xp gained this season doesn't change this season's other results. Then, for each character:
 
 - The xp is added to the Ability, Art or Mastery, and the score follows.
 <!-- tui -->
@@ -218,7 +218,7 @@ A change made by hand writes no Diary entry. Click **Add** in the Diary chapter 
 ### What the app does for you
 <!-- help: guide-advancement-app -->
 
-**The app works out** every score from its xp, each season's Advancement Total and xp, the Virtue and Flaw effects above, the dice left blank, the Winter aging rolls, Decrepitude, yearly Warping and Twilight, and the Diary entries.
+**The app works out** everything above but what you type.
 
 **You type** the season plans, any die rolled at the table, Year Born, Confidence, and any change made outside the seasons.
 
@@ -235,27 +235,23 @@ Your magus wants a new Ignem spell by midsummer, and a Gifted companion could le
 <!-- tui -->
 Lab work is planned on the [laboratory sheet](help:laboratory), not the magus's own sheet. The laboratory needs a magus as its owner first, so set the owner with `e` on the top panel.
 
-A magus with no laboratory yet starts one from their own sheet. On their Planning tab, plan **Set up a new laboratory** (under Order & covenant). When the season is advanced the laboratory is made in their covenant with them as its owner. Advance Season then offers to plan the second season, which removes the Basic Flaw (see [A new laboratory](help:advance-new-lab)).
-
-A laboratory with no owner, such as one left by a magus who died or moved on, or a covenant's spare, can be taken over. Plan **Take over the laboratory** (under Order & covenant) on the magus's own Planning tab and choose it in **Laboratory**. When the season is applied the laboratory becomes theirs, and any laboratory they had is left without an owner. Its Refinement drops to at most their Magic Theory - 3, and the Predecessor may linger (Covenants p. 118). A laboratory that already has a magus as its owner plans the same season on its own Planning tab.
+A magus with no laboratory yet plans **Set up a new laboratory** (under Order & covenant) on their own Planning tab (see [A new laboratory](help:advance-new-lab)). One taking over a laboratory with no owner, such as a dead magus's or a covenant's spare, plans **Take over the laboratory** there and chooses it in **Laboratory**, and the Predecessor may linger (Covenants p. 118; see [Activities offered](help:plan-season-activities)).
 
 1. **Open the laboratory.** In the tree, open the covenant's Laboratories group and choose the laboratory. Press `1` for the [Planning tab](help:tab-lab-planning).
-2. **Read the seasons.** The list shows the owner's seasons from the current one on: each planned activity with the seasons it spans and its progress, the free seasons in between, and the first free season after the last plan. A season planned on the owner's own sheet is marked "on (name)'s sheet". Planning lab work there replaces it.
-3. **Highlight a season.** The details panel shows its plan and its Lab Total line by line, or, in red, why it can't be done. A later season's Lab Total counts the seasons planned before it. A season reading an Ignem summa first raises the Ignem in a later invention's total (see [Seasons ahead](help:guide-advancement-ahead)).
-4. **Plan, start or clear.** Press `e` to plan lab work for that season, or reopen the plan there. `a` starts inventing a new spell from a blank design. `d` clears the season's plan, with any later seasons scheduled to continue it, after a confirmation.
+2. **Read the seasons.** The list shows the owner's seasons from the current one on. Planning lab work on a season marked "on (name)'s sheet" replaces that plan.
+3. **Highlight a season.** The details panel shows its plan and its Lab Total line by line, or, in red, why it can't be done. A later season's Lab Total counts the seasons planned before it (see [Seasons ahead](help:guide-advancement-ahead)).
+4. **Plan, start or clear.** Press `e` to plan lab work for that season, `a` to invent a new spell from a blank design, or `d` to clear the season's plan.
 <!-- /tui -->
 <!-- gui -->
 Lab work is planned on the [laboratory sheet](help:laboratory), not the magus's own sheet. The laboratory needs a magus as its owner first, so set the **Owner** with **Edit** in the laboratory's header.
 
-A magus with no laboratory yet starts one from their own page. In their Planning chapter, plan **Set up a new laboratory** (under Order & covenant). When the season is advanced the laboratory is made in their covenant with them as its owner. Advance Season then offers to plan the second season, which removes the Basic Flaw (see [A new laboratory](help:advance-new-lab)).
-
-A laboratory with no owner, such as one left by a magus who died or moved on, or a covenant's spare, can be taken over. Plan **Take over the laboratory** (under Order & covenant) in the magus's own Planning chapter and choose it in **Laboratory**. When the season is applied the laboratory becomes theirs, and any laboratory they had is left without an owner. Its Refinement drops to at most their Magic Theory - 3, and the Predecessor may linger (Covenants p. 118). A laboratory that already has a magus as its owner plans the same season in its own Planning list.
+A magus with no laboratory yet plans **Set up a new laboratory** (under Order & covenant) in their own Planning chapter (see [A new laboratory](help:advance-new-lab)). One taking over a laboratory with no owner, such as a dead magus's or a covenant's spare, plans **Take over the laboratory** there and chooses it in **Laboratory**, and the Predecessor may linger (Covenants p. 118; see [Activities offered](help:plan-season-activities)).
 
 1. **Open the laboratory.** On the covenant's page, choose **Laboratories** in the rail and click the laboratory.
 2. **Open its Seasons.** Choose **Seasons** in the laboratory's rail. The [Planning](help:tab-lab-planning) list is at the top.
-3. **Read the seasons.** The list shows the owner's seasons from the current one on: each planned activity with the seasons it spans and its progress, the free seasons in between, and the first free season after the last plan. A season planned on the owner's own sheet is marked "on (name)'s sheet". Planning lab work there replaces it.
-4. **Click a season.** The inspector on the right shows its plan and its Lab Total line by line, or, in red, why it can't be done. A later season's Lab Total counts the seasons planned before it. A season reading an Ignem summa first raises the Ignem in a later invention's total (see [Seasons ahead](help:guide-advancement-ahead)).
-5. **Plan, start or clear.** Click **Plan** to plan lab work for that season, or reopen the plan there. **New Spell** starts inventing a new spell. **Clear** clears the season's plan, with any later seasons scheduled to continue it, after a confirmation.
+3. **Read the seasons.** The list shows the owner's seasons from the current one on. Planning lab work on a season marked "on (name)'s sheet" replaces that plan.
+4. **Click a season.** The inspector on the right shows its plan and its Lab Total line by line, or, in red, why it can't be done. A later season's Lab Total counts the seasons planned before it (see [Seasons ahead](help:guide-advancement-ahead)).
+5. **Plan, start or clear.** Click **Plan** to plan lab work for that season, **New Spell** to invent a new spell, or **Clear** to clear the season's plan.
 <!-- /gui -->
 
 ### Planning the work
@@ -265,20 +261,19 @@ A laboratory with no owner, such as one left by a magus who died or moved on, or
 `e` and `a` open the [Invent Spell screen](help:invent-spell), titled with the work, the magus, the laboratory and the season. Despite its name it plans every kind of lab work.
 
 1. **Choose the work.** Choose the **Lab work** (see [Lab work](help:invent-spell-activity)). The screen shows only the fields that work needs.
-2. **Start from a spell.** To invent a spell, **Start from** picks any spell as the template, the magus's own known spells first, for a variant of one of theirs (see [Starting from a spell](help:invent-spell-start)). **New spell** clears the design.
-3. **Fill in the design.** Fill in the [design](help:invent-spell-design). Type the Name, Effect, Technique, Form, Requisites, Base level and Ritual, and choose the Range, Duration and Target. The level is worked out below them.
+2. **Start from a spell.** To invent a variant of a spell, choose it in **Start from** (see [Starting from a spell](help:invent-spell-start)).
+3. **Fill in the design.** Fill in the [design](help:invent-spell-design). The level is worked out below it.
 <!-- /tui -->
 <!-- gui -->
 **Plan** and **New Spell** open the lab work form in a window of its own (see [Invent Spell screen](help:invent-spell)), titled with the work, the magus, the laboratory and the season. It plans every kind of lab work.
 
 1. **Choose the work.** Choose the **Lab work** (see [Lab work](help:invent-spell-activity)). The form shows only the fields that work needs.
-2. **Start from a spell.** To invent a spell, **Start from** picks any spell as the template, the magus's own known spells first, for a variant of one of theirs (see [Starting from a spell](help:invent-spell-start)). **New Spell** asks for it first, or for "A new spell (a blank design)".
-3. **Fill in the design.** Fill in the [design](help:invent-spell-design). Type the Spell name, Effect, Technique, Form, Requisites, Base level and Ritual, and choose the Range, Duration and Target. The level is worked out in the line under the fields.
+2. **Start from a spell.** To invent a variant of a spell, choose it in **Start from** (see [Starting from a spell](help:invent-spell-start)).
+3. **Fill in the design.** Fill in the [design](help:invent-spell-design). The level is worked out in the line under the fields.
 <!-- /gui -->
 4. **Or invent from a Lab Text.** Choose **Invent from a Lab Text** and the **Lab Text**. Texts the magus can't read yet are marked, for example "(can't read: decode first)".
-5. **Choose whose vis.** For work that pays with vis, choose in **Vis** whether it's the laboratory's raw vis, the magus's own or the covenant's vis stores.
-6. **Split the pawns.** Enchanting and familiar work may pay each pawn in its Technique or its Form. Choose one Art and type how many pawns are of the other.
-7. **Tick the modifiers.** Under Lab work, tick what applies: **Similar spell known**, a **Magical Focus** or Magic Theory Specialty (shown only if the magus has one), **Days away** and **Other modifiers**. A magus with Potent Magic, Cyclic Magic, Environmental Magic Condition, Planetary or Celestial Magic, or Hermetic Alchemy sees its option too (see [Lab Total](help:invent-spell-total)).
+5. **Choose whose vis** in **Vis**, and for enchanting and familiar work, how many pawns are of each Art (see [Lab work](help:invent-spell-activity)).
+6. **Tick the modifiers.** Under Lab work, tick what applies: **Similar spell known**, a **Magical Focus** or Magic Theory Specialty (shown only if the magus has one), **Days away** and **Other modifiers**. A magus with Potent Magic, Cyclic Magic, Environmental Magic Condition, Planetary or Celestial Magic, or Hermetic Alchemy sees its option too (see [Lab Total](help:invent-spell-total)).
 
 ### The Lab Total and when it finishes
 <!-- help: guide-lab-planning-total -->
@@ -290,10 +285,9 @@ As you type, the [Lab Total](help:invent-spell-total) panel lists every term: Te
 As you type, the line under the fields gives the [Lab Total](help:invent-spell-total) and every term: Technique and Form (each the lower of the Art and its requisites), Intelligence, Magic Theory, the aura, the laboratory's General Quality, Specializations and Virtues, and the options above. After it, [When](help:invent-spell-when) says what the season achieves.
 <!-- /gui -->
 
-- **Inventing a spell**: the Lab Total must be above the spell's level. Each season adds the Lab Total less the level in points, and the spell is invented when the points reach its level. When shows the points so far and the season it's projected to be invented.
-- **Inventing from a Lab Text** takes one season, if the Lab Total is at least the spell's level. **More Lab Texts** adds further texts of the same Technique and Form to the season, if their levels together are within the lowest Lab Total.
-- **Learning spells from a teacher** takes one season, with a teacher who knows the spells and spends the season teaching. The spells may be of any Arts, within the teacher's Lab Totals and each within the student's own.
-- **Other work** says what this season produces, such as pawns extracted or the aging-roll modifier.
+- **Inventing a spell** is done when the season's points, the Lab Total less the level, reach its level (see [When](help:invent-spell-when)).
+- **Inventing from a Lab Text** takes one season, if the Lab Total is at least the spell's level. So does **learning spells from a teacher**. See [Lab work](help:invent-spell-activity) for **More Lab Texts** and the teacher's limits.
+- **A General spell's Lab Text** (Aegis of the Hearth, Wizard's Communion, the Wards) teaches the level the text records. Set its **Level** on the Lab Text, or the form says so and won't schedule it. When the season is applied, the magus gets a version of their own at that level, with the text named as its source, and their new Lab Text teaches that version (DE pp. 226, 313).
 
 <!-- tui -->
 To compare Lab Totals before choosing, press `2` for the [Lab Totals tab](help:tab-lab-totals). It shows the owner's total for every Technique and Form in this laboratory, the Base Lab Total they share, and what each activity adds.
@@ -305,17 +299,13 @@ To compare Lab Totals before choosing, choose [Lab Totals](help:tab-lab-totals) 
 ### Scheduling
 <!-- help: guide-lab-planning-schedule -->
 
-1. **Schedule it.** Choose **Schedule**. It refuses, and says why, if the work can't be done.
-2. **Check the seasons it planned.** For work that takes several seasons, such as inventing a spell, the app also plans each following season the work is projected to need, stopping at a season that already has a plan. A message names the last season planned.
+1. **Schedule it.** Choose **Schedule** (see [Scheduling](help:invent-spell-schedule)).
+2. **Check the seasons it planned.** For work that takes several seasons, a message names the last season planned.
 <!-- tui -->
 3. **See it on the list.** The Planning tab shows the work as one row spanning its seasons, with its progress, for example "8/15 points".
-
-**Reset** puts back the plan as it was when the screen opened, and **Cancel** leaves without changing anything.
 <!-- /tui -->
 <!-- gui -->
 3. **See it on the list.** The Planning list shows the work as one row spanning its seasons, with its progress, for example "8/15 points".
-
-**Cancel** leaves without changing anything.
 <!-- /gui -->
 
 When each season is advanced, Advance Season asks about [interruptions](help:advance-interrupted), such as days away or the season lost, and works the remaining seasons out again. A season is added when the work fell behind.
@@ -326,18 +316,18 @@ When each season is advanced, Advance Season asks about [interruptions](help:adv
 <!-- tui -->
 [Assistants](help:invent-spell-assistants) are named on the Invent Spell screen.
 
-1. **Name the helper.** Plan the magus's lab work, and choose the helper in **Assistant** (next to Notes). Only characters with The Gift and Magic Theory are offered.
-2. **Schedule.** Choose **Schedule**. The helper's season is planned as **Assist in a laboratory** with the magus, for each season of the work.
+1. **Name the helper.** Plan the magus's lab work, and choose the helper in **Assistant** (next to Notes).
+2. **Schedule.** Choose **Schedule**. The helper's season is planned as **Assist in a laboratory** with the magus.
 <!-- /tui -->
 <!-- gui -->
 [Assistants](help:invent-spell-assistants) are named in the lab work form.
 
-1. **Name the helper.** Plan the magus's lab work, and choose the helper in **Assistant**. Only characters with The Gift and Magic Theory are offered.
-2. **Schedule.** Choose **Schedule**. The helper's season is planned as **Assist in a laboratory** with the magus, for each season of the work.
+1. **Name the helper.** Plan the magus's lab work, and choose the helper in **Assistant**.
+2. **Schedule.** Choose **Schedule**. The helper's season is planned as **Assist in a laboratory** with the magus.
 <!-- /gui -->
-3. **Check the Lab Total.** The magus's Lab Total now has a line for the helper: their Intelligence plus Magic Theory, for as many helpers as the magus's Leadership allows (at least one). The helper gains 2 xp of Exposure in Magic Theory.
+3. **Check the Lab Total.** The magus's Lab Total now has a line for the helper. The helper gains 2 xp of Exposure in Magic Theory.
 
-A second helper is planned on their own sheet, in Plan Season, as **Assist in a laboratory** with the magus as **Teacher / master**. If the helper already has another plan for the season, Schedule refuses and says so.
+A second helper is planned on their own sheet, in Plan Season, as **Assist in a laboratory** with the magus as **Teacher / master**.
 
 ### Lab Texts
 <!-- help: guide-lab-planning-texts -->
@@ -363,11 +353,11 @@ A second helper is planned on their own sheet, in Plan Season, as **Assist in a 
 ### Experimenting
 <!-- help: guide-lab-planning-experiment -->
 
-Work that can be done [experimentally](help:invent-spell-experiment) shows an **Experiment** box, **Risk +** and an optional **Research goal**. Inventing from a Lab Text can't be done experimentally. A magus who is Averse to Risk can't experiment, and one who is Prone to Chance must.
+Work that can be done [experimentally](help:invent-spell-experiment) shows an **Experiment** box, **Risk +** and an optional **Research goal**. Inventing from a Lab Text can't be done experimentally.
 
-- **The die**: experimenting adds a simple die and the risk (0 to +3) to the Lab Total. The die is rolled when the season is advanced.
-- **A Lab Total too low without the die** can still be planned experimentally, and the plan says so. If the die doesn't lift it, the season goes ahead all the same: the Extraordinary Results chart is still rolled, any vis paid is lost, and the work makes no progress. A season the chart wastes (a Disaster or a Complete Failure) loses its vis too.
-- **The Extraordinary Results chart** is then rolled. Advance Season's [Experiment Results](help:advance-experiment-results) step asks whatever needs the storyguide's word. That's which of two rolls stands, what a side or modified effect is, what a special result becomes, and a Disaster of 5 or more.
+- **The die**: the risk runs from 0 to +3.
+- **A Lab Total too low without the die**: the plan says so. If the die doesn't lift it, the work makes no progress. A season the chart wastes (a Disaster or a Complete Failure) loses its vis too.
+- **The Extraordinary Results chart** is then rolled. Advance Season's [Experiment Results](help:advance-experiment-results) step asks whatever needs the storyguide's word.
 - **The rest** is applied by the app and noted in the Diary: Discovery xp, a Disaster's Warping, wounds and laboratory Flaws, a creation destroyed, and the effects the creation keeps (see [Living with an experiment](help:guide-lab-planning-living)).
 - **A Research goal** makes the experiment seek a Discovery (Definitive Edition, Chapter 8, Arcane Discovery). Houses of Hermes: True Lineages calls it original research. The risk goes on the chart roll, not the Lab Total, and is at most +1 for every 5 points of Magic Theory or part of 5 (DE p. 278). A Discovery toward the research gives no experience.
 - **The goal** is chosen from the magus's own goals not yet reached, so add it on their [Research](help:tab-research) first.
@@ -395,12 +385,12 @@ Ars Magica Fifth Edition: Covenants also adds the Safety's size to the risk modi
 
 An experiment's results stay with what it made, flaws and all (Ars Magica Definitive Edition, Chapter 8: Laboratory, Experimentation, p. 274).
 
-- **Side effects and modified effects** are kept as the creation's **experimental effects**. That's on an invented spell (and on anyone's copy learned from it or its Lab Text), on an instilled effect (and on the Lab Text written of it, which reproduces them), on a familiar's bond power or the binding itself, and on a Longevity Ritual. Each shows where the creation's details are shown, with the season it came from. A fatal flaw is marked.
-- **A side effect's description** can be left blank in [Experiment Results](help:advance-experiment-results) and filled in later. Edit a known spell (its Mastery form), an item's effect or a bond power and use **Experimental effects** to add, change or remove one. A new Range, Duration or Target given there changes the creation when the form is saved. The level never changes, and no requisite is added.
-- **A special result** becomes what the storyguide makes of it. A story event goes into the laboratory's and the covenant's Diaries as an open Story Event. A spell created as well is learned, with its Lab Text. Extra vis is paid from the season's vis.
+- **Side effects and modified effects** are kept as the creation's **experimental effects**. That's on an invented spell (and on anyone's copy learned from it or its Lab Text), on an instilled effect (and on the Lab Text written of it, which reproduces them), on a familiar's bond power or the binding itself, and on a Longevity Ritual. Each shows where the creation's details are shown, with the season it came from.
+- **A side effect's description** left blank in [Experiment Results](help:advance-experiment-results) is filled in later. Edit a known spell (its Mastery form), an item's effect or a bond power and use **Experimental effects** to add, change or remove one. A new Range, Duration or Target given there changes the creation when the form is saved.
+- **A special result** is applied as Experiment Results describes. Extra vis is paid from the season's vis.
 - **Investigating an item** by experiment: changes reach the power the storyguide names. A result that would destroy the creation destroys the item, unless one of its own effects protects it with a level above the Lab Total. A protected item also resists the side and modified effects that would harm it, but a side benefit or an increase still reaches it.
 
-**The app's assumptions.** The rules don't size a change of potency. The app takes one step of potency as 5 points of the Lab Total behind the creation, which is 1 point of a Longevity Ritual's modifier: a ritual reduced by a step protects one point less on every aging roll. Where nothing is worked out from the Lab Total, such as a spell's or an item's power, the change is only recorded and described for the storyguide.
+**The app's assumptions.** A change of potency is sized as [Experiment Results](help:advance-experiment-results) says.
 
 ### How to recreate a flawed creation
 <!-- help: guide-lab-planning-recreate -->
@@ -431,8 +421,7 @@ Nothing happens to the magus or the laboratory until the season is advanced with
 Nothing happens to the magus or the laboratory until the season is advanced with **Advance Season** (see [Advance Season](help:advance-season)). Then:
 <!-- /gui -->
 
-- A finished spell joins the magus's Known Spells, its Lab Text goes into the laboratory, and later seasons planned to continue it are removed.
-- An unfinished invention keeps its points and carries on into the next free season.
+- The work is applied as [Scheduling](help:invent-spell-schedule) says, and later seasons planned to continue a finished spell are removed.
 - Vis is paid or gained, a connection is fixed, a device is enchanted, and so on.
 <!-- tui -->
 - The magus gains 2 xp of Exposure in Magic Theory, and entries are written in the magus's Diary and the laboratory's [Diary tab](help:tab-lab-diary).
@@ -469,7 +458,7 @@ Nothing happens to the magus or the laboratory until the season is advanced with
 ### What the app does for you
 <!-- help: guide-lab-planning-app -->
 
-**The app works out** every Lab Total and its terms, the spell's level, the seasons the work needs and the plans for them, progress from season to season, whether each plan can be done, the experiment's results, and what the season does to the magus and the laboratory.
+**The app works out** everything above but what you type.
 
 **You type** the laboratory's owner, the work and its design or choices, any die rolled at the table, and the assistants' plans on their own sheets.
 

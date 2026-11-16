@@ -26,6 +26,8 @@ On GNOME the desktop app draws its windows through X11. If you'd rather use Wayl
 ### A newer version
 <!-- help: guide-download-update -->
 
+The app tells you when a newer version is out: a notice on the title page, with **Check now** to ask at once and **Skip this version** to set one aside (see [How to check for an App update](help:guide-app-update)). Getting it is done by hand, as before:
+
 1. **Unzip the new one.** Download the newer zip and unzip it beside the old folder.
 2. **Start the new one.** Your sagas and settings carry over, since they aren't in the app's folder.
 3. **Delete the old folder** once the new one works.
@@ -123,15 +125,14 @@ You can come back to these settings at any time.
 <!-- gui -->
 1. **Choose the kind of character.** On the covenant's page, open its **People** chapter. Each group ends in a New card, **New Magus**, **New Companion** or **New Grog**. Click the one you want. The new character starts in the covenant on show.
 <!-- /gui -->
-2. **Fill in the form.** Create a New Character asks for a Name, a Type (Magus, Companion, Mythic Companion or Grog), a Template and the Covenant. See [Characters group](help:character-group).
-3. **Choose a template, or None.** Leave Template at None to build the character step by step, or choose one of the book's ready-to-play characters. The line above Create describes the one you chose.
+2. **Fill in the form.** Give a Name, a Type and the Covenant, and a Template, or None to build the character step by step (see [New Character](help:character-group-new)).
 <!-- tui -->
-4. **Create.** Choose Create. The character's [sheet](help:character) opens, and their node appears under Characters.
-5. **Add a laboratory.** Choose the covenant or its Laboratories group, press `n`, then `l` for New Laboratory. The form asks for a Name, a Size, the Covenant, and whether it's **One of the covenant's starting labs**, ticked for you while the covenant is In Creation. See [Laboratories group](help:laboratory-group).
+3. **Create.** Choose Create. The character's [sheet](help:character) opens, and their node appears under Characters.
+4. **Add a laboratory.** Choose the covenant or its Laboratories group, press `n`, then `l` for New Laboratory. The form asks for a Name, a Size, the Covenant, and whether it's **One of the covenant's starting labs**, ticked for you while the covenant is In Creation. See [Laboratories group](help:laboratory-group).
 <!-- /tui -->
 <!-- gui -->
-4. **Create.** Choose Create. A character built step by step opens on their Creation Worksheet, and one made from a template opens on their [sheet](help:character). Either way, their card joins the covenant's People.
-5. **Add a laboratory.** Open the covenant's **Laboratories** chapter and click the **New Laboratory** card. The form asks for a Name, a Size, the Covenant, and whether it's **One of the covenant's starting labs**, ticked for you while the covenant is In Creation. See [Laboratories group](help:laboratory-group).
+3. **Create.** Choose Create. A character built step by step opens on their Creation Worksheet, and one made from a template opens on their [sheet](help:character). Either way, their card joins the covenant's People.
+4. **Add a laboratory.** Open the covenant's **Laboratories** chapter and click the **New Laboratory** card. The form asks for a Name, a Size, the Covenant, and whether it's **One of the covenant's starting labs**, ticked for you while the covenant is In Creation. See [Laboratories group](help:laboratory-group).
 <!-- /gui -->
 
 ### Give a magus their laboratory
@@ -158,17 +159,17 @@ A laboratory has only one owner at a time. Giving a laboratory to a magus who al
 2. **Sections.** A sheet is made of sections. Tab and Shift+Tab move from one section to the next, and the arrow keys move within a list. `c` collapses or expands the focused section.
 3. **Tabs.** The number keys open a sheet's tabs, and each tab shows its number.
 4. **The keys that act.** `a` adds to the focused list, `e` edits the highlighted row or the focused section, and `d` deletes the highlighted row after asking first. `m` More holds the rarer actions for where you are, and `n` New makes a covenant, character, laboratory or familiar bond. See [Keys](help:keys) and [What the keys act on](help:workspace-keys).
-5. **The footer.** Its left end shows the keys that work where focus is, with labels that say what they'll do. Its right end shows the keys that always work.
-6. **Where you are.** The row above the footer names the tree node, the tab, the section and the chosen row, separated by "›".
-7. **The details panel.** A list that holds records has a panel below it that shows the chosen row in full, with the rules text of a Virtue, Flaw or spell. See [Where you are, the details panel and the theme](help:workspace-status).
+5. **The footer.** Its left end shows the keys that work where focus is, labelled with what they'll do, and its right end the keys that always work.
+6. **Where you are.** The row above the footer names where focus is.
+7. **The details panel.** A list that holds records shows the chosen row in full below it, with the rules text of a Virtue, Flaw or spell. See [Where you are, the details panel and the theme](help:workspace-status).
 <!-- /tui -->
 <!-- gui -->
-1. **The trail.** The top left of the window names the pages above the one on show, such as "Sagas › Matrix › Keep › Leandro". Click one to go back to it. A card opens the page of what it shows, such as a covenant or a person. See [The trail and the pages](help:workspace-tree).
+1. **The trail.** The top left of the window names the pages above the one on show. Click one to go back to it, or a card to open the page of what it shows. See [The trail and the pages](help:workspace-tree).
 2. **Chapters.** A page is a book of chapters, listed in the rail on its left. Click one to show it.
-3. **The buttons that act.** A section's **Add** adds to it, and **Edit** and **Delete** act on the row or card last clicked in it. They stay greyed out until there is one, and Delete asks first. Forms open in a window of their own over the page. See [What the buttons act on](help:workspace-keys).
+3. **The buttons that act.** A section's **Add** adds to it, and **Edit** and **Delete** act on the row or card last clicked in it. Forms open in a window of their own. See [What the buttons act on](help:workspace-keys).
 4. **Making and managing.** A **New** card at the end of a page's cards makes one more, such as New Covenant or New Laboratory. The rarer actions are buttons in the chapter or section they act on. A record's own **Manage** chapter holds actions such as Export, Print to PDF and Delete.
 5. **The top bar.** **Find** opens any record of the saga by its name, and **Help**, beside it, opens help on the page on show. Past a thin rule, the **gear** opens the Settings window, to choose the theme, turn the sounds on or off, and reduce motion (see [How to choose a theme](help:guide-themes)).
-6. **Advance Season.** At the foot of the chapters, a card shows the present season's medallion, name and year. The whole card is the **Advance Season** button. Click it, or press Space or Enter on it, to play the season out after asking first. It isn't there on a Creation Worksheet, a Fight or a Siege.
+6. **Advance Season.** The card at the foot of the chapters, with the present season's medallion, is the **Advance Season** button. Click it, or press Space or Enter on it (see [Advance Season](help:advance-season)).
 7. **The Inspector.** The right of a page shows whatever you last clicked in full, with the rules text of a Virtue, Flaw or spell. See [The Inspector and the theme](help:workspace-status).
 8. **Your troupe, close at hand.** Fill in each player character's **Player** in their Biographical Detail, in their Description chapter. They then gather on the saga's first chapter, **The Troupe**, a click from their sheets. See [The Troupe](help:saga-troupe).
 9. **Bookmarks.** For any other page you keep going back to, such as a rival magus, a Tribunal or a neighbour, open it and click the ribbon at the right of its header. It joins The Troupe too.
@@ -208,6 +209,7 @@ The desktop's help and its guides are also on the [Armarius website](https://apo
 <!-- gui -->
 - [How to add a map and place its records](help:guide-atlas): the saga's Atlas.
 - [How to fit the window to your screen](help:guide-window-size): high-resolution screens and display scale.
+- [Jump to your sheet and back](help:guide-my-sheet): your character's sheet from any page while you are Playing.
 <!-- /gui -->
 
 **See also:** [Saga picker](help:saga-picker), [The workspace](help:workspace), [The saga](help:saga), [Keys](help:keys)
@@ -254,20 +256,9 @@ You can move freely between records and steps. Nothing is locked in by the order
 <!-- gui -->
 1. **Choose New Character.** On the covenant's page, open its **People** chapter and click the New card at the end of a group, **New Magus**, **New Companion** or **New Grog**.
 <!-- /gui -->
-2. **Give a Name and a Type.** For a Magus, Companion or Grog the form offers a **Template**, one of the book's ready-to-play characters, such as a magus of each House or The Knight. A Mythic Companion's templates are its kinds (see below).
-3. **Choose a template, or None.** Leave Template at None to build the character yourself, and the line above Create says the character starts In Creation. Or choose a template, and the line describes it.
-4. **Choose Create.** If the template leaves a name to you, such as an Area Lore's area, the app asks for it first. Cancelling there cancels the new character.
-
-Some templates ask for their choices after Create, then make a character In Creation for you to finish on its worksheet:
-
-- **A Grogs template**, marked "(Grogs)" on a grog's list while that book is in play. It asks for its version and age, Social Status, the book's Virtues and Flaws (ticked), its other suggestions, and up to two more Virtues and three more Flaws. Next refuses anything a grog can't take. Name what the Ability list leaves blank and choose Use. See [A Grogs template](help:grog-templates).
-- **An animal template**, marked "(Grogs, an animal)", makes a Dog, a Horse or a Hawk. See [Animal grogs](help:animal-grogs).
-- **A quick recipe**, marked "(DE quick)", for a grog, a Martial, Learned, Social or Magical companion, or a magus. It asks for the recipe's choices, such as what its Puissant and Affinity name, the Flaw and the Social Status. You finish Characteristics and Abilities on the worksheet. See [Quick and Easy Virtues and Flaws](help:quick-virtues-flaws).
-- **A Mythic Companion**, chosen as the Mythic Companion type and then its kind, such as Faerie Doctor (DE) or Zahid (RoP:D). It asks what the book lets you choose, any Flaw you substitute, Virtues and Flaws of your own to balance it, and whether to put the book's minimum Abilities on the worksheet. See [A Mythic Companion template](help:mythic-companion-templates).
-- **A supplement's character**, marked with its book and listed by role, then name, such as Guild Master Clothier - Doolin (C&G) on a companion's list or Anchoress (TC) on a grog's. It asks for its choices as a Grogs template does. See [A supplement's character](help:companion-sample-templates).
-- **A Grogs template as a companion**, marked "(Grogs, as a companion)" on a companion's list. It also needs a Story Flaw. See [A Grogs template as a companion](help:grog-template-companion).
-
-See [New Character](help:character-group-new).
+2. **Give a Name and a Type.** A Mythic Companion's templates are its kinds, such as Faerie Doctor (DE) or Zahid (RoP:D).
+3. **Choose a template, or None.** Leave Template at None to build the character yourself, and the line above Create says the character starts In Creation. See [New Character](help:character-group-new) for the templates.
+4. **Choose Create.** Some templates ask for their choices next, then make a character In Creation for you to finish on its worksheet: [A Grogs template](help:grog-templates), [Animal grogs](help:animal-grogs), [Quick and Easy Virtues and Flaws](help:quick-virtues-flaws), [A Mythic Companion template](help:mythic-companion-templates), [A supplement's character](help:companion-sample-templates) and [A Grogs template as a companion](help:grog-template-companion).
 
 ### Open the worksheet
 <!-- help: guide-creation-open; tui -->
@@ -276,8 +267,7 @@ A new covenant, laboratory or character opens its worksheet by itself. To open i
 
 1. **Focus the record.** Choose the record in the tree and press Enter to focus its top panel.
 2. **Open the worksheet.** Choose the **Creation Worksheet** button, or press `m` More and choose Creation Worksheet.
-3. **Find your way in it.** The [Creation Worksheet](help:creation-worksheet) fills the screen. The left column lists the steps. The right shows the chosen step's budget, its list (`a` adds, `e` changes, `d` takes back), its checks and its buttons.
-4. **Move around.** Up and Down choose a step, Tab moves to the step's list and then its buttons, and Esc closes the worksheet.
+3. **Find your way in it.** The [Creation Worksheet](help:creation-worksheet) fills the screen, with the steps on the left (see [Steps and their marks](help:creation-worksheet-steps)). In a step's list, `a` adds, `e` changes and `d` takes back.
 
 The keys and buttons open the sheet's own dialogs and change the real record, so everything is saved as you go. When a dialog closes, the worksheet works out the budget and checks again.
 
@@ -377,10 +367,10 @@ Once xp is spent at a step, it's a row of the step's list, showing the pool xp s
 <!-- help: guide-creation-marks -->
 
 <!-- tui -->
-Each step in the left column is marked ✔ when every check passes, ✘ when a rule the book says must be followed is broken (a warning), ☞ when something the book says should be done isn't (advice), and ○ when the step has no checks. Below the list the app counts the steps that pass and sums up the checks, for example "2 warnings, 1 advice". See [Steps and their marks](help:creation-worksheet-steps).
+Each step in the left column is marked ✔, ✘ (a warning), ☞ (advice) or ○ by how its checks stand, and below the list the app sums them up, for example "2 warnings, 1 advice". See [Steps and their marks](help:creation-worksheet-steps).
 <!-- /tui -->
 <!-- gui -->
-Each step in the rail is marked ✔ when every check passes, ✘ when a rule the book says must be followed is broken (a warning), ☞ when something the book says should be done isn't (advice), and ○ when the step has no checks. The worksheet's header counts the steps that pass and sums up the checks, for example "2 warnings, 1 advice". See [Steps and their marks](help:creation-worksheet-steps).
+Each step in the rail is marked ✔, ✘ (a warning), ☞ (advice) or ○ by how its checks stand, and the worksheet's header sums them up, for example "2 warnings, 1 advice". See [Steps and their marks](help:creation-worksheet-steps).
 <!-- /gui -->
 
 Checks never stop an edit. They only matter when you move the record to In Play.
@@ -388,7 +378,7 @@ Checks never stop an edit. They only matter when you move the record to In Play.
 ### Move to In Play
 <!-- help: guide-creation-play -->
 
-1. **Choose Move to In Play.** It's on the worksheet's last step. The confirmation lists every check that doesn't pass, and for a covenant how many Build Points are left, which become Mythic Pounds in its Wealth, 10 for each. Choose Move to In Play to go ahead.
+1. **Choose Move to In Play.** It's on the worksheet's last step. The confirmation lists every check that doesn't pass, and for a covenant the Build Points left, which become Mythic Pounds. Choose Move to In Play to go ahead.
 <!-- tui -->
 2. **Or use the mode button.** From the sheet, choose the mode button on the top panel, or More's **In Creation / In Play**.
 <!-- /tui -->

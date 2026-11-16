@@ -30,6 +30,12 @@ parts that face other people are the ones that matter most:
   [docs/threat-model-browser-and-ssh-hosting.md](docs/threat-model-browser-and-ssh-hosting.md).
 - **Files coming in**: saga files, exports and content packs from someone
   else, which are shape-checked as they load.
+- **The App update check**: the desktop and terminal apps ask GitHub's API,
+  read-only, for the latest Release (at most once a day, or on Check now),
+  sending only the app's version; the release notes it reads are shown as
+  plain text. It downloads and installs nothing. `ARMARIUS_UPDATES=off`
+  turns it off. A threat model will come with downloading and installing
+  updates.
 
 A problem that needs an attacker who already controls your computer or
 your account is out of scope.

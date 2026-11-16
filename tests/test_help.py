@@ -526,7 +526,7 @@ async def test_go_there_opens_the_topic_on_the_sheet_or_says_where_it_is():
         await pilot.pause()
         assert app.screen is help_screen
         assert [n.message for n in app._notifications] == [
-            "The Lab Totals tab isn't on what Help was opened from. "
+            "The Lab Totals isn't on what Help was opened from. "
             "It is on the Laboratory sheet."
         ]
 
@@ -638,6 +638,7 @@ GUIDES = [
     "guide-tutorials",
     "guide-sessions",
     "guide-update",
+    "guide-app-update",
     "guide-save-folder",
     "guide-restore-backup",
     "guide-player-goals",
@@ -677,7 +678,7 @@ def test_whats_new_is_the_changelog_by_feature():
         headings = headings[1:]
     assert headings[0] == "## Latest"
     assert headings[-2:] == ["## Chronicle", "## The names and numbers"]
-    assert "## Peregrinatio" in headings
+    assert "## Sourcebook packs (Peregrinatio)" in headings
     assert f"- **{__version__}** · " in text
 
 

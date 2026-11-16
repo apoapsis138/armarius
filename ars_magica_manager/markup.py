@@ -77,15 +77,15 @@ def escape(text: str) -> str:
     return text.replace("[", "\\[")
 
 
-#: One markup tag, opening or closing ([b], [/], [$text-error]), not an
-#: escaped bracket.
-_TAG = re.compile(r"(?<!\\)\[/?[^\[\]\n]*\]")
+#: One markup tag, opening or closing ([b], [/], [i $label]), not an
+#: escaped bracket: whether it closes, and what it sets.
+TAG = re.compile(r"(?<!\\)\[(/?)([^\[\]\n]*)\]")
 
 
 def plain(text: str) -> str:
-    """`text` without its markup, its escaped brackets restored: what a
-    plain terminal (the admin word) prints."""
-    return _TAG.sub("", text).replace("\\[", "[")
+    """`text` without its markup, its escaped brackets restored: for a list
+    row, paper, or what a plain terminal (the admin word) prints."""
+    return TAG.sub("", text).replace("\\[", "[")
 
 
 _EMPHASIS_OPEN = {"*": "[i]", "**": "[b]", "~~": "[s]"}

@@ -76,8 +76,135 @@ FILE_TITLES = {
     "bestiary.md": "The Bestiary",
     "packs.md": "Sourcebook packs",
 }
-#: The guides the menu lists first; the rest follow in the help's order.
-FIRST_GUIDES = ("guide-getting-started",)
+#: The how-to guides in the menu, by what you're doing; a guide no group
+#: names goes under More guides, at the end.
+GUIDE_GROUPS: tuple[tuple[str, tuple[str, ...]], ...] = (
+    (
+        "Start here",
+        (
+            "guide-getting-started",
+            "guide-download",
+            "guide-update",
+            "guide-app-update",
+            "guide-tutorials",
+            "guide-find-record",
+            "guide-find-action",
+            "guide-window-size",
+            "guide-themes",
+            "guide-formatting",
+        ),
+    ),
+    (
+        "Characters and magic",
+        (
+            "guide-creation",
+            "guide-advancement",
+            "guide-player-goals",
+            "guide-familiars",
+            "guide-initiation",
+            "guide-hedge-magic",
+            "guide-galdor",
+            "guide-religion",
+        ),
+    ),
+    (
+        "Seasons and the laboratory",
+        (
+            "guide-seasons",
+            "guide-lab-planning",
+            "guide-lab-magic-item",
+            "guide-staged-project",
+            "guide-needs-you",
+        ),
+    ),
+    (
+        "The covenant",
+        (
+            "guide-covenant",
+            "guide-charter",
+            "guide-mobile-covenant",
+            "guide-guest-stay",
+            "guide-store-find",
+        ),
+    ),
+    (
+        "The saga's world",
+        (
+            "guide-book-packs",
+            "guide-atlas",
+            "guide-bestiary",
+            "guide-faction",
+            "guide-threat-clock",
+            "guide-story-hook",
+            "guide-tomb",
+            "guide-mythic-locations",
+            "guide-homebrew-source",
+            "guide-reveal",
+        ),
+    ),
+    (
+        "Tribunals and conflict",
+        ("guide-tribunal", "guide-battle", "guide-fights", "guide-sieges"),
+    ),
+    (
+        "Playing together",
+        (
+            "guide-sessions",
+            "guide-my-sheet",
+            "guide-troupe-storyguides",
+            "guide-join-saga",
+            "guide-invite-player",
+            "guide-passcode",
+            "guide-hosting",
+            "guide-hosting-local",
+            "guide-hosting-internet",
+            "guide-self-hosting",
+        ),
+    ),
+    (
+        "Your data",
+        ("guide-save-folder", "guide-restore-backup", "guide-import-export"),
+    ),
+)
+#: A plain gloss after a screen whose name doesn't say what it holds, by
+#: help id: the menu shows "The Armarium: the saga's books".
+MENU_GLOSSES = {
+    "armarium": "the saga's books",
+    "custodia": "the saga's enchanted devices",
+    "saga-content": "books, catalogs, house rules and spells in play",
+    "saga-management": "import, export and hosting",
+    "tab-secrets": "what only the storyguide knows",
+    "section-attention": "what's waiting on the storyguide",
+    "section-ahead": "the seasons to come",
+    "section-undertakings": "travel and projects",
+    "section-world-turns": "each year's changes",
+    "section-seasons-recorded": "seasons played",
+    "world-turns": "the yearly step",
+    "take-up-tale": "pick a story up again",
+    "close-chapter": "what a story chapter gave",
+    "grow-story": "turn a story into a threat",
+    "threat-delay": "move a threat's timing",
+    "region": "the world beyond the covenants",
+    "saga-atlas": "maps",
+    "bestiary": "creatures",
+    "arms": "coats of arms",
+    "tab-cov-sketch": "a covenant drawn in outline",
+    "tab-deeds": "actions the books bring",
+    "interests": "which deeds a character pursues",
+    "tab-agents": "people the character controls",
+    "tab-criamon": "a Criamon's path",
+    "tab-trib-code": "local rulings",
+    "tab-trib-tokens": "Theban offices and tokens",
+    "tab-trib-ostracism": "the Alps' ostracised magi",
+    "tab-trib-privileges": "Transylvania's legal covenants",
+    "tab-trib-tenure": "Normandy's vis holdings",
+    "tab-trib-gilds": "the Rhine's factions",
+}
+#: The prefix a pack's assumptions page opens its title with; the menu
+#: names the pack by its book alone.
+_PACK_PREFIX = "Assumptions made for "
+#: A menu name in place of a page's title, by help id.
+MENU_TITLES = {"pack-overlay-through-the-aegis": "Through the Aegis"}
 #: Files whose pages the menu lists elsewhere (the guides, Keys).
 UNLISTED_FILES = ("reference.md",)
 #: The generated reference pages, by help id.
@@ -207,6 +334,15 @@ def export(book: HelpBook) -> list[SitePage]:
 # -- the menu -----------------------------------------------------------------
 
 
+def menu_title(page: Page) -> str:
+    """A page's name in the menu: a pack by its book's name, and a screen
+    whose name doesn't say what it holds with a plain gloss after it."""
+    title = MENU_TITLES.get(page.id, page.title)
+    title = title.removeprefix(_PACK_PREFIX)
+    gloss = MENU_GLOSSES.get(page.id)
+    return f"{title}: {gloss}" if gloss else title
+
+
 def _entry(book: HelpBook, paths: dict[str, str], page: Page, indent: str) -> str:
     """A page's line in the menu, with the pages under it when it has
     any (its own page then opens the section)."""
@@ -215,12 +351,12 @@ def _entry(book: HelpBook, paths: dict[str, str], page: Page, indent: str) -> st
         for p in book.pages.values()
         if p is not page and parent_of(book, p) == page.id
     ]
-    title = json.dumps(page.title)
+    title = json.dumps(menu_title(page))
     if not children:
         return f"{indent}- {title}: {paths[page.id]}"
     lines = [f"{indent}- {title}:", f"{indent}  - {paths[page.id]}"]
     lines += [
-        f"{indent}  - {json.dumps(child.title)}: {paths[child.id]}"
+        f"{indent}  - {json.dumps(menu_title(child))}: {paths[child.id]}"
         for child in children
     ]
     return "\n".join(lines)
@@ -242,9 +378,19 @@ def nav_yaml(book: HelpBook) -> str:
         "  - FAQ and troubleshooting: faq.md",
         "  - How-to guides:",
     ]
-    guides = [p for p in tops if help_text.is_guide(p.id)]
-    guides.sort(key=lambda p: p.id not in FIRST_GUIDES)
-    lines += [_entry(book, paths, p, "    ") for p in guides]
+    guides = {p.id: p for p in tops if help_text.is_guide(p.id)}
+    grouped: set[str] = set()
+    for title, ids in GUIDE_GROUPS:
+        shown = [guides[i] for i in ids if i in guides]
+        if not shown:
+            continue
+        lines.append(f"    - {json.dumps(title)}:")
+        lines += [_entry(book, paths, p, "      ") for p in shown]
+        grouped.update(p.id for p in shown)
+    rest = [p for i, p in guides.items() if i not in grouped]
+    if rest:
+        lines.append('    - "More guides":')
+        lines += [_entry(book, paths, p, "      ") for p in rest]
     lines.append("  - Help:")
     files = list(FILE_TITLES) + sorted(
         {p.file for p in tops} - set(FILE_TITLES) - set(UNLISTED_FILES)

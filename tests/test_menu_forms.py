@@ -78,6 +78,7 @@ def test_each_page_offers_what_applies_there():
         # Join a tradition: the saga offers every tradition of its books.
         "Traditions",
         "Export",
+        "Export as Markdown",
         "Interests",
         "Update from a File",
         "In Creation / In Play",
@@ -110,6 +111,7 @@ def test_each_page_offers_what_applies_there():
         "Import",
         "Set Up Research Library",
         "Export",
+        "Export as Markdown",
         "Interests",
         "Update from a File",
         "In Creation / In Play",
@@ -124,7 +126,7 @@ def test_each_page_offers_what_applies_there():
     ]
 
     familiar = _page(_saga_with_familiar(), NodeKind.FAMILIAR, familiar_id="fam1")
-    assert menu_forms.more_items(familiar) == []
+    assert _labels(menu_forms.more_items(familiar)) == ["Export as Markdown"]
     assert menu_forms.new_items(familiar) == []
     deleted = menu_forms.deletes(familiar)
     assert deleted is not None and deleted.name == "Ashwing"

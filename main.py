@@ -11,24 +11,32 @@ from collections.abc import Callable
 from ars_magica_manager import launch, paths
 
 
-def main() -> None:
-    # The data folder is settled first: the default folder takes the app's
-    # new name, and if the folder can't be used, another is, and the app
-    # says why. The app then keeps to that folder until another is chosen.
-    renamed = paths.move_old_default_folder()
+def main(*, by_word: bool = False) -> None:
+    """The terminal app. `by_word`: started with launch's `play` word, as
+    a host starts a player's copy, which never checks for App updates."""
+    # The data folder is settled first: an older version's default folder
+    # is kept as the chosen one, and if the folder can't be used, another
+    # is, and the app says why. The app then keeps to that folder until
+    # another is chosen.
+    paths.keep_old_default_folder()
     problem = paths.settle_data_dir()
     paths.use_data_dir(paths.data_dir())
-    from ars_magica_manager import hosting
+    from ars_magica_manager import hosting, updates
     from ars_magica_manager.tui.app import ArsMagicaManagerApp
 
     app = ArsMagicaManagerApp()
     # The storyguide's own window opens on the title page; a player's copy
     # of a hosted saga goes straight to the sagas, to sign in.
     app.show_title = not hosting.transport()
+    # Only a terminal app someone started themselves looks for App
+    # updates: never a copy a host runs for a player.
+    app.update_copy = updates.this_copy(
+        by_word=by_word, hosted=hosting.is_hosted_copy()
+    )
     # Saves made by older versions move from the repo's data/ folder to the
     # user's data folder, once.
     notes = [problem] if problem else paths.move_legacy_data()
-    app.startup_notes = tuple(([renamed] if renamed else []) + notes)
+    app.startup_notes = tuple(notes)
     app.run()
 
 
@@ -48,7 +56,7 @@ def _seats(argv: list[str]) -> None:
 
 
 def _play(argv: list[str]) -> None:
-    main()
+    main(by_word=True)
 
 
 def _admin(argv: list[str]) -> None:

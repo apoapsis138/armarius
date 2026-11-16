@@ -72,6 +72,7 @@ from .menus import Placer
 from .saga_settings import SettingsChapter
 from .style.ornaments import FleuronButton, ShortRule
 from .themes import Palette
+from .troupe_print import print_troupe
 from .widgets import (
     CARDS_ACROSS,
     Card,
@@ -1122,16 +1123,37 @@ def _stewards_part(saga: Saga, p: Palette) -> list[QWidget]:
     return [chapter_title(f"Stewards ({count})", p), *rows]
 
 
+def _print_troupe_line(
+    saga: Saga, p: Palette, run: Callable[[Command], None]
+) -> QWidget:
+    """Print the Troupe, at the left of a line of its own."""
+    line = QWidget()
+    row = QHBoxLayout(line)
+    row.setContentsMargins(0, 0, 0, 0)
+    row.addWidget(
+        edit_button(
+            "Print the Troupe",
+            p,
+            lambda: run(print_troupe(saga)),
+            menu_icons.get("print", "export"),
+        )
+    )
+    row.addStretch(1)
+    return line
+
+
 def troupe_chapter(
     saga: Saga,
     p: Palette,
     opens: dict[str, Callable[[Any], None]],
     new: Callable[[str], QWidget | None] = lambda _spot: None,
+    run: Callable[[Command], None] | None = None,
 ) -> QWidget:
     """The Troupe: the player characters by covenant, the covenants the
     troupe plays, then whatever else the reader has bookmarked, by kind.
     `opens` opens a record of each kind (troupe.KIND_TITLES); `new` is the
-    New card at a spot, if any (a player's New Character)."""
+    New card at a spot, if any (a player's New Character); with `run`,
+    Print the Troupe under the player characters' heading."""
     covenants = {f.id: f for f in ov.covenant_cards(saga)}
     # How each kind of record is drawn as a card.
     cards: dict[str, Callable[[Any], QWidget]] = {
@@ -1191,6 +1213,8 @@ def troupe_chapter(
         )
     heading = "Player Characters" if me is None else "The Troupe's Characters"
     parts.append(chapter_title(f"{heading} ({played})", p))
+    if groups and run is not None:
+        parts.append(_print_troupe_line(saga, p, run))
     for covenant, members in groups:
         if len(groups) > 1:
             parts.append(
@@ -1291,7 +1315,7 @@ class SagaPage(QWidget):
             "creature": open_creature,
         }
         self.codex.add(
-            "The Troupe", "troupe", troupe_chapter(saga, p, opens, self._new)
+            "The Troupe", "troupe", troupe_chapter(saga, p, opens, self._new, run)
         )
         self.codex.add("The Covenants", "covenant", self._covenants())
         # The Region and Compendium are built when first opened: a

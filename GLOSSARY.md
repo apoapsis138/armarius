@@ -524,6 +524,12 @@ _Avoid_: TUI (in the help), console app
 The front-end drawn as a book, one page at a time.
 _Avoid_: GUI (in the help), window app
 
+**Save folder**:
+The folder on this computer holding a user's sagas, their backups, exports,
+portraits, maps and settings: by default the app data folder, or one
+chosen in the app or by ARMARIUS_DATA.
+_Avoid_: Data folder (the repo's data/ catalogs)
+
 **More**:
 The menu of a sheet's rarer actions.
 _Avoid_: Actions menu, overflow
@@ -553,6 +559,33 @@ _Avoid_: House skin, House palette
 The window the settings gear opens, holding the theme and the app's other
 settings.
 _Avoid_: Preferences, options, settings menu
+
+**Trail**:
+The row of crumbs across the top of the desktop app, from Sagas down to the
+page on show; each crumb opens its page again.
+_Avoid_: breadcrumbs, path
+
+**My sheet**:
+The sheet of a character you play, one click or key away from any page
+while you are Playing.
+_Avoid_: home, my character page
+
+**App update**:
+A Release of Armarius newer than the one running, with a Build for this
+platform. A security App update is one whose changelog has a bullet marked
+Security:.
+_Avoid_: a bare "Update" (taken by Yearly update and Update from a File),
+patch, upgrade, new version
+
+**App update notice**:
+How the app tells you an App update is waiting.
+_Avoid_: popup, alert, nag
+
+**Version mismatch**:
+Your app's version differs from your host's. A major one (the first number
+differs) stops you joining; a minor one lets you join, though the two
+versions haven't been tested together.
+_Avoid_: incompatible, out of date
 
 ### Building the app
 
@@ -770,6 +803,12 @@ Auram, Corpus, Herbam, Ignem, Imaginem, Mentem, Terram, Vim.
 **Spell**:
 A single working of magic; a Hermetic spell has a Technique, a Form and a
 level. (DE pp. 6, 213)
+
+**General spell**:
+A spell printed with no fixed level (Gen), which may be learned at any level:
+the higher, the stronger. A magus knows it at the level of the version he
+invented or learned, and needs a new version to go higher. (DE p. 313)
+_Avoid_: Gen-level spell, levelless spell
 
 **Spell guideline**:
 The base level the books give for one kind of effect in a Technique and

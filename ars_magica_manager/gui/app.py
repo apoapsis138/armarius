@@ -34,7 +34,7 @@ def main() -> int:
     from .. import crash_log, paths
 
     # As main.py: the data folder is settled, then kept to.
-    renamed = paths.move_old_default_folder()
+    paths.keep_old_default_folder()
     problem = paths.settle_data_dir()
     paths.use_data_dir(paths.data_dir())
     crash_log.start()
@@ -57,8 +57,11 @@ def main() -> int:
     pictures.register_fonts()
     window = MainWindow()
     window.show_title()
-    if problem or renamed:
-        window.statusBar().showMessage(problem or renamed or "")
+    if problem:
+        window.statusBar().showMessage(problem)
     fit_to_screen(window, 1400, 900)
     window.show()
+    # Once the window is up: a thread of its own asks GitHub, if a day has
+    # passed since it last did (updates.py).
+    window.update_notices.check_at_start()
     return app.exec()

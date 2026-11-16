@@ -15,6 +15,7 @@ from ars_magica_manager import (
     paths,
     seat,
     storage,
+    updates,
     viewing,
 )
 
@@ -22,6 +23,9 @@ from ars_magica_manager import (
 os.environ["ARMARIUS_SOUNDS"] = "off"
 # ...and still: every movement ends at once (gui/motion.py).
 os.environ["ARMARIUS_MOTION"] = "off"
+# ...and never asks GitHub for an App update (updates.py); a test of the
+# check passes its own fetch.
+os.environ["ARMARIUS_UPDATES"] = "off"
 
 
 def pytest_addoption(parser):
@@ -132,6 +136,17 @@ class _MemoryKeyring(keyring.backend.KeyringBackend):
 
 
 @pytest.fixture(autouse=True)
+def github_never_asked(monkeypatch):
+    """No test reaches GitHub, even one that turns the App update check on:
+    the check's own request fails as if offline."""
+
+    def offline(url, headers, timeout):
+        raise OSError("tests never reach GitHub")
+
+    monkeypatch.setattr(updates, "_fetch", offline)
+
+
+@pytest.fixture(autouse=True)
 def memory_keychain():
     """Each test starts with an empty keychain of its own."""
     keyring.set_keyring(_MemoryKeyring())
@@ -184,7 +199,7 @@ def isolated_location_file(tmp_path, monkeypatch):
         paths, "OLD_LOCATION_FILE", tmp_path / "old_config" / "location.json"
     )
     monkeypatch.setattr(paths, "default_data_dir", lambda: tmp_path / "data")
-    monkeypatch.setattr(paths, "old_default_data_dir", lambda: tmp_path / "old_data")
+    monkeypatch.setattr(paths, "old_default_folders", list)
     monkeypatch.setattr(paths, "_fallback", None)
     monkeypatch.delenv(paths.ENV_VAR, raising=False)
     monkeypatch.delenv(paths.OLD_ENV_VAR, raising=False)

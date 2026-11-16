@@ -43,6 +43,7 @@ from .style.ornaments import (
 )
 from .style.paper import Paper
 from .themes import Palette, wash_style
+from .updates import UpdateLine, UpdateNotices
 from .widgets import serif, text
 
 #: How long the page takes to fade in, in milliseconds.
@@ -173,7 +174,12 @@ class TitleScreen(Paper):
     opens onto Tutorials and General Help)."""
 
     def __init__(
-        self, page: tp.TitlePage, p: Palette, choose: Callable[[str], None]
+        self,
+        page: tp.TitlePage,
+        p: Palette,
+        choose: Callable[[str], None],
+        notices: UpdateNotices | None = None,
+        open_update: Callable[[], None] | None = None,
     ) -> None:
         super().__init__(p)
         self.page = page
@@ -220,9 +226,10 @@ class TitleScreen(Paper):
         column.addWidget(self.hint)
         column.addStretch(3)
         column.addWidget(Tailpiece(p))
-        edition = text(page.edition, p["dim"], serif(11))
-        edition.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        column.addWidget(edition)
+        #: "! Armarius X.Y.Z is available" beside the version, while an App
+        #: update notice waits (gui/updates.py); hidden otherwise.
+        self.update_line = UpdateLine(p, open_update or (lambda: None))
+        column.addLayout(self._foot(page.edition, notices))
         for key in (Qt.Key.Key_Return, Qt.Key.Key_Enter):
             QShortcut(
                 QKeySequence(key),
@@ -230,6 +237,22 @@ class TitleScreen(Paper):
                 lambda: next(iter(self.buttons.values())).click(),
             )
         self._measure()
+
+    def _foot(self, edition: str, notices: UpdateNotices | None) -> QHBoxLayout:
+        """The page's foot: the version line, and the App update line
+        beside it, listening for the notice."""
+        version = text(edition, self.p["dim"], serif(11))
+        version.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        foot = QHBoxLayout()
+        foot.setSpacing(14)
+        foot.addStretch(1)
+        foot.addWidget(version)
+        foot.addWidget(self.update_line)
+        foot.addStretch(1)
+        if notices is not None:
+            notices.changed.connect(self.update_line.show_notice)
+            self.update_line.show_notice(notices.notice)
+        return foot
 
     # Fitting the window
 
