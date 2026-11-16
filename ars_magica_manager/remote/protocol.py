@@ -79,6 +79,8 @@ class Session:
     #: When the connection opened (monotonic seconds), for its deadline to
     #: sign in (host.py).
     opened: float = 0.0
+    #: The seat's version of Armarius, as its hello said ("" until then).
+    app_version: str = ""
 
 
 @dataclass(frozen=True)
@@ -216,6 +218,10 @@ def decode_reply(raw: bytes) -> Reply:
 
 
 def _hello(session: Session, body: Body) -> Reply:
+    # The seat's version is kept for the connection, and noted on its
+    # device when it signs in (the storyguide's Players list shows it).
+    app = body.get("app", "")
+    session.app_version = app if isinstance(app, str) else ""
     return Reply("welcome", {"protocol": PROTOCOL_VERSION, "app": __version__})
 
 

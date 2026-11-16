@@ -12,6 +12,7 @@ from screen_helpers import (
     _select,
     _select_covenant,
     _show_library_tab,
+    _show_tab,
     _wait_for_screen,
 )
 from support import choose, menu, screen_lines, wait_until
@@ -22,7 +23,6 @@ from textual.widgets import (
     Input,
     Select,
     Static,
-    TabbedContent,
 )
 
 from ars_magica_manager import catalog, storage
@@ -42,10 +42,9 @@ async def _open_spells(pilot, app) -> SpellListView:
     await _open_workspace(pilot)
     await _select(pilot, app, ("saga_content",))
     assert await wait_until(pilot, lambda: app.screen._saga_content_view)
-    content = app.screen._saga_content_view
-    assert await wait_until(pilot, lambda: content.initial_tab_seen)
-    content.query_one(TabbedContent).active = "tab-content-spells"
-    await wait_until(pilot, lambda: bool(app.screen.query(SpellListView)))
+    # Not a bare switch: the sheet's own first focus can land after it and
+    # take the tab back.
+    await _show_tab(pilot, app, "tab-content-spells")
     return app.screen.query_one(SpellListView)
 
 

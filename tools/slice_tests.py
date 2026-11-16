@@ -84,6 +84,16 @@ DIALOG_CONTRACT_TESTS = (
 )
 
 AREA_TESTS: dict[str, tuple[str, ...]] = {
+    # The App update notice: both title pages, the Settings window, the
+    # join windows' Version mismatch and the saga's status row.
+    "ars_magica_manager/updates.py": (
+        "test_gui_updates.py",
+        "test_tui_updates.py",
+        "test_gui_title.py",
+        "test_title_page.py",
+        "test_gui_settings_window.py",
+        "test_gui_join.py",
+    ),
     # The Armarium and the Custodia Mirabilium: both front-ends' pages,
     # their Add forms, their lists, Find, and the sheets' text and keys.
     "ars_magica_manager/stores.py": (

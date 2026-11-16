@@ -61,4 +61,7 @@ def main() -> int:
         window.statusBar().showMessage(problem)
     fit_to_screen(window, 1400, 900)
     window.show()
+    # Once the window is up: a thread of its own asks GitHub, if a day has
+    # passed since it last did (updates.py).
+    window.update_notices.check_at_start()
     return app.exec()

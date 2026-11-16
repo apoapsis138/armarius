@@ -39,6 +39,22 @@ from .widgets import DetailsPanel, SelectableList, TableHeader
 if TYPE_CHECKING:
     from .workspace.screen import WorkspaceScreen
 
+#: Every widget a refresh fills in (see compose): while any is missing, the
+#: worksheet is closing and a refresh has nothing to do.
+_PARTS = (
+    "#ws-title",
+    "#ws-steps",
+    "#ws-progress",
+    "#ws-step-title",
+    "#ws-budget",
+    "#ws-list-header",
+    "#ws-list",
+    "#ws-checks",
+    "#ws-actions",
+    "#ws-details",
+    "#ws-hint",
+)
+
 
 class CreationWorksheetScreen(ModalDialog[None]):
     """The worksheet for `record`, opened from its sheet's top panel while
@@ -172,7 +188,17 @@ class CreationWorksheetScreen(ModalDialog[None]):
                     yield DetailsPanel("", id="ws-details")
             yield Label("", id="ws-hint")
 
+    def _gone(self) -> bool:
+        """Whether the worksheet has closed, or the app is quitting, since
+        a refresh was asked for: its widgets are being removed (a refresh
+        waits its turn, and a closing app removes them while it waits)."""
+        if not self.is_attached or self not in self.app.screen_stack:
+            return True
+        return any(not self.query(part) for part in _PARTS)
+
     async def on_mount(self) -> None:
+        if self._gone():
+            return  # closed before its Mount was handled
         steps = self.query_one("#ws-steps", OptionList)
         steps.highlighted = [s.key for s in self.steps].index(self.step)
         steps.focus()
@@ -203,8 +229,8 @@ class CreationWorksheetScreen(ModalDialog[None]):
             await self._refresh_now()
 
     async def _refresh_now(self) -> None:
-        if not self.is_attached or self not in self.app.screen_stack:
-            return  # closed since the refresh was asked for
+        if self._gone():
+            return
         record = self.record
         self.query_one("#ws-title", Label).update(ws.title(record))
         steps = self.query_one("#ws-steps", OptionList)
@@ -231,6 +257,8 @@ class CreationWorksheetScreen(ModalDialog[None]):
             await self._show_step_now(keep_row=False)
 
     async def _show_step_now(self, *, keep_row: bool) -> None:
+        if self._gone():
+            return
         step = next(s for s in self.steps if s.key == self.step)
         panel = ws.panel_for(self.record, step.key)
         self.query_one("#ws-step-title", Label).update(step.title)
@@ -242,6 +270,8 @@ class CreationWorksheetScreen(ModalDialog[None]):
         self.query_one("#ws-checks", Static).update(ws.check_lines(found))
         actions = self.query_one("#ws-actions", Vertical)
         await actions.remove_children()
+        if self._gone():
+            return
         buttons = [
             Button(action.label, id=f"ws-action-{i}", compact=True)
             for i, action in enumerate(panel.actions(self.saga, self.record))
@@ -251,7 +281,8 @@ class CreationWorksheetScreen(ModalDialog[None]):
                 Button("Move to In Play", id="ws-play", variant="primary", compact=True)
             )
         await actions.mount_all(buttons)
-        self._show_hint()
+        if not self._gone():
+            self._show_hint()
 
     def _show_list(self, step_list: ws.StepList | None, *, keep_row: bool) -> None:
         """The step's list and its details panel (both hidden without one);

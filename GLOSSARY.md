@@ -570,6 +570,23 @@ The sheet of a character you play, one click or key away from any page
 while you are Playing.
 _Avoid_: home, my character page
 
+**App update**:
+A Release of Armarius newer than the one running, with a Build for this
+platform. A security App update is one whose changelog has a bullet marked
+Security:.
+_Avoid_: a bare "Update" (taken by Yearly update and Update from a File),
+patch, upgrade, new version
+
+**App update notice**:
+How the app tells you an App update is waiting.
+_Avoid_: popup, alert, nag
+
+**Version mismatch**:
+Your app's version differs from your host's. A major one (the first number
+differs) stops you joining; a minor one lets you join, though the two
+versions haven't been tested together.
+_Avoid_: incompatible, out of date
+
 ### Building the app
 
 **Feature**:

@@ -37,6 +37,7 @@ from ... import references, viewing, world
 from ...markup import escape
 from ...models import Attitude
 from ...references import Fact
+from .update import UpdateLine
 
 
 def _sign_colored(value: float, text: str) -> str:
@@ -100,14 +101,21 @@ class BottomBar(Vertical):
     }
     """
 
-    def __init__(self, right_actions: Iterable[str] = ()) -> None:
+    def __init__(
+        self, right_actions: Iterable[str] = (), *, update_line: bool = False
+    ) -> None:
         super().__init__()
         self._right_actions = frozenset(right_actions)
         self._where = ""
+        #: Whether the status row may show the App update notice's short
+        #: line (a saga's, once a sitting).
+        self._update_line = update_line
 
     def compose(self) -> ComposeResult:
         with Horizontal(id="status-row"):
             yield Static(id="where-bar")
+            if self._update_line:
+                yield UpdateLine(id="update-line")
             yield ThemeBar(id="theme-bar")
         yield SplitFooter(self._right_actions)
 

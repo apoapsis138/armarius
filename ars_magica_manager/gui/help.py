@@ -184,6 +184,19 @@ class HelpPage(QWidget):
             self._rubricate()
         self._scroll_to(topic_id)
 
+    def show_plain(self, title: str, words: str) -> None:
+        """Show `words` as plain text under `title`: never drawn as Markdown
+        or HTML, for text from outside the app (an App update's notes)."""
+        self.topics.blockSignals(True)
+        self.topics.setCurrentRow(-1)
+        self.topics.blockSignals(False)
+        self.topic_id = None
+        self._page_shown = None
+        self.go_there.setEnabled(False)
+        self.note.hide()
+        self.page.setPlainText(f"{title}\n\n{words}")
+        self.page.verticalScrollBar().setValue(0)
+
     def _rubricate(self) -> None:
         """Set the page's headings in the serif, in the heading colour,
         as the rest of the app's are."""

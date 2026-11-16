@@ -21,8 +21,8 @@ from __future__ import annotations
 import socket
 from collections.abc import Callable
 
-from PySide6.QtCore import Qt, QTimer
-from PySide6.QtGui import QGuiApplication, QShowEvent
+from PySide6.QtCore import Qt, QTimer, QUrl
+from PySide6.QtGui import QDesktopServices, QGuiApplication, QShowEvent
 from PySide6.QtWidgets import (
     QHBoxLayout,
     QLineEdit,
@@ -33,6 +33,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from .. import updates
 from ..players import MIN_PASSCODE, passcode_problem
 from ..remote.client import (
     ChangeNotSaved,
@@ -85,13 +86,39 @@ def sign_in_problem(error: Exception) -> str:
 
 
 def reach_problem(error: Exception) -> str:
-    if isinstance(error, VersionMismatch | NoKeychainError | UnreadableReply):
+    if isinstance(error, VersionMismatch):
+        copy = updates.this_copy()
+        if error.older and not copy.download and copy.how_to_update:
+            return f"{error} {copy.how_to_update}"
+        return str(error)
+    if isinstance(error, NoKeychainError | UnreadableReply):
         return str(error)
     if isinstance(error, ChannelError | ConnectionError | TimeoutError):
         return (
             "The host can't be reached. Check the storyguide is hosting, and try again."
         )
     return str(error)
+
+
+def offers_update(error: Exception) -> bool:
+    """Whether a refusal offers Update: the host runs a newer major
+    version, and this copy is updated from the Download page."""
+    return (
+        isinstance(error, VersionMismatch)
+        and error.older
+        and bool(updates.this_copy().download)
+    )
+
+
+def update_button(sheet: Sheet) -> QPushButton:
+    """Update, under a refusal that offers it (offers_update): it opens the
+    app's Releases page. Hidden until then."""
+    button = QPushButton("Update")
+    button.setToolTip("Open the app's Releases page, to download the host's version")
+    button.clicked.connect(lambda: QDesktopServices.openUrl(QUrl(updates.RELEASES_URL)))
+    button.hide()
+    sheet.column.addWidget(button, 0, Qt.AlignmentFlag.AlignLeft)
+    return button
 
 
 def _busy[T](work: Callable[[], T]) -> T:
@@ -127,6 +154,7 @@ class JoinWindow(Sheet):
         self._device_page()
         self._waiting_page()
         self._passcode_page()
+        self.update_offer = update_button(self)
         self.timer = QTimer(self)
         self.timer.setInterval(ASK_EVERY)
         self.timer.timeout.connect(self._ask)
@@ -267,7 +295,9 @@ class JoinWindow(Sheet):
         except (ChannelError, ConnectionError, TimeoutError) as problem:
             session.close()
             self.refuse(reach_problem(problem))
+            self.update_offer.setVisible(offers_update(problem))
             return
+        self.update_offer.hide()
         self.session, self.code = session, invite.code
         self.words.setText(session.host_words())
         self._step(1, None)
@@ -375,6 +405,7 @@ class PasscodeWindow(Sheet):
         self.asked = text("", p["label"], serif(12.5, italic=True), wrap=True)
         self.asked.hide()
         self.column.addWidget(self.asked)
+        self.update_offer = update_button(self)
         self.save.clicked.connect(self._sign_in)
         self.finish()
         self.setMinimumWidth(NARROWEST)
@@ -390,6 +421,7 @@ class PasscodeWindow(Sheet):
             _busy(lambda: self.session.sign_in(self.passcode.text()))
         except SIGN_IN_ERRORS as problem:
             self.refuse(sign_in_problem(problem))
+            self.update_offer.setVisible(offers_update(problem))
             return
         self.accept()
 

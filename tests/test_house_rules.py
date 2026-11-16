@@ -5,8 +5,9 @@ from __future__ import annotations
 from dataclasses import asdict
 
 import pytest
+from screen_helpers import _focus_section, _show_tab
 from support import strip_markup, wait_until
-from textual.widgets import Collapsible, Select, Static, TabbedContent, Tree
+from textual.widgets import Collapsible, Select, Static, Tree
 
 from ars_magica_manager import catalog, storage
 from ars_magica_manager import house_rules as hr
@@ -202,16 +203,11 @@ async def test_house_rules_are_added_edited_and_removed_from_their_node(size):  
         )
         tree.select_node(_node(tree, (NodeKind.SAGA_CONTENT,)))
         assert await wait_until(pilot, lambda: workspace._saga_content_view)
-        view = workspace._saga_content_view
-        assert await wait_until(pilot, lambda: view.initial_tab_seen)
-        view.query_one(TabbedContent).active = "tab-content-house-rules"
-        assert await wait_until(
-            pilot, lambda: bool(workspace.query("#house-rules-list"))
-        )
-        workspace.query_one("#section-house-rules", Collapsible).focus_section()
-        assert await wait_until(
-            pilot, lambda: workspace._active_section() == "section-house-rules"
-        )
+        # The sheet's own first focus (its Books tab) can land after the
+        # switch and take the tab back: the helpers wait for it and refocus.
+        await _show_tab(pilot, app, "tab-content-house-rules")
+        section = workspace.query_one("#section-house-rules", Collapsible)
+        await _focus_section(pilot, app, section, "section-house-rules")
         rows = workspace.query_one("#house-rules-list", SelectableList)
         # 'a': a Major Hook for covenants.
         await pilot.press("a")
@@ -239,7 +235,6 @@ async def test_house_rules_are_added_edited_and_removed_from_their_node(size):  
             ),
         )
         assert await wait_until(pilot, lambda: app.screen is workspace)
-        section = workspace.query_one("#section-house-rules", Collapsible)
         assert await wait_until(pilot, lambda: section.title == "House Rules (2)")
         hook_id = workspace.saga.custom_boons_hooks[0].id
         assert hook_id in catalog.load_covenant_boon_hook_catalog_by_id()

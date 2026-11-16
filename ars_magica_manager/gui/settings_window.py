@@ -1,5 +1,6 @@
-"""The Settings window the title bar's gear opens: the theme the desktop
-is drawn in, the sounds and Reduce Motion.
+"""The Settings window the title bar's gear opens: the App update row at
+its top (gui/updates.py), the theme the desktop is drawn in, the sounds
+and Reduce Motion.
 
 It stays open beside the page without blocking it. The theme is chosen in
 a selector over the registry (style.liveries.THEMES): closed, it shows the
@@ -228,10 +229,16 @@ class SettingsWindow(Sheet):
         current: Theme,
         choose: Callable[[str], None],
         parent: QWidget | None = None,
+        update_row: QWidget | None = None,
     ) -> None:
         super().__init__(TITLE, p, "Close", parent)
         self.setModal(False)
         self.choose = choose
+        #: The Update row at the top (gui/updates.UpdateRow), when given.
+        self.update_row = update_row
+        if update_row is not None:
+            self.column.addWidget(update_row)
+            self.column.addSpacing(6)
         self.column.addWidget(text("Theme", p["heading"], heading_font(14, p)))
         self.column.addWidget(
             text(

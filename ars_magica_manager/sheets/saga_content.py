@@ -12,7 +12,7 @@ from collections.abc import Callable, Iterable, Sequence
 from dataclasses import dataclass
 from typing import Any
 
-from .. import book_kinds, book_overviews, sourcebooks, traditions
+from .. import book_kinds, book_overviews, sourcebooks, traditions, updates
 from .. import house_rules as hr
 from .. import own_abilities as oa
 from .. import players as pl
@@ -20,9 +20,10 @@ from .. import saga_content as sc
 from .. import sessions as ss
 from .. import spells as spl
 from ..markup import escape
-from ..models import AbilityDef, Saga, Spell
+from ..models import AbilityDef, Player, Saga, Spell
 from ..models.mystery_cults import is_saga_cult
 from ..references import Fact
+from ..remote.devices import DeviceBook, devices_path
 from ..remote.passcodes import RemotePasscodes, passcodes_path, readiness
 from ..rules import activities
 from ..rules import options as rule_options
@@ -464,6 +465,14 @@ def players_table(saga: Saga, *, seats: bool = False) -> Table:
     """The Players as the list shows them; with `seats` (the desktop's
     Saga Management), whether each can sign in from a Remote seat."""
     allowed = RemotePasscodes(passcodes_path(saga.name)) if seats else None
+    versions = _seat_versions(saga) if seats else {}
+
+    def seat(player: Player) -> list[str]:
+        if allowed is None:
+            return []
+        note = updates.seat_note(versions.get(player.id, ""))
+        return [readiness(allowed, player) + (f" ({note})" if note else "")]
+
     return Table(
         ["Name", "Role", "Plays", *(["Remote seat"] if seats else [])],
         [
@@ -471,11 +480,21 @@ def players_table(saga: Saga, *, seats: bool = False) -> Table:
                 player.name,
                 pl.ROLE_LABELS.get(player.role, player.role),
                 ", ".join(c.name for c in pl.characters_of(saga, player)),
-                *([readiness(allowed, player)] if allowed is not None else []),
+                *seat(player),
             ]
             for player in saga.players
         ],
     )
+
+
+def _seat_versions(saga: Saga) -> dict[str, str]:
+    """Each player's app version at their Remote seat, as their device last
+    signed in; none when the devices file can't be read (the list still
+    shows, and the storyguide's window says what's wrong elsewhere)."""
+    try:
+        return DeviceBook(devices_path(saga.name)).seat_versions()
+    except ValueError:
+        return {}
 
 
 def sessions_table(saga: Saga) -> Table:

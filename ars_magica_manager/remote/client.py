@@ -21,7 +21,7 @@ from typing import Any, Self, cast
 
 import aiohttp
 
-from .. import __version__, players, storage
+from .. import __version__, players, storage, updates
 from ..models import Saga
 from .changes import SAGA, change_messages
 from .identity import normalise_pin
@@ -105,14 +105,15 @@ class VersionMismatch(ChannelError):
     """The host runs another major version of the app."""
 
     def __init__(self, ours: str, theirs: str) -> None:
-        older = (
-            "this app" if (major(ours) or 0) < (major(theirs) or 0) else "the host's"
-        )
+        found = updates.mismatch(ours, theirs)
         super().__init__(
-            f"The host runs Armarius {theirs} and this is {ours}: update {older} "
-            "to the same major version."
+            found.message
+            if found is not None
+            else f"The host runs Armarius {theirs} and this is {ours}."
         )
         self.ours, self.theirs = ours, theirs
+        #: Whether this app is the older one, and so may update.
+        self.older = found is not None and found.older
 
 
 def _unpacked(packed: bytes) -> bytes:

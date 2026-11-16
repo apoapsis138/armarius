@@ -27,9 +27,10 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 import shiboken6
-from PySide6.QtCore import QByteArray, QEvent, Qt, QTimer
+from PySide6.QtCore import QByteArray, QEvent, Qt, QTimer, QUrl
 from PySide6.QtGui import (
     QCloseEvent,
+    QDesktopServices,
     QFont,
     QKeySequence,
     QShortcut,
@@ -74,6 +75,7 @@ from .. import (
     storyguides,
     title_page,
     undo_season,
+    updates,
     viewing,
 )
 from .. import familiars as fam
@@ -178,6 +180,7 @@ from .themes import (
 )
 from .title import TitleScreen
 from .tribunal import TribunalPage
+from .updates import UpdateNotices, UpdateRow, badged_gear_icon
 from .widgets import Codex
 from .worksheet import WorksheetPage
 
@@ -390,6 +393,9 @@ class MainWindow(QMainWindow):
         self._applied = self.theme.palette
         #: The Settings window, once opened.
         self._settings: SettingsWindow | None = None
+        #: The App update notice (or a Joined game's Version mismatch) the
+        #: title page, the gear and Settings all show (gui/updates.py).
+        self.update_notices = self._notices()
         self.saga_ids = storage.list_sagas() if saga_ids is None else saga_ids
         self.saga: Saga | None = None
         #: The player seated at the open saga (seat.py); None is the
@@ -638,7 +644,13 @@ class MainWindow(QMainWindow):
             joining=True,
             joined={g.saga_id: g.saga_name for g in joined_games.listed()},
         )
-        self.title = TitleScreen(page, self.palette_, self.leave_title)
+        self.title = TitleScreen(
+            page,
+            self.palette_,
+            self.leave_title,
+            self.update_notices,
+            self.open_update_row,
+        )
         TopStrip(self.title, self, self.palette_)
         self.stack.addWidget(self.title)
         self.stack.setCurrentWidget(self.title)
@@ -2392,14 +2404,64 @@ class MainWindow(QMainWindow):
     def _show_settings(self, where: QWidget | None) -> None:
         """The Settings window, drawn in the theme on show, where `where`
         was (a window it replaces) or beside the page."""
+        row = UpdateRow(
+            self.palette_,
+            self.update_notices,
+            self.show_update_notes,
+            self.open_url,
+        )
         shown = self._settings = SettingsWindow(
-            self.palette_, self.theme, self.choose_theme, self
+            self.palette_, self.theme, self.choose_theme, self, row
         )
         if where is not None:
             shown.setGeometry(where.geometry())
         shown.show()
         shown.raise_()
         shown.activateWindow()
+
+    def _notices(self) -> UpdateNotices:
+        """The window's App update notice, with the gear listening."""
+        notices = UpdateNotices(updates.this_copy(), parent=self)
+        notices.changed.connect(self._badge_gear)
+        return notices
+
+    def open_url(self, url: str) -> None:
+        """Open `url` in the browser (an App update's Download page)."""
+        QDesktopServices.openUrl(QUrl(url))
+
+    def open_update_row(self) -> None:
+        """The title page's App update line, or the gear's badge: open
+        Settings at its Update row."""
+        self.open_settings()
+        shown = self._settings
+        if shown is not None and shown.update_row is not None:
+            shown.update_row.setFocus()
+
+    def show_update_notes(self, notice: updates.Notice) -> None:
+        """What's new: an App update's whole notes in Help, as plain text
+        (they come from the network, so are never drawn as markup)."""
+        if self.title is not None:
+            self.leave_title(title_page.HELP)
+        else:
+            self.open_help()
+        page = self.page()
+        if isinstance(page, HelpPage):
+            page.show_plain(f"Armarius {notice.version}", notice.notes)
+
+    def _badge_gear(self, _notice: object = None) -> None:
+        """The gear, with its "!" seal while a notice waits."""
+        p = self._applied
+        notice = self.update_notices.notice
+        self.settings.setIcon(
+            badged_gear_icon(p["label"], p)
+            if notice is not None and notice.shown
+            else pictures.gear_icon(p["label"])
+        )
+        self.settings.setToolTip(
+            "Settings: " + notice.headline
+            if notice is not None and notice.shown
+            else "Settings: theme, sounds and motion"
+        )
 
     def _apply_theme(self) -> None:
         p = self._applied = self.palette_
@@ -2433,7 +2495,7 @@ class MainWindow(QMainWindow):
             # Drawn again in the new theme, where it was.
             settings_open.close()
             self._show_settings(settings_open)
-        self.settings.setIcon(pictures.gear_icon(p["label"]))
+        self._badge_gear()
         self.help.setIcon(pictures.icon("help", p["label"]))
         self.find_button.setIcon(magnifier_icon(p["label"]))
         self.view_button.setIcon(eye_icon(p["label"]))
