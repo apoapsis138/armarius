@@ -136,6 +136,12 @@ change in it.
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## Unreleased
+
+### Castellum
+
+- **Seeing it in UGOS's Docker app.** The self-hosting guide's UGREEN NAS steps say how to add a saga started from the command line to the Docker app's Projects, so you can start, stop and watch it there, and why it never shows as Updatable.
+
 ## 4.14.0 — 2026-11-15
 
 ### PDF Exports and Handouts
