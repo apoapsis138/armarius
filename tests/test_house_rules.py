@@ -5,8 +5,8 @@ from __future__ import annotations
 from dataclasses import asdict
 
 import pytest
-from screen_helpers import _focus_section, _show_tab
-from support import strip_markup, wait_until
+from screen_helpers import _show_tab
+from support import settled, strip_markup, wait_until
 from textual.widgets import Collapsible, Select, Static, Tree
 
 from ars_magica_manager import catalog, storage
@@ -25,6 +25,7 @@ from ars_magica_manager.tui.screens import (
     SelectableList,
     WorkspaceScreen,
 )
+from ars_magica_manager.tui.screens.widgets import section_stop
 from ars_magica_manager.tui.screens.workspace.base import NodeKind
 
 
@@ -203,11 +204,14 @@ async def test_house_rules_are_added_edited_and_removed_from_their_node(size):  
         )
         tree.select_node(_node(tree, (NodeKind.SAGA_CONTENT,)))
         assert await wait_until(pilot, lambda: workspace._saga_content_view)
-        # The sheet's own first focus (its Books tab) can land after the
-        # switch and take the tab back: the helpers wait for it and refocus.
+        # The sheet's own first focus (its Books tab) lands first.
+        await settled(pilot, workspace)
         await _show_tab(pilot, app, "tab-content-house-rules")
         section = workspace.query_one("#section-house-rules", Collapsible)
-        await _focus_section(pilot, app, section, "section-house-rules")
+        section_stop(section).focus()
+        assert await wait_until(
+            pilot, lambda: workspace._active_section() == "section-house-rules"
+        )
         rows = workspace.query_one("#house-rules-list", SelectableList)
         # 'a': a Major Hook for covenants.
         await pilot.press("a")

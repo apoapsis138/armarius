@@ -25,6 +25,7 @@ from support import (
     NODES,
     everything_saga,
     screen_lines,
+    settled,
     wait_until,
 )
 from textual.widgets import TabbedContent, TabPane, Tree
@@ -179,9 +180,9 @@ async def _show_node(pilot, workspace: WorkspaceScreen, node: str) -> None:
         assert await wait_until(
             pilot, lambda: workspace._current_sheet_view() is not None
         )
-    view = workspace._current_sheet_view()
-    if view is not None:
-        assert await wait_until(pilot, lambda: view.initial_tab_seen)
+    # Its first focus lands, and the Footer rebuilds for it, after this:
+    # counting Footer rebuilds sooner would count those too.
+    await settled(pilot, workspace)
     await _settle(pilot)
 
 

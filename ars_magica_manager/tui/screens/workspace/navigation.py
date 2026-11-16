@@ -42,6 +42,7 @@ class NavigationActions(WorkspaceBase):
 
         kind: NodeKind = data[0]
         self.selected_kind = kind
+        self.detail_settled = False  # a new view is on its way
         self._character_sheet_view = None
         self._laboratory_sheet_view = None
         self._covenant_sheet_view = None
@@ -63,12 +64,14 @@ class NavigationActions(WorkspaceBase):
         if self._current_sheet_view() is None:
             # Enter on a node moves into what it shows: a list view's list.
             for rows in self._detail_pane().query(SelectableList):
-                rows.focus()
+                self._focus_stop(rows)  # the view's first focus (settling)
                 break
         spot, self._spot_after_open = self._spot_after_open, None
         if spot is not None:
             self.open_spot(*spot)
         self.refresh_bindings()
+        # Settle even when the node swapped no view in (_set_detail does too).
+        self.call_later(self._settle_unless_tabs_pending, self._detail_generation)
 
     # What selecting each kind of tree node does: set the selection and
     # show its detail. `ident` is the node's record or covenant id, if any.
