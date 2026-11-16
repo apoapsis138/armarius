@@ -174,8 +174,9 @@ what the books print: never invent lists or figures to fill a gap.
   `checks`, passes only when every job that should run did; it is the one
   status to require in branch protection.
 - A pull request that changes only docs (README.md, CONTRIBUTING.md,
-  SECURITY.md, `docs/` outside `docs/screenshots/`, and
-  `.github/ISSUE_TEMPLATE/`) gets lighter checks: formatting, lint and
+  SECURITY.md, `docs/` outside `docs/screenshots/`,
+  `.github/ISSUE_TEMPLATE/`, and changelog fragments, `changelog.d/*.md`)
+  gets lighter checks: formatting, lint and
   pyright as usual, and the fast tier (`-m "not ui"`) once per system in
   place of the sharded suite. NOTICE.md and the screenshots are left out
   because tests read NOTICE.md and the help site copies the screenshots.
@@ -187,16 +188,20 @@ what the books print: never invent lists or figures to fill a gap.
 
 ## Changelog and versioning
 
-**With each change** add its lines under `## Unreleased` at the top of
-CHANGELOG.md (above the newest version; start the section if it isn't
-there), in plain English for the user, each entry under a `### Feature`
-heading naming one of the Features table's features. Don't change the
-version. `tests/test_changelog.py` holds the Unreleased section to the
-same rules as a version's, and fails if it isn't the first section above
-the newest version. What's New shows it as Unreleased (in development).
-A security fix is a bullet that starts with `**Security:**`, under its
-feature's heading: the app's App update notice marks a Release with one
-as a security App update.
+**With each change** add a fragment to `changelog.d/`, one file per
+entry, and never edit CHANGELOG.md's versions by hand
+(`changelog.d/README.md` has the details). Name it
+`<slug>.<feature>.md`: a few lowercase words joined by hyphens, then the
+feature's key from `[tool.towncrier]` in `pyproject.toml` (`glossa`,
+`fundamenta`, `castellum`, ...), one per feature in CHANGELOG.md's
+Features table. Write one paragraph in plain English for the user,
+starting with a bold headline (`**A new guide.** ...`), at most 40 words,
+with no bullet or heading: a release adds those. Don't change the
+version. `tests/test_changelog.py` checks every fragment, and builds a
+release from them to check that What's New, the release notes and the
+site can read it. What's New shows released versions only. A security
+fix is a fragment that starts with `**Security:**`: the app's App update
+notice marks a Release with one as a security App update.
 
 **The version** is `MAJOR.MINOR.PATCH`, set only in `pyproject.toml`, and
 goes up once per release, by the largest change in it: a change that adds
@@ -205,10 +210,13 @@ change is PATCH. MAJOR marks a finished phase of the plan, when the maintainer s
 
 **A release**, when the maintainer calls one, in order:
 
-1. On a branch from an up-to-date `main`, one commit: rename
-   `## Unreleased` to `## X.Y.Z — YYYY-MM-DD`, set the version in
-   `pyproject.toml`, and run `uv lock`. `tests/test_version.py` checks
-   that the newest version heading is the one `pyproject.toml` names.
+1. On a branch from an up-to-date `main`, one commit: run
+   `uv run towncrier build --yes --version X.Y.Z`, which writes the
+   fragments into CHANGELOG.md as `## X.Y.Z — YYYY-MM-DD` (today's date)
+   and deletes them; then set the version in `pyproject.toml` and run
+   `uv lock`. `tests/test_version.py` checks that the newest version
+   heading is the one `pyproject.toml` names. (`--draft` in place of
+   `--yes` shows the section without writing it.)
 2. Open a pull request into `main`, and merge it once the checks pass.
 3. Tag the merge commit on `main`: `git tag -a vX.Y.Z -m "..."` and push
    the tag. The tag builds the rest: the Release workflow

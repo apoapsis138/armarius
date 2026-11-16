@@ -350,8 +350,15 @@ AREA_TESTS: dict[str, tuple[str, ...]] = {
     "tests/dialog_openers.py": DIALOG_CONTRACT_TESTS,
     "tests/dialog_contract_support.py": DIALOG_CONTRACT_TESTS,
     "tests/gui_steps.py": ("test_gui_edit_shared.py",),
-    "pyproject.toml": ("test_version.py",),
-    "CHANGELOG.md": ("test_version.py", "test_help.py", "test_title_page.py"),
+    "pyproject.toml": ("test_version.py", "test_changelog.py"),
+    "CHANGELOG.md": (
+        "test_version.py",
+        "test_help.py",
+        "test_title_page.py",
+        "test_changelog.py",
+    ),
+    # The changelog's fragments and the template a release builds them with.
+    "changelog.d/": ("test_changelog.py",),
     "ars_magica_manager/changelog.py": ("test_help.py", "test_title_page.py"),
     # The Theban treasury and its coins.
     "ars_magica_manager/treasury.py": (

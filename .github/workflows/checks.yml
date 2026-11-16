@@ -8,9 +8,10 @@
 # A pull request that changes only the docs-only files below (the `changes`
 # job) runs the fast tier instead of the full suite (`-m "not ui"`, once per
 # system); lint, format and types still run. Pushes to main and runs by
-# hand always run the full suite. NOTICE.md and docs/screenshots/ are left
-# off the list on purpose: tests read NOTICE.md, and the help site copies
-# the screenshots.
+# hand always run the full suite. Changelog fragments (changelog.d/*.md)
+# count as docs: the fast tier checks them. NOTICE.md and docs/screenshots/
+# are left off the list on purpose: tests read NOTICE.md, and the help
+# site copies the screenshots.
 #
 # The last job, `checks`, passes only when all the others that should run
 # did: it is the one status branch protection requires.
@@ -56,7 +57,7 @@ jobs:
               while IFS= read -r f; do
                 case "$f" in
                   docs/screenshots/*) docs_only=false ;;
-                  README.md | CONTRIBUTING.md | SECURITY.md | docs/* | .github/ISSUE_TEMPLATE/*) ;;
+                  README.md | CONTRIBUTING.md | SECURITY.md | docs/* | .github/ISSUE_TEMPLATE/* | changelog.d/*.md) ;;
                   *) docs_only=false ;;
                 esac
               done <<< "$files"
