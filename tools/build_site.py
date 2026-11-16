@@ -85,6 +85,7 @@ GUIDE_GROUPS: tuple[tuple[str, tuple[str, ...]], ...] = (
             "guide-getting-started",
             "guide-download",
             "guide-update",
+            "guide-app-update",
             "guide-tutorials",
             "guide-find-record",
             "guide-find-action",

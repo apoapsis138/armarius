@@ -18,7 +18,7 @@ from typing import TYPE_CHECKING, Any
 
 from PySide6.QtWidgets import QDialog
 
-from .. import joined_games, picture_files, players, undo_season
+from .. import __version__, joined_games, picture_files, players, undo_season, updates
 from ..joined_games import JoinedGame
 from ..models import Player, Saga
 from ..saga_store import LocalStore, Refreshed, RemoteStore, Saved
@@ -205,6 +205,10 @@ def open_joined(window: MainWindow, session: SeatSession) -> None:
     joined_games.remember(JoinedGame(saga.id, saga.name, session.url, session.pin))
     window.end_joined()
     window.store, window.session = store, session
+    # A minor Version mismatch shows in the App update notice's places.
+    window.update_notices.set_mismatch(
+        updates.mismatch(__version__, session.host_version)
+    )
     picture_files.use_host(session.picture)
     signed = signed_in_as(saga, session)
     store.whole = is_storyguide(signed)
@@ -245,6 +249,7 @@ def end_joined(window: MainWindow) -> None:
     """Close a Joined game's connection and go back to the data folder."""
     session = window.session
     window.session = None
+    window.update_notices.set_mismatch(None)
     window.store = LocalStore()
     window.unsent = False
     # A talk still under way is left to end on its own; its result is

@@ -15,6 +15,7 @@ from ars_magica_manager import (
     paths,
     seat,
     storage,
+    updates,
     viewing,
 )
 
@@ -22,6 +23,9 @@ from ars_magica_manager import (
 os.environ["ARMARIUS_SOUNDS"] = "off"
 # ...and still: every movement ends at once (gui/motion.py).
 os.environ["ARMARIUS_MOTION"] = "off"
+# ...and never asks GitHub for an App update (updates.py); a test of the
+# check passes its own fetch.
+os.environ["ARMARIUS_UPDATES"] = "off"
 
 
 def pytest_addoption(parser):
@@ -129,6 +133,17 @@ class _MemoryKeyring(keyring.backend.KeyringBackend):
     def delete_password(self, service: str, username: str) -> None:
         if self._items.pop((service, username), None) is None:
             raise keyring.errors.PasswordDeleteError(username)
+
+
+@pytest.fixture(autouse=True)
+def github_never_asked(monkeypatch):
+    """No test reaches GitHub, even one that turns the App update check on:
+    the check's own request fails as if offline."""
+
+    def offline(url, headers, timeout):
+        raise OSError("tests never reach GitHub")
+
+    monkeypatch.setattr(updates, "_fetch", offline)
 
 
 @pytest.fixture(autouse=True)

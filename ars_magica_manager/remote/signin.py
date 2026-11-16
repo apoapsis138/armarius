@@ -85,7 +85,7 @@ def signin_specs(
             raise Refused  # not a proof at all: nothing to compare
         if not proof_is_good(proof, digest, nonce, pin()):
             return Reply("denied", {"seconds": devices.failed(device)})
-        devices.signed_in(device)
+        devices.signed_in(device, session.app_version)
         session.player_id = player.id
         session.device_id = device.id
         # A passcode changed after this (by the player, or a reset by the

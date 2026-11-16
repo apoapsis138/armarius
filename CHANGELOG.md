@@ -19,7 +19,8 @@ apprentice a magus; a *scriptorium* is where books are written; a
 the storyguide; an *illuminatio* is the painted and gilded copy of a
 manuscript; the *orbis* is the world; a *concilium* is a council;
 *insignia* are marks of honour; a *peregrinatio* is a journey into
-other lands; a *mappa mundi* is a medieval map of the world; and a
+other lands; a *mappa mundi* is a medieval map of the world; a
+*renovatio* is a renewal; and a
 livery is the colours and badge a great household's people wore. Each major version has a name of its own: an *incipit* is
 the opening words of a manuscript, a *folio* a sheet folded into leaves,
 a *codex* the bound book, and a *nomen novum* a new name.
@@ -56,6 +57,7 @@ change in it.
 | Mappa Mundi | Atlas | The Atlas: the saga's maps and the records pinned on them |
 | Liveries of the Houses | House looks | The desktop drawn in a House's own look: its family's form, colours, paper and mark |
 | Castellum | Self-hosting | Hosting a saga on a server or NAS, such as a Linux computer or a rented server, with no window |
+| Renovatio | App updates | App updates: finding, checking and installing a newer Release |
 
 ## Editions
 
@@ -148,6 +150,14 @@ change in it.
 ### Book of Hours
 
 - **General spells from a Lab Text.** A Lab Text for a General spell, such as Aegis of the Hearth, now teaches the level written on it instead of refusing with "has no level" (#16). The magus learns a version of his own at that level, with the text named as its source, and the Lab Text he writes teaches that version; two magi learning from the same text each get their own. A General spell's text with no level asks for one, and the Lab Work window gives its reason once, not twice.
+
+### Renovatio
+
+- **Told when a newer version is out.** Once a day at most, when it starts, the app asks GitHub for the latest Release, sending only its own version, and never holding up the start. When a newer one is out, the desktop's title page says "! Armarius X.Y.Z is available" beside the version, and the settings gear wears a small "!" seal; the terminal's title page lists **Update** last, and the first saga you open shows the same line once. Nothing is downloaded or installed: getting the new version is done as before.
+- **The Update row.** At the top of the desktop's Settings window, or on the terminal's new Update screen: the new version, its date and the first lines of its notes, with **What's new** for all of them, **Download page** (a copy run from the source says to pull main instead) and **Skip this version**. **Check now** asks at once and says what it found, or that GitHub couldn't be reached and why. **Check for updates when Armarius starts** turns the daily check off, and `ARMARIUS_UPDATES=off` turns every check off.
+- **Security fixes stand out.** A new version whose notes have a bullet marked **Security:** is shown in the theme's warning colour, "with security fixes", and can't be skipped. A new major version says that players who join by Remote seat must move to it too.
+- **Never on a host.** A copy a host runs for a player, the hosts themselves, the admin command and the container image never check.
+- **Version mismatches told plainly.** Joining a host on another major version still stops, and now offers **Update** when yours is the older, or says "Your storyguide's Armarius is older" when theirs is. On another minor version you can play, and the gear's seal and the Settings window say the two versions haven't been tested together. The storyguide's Players list notes a player who last joined on another version.
 
 ### Fundamenta
 

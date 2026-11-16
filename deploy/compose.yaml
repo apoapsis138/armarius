@@ -15,6 +15,9 @@
 # No port is published. The listener answers on 127.0.0.1 inside the
 # armarius container only; cloudflared shares that container's network,
 # so it alone reaches the listener and carries players in from outside.
+#
+# The headless host never checks for App updates: the image sets
+# ARMARIUS_UPDATES=off, and a new version is pulled on purpose (below).
 
 name: armarius
 

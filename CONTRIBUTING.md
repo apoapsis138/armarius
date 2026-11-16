@@ -185,6 +185,9 @@ heading naming one of the Features table's features. Don't change the
 version. `tests/test_changelog.py` holds the Unreleased section to the
 same rules as a version's, and fails if it isn't the first section above
 the newest version. What's New shows it as Unreleased (in development).
+A security fix is a bullet that starts with `**Security:**`, under its
+feature's heading: the app's App update notice marks a Release with one
+as a security App update.
 
 **The version** is `MAJOR.MINOR.PATCH`, set only in `pyproject.toml`, and
 goes up once per release, by the largest change in it: a change that adds

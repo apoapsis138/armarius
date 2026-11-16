@@ -552,7 +552,7 @@ class WorkspaceBase(Screen[None]):
         with Horizontal(id="workspace-body"):
             yield Tree(escape(self.saga.name), data=(NodeKind.SAGA,), id=NAV_TREE_ID)
             yield VerticalScroll(id=DETAIL_PANE_ID)
-        yield BottomBar(right_actions=self.GLOBAL_ACTIONS)
+        yield BottomBar(right_actions=self.GLOBAL_ACTIONS, update_line=True)
 
     def _nav_tree(self) -> Tree:
         return self.query_one(f"#{NAV_TREE_ID}", Tree)

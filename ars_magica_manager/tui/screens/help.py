@@ -255,13 +255,17 @@ class HelpScreen(ModalDialog[None]):
     def _scroll_to(self, topic_id: str, tries: int = 25) -> None:
         """Scroll the page to `topic_id`'s heading (its top for a page).
         A page just loaded isn't laid out yet: until it is, try again after
-        the next refresh."""
-        scroll = self.query_one("#help-scroll", VerticalScroll)
+        the next refresh. Help may have closed meanwhile (Go there, Esc),
+        taking its page with it: then there is nothing to scroll."""
+        scrolls = self.query("#help-scroll").results(VerticalScroll)
+        pages = self.query("#help-page").results(Markdown)
+        scroll, markdown = next(scrolls, None), next(pages, None)
+        if scroll is None or markdown is None:
+            return  # Help has closed, its page removed
         topic = self.book.topic(topic_id)
         if topic is None or topic.level < 3:
             scroll.scroll_home(animate=False)
             return
-        markdown = self.query_one("#help-page", Markdown)
         for _, title, block_id in markdown.table_of_contents or ():
             if str(title) == topic.title and block_id:
                 # The contents can name a heading not mounted yet.

@@ -62,6 +62,9 @@ class Device:
     #: When the player asked, from this device, for a new passcode (0: not
     #: asking). The storyguide answers by setting one.
     reset_asked: float = 0.0
+    #: The version of Armarius it last signed in with (its hello), for the
+    #: storyguide's Players list; "" until it signs in again.
+    app_version: str = ""
 
 
 @dataclass
@@ -198,14 +201,27 @@ class DeviceBook(SharedFile):
             device = self._now(device)
             return max(0, math.ceil(device.locked_until - self._clock()))
 
-    def signed_in(self, device: Device) -> None:
+    def signed_in(self, device: Device, app_version: str = "") -> None:
+        """`device` has signed in, from Armarius `app_version` (as its
+        hello said; "" if it didn't)."""
         with self._fresh():
             device = self._now(device)
             device.last_seen = self._clock()
             device.failures = 0
             device.locked_until = 0.0
+            device.app_version = app_version[:32]
             self._save()
         self._note(audit.SIGNED_IN, device)
+
+    def seat_versions(self) -> dict[str, str]:
+        """Each player's app version, from the live device that signed in
+        most recently and said one, by player id."""
+        with self._fresh():
+            live = sorted(
+                (d for d in self._devices.values() if not d.ended and d.app_version),
+                key=lambda d: d.last_seen,
+            )
+            return {d.player_id: d.app_version for d in live}
 
     def failed(self, device: Device) -> int:
         """Count a failed proof; the seconds `device` must now wait."""

@@ -1057,15 +1057,19 @@ seen by someone else:
 ### A newer version
 <!-- help: guide-self-hosting-update -->
 
-The server never updates itself. To move to a newer version:
+The server never updates itself, and never checks for an App update: the
+image sets `ARMARIUS_UPDATES=off`. Your own desktop still tells you when a
+newer version is out (see [How to check for an App update](help:guide-app-update)).
+To move the server to a newer version:
 
 1. **Read its notes** on the Releases page.
 2. **Take a backup** with `admin backup`.
 3. **Set the version.** Set `ARMARIUS_VERSION` in `.env` to it.
 4. **Pull and restart.** `docker compose pull`, then `docker compose up -d`.
 
-Within the same first number (4.13 to 4.14, say) seats keep working. A new
-first number (5.0) means every player moves to it too, since a seat
+Within the same first number (4.13 to 4.14, say) seats keep working, though
+a player on another version is told the two haven't been tested together.
+A new first number (5.0) means every player moves to it too, since a seat
 refuses a host of another major version.
 
 **See also:** [How to host a saga](help:guide-hosting)
@@ -2430,7 +2434,11 @@ play from yours, over the internet.
 1. **Check your version.** Your Armarius needs the same major version as
    the storyguide's, the first number (4 in 4.13.0). The title page shows
    yours. If the two differ, joining stops and says which one to update
-   (see [How to update the app](help:guide-update)).
+   (see [How to update the app](help:guide-update)); when it's yours,
+   **Update** opens the Releases page. If only the second or third number
+   differs, you can play, but the app says the two versions haven't been
+   tested together (see
+   [When your version and the host's differ](help:join-game-versions)).
 2. **Get your Invite.** Your storyguide adds you as a Player with a
    passcode of at least 14 characters, and tells you the passcode. Then
    they send you an Invite, a line that begins `ARM1`, by chat or email.
@@ -2532,9 +2540,12 @@ before the next session.
 <!-- tui -->
    The saga list shows it under the list too.
 <!-- /tui -->
-3. **Download the new one.** On the app's GitHub page, under **Releases**,
-   read the new version's notes. Then download the zip for your system,
-   named like `Armarius-X.Y.Z-windows.zip`.
+3. **Download the new one.** The app tells you when one is out (see
+   [How to check for an App update](help:guide-app-update)), and its
+   **Download page** opens the Release. Or find it yourself on the app's
+   GitHub page, under **Releases**. Read the new version's notes, then
+   download the zip for your system, named like
+   `Armarius-X.Y.Z-windows.zip`.
 4. **Unzip it beside the old one.** Extract it next to the old version's
    folder. It makes a folder of its own, `Armarius-X.Y.Z`.
 5. **Start the new version.** Start **Armarius** from the new folder, or
@@ -2562,7 +2573,59 @@ A saga hosted on a server or NAS is updated there, on its own (see
    bring the app's libraries up to date first, so the first start after an
    update takes longer.
 
-**See also:** [How to download and run the app](help:guide-download), [Saga picker](help:saga-picker)
+**See also:** [How to download and run the app](help:guide-download), [How to check for an App update](help:guide-app-update), [Saga picker](help:saga-picker)
+
+# How to check for an App update
+<!-- help: guide-app-update -->
+
+You'd like to know when a newer version of Armarius is out, without
+watching its GitHub page.
+
+1. **Let it check.** Once a day at most, when it starts, the app asks
+   GitHub for the latest Release. It sends only its own version, and the
+   check never holds the app up. If GitHub can't be reached, it says
+   nothing and tries again next time.
+2. **See the notice.**
+<!-- gui -->
+   When a newer version is out, the title page shows "! Armarius X.Y.Z is
+   available" beside the version line, and the settings gear at the top
+   right wears a small "!" seal. Click either to open the
+   [Settings window](help:settings-window) at its Update row.
+<!-- /gui -->
+<!-- tui -->
+   When a newer version is out, the title page lists **Update** last, with
+   "Armarius X.Y.Z is available" beside it. The first saga you open shows
+   the same line once at the foot of the screen. Choose Update, or press
+   Ctrl+P and choose **Update**, to open the
+   [Update screen](help:update-screen).
+<!-- /tui -->
+3. **Read what's new.** The Update row shows the new version, its date and
+   the first lines of its notes. **What's new** shows all of them.
+4. **Get it.** **Download page** opens the Release's page in your browser.
+   Then follow [How to update the app](help:guide-update): the app doesn't
+   download or install anything itself. A copy run from the source says
+   to pull `main` instead.
+5. **Or skip it.** **Skip this version** hides the notice until a newer
+   Release. The Update row still shows the skipped version, faintly.
+6. **Check now.** **Check now** asks GitHub at once, whenever you like,
+   and says what it found, or "Couldn't reach GitHub" and why.
+
+**Security fixes.** When a Release's notes mark a security fix (a line
+starting **Security:**), the notice reads "Armarius X.Y.Z is available, with security fixes", in the
+theme's warning colour, and it can't be skipped. Move to it soon.
+
+**A new major version.** When the first number changes (4 to 5), the
+notice says so: players who join by Remote seat must move to it too, as a
+seat needs the host's major version.
+
+**Turning it off.** Untick **Check for updates when Armarius starts** on
+the Update row: the app then checks only when you choose Check now, and
+shows no notice. The desktop and terminal apps share the setting. Setting
+the environment variable `ARMARIUS_UPDATES=off` turns every check off,
+Check now included. A copy a host runs for a player, the host itself, and
+a saga self-hosted on a server never check.
+
+**See also:** [How to update the app](help:guide-update), [Title page](help:title-page)
 
 # How to change the save folder
 <!-- help: guide-save-folder -->
