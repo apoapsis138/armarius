@@ -141,7 +141,9 @@ conftest fixtures point it at the test's temporary folder. Ask
 constant.
 
 **Comments** state the rule or design choice plainly. Story and bug
-numbers belong in commit messages and the CHANGELOG, not in code.
+numbers belong in commit messages and pull request titles or
+descriptions, not in changelog fragments (they're for the user), code
+comments or docstrings.
 
 **No generative-AI art.** Every image, icon, symbol, texture or font the
 app ships or draws is either drawn in code or taken from a source under a
