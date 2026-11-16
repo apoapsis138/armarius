@@ -611,7 +611,7 @@ _Avoid_: Milestone
 
 **Release**:
 A version of the app published for people to download, with a **Build**
-attached for each platform.
+attached for each platform, made by pushing a version tag on main.
 _Avoid_: Edition (a feature's finished round, not a version), drop
 
 **Build**:
