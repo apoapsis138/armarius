@@ -642,6 +642,7 @@ GUIDES = [
     "guide-save-folder",
     "guide-restore-backup",
     "guide-player-goals",
+    "guide-report-bug",
 ]
 
 

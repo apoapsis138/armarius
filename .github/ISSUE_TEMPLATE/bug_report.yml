@@ -1,0 +1,186 @@
+name: Bug report
+description: Something in Armarius is broken, or doesn't match the book.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this. The repository is public,
+        so anything you write or attach here can be seen by anyone.
+        [How to report a bug](https://apoapsis138.github.io/armarius/help/guide-report-bug/)
+        says where to find what this form asks for.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open the saga…
+        2. Go to …
+        3. Press …
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: false
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: >-
+        On the desktop app's title page and on Help's About page; the
+        terminal app also shows it in its title bar. On a headless host,
+        it's ARMARIUS_VERSION in .env.
+      placeholder: "4.13.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where it runs
+      description: >-
+        If someone could see or change what they shouldn't, don't post it
+        here: report it privately through the Security tab's "Report a
+        vulnerability" (see [SECURITY.md](https://github.com/apoapsis138/armarius/blob/main/SECURITY.md)).
+      options:
+        - Desktop app
+        - Terminal app on this computer
+        - Terminal app served to browsers or SSH
+        - Remote seat in a Hosted saga
+        - Headless host (Docker)
+        - Not sure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: install
+    attributes:
+      label: How it's installed
+      options:
+        - Release download
+        - From source (uv)
+        - Docker image
+    validations:
+      required: false
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - Windows
+        - Linux
+        - macOS (from source)
+        - Other
+    validations:
+      required: false
+
+  - type: input
+    id: os-version
+    attributes:
+      label: Operating system version
+      placeholder: Windows 11 24H2, Fedora 41…
+    validations:
+      required: false
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Part of the app
+      options:
+        - Character, covenant, lab and familiar sheets (Pagina)
+        - Scores and totals (Computus)
+        - Seasons (Book of Hours)
+        - Catalogs of Virtues, spells… (Florilegium)
+        - Building characters and covenants (Gauntlet)
+        - The saga's world (Orbis)
+        - Tribunals (Concilium)
+        - Coats of arms (Insignia)
+        - Hedge magic
+        - Maps (Mappa Mundi)
+        - Sourcebook packs (Peregrinatio)
+        - Sharing a saga (Sodales)
+        - Printing and the desktop's look (Illuminatio / Liveries)
+        - Help (Glossa)
+        - Other / not sure
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: rules
+    attributes:
+      label: Rules
+      options:
+        - label: The app doesn't match the book
+          required: false
+
+  - type: input
+    id: book-page
+    attributes:
+      label: Book and page
+      description: >-
+        If you ticked the rules box: the book and printed page the rule is
+        on. The Definitive Edition wins where a supplement disagrees. If you
+        don't know the page, say so and it will be looked up.
+      placeholder: Definitive Edition p. 165
+    validations:
+      required: false
+
+  - type: input
+    id: screen
+    attributes:
+      label: Screen size and scaling, or terminal size
+      placeholder: 1920×1080 at 150%, or 120×45
+    validations:
+      required: false
+
+  - type: textarea
+    id: error
+    attributes:
+      label: Error text
+      description: Any message or traceback the app showed.
+      render: text
+    validations:
+      required: false
+
+  - type: textarea
+    id: crash-log
+    attributes:
+      label: crash.log
+      description: >-
+        If the app closed itself without a word, crash.log in your save
+        folder records where it was. Paste it here.
+      render: text
+    validations:
+      required: false
+
+  - type: textarea
+    id: attachments
+    attributes:
+      label: Attachments
+      description: >-
+        If records are involved, attach an Export of just those records,
+        never your whole saga file. Anything attached is public.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: latest
+    attributes:
+      label: Latest release
+      options:
+        - label: It still happens on the latest release
+          required: false

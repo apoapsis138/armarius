@@ -6,8 +6,9 @@ Please report a security problem privately, through GitHub: on this
 repository's **Security** tab, choose **Report a vulnerability**. Don't
 open a public issue for it.
 
-Say what you found, which version it affects (the title bar shows it),
-and how to reproduce it. You'll get an answer when the report has been
+Say what you found, which version it affects (on the desktop app,
+the title page and Help's About page; on the terminal app, its title bar
+and About; on a headless host, ARMARIUS_VERSION in `.env`), and how to reproduce it. You'll get an answer when the report has been
 read; Armarius is a one-person project, so a fix may take a while, and
 you'll be told what is planned.
 
