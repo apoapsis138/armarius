@@ -148,6 +148,9 @@ async def test_a_browser_copy_signs_in_before_opening_a_saga(in_a_browser):
 
         await _sign_in(pilot, app, "ana", ROSEMARY)
         assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        # The workspace is the screen as soon as it's pushed; its Header
+        # names who signed in once it has mounted, so wait for that.
+        await settled(pilot, app.screen)
         assert app.player is not None and app.player.name == "Ana"
         assert app.screen.sub_title.endswith("| Ana")
         # A player doesn't see who else can sign in.
