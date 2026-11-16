@@ -17,9 +17,11 @@ Tests run in two tiers.
 - **Before handing a change over:** `uv run python tools/story_check.py
   --full` runs the whole suite in parallel (`python -m pytest -q -n auto
   --dist worksteal`, one worker per core; more workers than cores make the
-  Pilot tests time out). Both modes rerun each failure once alone and
-  report it flaky or real (flaky ones are logged in
-  `.pytest_cache/flaky_tests.txt`).
+  Pilot tests time out). Both modes rerun each failure once alone, by its
+  exact test id. One that fails again is real; one that passes alone is
+  flaky, and **a flaky test fails the check too**: fix its waits (see
+  "Textual and Pilot gotchas"). Flaky ones are named and added to
+  `.pytest_cache/flaky_tests.txt`, the list still to fix.
 - **pyright must report 0 errors.** It checks `ars_magica_manager/`,
   `tools/` and `main.py` in basic mode. Every parameter is annotated
   (`self`/`cls` aside); `reportMissingParameterType` is on.
