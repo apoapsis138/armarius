@@ -1,10 +1,12 @@
 ---
-status: proposed
+status: accepted
 ---
 
 # The host rolls every die
 
-When a hosted saga is played online, every die is rolled on the host. A seat sends only what to roll (the character, the trait, the choices such as a Specialty or Confidence, and the visibility: Public, Private or Blind), never a die or a total. The host rolls with `secrets.SystemRandom` through `rules/dice.py`, and one request makes exactly one result, written to the Session's Chronicle; asking again makes a second, recorded roll rather than replacing the first. A roll that should not count is Voided by the storyguide with a reason, and stays in the Chronicle.
+When a hosted saga is played online, every die is rolled on the host. A seat sends only what to roll, never a die or a total: from a sheet, the character, the trait and the choices such as a Specialty or Confidence; for a Free roll, stress or simple, the modifier the roller typed, the botch dice, an optional Ease Factor and what it is for. Each request also says who may see it, in terms of the Chronicle's Audience: a Public roll goes to the Table, a Private roll to the roller chosen alone (and so the Session's storyguide), and a Blind roll's number to the Session's storyguide alone, with a line for the roller saying only that it was rolled. The host rolls with `secrets.SystemRandom` through `rules/dice.py`, and one request makes exactly one result, written to the Session's Chronicle; asking again makes a second, recorded roll rather than replacing the first. This is the Command pattern: a roll request is carried out once, and the Chronicle is the list of the commands carried out.
+
+A roll's entry keeps every die face, each doubling of a stress die and each botch die, with the modifier, the total, any Ease Factor and the margin, so it can be read back exactly as it fell. A player rolls only for the characters they play that evening (the Session's castings); the Session's storyguide rolls for any character or none. The host checks both. A roll that should not count is Voided by the storyguide with a reason: the Void is a new entry pointing at the roll, which stays in the Chronicle.
 
 ## Considered options
 
@@ -16,3 +18,5 @@ When a hosted saga is played online, every die is rolled on the host. A seat sen
 - A player who wants to roll real dice may type them in only when the saga option for Typed dice is on, and each such die is marked as typed wherever the roll is shown.
 - A roll needs the host to answer; with the host away there is no rolling at the table.
 - Rolling follows ADR 0002's spirit: the request is data (what to roll), and the rules turn it into a result in one place.
+- Rolls are limited per seat through `remote/limits.py`, apart from other requests, so a seat cannot flood the Chronicle.
+- The host's computer holds every roll, Blind ones included (ADR 0020): the Audience decides what each seat is sent and what the host's own app shows, not what the host could read.
