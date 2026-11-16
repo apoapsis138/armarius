@@ -1,5 +1,0 @@
-4.14.0: print sheets for the troupe, and be told when a new version is out
-
-Version 4.14.0: CHANGELOG's Unreleased becomes 4.14.0 (2026-11-15),
-pyproject.toml and uv.lock set to 4.14.0. One wording fix in the notes:
-"their" for a magus learning from a Lab Text.
