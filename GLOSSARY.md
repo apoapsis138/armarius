@@ -573,9 +573,9 @@ The window the settings gear opens, holding the theme and the app's other
 settings.
 _Avoid_: Preferences, options, settings menu
 
-**Online play preview**:
-The setting, off by default, that shows the Chronicle and Begin Session while online play is still being built, until it is finished in version 5.0.
-_Avoid_: beta, experimental, feature flag (in the help)
+**Virtual Tabletop (Preview)**:
+The setting, off by default, that shows the Chronicle and Begin Session while the Virtual Tabletop is still being built, until it is finished in version 5.0. Remote seats work without it.
+_Avoid_: online play (Remote seats are online play already), VTT (in the help), beta, experimental, feature flag
 
 **Trail**:
 The row of crumbs across the top of the desktop app, from Sagas down to the
