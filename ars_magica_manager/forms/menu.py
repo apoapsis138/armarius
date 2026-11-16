@@ -100,6 +100,7 @@ from ..models import (
     LabTextAccess,
     Neighbour,
     Saga,
+    Session,
     Spell,
     Tribunal,
 )
@@ -174,8 +175,11 @@ NOT_ON_PAGES = frozenset(
     {
         # The desktop's eye in the title bar.
         "player_view",
-        # Saga Content's Sessions draws it as a row button.
+        # Saga Content's Sessions draws them as row buttons.
         "cast_glance",
+        "begin_session",
+        "close_session",
+        "read_chronicle",
         # The Secrets list's own row buttons.
         "reveal_secret",
         "conceal_secret",
@@ -1879,6 +1883,14 @@ def _update_command(page: Page) -> Command:
     return import_forms.update_record(page.saga, record)
 
 
+def _on_session(page: Page, step: Callable[[Saga, Session], Command]) -> Command:
+    """`step` for the Session chosen in the Sessions list."""
+    shown = sessions.in_order(page.saga)
+    if page.row is None or not 0 <= page.row < len(shown):
+        return Refuse("Sessions", "Choose a Session first.")
+    return step(page.saga, shown[page.row])
+
+
 def _needs[T](
     get: Callable[[Page], T | None], build: Callable[[Saga, T], Command]
 ) -> Callable[[Page], Command]:
@@ -2010,6 +2022,9 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
         if page.row is not None and page.row < len(page.saga.sessions)
         else Refuse("Cast at a Glance", "Choose a Session first.")
     ),
+    "begin_session": lambda page: _on_session(page, session_forms.begin_session),
+    "close_session": lambda page: _on_session(page, session_forms.end_session),
+    "read_chronicle": lambda page: _on_session(page, session_forms.read_chronicle),
     "tourney_season": _needs(_character, tourney_season.tourney_form),
     "melee_event": _needs(_character, melee_events.melee_form),
     "labor_story": _needs(_character, labor.story_form),

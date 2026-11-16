@@ -213,6 +213,15 @@ def test_the_repo_data_moves_once(tmp_path):
     assert paths.move_legacy_data(old, new) == []  # nothing left to move
 
 
+def test_a_sagas_chronicles_move_with_it(tmp_path):
+    old, new = tmp_path / "old", tmp_path / "new"
+    (old / "chronicles" / "a").mkdir(parents=True)
+    (old / "chronicles" / "a" / "s1.jsonl").write_text("{}", encoding="utf-8")
+
+    assert paths.move_user_data(old, new) == ["Moved chronicles/a/s1.jsonl"]
+    assert (new / "chronicles" / "a" / "s1.jsonl").exists()
+
+
 def test_moving_never_overwrites_what_is_already_there(tmp_path):
     old, new = _legacy(tmp_path), tmp_path / "new"
     (new / "sagas").mkdir(parents=True)

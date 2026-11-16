@@ -15,7 +15,12 @@ from typing import NamedTuple
 
 from .. import traditions
 from ..rules import galdor
-from ..sections import AGENTS_SECTION, FAITH_SECTION, WHEREABOUTS_SECTION
+from ..sections import (
+    AGENTS_SECTION,
+    FAITH_SECTION,
+    SESSIONS_SECTION,
+    WHEREABOUTS_SECTION,
+)
 
 
 class Refresh(NamedTuple):
@@ -172,6 +177,9 @@ REFRESH: dict[str, Refresh] = {
     "end_session": changes("section-reputations", "section-char-info"),
     "what_changed": calculator(),
     "cast_glance": calculator(),
+    "begin_session": changes(SESSIONS_SECTION),
+    "close_session": changes(SESSIONS_SECTION),
+    "read_chronicle": calculator(),
     "previously_on": calculator(),
     "teaching_requests": changes(
         "section-char-season", "section-char-ahead", "tab-planning"

@@ -393,7 +393,8 @@ HOST_ONLY: frozenset[str] = frozenset({"tab-content-players", "section-players"}
 #: A downtime run is the host's too: it plays many seasons at once,
 #: each kept as it goes.
 HOST_ONLY_ACTIONS: frozenset[str] = frozenset(
-    {"host_saga", "stop_hosting", "downtime_run"}
+    # A Session's Chronicle is kept on the host's computer (ADR 0020).
+    {"host_saga", "stop_hosting", "downtime_run", "begin_session", "close_session"}
 )
 
 #: What changes every record of the saga at once. A Remote seat holds
@@ -531,6 +532,8 @@ LOOKING_ACTIONS: frozenset[str] = frozenset(
         "what_changed",
         "cast_glance",
         "previously_on",
+        # A Session's Chronicle, as its reader may see it.
+        "read_chronicle",
         # A calculator: it records nothing.
         "plan_journey",
         "craft_by_magic",

@@ -14,9 +14,9 @@ from pathlib import Path
 import pytest
 from admin_support import FakeConsole, ok, refused
 
-from ars_magica_manager import host_backup, storage
+from ars_magica_manager import chronicle, host_backup, storage, viewing
 from ars_magica_manager import players as pl
-from ars_magica_manager.models import Saga
+from ars_magica_manager.models import Saga, Session
 from ars_magica_manager.remote.devices import devices_path
 from ars_magica_manager.remote.folder import lock_of
 from ars_magica_manager.remote.invites import InviteBook, book_path
@@ -43,6 +43,18 @@ def _clock(*moments: str):
         datetime.datetime.fromisoformat(m).replace(tzinfo=datetime.UTC) for m in moments
     )
     return lambda: next(times)
+
+
+def test_a_backup_holds_the_sagas_chronicles(saga: Saga, folder: Path) -> None:
+    """ADR 0020: a saga's backup includes its Sessions' Chronicle files."""
+    saga.sessions = [Session("s1")]
+    chronicle.begin(saga, saga.sessions[0], by=viewing.HOST)
+
+    made = host_backup.take(saga.id, saga.name, folder)
+
+    with zipfile.ZipFile(made.path) as archive:
+        kept = archive.read("chronicles/dammerstein/s1.jsonl").decode()
+    assert json.loads(kept.splitlines()[0])["kind"] == "begin"
 
 
 def test_a_backup_holds_the_saga_and_its_seat_files(saga: Saga, folder: Path) -> None:

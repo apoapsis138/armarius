@@ -297,6 +297,7 @@ The gear at the right of the top bar opens the Settings window. It stays open be
   - A record In Creation is drawn on the theme's own drafting page, cooler and ruled. Printed pages stay in Scriptorum.
 - **Sounds** turns the app's sounds on or off.
 - **Reduce motion** stills the pages' movements, the season dial and the seal.
+- **Virtual Tabletop (Preview)**, under Preview, turns on the parts of the Virtual Tabletop built so far: Begin Session, End Session and a Session's [Chronicle](help:chronicle). It's off by default until the Virtual Tabletop is finished in 5.0. Remote seats work without it.
 
 A House theme draws the window, its pages and its windows in its House family's form, with the House's own colours, paper and mark:
 
@@ -1480,6 +1481,34 @@ Choose a Session in the Sessions list and press `m` for More, then **Cast at a G
 <!-- /tui -->
 <!-- gui -->
 Choose a Session in Saga Management's Sessions and click **Cast at a Glance**. **Print the Cast** makes a PDF in the Scriptorum style, asking for the paper first and then where to save it.
+<!-- /gui -->
+
+**See also:** [Sessions](help:tab-content-sessions)
+
+### The Chronicle
+<!-- help: chronicle -->
+
+Preview: turn on Virtual Tabletop in Settings.
+
+A Session's record of everything rolled while it's under way. In this preview the Chronicle opens and closes with its Session; rolling into it from the Chronicle pane and from Remote seats comes in the next steps of the preview. Each line has its number, its time and what happened. A roll shows every die face: each 1 that doubled, and the botch dice after a 0. Then come the modifier, the total and, when the roll had one, the Ease Factor and whether it succeeded and by how much (DE pp. 7-8).
+
+**Begin Session** puts a planned Session under way and opens its Chronicle. **End Session** marks it Played, as ticking Played does, and closes its Chronicle. The Chronicle is still read from the Session's row afterwards, but nothing more is added. Only the Session's storyguide begins or ends it, and only one Session of a saga is under way at a time. End Session isn't **End of Session** on a character's More, which gives Confidence Points for an evening of play.
+
+Who sees each roll:
+
+- **Public**: everyone at the Session.
+- **Private**: the roller and the Session's storyguide.
+- **Blind**: the number is the Session's storyguide's alone. The player of the character it was rolled for sees only that the storyguide rolled.
+
+In troupe-style play, another storyguide at the Session counts as a player that evening. A roll that shouldn't count is voided by the Session's storyguide with a reason. It stays in the Chronicle, struck through.
+
+Every die is rolled on the host's computer, and the host's computer keeps the whole Chronicle in a file beside the saga, Private and Blind rolls included. The host's own window shows only what the host may see, but anyone at that computer could open the file. A saga's backups include its Chronicles. A headless host serves Remote seats as before, but the preview needs a host with the desktop app until 5.0.
+
+<!-- tui -->
+Choose a Session in the Sessions list and press `m` for More. **Begin Session**, **End Session** and **Chronicle** are there while the preview is on in the desktop app's Settings.
+<!-- /tui -->
+<!-- gui -->
+Choose a Session in Saga Management's Sessions and click **Begin Session**, **End Session** or **Chronicle**. The preview is turned on in the [Settings window](help:settings-window).
 <!-- /gui -->
 
 **See also:** [Sessions](help:tab-content-sessions)
