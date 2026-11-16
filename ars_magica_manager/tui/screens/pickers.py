@@ -55,6 +55,7 @@ from ...models import (
 )
 from ...rules import creation_access as access
 from ...rules.vf_eligibility import VirtueFlawChooser
+from .closing import while_open
 from .fields import FieldsDialog, ModalDialog
 from .prompts import (
     _ability_dialog,
@@ -201,6 +202,10 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
                 yield Static(id="picker-books")
             yield Button("Cancel", id="btn-cancel")
 
+    # The picker can close before its Mount is handled, or while a refill
+    # waits for the one before it: while_open ends that work quietly.
+
+    @while_open
     async def on_mount(self) -> None:
         self._entries = self._load_entries()
         await self._render_list("")
@@ -305,6 +310,7 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
 
     # -- filtering / list rendering --
 
+    @while_open
     async def _render_list(self, query: str) -> None:
         self._render_generation += 1
         generation = self._render_generation

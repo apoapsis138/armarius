@@ -156,6 +156,10 @@ change in it.
 - **Reporting a bug.** New issues on GitHub open as a Bug report or a Feature request form, which ask for the version, where the app runs, the part of the app and, for a rules slip, the book and page; security problems go to a private report, and questions and ideas to Discussions. Help has a new guide, How to report a bug, under Getting help on the website: where the version and `crash.log` are, and why to attach an Export of the records involved rather than the whole saga file, since issues are public. The README and the security policy now say where the version really shows: the desktop app's title page, the terminal app's title bar, and Help's About page.
 - **The README lists every feature.** Its table now has Self-hosting, Printing and exports, Your data and upkeep, and App updates, each feature headed by its plain name as What's New is, and it says where to find the version you have.
 
+### Scriptorum
+
+- **Closing a window while it fills in.** Closing a picker, Help or the creation worksheet while it is still filling in no longer crashes.
+
 ## 4.14.0 — 2026-11-15
 
 ### Folia

@@ -15,6 +15,7 @@ from textual.widgets.option_list import Option, OptionDoesNotExist
 
 from ... import help_text as ht
 from ...markup import escape
+from .closing import while_open
 from .fields import ModalDialog
 from .help_context import HelpContext
 
@@ -146,6 +147,10 @@ class HelpScreen(ModalDialog[None]):
                         yield Markdown("", id="help-page", open_links=False)
             yield Static(_hint(), id="help-hint")
 
+    # Help can close (Esc, Go there) before its Mount or a highlight is
+    # handled, or while a page loads: while_open ends that work quietly.
+
+    @while_open
     def on_mount(self) -> None:
         topics = self.query_one("#help-topics", OptionList)
         self._list_topics()
@@ -212,6 +217,7 @@ class HelpScreen(ModalDialog[None]):
         """The page `topic_id` is on: its id and Markdown."""
         return ht.page_text(self.book, topic_id)
 
+    @while_open
     def show_topic(self, topic_id: str, *, here: bool = False) -> None:
         """Show `topic_id`'s page, scrolled to it; the keys line only for
         where Help was opened from."""
@@ -234,6 +240,7 @@ class HelpScreen(ModalDialog[None]):
         else:
             self._scroll_to(topic_id)
 
+    @while_open
     async def _load(
         self, markdown: Markdown, page_id: str, text: str, topic_id: str
     ) -> None:
@@ -252,16 +259,13 @@ class HelpScreen(ModalDialog[None]):
                 else:
                     await markdown.append(chunk)
 
+    @while_open
     def _scroll_to(self, topic_id: str, tries: int = 25) -> None:
         """Scroll the page to `topic_id`'s heading (its top for a page).
         A page just loaded isn't laid out yet: until it is, try again after
-        the next refresh. Help may have closed meanwhile (Go there, Esc),
-        taking its page with it: then there is nothing to scroll."""
-        scrolls = self.query("#help-scroll").results(VerticalScroll)
-        pages = self.query("#help-page").results(Markdown)
-        scroll, markdown = next(scrolls, None), next(pages, None)
-        if scroll is None or markdown is None:
-            return  # Help has closed, its page removed
+        the next refresh."""
+        scroll = self.query_one("#help-scroll", VerticalScroll)
+        markdown = self.query_one("#help-page", Markdown)
         topic = self.book.topic(topic_id)
         if topic is None or topic.level < 3:
             scroll.scroll_home(animate=False)

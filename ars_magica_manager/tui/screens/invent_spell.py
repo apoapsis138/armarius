@@ -58,6 +58,7 @@ from ...rules import enchantment, lab_seasons
 from ...rules import experiment as ex
 from ...rules import familiar_seasons as fs
 from ...rules import laboratory_seasons as ls
+from .closing import while_open
 from .fields import ModalDialog
 from .prompts import terminal_fields
 from .steps import run_steps
@@ -1141,6 +1142,7 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         level = "Gen" if source.level is None else source.level
         return f"{source.name}  {spl.shorthand(source)}  (level {level})"
 
+    @while_open  # also run after a refresh, when the window may have closed
     def _refresh(self) -> None:
         if not self._ready:
             return

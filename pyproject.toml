@@ -42,6 +42,8 @@ dev = [
     "pyright>=1.1.414",
     "pytest-xdist>=3.8.0",
     "pytest-timeout>=2.3",
+    # Reruns a test many times (--count N) to show a flaky one fails, and is fixed.
+    "pytest-repeat>=0.9.4",
     # The desktop version is type-checked and tested with the rest.
     {include-group = "gui"},
 ]
