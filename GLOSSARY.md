@@ -236,6 +236,12 @@ change or snapshot) has the form its records expect, refusing it by field
 otherwise.
 _Avoid_: Validation (too broad: a form's own checks are not this)
 
+**Plain id**:
+An id made only of lowercase letters, digits, `_` and `-`, starting with a
+letter or digit, at most 100 characters. Every id coming in must be one,
+as ids name files.
+_Avoid_: Safe id, slug (a slug is how a name becomes an id)
+
 **Saga Content**:
 The one place listing what a saga's pickers offer: its books in play and
 sources, the catalogs and what it hides from them, its house rules, its own

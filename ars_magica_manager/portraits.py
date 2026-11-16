@@ -29,8 +29,12 @@ def path(character: Character) -> Path | None:
 
 def file_name(saga: Saga, character: Character, suffix: str) -> str:
     """The copy's name: the saga's and character's ids, so no two
-    characters share one."""
-    return f"{saga.id}--{character.id}{suffix.lower()}"
+    characters share one. ValueError if the ids would make it anything but
+    a picture's bare name in the portraits folder (ADR 0028)."""
+    name = f"{saga.id}--{character.id}{suffix.lower()}"
+    if not safe_name(name):
+        raise ValueError(f"{name!r} would name a file outside the portraits folder")
+    return name
 
 
 def set_portrait(saga: Saga, character: Character, picture: Path) -> None:

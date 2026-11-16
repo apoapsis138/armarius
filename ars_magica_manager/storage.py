@@ -4,6 +4,7 @@ user's data folder (paths.data_dir())."""
 from __future__ import annotations
 
 import json
+import os
 import re
 from collections.abc import Callable, Iterable, Iterator
 from contextlib import contextmanager
@@ -71,8 +72,18 @@ def generate_saga_id(name: str) -> str:
     return generate_unique_id(name, list_sagas())
 
 
+def _in_folder(folder: Path, name: str) -> Path:
+    """`folder / name`, refused (ValueError) if `name` would put the file
+    anywhere else ("../x"): a guard for ids from someone else's file that
+    never passed the shape check (ADR 0028)."""
+    path = folder / name
+    if Path(os.path.abspath(path)).parent != Path(os.path.abspath(folder)):
+        raise ValueError(f"{name!r} would name a file outside the sagas folder")
+    return path
+
+
 def saga_path(saga_id: str) -> Path:
-    return sagas_dir() / f"{saga_id}.json"
+    return _in_folder(sagas_dir(), f"{saga_id}.json")
 
 
 #: What this copy of the app last saw of each saga, by its file: the file's
@@ -334,7 +345,7 @@ def backup_path(saga_id: str, age: int = 0) -> Path:
     list_sagas() never lists them): `<id>.json` for the newest (age 0), and
     `<id>.1.json` ... for older ones."""
     name = f"{saga_id}.json" if age == 0 else f"{saga_id}.{age}.json"
-    return sagas_dir() / "backups" / name
+    return _in_folder(sagas_dir() / "backups", name)
 
 
 def after_path(saga_id: str, age: int = 0) -> Path:
@@ -342,13 +353,13 @@ def after_path(saga_id: str, age: int = 0) -> Path:
     backup taken just before it (`backup_path` of the same age): the pair
     Undo Last Season reads (undo_season.py)."""
     name = f"{saga_id}.after.json" if age == 0 else f"{saga_id}.after.{age}.json"
-    return sagas_dir() / "backups" / name
+    return _in_folder(sagas_dir() / "backups", name)
 
 
 def undone_path(saga_id: str) -> Path:
     """Where the saga as it stood is kept when a season is undone, so a
     mistaken undo loses nothing (copied back by hand)."""
-    return sagas_dir() / "backups" / f"{saga_id}.undone.json"
+    return _in_folder(sagas_dir() / "backups", f"{saga_id}.undone.json")
 
 
 def _write_copy(saga: Saga, path: Path) -> Path:

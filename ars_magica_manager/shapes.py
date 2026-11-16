@@ -11,7 +11,8 @@ saves (renamed keys, text that became a list) before the values are typed:
   `strict` (data from the network, written by the same version of the app),
   a key the record doesn't have is refused too, and no older shape is
   allowed. LEGACY lists the older shapes a `from_dict` still turns into the
-  current one.
+  current one. Every id field (a record's `id`, a link ending `_id`, a list
+  of links ending `_ids`) must hold a plain id or nothing (ADR 0028).
 * `check_built(record)`, after building: every value against its field's
   type, exactly (an int stands for a float; None only where a field allows
   it; a bool is not an int).
@@ -28,6 +29,7 @@ annotations, no class hierarchy.
 from __future__ import annotations
 
 import dataclasses
+import re
 import types
 import typing
 from collections.abc import Mapping
@@ -44,6 +46,17 @@ LEGACY: dict[str, tuple[type, ...]] = {
     # (models.common.read_secrets).
     "*.secrets": (str,),
 }
+
+#: A plain id: lowercase letters, digits, _ and -, starting with a letter or
+#: digit, at most 100 characters. Ids name files and are joined into paths,
+#: so one from someone else's file must be no more than a name (ADR 0028).
+PLAIN_ID = re.compile(r"[a-z0-9][a-z0-9_-]{0,99}")
+
+
+def is_plain_id(text: str) -> bool:
+    """Whether `text` is a plain id (PLAIN_ID)."""
+    return PLAIN_ID.fullmatch(text) is not None
+
 
 # The kinds of plan.
 ANY, RECORD, SEQUENCE, MAPPING, TYPED, UNION, LITERAL, BOOL, INT, FLOAT, OTHER = range(
@@ -133,6 +146,26 @@ def _required(cls: type) -> tuple[str, ...]:
 
 
 @cache
+def _id_fields(cls: type) -> tuple[str, ...]:
+    """The fields of `cls` holding ids: its own, and its links."""
+    return tuple(
+        name
+        for name, _ in _record(cls)
+        if name == "id" or name.endswith(("_id", "_ids"))
+    )
+
+
+def _plain_ids(data: dict[Any, Any], cls: type) -> None:
+    for name in _id_fields(cls):
+        value = data.get(name)
+        found = value if isinstance(value, list) else [value]
+        if any(isinstance(v, str) and v and not is_plain_id(v) for v in found):
+            refused = _Refused("not a plain id")
+            refused.parts.append(name)
+            raise refused
+
+
+@cache
 def _legacy(cls: type, name: str) -> tuple[type, ...]:
     return LEGACY.get(f"{cls.__name__}.{name}", ()) + LEGACY.get(f"*.{name}", ())
 
@@ -168,18 +201,24 @@ def _item(item: object, index: int) -> str:
 # -- before building ---------------------------------------------------------
 
 
-def check_raw(data: object, cls: type, *, strict: bool = False) -> None:
+def check_raw(
+    data: object, cls: type, *, strict: bool = False, plain_ids: bool = True
+) -> None:
     """Refuse (ValueError) data of the wrong kind of container for record
-    `cls` (see the module's docstring)."""
+    `cls`, or an id that isn't plain (see the module's docstring). Without
+    `plain_ids` ids aren't checked: an import, which gives each record it
+    brings in an id of its own."""
     try:
-        _raw_record(data, cls, strict)
+        _raw_record(data, cls, strict, plain_ids)
     except _Refused as refused:
         raise _named(refused) from None
 
 
-def _raw_record(data: object, cls: type, strict: bool) -> None:
+def _raw_record(data: object, cls: type, strict: bool, plain_ids: bool) -> None:
     if not isinstance(data, dict):
         raise _Refused(f"expected a record ({cls.__name__})")
+    if plain_ids:
+        _plain_ids(data, cls)
     if strict:
         names = _names(cls)
         for key in data:
@@ -201,20 +240,20 @@ def _raw_record(data: object, cls: type, strict: bool) -> None:
         if not strict and isinstance(value, _legacy(cls, name)):
             continue
         try:
-            _raw(value, plan, strict)
+            _raw(value, plan, strict, plain_ids)
         except _Refused as refused:
             refused.parts.append(name)
             raise
 
 
-def _raw(value: object, plan: _Plan, strict: bool) -> None:
+def _raw(value: object, plan: _Plan, strict: bool, plain_ids: bool) -> None:
     kind = plan.kind
     if value is None:
         if plan.allows_none or kind == ANY:
             return
         raise _Refused("missing")
     if kind == RECORD:
-        _raw_record(value, plan.cls, strict)
+        _raw_record(value, plan.cls, strict, plain_ids)
     elif kind == SEQUENCE:
         if not isinstance(value, list):
             raise _Refused("expected a list")
@@ -225,7 +264,12 @@ def _raw(value: object, plan: _Plan, strict: bool) -> None:
             if sized and index >= len(plan.inner):
                 break
             try:
-                _raw(entry, plan.inner[index] if sized else plan.inner[0], strict)
+                _raw(
+                    entry,
+                    plan.inner[index] if sized else plan.inner[0],
+                    strict,
+                    plain_ids,
+                )
             except _Refused as refused:
                 refused.parts.append(_item(entry, index))
                 raise
@@ -240,7 +284,7 @@ def _raw(value: object, plan: _Plan, strict: bool) -> None:
             if inner is None:
                 continue
             try:
-                _raw(entry, inner, strict)
+                _raw(entry, inner, strict, plain_ids)
             except _Refused as refused:
                 refused.parts.append(f"[{key}]")
                 raise
@@ -248,7 +292,7 @@ def _raw(value: object, plan: _Plan, strict: bool) -> None:
         first: _Refused | None = None
         for arm in plan.inner:
             try:
-                _raw(value, arm, strict)
+                _raw(value, arm, strict, plain_ids)
             except _Refused as refused:
                 first = first or refused
             else:

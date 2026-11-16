@@ -359,7 +359,7 @@ def test_import_refuses_an_id_that_is_a_path(
     tmp_path_factory: pytest.TempPathFactory,
 ) -> None:
     data = asdict(Saga(id="../escape", name="Escape"))
-    assert "safe id" in refused(
+    assert "id: not a plain id" in refused(
         ["saga", "import", str(_saga_file(tmp_path_factory, data))]
     )
     assert storage.list_sagas() == []
