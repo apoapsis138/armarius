@@ -136,7 +136,7 @@ change in it.
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
-## Unreleased
+## 4.14.0 — 2026-11-15
 
 ### PDF Exports and Handouts
 
@@ -161,7 +161,7 @@ change in it.
 
 ### Book of Hours
 
-- **General spells from a Lab Text.** A Lab Text for a General spell, such as Aegis of the Hearth, now teaches the level written on it instead of refusing with "has no level" (#16). The magus learns a version of his own at that level, with the text named as its source, and the Lab Text he writes teaches that version; two magi learning from the same text each get their own. A General spell's text with no level asks for one, and the Lab Work window gives its reason once, not twice.
+- **General spells from a Lab Text.** A Lab Text for a General spell, such as Aegis of the Hearth, now teaches the level written on it instead of refusing with "has no level" (#16). The magus learns a version of their own at that level, with the text named as its source, and the Lab Text they write teaches that version; two magi learning from the same text each get their own. A General spell's text with no level asks for one, and the Lab Work window gives its reason once, not twice.
 
 ### Renovatio
 
