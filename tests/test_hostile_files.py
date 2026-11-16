@@ -9,7 +9,8 @@ from dataclasses import asdict
 import pytest
 from support import everything_saga
 
-from ars_magica_manager import portraits, storage
+from ars_magica_manager import portraits, shapes, storage, transfer
+from ars_magica_manager.models import Character, Covenant, Laboratory, Saga
 
 
 def _data() -> dict:
@@ -111,3 +112,62 @@ def test_a_portrait_is_never_named_outside_the_portraits_folder(tmp_path):
         portraits.set_portrait(saga, character, picture)
     assert character.portrait == ""
     assert not any(storage.portraits_dir().parent.rglob("*escaped*"))
+
+
+# -- an import re-ids what isn't plain (STORY-2331) ----------------------------
+
+
+def test_an_export_with_hostile_ids_comes_in_with_fresh_ones_and_its_links(tmp_path):
+    keep = Covenant(id="../keep", saga_id="src", name="Keep")
+    magus = Character(
+        id="../../Leandro", name="Leandro", type="magus", covenant_id="../keep"
+    )
+    lab = Laboratory(
+        id="tower", covenant_id="../keep", name="Tower", owner_id="../../Leandro"
+    )
+    magus.assigned_lab_id = "tower"
+    source = Saga(
+        id="src",
+        name="Source",
+        covenants=[keep],
+        characters=[magus],
+        laboratories=[lab],
+    )
+    path = transfer.export_to(
+        tmp_path / "keep.amm.json", source, keep, with_members=True
+    )
+    data = transfer.read(path)
+    target = Saga(id="dst", name="Target")
+    transfer.apply(target, transfer.plan_import(target, data))
+    [covenant], [character], [laboratory] = (
+        target.covenants,
+        target.characters,
+        target.laboratories,
+    )
+    assert all(
+        shapes.is_plain_id(found)
+        for found in (covenant.id, character.id, laboratory.id)
+    )
+    assert character.covenant_id == covenant.id
+    assert (laboratory.covenant_id, laboratory.owner_id) == (covenant.id, character.id)
+    assert character.assigned_lab_id == laboratory.id
+    # And the saga, with them in it, saves and opens again.
+    storage.save_saga(target)
+    assert storage.load_saga("dst").characters[0].id == character.id
+
+
+def test_an_export_with_a_hostile_id_inside_a_record_is_refused(tmp_path):
+    source = everything_saga()
+    character = source.characters[0]
+    path = transfer.export_to(tmp_path / "one.amm.json", source, character)
+    text = path.read_text(encoding="utf-8")
+    data = json.loads(text)
+    held = data["saga"]["characters"][0]
+    held["inventory"] = [{"id": "../../x", "kind": "weapon", "name": "Knife"}]
+    path.write_text(json.dumps(data), encoding="utf-8")
+    target = Saga(id="dst", name="Target")
+    with pytest.raises(
+        ValueError, match=r"inventory\[\.\./\.\./x\]\.id: not a plain id"
+    ):
+        transfer.plan_import(target, transfer.read(path))
+    assert target.characters == []
