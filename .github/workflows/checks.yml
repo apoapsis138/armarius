@@ -109,8 +109,12 @@ jobs:
           enable-cache: true
       - name: Install Python and dependencies
         run: uv sync --locked
+      # A failed test is run once more alone (tools/ci_tests.py): one that
+      # passes then is flaky, and the job stays green but warns of it on
+      # the pull request and in the job's summary; one that fails again,
+      # or a collection or setup error, fails the job.
       - name: Tests (shard ${{ matrix.shard }} of 4)
-        run: uv run pytest -q -n auto --dist worksteal --shard=${{ matrix.shard }}/4
+        run: uv run python tools/ci_tests.py -q -n auto --dist worksteal --shard=${{ matrix.shard }}/4
 
   # A docs-only pull request's lighter run: the fast tier, no screen tests.
   fast-tests:

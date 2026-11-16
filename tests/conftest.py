@@ -95,26 +95,27 @@ def pytest_runtest_logfinish(nodeid, location):
         pass
 
 
-def note_failed(nodeid: str) -> None:
-    """Add a failed test's id to the file story_check named
-    (tools/story_check.py, FAILED_IDS_ENV), one per line, so it can rerun
-    the test by its exact id, spaces and all. Only the process that
-    reports (xdist's controller, or a run without workers) writes it."""
-    path = os.environ.get("STORY_CHECK_FAILED_IDS")
+def note_failed(nodeid: str, phase: str) -> None:
+    """Add a failed test to the file tools/rerun_once.py named
+    (FAILED_IDS_ENV): a line of its phase (collect, setup, call or
+    teardown), a tab and its exact id, spaces and all, so story_check and
+    CI can rerun it. Only the process that reports (xdist's controller, or
+    a run without workers) writes it."""
+    path = os.environ.get("RERUN_FAILED_IDS")
     if not path or "PYTEST_XDIST_WORKER" in os.environ:
         return
     with open(path, "a", encoding="utf-8") as ids:
-        ids.write(nodeid + "\n")
+        ids.write(f"{phase}\t{nodeid}\n")
 
 
 def pytest_runtest_logreport(report):
     if report.failed:
-        note_failed(report.nodeid)
+        note_failed(report.nodeid, report.when)
 
 
 def pytest_collectreport(report):
     if report.failed:
-        note_failed(report.nodeid)
+        note_failed(report.nodeid, "collect")
 
 
 @pytest.fixture(autouse=True)

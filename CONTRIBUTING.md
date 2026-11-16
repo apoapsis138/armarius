@@ -28,6 +28,15 @@ Tests run in two tiers.
 - Then boot the app (`uv run python main.py`, `uv run python gui.py`), and
   for a UI change look at what it really draws (see "Seeing the screen").
 
+**Every flake becomes a story the same day.** A flaky test is a bug in its
+waits, not bad luck: the day one shows up, locally or in CI, it gets a
+story of its own to find the cause and fix it. In CI
+(`tools/ci_tests.py`) a failed test is run once more alone, sharing
+story_check's rerun (`tools/rerun_once.py`): one that passes then keeps
+the job green but is flagged as a "Flaky test" warning on the pull request
+and in the job's summary, and one that fails again, or a collection or
+setup error, fails the job.
+
 Tests are isolated per test (a temporary saga folder and settings path, and
 conftest closes every Qt window a test leaves open), so parallel runs are
 safe. Screen tests (Pilot or Qt; `tools/tiers.py` says which) are marked

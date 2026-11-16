@@ -9,6 +9,8 @@ from types import SimpleNamespace
 
 import conftest
 import pytest
+from rerun_fakes import FakeRuns
+from rerun_once import FAILED_IDS_ENV, Failure, failures
 
 TOOL = Path(__file__).resolve().parent.parent / "tools" / "story_check.py"
 SPACED = "tests/test_dialog_contracts_magus.py::test_form_contract[add magus]"
@@ -26,29 +28,11 @@ def check(tmp_path, monkeypatch):
     return module
 
 
-def fake_runs(check, monkeypatch, failed: dict[str, bool]) -> list[list[str]]:
-    """Fake every run: the first test run fails the ids in `failed`,
-    writing them as tests/conftest.py does; a rerun alone passes when
-    `failed[id]` is False. The other tools pass. The commands, in order."""
-    commands: list[list[str]] = []
-
-    def run(command, limit=None, env=None):
-        commands.append(command)
-        if env and check.FAILED_IDS_ENV in env:
-            if not failed:
-                return 0, "5 passed"
-            Path(env[check.FAILED_IDS_ENV]).write_text(
-                "".join(f"{test}\n" for test in failed), encoding="utf-8"
-            )
-            return 1, f"{len(failed)} failed, 5 passed"
-        if "no:xdist" in command:
-            if failed[command[-1]]:
-                return 1, "E   AssertionError: assert 1 == 2\n1 failed"
-            return 0, "1 passed"
-        return 0, ""
-
-    monkeypatch.setattr(check, "run", run)
-    return commands
+def fake_runs(check, monkeypatch, failed: dict[str, bool]) -> FakeRuns:
+    """Fake every run story_check makes (rerun_fakes.FakeRuns)."""
+    runs = FakeRuns(failed)
+    monkeypatch.setattr(check, "run", runs)
+    return runs
 
 
 def test_all_green_passes(check, monkeypatch) -> None:
@@ -78,23 +62,31 @@ def test_a_real_failure_fails_with_why(check, monkeypatch) -> None:
 
 
 def test_an_id_with_spaces_and_brackets_is_rerun_whole(check, monkeypatch):
-    commands = fake_runs(check, monkeypatch, {SPACED: False})
+    runs = fake_runs(check, monkeypatch, {SPACED: False})
     passed, said = check.tests_step(["pytest"], 10)
     assert not passed and f"FLAKY {SPACED} " in said
-    assert commands[1][-1] == SPACED  # one argument, spaces and all
+    assert runs.reruns() == [SPACED]  # one argument, spaces and all
 
 
 def test_the_run_notes_failed_ids_only_where_it_reports(tmp_path, monkeypatch):
-    """tests/conftest.py writes each failed id once, from xdist's controller
-    (or a run without workers), never from a worker too."""
+    """tests/conftest.py writes each failure's phase and id, from xdist's
+    controller (or a run without workers), never from a worker too; and
+    rerun_once reads them back whole."""
     ids = tmp_path / "failed.txt"
-    monkeypatch.setenv("STORY_CHECK_FAILED_IDS", str(ids))
+    monkeypatch.setenv(FAILED_IDS_ENV, str(ids))
     monkeypatch.delenv("PYTEST_XDIST_WORKER", raising=False)
-    conftest.pytest_runtest_logreport(SimpleNamespace(failed=True, nodeid=SPACED))
-    conftest.pytest_runtest_logreport(SimpleNamespace(failed=False, nodeid="x"))
+    report = SimpleNamespace
+    conftest.pytest_runtest_logreport(report(failed=True, nodeid=SPACED, when="call"))
+    conftest.pytest_runtest_logreport(report(failed=False, nodeid="x", when="call"))
+    conftest.pytest_runtest_logreport(report(failed=True, nodeid="s", when="setup"))
+    conftest.pytest_collectreport(report(failed=True, nodeid="tests/t.py"))
     monkeypatch.setenv("PYTEST_XDIST_WORKER", "gw0")
-    conftest.pytest_runtest_logreport(SimpleNamespace(failed=True, nodeid="y"))
-    assert ids.read_text(encoding="utf-8") == f"{SPACED}\n"
+    conftest.pytest_runtest_logreport(report(failed=True, nodeid="y", when="call"))
+    assert failures(ids) == [
+        Failure(SPACED, "call"),
+        Failure("s", "setup"),
+        Failure("tests/t.py", "collect"),
+    ]
 
 
 def test_each_run_has_its_own_running_note(monkeypatch) -> None:
