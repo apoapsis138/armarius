@@ -10,7 +10,6 @@ from textual import events
 from textual.app import ComposeResult
 from textual.binding import Binding, BindingType
 from textual.containers import Horizontal, Vertical, VerticalScroll
-from textual.css.query import NoMatches
 from textual.screen import ModalScreen, Screen
 from textual.widgets import (
     Button,
@@ -27,12 +26,14 @@ from ... import form_spec as fs
 from ...commands import Picked
 from ...form_spec import DialogField
 from ...markup import escape
+from .closing import OpenAwareScreen, while_open
 from .help_context import HelpContext
 
 
-class ModalDialog[ResultT](ModalScreen[ResultT]):
+class ModalDialog[ResultT](OpenAwareScreen[ResultT], ModalScreen[ResultT]):
     """Base of the app's modal dialogs: Escape (or a dialog's Cancel button
-    calling action_cancel) dismisses with CANCEL_RESULT."""
+    calling action_cancel) dismisses with CANCEL_RESULT. Work that may
+    outlive the dialog is marked @while_open (closing.py)."""
 
     BINDINGS: ClassVar[list[BindingType]] = [
         ("escape", "cancel", "Cancel"),
@@ -447,13 +448,11 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
             4, self.size.height - reserved
         )
 
+    @while_open
     def _refit(self) -> None:
         """_fit again once the live line has rewrapped -- unless the form
         has been closed in the meantime."""
-        try:
-            self._fit()
-        except NoMatches:
-            pass  # closed: its widgets are gone
+        self._fit()
 
     def _read(self, spec: DialogField) -> Any:
         """A (non-info) field's value as its widget holds it: stripped text
