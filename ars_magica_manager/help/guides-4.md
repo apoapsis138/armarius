@@ -813,8 +813,20 @@ above, private to the app's user. What that gives up: someone who steals
 the NAS's drive could read the key, and then you'd rotate it and send
 everyone a new Invite.
 
-Over SSH, `sudo docker compose ...` works from the `armarius` folder, and
-the Docker app's **Project** view shows the same containers.
+Over SSH, `sudo docker compose ...` works from the `armarius` folder.
+
+**Optional: see it in UGOS's Docker app.** The Docker app lists only the
+projects it made, so one started from the command line isn't there at
+first. Once you've run `docker compose up -d` the first time, add it:
+
+1. **Make the project.** In the Docker app, **Project**, **Create**.
+2. **Name it `armarius`.** It must match the `name:` in `compose.yaml`, so the running containers are taken in.
+3. **Choose the folder.** Pick the `armarius` shared folder. UGOS loads the `compose.yaml` already there: leave it as it is, and leave the environment variables empty, since `.env` and `tunnel.env` are in the folder.
+4. **Create it.** The project shows 3/3 running.
+
+From there you can start it, stop it and watch it. It never shows
+"Updatable", because `.env` pins the version, so update it as before (see
+[A newer version](help:guide-self-hosting-update)).
 
 ### Bringing the saga in
 <!-- help: guide-self-hosting-move -->
@@ -2794,3 +2806,55 @@ No other player sees your notes, nor that there are any, and an export
 leaves them out.
 
 **See also:** [Notes & Goals](help:section-char-notes), [Study Path](help:study-path), [Teaching Requests](help:teaching-requests)
+
+# How to report a bug
+<!-- help: guide-report-bug -->
+
+Something went wrong, or the app doesn't match the book, and you'd like it
+fixed. A bug report on the project's GitHub page does that.
+
+1. **Open a new issue.** On the
+   [Armarius repository](https://github.com/apoapsis138/armarius), open
+   **Issues**, then **New issue**, and choose **Bug report**. (A
+   **Feature request** asks for something the app doesn't do yet.) You
+   need a free GitHub account.
+2. **Say what happened, and how.** Write what you did, step by step, and
+   what you saw, so someone else can make it happen again.
+3. **Give the version.**
+<!-- tui -->
+   It's in the title bar, as "Armarius v4.13.0", and on Help's About page.
+<!-- /tui -->
+<!-- gui -->
+   It's on the title page, under Armarius's name, and on Help's About
+   page.
+<!-- /gui -->
+   For a saga on a headless host, it's `ARMARIUS_VERSION` in its `.env`
+   (see [How to self-host a saga](help:guide-self-hosting)).
+4. **Say where it runs.** The form asks which front-end and how it runs:
+   the Desktop app, the Terminal app on your computer or served to
+   browsers or SSH, a Remote seat in a hosted saga, or a headless host.
+5. **If the app closed itself without a word**, open `crash.log` in your
+   save folder and paste what it holds into the form. The Sagas page
+   names the folder (see [How to change the save folder](help:guide-save-folder)).
+6. **If it's about the rules,** tick **The app doesn't match the book**
+   and give the book and printed page. The Definitive Edition wins where
+   a supplement disagrees. If you don't know the page, say so.
+7. **If records are involved,** attach an Export of just those records
+   (see [How to import and export](help:guide-import-export)).
+
+**Never attach your whole saga file.** The repository is public, so
+anyone can read an issue and everything attached to it. An Export of the
+few records the bug touches is all that's needed.
+
+**A security problem goes elsewhere.** If someone could see or change
+what they shouldn't, such as a player reading another's Secrets, don't
+open an issue. Report it privately from the repository's **Security**
+tab, with **Report a vulnerability**.
+
+**Questions and ideas** go to the repository's
+[Discussions](https://github.com/apoapsis138/armarius/discussions): ask how
+to do something, or share an idea before it becomes an issue. For
+installing and setting up, the
+[FAQ](https://apoapsis138.github.io/armarius/faq/) may already answer it.
+
+**See also:** [How to update the app](help:guide-update), [How to import and export](help:guide-import-export)
