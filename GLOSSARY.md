@@ -114,11 +114,11 @@ A Player who is not coming to a given Session. Their characters are not played t
 _Avoid_: absent, no-show
 
 **Planned Session / Played Session**:
-A Session not yet played, and one that has been. The next planned Session is the earliest unplayed one; its date may be blank.
+A Session not yet played, and one that has been. A Session goes from Planned to Under way to Played. The next planned Session is the earliest unplayed one; its date may be blank.
 _Avoid_: upcoming, past
 
 **Under way**:
-Said of a Session between Begin Session and End Session.
+Said of a Session between Begin Session and End Session. Only the Session's storyguide begins or ends it, and at most one Session of a saga is Under way at a time.
 _Avoid_: in play, live, running
 
 **Chronicle**:
@@ -129,17 +129,25 @@ _Avoid_: log, Session log, feed, chat, transcript
 A part of a Session at one place and time, with who is present and its aura, prepared ahead or made on the night. It may name the Story chapter it plays.
 _Avoid_: encounter
 
+**Audience**:
+Who may see a Chronicle entry: the Table (everyone at the Session), the Session's storyguide alone, or chosen Players (with the Session's storyguide always). Any other storyguide of the troupe at the Session counts as a Player that evening.
+_Avoid_: visibility (for the entry's setting), permissions, scope
+
 **Public roll**:
-A roll everyone at the Session sees.
+A roll whose Audience is the Table: everyone at the Session sees it.
 _Avoid_: open roll
 
 **Private roll**:
-A roll only the roller and the Session's storyguide see.
+A roll whose Audience is the roller chosen alone: only the roller and the Session's storyguide see it.
 _Avoid_: secret roll, hidden roll
 
 **Blind roll**:
-A roll whose number only the Session's storyguide sees; the roller sees only that it was rolled. Only a storyguide asks for one.
+A roll whose number has the Session's storyguide alone as its Audience; the roller sees only that it was rolled. Only a storyguide asks for one.
 _Avoid_: secret roll, GM roll
+
+**Free roll**:
+A roll made from the Chronicle rather than from a sheet, with a modifier the roller types and a line saying what it is for.
+_Avoid_: quick roll, custom roll, manual roll
 
 **Roll request**:
 A storyguide's call for one or more characters to roll, with what it is for.
@@ -564,6 +572,10 @@ _Avoid_: House skin, House palette
 The window the settings gear opens, holding the theme and the app's other
 settings.
 _Avoid_: Preferences, options, settings menu
+
+**Virtual Tabletop (Preview)**:
+The setting, off by default, that shows the Chronicle and Begin Session while the Virtual Tabletop is still being built, until it is finished in version 5.0. Remote seats work without it.
+_Avoid_: online play (Remote seats are online play already), VTT (in the help), beta, experimental, feature flag
 
 **Trail**:
 The row of crumbs across the top of the desktop app, from Sagas down to the
