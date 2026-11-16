@@ -19,6 +19,7 @@ from textual.containers import Horizontal, VerticalScroll
 from textual.content import Content
 from textual.css.query import NoMatches
 from textual.events import DescendantBlur, DescendantFocus
+from textual.message import Message
 from textual.screen import Screen
 from textual.widget import Widget
 from textual.widgets import (
@@ -546,6 +547,21 @@ class WorkspaceBase(Screen[None]):
         self._spot_after_open: tuple[Ref, saga_index.Spot] | None = None
         #: ... and then until its sheet has announced its first tab.
         self._spot_after_tab: tuple[Ref, saga_index.Spot] | None = None
+        #: Whether the view in the detail pane has settled: built, and its
+        #: first focus landed here (see _settle). DetailSettled announces it.
+        self.detail_settled = False
+        #: Counts detail-pane swaps, so a late step of an old view's
+        #: settling is ignored.
+        self._detail_generation = 0
+        #: Whether the view's first focus has been asked for (on a sheet,
+        #: once its first tab is announced), and the widget that focus is
+        #: going to, until it lands (None: nothing on the way).
+        self._settling = False
+        self._focus_asked: Widget | None = None
+
+    class DetailSettled(Message, bubble=False):
+        """The view in the detail pane has settled: built, with its first
+        focus landed and the keys worked out for it (detail_settled)."""
 
     def compose(self) -> ComposeResult:
         yield Header()
@@ -1285,6 +1301,8 @@ class WorkspaceBase(Screen[None]):
         footer = SplitFooter.of(self.screen)
         if footer is not None:
             self.app.call_later(footer.release)
+        if initial:
+            self._settle()  # the sheet's first focus has been asked for
 
     def go_to(self, place: str) -> bool:
         """Help's Go there: open `place` (a tab's or section's id, as the
@@ -1396,6 +1414,8 @@ class WorkspaceBase(Screen[None]):
         DescendantFocus will follow."""
         moved = widget is not self.app.focused
         widget.focus(scroll_visible=scroll)
+        if moved:
+            self._focus_asked = widget
         return moved
 
     def _focus_first_section(self, *, initial: bool = False) -> bool:
@@ -1427,6 +1447,7 @@ class WorkspaceBase(Screen[None]):
                 stop = None
             if stop is None and not initial:
                 self.screen.set_focus(None)
+                self._focus_asked = None
                 return False
         if stop is None:
             try:
@@ -1441,6 +1462,9 @@ class WorkspaceBase(Screen[None]):
         # too, or the Footer hint and check_action gating go stale.
         self.refresh_bindings()
         self._update_where()
+        if event.widget is self._focus_asked:
+            self._focus_asked = None
+            self._check_settled()
 
     def on_selectable_list_moved(self, event: SelectableList.Moved) -> None:
         event.stop()
@@ -1547,7 +1571,41 @@ class WorkspaceBase(Screen[None]):
             # widget not yet removed collides with its freshly-mounted
             # replacement and Textual raises DuplicateIds.
             await detail_pane.remove_children()
+            self.detail_settled = False
+            self._settling = False
+            self._focus_asked = None
+            self._detail_generation += 1
             await detail_pane.mount(*widgets)
+        # The caller gives the view its first focus next; a sheet does when
+        # it announces its first tab (on_tabbed_content_tab_activated).
+        self.call_later(self._settle_unless_tabs_pending, self._detail_generation)
+
+    def _settle_unless_tabs_pending(self, generation: int) -> None:
+        """Start settling the view shown at `generation`, unless it is a
+        sheet whose first tab is still to be announced."""
+        if generation != self._detail_generation:
+            return
+        view = self._current_sheet_view()
+        if view is not None and not view.initial_tab_seen and view.query(TabbedContent):
+            return
+        self._settle()
+
+    def _settle(self) -> None:
+        """The view's first focus has been asked for: it has settled once
+        that focus lands (on_descendant_focus), or now if none is on the
+        way."""
+        self._settling = True
+        self._check_settled()
+
+    def _check_settled(self) -> None:
+        if not self._settling or self.detail_settled:
+            return
+        asked = self._focus_asked
+        if asked is not None and asked.is_attached and asked.focusable:
+            return  # its DescendantFocus hasn't reached here yet
+        self._focus_asked = None
+        self.detail_settled = True
+        self.post_message(self.DetailSettled())
 
     async def _show_placeholder_detail(self, title: str, hint: str) -> None:
         await self._set_detail(Static(f"{title}\n\n{hint}"))

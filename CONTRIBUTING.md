@@ -255,3 +255,23 @@ it:
 - Under load a bare `pilot.pause()` can be not quite enough, and a fixed
   extra delay only makes the failure rarer. Poll for the real condition
   (a `_wait_until(pilot, condition)` helper) at the lowest shared call site.
+
+### Settled and closed
+
+Two moments in a screen's life decide when a test may act, and when the
+app's own work must stop.
+
+- **Settled.** Showing a tree node in the workspace builds its view, then
+  gives it a first focus (a sheet does this when its first tab is
+  announced), and that focus reaches the workspace a few message-loop turns
+  later, rebuilding the Footer. Until then a key a test presses can go to
+  the wrong section, and a focus the test sets can be taken back.
+  The workspace's `detail_settled` turns true, and it posts
+  `DetailSettled`, once that first focus has landed. In a test,
+  `await settled(pilot, workspace)` (`tests/support.py`) waits for that and
+  for the Footer to finish rebuilding: wait for it after choosing a node,
+  before pressing keys, focusing a section or counting Footer rebuilds.
+- **Closed.** A screen's async work (an awaiting `on_mount`, a worker, a
+  `call_after_refresh`) can outlive the screen. Mark it `@while_open`
+  (`tui/screens/closing.py`): a missing widget once the screen has closed
+  ends the work quietly, and is still an error while it is open.

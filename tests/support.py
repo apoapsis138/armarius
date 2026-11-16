@@ -62,6 +62,7 @@ from ars_magica_manager.models import (
     VirtueFlawInstance,
 )
 from ars_magica_manager.rules.xp import ability_xp
+from ars_magica_manager.tui.screens.widgets import SplitFooter
 
 
 def offer_only(saga: Saga, *offered: str) -> Saga:
@@ -140,6 +141,34 @@ async def wait_until(pilot, condition, timeout: float = 5.0, interval: float = 0
     return condition()
 
 
+async def settled(pilot, workspace) -> None:
+    """Wait until the workspace's view has settled (CONTRIBUTING.md
+    "Settled and closed"): its first focus landed and, while the workspace
+    is on top, the Footer done rebuilding for it. Press keys, focus a section or count Footer rebuilds
+    only after this, or the view's own first focus can land later and take
+    them back."""
+
+    def done() -> bool:
+        footer = SplitFooter.of(workspace)
+        # Under a dialog the Footer waits to rebuild until it shows again.
+        on_top = workspace.app.screen is workspace
+        return workspace.detail_settled and (
+            footer is None or footer.idle or not on_top
+        )
+
+    if not await wait_until(pilot, done):
+        footer = SplitFooter.of(workspace)
+        asked = workspace._focus_asked
+        raise AssertionError(
+            "the workspace's view never settled: "
+            f"settled={workspace.detail_settled} settling={workspace._settling} "
+            f"asked={asked!r} attached={asked is not None and asked.is_attached} "
+            f"focusable={asked is not None and asked.focusable} "
+            f"focused={workspace.focused!r} current={workspace.is_current} "
+            f"footer_idle={footer is None or footer.idle}"
+        )
+
+
 async def shown[W: Widget](pilot, selector: str, kind: type[W] = Widget) -> W:
     """The current screen's `selector`, once layout has given it a place.
 
@@ -196,7 +225,7 @@ async def build_all_tabs(pilot, view) -> None:
     """Build every tab of a sheet view that's just been opened (tabs are
     built on first visit), for a test that reaches into a tab
     without showing it first."""
-    await wait_until(pilot, lambda: view.initial_tab_seen)
+    await settled(pilot, view.screen)
     await view.build_all_tabs()
     await pilot.pause()
 

@@ -20,7 +20,7 @@ from pathlib import Path
 
 import pytest
 from rich.text import Text
-from support import NODES, build_all_tabs, everything_saga, wait_until
+from support import NODES, build_all_tabs, everything_saga, settled, wait_until
 from textual.widgets import Collapsible, TabbedContent, TabPane, Tree
 
 from ars_magica_manager import storage
@@ -123,7 +123,9 @@ async def _focus_target(pilot, app, view, target) -> None:
         await pilot.pause()
     if isinstance(target, Collapsible):
         section_stop(target).focus()
-        await wait_until(pilot, lambda: app.screen._active_section() == target.id)
+        assert await wait_until(
+            pilot, lambda: app.screen._active_section() == target.id
+        ), f"{target.id!r} never became the active section"
     else:
         stop = first_stop(target)
         if stop is None:
@@ -244,7 +246,9 @@ async def _matrix_for(
         assert await wait_until(pilot, lambda: find_node() is not None)
         node = find_node()
         tree.select_node(node)
-        await pilot.pause()
+        assert await wait_until(pilot, lambda: workspace.selected_kind == node.data[0])
+        # Keys go where the view's first focus put them: wait for it to land.
+        await settled(pilot, workspace)
 
         attr = _SHEET_VIEW_ATTR.get(kind)
         if attr is None:  # no sheet: the node itself decides the section

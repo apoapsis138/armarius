@@ -189,6 +189,11 @@ class SplitFooter(Footer):
             else:
                 self._rebuild_after_refresh()
 
+    @property
+    def idle(self) -> bool:
+        """Whether no rebuild is held back or waiting to run."""
+        return not (self._held or self._asked_while_held or self._rebuild_pending)
+
     @staticmethod
     def of(screen: Screen) -> SplitFooter | None:
         """`screen`'s SplitFooter, if it has one."""

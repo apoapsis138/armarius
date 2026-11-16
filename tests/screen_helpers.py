@@ -1,7 +1,7 @@
 """Helpers shared by the test_screens_*.py tests: sample sagas, waiting for
 screens and pickers, opening sections and reading what a sheet shows."""
 
-from support import strip_markup, wait_until
+from support import settled, strip_markup, wait_until
 from textual.widgets import (
     Button,
     Collapsible,
@@ -106,7 +106,7 @@ async def _show_tab(pilot, app, tab_id: str) -> None:
     step."""
     view = app.screen._current_sheet_view()
     assert view is not None, "no sheet is currently shown"
-    await wait_until(pilot, lambda: view.initial_tab_seen)
+    await settled(pilot, app.screen)
     await pilot.pause()
     tabbed = view.query_one(TabbedContent)
     if tabbed.active == tab_id:
@@ -172,8 +172,7 @@ async def _select(pilot, app, data) -> None:
     attr = _SHEET_VIEW_ATTR.get(data[0])
     if attr is not None:
         await wait_until(pilot, lambda: getattr(app.screen, attr) is not None)
-        view = getattr(app.screen, attr)
-        await wait_until(pilot, lambda: view.initial_tab_seen)
+        await settled(pilot, app.screen)
         await pilot.pause()
 
 
@@ -272,7 +271,7 @@ async def _open_section(pilot, app, section_id: str) -> None:
     assert view is not None, "no character sheet is currently shown"
     # Let the view's own initial focus land first, or it can arrive after
     # ours and steal it back (see _open_lab_section).
-    await wait_until(pilot, lambda: view.initial_tab_seen)
+    await settled(pilot, app.screen)
     await pilot.pause()
     if section_id not in ("section-char-info", "section-char-characteristics"):
         await _show_tab(pilot, app, _SECTION_TAB[section_id])
@@ -311,7 +310,7 @@ async def _open_lab_section(pilot, app, section_id: str) -> None:
     # Let the view's own initial focus (set when the lab is first shown, and
     # applied a message-loop cycle later) land before we move focus
     # ourselves -- otherwise it can arrive afterwards and steal it back.
-    await wait_until(pilot, lambda: view.initial_tab_seen)
+    await settled(pilot, app.screen)
     await pilot.pause()
     if section_id in ("section-lab-identity", "section-lab-characteristics"):
         collapsible = view.query_one(f"#{section_id}", Collapsible)
@@ -547,7 +546,7 @@ async def _open_familiar_section(pilot, app, section_id: str) -> None:
     _open_section()."""
     view = app.screen._familiar_sheet_view
     assert view is not None, "no familiar sheet is currently shown"
-    await wait_until(pilot, lambda: view.initial_tab_seen)
+    await settled(pilot, app.screen)
     await pilot.pause()
     tab_id = _FAM_SECTION_TAB[section_id]
     await _show_tab(pilot, app, tab_id)
@@ -581,7 +580,7 @@ async def _open_cov_section(pilot, app, section_id: str) -> None:
     view's own initial focus settle (see _open_lab_section)."""
     view = app.screen._covenant_sheet_view
     assert view is not None, "no covenant sheet is currently shown"
-    await wait_until(pilot, lambda: view.initial_tab_seen)
+    await settled(pilot, app.screen)
     await pilot.pause()
     await _show_tab(pilot, app, "tab-cov-overview")
     collapsible = view.query_one(f"#{section_id}", Collapsible)
@@ -611,7 +610,7 @@ async def _select_bh_row(pilot, app, kind: str, list_index: int) -> None:
     """Select a row of the Boons/Hooks list the way a user does: focus the
     list and highlight the row."""
     view = app.screen._covenant_sheet_view
-    await wait_until(pilot, lambda: view.initial_tab_seen)
+    await settled(pilot, app.screen)
     await pilot.pause()
     view.query_one("#section-cov-" + kind.lower() + "s")  # exists
     option_list = view.query_one(f"#cov-{kind.lower()}s-list", OptionList)
@@ -700,7 +699,7 @@ def _inh_labels(app, kind: str) -> list[str]:
 async def _show_library_tab(pilot, app) -> None:
     """Open the covenant's Library tab and focus its Books section."""
     view = app.screen._covenant_sheet_view
-    await wait_until(pilot, lambda: view.initial_tab_seen)
+    await settled(pilot, app.screen)
     await pilot.pause()
     await _show_tab(pilot, app, "tab-cov-library")
     section_stop(view.query_one("#section-lib-books", Collapsible)).focus()
