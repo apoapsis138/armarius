@@ -1,0 +1,15 @@
+{#- One version's section of CHANGELOG.md, in the shape
+    ars_magica_manager/changelog.py parses: towncrier writes the
+    "## X.Y.Z — date" heading (title_format), then this writes each feature
+    with work in it, in the Features table's order, as "### <Feature>" over
+    its entries, one bullet per fragment. Fragments carry no issue numbers. -#}
+{%- set newline = "\n" -%}
+{%- for section, _ in sections.items() -%}
+{%- for category, val in definitions.items() if category in sections[section] -%}
+{{- "### " ~ definitions[category]['name'] ~ newline ~ newline -}}
+{%- for text, values in sections[section][category].items() -%}
+{{- "- " ~ text ~ newline -}}
+{%- endfor -%}
+{{- newline -}}
+{%- endfor -%}
+{%- endfor -%}

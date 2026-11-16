@@ -179,14 +179,14 @@ A laboratory has only one owner at a time. Giving a laboratory to a magus who al
 <!-- help: guide-getting-started-help -->
 
 <!-- tui -->
-Press `?` anywhere for help on the part of the screen that has focus, or F1 in a dialog where you're typing. The Help screen lists THIS SCREEN first, then the REFERENCE pages, the HOW-TO GUIDES and ALL PAGES. The reference pages include About this App, Keys, and What's New, which shows any changes not yet in a release, then what changed by feature and edition, then every version in its Chronicle. Filtering finds About and What's New by their titles too.
+Press `?` anywhere for help on the part of the screen that has focus, or F1 in a dialog where you're typing. The Help screen lists THIS SCREEN first, then the REFERENCE pages, the HOW-TO GUIDES and ALL PAGES. The reference pages include About this App, Keys, and What's New, which shows what each release changed, by feature and edition, then every version in its Chronicle. Filtering finds About and What's New by their titles too.
 
 The arrow keys choose a topic, `/` filters the topics, Tab moves between the list and the page, and Esc closes Help.
 
 On a topic about a tab or section of a sheet, `g` (Go there) closes Help and opens that tab on the record you were looking at, with the section focused. Some steps in the guides end with a **Go there** link that does the same when clicked. If the record on show has no such tab, such as Lab Totals while you look at a covenant, Help stays open and says which sheet it's on.
 <!-- /tui -->
 <!-- gui -->
-Click **Help** in the top bar, or press `?` or F1, for help on the page and chapter on show. Help lists THIS SCREEN first, then the REFERENCE pages, the HOW-TO GUIDES and ALL PAGES. The reference pages include About this App, and What's New, which shows any changes not yet in a release, then what changed by feature and edition, then every version in its Chronicle.
+Click **Help** in the top bar, or press `?` or F1, for help on the page and chapter on show. Help lists THIS SCREEN first, then the REFERENCE pages, the HOW-TO GUIDES and ALL PAGES. The reference pages include About this App, and What's New, which shows what each release changed, by feature and edition, then every version in its Chronicle.
 
 The box above the list filters the topics, and finds About and What's New by their titles too. Click a topic to read it, and a link to follow it. Esc, or the trail, leads back to the page you came from, and `q` quits the app.
 

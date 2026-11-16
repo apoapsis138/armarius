@@ -1,0 +1,1 @@
+**How to report a bug.** A new guide, under Getting help on the website: where the version and `crash.log` are, and why to attach an Export of the records involved rather than the whole saga file, since issues are public.

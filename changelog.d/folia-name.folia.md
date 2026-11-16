@@ -1,0 +1,1 @@
+**A Latin name.** Printing and exports is now called Folia, the leaves handed round the table, like the app's other features; What's New, the release notes and the README show it as Printing and exports (Folia).

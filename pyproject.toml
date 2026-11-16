@@ -42,6 +42,9 @@ dev = [
     "pyright>=1.1.414",
     "pytest-xdist>=3.8.0",
     "pytest-timeout>=2.3",
+    # The changelog's fragments (changelog.d/), built into CHANGELOG.md at
+    # a release.
+    "towncrier>=26.9.0",
     # The desktop version is type-checked and tested with the rest.
     {include-group = "gui"},
 ]
@@ -79,3 +82,122 @@ asyncio_mode = "auto"
 # of holding the run (a deadlock between two threads shows where each waits).
 timeout = 300
 timeout_method = "thread"
+
+# The changelog is built from fragments (docs/adr/0026): each change adds a
+# file to changelog.d/ named <slug>.<feature>.md, one entry each, and a
+# release runs `towncrier build`, which writes them into CHANGELOG.md as the
+# version's "## X.Y.Z — date" section and deletes them (changelog.d/README.md).
+# One fragment type per feature in CHANGELOG.md's Features table, in its
+# order, shown under the feature's Latin name; tests/test_changelog.py holds
+# the two to each other.
+[tool.towncrier]
+directory = "changelog.d"
+filename = "CHANGELOG.md"
+start_string = "<!-- towncrier release notes start -->\n"
+template = "changelog.d/template.md.jinja"
+title_format = "## {version} — {project_date}"
+underlines = ["", "", ""]
+ignore = ["README.md", "template.md.jinja"]
+issue_format = ""
+wrap = false
+all_bullets = true
+
+[[tool.towncrier.type]]
+directory = "pagina"
+name = "Pagina"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "computus"
+name = "Computus"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "hours"
+name = "Book of Hours"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "florilegium"
+name = "Florilegium"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "gauntlet"
+name = "Gauntlet"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "scriptorum"
+name = "Scriptorum"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "glossa"
+name = "Glossa"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "fundamenta"
+name = "Fundamenta"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "sodales"
+name = "Sodales"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "illuminatio"
+name = "Illuminatio"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "orbis"
+name = "Orbis"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "concilium"
+name = "Concilium"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "insignia"
+name = "Insignia"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "peregrinatio"
+name = "Peregrinatio"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "hedge"
+name = "Hedge Magic"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "mappa"
+name = "Mappa Mundi"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "liveries"
+name = "Liveries of the Houses"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "castellum"
+name = "Castellum"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "renovatio"
+name = "Renovatio"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "folia"
+name = "Folia"
+showcontent = true

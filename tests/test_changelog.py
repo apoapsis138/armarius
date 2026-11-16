@@ -3,6 +3,15 @@ and the What's New page made from it."""
 
 from __future__ import annotations
 
+import importlib.util
+import os
+import re
+import shutil
+import subprocess
+import sys
+import tomllib
+from pathlib import Path
+
 import pytest
 
 from ars_magica_manager import ROOT, __version__
@@ -194,16 +203,6 @@ def test_a_plain_name_comes_first_wherever_the_page_names_a_feature():
     assert _edition(log, "Packs I").heading == "Packs I: The Rhine"
 
 
-def test_unreleased_work_is_headed_by_the_plain_name():
-    text = PLAIN.replace(
-        "## 1.4.0",
-        "## Unreleased\n\n### Packs\n\n- **A new pack.** Soon.\n\n## 1.4.0",
-    )
-    assert "### Sourcebook packs (Packs)\n\n- **A new pack.** Soon." in cl.whats_new(
-        text
-    )
-
-
 def test_the_chronicle_has_a_line_per_version_under_its_day():
     chronicle = cl.chronicle_text(_log())
     assert chronicle.index(
@@ -218,67 +217,18 @@ def test_the_chronicle_has_a_line_per_version_under_its_day():
     )
 
 
-PENDING = """## Unreleased
-
-### Help
-
-- **A new guide.** Written.
-
-"""
+def test_an_unreleased_section_is_refused():
+    # Unreleased work waits in changelog.d/ fragments until a release.
+    pending = "## Unreleased\n\n### Help\n\n- **A new guide.** Written.\n\n"
+    with pytest.raises(cl.ChangelogError, match="changelog.d"):
+        cl.parse(SAMPLE.replace("## 1.4.0", pending + "## 1.4.0", 1))
 
 
-def _with_unreleased(block: str = PENDING) -> str:
-    return SAMPLE.replace("## 1.4.0", block + "## 1.4.0", 1)
-
-
-def test_unreleased_work_above_the_newest_version_is_read_by_feature():
-    log = cl.parse(_with_unreleased())
-    assert [(p.feature, p.text) for p in log.unreleased] == [
-        ("Help", "- **A new guide.** Written.")
-    ]
-    # Only released versions are versions, editions and Chronicle lines.
-    assert log.versions[0].number == "1.4.0"
-    assert not any(p.feature == "Help" for p in _edition(log, "Packs II").parts)
-    assert not any(e.name == "Help II" for e in log.editions)
-
-
-def test_without_an_unreleased_section_there_is_no_unreleased_work():
-    log = _log()
-    assert log.unreleased == []
-    assert "Unreleased" not in cl.whats_new(SAMPLE)
-
-
-def test_an_empty_unreleased_section_is_allowed():
-    assert cl.parse(_with_unreleased("## Unreleased\n\n")).unreleased == []
-
-
-def test_unreleased_entries_follow_the_same_feature_rules():
-    with pytest.raises(cl.ChangelogError, match="unknown feature"):
-        cl.parse(_with_unreleased(PENDING.replace("### Help", "### Hepl")))
-    with pytest.raises(cl.ChangelogError, match="under no feature"):
-        cl.parse(_with_unreleased("## Unreleased\n\n- Loose.\n\n"))
-
-
-def test_unreleased_must_come_first():
-    # Below a version.
-    late = SAMPLE.replace("## 1.3.1", PENDING + "## 1.3.1", 1)
-    with pytest.raises(cl.ChangelogError, match="before the newest version"):
-        cl.parse(late)
-    # Above another section of the preamble.
-    early = SAMPLE.replace("## Milestones", PENDING + "## Milestones", 1)
-    with pytest.raises(cl.ChangelogError, match="just before the newest version"):
-        cl.parse(early)
-    # Twice.
-    with pytest.raises(cl.ChangelogError, match="more than one"):
-        cl.parse(_with_unreleased(PENDING + PENDING))
-
-
-def test_the_page_shows_unreleased_work_first_as_in_development():
-    page = cl.whats_new(_with_unreleased())
+def test_the_page_shows_released_versions_only():
+    page = cl.whats_new(SAMPLE)
     headings = [line for line in page.splitlines() if line.startswith("## ")]
-    assert headings[:2] == ["## Unreleased (in development)", "## Latest"]
-    assert "### Help\n\n- **A new guide.** Written." in page
-    assert "A new guide" not in cl.chronicle_text(cl.parse(_with_unreleased()))
+    assert headings[0] == "## Latest"
+    assert "Unreleased" not in page
 
 
 def test_a_short_label_before_a_colon_gives_way_to_what_follows():
@@ -294,8 +244,7 @@ def _real() -> cl.Changelog:
 
 
 def test_the_changelog_reads_and_has_this_version():
-    # The newest released version, below any Unreleased section, is the
-    # one pyproject.toml names.
+    # The newest version is the one pyproject.toml names.
     log = _real()
     assert log.versions[0].number == __version__
 
@@ -327,3 +276,105 @@ def test_every_major_version_has_a_name():
     log = _real()
     numbers = {cl.version_key(v.number)[0] for v in log.versions}
     assert all(log.major(n) for n in numbers)
+
+
+# -- the fragments (changelog.d/), built into a version at a release --
+
+FRAGMENTS = ROOT / "changelog.d"
+#: The files in changelog.d/ that aren't fragments.
+NOT_FRAGMENTS = {"README.md", "template.md.jinja"}
+#: A fragment: "<slug>.<feature type>.md", the slug in lowercase words.
+_FRAGMENT_NAME = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*\.([a-z]+)\.md$")
+#: The most words a fragment may have: one entry, not an essay.
+MOST_WORDS = 40
+
+
+def _towncrier() -> dict:
+    pyproject = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+    return pyproject["tool"]["towncrier"]
+
+
+def _types() -> dict[str, str]:
+    """Each fragment type's key (its directory), and the feature it names."""
+    return {t["directory"]: t["name"] for t in _towncrier()["type"]}
+
+
+def _fragments() -> list[Path]:
+    return sorted(
+        p for p in FRAGMENTS.iterdir() if p.is_file() and p.name not in NOT_FRAGMENTS
+    )
+
+
+def test_each_feature_has_a_fragment_type_in_the_tables_order():
+    assert list(_types().values()) == [f.name for f in _real().features]
+    assert sorted(_towncrier()["ignore"]) == sorted(NOT_FRAGMENTS)
+
+
+def test_the_start_marker_sits_just_above_the_newest_version():
+    lines = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8").splitlines()
+    marker = lines.index(_towncrier()["start_string"].strip())
+    newest = next(i for i, line in enumerate(lines) if line.startswith("## "))
+    later = [line for line in lines[marker + 1 :] if line.strip()]
+    assert later[0] == f"## {_real().versions[0].number} — {_real().versions[0].date}"
+    assert newest < marker  # the preamble's sections come first
+
+
+@pytest.mark.parametrize("path", _fragments(), ids=lambda p: p.name)
+def test_every_fragment_is_one_short_entry_for_a_known_feature(path: Path):
+    match = _FRAGMENT_NAME.match(path.name)
+    assert match, f"{path.name}: name it <slug>.<feature>.md"
+    assert match.group(1) in _types(), f"{path.name}: no feature {match.group(1)!r}"
+    text = path.read_text(encoding="utf-8").strip()
+    # One paragraph, the bullet and heading left to the release's template.
+    assert text and "\n\n" not in text, f"{path.name}: one paragraph"
+    assert not text.startswith(("- ", "* ", "#")), f"{path.name}: no bullet or heading"
+    # A bold headline, then plain English, ending as a sentence does.
+    assert re.match(r"^\*\*[^*]+[.?!:]\*\* \S", text), (
+        f"{path.name}: **Headline.** first"
+    )
+    assert text.endswith((".", ")", "?", "!")), f"{path.name}: end with a full stop"
+    words = len(text.split())
+    assert words <= MOST_WORDS, f"{path.name}: {words} words, at most {MOST_WORDS}"
+
+
+def _release_notes():
+    spec = importlib.util.spec_from_file_location(
+        "release_notes", ROOT / "tools" / "release_notes.py"
+    )
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_a_release_built_from_the_fragments_reads_back(tmp_path: Path):
+    """towncrier, run as a release runs it, writes a section What's New,
+    the release notes and the site read: every feature's fragment under
+    its feature, in the table's order, above the newest version."""
+    for name in ("pyproject.toml", "CHANGELOG.md"):
+        shutil.copy(ROOT / name, tmp_path / name)
+    shutil.copytree(FRAGMENTS, tmp_path / "changelog.d")
+    for key, feature in _types().items():
+        (tmp_path / "changelog.d" / f"sample.{key}.md").write_text(
+            f"**A {feature} sample.** Built for the test.\n", encoding="utf-8"
+        )
+    env = {**os.environ, "PYTHONIOENCODING": "utf-8"}
+    subprocess.run(
+        [sys.executable, "-m", "towncrier", "build", "--keep"]
+        + ["--version", "99.0.0", "--date", "2099-01-01"]
+        + ["--config", str(tmp_path / "pyproject.toml"), "--dir", str(tmp_path)],
+        check=True,
+        capture_output=True,
+        env=env,
+    )
+    built = (tmp_path / "CHANGELOG.md").read_text(encoding="utf-8")
+    log = cl.parse(built)
+    newest, before = log.versions[0], _real().versions[0]
+    assert (newest.number, newest.date) == ("99.0.0", "2099-01-01")
+    assert log.versions[1].number == before.number
+    assert [p.feature for p in newest.parts] == [f.name for f in log.features]
+    for part in newest.parts:
+        assert f"- **A {part.feature} sample.** Built for the test." in part.text
+    assert "- **99.0.0** · " in cl.whats_new(built)
+    notes = _release_notes().notes(built, "99.0.0")
+    assert "Built for the test." in notes and "## " + before.number not in notes

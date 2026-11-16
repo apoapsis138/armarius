@@ -614,6 +614,11 @@ A version of the app published for people to download, with a **Build**
 attached for each platform, made by pushing a version tag on main.
 _Avoid_: Edition (a feature's finished round, not a version), drop
 
+**Fragment**:
+One changelog entry waiting for its Release: a small file in `changelog.d/`
+named for its feature, which the Release gathers into CHANGELOG.md.
+_Avoid_: news file, changelog line
+
 **Build**:
 The app packed to run on one platform without installing Python, given out
 as one download.
