@@ -18,7 +18,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Covenant",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Export, Interests, Update from a File, In Creation / In Play, Demote, Arms, Go To, Begin Project",
+        "m": "MenuScreen: Export, Export as Markdown, Interests, Update from a File, In Creation / In Play, Demote, Arms, Go To, Begin Project",
         "slash": "(disabled)"
       }
     },
@@ -570,7 +570,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Character Info",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Traditions, Cast a Power, Export, Interests, Update from a File, In Creation / In Play, Demote, Hide from the Players, Go To, Certamen, Scholarly, Disputatio, A Scholar's Career, Religion, A Mother's Curse, Craft & Trade, Make Greek Fire, Tribunal & Order, Hermetic Letter, Invoke a Broken Oath, Dealings with Faerie, An Offer to Faerie, Apprenticeship, Turbulence",
+        "m": "MenuScreen: Traditions, Cast a Power, Export, Export as Markdown, Interests, Update from a File, In Creation / In Play, Demote, Hide from the Players, Go To, Certamen, Scholarly, Disputatio, A Scholar's Career, Religion, A Mother's Curse, Craft & Trade, Make Greek Fire, Tribunal & Order, Hermetic Letter, Invoke a Broken Oath, Dealings with Faerie, An Offer to Faerie, Apprenticeship, Turbulence",
         "slash": "(disabled)"
       }
     },
@@ -972,7 +972,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Laboratory Identity",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Export, Update from a File, In Creation / In Play, Go To",
+        "m": "MenuScreen: Export, Export as Markdown, Update from a File, In Creation / In Play, Go To",
         "slash": "(disabled)"
       }
     },
@@ -1214,7 +1214,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Familiar",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "FieldsDialog: Export Corax as Markdown",
         "slash": "(disabled)"
       }
     },
@@ -1480,7 +1480,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Covenant",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Export, Update from a File, Promote, Demote, Arms, Hide from the Players, Go To",
+        "m": "MenuScreen: Export, Export as Markdown, Update from a File, Promote, Demote, Arms, Hide from the Players, Go To",
         "slash": "(disabled)"
       }
     },

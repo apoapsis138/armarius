@@ -366,6 +366,8 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("i", "import_data", "Import"),
     MenuItem("b", "research_bonuses", "Set Up Research Library"),
     MenuItem("x", "export_record", "Export"),
+    # The record's sheet as a Markdown file (markdown_sheet).
+    MenuItem("j", "export_markdown", "Export as Markdown"),
     # Which interests' deeds a character's sheet offers (deeds).
     MenuItem("w", "edit_interests", "Interests"),
     MenuItem("x", "export_saga", "Export Saga"),
@@ -977,6 +979,17 @@ def _exports_record(facts: ActionFacts) -> bool:
     )
 
 
+def _exports_markdown(facts: ActionFacts) -> bool:
+    """A character's, covenant's, laboratory's or familiar's own page: a
+    record with a printed sheet."""
+    record = facts.record_to_delete()
+    return (
+        facts.can_send_files()
+        and isinstance(record, Character | Covenant | Laboratory | Familiar)
+        and facts.on_record()
+    )
+
+
 def _updates_record(facts: ActionFacts) -> bool:
     return facts.record_to_export() is not None and facts.on_record()
 
@@ -1555,6 +1568,7 @@ _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     "galdor_bind": partial(_sings, galdor.enchants),
     "give_silver": _gives_silver,
     "export_record": _exports_record,
+    "export_markdown": _exports_markdown,
     "edit_interests": _has_interests,
     # Experiment on a Script, on a Mystagogue's record (TMRE p. 18).
     "experiment_script": _experiments,

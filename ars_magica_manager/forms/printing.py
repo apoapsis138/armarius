@@ -1,9 +1,12 @@
-"""Print to PDF's options, as the core's command steps (commands.py): the
-paper, and for a character's printed sheet whether the Grimoire gives the
-spells in full and whether the pages are textured parchment or plain white.
+"""Print to PDF's options, as the core's command steps (commands.py): who
+the copy is for, the paper, for a character's printed sheet a play sheet
+or the full record and whether the Grimoire gives the spells in full, and
+whether the pages are textured parchment or plain white.
 
 The last choices are kept in the app's settings, so a troupe that prints
-on A4 chooses it once.
+on A4 chooses it once. The copy is not kept: it starts at the Player copy
+each time, so nothing secret goes out by accident, and only someone who
+reads everything is asked at all (print_layout.reader_for).
 """
 
 from __future__ import annotations
@@ -11,37 +14,91 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import Any
 
-from .. import settings
+from .. import settings, viewing
 from ..commands import Form
 from ..form_spec import DialogField
-from ..print_layout import A4, DEFAULT_OPTIONS, LETTER, PAPER_SIZES, PrintOptions
+from ..models import Saga
+from ..print_layout import (
+    A4,
+    DEFAULT_OPTIONS,
+    FULL_RECORD,
+    HOUSE_COLOURS,
+    LETTER,
+    PAPER_SIZES,
+    PLAY_SHEET,
+    PLAYER_COPY,
+    SHEETS,
+    STORYGUIDE_COPY,
+    PrintOptions,
+)
+from ..print_records import THEME_NAMES
 
 #: The settings key the last choices are kept under.
 PRINT_SETTINGS = "print_options"
 
 PAPER_LABELS = {LETTER: "US Letter", A4: "A4"}
-SHORT, FULL = "short", "full"
 TEXTURED, WHITE = "textured", "white"
+
+
+def offers_copy(saga: Saga | None, viewer: viewing.Viewer | None = None) -> bool:
+    """Whether the print options ask who the copy is for: only when the
+    viewer (by default whoever is looking) reads all of `saga`, the host
+    or a Storyguide-role player. Anyone else gets the Player copy."""
+    looking = viewer or viewing.current()
+    return saga is not None and viewing.reads_everything(looking, saga)
 
 
 def saved_options() -> PrintOptions:
     """The options chosen last time, or the defaults: anything unknown in
-    the settings file falls back to its default."""
+    the settings file falls back to its default. The copy is always the
+    Player copy."""
     saved = settings.load_settings().get(PRINT_SETTINGS)
     if not isinstance(saved, dict):
         return DEFAULT_OPTIONS
     paper = saved.get("paper")
+    sheet = saved.get("sheet")
     return PrintOptions(
         paper=paper if paper in PAPER_SIZES else DEFAULT_OPTIONS.paper,
-        full_spells=saved.get("spells") == FULL,
         textured=saved.get("background", TEXTURED) != WHITE,
+        sheet=sheet if sheet in SHEETS else DEFAULT_OPTIONS.sheet,
+        theme=_theme(saved.get("theme")),
     )
 
 
-def print_fields(options: PrintOptions, *, sheet: bool = True) -> list[DialogField]:
-    """The paper; with `sheet` (a character's printed sheet) also the
-    spells and the background."""
-    fields = [
+def print_fields(
+    options: PrintOptions, *, character: bool = True, asks_copy: bool = False
+) -> list[DialogField]:
+    """With `asks_copy`, who the copy is for; for a `character` the sheet;
+    the paper, the theme and the background."""
+    fields: list[DialogField] = []
+    if asks_copy:
+        fields.append(
+            DialogField(
+                "copy",
+                "Copy",
+                "select",
+                options.copy,
+                options=[
+                    ("Player copy: what the players may read", PLAYER_COPY),
+                    ("Storyguide copy: everything, Secrets too", STORYGUIDE_COPY),
+                ],
+                hint="A Player copy leaves off unrevealed Secrets.",
+            )
+        )
+    if character:
+        fields.append(
+            DialogField(
+                "sheet",
+                "Sheet",
+                "select",
+                options.sheet,
+                options=[
+                    ("Play sheet: a page or two to play from", PLAY_SHEET),
+                    ("Full record: everything, story and all", FULL_RECORD),
+                ],
+            )
+        )
+    fields.append(
         DialogField(
             "paper",
             "Paper size",
@@ -50,56 +107,75 @@ def print_fields(options: PrintOptions, *, sheet: bool = True) -> list[DialogFie
             options=[(PAPER_LABELS[size], size) for size in PAPER_SIZES],
             hint="US Letter, or A4 outside North America.",
         )
+    )
+    fields += [
+        DialogField(
+            "theme",
+            "Theme",
+            "select",
+            options.theme,
+            options=[
+                ("Each in its House's colours", HOUSE_COLOURS),
+                *((name, name) for name in THEME_NAMES),
+            ],
+            hint="House colours: a magus, their lab and familiar in their "
+            "House's theme; anything else in Scriptorum.",
+        ),
+        DialogField(
+            "background",
+            "Background",
+            "select",
+            TEXTURED if options.textured else WHITE,
+            options=[
+                ("The theme's paper (a dark one takes a lot of ink)", TEXTURED),
+                ("Plain white, to save ink", WHITE),
+            ],
+            hint="On plain white a dark theme prints in light colours.",
+        ),
     ]
-    if sheet:
-        fields += [
-            DialogField(
-                "spells",
-                "Spells in the Grimoire",
-                "select",
-                FULL if options.full_spells else SHORT,
-                options=[
-                    ("Short: just the parameters", SHORT),
-                    ("Full description", FULL),
-                ],
-            ),
-            DialogField(
-                "background",
-                "Background",
-                "select",
-                TEXTURED if options.textured else WHITE,
-                options=[
-                    ("Textured parchment", TEXTURED),
-                    ("Plain white, to save ink", WHITE),
-                ],
-            ),
-        ]
     return fields
 
 
-def options_from(values: dict[str, Any]) -> PrintOptions:
+def options_from(values: dict[str, Any], *, asks_copy: bool = False) -> PrintOptions:
     """The options a filled-in form chose; a field left off keeps its
-    default."""
+    default. A Storyguide copy only when the form asked."""
+    sheet = values.get("sheet")
     return PrintOptions(
         paper=values.get("paper") or DEFAULT_OPTIONS.paper,
-        full_spells=values.get("spells") == FULL,
         textured=values.get("background", TEXTURED) != WHITE,
+        copy=STORYGUIDE_COPY
+        if asks_copy and values.get("copy") == STORYGUIDE_COPY
+        else PLAYER_COPY,
+        sheet=sheet if sheet in SHEETS else DEFAULT_OPTIONS.sheet,
+        theme=_theme(values.get("theme")),
     )
 
 
-def print_form(then: Callable[[PrintOptions], Any], *, sheet: bool = True) -> Form:
+def _theme(value: object) -> str:
+    """A theme choice as saved or chosen; the default for anything else."""
+    return next(
+        (name for name in (HOUSE_COLOURS, *THEME_NAMES) if value == name),
+        DEFAULT_OPTIONS.theme,
+    )
+
+
+def print_form(
+    then: Callable[[PrintOptions], Any],
+    *,
+    character: bool = True,
+    asks_copy: bool = False,
+) -> Form:
     """Print to PDF's options, starting from the last ones chosen, which it
-    keeps; `then` gets the options and returns the next step (where to
-    save the PDF)."""
+    keeps (all but the copy); `then` gets the options and returns the next
+    step (where to save the PDF). `asks_copy`: offers_copy's answer."""
 
     def apply(values: dict[str, Any]) -> Any:
-        options = options_from(values)
-        kept = {"paper": options.paper}
-        if sheet:
-            kept |= {
-                "spells": FULL if options.full_spells else SHORT,
-                "background": TEXTURED if options.textured else WHITE,
-            }
+        options = options_from(values, asks_copy=asks_copy)
+        kept: dict[str, Any] = {"paper": options.paper}
+        if character:
+            kept["sheet"] = options.sheet
+        kept["background"] = TEXTURED if options.textured else WHITE
+        kept["theme"] = options.theme
         saved = settings.load_settings().get(PRINT_SETTINGS)
         settings.update_settings(
             **{PRINT_SETTINGS: (saved if isinstance(saved, dict) else {}) | kept}
@@ -108,7 +184,7 @@ def print_form(then: Callable[[PrintOptions], Any], *, sheet: bool = True) -> Fo
 
     return Form(
         "Print to PDF",
-        lambda: print_fields(saved_options(), sheet=sheet),
+        lambda: print_fields(saved_options(), character=character, asks_copy=asks_copy),
         apply,
         save_label="Next",
         help_id="print-record",

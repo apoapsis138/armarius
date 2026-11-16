@@ -58,6 +58,7 @@ change in it.
 | Liveries of the Houses | House looks | The desktop drawn in a House's own look: its family's form, colours, paper and mark |
 | Castellum | Self-hosting | Hosting a saga on a server or NAS, such as a Linux computer or a rented server, with no window |
 | Renovatio | App updates | App updates: finding, checking and installing a newer Release |
+| PDF Exports and Handouts | Printing and exports | Sheets and handouts printed from the saga for the troupe |
 
 ## Editions
 
@@ -136,6 +137,17 @@ change in it.
 | Armarius | 2.52.0 | the app's new name |
 
 ## Unreleased
+
+### PDF Exports and Handouts
+
+- **Player and Storyguide copies.** Printing a character asks the host or a storyguide whether it's a Player copy or a Storyguide copy, starting at the Player copy each time. A Player copy leaves off every Secret not yet revealed and anything the players don't know of; a player always gets the Player copy, with their own character's notes and goals. The full record now prints the character's Secrets, each marked revealed or not, and the player's notes and goals.
+- **A new order for the full record.** Page 1 is the Characteristics, Personality Traits, Abilities and Combat & Condition; the Virtues and Flaws follow; then a magus's Hermetic Background and Arts, the story and diary, and last the Grimoire, each spell in full and never split between pages. The Spells in the Grimoire option is gone: the full record always gives each spell's description, and the play sheet a line each.
+- **A play sheet.** A character can print as a play sheet, about a page for a companion or grog and two for a magus: Characteristics, Virtues and Flaws by name, traits, Abilities, Combat & Condition, then the Arts, Casting Scores, Raw Vis and the spells a line each.
+- **Less empty paper.** Sections now run on to the next page instead of moving whole: tables between their rows, the Virtues and Flaws down their columns. The Abilities are set in two columns, the Arts in three, and the Arts start a new page only when little of the page is left. The Combat box stays with Weapons and Equipment. Raw Vis keeps lines to pencil in, and the familiar's box is short and points to its own sheet. A magus's full record takes about half the pages it did.
+- **Covenants, laboratories and familiars laid out for paper.** They now print as a record laid out for the page, like a character, instead of a picture of the screen: real text you can search, nothing cut off at the edge or shortened with "…", and every history entry, diary entry and book. Each asks for a Player or Storyguide copy and a background like a character. Colour no longer carries meaning on paper: the Lab Totals are numbers with the best in bold, and a turned-off Specialization is struck through. A table's long words now wrap onto a second line instead of shrinking.
+- **Printing in a theme.** Print options have a Theme: each magus (with their laboratory and familiar) in their House's colours, or any theme by name. The page takes the theme's colours and paper, with the House's mark beside the title and in the running head, and large and faint behind the first page's title. On plain white a dark theme prints in light colours, so there's never pale ink on white.
+- **Print the Troupe.** The Troupe chapter has Print the Troupe: every player character's sheet in one PDF, each from a fresh page and in its own House's colours (or one theme for everyone), with a bookmark for each.
+- **Export as Markdown.** A character's, covenant's, laboratory's or familiar's sheet can be written as a Markdown file, on the terminal (More) and the desktop (Manage): the same copy and sheet as printing, with tables a wiki or notes app shows. Help has a how-to.
 
 ### Castellum
 

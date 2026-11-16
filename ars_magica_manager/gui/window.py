@@ -65,6 +65,7 @@ from .. import (
     paths,
     players,
     presence,
+    print_records,
     references,
     saga_index,
     seat,
@@ -120,7 +121,6 @@ from . import (
     motion,
     pictures,
     print_sheet,
-    printing,
     season_panel,
     sounds,
 )
@@ -389,8 +389,6 @@ class MainWindow(QMainWindow):
         self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
         #: The theme the desktop is drawn in (liveries.THEMES).
         self.theme: Theme = saved_theme()
-        #: The palette pages are built in while one is printed.
-        self._printing: Palette | None = None
         #: The palette the window is drawn in now.
         self._applied = self.theme.palette
         #: The Settings window, once opened.
@@ -613,10 +611,7 @@ class MainWindow(QMainWindow):
     @property
     def palette_(self) -> Palette:
         """The theme, in the mode of the record on show: drafting vellum
-        while it is In Creation (liveries.for_mode); parchment while a page
-        is built for printing."""
-        if self._printing is not None:
-            return self._printing
+        while it is In Creation (liveries.for_mode)."""
         return liveries.for_mode(self.theme, self._drafting())
 
     def _drafting(self) -> bool:
@@ -2057,8 +2052,8 @@ class MainWindow(QMainWindow):
 
     def print_pdf(self) -> None:
         """Print the record on show to a PDF: its options first (the
-        paper, and for a character's sheet the spells and background), then
-        where to save it."""
+        paper; for a character's sheet who the copy is for, the sheet, the
+        spells and background), then where to save it."""
         page = self.menu_page()
         record = page.record_to_delete() if page is not None else None
         if record is None:
@@ -2071,36 +2066,33 @@ class MainWindow(QMainWindow):
             return ChooseFile(
                 f"Print {escape(name)} to PDF",
                 ".pdf",
-                folder / f"{printing.file_stem(name)}.pdf",
-                lambda path: self.print_to(path, name, options),
+                folder / f"{print_records.file_stem(name)}.pdf",
+                lambda path: self.print_to(path, options),
                 save=True,
             )
 
         self.run(
-            print_forms.print_form(where, sheet=isinstance(record, Character)), None
+            print_forms.print_form(
+                where,
+                character=isinstance(record, Character),
+                asks_copy=print_forms.offers_copy(self.saga),
+            ),
+            None,
         )
 
     def print_to(
-        self, path: Path, title: str, options: pl.PrintOptions = pl.DEFAULT_OPTIONS
+        self, path: Path, options: pl.PrintOptions = pl.DEFAULT_OPTIONS
     ) -> list[str]:
-        """Print the record on show to the PDF at `path`; what it did, to
-        tell. A character prints as a sheet laid out for paper
-        (print_layout.py); other records print their page, drawn afresh in
-        the parchment palette."""
+        """Print the record on show to the PDF at `path`, laid out for
+        paper (print_records.py); what it did, to tell."""
         page = self.menu_page()
         record = page.record_to_delete() if page is not None else None
-        if isinstance(record, Character) and self.saga is not None:
-            doc = pl.document(self.saga, "character", record, options)
-            pages = print_sheet.print_document(doc, path, options)
-        else:
-            self._printing = printing.PARCHMENT
-            try:
-                built = self._build(self.trail[-1])
-            finally:
-                self._printing = None
-            pages = printing.print_page(
-                built, path, title, printing.PARCHMENT, options.paper
-            )
+        kind = print_records.kind_of(record)
+        if kind is None or self.saga is None:
+            return ["This page has no printed sheet."]
+        doc = print_records.document(self.saga, kind, record, options)
+        theme = print_records.theme_for(self.saga, record, options.theme)
+        pages = print_sheet.print_document(doc, path, options, theme)
         return [f"{pages} page{'s' if pages != 1 else ''} saved to {path}."]
 
     def toggle_mode(self, record: Moded) -> None:

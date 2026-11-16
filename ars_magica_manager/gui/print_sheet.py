@@ -1,7 +1,11 @@
 """A printed sheet (print_layout.Document) drawn to a PDF: real text in the
-app's faces on textured Scriptorum parchment (or plain white, to save
-ink), each page framed with a gilt rule, a
-fleuron at each corner and a red band down the binding edge.
+app's faces on a theme's textured paper (or plain white, to save ink),
+each page framed with a gilt rule, a fleuron at each corner and a band
+down the binding edge, in the theme's colours, with its House's mark
+beside the title and in the running head.
+
+Pattern: an interpreter over the blocks (a measure and a painter for each
+kind), given the theme as arguments; the builders never see it.
 
 Each block is measured at the column width with the PDF's own font
 metrics, print_layout.paginate decides the pages, and each block is drawn
@@ -10,7 +14,9 @@ where it was placed, so nothing is drawn past the page's printed area.
 
 from __future__ import annotations
 
-from collections.abc import Callable
+import html
+from collections.abc import Callable, Sequence
+from dataclasses import replace
 from functools import cache
 from pathlib import Path
 
@@ -26,12 +32,16 @@ from PySide6.QtGui import (
     QPdfWriter,
     QPen,
     QPixmap,
+    QTextDocument,
 )
 from PySide6.QtSvg import QSvgRenderer
 
 from .. import artwork
 from .. import print_layout as pl
+from ..pdf_outline import add_outline
+from ..print_records import printed_palette
 from . import marks, pictures
+from .style import liveries
 from .style.paper import paper
 from .themes import SCRIPTORUM, Palette
 
@@ -57,12 +67,18 @@ def _font(
     bold: bool = False,
     italic: bool = False,
     caps: bool = False,
+    struck: bool = False,
     family: str = pictures.SERIF,
 ) -> QFont:
     font = QFont(family)
     font.setPointSizeF(size)
     font.setBold(bold)
     font.setItalic(italic)
+    font.setStrikeOut(struck)
+    # Hinting snaps each glyph to the writer's coarse 72-dpi grid, which on
+    # paper reads as uneven gaps inside words: set the outlines as drawn.
+    font.setHintingPreference(QFont.HintingPreference.PreferNoHinting)
+    font.setKerning(True)
     if caps:
         font.setCapitalization(QFont.Capitalization.SmallCaps)
     return font
@@ -80,49 +96,68 @@ SYMBOL_PIXELS = 96
 
 
 @cache
-def _art_picture(art: str, colour: str) -> QPixmap:
-    svg = artwork.art_symbol(art).read_text(encoding="utf-8")
+def _picture(svg_path: Path, colour: str, pixels: int = SYMBOL_PIXELS) -> QPixmap:
+    """An SVG drawn in `colour` (for its currentColor) as a picture, once;
+    a picture that isn't an SVG (the Order's sigil) as it is."""
+    if svg_path.suffix.lower() != ".svg":
+        return QPixmap(str(svg_path)).scaledToWidth(
+            pixels, Qt.TransformationMode.SmoothTransformation
+        )
+    svg = svg_path.read_text(encoding="utf-8")
     renderer = QSvgRenderer(
         QByteArray(svg.replace("currentColor", colour).encode("utf-8"))
     )
-    picture = QPixmap(SYMBOL_PIXELS, SYMBOL_PIXELS)
+    size = renderer.defaultSize()
+    tall = pixels * size.height() / size.width() if size.width() > 0 else pixels
+    picture = QPixmap(pixels, round(tall))
     picture.fill(Qt.GlobalColor.transparent)
     painter = QPainter(picture)
     painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-    renderer.render(painter, QRectF(0, 0, SYMBOL_PIXELS, SYMBOL_PIXELS))
+    renderer.render(painter, QRectF(0, 0, pixels, tall))
     painter.end()
     return picture
 
 
-class Sheet:
-    """Draws one Document onto a PDF."""
+def _art_picture(art: str, colour: str) -> QPixmap:
+    return _picture(artwork.art_symbol(art), colour)
 
-    def __init__(self, path: Path, doc: pl.Document, options: pl.PrintOptions) -> None:
+
+#: The side, in points, of the House's mark beside the title, in the
+#: running head, and of the faint sigil behind the first page's title.
+MARK, HEAD_MARK, SIGIL = 34.0, 11.0, 150.0
+#: How strongly the sigil shows through, out of 1.
+SIGIL_OPACITY = 0.07
+
+
+class Sheet:
+    """Draws one Document onto a PDF, in a theme (by name, style.palettes):
+    its colours, paper and House mark. On plain white a dark theme prints
+    its light twin's colours (print_records.printed_palette)."""
+
+    def __init__(
+        self,
+        path: Path,
+        doc: pl.Document,
+        options: pl.PrintOptions,
+        theme: str = PARCHMENT.name,
+        writer: QPdfWriter | None = None,
+    ) -> None:
         self.doc = doc
-        self.p = PARCHMENT
+        self.p = printed_palette(theme, options.textured)
+        found = liveries.named(theme)
+        look = found.look if found is not None else liveries.SCRIPTORUM_LOOK
+        #: The House's mark, or None (Scriptorum has none).
+        self.mark: Path | None = look.mark
+        #: The picture faint behind the first page's title: the House's
+        #: mark, or the Order's sigil.
+        self.sigil: Path | None = look.mark or look.watermark
         self.textured = options.textured
         #: The page's colour where the frame's corners clear it.
-        self.page_colour = QColor(
-            PARCHMENT["background"] if options.textured else "white"
-        )
+        self.page_colour = QColor(self.p["background"] if options.textured else "white")
         width, height = pl.PAPER_POINTS[options.paper]
         self.page_size = QSizeF(width, height)
-        self.writer = QPdfWriter(str(path))
-        self.writer.setTitle(doc.title)
-        self.writer.setCreator("Armarius")
-        self.writer.setResolution(72)
-        size = (
-            QPageSize.PageSizeId.Letter
-            if options.paper == pl.LETTER
-            else QPageSize.PageSizeId.A4
-        )
-        self.writer.setPageLayout(
-            QPageLayout(
-                QPageSize(size),
-                QPageLayout.Orientation.Portrait,
-                QMarginsF(0, 0, 0, 0),
-            )
-        )
+        #: The PDF drawn on: its own, or a book's that holds several sheets.
+        self.writer = writer or pdf_writer(path, doc.title, options.paper)
         self.width = width - LEFT - RIGHT
         self.height = height - TOP - BOTTOM
         self.painter: QPainter | None = None
@@ -141,6 +176,7 @@ class Sheet:
             pl.Paragraph: self._paragraph_h,
             pl.Table: self._table_h,
             pl.Entry: self._entry_h,
+            pl.Flow: lambda b, w: self._flow_piece(b, w).height,
             pl.Columns: self._columns_h,
             pl.Condition: self._condition_h,
             pl.CombatSummary: lambda b, w: 64.0,
@@ -148,6 +184,7 @@ class Sheet:
             pl.Equipment: lambda b, w: 24.0 + b.lines * 14,
             pl.GrimoireTitle: lambda b, w: 62.0,
             pl.Spell: self._spell_h,
+            pl.Blanks: lambda b, w: 4.0 + b.lines * 14,
             pl.NewPage: lambda b, w: 0.0,
         }
         self._painters: dict[type, Callable] = {
@@ -158,6 +195,7 @@ class Sheet:
             pl.Paragraph: self._paragraph,
             pl.Table: self._table,
             pl.Entry: self._entry,
+            pl.Flow: self._flow,
             pl.Columns: self._columns,
             pl.Condition: self._condition,
             pl.CombatSummary: self._combat,
@@ -165,6 +203,7 @@ class Sheet:
             pl.Equipment: self._equipment,
             pl.GrimoireTitle: self._grimoire_title,
             pl.Spell: self._spell,
+            pl.Blanks: self._blanks,
             pl.NewPage: lambda *args: None,
         }
 
@@ -262,25 +301,162 @@ class Sheet:
 
     def _paragraph_font(self, block: pl.Paragraph) -> QFont:
         size = 8.5 if block.size == "small" else 10.5
-        return _font(size, italic=block.style == "italic")
+        return _font(
+            size,
+            bold=block.style == "bold",
+            italic=block.style == "italic",
+            struck=block.style == "struck",
+        )
 
     def _paragraph_h(self, block: pl.Paragraph, width: float) -> float:
         return self.text_height(block.text, self._paragraph_font(block), width)
 
     ROW, HEAD, GROUP = 16.0, 15.0, 13.0
 
-    def _row_heights(self, block: pl.Table) -> list[float]:
+    def _cell_setting(self, cell: pl.Cell, width: float) -> tuple[QFont, float]:
+        """How a cell's words are set in a column `width` wide, and the
+        row height that needs: on one line, a little smaller if that fits
+        them, else wrapped over as many lines as they take; never cut."""
+        if cell.symbol is not None:
+            width -= self.ROW - 1
+        room = width - 6
+        for size in (9.5, 8.5):
+            font = _font(
+                size,
+                bold=cell.style == "bold",
+                italic=cell.style == "italic",
+                struck=cell.style == "struck",
+            )
+            if QFontMetricsF(font, self.writer).horizontalAdvance(cell.text) <= room:
+                return font, self.ROW
+        return font, max(self.ROW, self.text_height(cell.text, font, room) + 4)
+
+    def _part_width(self, block: pl.Table, width: float) -> float:
+        """The width each part of the table is set in: half, two-up."""
+        return (width - 16) / 2 if block.two_up else width
+
+    def _row_heights(self, block: pl.Table, width: float) -> list[float]:
+        """Each row's height in a table `width` wide (with its group's
+        name above it, where one starts)."""
         groups = dict(block.groups)
+        part = self._part_width(block, width)
         return [
-            self.ROW + (self.GROUP if i in groups else 0)
-            for i in range(len(block.rows))
+            max(
+                self._cell_setting(cell, column.width * part)[1]
+                for cell, column in zip(row, block.columns, strict=True)
+            )
+            + (self.GROUP if i in groups else 0)
+            for i, row in enumerate(block.rows)
         ]
 
+    def _table_piece(self, block: pl.Table, width: float) -> pl.Piece:
+        """The table as the paginator sees it, `width` wide."""
+        rows = tuple(self._row_heights(block, width))
+        piece = pl.Piece(
+            self.HEAD + sum(rows),
+            GAP,
+            header=self.HEAD,
+            rows=rows,
+            two_up=block.two_up,
+            breaks=tuple(i for i, _ in block.groups),
+            cont=self.GROUP if block.groups else 0.0,
+        )
+        if block.two_up:
+            piece = replace(piece, height=pl.two_up_height(piece))
+        return piece
+
     def _table_h(self, block: pl.Table, width: float) -> float:
-        return self.HEAD + sum(self._row_heights(block))
+        return self._table_piece(block, width).height
+
+    #: An entry's name: semibold, a little under the body text, so a page
+    #: of Virtues or Boons doesn't sit darker than the prose around it.
+    ENTRY_NAME, ENTRY_NOTE = _font(10), _font(7.5, caps=True)
+    ENTRY_NAME.setWeight(QFont.Weight.DemiBold)
+
+    def _entry_lines(self, block: pl.Entry, width: float) -> tuple[float, bool]:
+        """The height of an entry's name, wrapped to the width, and whether
+        its note goes on a line of its own (when it doesn't fit beside)."""
+        note = QFontMetricsF(self.ENTRY_NOTE, self.writer).horizontalAdvance(block.note)
+        wide = QFontMetricsF(self.ENTRY_NAME, self.writer).horizontalAdvance(block.name)
+        beside = not block.note or wide + note + 12 <= width - 6
+        name = self.text_height(block.name, self.ENTRY_NAME, width - 6)
+        return max(14.0, name), not beside
+
+    def _run_in(self, block: pl.Entry, width: float) -> QTextDocument:
+        """A run-in entry as one paragraph `width` wide: its name in
+        semibold, its tier and category in small capitals, its summary."""
+        doc = QTextDocument()
+        doc.documentLayout().setPaintDevice(self.writer)
+        doc.setDocumentMargin(0)
+        doc.setDefaultFont(_font(9))
+        doc.setTextWidth(width)
+        label = self.p["label"]
+        note = (
+            f'&nbsp; <span style="font-size:6.5pt; font-variant:small-caps; '
+            f'color:{label}">{html.escape(block.note)}</span>'
+            if block.note
+            else ""
+        )
+        summary = (
+            f'&nbsp; <span style="color:{label}">{html.escape(block.summary)}</span>'
+            if block.summary
+            else ""
+        )
+        doc.setHtml(
+            f'<span style="font-size:10pt; font-weight:600; '
+            f'color:{self.p["foreground"]}">{html.escape(block.name)}</span>'
+            f"{note}{summary}"
+        )
+        return doc
 
     def _entry_h(self, block: pl.Entry, width: float) -> float:
-        return 15 + self.text_height(block.summary, _font(9), width - 8)
+        if block.run_in:
+            return self._run_in(block, width - 6).size().height()
+        name, below = self._entry_lines(block, width)
+        summary = (
+            self.text_height(block.summary, _font(9), width - 8) if block.summary else 0
+        )
+        return name + (11 if below else 1) + summary
+
+    def _flow_units(self, block: pl.Flow, width: float) -> list[tuple[int, int, float]]:
+        """A flow's blocks as the units its columns break between (first,
+        last exclusive, height at a column's width): a heading with the
+        block after it, every other block alone."""
+        column = (width - 16) / 2
+        units: list[tuple[int, int, float]] = []
+        k = 0
+        while k < len(block.blocks):
+            last = k + 1
+            if isinstance(block.blocks[k], pl.Heading) and last < len(block.blocks):
+                last += 1
+            tall = sum(self.measure(b, column) + GAP for b in block.blocks[k:last])
+            units.append((k, last, tall))
+            k = last
+        return units
+
+    def _flow_piece(self, block: pl.Flow, width: float) -> pl.Piece:
+        rows = tuple(tall for _, _, tall in self._flow_units(block, width))
+        piece = pl.Piece(sum(rows), GAP, rows=rows, two_up=True)
+        return replace(piece, height=pl.two_up_height(piece))
+
+    def _flow(
+        self,
+        block: pl.Flow,
+        x: float,
+        y: float,
+        w: float,
+        part: pl.Placement | None = None,
+    ) -> None:
+        units = self._flow_units(block, w)
+        spans = part.spans if part and part.spans else ()
+        if not spans:
+            split = pl.balance(self._flow_piece(block, w), 0, len(units))
+            spans = ((0, split), (split, len(units)))
+        column = (w - 16) / 2
+        for k, (first, last) in enumerate(spans):
+            if first < last:
+                shown = block.blocks[units[first][0] : units[last - 1][1]]
+                self._run(shown, x + k * (column + 16), y, column)
 
     def _run_h(self, blocks: tuple[pl.Block, ...], width: float) -> float:
         return sum(self.measure(b, width) + GAP for b in blocks)
@@ -293,11 +469,24 @@ class Sheet:
     def _condition_h(self, block: pl.Condition, width: float) -> float:
         return 28.0 + max(len(block.fatigue.rows), len(block.wounds.rows) + 1) * 13
 
+    #: A spell's name, Arts, parameters and Casting Total, above its words.
+    SPELL_HEAD = 43.0
+    #: The space between a spell's paragraphs.
+    SPELL_GAP = 4.0
+
+    def _spell_parts(self, block: pl.Spell) -> list[str]:
+        """A spell's description, paragraph by paragraph."""
+        return [p.strip() for p in block.description.split("\n\n") if p.strip()]
+
+    def _spell_rows(self, block: pl.Spell, width: float) -> tuple[float, ...]:
+        """Each paragraph's height, with the space before it."""
+        return tuple(
+            self.SPELL_GAP + self.text_height(part, _font(9.5), width - 10)
+            for part in self._spell_parts(block)
+        )
+
     def _spell_h(self, block: pl.Spell, width: float) -> float:
-        extra = 0.0
-        if block.description:
-            extra = 4 + self.text_height(block.description, _font(9.5), width - 10)
-        return 43.0 + extra
+        return self.SPELL_HEAD + sum(self._spell_rows(block, width))
 
     # ------------------------------------------------------------ painters
 
@@ -311,10 +500,22 @@ class Sheet:
     ) -> None:
         if isinstance(block, pl.Table):
             self._table(block, x, y, w, part)
+        elif isinstance(block, pl.Columns):
+            self._columns(block, x, y, w, part)
+        elif isinstance(block, pl.Spell):
+            self._spell(block, x, y, w, part)
+        elif isinstance(block, pl.Flow):
+            self._flow(block, x, y, w, part)
         else:
             self._painters[type(block)](block, x, y, w)
 
     def _title(self, block: pl.Title, x: float, y: float, w: float) -> None:
+        if self.mark is not None:
+            picture = _picture(self.mark, self.p["heading"])
+            tall = MARK * picture.height() / picture.width()
+            where = QRectF(x + w - MARK, y + (56 - tall) / 2, MARK, tall)
+            self.qp.drawPixmap(where, picture, QRectF(picture.rect()))
+            w -= MARK + 8
         self.text(
             QRectF(x, y, w, 40),
             block.name,
@@ -392,14 +593,18 @@ class Sheet:
         )
 
     def _cell(self, cell: pl.Cell, rect: QRectF, align: str) -> None:
-        font = _font(9.5, bold=cell.style == "bold", italic=cell.style == "italic")
+        font, tall = self._cell_setting(cell, rect.width())
         if cell.symbol is not None:
-            side = rect.height() - 4
+            side = self.ROW - 4
             self.symbol(cell.symbol, QRectF(rect.x() + 3, rect.y() + 2, side, side))
             rect = rect.adjusted(side + 3, 0, 0, 0)
         self.qp.setFont(font)
         self.qp.setPen(self.ink)
         flags = int(ALIGN[align] | Align.AlignVCenter)
+        if tall > self.ROW:
+            # Wrapped only where measured to need it, so a line that fits
+            # never breaks onto one the row has no room for.
+            flags |= int(Qt.TextFlag.TextWordWrap)
         self.qp.drawText(rect.adjusted(3, 0, -3, 0), flags, cell.text)
 
     def _table(
@@ -410,9 +615,38 @@ class Sheet:
         w: float,
         part: pl.Placement | None = None,
     ) -> None:
+        if block.two_up:
+            spans = part.spans if part and part.spans else ()
+            if not spans:
+                n = len(block.rows)
+                split = pl.balance(self._table_piece(block, w), 0, n)
+                spans = ((0, split), (split, n))
+            half = (w - 16) / 2
+            heights = self._row_heights(block, w)
+            for k, (first, last) in enumerate(spans):
+                if first < last:
+                    self._rows(
+                        block, x + k * (half + 16), y, half, first, last, heights
+                    )
+            return
         first, last = (
             (part.first, part.last) if part and part.last else (0, len(block.rows))
         )
+        self._rows(block, x, y, w, first, last, self._row_heights(block, w))
+
+    def _rows(
+        self,
+        block: pl.Table,
+        x: float,
+        y: float,
+        w: float,
+        first: int,
+        last: int,
+        heights: list[float],
+    ) -> None:
+        """The table's header, then its rows `first` to `last` (`heights`
+        each, with any group name); a part starting inside a group sets the
+        group's name again atop it."""
         xs, at = [], x
         for column in block.columns:
             xs.append(at)
@@ -429,7 +663,11 @@ class Sheet:
             )
         y += self.HEAD
         groups = dict(block.groups)
+        if block.two_up and block.groups and first > 0 and first not in groups:
+            groups[first] = f"{block.group_of(first)} (continued)"
+        named = dict(block.groups)
         for i in range(first, last):
+            row = heights[i] - (self.GROUP if i in named else 0)
             if i in groups:
                 self.text(
                     QRectF(x + 3, y, w, self.GROUP),
@@ -439,38 +677,62 @@ class Sheet:
                 )
                 y += self.GROUP
             if i % 2:
-                self.qp.fillRect(QRectF(x, y, w, self.ROW), self.band)
+                self.qp.fillRect(QRectF(x, y, w, row), self.band)
             for cx, column, cell in zip(xs, block.columns, block.rows[i], strict=True):
-                self._cell(
-                    cell, QRectF(cx, y, column.width * w, self.ROW), column.align
-                )
-            self.line(
-                _shade(self.p["rule"], 140), 0.4, x, y + self.ROW, x + w, y + self.ROW
-            )
-            y += self.ROW
+                self._cell(cell, QRectF(cx, y, column.width * w, row), column.align)
+            self.line(_shade(self.p["rule"], 140), 0.4, x, y + row, x + w, y + row)
+            y += row
 
     def _entry(self, block: pl.Entry, x: float, y: float, w: float) -> None:
         h = self._entry_h(block, w)
         self.line(self.gold, 1.2, x, y + 2, x, y + h - 1)
-        self.text(QRectF(x + 6, y, w, 14), block.name, _font(10.5, bold=True))
-        self.text(
-            QRectF(x, y + 1, w, 14),
-            block.note,
-            _font(7.5, caps=True),
-            self.label,
-            RIGHT_ALIGN,
-        )
-        self.text(QRectF(x + 6, y + 15, w - 8, h), block.summary, _font(9), self.label)
+        if block.run_in:
+            doc = self._run_in(block, w - 6)
+            self.qp.save()
+            self.qp.translate(x + 6, y)
+            doc.drawContents(self.qp)
+            self.qp.restore()
+            return
+        name, below = self._entry_lines(block, w)
+        self.text(QRectF(x + 6, y, w - 6, name), block.name, self.ENTRY_NAME)
+        if below:
+            note = QRectF(x + 6, y + name, w - 6, 11)
+            self.text(note, block.note, self.ENTRY_NOTE, self.label)
+        else:
+            note = QRectF(x, y + 1, w, 14)
+            self.text(note, block.note, self.ENTRY_NOTE, self.label, RIGHT_ALIGN)
+        top = y + name + (11 if below else 1)
+        self.text(QRectF(x + 6, top, w - 8, h), block.summary, _font(9), self.label)
 
     def _run(self, blocks: tuple[pl.Block, ...], x: float, y: float, w: float) -> None:
         for block in blocks:
             self.paint(block, x, y, w)
             y += self.measure(block, w) + GAP
 
-    def _columns(self, block: pl.Columns, x: float, y: float, w: float) -> None:
+    def _column_widths(self, block: pl.Columns, w: float) -> tuple[float, float]:
         left = (w - 16) * block.split
-        self._run(block.left, x, y, left)
-        self._run(block.right, x + left + 16, y, w - 16 - left)
+        return left, w - 16 - left
+
+    def _columns(
+        self,
+        block: pl.Columns,
+        x: float,
+        y: float,
+        w: float,
+        part: pl.Placement | None = None,
+    ) -> None:
+        left, right = self._column_widths(block, w)
+        runs = (block.left, block.right)
+        if part and part.spans:
+            runs = tuple(run[a:b] for run, (a, b) in zip(runs, part.spans, strict=True))
+        self._run(runs[0], x, y, left)
+        self._run(runs[1], x + left + 16, y, right)
+
+    def _blanks(self, block: pl.Blanks, x: float, y: float, w: float) -> None:
+        half = (w - 16) / 2
+        for k in range(block.lines * 2):
+            column, row = divmod(k, block.lines)
+            self.blank(x + column * (half + 16), y + 14 + row * 14, half)
 
     def _condition(self, block: pl.Condition, x: float, y: float, w: float) -> None:
         h = self._condition_h(block, w)
@@ -634,8 +896,20 @@ class Sheet:
         )
         self.text(QRectF(x, y + 44, w, 16), "❧  ✠  ☙", _font(12), self.gold, CENTRE)
 
-    def _spell(self, block: pl.Spell, x: float, y: float, w: float) -> None:
-        self.text(QRectF(x, y, w, 16), block.name, _font(11.5, bold=True, caps=True))
+    def _spell(
+        self,
+        block: pl.Spell,
+        x: float,
+        y: float,
+        w: float,
+        part: pl.Placement | None = None,
+    ) -> None:
+        """A spell: its head, then its paragraphs; a part of one longer than
+        a page sets its head again, its name marked continued."""
+        parts = self._spell_parts(block)
+        first, last = (part.first, part.last) if part and part.last else (0, len(parts))
+        name = block.name + (" (continued)" if first else "")
+        self.text(QRectF(x, y, w, 16), name, _font(11.5, bold=True, caps=True))
         self.text(
             QRectF(x, y, w, 16),
             block.arts,
@@ -650,10 +924,12 @@ class Sheet:
             _font(9, italic=True),
             self.label,
         )
-        if block.description:
-            self.text(
-                QRectF(x + 10, y + 44, w - 10, 100000), block.description, _font(9.5)
-            )
+        rows = self._spell_rows(block, w)
+        at = y + self.SPELL_HEAD
+        for k in range(first, last):
+            top = at + self.SPELL_GAP
+            self.text(QRectF(x + 10, top, w - 10, rows[k]), parts[k], _font(9.5))
+            at += rows[k]
 
     # ------------------------------------------------------------ pages
 
@@ -698,59 +974,167 @@ class Sheet:
             self.label,
         )
         self.text(foot, str(number), _font(8.5), self.label, RIGHT_ALIGN)
-        if number > 1:
-            head = QRectF(LEFT, 34, self.width, 16)
-            self.text(
-                head,
-                self.doc.title,
-                _font(10, family=pictures.DISPLAY),
-                self.red,
-                RIGHT_ALIGN,
+        if number == 1:
+            self._sigil()
+            return
+        head = QRectF(LEFT, 34, self.width, 16)
+        font = _font(10, family=pictures.DISPLAY)
+        self.text(head, self.doc.title, font, self.red, RIGHT_ALIGN)
+        if self.mark is not None:
+            # The House's mark before the name in the running head.
+            wide = QFontMetricsF(font, self.writer).horizontalAdvance(self.doc.title)
+            picture = _picture(self.mark, self.p["heading"])
+            tall = HEAD_MARK * picture.height() / picture.width()
+            at = QRectF(
+                LEFT + self.width - wide - HEAD_MARK - 6,
+                34 + (14 - tall) / 2,
+                HEAD_MARK,
+                tall,
             )
+            self.qp.drawPixmap(at, picture, QRectF(picture.rect()))
+
+    def _sigil(self) -> None:
+        """The House's mark (or the Order's sigil), large and faint behind
+        the first page's title; left off plain white, to save ink."""
+        if self.sigil is None or not self.textured:
+            return
+        picture = _picture(self.sigil, self.p["heading"], 400)
+        tall = SIGIL * picture.height() / picture.width()
+        self.qp.setOpacity(SIGIL_OPACITY)
+        where = QRectF(LEFT + self.width - SIGIL - 30, TOP - 20, SIGIL, tall)
+        self.qp.drawPixmap(where, picture, QRectF(picture.rect()))
+        self.qp.setOpacity(1.0)
 
     def pieces(self) -> list[pl.Piece]:
         pieces = []
         for block in self.doc.blocks:
             if isinstance(block, pl.NewPage):
-                pieces.append(pl.Piece(0, new_page=True))
+                pieces.append(pl.Piece(0, new_page=True, soft=block.soft))
             elif isinstance(block, pl.Table):
+                pieces.append(self._table_piece(block, self.width))
+            elif isinstance(block, pl.Flow):
+                pieces.append(self._flow_piece(block, self.width))
+            elif isinstance(block, pl.Spell):
+                # Whole on one page, from a new one if need be; split
+                # between its paragraphs only when longer than a page.
+                rows = self._spell_rows(block, self.width)
                 pieces.append(
                     pl.Piece(
-                        self._table_h(block, self.width),
+                        self.SPELL_HEAD + sum(rows),
                         GAP,
-                        header=self.HEAD,
-                        rows=tuple(self._row_heights(block)),
+                        header=self.SPELL_HEAD,
+                        rows=rows,
+                        whole=True,
+                    )
+                )
+            elif isinstance(block, pl.Columns):
+                widths = self._column_widths(block, self.width)
+                runs = tuple(
+                    tuple(self.measure(b, width) + GAP for b in run)
+                    for run, width in zip(
+                        (block.left, block.right), widths, strict=True
+                    )
+                )
+                pieces.append(
+                    pl.Piece(
+                        self.measure(block, self.width),
+                        GAP,
+                        runs=runs,
+                        run_keeps=tuple(
+                            tuple(pl.keeps_with_next(b) for b in run)
+                            for run in (block.left, block.right)
+                        ),
                     )
                 )
             else:
-                keep = isinstance(block, pl.Heading)
-                gap = 3.0 if keep else GAP
+                keep = pl.keeps_with_next(block)
+                gap = 3.0 if isinstance(block, pl.Heading) else GAP
                 pieces.append(pl.Piece(self.measure(block, self.width), gap, keep))
         return pieces
 
     def print(self) -> int:
         """Draw the document; how many pages it took."""
+        painter = QPainter(self.writer)
+        try:
+            return self.draw(painter)
+        finally:
+            painter.end()
+
+    def draw(self, painter: QPainter, *, new_page: bool = False) -> int:
+        """Draw the document with `painter` (on this sheet's writer),
+        starting a new page first when `new_page` (a book's later sheets);
+        how many pages it took."""
         pages = pl.paginate(self.pieces(), self.height)
-        self.painter = QPainter(self.writer)
+        self.painter = painter
         self.qp.setRenderHint(QPainter.RenderHint.Antialiasing)
         try:
             for number, page in enumerate(pages, start=1):
-                if number > 1:
+                if number > 1 or new_page:
                     self.writer.newPage()
                 self.frame(number)
                 for place in page:
                     block = self.doc.blocks[place.index]
                     self.paint(block, LEFT, TOP + place.top, self.width, place)
         finally:
-            self.qp.end()
             self.painter = None
         return len(pages)
 
 
-def print_document(
-    doc: pl.Document, path: Path, options: pl.PrintOptions = pl.DEFAULT_OPTIONS
-) -> int:
-    """Print `doc` to the PDF at `path`; how many pages it took."""
+def pdf_writer(path: Path, title: str, paper: str) -> QPdfWriter:
+    """A PDF at `path` on `paper` (print_layout.LETTER or A4), in points,
+    with no margins: each sheet draws its own."""
+    writer = QPdfWriter(str(path))
+    writer.setTitle(title)
+    writer.setCreator("Armarius")
+    writer.setResolution(72)
+    size = (
+        QPageSize.PageSizeId.Letter if paper == pl.LETTER else QPageSize.PageSizeId.A4
+    )
+    writer.setPageLayout(
+        QPageLayout(
+            QPageSize(size), QPageLayout.Orientation.Portrait, QMarginsF(0, 0, 0, 0)
+        )
+    )
+    return writer
+
+
+def print_book(
+    title: str,
+    sheets: Sequence[tuple[pl.Document, str]],
+    path: Path,
+    options: pl.PrintOptions = pl.DEFAULT_OPTIONS,
+) -> list[int]:
+    """Print several documents, each in its own theme, one after another
+    in one PDF at `path` titled `title`, each from a fresh page, with a
+    bookmark for each (pdf_outline); the page each starts on, from 0.
+
+    Pattern: Composite: the book is its documents drawn by the same
+    renderer, one after another."""
     if pictures.DISPLAY not in QFontDatabase.families():
         pictures.register_fonts()
-    return Sheet(path, doc, options).print()
+    writer = pdf_writer(path, title, options.paper)
+    painter = QPainter(writer)
+    starts: list[int] = []
+    at = 0
+    try:
+        for k, (doc, theme) in enumerate(sheets):
+            starts.append(at)
+            sheet = Sheet(path, doc, options, theme, writer=writer)
+            at += sheet.draw(painter, new_page=k > 0)
+    finally:
+        painter.end()
+    add_outline(path, [(doc.title, start) for (doc, _), start in zip(sheets, starts)])
+    return starts
+
+
+def print_document(
+    doc: pl.Document,
+    path: Path,
+    options: pl.PrintOptions = pl.DEFAULT_OPTIONS,
+    theme: str = PARCHMENT.name,
+) -> int:
+    """Print `doc` to the PDF at `path` in `theme` (by name); how many
+    pages it took."""
+    if pictures.DISPLAY not in QFontDatabase.families():
+        pictures.register_fonts()
+    return Sheet(path, doc, options, theme).print()

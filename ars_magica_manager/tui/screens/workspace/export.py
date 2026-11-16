@@ -11,6 +11,7 @@ from typing import Any
 from .... import packs, storage, transfer
 from ....forms import hosting as hosting_forms
 from ....forms import importing as import_forms
+from ....forms import markdown as markdown_forms
 from ....forms import menu as menu_forms
 from ....markup import escape
 from ..prompts import (
@@ -62,6 +63,35 @@ class ExportActions(WorkspaceBase):
 
         self.app.push_screen(
             _export_dialog(record, storage.exports_dir()), handle_result
+        )
+
+    def action_export_markdown(self) -> None:
+        """More's Export as Markdown on a character, covenant, laboratory or
+        familiar: its sheet as a .md file in the exports folder, or, in a
+        browser copy, a download to the player's computer."""
+        record = self._record_to_delete()
+
+        def download(name: str, words: str) -> list[str]:
+            self.app.deliver_binary(
+                io.BytesIO(words.encode("utf-8")),
+                save_filename=name,
+                mime_type="text/markdown",
+            )
+            return [f"Exported {escape(name)}: your browser downloads it."]
+
+        def done(end: object) -> None:
+            if isinstance(end, list) and end:
+                self.notify("\n".join(end))
+
+        run_steps(
+            self.app,
+            markdown_forms.export_markdown(
+                self.saga,
+                record,
+                storage.exports_dir(),
+                download if self.app.is_web else None,
+            ),
+            done,
         )
 
     def action_export_saga(self) -> None:

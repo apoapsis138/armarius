@@ -137,6 +137,7 @@ from . import interests as interests_forms
 from . import lacuna as lacuna_forms
 from . import land_shaping as land_forms
 from . import library as library_forms
+from . import markdown as markdown_forms
 from . import mystery_cults as cult_forms
 from . import neighbour as neighbour_forms
 from . import pilgrimage as pilgrimage_forms
@@ -536,6 +537,8 @@ class ManageItem(NamedTuple):
 MANAGE: dict[str, str] = {
     "export_record": "Write it to a file that another saga, or this saga on "
     "another computer, can import.",
+    "export_markdown": "Write its sheet as a Markdown file, for notes, a wiki "
+    "or a message: the same copy and sheet as Print to PDF.",
     "update_record": "Read an export of it over it, for example after working "
     "on it elsewhere: shows what would change first, and keeps its place in "
     "this saga.",
@@ -2044,6 +2047,9 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "import_data": _import_command,
     "research_bonuses": _needs(_covenant, research_bonuses),
     "export_record": _export_command,
+    "export_markdown": lambda page: markdown_forms.export_markdown(
+        page.saga, page.record_to_delete(), storage.exports_dir()
+    ),
     "export_saga": lambda page: export_saga(page.saga, storage.exports_dir()),
     "export_cult": lambda page: export_cult(page.saga, storage.exports_dir()),
     "export_pack": lambda page: packs.export_pack(page.saga, storage.exports_dir()),

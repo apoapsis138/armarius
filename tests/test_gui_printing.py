@@ -1,6 +1,6 @@
 """Print to PDF from a record's Manage chapter: its options, then where to
-save it; a character prints as a sheet laid out for paper, other records
-as their page in the parchment palette."""
+save it; every kind prints as a sheet laid out for paper
+(print_records.py)."""
 
 from __future__ import annotations
 
@@ -17,9 +17,9 @@ from PySide6.QtWidgets import QApplication, QFileDialog, QPushButton
 from screen_helpers import _sample_saga_with_covenant
 
 from ars_magica_manager import settings, storage
-from ars_magica_manager.gui import printing
 from ars_magica_manager.gui.forms import FieldsDialog
 from ars_magica_manager.gui.window import MainWindow
+from ars_magica_manager.models import Familiar
 
 
 @pytest.fixture(scope="module")
@@ -52,10 +52,15 @@ def test_manage_prints_the_record_to_a_pdf(app, tmp_path):
     assert window.told and "saved to" in window.told[0][1]
     # The choices are kept for next time.
     kept = settings.load_settings()["print_options"]
-    assert kept == {"paper": "A4", "spells": "short", "background": "white"}
+    assert kept == {
+        "paper": "A4",
+        "sheet": "full",
+        "background": "white",
+        "theme": "house",
+    }
 
 
-def test_a_covenant_is_asked_only_its_paper(app, tmp_path):
+def test_a_covenant_is_asked_its_copy_paper_and_background(app, tmp_path):
     saga = _sample_saga_with_covenant()
     storage.save_saga(saga)
     window = MainWindow(saga_ids=[saga.id])
@@ -64,28 +69,31 @@ def test_a_covenant_is_asked_only_its_paper(app, tmp_path):
     asked = answering(window, {"paper": "Letter"}, target)
     _manage_button(window, "Print to PDF").click()
     assert isinstance(asked[0], FieldsDialog)
-    assert [f.key for f in asked[0].fields] == ["paper"]
+    assert [f.key for f in asked[0].fields] == [
+        "copy",
+        "paper",
+        "theme",
+        "background",
+    ]
     assert target.read_bytes().startswith(b"%PDF")
-    # The window goes back to its own colours.
-    assert window._printing is None
 
 
-def test_a_covenant_prints_every_chapter_but_manage_and_seasons(app, tmp_path):
+@pytest.mark.parametrize(
+    ("open_it", "name"),
+    [
+        (lambda w: w.open_covenant("cov1"), "cov"),
+        (lambda w: w.open_laboratory("lab1"), "lab"),
+        (lambda w: w.open_familiar("fam1"), "familiar"),
+    ],
+)
+def test_each_kind_prints_as_a_laid_out_sheet(app, tmp_path, open_it, name):
     saga = _sample_saga_with_covenant()
+    saga.familiars.append(Familiar(id="fam1", character_id="char1", name="Ashwing"))
     storage.save_saga(saga)
     window = MainWindow(saga_ids=[saga.id])
-    window.open_covenant("cov1")
-    pages = window.print_to(tmp_path / "cov.pdf", "Test Covenant")
-    assert int(pages[0].split()[0]) >= 3
-
-
-def test_breaks_keep_a_section_title_with_what_is_under_it():
-    breaks = printing._Breaks(tops=[100, 300, 520, 560, 900], sections=[520])
-    # 600 of room from 0 would cut at 560, just under the title at 520.
-    assert breaks.cut(0, 600) == 520
-    assert breaks.cut(0, 1000) == 900
-
-
-def test_file_names_lose_what_windows_refuses():
-    assert printing.file_stem('Leandro: "the Red"?') == "Leandro the Red"
-    assert printing.file_stem("///") == "Untitled"
+    open_it(window)
+    said = window.print_to(tmp_path / f"{name}.pdf")
+    assert "saved to" in said[0]
+    data = (tmp_path / f"{name}.pdf").read_bytes()
+    # Real text in embedded fonts, not a picture of the screen.
+    assert b"/FontFile" in data
