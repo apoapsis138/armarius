@@ -339,6 +339,10 @@ def parse(text: str) -> Changelog:
         raise ChangelogError(
             "an Unreleased section: unreleased work goes in changelog.d/ fragments"
         )
+    # Entries above the newest version belong to no version: a merge can
+    # leave a fragment's lines there, and they would be lost silently.
+    if any(line.startswith(("### ", "- ", "* ")) for line in lines[1 : starts[0]]):
+        raise ChangelogError("entries above the newest version, under no version")
     preamble = "\n".join(lines[1 : starts[0]])  # after "# Changelog"
     sections = _sections(preamble)
     intro, _, about = preamble.split("\n## ", 1)[0].strip().partition("\n\n")

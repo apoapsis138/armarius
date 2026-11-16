@@ -224,6 +224,17 @@ def test_an_unreleased_section_is_refused():
         cl.parse(SAMPLE.replace("## 1.4.0", pending + "## 1.4.0", 1))
 
 
+def test_entries_above_the_newest_version_are_refused():
+    # What a merge once left: a feature's entries under the towncrier
+    # marker, with no version heading over them.
+    stray = (
+        "<!-- towncrier release notes start -->\n\n### Scriptorum\n\n"
+        "- **Closing a window while it fills in.** No longer crashes.\n\n"
+    )
+    with pytest.raises(cl.ChangelogError, match="under no version"):
+        cl.parse(SAMPLE.replace("## 1.4.0", stray + "## 1.4.0", 1))
+
+
 def test_the_page_shows_released_versions_only():
     page = cl.whats_new(SAMPLE)
     headings = [line for line in page.splitlines() if line.startswith("## ")]
