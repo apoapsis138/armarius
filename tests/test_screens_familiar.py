@@ -18,7 +18,15 @@ from screen_helpers import (
     _select_familiar,
     _wait_for_screen,
 )
-from support import build_all_tabs, choose, click_when_shown, menu, wait_until
+from support import (
+    build_all_tabs,
+    choose,
+    click_when_shown,
+    menu,
+    settled,
+    shown,
+    wait_until,
+)
 from textual.widgets import Button, Checkbox, Input, Select, Static, Tree
 
 from ars_magica_manager import familiars as fam
@@ -52,22 +60,30 @@ async def test_binding_a_familiar_nests_it_under_its_magus_and_grants_shared_tra
         await _select_character(pilot, app)
         assert isinstance(app.screen, WorkspaceScreen)
 
+        workspace = app.screen
         await menu(pilot, app, "n", "Bind Familiar")
-        await pilot.pause()
         assert _is_form(app.screen, "Bind a New Familiar")
         # A magus was already selected: it's preselected as the default.
-        assert app.screen.query_one("#fld-character_id", Select).value == "char1"
+        assert (await shown(pilot, "#fld-character_id", Select)).value == "char1"
 
-        app.screen.query_one("#fld-name", Input).value = "Ashwing"
+        (await shown(pilot, "#fld-name", Input)).value = "Ashwing"
         # A magus in play binds by lab work, so the box starts unticked:
         # tick it for a familiar bound already.
         bound = app.screen.query_one("#fld-bound", Checkbox)
         assert bound.value is False
         bound.value = True
         app.screen.query_one("#btn-save", Button).press()
-        await pilot.pause()
-        assert isinstance(app.screen, WorkspaceScreen)
-        assert app.screen.selected_kind == "familiar"
+        # Saved: the dialog closes and the workspace shows the new familiar.
+        # Wait for its sheet to settle, or the test (and the app) can end
+        # while the sheet's tabs are still mounting.
+        assert await wait_until(
+            pilot,
+            lambda: (
+                app.screen is workspace and workspace._familiar_sheet_view is not None
+            ),
+        )
+        await settled(pilot, workspace)
+        assert workspace.selected_kind == "familiar"
 
         # The magus's tree node is now expandable, with the Familiar nested
         # as its one child leaf.
