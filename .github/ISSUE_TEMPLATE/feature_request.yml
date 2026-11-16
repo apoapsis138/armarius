@@ -1,0 +1,60 @@
+name: Feature request
+description: Something you'd like Armarius to do that it doesn't yet.
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the idea. The repository is public, so anything you
+        write here can be seen by anyone.
+
+  - type: textarea
+    id: want
+    attributes:
+      label: What you want to do
+      description: What you're trying to do in your saga, in your own words.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: who
+    attributes:
+      label: Who it's for
+      options:
+        - Storyguide
+        - Player
+        - Both
+    validations:
+      required: false
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Part of the app
+      options:
+        - Character, covenant, lab and familiar sheets (Pagina)
+        - Scores and totals (Computus)
+        - Seasons (Book of Hours)
+        - Catalogs of Virtues, spells… (Florilegium)
+        - Building characters and covenants (Gauntlet)
+        - The saga's world (Orbis)
+        - Tribunals (Concilium)
+        - Coats of arms (Insignia)
+        - Hedge magic
+        - Maps (Mappa Mundi)
+        - Sourcebook packs (Peregrinatio)
+        - Sharing a saga (Sodales)
+        - Printing and the desktop's look (Illuminatio / Liveries)
+        - Help (Glossa)
+        - Other / not sure
+    validations:
+      required: false
+
+  - type: input
+    id: book-page
+    attributes:
+      label: Book and page
+      description: If it comes from a sourcebook, the book and printed page.
+      placeholder: Covenants p. 45
+    validations:
+      required: false

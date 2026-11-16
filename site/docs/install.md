@@ -144,9 +144,11 @@ Either:
   Then right-click it and choose **Extract All…**, as above.
 - **With [git](https://git-scm.com/).** In PowerShell, in the folder where
   you want it, run
-  `git clone https://github.com/apoapsis138/armarius.git`. To update later,
-  run `git pull` in the `armarius` folder it makes. The `main` branch is
-  always the latest release.
+  `git clone https://github.com/apoapsis138/armarius.git`, then, in the
+  `armarius` folder it makes, `git checkout vX.Y.Z` with the latest
+  release's version: each release is a tag. To update later, run
+  `git fetch --tags` and check out the new version's tag the same way.
+  (The `main` branch has the newest work, which may not be released yet.)
 
 ### 4. Start it
 

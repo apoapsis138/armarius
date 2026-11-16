@@ -2,16 +2,25 @@
 # Linux machines: formatting, lint and types once per system, and the full
 # test suite split four ways per system (pytest --shard, tools/shards.py),
 # the eight quarters running side by side. They run on every push and pull
-# request to dev (where work happens) and main (the latest release), and by
-# hand from the Actions tab. The last job, `checks`, passes only when all the
-# others did: it is the one status branch protection requires.
+# request to main (the one long-lived branch, always releasable), and by
+# hand from the Actions tab.
+#
+# A pull request that changes only the docs-only files below (the `changes`
+# job) runs the fast tier instead of the full suite (`-m "not ui"`, once per
+# system); lint, format and types still run. Pushes to main and runs by
+# hand always run the full suite. NOTICE.md and docs/screenshots/ are left
+# off the list on purpose: tests read NOTICE.md, and the help site copies
+# the screenshots.
+#
+# The last job, `checks`, passes only when all the others that should run
+# did: it is the one status branch protection requires.
 name: Checks
 
 on:
   push:
-    branches: [dev, main]
+    branches: [main]
   pull_request:
-    branches: [dev, main]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -22,6 +31,40 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      docs_only: ${{ steps.files.outputs.docs_only }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+      - name: Is this a docs-only pull request?
+        id: files
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          docs_only=false
+          if [ "$EVENT" = pull_request ]; then
+            files=$(git diff --name-only "origin/$BASE_REF...HEAD")
+            echo "Changed files:"
+            echo "$files"
+            if [ -n "$files" ]; then
+              docs_only=true
+              while IFS= read -r f; do
+                case "$f" in
+                  docs/screenshots/*) docs_only=false ;;
+                  README.md | CONTRIBUTING.md | SECURITY.md | docs/* | .github/ISSUE_TEMPLATE/*) ;;
+                  *) docs_only=false ;;
+                esac
+              done <<< "$files"
+            fi
+          fi
+          echo "docs_only: $docs_only"
+          echo "docs_only=$docs_only" >> "$GITHUB_OUTPUT"
+
   lint:
     strategy:
       fail-fast: false
@@ -44,6 +87,8 @@ jobs:
         run: uv run pyright
 
   tests:
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
     strategy:
       fail-fast: false
       matrix:
@@ -66,16 +111,48 @@ jobs:
       - name: Tests (shard ${{ matrix.shard }} of 4)
         run: uv run pytest -q -n auto --dist worksteal --shard=${{ matrix.shard }}/4
 
+  # A docs-only pull request's lighter run: the fast tier, no screen tests.
+  fast-tests:
+    needs: changes
+    if: needs.changes.outputs.docs_only == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Install Qt's system libraries (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libegl1 libgl1 libxkbcommon-x11-0 libdbus-1-3
+      - uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6.8.0
+        with:
+          enable-cache: true
+      - name: Install Python and dependencies
+        run: uv sync --locked
+      - name: Tests (fast tier)
+        run: uv run pytest -q -n auto --dist worksteal -m "not ui"
+
   checks:
     if: always()
-    needs: [lint, tests]
+    needs: [changes, lint, tests, fast-tests]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Every job passed
+      - name: Every job that should run passed
         env:
+          CHANGES: ${{ needs.changes.result }}
+          DOCS_ONLY: ${{ needs.changes.outputs.docs_only }}
           LINT: ${{ needs.lint.result }}
           TESTS: ${{ needs.tests.result }}
+          FAST: ${{ needs.fast-tests.result }}
         run: |
-          echo "lint: $LINT, tests: $TESTS"
-          test "$LINT" = success && test "$TESTS" = success
+          echo "changes: $CHANGES (docs only: $DOCS_ONLY), lint: $LINT, tests: $TESTS, fast tests: $FAST"
+          test "$CHANGES" = success && test "$LINT" = success || exit 1
+          if [ "$DOCS_ONLY" = true ]; then
+            # The full suite was skipped on purpose; the fast tier stands in.
+            test "$FAST" = success && test "$TESTS" = skipped
+          else
+            test "$TESTS" = success
+          fi

@@ -165,6 +165,7 @@ GUIDE_GROUPS: tuple[tuple[str, tuple[str, ...]], ...] = (
         "Your data",
         ("guide-save-folder", "guide-restore-backup", "guide-import-export"),
     ),
+    ("Getting help", ("guide-report-bug",)),
 )
 #: A plain gloss after a screen whose name doesn't say what it holds, by
 #: help id: the menu shows "The Armarium: the saga's books".

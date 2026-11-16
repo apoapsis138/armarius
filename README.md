@@ -12,29 +12,35 @@ and keeps a record of what happened.
 
 ## What it does
 
-Each part of the app has a name; [CHANGELOG.md](CHANGELOG.md) lists what
-each version added to it (the current version is in the title bar).
+Each part of the app has a plain name and a name of its own;
+[CHANGELOG.md](CHANGELOG.md) lists what each version added to it. The
+version you have is on Help's About page, on the desktop's title page, and
+in the terminal version's title bar.
 
 | Feature | What it is |
 | --- | --- |
-| **Pagina** | Sheets for characters, covenants, laboratories and familiars, kept in full |
-| **Computus** | The rules engine: scores from experience, Lab, Casting and Study totals, Penetration, combat, aging and Warping |
-| **Book of Hours** | Seasons planned a year ahead and played out: study, teaching, lab work, books, enchanting, gifts, and each winter's aging and upkeep |
-| **Florilegium** | The catalogs of Virtues, Flaws, spells and more, checked against the books, and what a saga offers from them |
-| **Gauntlet** | Covenants, laboratories and characters built by the book, step by step, from templates if you like |
-| **Orbis** | The saga's world: its Region, people, places, threats and what lies ahead |
-| **Concilium** | Tribunals, their customs and their meetings, held step by step |
-| **Insignia** | Coats of arms for covenants, lords, towns and factions |
+| **Sheets** (Pagina) | Sheets for characters, covenants, laboratories and familiars, kept in full |
+| **Rules engine** (Computus) | Scores from experience, Lab, Casting and Study totals, Penetration, combat, aging and Warping |
+| **Seasons** (Book of Hours) | Seasons planned a year ahead and played out: study, teaching, lab work, books, enchanting, gifts, and each winter's aging and upkeep |
+| **Catalogs** (Florilegium) | The catalogs of Virtues, Flaws, spells and more, checked against the books, and what a saga offers from them |
+| **Creation** (Gauntlet) | Covenants, laboratories and characters built by the book, step by step, from templates if you like |
+| **The saga's world** (Orbis) | Its Region, people, places, threats and what lies ahead |
+| **Tribunals** (Concilium) | Tribunals, their customs and their meetings, held step by step |
+| **Heraldry and artwork** (Insignia) | Coats of arms for covenants, lords, towns and factions |
 | **Hedge Magic** | The non-Hermetic traditions: their Arts, chapters and rules |
-| **Mappa Mundi** | The Atlas: the saga's maps and the records pinned on them |
-| **Peregrinatio** | Sourcebooks ready to import as a new saga (below) |
-| **Sodales** | Sharing a saga with the troupe (below) |
-| **Illuminatio** | The desktop version, drawn as a manuscript, and printing sheets to PDF |
-| **Liveries of the Houses** | The desktop drawn in a House's own look: its colours, paper and mark |
-| **Scriptorum** | The terminal version: one key per verb, readable at any size |
-| **Glossa** | Help for whatever has focus (F1 or `?`), with how-to guides |
+| **Atlas** (Mappa Mundi) | The saga's maps and the records pinned on them |
+| **Sourcebook packs** (Peregrinatio) | Sourcebooks ready to import as a new saga (below) |
+| **Playing together** (Sodales) | Sharing a saga with the troupe (below) |
+| **Self-hosting** (Castellum) | A saga hosted day and night on your own NAS or server, with nightly backups and a container image |
+| **Printing and exports** (Folia) | Sheets printed to PDF or written as Markdown, as a Player or Storyguide copy, in a House's colours, or the whole troupe at once |
+| **Desktop version** (Illuminatio) | The desktop version, drawn as a manuscript |
+| **House looks** (Liveries of the Houses) | The desktop drawn in a House's own look: its colours, paper and mark |
+| **Terminal version** (Scriptorum) | One key per verb, readable at any size |
+| **Help** (Glossa) | Help for whatever has focus (F1 or `?`), with how-to guides |
+| **Your data and upkeep** (Fundamenta) | Your sagas in a save folder of your choosing, safe saves and backups |
+| **App updates** (Renovatio) | Told when a newer version is out, with its notes |
 
-**Peregrinatio's packs** are summaries, in the app's own words, of the
+**The sourcebook packs** are summaries, in the app's own words, of the
 sourcebooks' open content, with their covenants, magi, places, creatures
 and stories: the Rhine, Normandy, Provence, Theban, Transylvanian,
 Hibernian, Levant, Greater Alps, Stonehenge and Novgorod Tribunals; *The
@@ -43,10 +49,11 @@ Cradle and the Crescent*, *Lands of the Nile*, *Between Sand and Sea* and
 *Magi of Hermes*, *Legends of Hermes* and *Antagonists*. Each pack has a
 Help page saying what it assumed where its book is silent.
 
-**Sodales** shares a saga two ways: players join from their own copy of
-Armarius over the internet (Remote seats), or you host the saga on a
-private network for their browsers or SSH. Each player changes only what
-is theirs, and can make their own character.
+**Playing together** shares a saga two ways: players join from their own
+copy of Armarius over the internet (Remote seats), or you host the saga on
+a private network for their browsers or SSH. Each player changes only what
+is theirs, and can make their own character. To keep a saga up day and
+night, host it on your own NAS or server (Self-hosting).
 
 There are two front-ends over one shared core: a desktop version (PySide6)
 and a terminal version (Textual) that can do the same things.
@@ -145,9 +152,10 @@ and `ars_magica_manager/gui/` draw them. [CONTRIBUTING.md](CONTRIBUTING.md)
 has the working rules, [DESIGN.md](DESIGN.md) the architecture and
 [docs/adr/](docs/adr/) the reasons for each lasting decision.
 
-Work happens on the `dev` branch, and pull requests go into it; `main`
-is always the latest release, each one listed on the repository's
-Releases page with its notes from [CHANGELOG.md](CHANGELOG.md).
+Work happens on short-lived branches from `main`, and pull requests go
+into `main`, which is always ready to release. Each release is a version
+tag on `main`, listed on the repository's Releases page with its notes
+from [CHANGELOG.md](CHANGELOG.md).
 
 ## Licence and credits
 
