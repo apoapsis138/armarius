@@ -2576,9 +2576,10 @@ A saga hosted on a server or NAS is updated there, on its own (see
 <!-- help: guide-update-source -->
 
 1. **Get the new source.** In the folder you cloned with git, run
-   `git pull`. The `main` branch is always the latest release. Or download
-   the release's **Source code (zip)** and extract it beside the old
-   folder.
+   `git fetch --tags`, then `git checkout vX.Y.Z` with the new version's
+   number: each release is a tag. (`git pull` on `main` gets the newest
+   work instead, which may not be released yet.) Or download the
+   release's **Source code (zip)** and extract it beside the old folder.
 2. **Start it as before.** On Windows, double-click `run-gui.bat`. On any
    system, run `uv run python gui.py` for the desktop version or
    `uv run python main.py` for the terminal version, in the folder. Both

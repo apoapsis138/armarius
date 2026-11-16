@@ -139,6 +139,10 @@ change in it.
 
 ## Unreleased
 
+### Fundamenta
+
+- **One main branch.** Development now happens on `main` alone: changes go straight into it through pull requests, each release is a version tag, and the help website is rebuilt only when a version is released, so it always matches the latest release. A change to the docs alone gets a quicker set of checks.
+
 ### Folia
 
 - **A Latin name.** Printing and exports is now called Folia, the leaves handed round the table, like the app's other features; What's New, the release notes and the README show it as Printing and exports (Folia).

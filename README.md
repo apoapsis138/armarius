@@ -152,9 +152,10 @@ and `ars_magica_manager/gui/` draw them. [CONTRIBUTING.md](CONTRIBUTING.md)
 has the working rules, [DESIGN.md](DESIGN.md) the architecture and
 [docs/adr/](docs/adr/) the reasons for each lasting decision.
 
-Work happens on the `dev` branch, and pull requests go into it; `main`
-is always the latest release, each one listed on the repository's
-Releases page with its notes from [CHANGELOG.md](CHANGELOG.md).
+Work happens on short-lived branches from `main`, and pull requests go
+into `main`, which is always ready to release. Each release is a version
+tag on `main`, listed on the repository's Releases page with its notes
+from [CHANGELOG.md](CHANGELOG.md).
 
 ## Licence and credits
 
