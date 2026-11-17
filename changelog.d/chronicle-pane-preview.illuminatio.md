@@ -1,0 +1,1 @@
+**Preview (off by default): the Chronicle pane.** With Virtual Tabletop (Preview) on, the desktop docks a Session's Chronicle on the right while it's under way: a card per roll with each die face as a tile, a Free Roll, and a strip it collapses to that counts what came and pulses once for a Blind result.

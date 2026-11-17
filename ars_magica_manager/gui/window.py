@@ -27,7 +27,16 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 import shiboken6
-from PySide6.QtCore import QByteArray, QEvent, Qt, QTimer, QUrl
+from PySide6.QtCore import (
+    QByteArray,
+    QEvent,
+    QFileSystemWatcher,
+    QObject,
+    Qt,
+    QTimer,
+    QUrl,
+    Signal,
+)
 from PySide6.QtGui import (
     QCloseEvent,
     QDesktopServices,
@@ -58,6 +67,7 @@ from PySide6.QtWidgets import (
 
 from .. import (
     catalog,
+    chronicle,
     help_text,
     hosting,
     hotkeys,
@@ -77,6 +87,7 @@ from .. import (
     undo_season,
     updates,
     viewing,
+    virtual_tabletop,
 )
 from .. import familiars as fam
 from .. import print_layout as pl
@@ -87,6 +98,7 @@ from ..commands import (
     Command,
     Confirm,
     Empty,
+    Finished,
     Go,
     Picked,
     Question,
@@ -143,6 +155,7 @@ from .help import HelpPage
 if TYPE_CHECKING:
     from ..remote.seat_session import SeatSession
     from .hosting import HostingWindow
+from .chronicle_pane import ChroniclePane, remembered_collapsed
 from .icon import app_icon
 from .laboratory import LaboratoryPage
 from .manage import Moded, RecordControls
@@ -357,6 +370,17 @@ SPOT_CHAPTERS: dict[tuple[str, str], str] = {
 }
 
 
+class SeatEvents(QObject):
+    """Hands a Chronicle entry from a Remote seat's connection thread to
+    the window's (a queued signal)."""
+
+    arrived = Signal(str, object, int)
+
+    def __init__(self, window: MainWindow) -> None:
+        super().__init__(window)
+        self.arrived.connect(window._seat_entry)
+
+
 class MainWindow(QMainWindow):
     # A Joined game's talk with its host (joined.tick): set on the
     # instance as they change; these are where each starts.
@@ -430,7 +454,7 @@ class MainWindow(QMainWindow):
         layout.addLayout(bar)
         self.headpiece = SeasonHeadpiece(self.palette_)
         layout.addWidget(self.headpiece)
-        layout.addWidget(self.sheet_area, 1)
+        layout.addLayout(self._beside_the_page(), 1)
         #: The pages, and over them the title page while it is on show.
         self.stack = QStackedWidget()
         self.stack.addWidget(body)
@@ -463,6 +487,32 @@ class MainWindow(QMainWindow):
         else:
             self.go([Place(SHELF)])
 
+    def _beside_the_page(self) -> QHBoxLayout:
+        """The page, and docked on its right the Chronicle pane, shown
+        while a Session is Under way (the Virtual Tabletop preview)."""
+        #: A roll or a Cancel changes only the Chronicle, which writes
+        #: itself: nothing to save or redraw.
+        self.chronicle_pane = ChroniclePane(self.palette_, self._run_on_chronicle)
+        #: The Chronicle file found damaged, said once.
+        self._damaged_chronicle: Path | None = None
+        #: Watches the host's Chronicle file, so a Remote seat's roll (the
+        #: listener, another process, writes it) shows at once.
+        self.chronicle_watch = QFileSystemWatcher(self)
+        self.chronicle_watch.fileChanged.connect(self._chronicle_changed)
+        #: At a Remote seat: what the host sent of the Chronicle, in memory
+        #: only, and the hand-over from the connection's thread to this one.
+        self.seat_chronicle: chronicle.SeatChronicle | None = None
+        self.seat_events = SeatEvents(self)
+        #: The Session already Under way when the saga was opened: its pane
+        #: comes back as it was left; one begun since opens.
+        self.under_way_at_open: str | None = None
+        beside = QHBoxLayout()
+        beside.setContentsMargins(0, 0, 0, 0)
+        beside.setSpacing(0)
+        beside.addWidget(self.sheet_area, 1)
+        beside.addWidget(self.chronicle_pane)
+        return beside
+
     def _top_bar(self) -> QHBoxLayout:
         """The window's title bar: the trail on the left, the app's name
         in the middle (drag it to move the window), and Find, Help, a rule,
@@ -494,6 +544,14 @@ class MainWindow(QMainWindow):
         #: game's Player's desktop, only My sheet.
         self.seat_button = SeatChip("Play as", self.choose_seat)
         bar.addWidget(self.seat_button)
+        #: Opens or collapses the Chronicle pane, while a Session is Under
+        #: way (the Virtual Tabletop preview).
+        self.chronicle_button = QPushButton("  Chronicle")
+        self.chronicle_button.setFlat(True)
+        self.chronicle_button.setToolTip("Open or collapse the Chronicle")
+        self.chronicle_button.clicked.connect(self._toggle_chronicle)
+        self.chronicle_button.hide()
+        bar.addWidget(self.chronicle_button)
         self.help = QPushButton("  Help")
         self.help.setFlat(True)
         self.help.setToolTip("Help on this page (? or F1)")
@@ -781,6 +839,8 @@ class MainWindow(QMainWindow):
         left in it on this computer; read as `player` (a Joined game's
         Player), or as its storyguide."""
         self.saga = saga
+        found = chronicle.under_way(saga)
+        self.under_way_at_open = found.id if found is not None else None
         self.player = player
         if viewing.troupe_style(saga) and seat.runs_the_saga(player):
             # With a second storyguide every storyguide's window opens
@@ -876,6 +936,9 @@ class MainWindow(QMainWindow):
         (joined.tick)."""
         if self.saga is None or self._step_open():
             return
+        # The Chronicle file's watcher's fallback: catch up with the seat
+        # listener's writes here too.
+        self._refresh_chronicle()
         if self.store.remote:
             joined.tick(self)
             return
@@ -1857,6 +1920,7 @@ class MainWindow(QMainWindow):
         self._show(page)
         self._draw_trail()
         self._draw_advance()
+        self._draw_chronicle()
         if before is not None:
             motion.fade_from(self.stack, before, motion.MODE_FADE)
 
@@ -2271,6 +2335,132 @@ class MainWindow(QMainWindow):
             )
         return menu_forms.page_for(saga, NodeKind.FAMILIAR, familiar_id=place.id)
 
+    def _draw_chronicle(self) -> None:
+        """The Chronicle pane and its button, while the open saga has a
+        Session Under way and the Virtual Tabletop preview is on, on the
+        host's own computer (a Remote seat is sent the Chronicle by its
+        host instead). A Session newly begun opens the pane; after a
+        restart it comes back as it was left."""
+        pane = self.chronicle_pane
+        saga = self.saga
+        if saga is not None and self.session is not None:
+            self._draw_seat_chronicle(saga, self.session)
+            return
+        session = (
+            chronicle.under_way(saga)
+            if saga is not None and virtual_tabletop.on()
+            else None
+        )
+        self.chronicle_button.setVisible(session is not None)
+        if saga is None or session is None:
+            pane.detach()
+            self._watch(None)
+            return
+        try:
+            book = chronicle.read(saga, session)
+        except ValueError as problem:
+            # A damaged Chronicle hides the pane, said once; the page works.
+            pane.detach()
+            self.chronicle_button.setVisible(False)
+            path = chronicle.path_of(saga, session)
+            if self._damaged_chronicle != path:
+                self._damaged_chronicle = path
+                self.tell("Chronicle", escape(str(problem)))
+            return
+        fresh = pane.book is not book
+        pane.attach(saga, session, book, chronicle.here())
+        self._watch(book.path)
+        if fresh:
+            begun_now = session.id != self.under_way_at_open
+            pane.set_collapsed(False if begun_now else remembered_collapsed())
+            # Opened once on Begin; from then on as it was left.
+            self.under_way_at_open = session.id
+
+    def _watch(self, path: Path | None) -> None:
+        """Watch the host's Chronicle file at `path` (None: none)."""
+        watched = self.chronicle_watch.files()
+        if path is not None and str(path) in watched:
+            return
+        if watched:
+            self.chronicle_watch.removePaths(watched)
+        if path is not None and path.is_file():
+            self.chronicle_watch.addPath(str(path))
+
+    def _refresh_chronicle(self) -> None:
+        """Catch up with what the seat listener wrote; a file found damaged
+        hides the pane, said once."""
+        book = self.chronicle_pane.book
+        if not isinstance(book, chronicle.Chronicle):
+            return
+        try:
+            book.refresh()
+        except ValueError as problem:
+            self.chronicle_pane.detach()
+            self.chronicle_button.setVisible(False)
+            self._watch(None)
+            if self._damaged_chronicle != book.path:
+                self._damaged_chronicle = book.path
+                self.tell("Chronicle", escape(str(problem)))
+
+    def _chronicle_changed(self, path: str) -> None:
+        """The Chronicle file grew (a Remote seat's roll): catch up."""
+        self._refresh_chronicle()
+        if path not in self.chronicle_watch.files() and Path(path).is_file():
+            self.chronicle_watch.addPath(path)  # replaced, not just grown
+
+    def _draw_seat_chronicle(self, saga: Saga, seat: SeatSession) -> None:
+        """At a Remote seat: the pane while the host's Session is under
+        way, fed by the Chronicle's events connection; no setting needed
+        here (the host turned the preview on)."""
+        pane = self.chronicle_pane
+        session = chronicle.under_way(saga)
+        self.chronicle_button.setVisible(session is not None)
+        if session is None:
+            pane.detach()
+            return
+        held = self.seat_chronicle
+        if held is None:
+            held = self.seat_chronicle = chronicle.SeatChronicle()
+            events = self.seat_events
+            # Deliveries are marked with the Chronicle they're for: one
+            # still on its way from a game since left is dropped.
+            mark = id(held)
+
+            def deliver(session_id: str, entry: chronicle.Entry) -> None:
+                events.arrived.emit(session_id, entry, mark)
+
+            seat.follow_chronicle(deliver, lambda: (held.session_id, held.last))
+        elif held.session_id and held.session_id != session.id:
+            held.clear()  # the host began another Session
+        fresh = pane.book is not held
+        who = self.player.id if self.player is not None else ""
+        pane.attach(saga, session, held, who, send_roll=seat.roll)
+        if fresh:
+            pane.set_collapsed(remembered_collapsed())
+
+    def _seat_entry(self, session_id: str, entry: chronicle.Entry, mark: int) -> None:
+        """An entry the host sent, handed to this thread."""
+        held = self.seat_chronicle
+        if held is not None and id(held) == mark:
+            held.take(session_id, entry)
+
+    def _run_on_chronicle(self, command: Command) -> None:
+        """Run a step that writes only the Chronicle (a roll, a Cancel):
+        no saga save and no redraw, as the pane is told of what it wrote."""
+        if self._step_open():
+            self._bring_forward()
+            return
+        outcome = drive(command, self._answer)
+        if isinstance(outcome, Refuse):
+            sounds.play("tock")
+            self.tell(outcome.title, outcome.why)
+        elif isinstance(outcome, Finished) and isinstance(outcome.end, list):
+            if outcome.end:
+                self.tell(_title(command), "\n".join(outcome.end))
+
+    def _toggle_chronicle(self) -> None:
+        self.chronicle_pane.toggle()
+
     def _draw_advance(self) -> None:
         """Find while a saga is open, and Advance Season at the foot of
         the chapters of the page on show, but not a Creation Worksheet's:
@@ -2475,6 +2665,7 @@ class MainWindow(QMainWindow):
             body.update()
         self.headpiece.p = p
         self.headpiece.update()
+        self.chronicle_pane.set_palette(p)
         self.drag.set_palette(p)
         self.bar_rule.set_palette(p)
         self.controls.set_palette(p)

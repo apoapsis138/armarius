@@ -384,7 +384,9 @@ def end_session(saga: Saga, session: Session) -> Confirm | Refuse:
 def read_chronicle(saga: Saga, session: Session) -> Form:
     """`session`'s Chronicle, as whoever is looking may see it, to read."""
     book = chronicle.read(saga, session)
-    words = chronicle.text(book.seen_by(chronicle.here(), session, saga), book)
+    words = chronicle.text(
+        chronicle.for_reader(book, chronicle.here(), session, saga), book
+    )
     return Form(
         f"Chronicle: {escape(ss.when(session))}",
         lambda: [DialogField("_chronicle", "", "info", words)],

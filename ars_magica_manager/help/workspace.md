@@ -1490,7 +1490,11 @@ Choose a Session in Saga Management's Sessions and click **Cast at a Glance**. *
 
 Preview: turn on Virtual Tabletop in Settings.
 
-A Session's record of everything rolled while it's under way. Each Remote seat is sent the entries its player may see, as they come, and rolls through the host. Each line has its number, its time and what happened. A roll shows every die face: each 1 that doubled, and the botch dice after a 0. Then come the modifier, the total and, when the roll had one, the Ease Factor and whether it succeeded and by how much (DE pp. 7-8).
+A Session's record of everything rolled while it's under way. Each line has its number, its time and what happened. A roll shows every die face: each 1 that doubled, and the botch dice after a 0. Then come the modifier, the total and, when the roll had one, the Ease Factor and whether it succeeded and by how much (DE pp. 7-8). Each Remote seat is sent the entries its player may see, as they come, and rolls through the host.
+
+<!-- gui -->
+On the desktop, the [Chronicle pane](help:chronicle-pane) shows it as it happens, on the host's computer and at each seat, and makes [Free rolls](help:free-roll).
+<!-- /gui -->
 
 **Begin Session** puts a planned Session under way and opens its Chronicle. **End Session** marks it Played, as ticking Played does, and closes its Chronicle. The Chronicle is still read from the Session's row afterwards, but nothing more is added. Only the Session's storyguide begins or ends it, and only one Session of a saga is under way at a time. End Session isn't **End of Session** on a character's More, which gives Confidence Points for an evening of play.
 
@@ -1500,7 +1504,7 @@ Who sees each roll:
 - **Private**: the roller and the Session's storyguide.
 - **Blind**: the number is the Session's storyguide's alone. The player of the character it was rolled for sees only that the storyguide rolled.
 
-In troupe-style play, another storyguide at the Session counts as a player that evening. A roll that shouldn't count is voided by the Session's storyguide with a reason. It stays in the Chronicle, struck through.
+In troupe-style play, another storyguide at the Session counts as a player that evening. A roll that shouldn't count is canceled by the Session's storyguide with a reason. It stays in the Chronicle, marked Canceled.
 
 Every die is rolled on the host's computer, and the host's computer keeps the whole Chronicle in a file beside the saga, Private and Blind rolls included. The host's own window shows only what the host may see, but anyone at that computer could open the file. A saga's backups include its Chronicles. A headless host serves Remote seats as before, but the preview needs a host with the desktop app until 5.0.
 
@@ -1512,6 +1516,52 @@ Choose a Session in Saga Management's Sessions and click **Begin Session**, **En
 <!-- /gui -->
 
 **See also:** [Sessions](help:tab-content-sessions)
+
+### The Chronicle pane
+<!-- help: chronicle-pane; gui -->
+
+Preview: turn on Virtual Tabletop in Settings.
+
+While a Session is under way, the [Chronicle](help:chronicle) is docked on the right of the saga window. It opens when you Begin Session. It sits on a gilt leaf in your theme's own frame. Each roll is a card:
+
+- **Who** rolled: the character, in small capitals, and the player in smaller type.
+- **What** it's for, in italic.
+- **The dice**, drawn as ten-sided dice with their faces: the die's throws, then the botch dice. A 0 is drawn solid, its number in white, as well as in the warning colour, so it shows without telling colours apart. A 1 that exploded has a second rim inside its kite, with what the next die is multiplied by beside it (×2, ×4...), and the outcome says it once more: die 5 ×4 = 20.
+- **The outcome**, set largest: the total, then whether it beat the Ease Factor and by how much, or a botch and how many zeros.
+
+You see only what you may: a Private roll of someone else's, or a Blind roll's number unless you run the Session, isn't shown. The Session's storyguide sees a Blind roll once, as the roll itself.
+
+**Cancelling a roll:** click **Cancel** beside a roll's dice, or right-click the dice and choose **Cancel this roll**. Only the Session's storyguide can. Say why, and the roll stays on its card, faded, with a fine line struck through its dice and its total, and "Canceled" with the reason beneath. It no longer counts.
+
+- **Free Roll**, at the foot, makes a [Free roll](help:free-roll).
+- **›** collapses the pane to a thin gilt strip on the right edge, its name running up it and the count of entries come since in a small seal at its head. Click the strip to open it again. **Chronicle** in the top bar opens or collapses it too.
+- A Blind roll's number, for the Session's storyguide, or the line telling you one was rolled for your character pulses the strip once. Not with **Reduce motion** on. The pane never opens by itself.
+- A roll landing plays a soft tock, with **Sounds** on.
+
+Whether it's open or collapsed is remembered for the next time the app starts with a Session under way.
+
+**At a Remote seat** the pane shows while your host's Session is under way, with only what the host sends you. **Free Roll** sends the roll to the host, which rolls it. Cancel is the host's alone. On the host's computer, a seat's roll shows as soon as the listener writes it.
+
+**See also:** [How to roll at the table](help:guide-rolling), [Sessions](help:tab-content-sessions)
+
+### Free roll
+<!-- help: free-roll; gui -->
+
+Preview: turn on Virtual Tabletop in Settings.
+
+A roll made from the Chronicle rather than from a sheet. You say what to roll, never the number: the host's computer rolls every die.
+
+- **Die**: a stress die, or a simple die, on which a 0 counts as ten (DE p. 7).
+- **Modifier**: the Characteristic, Ability and anything else, added up and typed in.
+- **Botch dice**: for a stress die, one most of the time, more when disaster is likelier, 0 when a botch isn't possible (DE pp. 7-8). From 0 to 10.
+- **Ease Factor**: blank for none. With one, the Chronicle says whether the roll succeeded and by how much.
+- **For**: what the roll is for, shown on its card.
+- **Character**: a player rolls only for the characters they play tonight. The Session's storyguide rolls for any character, or for no one.
+- **Who sees it**: Public, Private or, for the Session's storyguide, Blind (see [The Chronicle](help:chronicle)).
+
+**Roll** sends it. If it can't be rolled, the reason is shown and nothing is added.
+
+**See also:** [The Chronicle](help:chronicle)
 
 ### The Sessions list
 <!-- help: section-sessions -->
