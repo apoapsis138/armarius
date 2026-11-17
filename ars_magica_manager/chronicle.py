@@ -35,7 +35,6 @@ import datetime
 import json
 import os
 import random
-import re
 import secrets
 from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
@@ -217,11 +216,8 @@ def _lock_of(path: Path) -> Path:
     return path.with_name(f".{path.name}.lock")
 
 
-_SAFE_ID = re.compile(r"[A-Za-z0-9_-]+")
-
-
 def _safe(value: str, what: str) -> str:
-    if not _SAFE_ID.fullmatch(value):
+    if not shapes.is_plain_id(value):
         raise ValueError(f"A {what} id can't name a Chronicle file: {value!r}")
     return value
 
@@ -239,7 +235,7 @@ def path_of(saga: Saga, session: Session) -> Path:
 def files_of(saga_id: str) -> list[Path]:
     """Every Chronicle file of the saga `saga_id`, for its backups: none
     for an id no Chronicle file could be named by."""
-    if not _SAFE_ID.fullmatch(saga_id):
+    if not shapes.is_plain_id(saga_id):
         return []
     folder = paths.data_dir() / paths.CHRONICLES / saga_id
     return sorted(folder.glob("*.jsonl")) if folder.is_dir() else []
