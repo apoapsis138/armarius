@@ -22,6 +22,9 @@ from ..models import Saga, Session
 
 #: Hands a request to the host; the reason it was refused, or None.
 Submit = Callable[[chronicle.RollRequest], str | None]
+#: Hands a Confidence spend (the points) to the host; the reason it was
+#: refused, or None. The Remote seat's takes the roll's number first.
+Spend = Callable[..., str | None]
 
 STRESS, SIMPLE = "stress", "simple"
 #: The most botch dice the form takes (DE p. 8's table goes to ten).
@@ -70,15 +73,15 @@ def request_of(values: dict[str, Any]) -> chronicle.RollRequest:
     )
 
 
-def void_form(
+def strike_form(
     book: chronicle.Chronicle, session: Session, number: int, who: str, saga: Saga
 ) -> Form:
-    """Cancel roll `number` (a Void: it stays in the Chronicle, struck),
-    with the reason asked."""
+    """Strike roll `number` from the count (it stays in the Chronicle,
+    struck through), with the reason asked."""
 
     def apply(values: dict[str, Any]) -> list[str]:
         try:
-            chronicle.void(
+            chronicle.strike(
                 book, session, number, values.get("reason") or "", by=who, saga=saga
             )
         except ValueError as problem:
@@ -86,7 +89,7 @@ def void_form(
         return []
 
     return Form(
-        f"Cancel Roll {number}",
+        f"Strike Roll {number}",
         lambda: [
             DialogField(
                 "reason",
@@ -95,12 +98,63 @@ def void_form(
                 "",
                 required=True,
                 hint="Why the roll doesn't count. It stays in the Chronicle, "
-                "marked Canceled.",
+                "struck through.",
             )
         ],
         apply,
-        save_label="Cancel the Roll",
+        save_label="Strike It",
         cancel_label="Keep It",
+        help_id=FREE_ROLL_HELP,
+    )
+
+
+def confidence_form(
+    book: chronicle.HasEntries,
+    saga: Saga,
+    session: Session,
+    number: int,
+    who: str,
+    spend: Spend,
+) -> Form:
+    """Spend Confidence on roll `number`, after seeing it: +3 a point, at
+    most the Confidence Score on one roll, never on a botch (DE p. 29)."""
+    target = next((e for e in book.entries if e.number == number), None)
+    character_id = str(target.body.get("character_id") or "") if target else ""
+    character = next((c for c in saga.characters if c.id == character_id), None)
+    score = character.background.confidence_score if character else 0
+    left = chronicle.confidence_left(book, character) if character else 0
+
+    def apply(values: dict[str, Any]) -> list[str]:
+        refused = spend(values.get("points") or 0)
+        return notes(refused) if refused else []
+
+    def validate(values: dict[str, Any]) -> str | None:
+        return chronicle.why_not_spend(
+            book, saga, session, number, values.get("points") or 0, who
+        )
+
+    name = escape(character.name) if character else "The character"
+    return Form(
+        f"Spend Confidence on Roll {number}",
+        lambda: [
+            DialogField(
+                "_left",
+                "",
+                "info",
+                f"{name}: Confidence Score {score}, {left} point(s) left this Session.",
+            ),
+            DialogField(
+                "points",
+                "Points",
+                "int",
+                1,
+                hint="Each adds +3 to the total. They come off the sheet when "
+                "the Session ends.",
+            ),
+        ],
+        apply,
+        validate=validate,
+        save_label="Spend",
         help_id=FREE_ROLL_HELP,
     )
 

@@ -171,8 +171,8 @@ def test_a_seats_pane_shows_what_its_host_sent_and_rolls_through_it() -> None:
 
 
 @pytest.mark.usefixtures("app")
-def test_a_seat_never_offers_cancel() -> None:
-    """Cancel is the host's: its computer keeps the Chronicle."""
+def test_a_seat_never_offers_strike() -> None:
+    """Strike is the host's: its computer keeps the Chronicle."""
     saga = _saga()
     saga.sessions[0].storyguide_id = "ana"
     held = chronicle.SeatChronicle()
@@ -204,7 +204,7 @@ def test_a_seat_never_offers_cancel() -> None:
     )
 
     dice = pane.card_list()[-1].findChild(DiceRow, "dice")
-    assert isinstance(dice, DiceRow) and not dice.can_cancel
+    assert isinstance(dice, DiceRow) and not dice.can_strike
 
 
 # -- a seat's connection, over a real one --

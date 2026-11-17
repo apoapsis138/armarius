@@ -501,10 +501,26 @@ class RemoteClient:
         }
         if request.ease_factor is not None:
             body["ease_factor"] = request.ease_factor
+        if request.sheet is not None:
+            body["characteristic"] = request.sheet.characteristic
+            body["ability"] = request.sheet.ability
+            body["specialty"] = request.sheet.specialty
         reply = await self.request("roll", body)
         number = reply.body.get("number")
         if reply.type == "rolled" and isinstance(number, int):
             return number
+        if reply.type == "roll_refused":
+            raise RollRefused(str(reply.body.get("why", "")))
+        raise UnreadableReply
+
+    async def confidence(self, number: int, points: int) -> int:
+        """Ask the host to spend `points` Confidence on roll `number`: the
+        number of the spend's Chronicle entry. RollRefused with the host's
+        reason (a botch, more than the Confidence Score...)."""
+        reply = await self.request("confidence", {"roll": number, "points": points})
+        entry = reply.body.get("number")
+        if reply.type == "rolled" and isinstance(entry, int):
+            return entry
         if reply.type == "roll_refused":
             raise RollRefused(str(reply.body.get("why", "")))
         raise UnreadableReply

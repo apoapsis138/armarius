@@ -1490,7 +1490,7 @@ Choose a Session in Saga Management's Sessions and click **Cast at a Glance**. *
 
 Preview: turn on Virtual Tabletop in Settings.
 
-A Session's record of everything rolled while it's under way. Each line has its number, its time and what happened. A roll shows every die face: each 1 that doubled, and the botch dice after a 0. Then come the modifier, the total and, when the roll had one, the Ease Factor and whether it succeeded and by how much (DE pp. 7-8). Each Remote seat is sent the entries its player may see, as they come, and rolls through the host.
+A Session's record of everything rolled while it's under way. Each line has its number, its time and what happened. A roll shows every die face: each 1 that doubled, and the botch dice after a 0. Then come the modifier, the total and, when the roll had one, the Ease Factor and whether it succeeded and by how much (DE pp. 7-8). A [roll from the sheet](help:sheet-roll) shows how its modifier was made: the Characteristic, the Ability, a Specialty and any wound or Fatigue penalty. Each Remote seat is sent the entries its player may see, as they come, and rolls through the host.
 
 <!-- gui -->
 On the desktop, the [Chronicle pane](help:chronicle-pane) shows it as it happens, on the host's computer and at each seat, and makes [Free rolls](help:free-roll).
@@ -1504,7 +1504,9 @@ Who sees each roll:
 - **Private**: the roller and the Session's storyguide.
 - **Blind**: the number is the Session's storyguide's alone. The player of the character it was rolled for sees only that the storyguide rolled.
 
-In troupe-style play, another storyguide at the Session counts as a player that evening. A roll that shouldn't count is canceled by the Session's storyguide with a reason. It stays in the Chronicle, marked Canceled.
+In troupe-style play, another storyguide at the Session counts as a player that evening. A roll that shouldn't count is **struck** by the Session's storyguide with a reason. It stays in the Chronicle, marked Struck, and no longer counts.
+
+**Confidence** is spent after a roll, once you see how it fell: +3 a point, at most your Confidence Score on one roll, never on a botch (DE p. 29). Only someone who sees the roll's number and may roll for the character spends it, so a Blind roll takes none from its player. Each spend is a line of its own naming the roll and its new total. The points come off the character's sheet when the Session ends; until then the Chronicle counts what's left.
 
 Every die is rolled on the host's computer, and the host's computer keeps the whole Chronicle in a file beside the saga, Private and Blind rolls included. The host's own window shows only what the host may see, but anyone at that computer could open the file. A saga's backups include its Chronicles. A headless host serves Remote seats as before, but the preview needs a host with the desktop app until 5.0.
 
@@ -1531,7 +1533,11 @@ While a Session is under way, the [Chronicle](help:chronicle) is docked on the r
 
 You see only what you may: a Private roll of someone else's, or a Blind roll's number unless you run the Session, isn't shown. The Session's storyguide sees a Blind roll once, as the roll itself.
 
-**Cancelling a roll:** click **Cancel** beside a roll's dice, or right-click the dice and choose **Cancel this roll**. Only the Session's storyguide can. Say why, and the roll stays on its card, faded, with a fine line struck through its dice and its total, and "Canceled" with the reason beneath. It no longer counts.
+A roll from the sheet has a line under what it's for saying how its modifier was made: Dexterity +2, Athletics +3, Wounds −1.
+
+**Striking a roll:** click **Strike** beside a roll's dice, or right-click the dice and choose **Strike this roll**. Only the Session's storyguide can. Say why, and the roll stays on its card, faded, with a fine line struck through its dice and its total, and "Struck" with the reason beneath. It no longer counts.
+
+**Spending Confidence:** click **Confidence** beside your roll's dice, or right-click them and choose **Spend Confidence**. It's there only on a roll you may spend Confidence on (see [The Chronicle](help:chronicle)). Say how many points; the spend shows as a card of its own with the new total.
 
 - **Free Roll**, at the foot, makes a [Free roll](help:free-roll).
 - **›** collapses the pane to a thin gilt strip on the right edge, its name running up it and the count of entries come since in a small seal at its head. Click the strip to open it again. **Chronicle** in the top bar opens or collapses it too.
@@ -1540,7 +1546,7 @@ You see only what you may: a Private roll of someone else's, or a Blind roll's n
 
 Whether it's open or collapsed is remembered for the next time the app starts with a Session under way.
 
-**At a Remote seat** the pane shows while your host's Session is under way, with only what the host sends you. **Free Roll** sends the roll to the host, which rolls it. Cancel is the host's alone. On the host's computer, a seat's roll shows as soon as the listener writes it.
+**At a Remote seat** the pane shows while your host's Session is under way, with only what the host sends you. **Free Roll**, Roll on a sheet and Confidence send what you ask to the host, which does it. Strike is the host's alone. On the host's computer, a seat's roll shows as soon as the listener writes it.
 
 **See also:** [How to roll at the table](help:guide-rolling), [Sessions](help:tab-content-sessions)
 
@@ -1559,7 +1565,31 @@ A roll made from the Chronicle rather than from a sheet. You say what to roll, n
 - **Character**: a player rolls only for the characters they play tonight. The Session's storyguide rolls for any character, or for no one.
 - **Who sees it**: Public, Private or, for the Session's storyguide, Blind (see [The Chronicle](help:chronicle)).
 
-**Roll** sends it. If it can't be rolled, the reason is shown and nothing is added.
+**Roll** sends it. If it can't be rolled, the reason is shown and nothing is added. To roll a Characteristic and Ability without adding them up, [roll from the sheet](help:sheet-roll) instead.
+
+**See also:** [The Chronicle](help:chronicle)
+
+### Roll from the sheet
+<!-- help: sheet-roll -->
+
+Preview: turn on Virtual Tabletop in Settings.
+
+While a Session is under way, a character's **Abilities** and **Characteristics** offer **Roll**: to the player of a character cast to them tonight, and to the Session's storyguide for any character. You say what to roll; the host's computer reads the sheet and rolls the dice.
+
+- **Characteristic**: any of the eight goes with any Ability, as the situation says (DE p. 157). The one last rolled with that Ability tonight is chosen for you.
+- **Ability**: the character's own with their scores, or none for a Characteristic alone. Abilities the character has no score in are offered too, marked "no score": rolled at 0 with three more botch dice (DE p. 157). An Ability the book asterisks, such as Magic Theory, or any Supernatural one, can't be used without experience and isn't offered (DE p. 159).
+- **Specialty applies**: +1 when the roll falls within the Ability's Specialty (DE p. 157). The roll names the Specialty.
+- **Die**, **Ease Factor**, **For** and **Who sees it**: as a Free roll's. The storyguide's own rolls start as Blind.
+- **Anything else**: a bonus or penalty beyond the sheet, such as an aura or the storyguide's call.
+
+The host adds the wound penalty and the Fatigue penalty itself, as the character's Virtues and Flaws change them: Enduring Constitution eases each by one (DE pp. 403-404). A character who is Incapacitated or Unconscious takes no action, and Roll says so (DE p. 404). After the roll, you may spend Confidence on it (see [The Chronicle](help:chronicle)).
+
+<!-- tui -->
+Choose the Ability or Characteristic in its list and press `m` for More, then **Roll**: the card opens with it chosen. The roll shows in the Chronicle.
+<!-- /tui -->
+<!-- gui -->
+Click **Roll** by the Abilities or Characteristics heading and choose what to roll on the card. The roll lands in the [Chronicle pane](help:chronicle-pane). See also [Free roll](help:free-roll).
+<!-- /gui -->
 
 **See also:** [The Chronicle](help:chronicle)
 

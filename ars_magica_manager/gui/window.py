@@ -111,6 +111,7 @@ from ..forms import creation as creation_forms
 from ..forms import menu as menu_forms
 from ..forms import printing as print_forms
 from ..forms import saga as saga_forms
+from ..forms import sheet_roll as sheet_roll_forms
 from ..joined_games import JoinedGame
 from ..markup import escape
 from ..models import (
@@ -2346,6 +2347,7 @@ class MainWindow(QMainWindow):
         if saga is not None and self.session is not None:
             self._draw_seat_chronicle(saga, self.session)
             return
+        sheet_roll_forms.use_sender(None)
         session = (
             chronicle.under_way(saga)
             if saga is not None and virtual_tabletop.on()
@@ -2417,6 +2419,7 @@ class MainWindow(QMainWindow):
         self.chronicle_button.setVisible(session is not None)
         if session is None:
             pane.detach()
+            sheet_roll_forms.use_sender(None)
             return
         held = self.seat_chronicle
         if held is None:
@@ -2434,7 +2437,15 @@ class MainWindow(QMainWindow):
             held.clear()  # the host began another Session
         fresh = pane.book is not held
         who = self.player.id if self.player is not None else ""
-        pane.attach(saga, session, held, who, send_roll=seat.roll)
+        pane.attach(
+            saga,
+            session,
+            held,
+            who,
+            send_roll=seat.roll,
+            send_confidence=seat.spend_confidence,
+        )
+        sheet_roll_forms.use_sender(seat.roll, held)
         if fresh:
             pane.set_collapsed(remembered_collapsed())
 

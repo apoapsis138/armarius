@@ -121,6 +121,7 @@ NO_BOOK: frozenset[str] = frozenset(
         "whereabouts",
         "guest_stay",
         "trait_roll",
+        "sheet_roll",
         "share_spell",
         "boost_spell",
         "give_silver",
