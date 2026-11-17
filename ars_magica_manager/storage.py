@@ -13,7 +13,7 @@ from dataclasses import fields as dataclass_fields
 from pathlib import Path
 from typing import Any, cast
 
-from . import __version__, catalog, laboratories, paths, shapes
+from . import __version__, catalog, incoming, laboratories, paths, shapes
 from .files import held_lock, write_atomic
 from .merge import merge
 from .models import Saga
@@ -168,6 +168,8 @@ def save_saga(saga: Saga, saver: Saver | None = None) -> Saved:
         theirs = base = None
         if seen is not None:
             text, file_data, base = seen
+            # ValueError for a file too big, or not text: written over by
+            # no save, so another copy's work there is never lost unseen.
             on_disk = _read_text(path)
             # The file as this copy left it needn't be read again.
             theirs = file_data if on_disk == text else _normalized(on_disk)
@@ -178,6 +180,11 @@ def save_saga(saga: Saga, saver: Saver | None = None) -> Saved:
         else:
             data, conflicts = merge(base, ours, theirs)
         text = json.dumps(data, indent=2)
+        if len(text.encode("utf-8")) > incoming.MAX_JSON:
+            # Too big to be opened again (incoming.py): left unwritten.
+            raise ValueError(
+                f"the saga is larger than {incoming.MAX_JSON // (1024 * 1024)} MB"
+            )
         write_atomic(path, text)
     _last_seen[str(path)] = (text, data, ours)
     return Saved(path, conflicts)
@@ -194,11 +201,14 @@ def reload_into(saga: Saga) -> list[tuple[str, str]] | None:
     next save replaces the damaged file."""
     path = saga_path(saga.id)
     seen = _last_seen.get(str(path))
-    text = _read_text(path)
+    try:
+        text = _read_text(path)
+    except ValueError as problem:
+        raise ValueError(f"the saga file can't be read ({problem})") from problem
     if text is None or (seen is not None and seen[0] == text):
         return None
     try:
-        raw = json.loads(text)
+        raw = incoming.loads(text)
         fresh = _from_data(raw)
     except (ValueError, KeyError) as problem:
         raise ValueError(f"the saga file can't be read ({problem})") from problem
@@ -249,8 +259,10 @@ def _is_records(value: object) -> bool:
 
 
 def _read_text(path: Path) -> str | None:
+    """The saga file's text, read within limits (incoming.py: ValueError if
+    it is too big, or isn't text), or None when it can't be read."""
     try:
-        return path.read_text(encoding="utf-8")
+        return incoming.read_text(path)
     except OSError:
         return None
 
@@ -261,7 +273,7 @@ def _normalized(text: str | None) -> dict[str, Any] | None:
     if text is None:
         return None
     try:
-        raw = json.loads(text)
+        raw = incoming.loads(text)
         return _with_newer(asdict(_from_data(raw)), raw if _is_newer(raw) else None)
     except ValueError, KeyError:
         return None
@@ -416,8 +428,8 @@ def remember_after(saga: Saga) -> Path:
 
 def load_saga(saga_id: str) -> Saga:
     path = saga_path(saga_id)
-    text = path.read_text(encoding="utf-8")
-    raw = json.loads(text)
+    text = incoming.read_text(path)
+    raw = incoming.loads(text)
     saga = _from_data(raw)
     data = _with_newer(asdict(saga), _remember_newer(path, raw))
     _last_seen[str(path)] = (text, data, data)

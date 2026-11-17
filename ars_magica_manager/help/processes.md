@@ -1088,7 +1088,7 @@ Brings records into the saga from files. Open it from **Import** in the saga pag
   - An owner or cost column is ignored, since the cost is always worked out.
 - **Spells**: a CSV file, through the [Import Spells](help:import-spells) helper.
 
-A row that can't be read is skipped, and the preview says why. When a book or spell has the name of one already in the saga, the app asks: Skip, Skip All, Duplicate or Duplicate All. Nothing is added until every question is answered, and cancelling a question imports nothing.
+A saga, export, content pack or Mystery Cult file larger than 50 MB, or nested too deeply to read, is refused before anything is added; a picture larger than 5 MB inside an export is left out, as a missing one is. A row that can't be read is skipped, and the preview says why. When a book or spell has the name of one already in the saga, the app asks: Skip, Skip All, Duplicate or Duplicate All. Nothing is added until every question is answered, and cancelling a question imports nothing.
 
 ### Importing an exported record
 <!-- help: import-data-records -->

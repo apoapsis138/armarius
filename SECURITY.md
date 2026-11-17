@@ -33,7 +33,8 @@ parts that face other people are the ones that matter most:
   and Mystery Cult files from someone else, which are shape-checked as
   they load, and a saga is checked again before it is saved. Every id in
   them must be a plain name (lowercase letters, digits, `_` and `-`), so
-  none can name a file outside its folder.
+  none can name a file outside its folder. They are read within size and
+  depth limits (50 MB for a file, unpacked or not; 5 MB for a picture).
 - **The App update check**: the desktop and terminal apps ask GitHub's API,
   read-only, for the latest Release (at most once a day, or on Check now),
   sending only the app's version; the release notes it reads are shown as

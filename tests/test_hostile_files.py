@@ -4,15 +4,18 @@ FEAT-26): each is refused, names what is wrong and changes nothing."""
 from __future__ import annotations
 
 import json
+import zipfile
 from dataclasses import asdict
 
 import pytest
+from admin_support import refused
 from support import everything_saga
 
 from ars_magica_manager import (
     books,
     creation,
     cult_transfer,
+    incoming,
     packs,
     portraits,
     shapes,
@@ -420,3 +423,147 @@ def test_a_refused_save_leaves_the_saga_as_it_was_in_hand():
     with pytest.raises(ValueError):
         storage.save_saga(saga, storage.Saver("After"))
     assert saga.saved_by == "Before"
+
+
+# -- files coming in are read within limits (STORY-2335) -----------------------
+
+
+def _oversize(path, size: int) -> None:
+    """A file of `size` bytes without writing them (sparse where it can be)."""
+    with path.open("wb") as file:
+        file.truncate(size)
+
+
+def test_an_export_over_the_size_limit_is_refused_before_it_is_read(tmp_path):
+    path = tmp_path / "huge.amm.json"
+    _oversize(path, incoming.MAX_JSON + 1)
+    with pytest.raises(ValueError, match="larger than 50 MB"):
+        transfer.read(path)
+
+
+def test_a_saga_file_over_the_size_limit_is_refused_on_open():
+    storage.sagas_dir().mkdir(parents=True, exist_ok=True)
+    _oversize(storage.saga_path("huge"), incoming.MAX_JSON + 1)
+    with pytest.raises(ValueError, match="larger than 50 MB"):
+        storage.load_saga("huge")
+
+
+def test_a_zip_whose_json_would_unpack_past_the_limit_is_refused(tmp_path):
+    path = tmp_path / "bomb.amm.json"
+    with (
+        zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as archive,
+        archive.open("bomb.amm.json", "w", force_zip64=True) as member,
+    ):
+        block = b" " * (1024 * 1024)
+        for _ in range(51):
+            member.write(block)
+    assert path.stat().st_size < 1024 * 1024  # small on disk
+    with pytest.raises(ValueError, match="larger than 50 MB"):
+        transfer.read(path)
+
+
+#: JSON nested far deeper than Python's recursion limit.
+DEEP = "[" * 100_000 + "]" * 100_000
+
+
+def test_an_export_nested_too_deep_is_refused_not_crashed(tmp_path):
+    path = tmp_path / "deep.amm.json"
+    path.write_text(DEEP, encoding="utf-8")
+    with pytest.raises(ValueError, match="nested too deeply"):
+        transfer.read(path)
+
+
+def test_a_saga_file_nested_too_deep_is_refused_not_crashed():
+    storage.sagas_dir().mkdir(parents=True, exist_ok=True)
+    storage.saga_path("deep").write_text(DEEP, encoding="utf-8")
+    with pytest.raises(ValueError, match="nested too deeply"):
+        storage.load_saga("deep")
+
+
+def test_a_file_that_is_not_utf8_is_refused_as_such(tmp_path):
+    path = tmp_path / "latin.amm.json"
+    path.write_bytes(b'{"name": "\xe9"}')
+    with pytest.raises(ValueError, match="not UTF-8 text"):
+        transfer.read(path)
+
+
+# -- pictures, cult files and the admin import too (STORY-2336) ----------------
+
+
+def test_a_picture_over_the_limit_in_an_export_counts_as_missing(tmp_path):
+    path = tmp_path / "home.amm.zip"
+    with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as archive:
+        archive.writestr("home.amm.json", "{}")
+        archive.writestr("portraits/big.jpg", b"\0" * (incoming.MAX_PICTURE + 1))
+        archive.writestr("portraits/face.jpg", b"a face")
+    pictures = transfer.Pictures(path)
+    assert pictures.get("portraits", "big.jpg") is None
+    assert pictures.get("portraits", "face.jpg") == b"a face"
+
+
+def test_a_picture_over_the_limit_beside_a_pack_counts_as_missing(tmp_path):
+    pack = tmp_path / "pack.amm.json"
+    pack.write_text("{}", encoding="utf-8")
+    (tmp_path / "maps").mkdir()
+    _oversize(tmp_path / "maps" / "big.png", incoming.MAX_PICTURE + 1)
+    (tmp_path / "maps" / "small.png").write_bytes(b"a map")
+    pictures = transfer.Pictures(pack)
+    assert pictures.get("maps", "big.png") is None
+    assert pictures.get("maps", "small.png") == b"a map"
+
+
+def test_a_cult_file_over_the_limit_is_refused(tmp_path):
+    path = tmp_path / "huge.cult.json"
+    _oversize(path, incoming.MAX_JSON + 1)
+    with pytest.raises(ValueError, match="larger than 50 MB"):
+        cult_transfer.read(path)
+
+
+def test_the_admin_s_saga_import_refuses_a_file_over_the_limit(tmp_path):
+    path = tmp_path / "huge.json"
+    _oversize(path, incoming.MAX_JSON + 1)
+    assert "larger than 50 MB" in refused(["saga", "import", str(path)])
+    assert storage.list_sagas() == []
+
+
+# -- from the review of PR 3 ---------------------------------------------------
+
+
+def test_a_saga_too_big_to_open_again_is_not_saved(monkeypatch):
+    saga, before = _saved()
+    monkeypatch.setattr(incoming, "MAX_JSON", len(before) + 10)
+    saga.description = "x" * len(before)
+    with pytest.raises(ValueError, match="larger than"):
+        storage.save_saga(saga)
+    assert storage.saga_path(saga.id).read_bytes() == before
+
+
+def test_a_saga_file_that_cannot_be_read_is_not_written_over():
+    saga, _ = _saved()
+    storage.saga_path(saga.id).write_bytes(b'{"name": "\xe9"}')
+    saga.description = "changed here"
+    with pytest.raises(ValueError, match="not UTF-8"):
+        storage.save_saga(saga)
+    assert storage.saga_path(saga.id).read_bytes() == b'{"name": "\xe9"}'
+
+
+def test_another_copy_s_unreadable_save_is_said_as_such():
+    saga, _ = _saved()
+    storage.saga_path(saga.id).write_bytes(b'{"name": "\xe9"}')
+    with pytest.raises(ValueError, match="the saga file can't be read"):
+        storage.reload_into(saga)
+
+
+def test_json_just_over_the_depth_limit_is_refused_and_at_it_is_read():
+    deepest = incoming.MAX_DEPTH
+    assert incoming.loads("[" * deepest + "]" * deepest) is not None
+    with pytest.raises(ValueError, match="nested too deeply"):
+        incoming.loads("[" * (deepest + 1) + "]" * (deepest + 1))
+    nested = '{"a": ' * (deepest + 1) + "1" + "}" * (deepest + 1)
+    with pytest.raises(ValueError, match="nested too deeply"):
+        incoming.loads(nested)
+
+
+def test_every_shipped_pack_is_well_within_the_depth_limit():
+    for path in packs.SHIPPED_DIR.glob(f"*{transfer.SUFFIX}"):
+        transfer.read(path)  # refused if it nested past MAX_DEPTH

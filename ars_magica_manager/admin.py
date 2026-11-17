@@ -22,7 +22,6 @@ from __future__ import annotations
 
 import argparse
 import getpass
-import json
 import os
 import sys
 from collections.abc import Callable
@@ -30,7 +29,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from . import host_backup, players, storage
+from . import host_backup, incoming, players, storage
 from .commands import (
     Cancelled,
     Confirm,
@@ -425,7 +424,7 @@ def saga_import(args: argparse.Namespace, console: Console) -> None:
     ids plain names among the rest)."""
     path = Path(args.file)
     try:
-        data = json.loads(path.read_text(encoding="utf-8"))
+        data = incoming.read_json(path)
         saga = storage.saga_from_data(data)
     except OSError as error:
         raise AdminError(f"Can't read {path}: {error.strerror or error}") from error

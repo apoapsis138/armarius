@@ -11,7 +11,7 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
-from . import __version__, shapes
+from . import __version__, incoming, shapes
 from . import mystery_cults as mc
 from .files import write_atomic
 from .models import MysteryCult, Saga
@@ -37,10 +37,7 @@ def export_to(path: Path, cult: MysteryCult) -> Path:
 
 def read(path: Path) -> MysteryCult:
     """The cult a file holds. Raises ValueError for anything else."""
-    try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as problem:
-        raise ValueError(f"not a JSON file ({problem.msg})") from problem
+    data = incoming.read_json(path)
     if not isinstance(data, dict) or data.get("format") != FORMAT:
         raise ValueError(
             "not a Mystery Cult export (export one with More's Export a "
