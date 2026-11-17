@@ -1,0 +1,1 @@
+**Preview (off by default): Roll requests.** The storyguide calls for chosen characters to roll, Blind by default and with an Ease Factor they may keep to themselves. Each player answers with one click, rolled at the host from their sheet, and the answers gather on the request's card with room for what came of it.

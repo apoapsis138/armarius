@@ -2444,6 +2444,7 @@ class MainWindow(QMainWindow):
             who,
             send_roll=seat.roll,
             send_confidence=seat.spend_confidence,
+            send_answer=seat.answer,
         )
         sheet_roll_forms.use_sender(seat.roll, held)
         if fresh:

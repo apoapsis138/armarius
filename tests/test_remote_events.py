@@ -342,3 +342,41 @@ async def test_a_seat_rolls_from_the_sheet_with_the_hosts_scores(table: Table) -
     assert confidence.kind == chronicle.CONFIDENCE
     assert confidence.body["total"] == roll.body["total"] + 3
     assert refused.value.why == "At most 1 on one roll (the Confidence Score)."
+
+
+async def test_a_seat_answers_a_request_and_never_learns_a_hidden_ease(
+    table: Table,
+) -> None:
+    session = table.saga.sessions[0]
+    request = chronicle.request_rolls(
+        table.book,
+        table.saga,
+        session,
+        chronicle.RollCall(
+            characters=("aelfric", "brigit"),
+            characteristic="Perception",
+            ease_factor=17,
+            hide_ease=True,
+            visibility=chronicle.PRIVATE,
+        ),
+        by=HOST,
+    )
+    anna = await table.seat("Anna")
+    try:
+        number = await anna.answer(request.number, "aelfric", False)
+        with pytest.raises(RollRefused) as refused:
+            await anna.answer(request.number, "brigit", False)
+    finally:
+        await anna.close()
+    watcher = await table.seat("Anna")
+    try:
+        frames = await _gather(watcher, 0, 10)
+    finally:
+        await watcher.close()
+
+    assert refused.value.why == "Another Player rolls for that character."
+    kinds = [e.kind for _s, e in frames]
+    assert chronicle.REQUEST_EASE not in kinds
+    assert all(e.body.get("ease_factor") is None for _s, e in frames)
+    assert all("17" not in str(e.body) for _s, e in frames)
+    assert number in [e.number for _s, e in frames]

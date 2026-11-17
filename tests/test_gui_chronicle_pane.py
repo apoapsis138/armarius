@@ -14,7 +14,7 @@ pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from PySide6.QtGui import QColor
-from PySide6.QtWidgets import QApplication, QLabel, QWidget
+from PySide6.QtWidgets import QApplication, QLabel, QToolButton, QWidget
 
 from ars_magica_manager import (
     chronicle,
@@ -514,3 +514,78 @@ def test_a_sheet_roll_shows_how_it_was_made_and_takes_confidence() -> None:
     assert book.entries[-1].kind == chronicle.CONFIDENCE
     again = pane.card_list()[-2].findChild(DiceRow, "dice")
     assert isinstance(again, DiceRow) and not again.can_spend  # the Score is 1
+
+
+def _labels(card: QWidget, name: str) -> list[str]:
+    return [w.text() for w in card.findChildren(QLabel, name)]
+
+
+@pytest.mark.usefixtures("app")
+def test_a_roll_request_gathers_its_answers_on_one_card() -> None:
+    pane, _saga_shown, _session, book, ran = _pane()
+    assert pane.request_button.isVisibleTo(pane)
+
+    pane.request_rolls()
+    form = ran[-1]
+    assert isinstance(form, commands.Form) and form.title == "Roll Request"
+    assert (
+        form.apply(
+            {
+                "roll:aelfric": True,
+                "characteristic": "Perception",
+                "ability": "",
+                "die": "simple",
+                "ease_factor": 6,
+                "hide_ease": True,
+                "for_what": "Spot the ambush",
+                "visibility": chronicle.PUBLIC,
+                "hand_to": "",
+            }
+        )
+        == []
+    )
+    card = pane.card_list()[-1]
+    assert _labels(card, "result") == ["…"]
+    assert _labels(card, "kept") == ["Ease Factor 6, kept from the players."]
+
+    answer = card.findChild(QToolButton, "answer")
+    assert isinstance(answer, QToolButton)
+    answer.click()
+
+    card = next(c for c in pane.card_list() if c.line.startswith("Roll request"))
+    assert len(chronicle.answers(book, 2)) == 1
+    assert _labels(card, "result")[0] != "…"
+    assert card.findChild(QToolButton, "answer") is None
+    outcome = card.findChild(QToolButton, "outcome")
+    assert isinstance(outcome, QToolButton)
+
+
+@pytest.mark.usefixtures("app")
+def test_a_player_answers_for_their_own_character_and_asks_for_nothing() -> None:
+    pane, saga, session, book, _ran = _pane("ana")
+    assert not pane.request_button.isVisibleTo(pane)
+    chronicle.request_rolls(
+        book,
+        saga,
+        session,
+        chronicle.RollCall(
+            characters=("aelfric",),
+            characteristic="Perception",
+            visibility=chronicle.PUBLIC,
+        ),
+        by=HOST,
+    )
+    card = pane.card_list()[-1]
+
+    answer = card.findChild(QToolButton, "answer")
+    assert isinstance(answer, QToolButton)
+    answer.click()
+
+    roll = chronicle.answers(book, 2)[0]
+    assert roll.author == "ana"
+    assert card_outcome_hidden(pane)
+
+
+def card_outcome_hidden(pane: ChroniclePane) -> bool:
+    card = next(c for c in pane.card_list() if c.line.startswith("Roll request"))
+    return card.findChild(QToolButton, "outcome") is None

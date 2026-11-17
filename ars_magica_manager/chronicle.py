@@ -45,7 +45,7 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Protocol
 
-from . import paths, shapes, viewing
+from . import paths, sessions, shapes, viewing
 from .files import held_lock
 from .markup import escape
 from .models import Character, Saga, Session
@@ -621,6 +621,26 @@ def free_roll(
     problem = why_not_roll(saga, session, request, by)
     if problem:
         raise ValueError(problem)
+    return _carry_out(
+        book, saga, session, request, by=by, rng=rng, player=None, links={}
+    )
+
+
+def _carry_out(
+    book: Chronicle,
+    saga: Saga,
+    session: Session,
+    request: RollRequest,
+    *,
+    by: str,
+    rng: random.Random | None,
+    player: str | None,
+    links: dict[str, Any],
+) -> Entry:
+    """Roll `request` once (already checked) and write it: a Private roll
+    seen by its roller, a Blind one's line told to `player` (None: whoever
+    plays the character tonight). `links` join the roll's body (the Roll
+    request it answers)."""
     terms, extra = sheet_terms(saga, request)
     result = dice.roll(
         rng or secrets.SystemRandom(),
@@ -630,12 +650,16 @@ def free_roll(
         botch_dice=request.botch_dice + extra if request.stress else 0,
         saga=saga,
     )
+    if player is None:
+        player = _player_of(session, request.character_id)
+        roller = by if by != storyguide_of(session, saga) else ""
+    else:
+        roller = player
     audience = {
         PUBLIC: table(),
-        PRIVATE: chosen(by) if by != storyguide_of(session, saga) else chosen(),
+        PRIVATE: chosen(roller) if roller else chosen(),
         BLIND: storyguide_only(),
     }[request.visibility]
-    player = _player_of(session, request.character_id)
     # Worked out before anything is written, so nothing can fail between
     # the roll and its line.
     name = _character_name(saga, request.character_id)
@@ -647,9 +671,8 @@ def free_roll(
         body = {"roll": roll.number, "for": request.for_what, "character_name": name}
         return (ROLLED, by, chosen(player), body)
 
-    return book.add(
-        ROLL, by, audience, _body(saga, request, result, terms), then=rolled
-    )
+    body = _body(saga, request, result, terms) | links
+    return book.add(ROLL, by, audience, body, then=rolled)
 
 
 def strike(
@@ -780,6 +803,261 @@ def spend_confidence(
     return book.add(CONFIDENCE, by, target.audience, body)
 
 
+# -- Roll requests --
+
+REQUEST = "request"
+#: The Ease Factor a Roll request keeps from its players: the storyguide's
+#: alone, written beside the request.
+REQUEST_EASE = "request_ease"
+OUTCOME = "outcome"
+
+
+@dataclass(frozen=True)
+class RollCall:
+    """A Roll request (the glossary's): the storyguide's call for chosen
+    characters to roll a Characteristic, with an Ability or none, what it
+    is for, who sees each answer, and an Ease Factor the storyguide may
+    keep to themselves. `rollers` names, for this request only, who rolls
+    a character in place of whoever would (a shared grog handed over)."""
+
+    characters: tuple[str, ...]
+    characteristic: str
+    ability: str = ""
+    ease_factor: int | None = None
+    hide_ease: bool = False
+    visibility: str = BLIND
+    for_what: str = ""
+    stress: bool = True
+    rollers: dict[str, str] = field(default_factory=dict)
+
+
+def answerer(saga: Saga, session: Session, character_id: str) -> str:
+    """Who answers a Roll request for `character_id` tonight: whoever plays
+    it, else (a character no Player is named on) its Steward, else the
+    Session's storyguide."""
+    player = _player_of(session, character_id)
+    if player:
+        return player
+    character = _character(saga, character_id)
+    keeper = sessions.steward(saga, character) if character is not None else None
+    if keeper is not None:
+        return keeper.id
+    return storyguide_of(session, saga)
+
+
+def _rollers(saga: Saga, session: Session, call: RollCall) -> dict[str, str]:
+    """Each character of `call` and who answers it."""
+    return {
+        c: call.rollers.get(c) or answerer(saga, session, c) for c in call.characters
+    }
+
+
+def why_not_call(saga: Saga, session: Session, call: RollCall, who: str) -> str | None:
+    """Why `who` may not make Roll request `call`, or None when they may."""
+    if who != storyguide_of(session, saga):
+        return "Only the Session's storyguide makes a Roll request."
+    if not call.characters:
+        return "Choose who rolls."
+    if call.characteristic not in ROLL_CHARACTERISTICS:
+        return "Choose a Characteristic."
+    if call.visibility not in (PUBLIC, PRIVATE, BLIND):
+        return "Choose who sees the rolls."
+    known = {c.id for c in saga.characters}
+    if any(c not in known for c in call.characters):
+        return "That character isn't in the saga."
+    players = {p.id for p in saga.players} | {storyguide_of(session, saga)}
+    if any(p not in players for p in call.rollers.values()):
+        return "That Player isn't in the saga."
+    return None
+
+
+def request_rolls(
+    book: Chronicle, saga: Saga, session: Session, call: RollCall, *, by: str
+) -> Entry:
+    """Make Roll request `call` (a Macro Command: each character's answer
+    is a roll of its own, pointing back at it). The request is seen by
+    whoever sees its rolls; a hidden Ease Factor is written beside it for
+    the storyguide alone."""
+    if book.closed:
+        raise ValueError("This Session has ended: its Chronicle is closed.")
+    problem = why_not_call(saga, session, call, by)
+    if problem:
+        raise ValueError(problem)
+    rollers = _rollers(saga, session, call)
+    shown = sorted({p for p in rollers.values() if p != storyguide_of(session, saga)})
+    audience = table() if call.visibility == PUBLIC else chosen(*shown)
+    body: dict[str, Any] = {
+        "characters": [
+            {"id": c, "name": _character_name(saga, c), "roller": rollers[c]}
+            for c in call.characters
+        ],
+        "characteristic": call.characteristic,
+        "ability": call.ability,
+        "ease_factor": None if call.hide_ease else call.ease_factor,
+        "visibility": call.visibility,
+        "for": call.for_what,
+        "stress": call.stress,
+    }
+    hidden = call.hide_ease and call.ease_factor is not None
+
+    def ease(entry: Entry) -> Written | None:
+        if not hidden:
+            return None
+        return (
+            REQUEST_EASE,
+            by,
+            storyguide_only(),
+            {"request": entry.number, "ease_factor": call.ease_factor},
+        )
+
+    return book.add(REQUEST, by, audience, body, then=ease)
+
+
+def _request(book: HasEntries, number: int) -> Entry | None:
+    found = next((e for e in book.entries if e.number == number), None)
+    return found if found is not None and found.kind == REQUEST else None
+
+
+def hidden_ease(book: HasEntries, number: int) -> int | None:
+    """Roll request `number`'s Ease Factor kept from its players (for the
+    storyguide's eyes), or None."""
+    return next(
+        (
+            int(e.body["ease_factor"])
+            for e in book.entries
+            if e.kind == REQUEST_EASE and e.body.get("request") == number
+        ),
+        None,
+    )
+
+
+def answers(book: HasEntries, number: int) -> list[Entry]:
+    """The rolls that answer Roll request `number`, in order."""
+    return [
+        e for e in book.entries if e.kind == ROLL and e.body.get("request") == number
+    ]
+
+
+def roller_of(request: Entry, character_id: str) -> str:
+    """Who answers `request` for `character_id`, as the request says."""
+    return next(
+        (
+            str(c["roller"])
+            for c in request.body.get("characters", [])
+            if c.get("id") == character_id
+        ),
+        "",
+    )
+
+
+def why_not_answer(
+    book: HasEntries,
+    saga: Saga,
+    session: Session,
+    number: int,
+    character_id: str,
+    who: str,
+) -> str | None:
+    """Why `who` may not answer Roll request `number` for `character_id`."""
+    request = _request(book, number)
+    if request is None:
+        return "There is no such Roll request."
+    if not any(c.get("id") == character_id for c in request.body["characters"]):
+        return "That character isn't asked to roll."
+    if any(e.body.get("character_id") == character_id for e in answers(book, number)):
+        return "That character has answered already."
+    if who not in (roller_of(request, character_id), storyguide_of(session, saga)):
+        return "Another Player rolls for that character."
+    character = _character(saga, character_id)
+    if character is None:
+        return "That character isn't in the saga."
+    return why_not_act(character)
+
+
+def answer(
+    book: Chronicle,
+    saga: Saga,
+    session: Session,
+    number: int,
+    character_id: str,
+    *,
+    by: str,
+    specialty: bool = False,
+    rng: random.Random | None = None,
+) -> Entry:
+    """Answer Roll request `number` for `character_id`: one roll from the
+    sheet, at the host, seen as the request says (a Blind one's line told
+    to whoever answers), pointing back at the request. A hidden Ease
+    Factor isn't in the roll: the storyguide reads it beside the request."""
+    if book.closed:
+        raise ValueError("This Session has ended: its Chronicle is closed.")
+    problem = why_not_answer(book, saga, session, number, character_id, by)
+    if problem:
+        raise ValueError(problem)
+    request = _request(book, number)
+    assert request is not None
+    body = request.body
+    rolled = RollRequest(
+        stress=bool(body.get("stress", True)),
+        botch_dice=1 if body.get("stress", True) else 0,
+        ease_factor=body.get("ease_factor"),
+        for_what=str(body.get("for", "")),
+        character_id=character_id,
+        visibility=str(body["visibility"]),
+        sheet=SheetRoll(str(body["characteristic"]), str(body["ability"]), specialty),
+    )
+    sheet_terms(saga, rolled)  # a Specialty the character lacks says so
+    roller = roller_of(request, character_id)
+    player = "" if roller == storyguide_of(session, saga) else roller
+    return _carry_out(
+        book,
+        saga,
+        session,
+        rolled,
+        by=by,
+        rng=rng,
+        player=player,
+        links={"request": number},
+    )
+
+
+def note_outcome(
+    book: Chronicle,
+    session: Session,
+    number: int,
+    text: str,
+    *,
+    by: str,
+    saga: Saga | None = None,
+) -> Entry:
+    """The storyguide's note of what came of Roll request `number`, seen
+    by whoever saw the request."""
+    if by != storyguide_of(session, saga):
+        raise ValueError("Only the Session's storyguide notes an outcome.")
+    request = _request(book, number)
+    if request is None:
+        raise ValueError("There is no such Roll request.")
+    if not text.strip():
+        raise ValueError("Say what came of it.")
+    return book.add(
+        OUTCOME, by, request.audience, {"request": number, "text": text.strip()}
+    )
+
+
+def request_line(body: dict[str, Any]) -> str:
+    """A Roll request's line."""
+    what = body["characteristic"]
+    if body.get("ability"):
+        what += f" + {body['ability']}"
+    who = ", ".join(str(c["name"]) for c in body["characters"])
+    line = f"Roll request: {what} for {who}"
+    if body.get("for"):
+        line += f" ({body['for']})"
+    if body.get("ease_factor") is not None:
+        line += f", against {body['ease_factor']}"
+    return line
+
+
 def spend_at_end(saga: Saga, book: HasEntries) -> None:
     """Take what the evening spent off each character's Confidence Points."""
     for character in saga.characters:
@@ -860,6 +1138,15 @@ def _line(entry: Entry, struck: dict[int, str]) -> str:
         return f"Roll {entry.body['strikes']} is struck: {entry.body['reason']}"
     if entry.kind == CONFIDENCE:
         return confidence_line(entry.body)
+    if entry.kind == REQUEST:
+        return request_line(entry.body)
+    if entry.kind == REQUEST_EASE:
+        return (
+            f"Request {entry.body['request']}'s Ease Factor, kept from its "
+            f"players: {entry.body['ease_factor']}"
+        )
+    if entry.kind == OUTCOME:
+        return f"Request {entry.body['request']}: {entry.body['text']}"
     return UNKNOWN
 
 

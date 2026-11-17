@@ -1506,6 +1506,8 @@ Who sees each roll:
 
 In troupe-style play, another storyguide at the Session counts as a player that evening. A roll that shouldn't count is **struck** by the Session's storyguide with a reason. It stays in the Chronicle, marked Struck, and no longer counts.
 
+A **Roll request** is the storyguide's call for chosen characters to roll a Characteristic, with an Ability or none: its line names what and who, and each answer is a roll of its own beneath it. The storyguide may keep the Ease Factor to themselves: players then see their totals, and only the storyguide sees the Ease Factor and who succeeded. The storyguide may add what came of it, as one more line.
+
 **Confidence** is spent after a roll, once you see how it fell: +3 a point, at most your Confidence Score on one roll, never on a botch (DE p. 29). Only someone who sees the roll's number and may roll for the character spends it, so a Blind roll takes none from its player. Each spend is a line of its own naming the roll and its new total. The points come off the character's sheet when the Session ends; until then the Chronicle counts what's left.
 
 Every die is rolled on the host's computer, and the host's computer keeps the whole Chronicle in a file beside the saga, Private and Blind rolls included. The host's own window shows only what the host may see, but anyone at that computer could open the file. A saga's backups include its Chronicles. A headless host serves Remote seats as before, but the preview needs a host with the desktop app until 5.0.
@@ -1540,6 +1542,7 @@ A roll from the sheet has a line under what it's for saying how its modifier was
 **Spending Confidence:** click **Confidence** beside your roll's dice, or right-click them and choose **Spend Confidence**. It's there only on a roll you may spend Confidence on (see [The Chronicle](help:chronicle)). Say how many points; the spend shows as a card of its own with the new total.
 
 - **Free Roll**, at the foot, makes a [Free roll](help:free-roll).
+- **Roll Request**, below it for the Session's storyguide on the host's computer, makes a [Roll request](help:roll-requests).
 - **›** collapses the pane to a thin gilt strip on the right edge, its name running up it and the count of entries come since in a small seal at its head. Click the strip to open it again. **Chronicle** in the top bar opens or collapses it too.
 - A Blind roll's number, for the Session's storyguide, or the line telling you one was rolled for your character pulses the strip once. Not with **Reduce motion** on. The pane never opens by itself.
 - A roll landing plays a soft tock, with **Sounds** on.
@@ -1568,6 +1571,27 @@ A roll made from the Chronicle rather than from a sheet. You say what to roll, n
 **Roll** sends it. If it can't be rolled, the reason is shown and nothing is added. To roll a Characteristic and Ability without adding them up, [roll from the sheet](help:sheet-roll) instead.
 
 **See also:** [The Chronicle](help:chronicle)
+
+### Roll requests
+<!-- help: roll-requests; gui -->
+
+Preview: turn on Virtual Tabletop in Settings.
+
+The storyguide's call for chosen characters to roll, answered with one click each. Click **Roll Request** at the foot of the [Chronicle pane](help:chronicle-pane):
+
+- **The characters**: each character cast tonight, and each shared grog whose Steward is coming, with a tick. All are ticked to start with.
+- **Characteristic** and **Ability**: what to roll. The host adds each character's own scores, Specialty and penalties, as for a [roll from the sheet](help:sheet-roll). A character with no score in the Ability rolls at 0 with three more botch dice.
+- **Die** and **Ease Factor**: blank for none.
+- **Hide Ease Factor**: players see their totals; only you see the Ease Factor and who succeeded.
+- **For**: what it's for.
+- **Who sees each roll**: Blind to start with, so the numbers are yours alone and each player sees only that they rolled; or Private, each roller and you; or Public.
+- **Shared grogs rolled by**: a shared grog is rolled by its Steward unless you name another Player here. It's for this request only: the evening's casting doesn't change.
+
+**Ask** puts the request in the Chronicle. Its card lists each character with **Roll** beside it for whoever rolls it (the character's player tonight, a shared grog's Steward, or you) and **Roll (climbing)** too when that character's Specialty may apply. Each answer fills its line as it comes: the total, with ✓ or ✗ against the Ease Factor, or "rolled" for a number you may not see. You can roll for anyone without a seat, such as a player at your table. **Outcome** notes what came of it.
+
+**At a Remote seat**, a request for your character shows its Roll on its card, sent to the host to roll.
+
+**See also:** [The Chronicle](help:chronicle), [How to roll at the table](help:guide-rolling)
 
 ### Roll from the sheet
 <!-- help: sheet-roll -->

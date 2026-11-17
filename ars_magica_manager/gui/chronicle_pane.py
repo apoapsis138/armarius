@@ -48,8 +48,9 @@ from PySide6.QtWidgets import (
 )
 
 from .. import artwork, chronicle, settings
-from ..commands import Command
-from ..forms import free_roll
+from ..commands import Command, Refuse
+from ..forms import free_roll, roll_request
+from ..markup import escape
 from ..models import Saga, Session
 from ..style import fonts
 from . import motion, pictures, sounds
@@ -368,6 +369,57 @@ def note_card(line: str, p: Palette) -> Card:
     return card
 
 
+#: One character of a Roll request, as its card shows it: the name,
+#: what came of it so far, and the answers this reader may give (a label
+#: and what it does).
+RequestRow = tuple[str, str, list[tuple[str, Callable[[], None]]]]
+
+
+def request_card(
+    line: str,
+    p: Palette,
+    rows: list[RequestRow],
+    kept: str,
+    outcome: Callable[[], None] | None,
+) -> Card:
+    """A Roll request: what it asks, then each character with its answer
+    as it comes in (the Roll buttons for whoever answers it), the Ease
+    Factor kept from the players (`kept`, the storyguide's alone) and, for
+    the storyguide, an outcome to note."""
+    card = Card(line, p)
+    asked = text(line, heading_ink(p), serif(12, italic=True), wrap=True)
+    asked.setObjectName("asked")
+    card.column.addWidget(asked)
+    for name, result, rolls in rows:
+        row = QHBoxLayout()
+        row.setSpacing(6)
+        who = text(name, p["foreground"], heading_font(11.5, p, caps=True))
+        who.setObjectName("who")
+        row.addWidget(who)
+        row.addStretch(1)
+        shown = text(result, p["label"], number_font(11, bold=False))
+        shown.setObjectName("result")
+        row.addWidget(shown)
+        for label, act in rolls:
+            button = margin_mark(
+                "answer", label, f"{label}: rolled at the host", p, p["foreground"]
+            )
+            button.clicked.connect(lambda _checked=False, act=act: act())
+            row.addWidget(button)
+        card.column.addLayout(row)
+    if kept:
+        hidden = text(kept, p["label"], serif(10.5, italic=True), wrap=True)
+        hidden.setObjectName("kept")
+        card.column.addWidget(hidden)
+    if outcome is not None:
+        note = margin_mark(
+            "outcome", "Outcome", "Note what came of it", p, p["foreground"]
+        )
+        note.clicked.connect(lambda _checked=False: outcome())
+        card.column.addWidget(note, 0, Qt.AlignmentFlag.AlignLeft)
+    return card
+
+
 def roll_card(
     entry: chronicle.Entry,
     line: str,
@@ -558,6 +610,8 @@ class ChroniclePane(QWidget):
         self.send_roll: free_roll.Submit | None = None
         #: Hands a Confidence spend to the host from a Remote seat.
         self.send_confidence: free_roll.Spend | None = None
+        #: Hands an answer to a Roll request to the host from a Remote seat.
+        self.send_answer: Callable[[int, str, bool], str | None] | None = None
         self.who = ""
         self._stop: Callable[[], None] | None = None
         self.collapsed = False
@@ -615,6 +669,10 @@ class ChroniclePane(QWidget):
         column.addWidget(self.scroller, 1)
         self.roll_button = edit_button("Free Roll", p, self.free_roll, "add")
         column.addWidget(self.roll_button)
+        #: The storyguide's Roll request, on the host's computer.
+        self.request_button = edit_button("Roll Request", p, self.request_rolls, "add")
+        self.request_button.setVisible(False)
+        column.addWidget(self.request_button)
         return leaf
 
     def set_palette(self, p: Palette) -> None:
@@ -626,6 +684,7 @@ class ChroniclePane(QWidget):
         self.title.setFont(heading_font(16, p, caps=True))
         self.rule.p = p
         self.roll_button.setIcon(pictures.icon("add", p["label"], 14))
+        self.request_button.setIcon(pictures.icon("add", p["label"], 14))
         self._redraw_cards()
         self.update()
 
@@ -639,12 +698,18 @@ class ChroniclePane(QWidget):
         who: str,
         send_roll: free_roll.Submit | None = None,
         send_confidence: free_roll.Spend | None = None,
+        send_answer: Callable[[int, str, bool], str | None] | None = None,
     ) -> None:
         """Show `book`, as `who` may see it, and listen for what comes. A
         Remote seat's book holds only what its host sent it; `send_roll`
         sends its rolls to the host, `send_confidence` its Confidence."""
         self.send_roll = send_roll
         self.send_confidence = send_confidence
+        self.send_answer = send_answer
+        self.request_button.setVisible(
+            isinstance(book, chronicle.Chronicle)
+            and who == chronicle.storyguide_of(session, saga)
+        )
         same = self.book is book and self.who == who
         self.saga, self.session = saga, session
         self.roll_button.setEnabled(free_roll.may_roll(saga, session, who))
@@ -697,6 +762,14 @@ class ChroniclePane(QWidget):
             return
         if entry.kind == chronicle.VOID:
             self._redraw_cards()
+            return
+        if entry.kind in (chronicle.OUTCOME, chronicle.REQUEST_EASE) or (
+            entry.kind == chronicle.ROLL and "request" in entry.body
+        ):
+            # A Roll request's card gathers its answers: drawn again.
+            self._redraw_cards()
+            if entry.kind == chronicle.ROLL and self._reads(entry):
+                sounds.play("tock")
             return
         if entry.kind == chronicle.CONFIDENCE:
             # Its roll's Confidence may be spent: that card is drawn again.
@@ -766,7 +839,10 @@ class ChroniclePane(QWidget):
         return next((p.name for p in saga.players if p.id == player), "")
 
     def _card(self, entry: chronicle.Entry, struck: dict[int, str]) -> None:
-        if entry.kind == chronicle.VOID:
+        if entry.kind in (chronicle.VOID, chronicle.REQUEST_EASE):
+            return
+        if entry.kind == chronicle.REQUEST:
+            self.cards.insertWidget(self.cards.count() - 1, self._request_card(entry))
             return
         line = chronicle.line(entry, struck)
         if entry.kind != chronicle.ROLL:
@@ -836,6 +912,128 @@ class ChroniclePane(QWidget):
     def _strikes(self) -> bool:
         """Strike is the host's: its computer keeps the Chronicle."""
         return self._runs_the_session() and isinstance(self.book, chronicle.Chronicle)
+
+    def _request_card(self, entry: chronicle.Entry) -> Card:
+        """Roll request `entry`'s card, its answers as this reader sees them."""
+        book, saga, session = self.book, self.saga, self.session
+        line = chronicle.line(entry, {})
+        assert book is not None and saga is not None and session is not None
+        runs = self._runs_the_session()
+        hidden = chronicle.hidden_ease(book, entry.number) if runs else None
+        seen = [e for e in chronicle.answers(book, entry.number) if self._reads(e)]
+        made = {
+            str(e.body.get("character_id"))
+            for e in chronicle.answers(book, entry.number)
+        }
+        rows: list[RequestRow] = []
+        for asked in entry.body.get("characters", []):
+            cid = str(asked.get("id"))
+            mine = next((e for e in seen if e.body.get("character_id") == cid), None)
+            if mine is not None:
+                result = str(mine.body.get("total"))
+                if mine.body.get("botches"):
+                    result = "botch"
+                elif hidden is not None:
+                    result += " ✓" if int(mine.body["total"]) >= hidden else " ✗"
+                elif mine.body.get("succeeded") is not None:
+                    result += " ✓" if mine.body["succeeded"] else " ✗"
+            else:
+                result = "rolled" if cid in made else "…"
+            rolls: list[tuple[str, Callable[[], None]]] = []
+            if self._may_answer(entry, cid, made):
+                rolls.append(("Roll", self._answers(entry.number, cid, False)))
+                specialty = self._specialty(cid, str(entry.body.get("ability") or ""))
+                if specialty:
+                    rolls.append(
+                        (f"Roll ({specialty})", self._answers(entry.number, cid, True))
+                    )
+            rows.append((str(asked.get("name") or ""), result, rolls))
+        kept = (
+            f"Ease Factor {hidden}, kept from the players."
+            if hidden is not None
+            else ""
+        )
+        outcome = (
+            (lambda: self.note_outcome(entry.number))
+            if runs and isinstance(book, chronicle.Chronicle)
+            else None
+        )
+        return request_card(line, self.p, rows, kept, outcome)
+
+    def _may_answer(self, request: chronicle.Entry, cid: str, made: set[str]) -> bool:
+        """Whether whoever sits here answers `request` for `cid` now: on the
+        host, as the host checks it; at a seat, the roller the request
+        names (the host checks again when it comes)."""
+        book, saga, session = self.book, self.saga, self.session
+        if cid in made or book is None or saga is None or session is None:
+            return False
+        if isinstance(book, chronicle.Chronicle):
+            why = chronicle.why_not_answer(
+                book, saga, session, request.number, cid, self.who
+            )
+            return why is None
+        return self.who == chronicle.roller_of(request, cid)
+
+    def _specialty(self, character_id: str, ability: str) -> str:
+        saga = self.saga
+        if saga is None or not ability:
+            return ""
+        character = next((c for c in saga.characters if c.id == character_id), None)
+        held = (
+            next((a for a in character.abilities if a.name == ability), None)
+            if character is not None
+            else None
+        )
+        return held.specialty or "" if held is not None else ""
+
+    def _answers(
+        self, number: int, character_id: str, specialty: bool
+    ) -> Callable[[], None]:
+        def act() -> None:
+            self.answer(number, character_id, specialty=specialty)
+
+        return act
+
+    def answer(
+        self, number: int, character_id: str, *, specialty: bool = False
+    ) -> None:
+        """Answer Roll request `number` for `character_id`: rolled at the
+        host (sent there from a Remote seat)."""
+        saga, session, book = self.saga, self.session, self.book
+        if saga is None or session is None or book is None:
+            return
+        if self.send_answer is not None:
+            refused = self.send_answer(number, character_id, specialty)
+        elif isinstance(book, chronicle.Chronicle):
+            try:
+                chronicle.answer(
+                    book,
+                    saga,
+                    session,
+                    number,
+                    character_id,
+                    by=self.who,
+                    specialty=specialty,
+                )
+                refused = None
+            except ValueError as problem:
+                refused = str(problem)
+        else:
+            refused = "Rolls go to the host."
+        if refused:
+            self.run(Refuse("Roll", escape(refused)))
+
+    def request_rolls(self) -> None:
+        saga, session, book = self.saga, self.session, self.book
+        if saga is None or session is None or not isinstance(book, chronicle.Chronicle):
+            return
+        self.run(roll_request.request_form(saga, session, self.who, book))
+
+    def note_outcome(self, number: int) -> None:
+        saga, session, book = self.saga, self.session, self.book
+        if saga is None or session is None or not isinstance(book, chronicle.Chronicle):
+            return
+        self.run(roll_request.outcome_form(book, saga, session, number, self.who))
 
     def _spends(self, number: int) -> bool:
         """Whether whoever sits here may spend Confidence on roll `number`
