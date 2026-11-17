@@ -1093,7 +1093,7 @@ A row that can't be read is skipped, and the preview says why. When a book or sp
 ### Importing an exported record
 <!-- help: import-data-records -->
 
-What travels with the record comes too, and everything imported gets new ids. Links to records that aren't in the file, such as a character's covenant, a laboratory's owner or a book's author, are matched by name to the one record of that kind and name in this saga, or dropped. The preview lists which.
+What travels with the record comes too, and everything imported gets new ids. Ids are plain names (lowercase letters, digits, `_` and `-`): a record whose id isn't one gets a fresh one, its links following. A file with an id that isn't plain inside a record is refused, naming it, and so is a saga file with one when it is opened. Links to records that aren't in the file, such as a character's covenant, a laboratory's owner or a book's author, are matched by name to the one record of that kind and name in this saga, or dropped. The preview lists which.
 
 A character's or laboratory's covenant is the exception when this saga has no covenant of that name. The file carries its name, aura and realm, and the import adds a covenant with just those, so the aura comes too. The preview lists it under Adds as having only its name and aura. Fill in the rest on its sheet.
 

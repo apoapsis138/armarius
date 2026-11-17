@@ -36,7 +36,7 @@ from __future__ import annotations
 import json
 import zipfile
 from collections.abc import Callable, Iterable
-from dataclasses import asdict, dataclass, field, replace
+from dataclasses import asdict, dataclass, field, fields, is_dataclass, replace
 from pathlib import Path
 from typing import Any, TypedDict, cast
 
@@ -576,8 +576,10 @@ def read(path: Path) -> dict[str, Any]:
     # Its records' shape, before any is built (shapes.py): older shapes
     # allowed, as an export may come from an older version of the app. An
     # overlay's saga is never built whole: it is laid over a saga's own.
+    # Ids that aren't plain are allowed: the import gives every record it
+    # brings in a plain one (_Ids, ADR 0028).
     if "overlay" not in data:
-        shapes.check_raw(data["saga"], Saga)
+        shapes.check_raw(data["saga"], Saga, plain_ids=False)
     introduction = data.get(INTRODUCTION)
     if introduction is not None and not isinstance(introduction, str):
         raise ValueError(
@@ -681,14 +683,14 @@ class ImportPlan:
 
 class _Ids:
     """Hands out ids that are free in the target, keeping an imported
-    record's own id when nothing has it."""
+    record's own id when nothing has it and it is a plain id (ADR 0028)."""
 
     def __init__(self, taken: Iterable[str]) -> None:
         self.taken = set(taken)
 
     def new(self, wanted: str, name: str) -> str:
         chosen = wanted
-        if not chosen or chosen in self.taken:
+        if not chosen or chosen in self.taken or not shapes.is_plain_id(chosen):
             chosen = storage.generate_unique_id(
                 name or wanted or "imported", self.taken
             )
@@ -1556,8 +1558,33 @@ def plan_import(
     }
     for planner in _PLANNERS.values():
         planner(job)
+    _check_plain_ids(job.plan)
     job.plan.pictures = pictures
     return job.plan
+
+
+def _check_plain_ids(plan: ImportPlan) -> None:
+    """Refuse (ValueError, naming it) an id that isn't plain anywhere in
+    what `plan` adds. Each record's own id and its links were given plain
+    ones (_Ids); this catches one the import keeps as it came, inside a
+    record (ADR 0028). Every list of records the plan holds is walked, so
+    one added to ImportPlan later is checked too."""
+    for found in fields(plan):
+        value = getattr(plan, found.name)
+        groups = value.items() if isinstance(value, dict) else [(found.name, value)]
+        for name, group in groups:
+            if not isinstance(group, list):
+                continue
+            for record in group:
+                if is_dataclass(record) and not isinstance(record, type):
+                    _check_record(name, record)
+
+
+def _check_record(name: str, record: Any) -> None:
+    try:
+        shapes.check_raw(asdict(record), type(record))
+    except ValueError as problem:
+        raise ValueError(f"{name}[{getattr(record, 'id', '')}].{problem}") from None
 
 
 def _count(number: int, noun: str) -> str:

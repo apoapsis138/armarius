@@ -24,7 +24,6 @@ import argparse
 import getpass
 import json
 import os
-import re
 import sys
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -53,9 +52,6 @@ from .remote.identity import NoKeychainError
 from .remote.passcodes import RemotePasscodes, passcodes_path, read_notes
 from .remote.plan import CLOUDFLARE, SAGA_VARIABLE, TUNNELS, RemotePlan, url_problem
 
-#: A saga id that is safe as a file name: an imported file can't name a
-#: path outside the sagas folder.
-_SAFE_ID = re.compile(r"[A-Za-z0-9_-]+")
 #: How many Log entries `log` prints unless told.
 LOG_SHOWN = 50
 
@@ -425,7 +421,8 @@ def rotate_key(args: argparse.Namespace, console: Console) -> None:
 
 
 def saga_import(args: argparse.Namespace, console: Console) -> None:
-    """Bring a saga file in, checked as any saga file is when opened."""
+    """Bring a saga file in, checked as any saga file is when opened (its
+    ids plain names among the rest)."""
     path = Path(args.file)
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
@@ -434,8 +431,6 @@ def saga_import(args: argparse.Namespace, console: Console) -> None:
         raise AdminError(f"Can't read {path}: {error.strerror or error}") from error
     except ValueError as error:
         raise AdminError(f"{path} isn't a saga this app can read: {error}") from error
-    if not _SAFE_ID.fullmatch(saga.id):
-        raise AdminError(f"{path} names its saga {saga.id!r}, which isn't a safe id.")
     if saga.id in storage.list_sagas():
         raise AdminError(
             f"A saga with the id {saga.id!r} is already here. Delete it first "
