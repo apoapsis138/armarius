@@ -1490,7 +1490,7 @@ Choose a Session in Saga Management's Sessions and click **Cast at a Glance**. *
 
 Preview: turn on Virtual Tabletop in Settings.
 
-A Session's record of everything rolled while it's under way. In this preview the Chronicle opens and closes with its Session; rolling into it from the Chronicle pane and from Remote seats comes in the next steps of the preview. Each line has its number, its time and what happened. A roll shows every die face: each 1 that doubled, and the botch dice after a 0. Then come the modifier, the total and, when the roll had one, the Ease Factor and whether it succeeded and by how much (DE pp. 7-8).
+A Session's record of everything rolled while it's under way. Each Remote seat is sent the entries its player may see, as they come, and rolls through the host. Each line has its number, its time and what happened. A roll shows every die face: each 1 that doubled, and the botch dice after a 0. Then come the modifier, the total and, when the roll had one, the Ease Factor and whether it succeeded and by how much (DE pp. 7-8).
 
 **Begin Session** puts a planned Session under way and opens its Chronicle. **End Session** marks it Played, as ticking Played does, and closes its Chronicle. The Chronicle is still read from the Session's row afterwards, but nothing more is added. Only the Session's storyguide begins or ends it, and only one Session of a saga is under way at a time. End Session isn't **End of Session** on a character's More, which gives Confidence Points for an evening of play.
 

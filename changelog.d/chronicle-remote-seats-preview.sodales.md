@@ -1,0 +1,1 @@
+**Preview (off by default): the Chronicle at Remote seats.** With Virtual Tabletop (Preview) on at the host, each seat is sent the Chronicle of the Session under way as it happens, only what its player may see, and rolls through the host. A seat on an older version is asked to update.

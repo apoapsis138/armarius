@@ -18,7 +18,7 @@ from ars_magica_manager.remote.limits import Limits
 from ars_magica_manager.remote.secure import ChannelError, HostKeyMismatch
 
 IDENTITY = ident.build(ident.ec.generate_private_key(ident.ec.SECP256R1()))
-HELLO = {"protocol": 1}
+HELLO = {"protocol": 2}
 
 Start = Callable[..., Awaitable[str]]
 
@@ -59,7 +59,7 @@ async def test_a_player_says_hello_and_is_welcomed(start: Start) -> None:
         reply = await client.request("hello", HELLO)
     assert (reply.type, reply.body) == (
         "welcome",
-        {"protocol": 1, "app": __version__},
+        {"protocol": 2, "app": __version__},
     )
 
 
@@ -95,7 +95,7 @@ async def test_the_connection_is_closed_after_a_few_refusals(start: Start) -> No
 async def test_an_oversized_message_is_refused(start: Start) -> None:
     address = await start(small(max_message=200, max_strikes=100))
     async with await RemoteClient.connect(url(address), IDENTITY.pin) as client:
-        reply = await client.request("hello", {"protocol": 1, "pad": "x" * 500})  # type: ignore[dict-item]
+        reply = await client.request("hello", {"protocol": 2, "pad": "x" * 500})  # type: ignore[dict-item]
         assert reply.type == "refused"
 
 

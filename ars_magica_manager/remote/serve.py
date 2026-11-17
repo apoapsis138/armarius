@@ -27,6 +27,7 @@ from ..models import Player
 from .audit import AuditLog, audit_path
 from .changes import SeatChanges
 from .devices import DeviceBook, devices_path
+from .events import event_specs, poller
 from .host import RemoteHost
 from .identity import KeyStore, NoKeychainError, load_or_create
 from .invites import InviteBook, book_path
@@ -114,8 +115,10 @@ def build(
                 *passcode_specs(saga_id, passcodes, log),
                 *undo_specs(saga_id, log),
                 *switch_specs(saga_id, log),
+                *event_specs(saga_id),
             ],
         ),
+        events=poller(saga_id),
         # Only the tunnel, on this computer, can reach the listener, so the
         # address it passes on is the player's own (threat model, section 4).
         trust_forwarded_address=True,

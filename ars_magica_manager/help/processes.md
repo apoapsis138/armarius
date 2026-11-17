@@ -1477,6 +1477,22 @@ A player needn't play a character to join. Once in, they can make their own with
 
 The line under the fields says what to point the tunnel at (`http://localhost:PORT`) and the address the Invites will carry. The app listens on this computer alone, and only the tunnel reaches it. The choices are kept for the saga, outside the saga file.
 
+### The Chronicle at a Remote seat
+<!-- help: chronicle-seats; gui -->
+
+Preview: turn on Virtual Tabletop in Settings.
+
+The preview is turned on in the host's Settings, on the computer the storyguide hosts from. A headless host serves Remote seats as before, without it. A seat needs nothing turned on: while the host's Session is under way, the seat is sent its [Chronicle](help:chronicle).
+
+- The seat opens a second connection, used only for the Chronicle, beside the one it reads and saves the saga on. Each entry comes down it within about a second.
+- The host sends a seat only what its player may see. A Private roll of someone else's, or a Blind roll's number, never leaves the host's computer for that seat. It isn't sent and hidden; it isn't sent at all.
+- A seat keeps the Chronicle in memory only. Nothing of it is written on the player's computer. Reconnecting, or starting the app again, it's sent again from the last entry it holds, or from the start.
+- A roll from a seat says what to roll, never the number. The host rolls it, for a character the player plays tonight, at most 30 a minute.
+- An entry of a kind this version doesn't know shows as "Something this version can't show; update Armarius."
+- A seat on a version of Armarius from before the Chronicle can't join until it's updated, and an updated seat can't join a host that hasn't been.
+
+**See also:** [The Chronicle](help:chronicle), [Host for Remote Seats](help:host-remote-seats)
+
 ### Issue Invite
 <!-- help: issue-invite; gui -->
 

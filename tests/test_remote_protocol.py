@@ -48,7 +48,7 @@ def registry() -> Registry:
 
 def test_hello_is_answered() -> None:
     reply, ok = public_registry(MAX).handle(
-        Session(), message("hello", {"protocol": 1})
+        Session(), message("hello", {"protocol": PROTOCOL_VERSION})
     )
     assert ok
     assert reply == Reply("welcome", {"protocol": PROTOCOL_VERSION, "app": __version__})

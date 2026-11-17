@@ -16,14 +16,15 @@ import hashlib
 import json
 import secrets
 import zlib
-from collections.abc import Callable
+from collections.abc import AsyncIterator, Callable
 from typing import Any, Self, cast
 
 import aiohttp
 
-from .. import __version__, players, storage, updates
+from .. import __version__, chronicle, players, storage, updates
 from ..models import Saga
 from .changes import SAGA, change_messages
+from .events import CHRONICLE, EVENTS, entry_of
 from .identity import normalise_pin
 from .proof import NONCE_BYTES, make_proof
 
@@ -31,6 +32,7 @@ from .proof import NONCE_BYTES, make_proof
 SALT_BYTES = 16
 from .protocol import (
     PROTOCOL_VERSION,
+    UPDATE,
     Body,
     Refused,
     Reply,
@@ -99,6 +101,14 @@ class AlreadyAdvanced(Exception):
         who, _, now = said.partition("|")
         self.who, self.now = who or "Someone", now
         super().__init__(f"{self.who} has already advanced the saga to {now}.")
+
+
+class RollRefused(Exception):
+    """The host wouldn't roll it; the reason, as the host said it."""
+
+    def __init__(self, why: str) -> None:
+        super().__init__(why)
+        self.why = why
 
 
 class VersionMismatch(ChannelError):
@@ -298,8 +308,15 @@ class RemoteClient:
             "hello", {"protocol": PROTOCOL_VERSION, "app": __version__}
         )
         theirs = str(reply.body.get("app", ""))
+        if reply.type == UPDATE:
+            raise VersionMismatch(__version__, theirs or "a newer version")
         if reply.type != "welcome":
             raise ChannelError("The host did not answer as expected.")
+        spoken = reply.body.get("protocol")
+        if isinstance(spoken, int) and spoken < PROTOCOL_VERSION:
+            # A host from before the Chronicle: it would refuse what this
+            # app asks of it.
+            raise VersionMismatch(__version__, theirs)
         ours_major, their_major = major(__version__), major(theirs)
         if (
             their_major is not None
@@ -469,6 +486,49 @@ class RemoteClient:
         reply = await self.request("switched", {"playing": playing})
         if reply.type != "noted":
             raise UnreadableReply
+
+    async def roll(self, request: chronicle.RollRequest) -> int:
+        """Ask the host to roll `request` (what to roll, never a number):
+        the number of its Chronicle entry. RollRefused with the host's
+        reason (not a character you play tonight, too many rolls...)."""
+        body: Body = {
+            "die": "stress" if request.stress else "simple",
+            "modifier": request.modifier,
+            "botch_dice": request.botch_dice,
+            "for": request.for_what,
+            "character_id": request.character_id,
+            "visibility": request.visibility,
+        }
+        if request.ease_factor is not None:
+            body["ease_factor"] = request.ease_factor
+        reply = await self.request("roll", body)
+        number = reply.body.get("number")
+        if reply.type == "rolled" and isinstance(number, int):
+            return number
+        if reply.type == "roll_refused":
+            raise RollRefused(str(reply.body.get("why", "")))
+        raise UnreadableReply
+
+    async def events(
+        self, since: int, session_id: str = ""
+    ) -> AsyncIterator[tuple[str, chronicle.Entry]]:
+        """Turn this connection (signed in, and used for nothing else) into
+        the Chronicle's events: each entry after `since` of Session
+        `session_id` (what the seat holds; "" for none) that the host sends,
+        with its Session's id, until the connection ends."""
+        reply = await self.request(
+            "events_since", {"session": session_id, "since": since}
+        )
+        if reply.type != EVENTS:
+            raise UnreadableReply
+        while True:
+            found = await self._receive()
+            if found.type != CHRONICLE:
+                raise UnreadableReply
+            try:
+                yield entry_of(found.body)
+            except ValueError:
+                raise UnreadableReply from None
 
     async def close(self) -> None:
         try:
