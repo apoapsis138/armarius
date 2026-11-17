@@ -318,6 +318,8 @@ DRAWN_ICONS: dict[str, Path] = {
     # House Diedne's invented sign, the mark of its theme
     # (tools/draw_diedne_mark.py): the books give it none.
     "diedne": DRAWN / "diedne.svg",
+    # A Chronicle roll's die (tools/draw_d10.py): Phosphor has only d6s.
+    "d10": DRAWN / "d10.svg",
 }
 
 

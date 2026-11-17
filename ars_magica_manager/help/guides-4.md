@@ -2384,6 +2384,22 @@ the Move.
 
 **See also:** [Saga picker](help:saga-picker), [Getting started](help:guide-getting-started)
 
+# How to roll at the table
+<!-- help: guide-rolling; gui -->
+
+Preview: turn on Virtual Tabletop in Settings.
+
+Friday's game has started round your desk, and Ana's magus Aelfric is climbing a wall.
+
+1. **Begin the Session.** On the saga page's **Saga Management**, choose Friday's Session in [Sessions](help:tab-content-sessions) and click **Begin Session**. The [Chronicle pane](help:chronicle-pane) opens on the right.
+2. **Roll.** Click **Free Roll**. Choose Aelfric, a stress die, Modifier 9 (Strength + Athletics), one botch die, Ease Factor 12, For "Climb the wall", and Public. Click **Roll**.
+3. **Read it.** The card shows each die face. Two 1s and a 5 is 5 × 4 = 20, so 29 against 12: it succeeds by 17 (DE p. 7).
+4. **Roll Blind** for something only you should know, such as whether Aelfric notices the ambush. Ana sees only that you rolled.
+5. **Cancel a mistake.** Click **Cancel** beside the dice of a roll made for the wrong character. Say why: the roll stays in the Chronicle, struck through and marked Canceled, with your reason.
+6. **End the Session** with **End Session** on its row. It's marked Played, and its Chronicle is kept to read from the row.
+
+**See also:** [The Chronicle](help:chronicle), [Free roll](help:free-roll)
+
 # How to plan and record a Session
 <!-- help: guide-sessions -->
 

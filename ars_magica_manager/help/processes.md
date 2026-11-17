@@ -1482,7 +1482,7 @@ The line under the fields says what to point the tunnel at (`http://localhost:PO
 
 Preview: turn on Virtual Tabletop in Settings.
 
-The preview is turned on in the host's Settings, on the computer the storyguide hosts from. A headless host serves Remote seats as before, without it. A seat needs nothing turned on: while the host's Session is under way, the seat is sent its [Chronicle](help:chronicle).
+The preview is turned on in the host's Settings, on the computer the storyguide hosts from. A headless host serves Remote seats as before, without it. A seat needs nothing turned on: while the host's Session is under way, the seat is sent its [Chronicle](help:chronicle), shown in the [Chronicle pane](help:chronicle-pane).
 
 - The seat opens a second connection, used only for the Chronicle, beside the one it reads and saves the saga on. Each entry comes down it within about a second.
 - The host sends a seat only what its player may see. A Private roll of someone else's, or a Blind roll's number, never leaves the host's computer for that seat. It isn't sent and hidden; it isn't sent at all.

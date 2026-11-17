@@ -14,21 +14,26 @@ player's half of the Remote Proxy (saga_store.py).
 
 from __future__ import annotations
 
+import asyncio
 import secrets
+from collections.abc import Callable
 from typing import Any
 
-from .. import players
+from .. import chronicle, players
 from ..models import Saga
 from ..saga_store import NotSaved
 from ..undo_season import Undo
 from .bridge import LoopThread
 from .client import (
     ChangeNotSaved,
+    NoCredential,
     RemoteClient,
+    RollRefused,
     SignInError,
     UnreadableReply,
     new_device_secret,
 )
+from .secure import ChannelError
 from .vault import DeviceVault
 from .words import device_words, host_words, two_lines
 
@@ -47,6 +52,12 @@ class SeatEnded(Exception):
 
 class NeedsPasscode(Exception):
     """A reconnect needs the passcode again (it changed on the host)."""
+
+
+#: Seconds before a dropped Chronicle connection is tried again.
+CHRONICLE_RETRY = 3.0
+#: The longest a roll may hold the window.
+ROLL_WAIT = 8.0
 
 
 class SeatSession:
@@ -69,6 +80,8 @@ class SeatSession:
         self.host_version = ""
         #: Who this device signed in as, once it has.
         self.player_name = ""
+        #: The Chronicle's events connection, while it runs (on the loop).
+        self._follow_task: asyncio.Task[None] | None = None
 
     # -- the connection --------------------------------------------------------
 
@@ -96,6 +109,7 @@ class SeatSession:
 
     def close(self) -> None:
         """End the session: the connection, its thread and the key kept."""
+        self.stop_chronicle()
         self.close_connection()
         self._keys.clear()
         self._loop.stop()
@@ -271,3 +285,98 @@ class SeatSession:
         seconds at most, so a slow or lost host never holds the window (the
         page shows none; ConnectionError or TimeoutError)."""
         return self._loop.run(self._talk().picture(folder, name), timeout=PICTURE_WAIT)
+
+    # -- the Chronicle (protocol 2, ADR 0019) -------------------------------------
+
+    def _key(self, salt: bytes) -> bytes:
+        """The passcode's key kept for this session, under the host's salt."""
+        if salt not in self._keys:
+            raise NeedsPasscode("The passcode changed on the host.")
+        return self._keys[salt]
+
+    def roll(self, request: chronicle.RollRequest) -> str | None:
+        """Ask the host to roll `request`; None once it is in the
+        Chronicle, else the host's reason (or why it can't be asked). It
+        goes on a short connection of its own, so it never crosses the
+        game's own talk with the host, and waits a few seconds at most."""
+        try:
+            self._loop.run(self._roll(request), timeout=ROLL_WAIT)
+        except RollRefused as refused:
+            return refused.why
+        except NeedsPasscode, NoCredential:
+            return "Sign in again to roll."
+        except ChannelError, SignInError, ConnectionError, TimeoutError:
+            return "The host can't be reached just now."
+        return None
+
+    async def _roll(self, request: chronicle.RollRequest) -> int:
+        client = await RemoteClient.connect(self.url, self.pin)
+        try:
+            await client.sign_in_with(self._key, self.vault)
+            return await client.roll(request)
+        finally:
+            await client.close()
+
+    def follow_chronicle(
+        self,
+        deliver: Callable[[str, chronicle.Entry], None],
+        held: Callable[[], tuple[str, int]],
+    ) -> None:
+        """Keep a second connection open for the Chronicle's events, signed
+        in with the key kept in memory: each entry the host sends goes to
+        `deliver` (called on the connection's thread: the caller hands it
+        to its own). After a dropped connection it asks again from what
+        `held` says the seat holds (its Session, its last entry)."""
+        if self._follow_task is not None and not self._follow_task.done():
+            return
+        self._loop.run(self._spawn(deliver, held))
+
+    async def _spawn(
+        self,
+        deliver: Callable[[str, chronicle.Entry], None],
+        held: Callable[[], tuple[str, int]],
+    ) -> None:
+        self._follow_task = asyncio.create_task(self._follow(deliver, held))
+
+    def stop_chronicle(self) -> None:
+        """End the Chronicle's connection, waiting for it to close."""
+        if self._follow_task is not None:
+            try:
+                self._loop.run(self._end_follow(), timeout=5)
+            except TimeoutError:
+                pass  # left to the loop's own end
+            self._follow_task = None
+
+    async def _end_follow(self) -> None:
+        task = self._follow_task
+        if task is None:
+            return
+        task.cancel()
+        try:
+            await task
+        except asyncio.CancelledError:
+            pass  # ended as asked
+
+    async def _follow(
+        self,
+        deliver: Callable[[str, chronicle.Entry], None],
+        held: Callable[[], tuple[str, int]],
+    ) -> None:
+        while True:
+            try:
+                client = await RemoteClient.connect(self.url, self.pin)
+                try:
+                    await client.sign_in_with(self._key, self.vault)
+                    session_id, last = held()
+                    async for found, entry in client.events(last, session_id):
+                        deliver(found, entry)
+                finally:
+                    await client.close()
+            except NeedsPasscode, NoCredential, SignInError:
+                # Refused or locked out: the game's own connection says so
+                # and asks for the passcode; asking again here would only
+                # add to a lock-out.
+                return
+            except ChannelError, ConnectionError, TimeoutError:
+                pass  # dropped for now: try again shortly
+            await asyncio.sleep(CHRONICLE_RETRY)

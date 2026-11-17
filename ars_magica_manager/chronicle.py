@@ -39,7 +39,7 @@ import secrets
 from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, Protocol
 
 from . import paths, shapes, viewing
 from .files import held_lock
@@ -132,6 +132,18 @@ def _now() -> str:
 clock: Callable[[], str] = _now
 
 
+#: An entry to write: its kind, author, Audience and body.
+Written = tuple[str, str, "Audience", dict[str, Any]]
+
+
+class HasEntries(Protocol):
+    """A Chronicle as a reader holds it: the host's file-backed Chronicle,
+    or what a Remote seat was sent (SeatChronicle)."""
+
+    @property
+    def entries(self) -> list[Entry]: ...
+
+
 class Chronicle:
     """A Session's Chronicle: its entries in order, and its file."""
 
@@ -139,6 +151,8 @@ class Chronicle:
         self.path = path
         self.entries = entries
         self._listeners: list[Callable[[Entry], None]] = []
+        #: The file's size when last read (-1: not read here yet).
+        self._read_size = -1
 
     def subscribe(self, listener: Callable[[Entry], None]) -> Callable[[], None]:
         """Tell `listener` of each entry added from now on (Observer: a
@@ -168,31 +182,57 @@ class Chronicle:
         return [e for e in self.entries if sees(e, who, session, saga)]
 
     def add(
-        self, kind: str, author: str, audience: Audience, body: dict[str, Any]
+        self,
+        kind: str,
+        author: str,
+        audience: Audience,
+        body: dict[str, Any],
+        then: Callable[[Entry], Written | None] | None = None,
     ) -> Entry:
         """Write a new entry at the end, flushed to the file before it
         counts: under the file's lock, after what another process wrote
-        since, numbered from the file."""
+        since, numbered from the file. `then` gives an entry that belongs
+        with it (a Blind roll's line for its player), written in the same
+        hold of the lock, so the two are on file before anyone is told."""
         self.path.parent.mkdir(parents=True, exist_ok=True)
         with held_lock(_lock_of(self.path)):
             caught_up = self._catch_up(mend=True)
             if self.closed:
                 self._tell(caught_up)
                 raise ValueError("This Session has ended: its Chronicle is closed.")
-            entry = Entry(len(self.entries) + 1, clock(), kind, author, audience, body)
-            with self.path.open("a", encoding="utf-8", newline="\n") as out:
-                out.write(json.dumps(asdict(entry), ensure_ascii=False) + "\n")
-                out.flush()
-                os.fsync(out.fileno())
-            self.entries.append(entry)
-        # Subscribers are told once the lock is let go, so a slow or failing
-        # one never holds up the other process.
-        self._tell([*caught_up, entry])
+            entry = self._write(kind, author, audience, body)
+            written = [entry]
+            follows = then(entry) if then is not None else None
+            if follows is not None:
+                written.append(self._write(*follows))
+        # Subscribers are told once the lock is let go and all of it is on
+        # file, so a slow or failing one never holds up the other process,
+        # nor stops what belongs with the entry from being written.
+        self._tell([*caught_up, *written])
+        return entry
+
+    def _write(
+        self, kind: str, author: str, audience: Audience, body: dict[str, Any]
+    ) -> Entry:
+        """Append one entry (the file's lock held)."""
+        entry = Entry(len(self.entries) + 1, clock(), kind, author, audience, body)
+        with self.path.open("a", encoding="utf-8", newline="\n") as out:
+            out.write(json.dumps(asdict(entry), ensure_ascii=False) + "\n")
+            out.flush()
+            os.fsync(out.fileno())
+        self.entries.append(entry)
         return entry
 
     def refresh(self) -> list[Entry]:
         """Catch up with what another process wrote since (Observer: each
-        subscriber is told of every entry new here)."""
+        subscriber is told of every entry new here). A file no bigger than
+        last read has nothing new, and isn't read again."""
+        try:
+            size = self.path.stat().st_size
+        except FileNotFoundError:
+            return []
+        if size == self._read_size:
+            return []
         fresh = self._catch_up()
         self._tell(fresh)
         return fresh
@@ -201,6 +241,10 @@ class Chronicle:
         """Read what is new in the file; `mend` (only with the file's lock
         held) cuts a half-written last line first."""
         found = _load(self.path, mend=mend)
+        try:
+            self._read_size = self.path.stat().st_size
+        except FileNotFoundError:
+            self._read_size = 0
         fresh = found[len(self.entries) :]
         self.entries.extend(fresh)
         return fresh
@@ -480,28 +524,33 @@ def free_roll(
         PRIVATE: chosen(by) if by != storyguide_of(session, saga) else chosen(),
         BLIND: storyguide_only(),
     }[request.visibility]
-    entry = book.add(ROLL, by, audience, _body(saga, request, result))
     player = _player_of(session, request.character_id)
-    if request.visibility == BLIND and player:
-        book.add(
-            ROLLED,
-            by,
-            chosen(player),
-            {
-                "roll": entry.number,
-                "for": request.for_what,
-                "character_name": _character_name(saga, request.character_id),
-            },
-        )
-    return entry
+    # Worked out before anything is written, so nothing can fail between
+    # the roll and its line.
+    name = _character_name(saga, request.character_id)
+    blind = request.visibility == BLIND and bool(player)
+
+    def rolled(roll: Entry) -> Written | None:
+        if not blind:
+            return None
+        body = {"roll": roll.number, "for": request.for_what, "character_name": name}
+        return (ROLLED, by, chosen(player), body)
+
+    return book.add(ROLL, by, audience, _body(saga, request, result), then=rolled)
 
 
 def void(
-    book: Chronicle, session: Session, number: int, reason: str, *, by: str
+    book: Chronicle,
+    session: Session,
+    number: int,
+    reason: str,
+    *,
+    by: str,
+    saga: Saga | None = None,
 ) -> Entry:
     """Strike roll `number` from the count, with a reason; the roll stays.
     The Void is seen by whoever saw the roll."""
-    if by != storyguide_of(session):
+    if by != storyguide_of(session, saga):
         raise ValueError("Only the Session's storyguide voids a roll.")
     if not reason.strip():
         raise ValueError("Say why the roll doesn't count.")
@@ -515,7 +564,7 @@ def void(
     )
 
 
-def voided(book: Chronicle) -> dict[int, str]:
+def voided(book: HasEntries) -> dict[int, str]:
     """The rolls struck, by number, with the reason."""
     return {e.body["strikes"]: e.body["reason"] for e in book.entries if e.kind == VOID}
 
@@ -557,7 +606,7 @@ def _line(entry: Entry, struck: dict[int, str]) -> str:
     if entry.kind == ROLL:
         line = _roll_line(entry.body)
         if entry.number in struck:
-            line = f"VOID ({struck[entry.number]}): {line}"
+            line = f"CANCELED ({struck[entry.number]}): {line}"
         if entry.audience.to != TABLE:
             line += " [Blind]" if entry.audience.to == STORYGUIDE else " [Private]"
         return line
@@ -625,6 +674,23 @@ class SeatChronicle:
         self.session_id = ""
         self.entries: list[Entry] = []
         self._listeners: list[Callable[[Entry], None]] = []
+        self._cleared: list[Callable[[], None]] = []
+
+    def clear(self, session_id: str = "") -> None:
+        """Hold nothing (a new Session's start): subscribers are told by
+        `cleared`, so a pane draws itself again."""
+        self.session_id, self.entries = session_id, []
+        for listener in list(self._cleared):
+            listener()
+
+    def when_cleared(self, listener: Callable[[], None]) -> Callable[[], None]:
+        self._cleared.append(listener)
+
+        def stop() -> None:
+            if listener in self._cleared:
+                self._cleared.remove(listener)
+
+        return stop
 
     @property
     def last(self) -> int:
@@ -644,9 +710,44 @@ class SeatChronicle:
         """An entry the host sent; one already held is passed over, and a
         new Session's entries start afresh."""
         if session_id != self.session_id:
-            self.session_id, self.entries = session_id, []
+            self.clear(session_id)
         if entry.number <= self.last:
             return
         self.entries.append(entry)
         for listener in list(self._listeners):
             listener(entry)
+
+
+def for_reader(
+    book: HasEntries, who: str, session: Session, saga: Saga | None = None
+) -> list[Entry]:
+    """The entries `who` reads, in order: those they may see, less the
+    line telling a player a Blind roll was made, for the Session's
+    storyguide, who has the roll itself."""
+    return [e for e in book.entries if reads(e, who, session, saga)]
+
+
+def reads(entry: Entry, who: str, session: Session, saga: Saga | None = None) -> bool:
+    """Whether `who` reads `entry` (for_reader, one entry at a time)."""
+    if entry.kind == ROLLED and who == storyguide_of(session, saga):
+        return False
+    return sees(entry, who, session, saga)
+
+
+def line(entry: Entry, struck: dict[int, str]) -> str:
+    """`entry`'s line, as the Chronicle reads (plain text, not markup);
+    `struck` is `voided(book)`, worked out once for all the lines drawn."""
+    return _line(entry, struck)
+
+
+def calls_attention(
+    entry: Entry, who: str, session: Session, saga: Saga | None = None
+) -> bool:
+    """Whether `entry` is meant for `who` alone enough to call a collapsed
+    pane's attention: a Blind roll's number for the Session's storyguide,
+    or the line telling a player one was rolled for their character."""
+    if entry.kind == ROLL and entry.audience.to == STORYGUIDE:
+        return who == storyguide_of(session, saga)
+    if entry.kind == ROLLED:
+        return who in entry.audience.players
+    return False

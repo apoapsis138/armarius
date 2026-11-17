@@ -249,6 +249,9 @@ def end_joined(window: MainWindow) -> None:
     """Close a Joined game's connection and go back to the data folder."""
     session = window.session
     window.session = None
+    # Its Chronicle was held in memory only: it goes with the game (the
+    # session's close ends its connection).
+    window.seat_chronicle = None
     window.update_notices.set_mismatch(None)
     window.store = LocalStore()
     window.unsent = False

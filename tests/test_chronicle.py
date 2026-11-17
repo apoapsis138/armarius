@@ -418,7 +418,9 @@ def test_the_chronicle_as_text_shows_each_face_and_a_void() -> None:
 
     shown = chronicle.text(book.seen_by(HOST, session), book)
 
-    assert "VOID (Wrong wall): Aelfric (Climb the wall): stress die 1 → 1 → 5" in shown
+    assert (
+        "CANCELED (Wrong wall): Aelfric (Climb the wall): stress die 1 → 1 → 5" in shown
+    )
     assert "+9 = 29 against 12: succeeds, margin 17" in shown
     assert "Storyguide (The weather): stress die 0; botch dice 0, +3 = 0" in shown
     assert "botch (1 zero)" in shown
