@@ -139,13 +139,20 @@ def save_saga(saga: Saga, saver: Saver | None = None) -> Saved:
     the app may share the file (a hosted saga): under a lock, the file is re-read and
     only what this copy changed since it last loaded or saved the saga is written
     into it, so another copy's changes stay. Where both changed the same value, this
-    save's wins (listed in the result's conflicts)."""
+    save's wins (listed in the result's conflicts).
+
+    The saga is shape-checked first, as it will be when it is next opened
+    (ValueError naming the field): a saga that couldn't be opened again is
+    never written, and the file on disk is left as it was (ADR 0012)."""
     saver = saver or Saver(saved_by, guard)
     path = saga_path(saga.id)
     newer = _newer_data.get(str(path))
     saga.app_version = __version__ if newer is None else newer["app_version"]
     saga.saved_by = saver.name
-    ours = _with_newer(asdict(saga), newer)
+    plain = asdict(saga)
+    shapes.check_built(saga)
+    shapes.check_raw(plain, Saga)
+    ours = _with_newer(plain, newer)
     with _saga_lock(saga.id):
         seen = _last_seen.get(str(path))
         theirs = base = None
@@ -405,6 +412,12 @@ def load_saga(saga_id: str) -> Saga:
     data = _with_newer(asdict(saga), _remember_newer(path, raw))
     _last_seen[str(path)] = (text, data, data)
     return saga
+
+
+def not_saved_note(problem: Exception) -> str:
+    """What to tell the storyguide when save_saga refused a saga that
+    couldn't be opened again (ValueError naming the field)."""
+    return f"Not saved: {problem}. The file is unchanged."
 
 
 def unreadable_note(saga_id: str, problem: Exception) -> str:

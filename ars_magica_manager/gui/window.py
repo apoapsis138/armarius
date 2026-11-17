@@ -841,7 +841,11 @@ class MainWindow(QMainWindow):
                     self.palette_,
                 )
             return
-        self.store.save(saga)
+        try:
+            self.store.save(saga)
+        except ValueError as problem:
+            # The shape check refused it (storage.save_saga): kept in hand.
+            self.note.say(storage.not_saved_note(problem), self.palette_)
 
     def refused(self, refused: list[str]) -> None:
         """The host didn't take some of a Joined game's changes."""

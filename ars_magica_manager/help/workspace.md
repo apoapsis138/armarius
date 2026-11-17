@@ -231,7 +231,7 @@ A covenant, laboratory or character still being made is In Creation. Its page is
   - Choosing a file or folder uses the system's own window.
   - A window is sized to what it holds, and grows when a choice shows more fields, as Lab Work's does. Past the height of the screen its fields scroll inside it, above its buttons, so a long form such as Export Pack's list of ticks can be read to its end.
   - **Save** keeps what you typed, and **Cancel** leaves things as they were. If you've changed anything, Cancel, the close button and Esc ask first, so a slip doesn't lose your work. A form that only works something out has Close in place of Cancel, and doesn't ask.
-  - Every change is saved to the saga file at once.
+  - Every change is saved to the saga file at once. A saga holding something that couldn't be opened again isn't saved: a note names the field, and the file stays as it was. That is a fault in the app, worth reporting.
   - One form is open at a time, and while it's open the page's other buttons wait. Clicking a New card, such as **New Magus** while a New Character form is open, takes you back to the form already open instead of opening another.
 - Buttons in a page's header or chapter heading, such as **Edit Covenant**, act on the record itself.
 - What the terminal keeps in its New and More menus is on the page itself. A New card ends the cards it adds to (**New Covenant**, **New Character**, **New Laboratory**). Other actions are buttons in the chapter or section they act on, such as **Give** beside a list's Add, Edit and Delete, **Set Up Research Library** on a covenant's Library or **Set Date** in the saga's Seasons chapter.

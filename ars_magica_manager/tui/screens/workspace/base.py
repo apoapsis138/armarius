@@ -1807,8 +1807,12 @@ class WorkspaceBase(Screen[None]):
     def _commit(self, *sections: str, tree: bool = False) -> None:
         """Save a change: write the saga, rebuild the navigation tree if a
         name or the structure changed (`tree`), and refresh `sections` of the
-        sheet on show -- the one whose handler made the change."""
-        storage.save_saga(self.saga)
+        sheet on show -- the one whose handler made the change. A saga the
+        shape check refuses isn't saved, and is said so."""
+        try:
+            storage.save_saga(self.saga)
+        except ValueError as problem:
+            self.notify(storage.not_saved_note(problem), severity="error", markup=False)
         # The sheet on show, before rebuilding the tree lets it go.
         shown = self._current_sheet_view()
         if tree:

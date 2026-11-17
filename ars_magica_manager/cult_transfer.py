@@ -1,7 +1,7 @@
 """A saga's own Mystery Cult to a file and back: Export a Cult writes one
 cult (its Lore, degrees, Scripts and their components) as JSON, and
 Import Data's A Mystery Cult reads it into another saga's own cults
-(Saga Content). The file is checked once as it is read, with a message
+(Saga Content). The file is shape-checked as it is read, with a message
 naming what is wrong."""
 
 from __future__ import annotations
@@ -11,7 +11,7 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
-from . import __version__
+from . import __version__, shapes
 from . import mystery_cults as mc
 from .files import write_atomic
 from .models import MysteryCult, Saga
@@ -49,7 +49,13 @@ def read(path: Path) -> MysteryCult:
     cult = data.get("cult")
     if not isinstance(cult, dict):
         raise ValueError("the export holds no cult")
-    return MysteryCult.from_dict(cult)
+    # Shape-checked before and after building, as an export is (ADR 0012).
+    # Its id and founder are replaced when it is added, so only the ids
+    # inside it must be plain already (ADR 0028).
+    shapes.check_raw({**cult, "id": "custom_cult_x", "founder_id": ""}, MysteryCult)
+    built = MysteryCult.from_dict(cult)
+    shapes.check_built(built)
+    return built
 
 
 def add(saga: Saga, cult: MysteryCult) -> MysteryCult:

@@ -29,10 +29,11 @@ parts that face other people are the ones that matter most:
   ZeroTier or a trusted home network), never a public address; its threat
   model, with the risks accepted and the guards not yet built, is
   [docs/threat-model-browser-and-ssh-hosting.md](docs/threat-model-browser-and-ssh-hosting.md).
-- **Files coming in**: saga files, exports and content packs from someone
-  else, which are shape-checked as they load. Every id in them must be a
-  plain name (lowercase letters, digits, `_` and `-`), so none can name a
-  file outside its folder.
+- **Files coming in**: saga files, exports, content packs, supplements
+  and Mystery Cult files from someone else, which are shape-checked as
+  they load, and a saga is checked again before it is saved. Every id in
+  them must be a plain name (lowercase letters, digits, `_` and `-`), so
+  none can name a file outside its folder.
 - **The App update check**: the desktop and terminal apps ask GitHub's API,
   read-only, for the latest Release (at most once a day, or on Check now),
   sending only the app's version; the release notes it reads are shown as
