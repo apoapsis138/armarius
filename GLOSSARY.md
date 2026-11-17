@@ -150,16 +150,16 @@ A roll made from the Chronicle rather than from a sheet, with a modifier the rol
 _Avoid_: quick roll, custom roll, manual roll
 
 **Roll request**:
-A storyguide's call for one or more characters to roll, with what it is for.
+A storyguide's call for chosen characters to roll a Characteristic, with or without an Ability, saying what it is for, who sees each roll, and any Ease Factor, which the storyguide may keep to themselves. Each answer is a roll of its own, gathered under the request.
 _Avoid_: check, prompt
 
-**Void**:
-The storyguide's striking of a roll from the count, with a reason. The roll stays in the Chronicle.
-_Avoid_: delete, undo
+**Strike**:
+The storyguide's taking of a roll from the count, with a reason. The roll stays in the Chronicle, shown struck through with the reason.
+_Avoid_: void, cancel, rollback, delete, undo
 
-**Typed die**:
-A die a person rolled by hand and typed in, allowed by a saga option and marked as typed.
-_Avoid_: manual roll
+**Entered die**:
+A die a person rolled by hand and entered, allowed by a saga option and marked as entered by them.
+_Avoid_: typed die, manual roll
 
 **Whisper**:
 A message to chosen people at the Session. The Session's storyguide always sees it, and everyone is told so.
