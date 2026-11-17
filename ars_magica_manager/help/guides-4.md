@@ -2847,15 +2847,17 @@ fixed. A bug report on the project's GitHub page does that.
 <!-- /gui -->
    For a saga on a headless host, it's `ARMARIUS_VERSION` in its `.env`
    (see [How to self-host a saga](help:guide-self-hosting)).
-4. **Say where it runs.** The form asks which front-end and how it runs:
-   the Desktop app, the Terminal app on your computer or served to
-   browsers or SSH, a Remote seat in a hosted saga, or a headless host.
+4. **Add whatever helps.** The form's last box, **Anything else**, is
+   for where it runs (the Desktop app, the Terminal app on your computer
+   or served to browsers or SSH, a Remote seat in a hosted saga, or a
+   headless host), your operating system, and any error text the app
+   showed.
 5. **If the app closed itself without a word**, open `crash.log` in your
-   save folder and paste what it holds into the form. The Sagas page
-   names the folder (see [How to change the save folder](help:guide-save-folder)).
-6. **If it's about the rules,** tick **The app doesn't match the book**
-   and give the book and printed page. The Definitive Edition wins where
-   a supplement disagrees. If you don't know the page, say so.
+   save folder and paste what it holds into **Anything else**. The Sagas
+   page names the folder (see [How to change the save folder](help:guide-save-folder)).
+6. **If it's about the rules,** give the book and printed page in
+   **Anything else**. The Definitive Edition wins where a supplement
+   disagrees. If you don't know the page, say so.
 7. **If records are involved,** attach an Export of just those records
    (see [How to import and export](help:guide-import-export)).
 
