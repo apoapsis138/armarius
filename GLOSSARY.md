@@ -149,6 +149,10 @@ _Avoid_: secret roll, GM roll
 A roll made from the Chronicle rather than from a sheet, with a modifier the roller types and a line saying what it is for.
 _Avoid_: quick roll, custom roll, manual roll
 
+**Table roll**:
+A roll the story calls for in the moment, made for a character acting in a scene. One made while a Session is Under way goes to its Chronicle. A roll the season, the year or a project calls for is not a Table roll.
+_Avoid_: live roll, session roll
+
 **Roll request**:
 A storyguide's call for chosen characters to roll a Characteristic, with or without an Ability, saying what it is for, who sees each roll, and any Ease Factor, which the storyguide may keep to themselves. Each answer is a roll of its own, gathered under the request.
 _Avoid_: check, prompt
