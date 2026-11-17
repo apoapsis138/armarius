@@ -209,10 +209,14 @@ def error_text(dialog) -> str:
     )
 
 
+def _saga_file() -> str:
+    return storage.saga_path(SAGA_ID).read_text(encoding="utf-8")
+
+
 def _saved_file() -> str:
     """What is on disk for the saga: its file, then each of its Chronicle
     files."""
-    parts = [storage.saga_path(SAGA_ID).read_text(encoding="utf-8")]
+    parts = [_saga_file()]
     parts += [p.read_text(encoding="utf-8") for p in chronicle.files_of(SAGA_ID)]
     return "\n".join(parts)
 
@@ -273,6 +277,7 @@ async def run_contract(name: str, contract: Contract) -> None:
 
     - the whole dialog, and its Save and Cancel buttons, are on screen (a
       long form scrolls between them);
+    - opening it saves nothing of the saga;
     - it's pre-filled with the record's current values;
     - Cancel after editing saves nothing;
     - each invalid entry is refused with an error, the dialog staying open
@@ -280,10 +285,13 @@ async def run_contract(name: str, contract: Contract) -> None:
     - a valid edit, saved, lands in the saved saga and the screen shows it.
     """
     app = new_app()
+    unopened = _saga_file()
     async with app.run_test(size=(120, 45)) as pilot:
         base, dialog = await open_dialog(pilot, app, name)
+        assert _saga_file() == unopened, "opening the dialog saved the saga"
         # Taken once the dialog is open: an opener may set the scene first
-        # (a Session begun, for a roll), and only what the form writes counts.
+        # (a Session begun, for a roll, writes its Chronicle), and only what
+        # the form writes counts.
         before = _saved_file()
         for button in (save_button(dialog), cancel_button(dialog)):
             region = button.region
