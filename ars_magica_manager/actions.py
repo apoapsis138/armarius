@@ -53,7 +53,7 @@ from . import mystic_paths as mystic_forms
 from . import sessions as ss
 from . import spells as spl
 from .forms import acclaim as acclaim_forms
-from .forms import careers, go_to, take_up
+from .forms import careers, go_to, sheet_roll, take_up
 from .forms import certamen_duel as certamen_forms
 from .forms import charter as charter_forms
 from .forms import hubris as hubris_forms
@@ -360,6 +360,8 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("b", "begin_session", "Begin Session"),
     MenuItem("n", "close_session", "End Session"),
     MenuItem("r", "read_chronicle", "Chronicle"),
+    # Roll from the sheet, at the Session Under way (forms/sheet_roll.py).
+    MenuItem("o", "sheet_roll", "Roll"),
     MenuItem("q", "teaching_requests", "Teaching Requests"),
     MenuItem("y", "study_path", "Study Path"),
     MenuItem("t", "tourney_season", "Tournament"),
@@ -1761,6 +1763,23 @@ def _ends_session(facts: ActionFacts, section: str) -> bool:
     )
 
 
+def _rolls_from_sheet(facts: ActionFacts, section: str) -> bool:
+    """Roll, on a character's Abilities and Characteristics, while a
+    Session is Under way and whoever uses this copy may roll for them: on
+    the host with the Virtual Tabletop (Preview) on, at a Remote seat as
+    its host does. One who can't act now is still offered it, and told
+    why."""
+    character = facts.selected_character
+    if section not in (sheet_roll.ABILITIES, sheet_roll.CHARACTERISTICS):
+        return False
+    if character is None or chronicle.under_way(facts.saga) is None:
+        return False
+    if viewing.current().hosts and not virtual_tabletop.on():
+        return False
+    why = sheet_roll.why_not_roll_here(facts.saga, character)
+    return why is None or why == chronicle.why_not_act(character)
+
+
 def _reads_chronicle(facts: ActionFacts, section: str) -> bool:
     session = _chosen_session(facts, section)
     return session is not None and chronicle.has_chronicle(facts.saga, session)
@@ -2104,6 +2123,7 @@ _SECTION_RULES: dict[str, Callable[[ActionFacts, str], bool]] = {
     "begin_session": _begins_session,
     "close_session": _ends_session,
     "read_chronicle": _reads_chronicle,
+    "sheet_roll": _rolls_from_sheet,
     # Lords of Men's Morale and Discipline, a saga option.
     "group_morale": _with_morale_rules("group_morale"),
     "rally_group": _with_morale_rules("rally_group"),

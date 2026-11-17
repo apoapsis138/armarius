@@ -14,7 +14,14 @@ import pytest
 import pytest_asyncio
 
 from ars_magica_manager import chronicle, players, storage, viewing
-from ars_magica_manager.models import Casting, Character, Saga, Session
+from ars_magica_manager.models import (
+    Ability,
+    Casting,
+    Character,
+    Characteristics,
+    Saga,
+    Session,
+)
 from ars_magica_manager.remote import events, protocol
 from ars_magica_manager.remote import identity as ident
 from ars_magica_manager.remote.client import (
@@ -301,3 +308,37 @@ def test_an_entry_too_large_to_send_whole_goes_as_one_the_seat_cant_show() -> No
     assert chronicle.UNKNOWN in chronicle.text(
         [back], chronicle.Chronicle(Path("x"), [])
     )
+
+
+async def test_a_seat_rolls_from_the_sheet_with_the_hosts_scores(table: Table) -> None:
+    aelfric = table.saga.characters[0]
+    aelfric.characteristics = Characteristics(dexterity=2)
+    aelfric.abilities = [Ability("Athletics", xp=30, specialty="climbing")]
+    aelfric.background.confidence_score = 1
+    aelfric.background.confidence_points = 2
+    storage.save_saga(table.saga)
+    seat = await table.seat("Anna")
+    try:
+        number = await seat.roll(
+            chronicle.RollRequest(
+                character_id="aelfric",
+                sheet=chronicle.SheetRoll("Dexterity", "Athletics", specialty=True),
+            )
+        )
+        spent = await seat.confidence(number, 1)
+        with pytest.raises(RollRefused) as refused:
+            await seat.confidence(number, 1)
+    finally:
+        await seat.close()
+
+    entries = chronicle.read(table.saga, table.saga.sessions[0]).refresh()
+    roll = next(e for e in entries if e.number == number)
+    assert chronicle.terms_of(roll.body) == [
+        ("Dexterity", 2),
+        ("Athletics", 3),
+        ("Specialty (climbing)", 1),
+    ]
+    confidence = next(e for e in entries if e.number == spent)
+    assert confidence.kind == chronicle.CONFIDENCE
+    assert confidence.body["total"] == roll.body["total"] + 3
+    assert refused.value.why == "At most 1 on one roll (the Confidence Score)."

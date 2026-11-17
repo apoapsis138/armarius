@@ -5,11 +5,10 @@ theme's own frame. Each roll is a card: who rolled (the character, and its
 player in smaller type), what for, the dice as ten-sided dice with their
 faces, and the outcome, set largest. A Free Roll button sits at its foot.
 
-The Session's storyguide cancels a roll with the Cancel beside its dice,
-or Cancel on the dice's menu. A canceled roll keeps its card, quietly:
+The Session's storyguide strikes a roll with the Strike beside its dice,
+or Strike on the dice's menu. A struck roll keeps its card, quietly:
 the card faded, a fine rule struck through its dice and its total, and
-"Canceled" with the reason beneath in small italic. (The
-Chronicle calls it a Void.)
+"Struck" with the reason beneath in small italic.
 
 Collapsed, it is a thin strip on the right edge, its name running up it
 and a count of entries come since; a click opens it again. A Blind result
@@ -175,20 +174,43 @@ class Die(QWidget):
         painter.end()
 
 
+def margin_mark(name: str, label: str, tip: str, p: Palette, hover: str) -> QToolButton:
+    """A quiet word in a card's margin that acts when clicked (Strike,
+    Confidence): italic, unframed, underlined in `hover` under the pointer."""
+    mark = QToolButton()
+    mark.setObjectName(name)
+    mark.setText(label)
+    mark.setToolTip(tip)
+    mark.setAutoRaise(True)
+    mark.setCursor(Qt.CursorShape.PointingHandCursor)
+    mark.setFont(serif(11, italic=True))
+    mark.setStyleSheet(
+        f"QToolButton#{name} {{ color:{p['label']}; border:none;"
+        " background:transparent; padding:0 2px; }"
+        f" QToolButton#{name}:hover {{ color:{hover};"
+        " text-decoration:underline; }"
+    )
+    return mark
+
+
 class DiceRow(QWidget):
-    """A roll's dice: the die's throws, then any botch dice. A canceled
-    roll's are faded and struck through. `cancel` (the Session's
-    storyguide only) is a Cancel beside them, and on the dice's menu."""
+    """A roll's dice: the die's throws, then any botch dice. A struck
+    roll's are faded and struck through. `strike` (the Session's
+    storyguide only) is a Strike beside them, and on the dice's menu;
+    `spend` (whoever may spend Confidence on it) a Confidence beside them,
+    and on the menu too."""
 
     def __init__(
         self,
         body: dict[str, object],
         p: Palette,
-        canceled: bool,
-        cancel: Callable[[], None] | None,
+        struck: bool,
+        strike: Callable[[], None] | None,
+        spend: Callable[[], None] | None = None,
     ) -> None:
         super().__init__()
-        self.p, self.canceled, self._cancel = p, canceled, cancel
+        self.p, self.struck, self._strike = p, struck, strike
+        self._spend = spend
         self.setObjectName("dice")
         rows = QVBoxLayout(self)
         rows.setContentsMargins(0, 4, 0, 4)
@@ -203,7 +225,7 @@ class DiceRow(QWidget):
             zero = stress and index == 0 and shown == 0
             exploded = stress and index < len(faces) - 1 and face == 1
             colour = (
-                p["dim"] if canceled else (p["text-error"] if zero else p["foreground"])
+                p["dim"] if struck else (p["text-error"] if zero else p["foreground"])
             )
             row.addWidget(
                 Die(
@@ -235,7 +257,7 @@ class DiceRow(QWidget):
                 row.addWidget(
                     Die(
                         face,
-                        p["dim"] if canceled else colour,
+                        p["dim"] if struck else colour,
                         BOTCH_DIE,
                         "botch",
                         marked=face == 0,
@@ -243,48 +265,66 @@ class DiceRow(QWidget):
                     )
                 )
         row.addStretch(1)
-        #: Cancel, for the Session's storyguide on a roll still counting: a
-        #: quiet word in the margin, not a framed button.
-        self.cancel_mark = QToolButton()
-        self.cancel_mark.setObjectName("cancel")
-        self.cancel_mark.setText("Cancel")
-        self.cancel_mark.setToolTip("Cancel this roll, with a reason")
-        self.cancel_mark.setAutoRaise(True)
-        self.cancel_mark.setCursor(Qt.CursorShape.PointingHandCursor)
-        self.cancel_mark.setFont(serif(11, italic=True))
-        self.cancel_mark.setStyleSheet(
-            f"QToolButton#cancel {{ color:{p['label']}; border:none;"
-            " background:transparent; padding:0 2px; }"
-            f" QToolButton#cancel:hover {{ color:{p['text-error']};"
-            " text-decoration:underline; }"
+        #: Strike, for the Session's storyguide on a roll still counting, and
+        #: Confidence, for whoever may spend it: quiet words in the margin,
+        #: not framed buttons.
+        self.confidence_mark = margin_mark(
+            "confidence",
+            "Confidence",
+            "Spend Confidence: +3 a point",
+            p,
+            p["foreground"],
         )
-        self.cancel_mark.clicked.connect(self.cancel)
-        self.cancel_mark.setVisible(self.can_cancel)
-        row.addWidget(self.cancel_mark, 0, Qt.AlignmentFlag.AlignBottom)
+        self.confidence_mark.clicked.connect(self.spend)
+        self.confidence_mark.setVisible(self.can_spend)
+        row.addWidget(self.confidence_mark, 0, Qt.AlignmentFlag.AlignBottom)
+        self.strike_mark = margin_mark(
+            "strike",
+            "Strike",
+            "Strike this roll from the count, with a reason",
+            p,
+            p["text-error"],
+        )
+        self.strike_mark.clicked.connect(self.strike)
+        self.strike_mark.setVisible(self.can_strike)
+        row.addWidget(self.strike_mark, 0, Qt.AlignmentFlag.AlignBottom)
 
     @property
-    def can_cancel(self) -> bool:
-        return self._cancel is not None and not self.canceled
+    def can_strike(self) -> bool:
+        return self._strike is not None and not self.struck
 
-    def cancel(self) -> None:
-        if self._cancel is not None and not self.canceled:
-            self._cancel()
+    @property
+    def can_spend(self) -> bool:
+        return self._spend is not None and not self.struck
+
+    def strike(self) -> None:
+        if self._strike is not None and not self.struck:
+            self._strike()
+
+    def spend(self) -> None:
+        if self._spend is not None and not self.struck:
+            self._spend()
 
     def menu(self) -> QMenu:
-        """The dice's menu: Cancel this roll, for the Session's storyguide."""
+        """The dice's menu: Spend Confidence, for whoever may; Strike this
+        roll, for the Session's storyguide."""
         found = QMenu(self)
-        action = found.addAction("Cancel this roll…")
-        action.setEnabled(self.can_cancel)
-        action.triggered.connect(self.cancel)
+        if self._spend is not None:
+            confidence = found.addAction("Spend Confidence…")
+            confidence.setEnabled(self.can_spend)
+            confidence.triggered.connect(self.spend)
+        action = found.addAction("Strike this roll…")
+        action.setEnabled(self.can_strike)
+        action.triggered.connect(self.strike)
         return found
 
     def contextMenuEvent(self, event: QContextMenuEvent) -> None:
-        if self.can_cancel:
+        if self.can_strike or self.can_spend:
             self.menu().exec(event.globalPos())
 
     def paintEvent(self, event: QPaintEvent) -> None:
         super().paintEvent(event)
-        if not self.canceled:
+        if not self.struck:
             return
         # A fine red rule through the dice, as a scribe strikes a line.
         dice = [w for w in self.findChildren(Die) if w.isVisible()]
@@ -334,10 +374,11 @@ def roll_card(
     p: Palette,
     who_rolled: str,
     reason: str | None,
-    cancel: Callable[[], None] | None,
+    strike: Callable[[], None] | None,
+    spend: Callable[[], None] | None = None,
 ) -> Card:
-    """Who rolled, what for, the dice and the outcome; `reason` when the
-    roll was canceled."""
+    """Who rolled, what for, how the total was made (a roll from the
+    sheet), the dice and the outcome; `reason` when the roll was struck."""
     body = entry.body
     card = Card(line, p)
     top = QHBoxLayout()
@@ -369,18 +410,26 @@ def roll_card(
         what = text(str(body["for"]), ink, serif(12, italic=True), wrap=True)
         what.setObjectName("what")
         card.column.addWidget(what)
-    card.column.addWidget(DiceRow(body, p, reason is not None, cancel))
+    terms = chronicle.terms_of(body)
+    if not (len(terms) == 1 and terms[0][0] == "Modifier"):
+        made = text(
+            chronicle.terms_text(terms),
+            p["dim"] if quiet else p["label"],
+            serif(10.5),
+            wrap=True,
+        )
+        made.setObjectName("terms")
+        card.column.addWidget(made)
+    card.column.addWidget(DiceRow(body, p, reason is not None, strike, spend))
     card.column.addWidget(_outcome(body, p, reason is not None))
     if reason is not None:
-        why = text(
-            f"Canceled: {reason}", p["label"], serif(10.5, italic=True), wrap=True
-        )
+        why = text(f"Struck: {reason}", p["label"], serif(10.5, italic=True), wrap=True)
         why.setObjectName("reason")
         card.column.addWidget(why)
     return card
 
 
-def _outcome(body: dict[str, object], p: Palette, canceled: bool) -> QWidget:
+def _outcome(body: dict[str, object], p: Palette, struck: bool) -> QWidget:
     """The total, set largest, and against the Ease Factor what came of it."""
     box = QWidget()
     box.setObjectName("outcome")
@@ -388,12 +437,12 @@ def _outcome(body: dict[str, object], p: Palette, canceled: bool) -> QWidget:
     row.setContentsMargins(0, 0, 0, 0)
     row.setSpacing(8)
     botches = _whole(body, "botches")
-    ink = p["dim"] if canceled else (p["text-error"] if botches else p["foreground"])
+    ink = p["dim"] if struck else (p["text-error"] if botches else p["foreground"])
     font = number_font(20)
-    font.setStrikeOut(canceled)
+    font.setStrikeOut(struck)
     total = text(str(_whole(body, "total")), ink, font)
     total.setObjectName("total")
-    if canceled:
+    if struck:
         # Struck through as rich text: the label's style sheet sets its font.
         total.setTextFormat(Qt.TextFormat.RichText)
         total.setText(f"<s>{_whole(body, 'total')}</s>")
@@ -507,6 +556,8 @@ class ChroniclePane(QWidget):
         #: Hands a roll to the host from a Remote seat (None: this is the
         #: host's computer, which rolls itself).
         self.send_roll: free_roll.Submit | None = None
+        #: Hands a Confidence spend to the host from a Remote seat.
+        self.send_confidence: free_roll.Spend | None = None
         self.who = ""
         self._stop: Callable[[], None] | None = None
         self.collapsed = False
@@ -587,11 +638,13 @@ class ChroniclePane(QWidget):
         book: chronicle.Chronicle | chronicle.SeatChronicle,
         who: str,
         send_roll: free_roll.Submit | None = None,
+        send_confidence: free_roll.Spend | None = None,
     ) -> None:
         """Show `book`, as `who` may see it, and listen for what comes. A
         Remote seat's book holds only what its host sent it; `send_roll`
-        sends its rolls to the host."""
+        sends its rolls to the host, `send_confidence` its Confidence."""
         self.send_roll = send_roll
+        self.send_confidence = send_confidence
         same = self.book is book and self.who == who
         self.saga, self.session = saga, session
         self.roll_button.setEnabled(free_roll.may_roll(saga, session, who))
@@ -644,6 +697,13 @@ class ChroniclePane(QWidget):
             return
         if entry.kind == chronicle.VOID:
             self._redraw_cards()
+            return
+        if entry.kind == chronicle.CONFIDENCE:
+            # Its roll's Confidence may be spent: that card is drawn again.
+            self._redraw_cards()
+            if self.collapsed and self._reads(entry):
+                self.unseen += 1
+                self._draw_strip()
             return
         if not self._reads(entry):
             return
@@ -713,14 +773,18 @@ class ChroniclePane(QWidget):
             self.cards.insertWidget(self.cards.count() - 1, note_card(line, self.p))
             return
         number = entry.number
-        cancel = (lambda: self.void(number)) if self._cancels() else None
+        strike = (lambda: self.strike_roll(number)) if self._strikes() else None
+        spend = (
+            (lambda: self.spend_confidence(number)) if self._spends(number) else None
+        )
         card = roll_card(
             entry,
             line,
             self.p,
             self._player_name(str(entry.body.get("character_id") or "")),
             struck.get(number),
-            cancel,
+            strike,
+            spend,
         )
         self.cards.insertWidget(self.cards.count() - 1, card)
 
@@ -769,16 +833,46 @@ class ChroniclePane(QWidget):
             session, self.saga
         )
 
-    def _cancels(self) -> bool:
-        """Cancel is the host's: its computer keeps the Chronicle."""
+    def _strikes(self) -> bool:
+        """Strike is the host's: its computer keeps the Chronicle."""
         return self._runs_the_session() and isinstance(self.book, chronicle.Chronicle)
 
-    def void(self, number: int) -> None:
-        """Cancel roll `number` (a Void in the Chronicle), asking why."""
+    def _spends(self, number: int) -> bool:
+        """Whether whoever sits here may spend Confidence on roll `number`
+        now (a point at least)."""
+        saga, session, book = self.saga, self.session, self.book
+        if saga is None or session is None or book is None:
+            return False
+        return chronicle.why_not_spend(book, saga, session, number, 1, self.who) is None
+
+    def spend_confidence(self, number: int) -> None:
+        """Spend Confidence on roll `number`, asking how much."""
+        saga, session, book = self.saga, self.session, self.book
+        if saga is None or session is None or book is None:
+            return
+        who = self.who
+
+        def spend(points: int) -> str | None:
+            if not isinstance(book, chronicle.Chronicle):
+                return "Confidence goes to the host."
+            try:
+                chronicle.spend_confidence(book, saga, session, number, points, by=who)
+            except ValueError as problem:
+                return str(problem)
+            return None
+
+        seat = self.send_confidence
+        sent: free_roll.Spend = (
+            (lambda points: seat(number, points)) if seat is not None else spend
+        )
+        self.run(free_roll.confidence_form(book, saga, session, number, who, sent))
+
+    def strike_roll(self, number: int) -> None:
+        """Strike roll `number` from the count, asking why."""
         saga, session, book = self.saga, self.session, self.book
         if saga is None or session is None or not isinstance(book, chronicle.Chronicle):
             return
-        self.run(free_roll.void_form(book, session, number, self.who, saga))
+        self.run(free_roll.strike_form(book, session, number, self.who, saga))
 
     def free_roll(self) -> None:
         saga, session, book = self.saga, self.session, self.book

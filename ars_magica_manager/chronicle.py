@@ -5,12 +5,16 @@ Begin Session opens it and End Session closes it; only the Session's
 storyguide does either, and at most one Session of a saga is Under way.
 Every entry has the same envelope (its number within the Session, time,
 kind, author, Audience, and a body by kind) and nothing is ever changed or
-removed: a Void is a new entry naming the roll it strikes.
+removed: a Strike (stored as kind `void`) is a new entry naming the roll
+it takes from the count, and a Confidence spend a new entry naming the
+roll it raises.
 
-Pattern: Command. A RollRequest is what to roll, as data; `free_roll`
-carries it out once, at the host, with the host's own source of chance,
-and the Chronicle is the list of the commands carried out. Asking again
-makes a second roll, never a replacement.
+Pattern: Command. A RollRequest is what to roll, as data (for a roll from
+the sheet, the Characteristic, the Ability and whether a Specialty
+applies, never a number); `free_roll` carries it out once, at the host,
+with the host's own source of chance, working a sheet roll's terms out
+from the saga as it stands, and the Chronicle is the list of the commands
+carried out. Asking again makes a second roll, never a replacement.
 
 Who may see an entry is decided here, once: `sees` is the one audience
 filter every reader goes through (the host's own window now; seats and
@@ -44,8 +48,9 @@ from typing import Any, Protocol
 from . import paths, shapes, viewing
 from .files import held_lock
 from .markup import escape
-from .models import Saga, Session
-from .rules import dice
+from .models import Character, Saga, Session
+from .models.definitions import ROLL_CHARACTERISTICS
+from .rules import creation_access, derived, dice, scores
 
 # -- Audience --
 
@@ -406,6 +411,7 @@ def end(saga: Saga, session: Session, *, by: str) -> Chronicle:
         raise ValueError(problem)
     book = read(saga, session)
     book.add(END, by, table(), {})
+    spend_at_end(saga, book)
     session.under_way = False
     session.played = True
     _open.pop(book.path, None)
@@ -420,15 +426,35 @@ BLIND = "blind"
 
 ROLL = "roll"
 ROLLED = "rolled"
+#: A Strike: the storyguide takes a roll from the count. Stored as "void",
+#: the word it was first written under, so every Chronicle file reads back.
 VOID = "void"
+CONFIDENCE = "confidence"
+
+#: Extra botch dice for an Ability used with no score in it (DE p. 157).
+UNTRAINED_BOTCH_DICE = 3
+#: What one Confidence Point adds to a roll's total (DE p. 29).
+CONFIDENCE_BONUS = 3
+
+
+@dataclass(frozen=True)
+class SheetRoll:
+    """What a roll from the sheet asks for: a Characteristic (as the book
+    names it, "Dexterity"), an Ability or none, and whether a Specialty of
+    that Ability applies. The scores come from the saga at the host."""
+
+    characteristic: str
+    ability: str = ""
+    specialty: bool = False
 
 
 @dataclass(frozen=True)
 class RollRequest:
-    """A Free roll, as data: a stress or simple die, the modifier the
-    roller typed, the botch dice, an optional Ease Factor, what it is for,
-    the character it is for (none: the storyguide's own), and who may see
-    it (PUBLIC, PRIVATE or BLIND)."""
+    """A roll, as data: a stress or simple die, the modifier the roller
+    typed (for a roll from the sheet, anything beyond the sheet), the
+    botch dice, an optional Ease Factor, what it is for, the character it
+    is for (none: the storyguide's own), who may see it (PUBLIC, PRIVATE or
+    BLIND) and, for a roll from the sheet, what on the sheet it rolls."""
 
     stress: bool = True
     modifier: int = 0
@@ -437,6 +463,82 @@ class RollRequest:
     for_what: str = ""
     character_id: str = ""
     visibility: str = PUBLIC
+    sheet: SheetRoll | None = None
+
+
+#: One part of a roll's modifier, as the roll shows it: its label and
+#: its amount.
+Term = tuple[str, int]
+
+
+def _character(saga: Saga, character_id: str) -> Character | None:
+    return next((c for c in saga.characters if c.id == character_id), None)
+
+
+def why_not_act(character: Character) -> str | None:
+    """Why `character` can take no action now (DE p. 404: Incapacitated;
+    an Unconscious or dead character neither), or None."""
+    if character.wounds.dead:
+        return f"{character.name} is dead."
+    if character.wounds.incapacitated:
+        return f"{character.name} is Incapacitated: no actions."
+    if character.fatigue_level == "unconscious":
+        return f"{character.name} is Unconscious."
+    return None
+
+
+def sheet_terms(saga: Saga, request: RollRequest) -> tuple[list[Term], int]:
+    """A roll's terms, and the botch dice it adds. For a roll from the
+    sheet: the Characteristic, the Ability (+1 with its Specialty, and any
+    fixed bonus such as Puissant), the wound and Fatigue penalties as the
+    character's Virtues and Flaws adjust them (DE pp. 403-404), and
+    anything typed beyond; an Ability with no score is rolled at 0 with
+    three extra botch dice (DE p. 157). A Free roll's one term is its
+    modifier. ValueError says why the sheet can't be rolled."""
+    sheet = request.sheet
+    if sheet is None:
+        return [("Modifier", request.modifier)], 0
+    character = _character(saga, request.character_id)
+    if character is None:
+        raise ValueError("Roll from a character's sheet.")
+    if sheet.characteristic not in ROLL_CHARACTERISTICS:
+        raise ValueError("Choose a Characteristic.")
+    problem = why_not_act(character)
+    if problem:
+        raise ValueError(problem)
+    value = getattr(character.characteristics, sheet.characteristic.lower())
+    terms: list[Term] = [(sheet.characteristic, value)]
+    extra = 0
+    if sheet.ability:
+        held = next((a for a in character.abilities if a.name == sheet.ability), None)
+        if held is None and creation_access.needs_experience(sheet.ability):
+            raise ValueError(f"{sheet.ability} can't be used without experience in it.")
+        if held is None:
+            terms.append((f"{sheet.ability} (no score)", 0))
+            extra = UNTRAINED_BOTCH_DICE
+        else:
+            level, bonus = scores.ability_score(character, sheet.ability)
+            terms.append((sheet.ability, level))
+            if bonus:
+                terms.append((f"{sheet.ability} bonus", bonus))
+        if sheet.specialty:
+            specialty = held.specialty if held is not None else None
+            if not specialty:
+                raise ValueError(
+                    f"{character.name} has no Specialty in {sheet.ability}."
+                )
+            terms.append((f"Specialty ({specialty})", 1))
+    elif sheet.specialty:
+        raise ValueError("A Specialty belongs to an Ability.")
+    wounds = derived.wound_penalty(character.wounds, character.virtues_flaws)
+    if wounds:
+        terms.append(("Wounds", wounds))
+    fatigue = derived.fatigue_penalty(character.fatigue_level, character.virtues_flaws)
+    if fatigue:
+        terms.append(("Fatigue", fatigue))
+    if request.modifier:
+        terms.append(("Modifier", request.modifier))
+    return terms, extra
 
 
 def why_not_roll(
@@ -453,6 +555,10 @@ def why_not_roll(
     known = {c.id for c in saga.characters}
     if request.character_id and request.character_id not in known:
         return "That character isn't in the saga."
+    try:
+        sheet_terms(saga, request)
+    except ValueError as problem:
+        return str(problem)
     if storyguide:
         return None
     if request.visibility == BLIND:
@@ -474,10 +580,14 @@ def _character_name(saga: Saga, character_id: str) -> str:
     return next((c.name for c in saga.characters if c.id == character_id), "")
 
 
-def _body(saga: Saga, request: RollRequest, result: dice.Roll) -> dict[str, Any]:
-    """Everything the roll was and every die face it showed."""
+def _body(
+    saga: Saga, request: RollRequest, result: dice.Roll, terms: list[Term]
+) -> dict[str, Any]:
+    """Everything the roll was, how its modifier was made, and every die
+    face it showed."""
     die = result.die
     return {
+        "terms": [list(term) for term in terms],
         "stress": die.stress,
         "faces": list(die.faces),
         "botch_faces": list(die.botch_faces),
@@ -511,12 +621,13 @@ def free_roll(
     problem = why_not_roll(saga, session, request, by)
     if problem:
         raise ValueError(problem)
+    terms, extra = sheet_terms(saga, request)
     result = dice.roll(
         rng or secrets.SystemRandom(),
-        request.modifier,
+        sum(amount for _label, amount in terms),
         ease_factor=request.ease_factor,
         stress=request.stress,
-        botch_dice=request.botch_dice,
+        botch_dice=request.botch_dice + extra if request.stress else 0,
         saga=saga,
     )
     audience = {
@@ -536,10 +647,12 @@ def free_roll(
         body = {"roll": roll.number, "for": request.for_what, "character_name": name}
         return (ROLLED, by, chosen(player), body)
 
-    return book.add(ROLL, by, audience, _body(saga, request, result), then=rolled)
+    return book.add(
+        ROLL, by, audience, _body(saga, request, result, terms), then=rolled
+    )
 
 
-def void(
+def strike(
     book: Chronicle,
     session: Session,
     number: int,
@@ -549,16 +662,16 @@ def void(
     saga: Saga | None = None,
 ) -> Entry:
     """Strike roll `number` from the count, with a reason; the roll stays.
-    The Void is seen by whoever saw the roll."""
+    The Strike is seen by whoever saw the roll."""
     if by != storyguide_of(session, saga):
-        raise ValueError("Only the Session's storyguide voids a roll.")
+        raise ValueError("Only the Session's storyguide strikes a roll.")
     if not reason.strip():
         raise ValueError("Say why the roll doesn't count.")
     target = next((e for e in book.entries if e.number == number), None)
     if target is None or target.kind != ROLL:
         raise ValueError("There is no such roll.")
     if number in voided(book):
-        raise ValueError("That roll is already void.")
+        raise ValueError("That roll is already struck.")
     return book.add(
         VOID, by, target.audience, {"strikes": number, "reason": reason.strip()}
     )
@@ -567,6 +680,114 @@ def void(
 def voided(book: HasEntries) -> dict[int, str]:
     """The rolls struck, by number, with the reason."""
     return {e.body["strikes"]: e.body["reason"] for e in book.entries if e.kind == VOID}
+
+
+# -- Confidence --
+
+
+def confidence_spent(book: HasEntries, character_id: str, on: int | None = None) -> int:
+    """The Confidence Points spent for `character_id` in this Chronicle
+    (on roll `on` alone, when given)."""
+    return sum(
+        int(e.body["points"])
+        for e in book.entries
+        if e.kind == CONFIDENCE
+        and e.body.get("character_id") == character_id
+        and (on is None or e.body.get("roll") == on)
+    )
+
+
+def confidence_left(book: HasEntries, character: Character) -> int:
+    """The Confidence Points `character` has left this Session: the
+    record's, less what this Chronicle has spent (the record falls at End
+    Session)."""
+    return max(
+        0, character.background.confidence_points - confidence_spent(book, character.id)
+    )
+
+
+def why_not_spend(
+    book: HasEntries,
+    saga: Saga,
+    session: Session,
+    number: int,
+    points: int,
+    who: str,
+) -> str | None:
+    """Why `who` may not spend `points` Confidence on roll `number`, or
+    None when they may (DE p. 29): after the roll, on one that didn't
+    botch and isn't struck, up to the character's Confidence Score on any
+    one roll, out of the points left; by one who may roll for the
+    character and sees the roll's number."""
+    target = next((e for e in book.entries if e.number == number), None)
+    if target is None or target.kind != ROLL:
+        return "There is no such roll."
+    if number in voided(book):
+        return "That roll is struck."
+    if target.body.get("botches"):
+        return "Confidence can't be spent on a botch."
+    character = _character(saga, str(target.body.get("character_id") or ""))
+    if character is None:
+        return "Only a character's roll takes Confidence."
+    if not sees(target, who, session, saga):
+        return "Only someone who sees the roll's number spends Confidence on it."
+    plays = {c.character_id for c in session.castings if c.player_id == who}
+    if who != storyguide_of(session, saga) and character.id not in plays:
+        return "Spend Confidence for a character you play tonight."
+    if points < 1:
+        return "Spend at least one point."
+    on_this = confidence_spent(book, character.id, number)
+    if on_this + points > character.background.confidence_score:
+        return (
+            f"At most {character.background.confidence_score} on one roll "
+            "(the Confidence Score)."
+        )
+    left = confidence_left(book, character)
+    if points > left:
+        return f"{character.name} has {left} Confidence left."
+    return None
+
+
+def spend_confidence(
+    book: Chronicle,
+    saga: Saga,
+    session: Session,
+    number: int,
+    points: int,
+    *,
+    by: str,
+) -> Entry:
+    """Spend `points` Confidence on roll `number`: a new entry naming the
+    roll, +3 a point (DE p. 29), seen by whoever saw the roll."""
+    problem = why_not_spend(book, saga, session, number, points, by)
+    if problem:
+        raise ValueError(problem)
+    target = next(e for e in book.entries if e.number == number)
+    character_id = str(target.body["character_id"])
+    raised = confidence_spent(book, character_id, number) + points
+    total = int(target.body["total"]) + CONFIDENCE_BONUS * raised
+    ease = target.body.get("ease_factor")
+    body: dict[str, Any] = {
+        "roll": number,
+        "character_id": character_id,
+        "character_name": target.body.get("character_name", ""),
+        "points": points,
+        "total": total,
+        "ease_factor": ease,
+        "succeeded": total >= ease if isinstance(ease, int) else None,
+        "margin": total - ease if isinstance(ease, int) else None,
+    }
+    return book.add(CONFIDENCE, by, target.audience, body)
+
+
+def spend_at_end(saga: Saga, book: HasEntries) -> None:
+    """Take what the evening spent off each character's Confidence Points."""
+    for character in saga.characters:
+        spent = confidence_spent(book, character.id)
+        if spent:
+            character.background.confidence_points = max(
+                0, character.background.confidence_points - spent
+            )
 
 
 # -- as text --
@@ -584,12 +805,33 @@ def _faces(body: dict[str, Any]) -> str:
     return f"stress die {shown}"
 
 
+def _signed(amount: int) -> str:
+    return f"+{amount}" if amount >= 0 else f"−{abs(amount)}"
+
+
+def terms_of(body: dict[str, Any]) -> list[Term]:
+    """A roll's terms as its entry keeps them; a Free roll written before
+    terms were kept has its modifier as its one term."""
+    kept = body.get("terms")
+    if not isinstance(kept, list):
+        return [("Modifier", int(body["modifier"]))]
+    return [(str(label), int(amount)) for label, amount in kept]
+
+
+def terms_text(terms: list[Term]) -> str:
+    """A sheet roll's terms as a line ("Dexterity +2, Athletics +3,
+    Wounds −1"); a Free roll's modifier alone ("+3")."""
+    if len(terms) == 1 and terms[0][0] == "Modifier":
+        return _signed(terms[0][1])
+    return ", ".join(f"{label} {_signed(amount)}" for label, amount in terms)
+
+
 def _roll_line(body: dict[str, Any]) -> str:
     who = body["character_name"] or "Storyguide"
     what = f" ({body['for']})" if body["for"] else ""
-    modifier = body["modifier"]
-    sign = "+" if modifier >= 0 else "−"
-    line = f"{who}{what}: {_faces(body)}, {sign}{abs(modifier)} = {body['total']}"
+    line = (
+        f"{who}{what}: {_faces(body)}, {terms_text(terms_of(body))} = {body['total']}"
+    )
     if body["botches"]:
         line += f", botch ({body['botches']} zero{'s' if body['botches'] > 1 else ''})"
     if body["ease_factor"] is not None:
@@ -606,7 +848,7 @@ def _line(entry: Entry, struck: dict[int, str]) -> str:
     if entry.kind == ROLL:
         line = _roll_line(entry.body)
         if entry.number in struck:
-            line = f"CANCELED ({struck[entry.number]}): {line}"
+            line = f"STRUCK ({struck[entry.number]}): {line}"
         if entry.audience.to != TABLE:
             line += " [Blind]" if entry.audience.to == STORYGUIDE else " [Private]"
         return line
@@ -615,8 +857,24 @@ def _line(entry: Entry, struck: dict[int, str]) -> str:
         what = f" ({entry.body['for']})" if entry.body["for"] else ""
         return f"{who}{what}: the storyguide rolled."
     if entry.kind == VOID:
-        return f"Roll {entry.body['strikes']} is void: {entry.body['reason']}"
+        return f"Roll {entry.body['strikes']} is struck: {entry.body['reason']}"
+    if entry.kind == CONFIDENCE:
+        return confidence_line(entry.body)
     return UNKNOWN
+
+
+def confidence_line(body: dict[str, Any]) -> str:
+    """A Confidence spend's line."""
+    who = body["character_name"] or "A character"
+    points = int(body["points"])
+    line = (
+        f"{who} spends {points} Confidence on roll {body['roll']}: "
+        f"+{CONFIDENCE_BONUS * points}, now {body['total']}"
+    )
+    if body.get("ease_factor") is not None:
+        verdict = "succeeds" if body["succeeded"] else "fails"
+        line += f", {verdict}, margin {body['margin']}"
+    return line
 
 
 def text(entries: list[Entry], book: Chronicle) -> str:

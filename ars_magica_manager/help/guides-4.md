@@ -2394,11 +2394,13 @@ Friday's game has started round your desk, and Ana's magus Aelfric is climbing a
 1. **Begin the Session.** On the saga page's **Saga Management**, choose Friday's Session in [Sessions](help:tab-content-sessions) and click **Begin Session**. The [Chronicle pane](help:chronicle-pane) opens on the right.
 2. **Roll.** Click **Free Roll**. Choose Aelfric, a stress die, Modifier 9 (Strength + Athletics), one botch die, Ease Factor 12, For "Climb the wall", and Public. Click **Roll**.
 3. **Read it.** The card shows each die face. Two 1s and a 5 is 5 × 4 = 20, so 29 against 12: it succeeds by 17 (DE p. 7).
-4. **Roll Blind** for something only you should know, such as whether Aelfric notices the ambush. Ana sees only that you rolled.
-5. **Cancel a mistake.** Click **Cancel** beside the dice of a roll made for the wrong character. Say why: the roll stays in the Chronicle, struck through and marked Canceled, with your reason.
-6. **End the Session** with **End Session** on its row. It's marked Played, and its Chronicle is kept to read from the row.
+4. **Or roll from the sheet.** On Aelfric's sheet, click **Roll** by Abilities. Choose Strength and Athletics, tick **Specialty applies** if he climbs well, and click **Roll**. The host adds his scores, his Specialty and any wound or Fatigue penalty, and the card shows how. See [Roll from the sheet](help:sheet-roll).
+5. **Spend Confidence** on a near miss. Ana clicks **Confidence** beside her roll's dice and spends a point: +3, and the new total shows as a card of its own (DE p. 29).
+6. **Roll Blind** for something only you should know, such as whether Aelfric notices the ambush. Ana sees only that you rolled.
+7. **Strike a mistake.** Click **Strike** beside the dice of a roll made for the wrong character. Say why: the roll stays in the Chronicle, struck through and marked Struck, with your reason.
+8. **End the Session** with **End Session** on its row. It's marked Played, its Chronicle is kept to read from the row, and the Confidence spent comes off each sheet.
 
-**See also:** [The Chronicle](help:chronicle), [Free roll](help:free-roll)
+**See also:** [The Chronicle](help:chronicle), [Free roll](help:free-roll), [Roll from the sheet](help:sheet-roll)
 
 # How to plan and record a Session
 <!-- help: guide-sessions -->

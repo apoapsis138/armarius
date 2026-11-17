@@ -318,7 +318,7 @@ def test_a_void_strikes_a_roll_with_a_reason_and_the_roll_stays() -> None:
     saga, session, book = _begun()
     roll = _roll(book, saga, session, Faces(5))
 
-    chronicle.void(book, session, roll.number, "Rolled for the wrong grog", by=HOST)
+    chronicle.strike(book, session, roll.number, "Rolled for the wrong grog", by=HOST)
 
     assert [e.kind for e in book.entries] == ["begin", "roll", "void"]
     assert chronicle.voided(book) == {2: "Rolled for the wrong grog"}
@@ -329,21 +329,21 @@ def test_only_the_storyguide_voids_and_only_once_with_a_reason() -> None:
     roll = _roll(book, saga, session, Faces(5), by="ana", character_id="aelfric")
 
     with pytest.raises(ValueError):
-        chronicle.void(book, session, roll.number, "No", by="ana")
+        chronicle.strike(book, session, roll.number, "No", by="ana")
     with pytest.raises(ValueError):
-        chronicle.void(book, session, roll.number, "  ", by=HOST)
+        chronicle.strike(book, session, roll.number, "  ", by=HOST)
     with pytest.raises(ValueError):
-        chronicle.void(book, session, 1, "Not a roll", by=HOST)
-    chronicle.void(book, session, roll.number, "Wrong roll", by=HOST)
+        chronicle.strike(book, session, 1, "Not a roll", by=HOST)
+    chronicle.strike(book, session, roll.number, "Wrong roll", by=HOST)
     with pytest.raises(ValueError):
-        chronicle.void(book, session, roll.number, "Again", by=HOST)
+        chronicle.strike(book, session, roll.number, "Again", by=HOST)
 
 
 def test_a_void_of_a_blind_roll_is_seen_only_by_who_saw_the_roll() -> None:
     saga, session, book = _begun()
     roll = _roll(book, saga, session, Faces(5), visibility=chronicle.BLIND)
 
-    chronicle.void(book, session, roll.number, "Never mind", by=HOST)
+    chronicle.strike(book, session, roll.number, "Never mind", by=HOST)
 
     assert _seen(book, session, "ana") == []
 
@@ -414,12 +414,12 @@ def test_the_chronicle_as_text_shows_each_face_and_a_void() -> None:
         for_what="Climb the wall",
     )
     _roll(book, saga, session, Faces(0, 0), modifier=3, for_what="The weather")
-    chronicle.void(book, session, roll.number, "Wrong wall", by=HOST)
+    chronicle.strike(book, session, roll.number, "Wrong wall", by=HOST)
 
     shown = chronicle.text(book.seen_by(HOST, session), book)
 
     assert (
-        "CANCELED (Wrong wall): Aelfric (Climb the wall): stress die 1 → 1 → 5" in shown
+        "STRUCK (Wrong wall): Aelfric (Climb the wall): stress die 1 → 1 → 5" in shown
     )
     assert "+9 = 29 against 12: succeeds, margin 17" in shown
     assert "Storyguide (The weather): stress die 0; botch dice 0, +3 = 0" in shown

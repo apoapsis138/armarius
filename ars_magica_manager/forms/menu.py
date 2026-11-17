@@ -25,6 +25,7 @@ from typing import Any, NamedTuple
 from .. import (
     aging_due,
     arms,
+    chronicle,
     creation,
     creatures,
     cult_transfer,
@@ -104,6 +105,7 @@ from ..models import (
     Spell,
     Tribunal,
 )
+from ..models.definitions import ROLL_CHARACTERISTICS
 from ..rules import covenfolk, creation_tradition, lab_seasons
 from ..rules import creation as creation_rules
 from ..rules import creation_covenant as cov_creation
@@ -145,6 +147,7 @@ from . import pilgrimage as pilgrimage_forms
 from . import reveal as reveal_forms
 from . import season as season_forms
 from . import sessions as session_forms
+from . import sheet_roll as sheet_roll_forms
 from . import ship_build as ship_build_forms
 from . import sin as sin_forms
 from . import threshold as threshold_forms
@@ -707,6 +710,10 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     # On the Hooks' points line, not their title's, where it would wrap.
     "suggest_story": ((NodeKind.COVENANT, "Hooks"),),
     "trait_roll": ((NodeKind.CHARACTER, "Personality Traits"),),
+    "sheet_roll": (
+        (NodeKind.CHARACTER, "Abilities"),
+        (NodeKind.CHARACTER, "Characteristics"),
+    ),
     # The Shared tick in a known spell's form.
     "share_spell": ((NodeKind.CHARACTER, "Known Spells"),),
     "boost_spell": ((NodeKind.CHARACTER, "Known Spells"),),
@@ -1929,6 +1936,30 @@ def _character(page: Page) -> Character | None:
     return page.character
 
 
+def _sheet_roll(page: Page) -> Command:
+    """Roll from the sheet: the chosen Ability or Characteristic (the
+    terminal knows the row; the desktop's button asks)."""
+    character = page.character
+    if character is None:
+        return Refuse("Roll", "That isn't available here.")
+    problem = chronicle.why_not_act(character)
+    if problem:
+        return Refuse("Roll", escape(problem))
+    ability, characteristic = "", ""
+    row = page.row if page.row is not None else -1
+    if page.section == sheet_roll_forms.ABILITIES and 0 <= row < len(
+        character.abilities
+    ):
+        ability = character.abilities[row].name
+    if page.section == sheet_roll_forms.CHARACTERISTICS and 0 <= row < len(
+        ROLL_CHARACTERISTICS
+    ):
+        characteristic = ROLL_CHARACTERISTICS[row]
+    return sheet_roll_forms.roll_form(
+        page.saga, character, ability=ability, characteristic=characteristic
+    )
+
+
 def _on_agent(
     build: Callable[[Page, Character, int], Command],
 ) -> Callable[[Page], Command]:
@@ -2046,6 +2077,7 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "build_ship": _needs(_covenant, ship_build_forms.build_form),
     "cross_threshold": _needs(_neighbour, threshold_forms.threshold_form),
     "trait_roll": _needs(_character, trait_roll_forms.roll_form),
+    "sheet_roll": lambda page: _sheet_roll(page),
     # The Agents list's chosen agent.
     "impress_agent": _on_agent(
         lambda page, character, row: agent_forms.impress(page.saga, character, row)

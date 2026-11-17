@@ -317,6 +317,27 @@ class SeatSession:
         finally:
             await client.close()
 
+    def spend_confidence(self, number: int, points: int) -> str | None:
+        """Ask the host to spend `points` Confidence on roll `number`; None
+        once it is in the Chronicle, else the host's reason (as `roll`)."""
+        try:
+            self._loop.run(self._confidence(number, points), timeout=ROLL_WAIT)
+        except RollRefused as refused:
+            return refused.why
+        except NeedsPasscode, NoCredential:
+            return "Sign in again to spend Confidence."
+        except ChannelError, SignInError, ConnectionError, TimeoutError:
+            return "The host can't be reached just now."
+        return None
+
+    async def _confidence(self, number: int, points: int) -> int:
+        client = await RemoteClient.connect(self.url, self.pin)
+        try:
+            await client.sign_in_with(self._key, self.vault)
+            return await client.confidence(number, points)
+        finally:
+            await client.close()
+
     def follow_chronicle(
         self,
         deliver: Callable[[str, chronicle.Entry], None],

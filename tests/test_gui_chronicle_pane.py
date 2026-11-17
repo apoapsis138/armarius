@@ -34,7 +34,15 @@ from ars_magica_manager.gui.chronicle_pane import (
 from ars_magica_manager.gui.style.liveries import THEMES
 from ars_magica_manager.gui.themes import SCRIPTORUM
 from ars_magica_manager.gui.window import MainWindow
-from ars_magica_manager.models import Casting, Character, Player, Saga, Session
+from ars_magica_manager.models import (
+    Ability,
+    Casting,
+    Character,
+    Characteristics,
+    Player,
+    Saga,
+    Session,
+)
 
 HOST = viewing.HOST
 
@@ -184,17 +192,17 @@ def test_the_storyguide_sees_a_blind_roll_once() -> None:
 
 
 @pytest.mark.usefixtures("app")
-def test_a_canceled_roll_is_struck_through_with_the_reason_beneath() -> None:
+def test_a_struck_roll_is_struck_through_with_the_reason_beneath() -> None:
     pane, saga, session, book, _ran = _pane()
     _roll(saga, session, book, 5)
 
-    chronicle.void(book, session, 2, "Wrong grog", by=HOST)
+    chronicle.strike(book, session, 2, "Wrong grog", by=HOST)
 
     card = pane.card_list()[-1]
     dice = card.findChild(DiceRow, "dice")
-    assert isinstance(dice, DiceRow) and dice.canceled
-    assert _text(card, "reason") == "Canceled: Wrong grog"
-    assert card.line.startswith("CANCELED (Wrong grog)")
+    assert isinstance(dice, DiceRow) and dice.struck
+    assert _text(card, "reason") == "Struck: Wrong grog"
+    assert card.line.startswith("STRUCK (Wrong grog)")
 
 
 @pytest.mark.usefixtures("app")
@@ -285,22 +293,22 @@ def test_no_pane_with_the_preview_off() -> None:
 
 
 @pytest.mark.usefixtures("app")
-def test_the_sessions_storyguide_cancels_a_roll_from_its_dice() -> None:
+def test_the_sessions_storyguide_strikes_a_roll_from_its_dice() -> None:
     pane, saga, session, book, ran = _pane()
     _roll(saga, session, book, 5)
     dice = pane.card_list()[-1].findChild(DiceRow, "dice")
-    assert isinstance(dice, DiceRow) and dice.can_cancel
+    assert isinstance(dice, DiceRow) and dice.can_strike
     menu = dice.menu()
-    assert [a.text() for a in menu.actions()] == ["Cancel this roll…"]
+    assert [a.text() for a in menu.actions()] == ["Strike this roll…"]
 
-    dice.cancel_mark.click()
+    dice.strike_mark.click()
 
     form = ran[-1]
-    assert isinstance(form, commands.Form) and form.title == "Cancel Roll 2"
+    assert isinstance(form, commands.Form) and form.title == "Strike Roll 2"
     form.apply({"reason": "Wrong grog"})
     assert chronicle.voided(book) == {2: "Wrong grog"}
     again = pane.card_list()[-1].findChild(DiceRow, "dice")
-    assert isinstance(again, DiceRow) and not again.can_cancel
+    assert isinstance(again, DiceRow) and not again.can_strike
 
 
 @pytest.mark.usefixtures("app")
@@ -309,7 +317,7 @@ def test_a_player_has_no_void_and_rolls_only_with_a_character_tonight() -> None:
     _roll(saga, session, book, 5)
 
     dice = pane.card_list()[-1].findChild(DiceRow, "dice")
-    assert isinstance(dice, DiceRow) and not dice.can_cancel
+    assert isinstance(dice, DiceRow) and not dice.can_strike
     assert pane.roll_button.isEnabled()
     pane.attach(saga, session, book, "")  # the table: no one in particular
     assert not pane.roll_button.isEnabled()
@@ -473,3 +481,36 @@ def test_an_exploding_one_shows_by_its_shape_not_colour_alone() -> None:
     dice = pane.card_list()[-1].findChildren(Die, "die")
     assert [(d.face, d.doubled) for d in dice] == [(1, True), (1, True), (5, False)]
     assert len({d.colour for d in dice}) == 1  # the same ink: only the rim differs
+
+
+@pytest.mark.usefixtures("app")
+def test_a_sheet_roll_shows_how_it_was_made_and_takes_confidence() -> None:
+    pane, saga, session, book, ran = _pane("ana")
+    aelfric = saga.characters[0]
+    aelfric.characteristics = Characteristics(dexterity=2)
+    aelfric.abilities = [Ability("Athletics", xp=30)]
+    aelfric.background.confidence_score = 1
+    aelfric.background.confidence_points = 2
+    request = chronicle.RollRequest(
+        character_id="aelfric", sheet=chronicle.SheetRoll("Dexterity", "Athletics")
+    )
+    chronicle.free_roll(book, saga, session, request, by="ana", rng=Faces(5))
+    card = pane.card_list()[-1]
+
+    assert _text(card, "terms") == "Dexterity +2, Athletics +3"
+    dice = card.findChild(DiceRow, "dice")
+    assert isinstance(dice, DiceRow) and dice.can_spend and not dice.can_strike
+    assert [a.text() for a in dice.menu().actions()] == [
+        "Spend Confidence…",
+        "Strike this roll…",
+    ]
+
+    dice.confidence_mark.click()
+
+    form = ran[-1]
+    assert isinstance(form, commands.Form)
+    assert form.title == "Spend Confidence on Roll 2"
+    assert form.apply({"points": 1}) == []
+    assert book.entries[-1].kind == chronicle.CONFIDENCE
+    again = pane.card_list()[-2].findChild(DiceRow, "dice")
+    assert isinstance(again, DiceRow) and not again.can_spend  # the Score is 1
