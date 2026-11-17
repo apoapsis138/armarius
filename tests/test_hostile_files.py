@@ -389,3 +389,34 @@ def test_a_refused_save_is_said_with_its_field_and_the_file_unchanged():
         f"Not saved: characters[{saga.characters[0].id}].covenant_id: not a plain id. "
         "The file is unchanged."
     )
+
+
+# -- from the review of PR 2 ---------------------------------------------------
+
+
+def test_an_overlay_section_pack_that_cannot_be_planned_changes_nothing():
+    saga, overlay, section = _provence_with_overlay()
+    del section["pack"]["kind"]
+    before = asdict(saga)
+    with pytest.raises(ValueError, match=r"overlay\[\d+\]\.pack"):
+        packs.apply_overlay(saga, overlay)
+    assert asdict(saga) == before
+
+
+def test_a_pack_whose_overlay_key_is_not_a_list_is_still_shape_checked(tmp_path):
+    data = transfer.export_saga_data(Saga(id="src", name="Source"))
+    data["overlay"] = {}
+    data["saga"]["covenants"] = {"not": "a list"}
+    path = tmp_path / "odd.amm.json"
+    path.write_text(json.dumps(data), encoding="utf-8")
+    with pytest.raises(ValueError, match="covenants: expected a list"):
+        transfer.read(path)
+
+
+def test_a_refused_save_leaves_the_saga_as_it_was_in_hand():
+    saga, _ = _saved()
+    saga.saved_by = "Before"
+    saga.characters[0].covenant_id = "../x"
+    with pytest.raises(ValueError):
+        storage.save_saga(saga, storage.Saver("After"))
+    assert saga.saved_by == "Before"

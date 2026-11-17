@@ -134,6 +134,17 @@ class Saved:
     conflicts: list[str]
 
 
+def checked(saga: Saga) -> dict[str, Any]:
+    """`saga` as plain data, once it passes the shape check it will meet
+    when it is next opened (ValueError naming the field): what save_saga
+    writes, and what a caller that must not act on a saga that couldn't be
+    saved asks first."""
+    shapes.check_built(saga)
+    plain = asdict(saga)
+    shapes.check_raw(plain, Saga)
+    return plain
+
+
 def save_saga(saga: Saga, saver: Saver | None = None) -> Saved:
     """Save `saga`, for `saver` (this copy's own reader by default). Other copies of
     the app may share the file (a hosted saga): under a lock, the file is re-read and
@@ -147,11 +158,10 @@ def save_saga(saga: Saga, saver: Saver | None = None) -> Saved:
     saver = saver or Saver(saved_by, guard)
     path = saga_path(saga.id)
     newer = _newer_data.get(str(path))
+    plain = checked(saga)
     saga.app_version = __version__ if newer is None else newer["app_version"]
     saga.saved_by = saver.name
-    plain = asdict(saga)
-    shapes.check_built(saga)
-    shapes.check_raw(plain, Saga)
+    plain["app_version"], plain["saved_by"] = saga.app_version, saga.saved_by
     ours = _with_newer(plain, newer)
     with _saga_lock(saga.id):
         seen = _last_seen.get(str(path))

@@ -1082,6 +1082,28 @@ def _rebuilt(record: Any, change: dict[str, Any]) -> Any:
     return rebuilt
 
 
+def _check_section(saga: Saga, section: dict[str, Any], index: int) -> None:
+    """Plan the section's pack and build each of its overwrites, changing
+    nothing, so that an overlay that would fail part-way is refused before
+    any of it is applied (ValueError naming it)."""
+    try:
+        plan = transfer.plan_import(saga, section["pack"])
+    except (KeyError, ValueError) as problem:
+        raise ValueError(f"overlay[{index}].pack: {problem}") from None
+    for change in section["changes"]:
+        record = _record(saga, change) or next(
+            (
+                r
+                # The plan names its lists as the saga does.
+                for r in getattr(plan, change["list"])
+                if r.name == change["name"] and getattr(r, "kind", "") == change["kind"]
+            ),
+            None,
+        )
+        if record is not None:
+            _rebuilt(record, change)
+
+
 def apply_overlay(
     saga: Saga, data: dict[str, Any], values: dict[str, Any] | None = None
 ) -> list[str]:
@@ -1092,12 +1114,7 @@ def apply_overlay(
     check_overlay(data)
     found = _sections(saga, data)
     for section in found:
-        # Each overwrite of a record the saga has now, built and checked
-        # before any section is applied.
-        for change in section["changes"]:
-            record = _record(saga, change)
-            if record is not None:
-                _rebuilt(record, change)
+        _check_section(saga, section, data[OVERLAY].index(section))
     book = str(data.get("book") or "")
     if book not in saga.overlays:
         saga.overlays.append(book)
