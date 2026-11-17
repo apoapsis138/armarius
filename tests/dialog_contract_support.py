@@ -13,6 +13,10 @@ before and after a dialog is rebuilt (e.g. as a FieldsDialog). For each:
 - an invalid entry keeps the dialog open with an error and saves nothing;
 - a valid edit, saved, lands in the saved saga.
 
+"Saved" counts the saga's Chronicle files too (the Virtual Tabletop's rolls
+are written there, never to the saga), so a form that rolls is held to
+the same contract: Cancel and a refused entry write no line.
+
 A field is found by the text of its label (a prefix match, ignoring a
 trailing colon), or -- for the few fields drawn without a label -- by an
 alias to its widget id. A Checkbox may also be found by its own label.
@@ -36,7 +40,7 @@ from textual.widgets import (
     TextArea,
 )
 
-from ars_magica_manager import storage
+from ars_magica_manager import chronicle, storage
 from ars_magica_manager.models import Possession, Saga, VirtueFlawInstance
 from ars_magica_manager.tui.screens import SelectableList
 from ars_magica_manager.tui.screens.prompts import ConfirmScreen
@@ -206,7 +210,22 @@ def error_text(dialog) -> str:
 
 
 def _saved_file() -> str:
-    return storage.saga_path(SAGA_ID).read_text(encoding="utf-8")
+    """What is on disk for the saga: its file, then each of its Chronicle
+    files."""
+    parts = [storage.saga_path(SAGA_ID).read_text(encoding="utf-8")]
+    parts += [p.read_text(encoding="utf-8") for p in chronicle.files_of(SAGA_ID)]
+    return "\n".join(parts)
+
+
+def last_chronicle_entry() -> chronicle.Entry | None:
+    """The newest entry of the saga's newest Chronicle file, for a
+    contract's `saved` (a roll is written there, not to the saga)."""
+    files = chronicle.files_of(SAGA_ID)
+    if not files:
+        return None
+    book = chronicle.Chronicle(files[-1], [])
+    book.refresh()
+    return book.entries[-1] if book.entries else None
 
 
 async def _fill(pilot, dialog, contract: Contract, values: dict[str, Any]) -> None:
@@ -261,9 +280,11 @@ async def run_contract(name: str, contract: Contract) -> None:
     - a valid edit, saved, lands in the saved saga and the screen shows it.
     """
     app = new_app()
-    before = _saved_file()
     async with app.run_test(size=(120, 45)) as pilot:
         base, dialog = await open_dialog(pilot, app, name)
+        # Taken once the dialog is open: an opener may set the scene first
+        # (a Session begun, for a roll), and only what the form writes counts.
+        before = _saved_file()
         for button in (save_button(dialog), cancel_button(dialog)):
             region = button.region
             assert region.height > 0, button.id

@@ -12,6 +12,7 @@ from dialog_contract_support import (
     familiar,
     field_widget,
     laboratory,
+    last_chronicle_entry,
     last_gear,
     run_contract,
     save_button,
@@ -21,7 +22,7 @@ from dialog_openers import new_app, open_dialog
 from support import wait_until
 from textual.widgets import Select
 
-from ars_magica_manager import catalog
+from ars_magica_manager import catalog, chronicle
 from ars_magica_manager.models import AnimalForm, VirtueFlawInstance
 from ars_magica_manager.rules import creation_characteristics as cch
 from ars_magica_manager.rules import divine_state as ds
@@ -1599,6 +1600,23 @@ CONTRACTS: dict[str, Contract] = {
         saved=lambda s: len(character(s).personality_traits) > 0,
         expected=True,
         invalid=[{"Roll": "resist", "The roll's own total": "x"}],
+    ),
+    # Roll from the sheet (the Virtual Tabletop preview): written to the
+    # Chronicle, never the saga.
+    "sheet roll": Contract(
+        prefill={"Characteristic": "Intelligence", "Ability": ""},
+        edits={"Characteristic": "Dexterity", "For": "Climb the wall"},
+        saved=lambda _s: (
+            (
+                entry.kind,
+                entry.body["for"],
+                chronicle.terms_of(entry.body)[0][0],
+            )
+            if (entry := last_chronicle_entry()) is not None
+            else None
+        ),
+        expected=("roll", "Climb the wall", "Dexterity"),
+        invalid=[{"Specialty applies": True}],
     ),
 }
 
