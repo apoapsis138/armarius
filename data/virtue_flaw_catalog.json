@@ -15234,6 +15234,12 @@
       "audience": [
         "magic being"
       ],
+      "modifiers": [
+        {
+          "applies_to": "fatigue_penalty",
+          "amount": 5
+        }
+      ],
       "source": "RoP:M",
       "summary": "No Fatigue levels, penalties or rolls, cannot fall unconscious, cannot exert itself; needs no sleep (two extra study seasons a year).",
       "description": "The character is tireless, meaning that it has no Fatigue levels, does not suffer Fatigue penalties, does not need to make Fatigue rolls, and cannot fall unconscious. It also cannot exert itself as other characters do, though the character can still simulate the loss of a Fatigue level by spending a Confidence Point, if necessary. The character does not need to sleep, which means that it effectively has two additional seasons each year in which to study. However, because of the limitations on magic character advancement, it is unlikely the character will be able to take advantage of this extra time."

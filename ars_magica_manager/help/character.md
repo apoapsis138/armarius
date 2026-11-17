@@ -697,7 +697,9 @@ character's Personal Gear.
 <!-- /gui -->
 
 Enduring Constitution makes the wound and fatigue penalties 1 better, and
-Low Tolerance 1 worse (DE, Chapter 11: Obstacles).
+Low Tolerance 1 worse (DE, Chapter 11: Obstacles). A creature with the No
+Fatigue Quality takes no fatigue penalty at all (Realms of Power: Magic
+p. 40).
 
 <!-- tui -->
 The right column shows the Fatigue Level, the total penalty from wounds
