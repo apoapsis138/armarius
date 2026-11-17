@@ -168,10 +168,9 @@ def save_saga(saga: Saga, saver: Saver | None = None) -> Saved:
         theirs = base = None
         if seen is not None:
             text, file_data, base = seen
-            try:
-                on_disk = _read_text(path)
-            except ValueError:  # too big to be a saga: as if unreadable
-                on_disk = None
+            # ValueError for a file too big, or not text: written over by
+            # no save, so another copy's work there is never lost unseen.
+            on_disk = _read_text(path)
             # The file as this copy left it needn't be read again.
             theirs = file_data if on_disk == text else _normalized(on_disk)
         if saver.guard is not None and base is not None:
@@ -181,6 +180,11 @@ def save_saga(saga: Saga, saver: Saver | None = None) -> Saved:
         else:
             data, conflicts = merge(base, ours, theirs)
         text = json.dumps(data, indent=2)
+        if len(text.encode("utf-8")) > incoming.MAX_JSON:
+            # Too big to be opened again (incoming.py): left unwritten.
+            raise ValueError(
+                f"the saga is larger than {incoming.MAX_JSON // (1024 * 1024)} MB"
+            )
         write_atomic(path, text)
     _last_seen[str(path)] = (text, data, ours)
     return Saved(path, conflicts)
@@ -197,7 +201,10 @@ def reload_into(saga: Saga) -> list[tuple[str, str]] | None:
     next save replaces the damaged file."""
     path = saga_path(saga.id)
     seen = _last_seen.get(str(path))
-    text = _read_text(path)
+    try:
+        text = _read_text(path)
+    except ValueError as problem:
+        raise ValueError(f"the saga file can't be read ({problem})") from problem
     if text is None or (seen is not None and seen[0] == text):
         return None
     try:

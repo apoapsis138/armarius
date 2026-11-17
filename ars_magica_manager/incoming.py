@@ -41,17 +41,26 @@ def read_bounded(
     too_big = f"the file is larger than {_megabytes(most)}"
     if isinstance(source, zipfile.ZipFile):
         info = source.getinfo(member)
-        if info.file_size > most:
+        size = info.file_size
+        if size > most:
             raise ValueError(too_big)
         with source.open(info) as file:
-            data = file.read(most + 1)
+            # One byte past the size it says, so a zip that says less than
+            # it holds is caught too.
+            data = file.read(size + 1)
     else:
-        if source.stat().st_size > most:
+        size = source.stat().st_size
+        if size > most:
             raise ValueError(too_big)
         with source.open("rb") as file:
-            data = file.read(most + 1)
-    if len(data) > most:
-        raise ValueError(too_big)
+            # Its size, not the limit: a read reserves what it asks for.
+            data = file.read(size + 1)
+    if len(data) > size:
+        # Grown since it was looked at, or a zip that said less than it
+        # holds: refused rather than read past what was allowed.
+        raise ValueError(
+            too_big if len(data) > most else "the file changed as it was read"
+        )
     return data
 
 

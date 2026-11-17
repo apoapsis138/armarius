@@ -572,7 +572,7 @@ def read(path: Path) -> dict[str, Any]:
     Raises ValueError for anything else."""
     try:
         data = loads(_text(path))
-    except (zipfile.BadZipFile, UnicodeDecodeError) as problem:
+    except zipfile.BadZipFile as problem:
         raise ValueError(f"the zip can't be read ({problem})") from problem
     if not isinstance(data, dict) or data.get("format") not in FORMATS:
         raise ValueError(

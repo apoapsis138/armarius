@@ -462,14 +462,20 @@ def test_a_zip_whose_json_would_unpack_past_the_limit_is_refused(tmp_path):
         transfer.read(path)
 
 
-@pytest.mark.parametrize("depth", [100_000])
-def test_json_nested_too_deep_is_refused_not_crashed(tmp_path, depth: int):
+#: JSON nested far deeper than Python's recursion limit.
+DEEP = "[" * 100_000 + "]" * 100_000
+
+
+def test_an_export_nested_too_deep_is_refused_not_crashed(tmp_path):
     path = tmp_path / "deep.amm.json"
-    path.write_text("[" * depth + "]" * depth, encoding="utf-8")
+    path.write_text(DEEP, encoding="utf-8")
     with pytest.raises(ValueError, match="nested too deeply"):
         transfer.read(path)
+
+
+def test_a_saga_file_nested_too_deep_is_refused_not_crashed():
     storage.sagas_dir().mkdir(parents=True, exist_ok=True)
-    storage.saga_path("deep").write_text("[" * depth + "]" * depth, encoding="utf-8")
+    storage.saga_path("deep").write_text(DEEP, encoding="utf-8")
     with pytest.raises(ValueError, match="nested too deeply"):
         storage.load_saga("deep")
 
@@ -518,3 +524,31 @@ def test_the_admin_s_saga_import_refuses_a_file_over_the_limit(tmp_path):
     _oversize(path, incoming.MAX_JSON + 1)
     assert "larger than 50 MB" in refused(["saga", "import", str(path)])
     assert storage.list_sagas() == []
+
+
+# -- from the review of PR 3 ---------------------------------------------------
+
+
+def test_a_saga_too_big_to_open_again_is_not_saved(monkeypatch):
+    saga, before = _saved()
+    monkeypatch.setattr(incoming, "MAX_JSON", len(before) + 10)
+    saga.description = "x" * len(before)
+    with pytest.raises(ValueError, match="larger than"):
+        storage.save_saga(saga)
+    assert storage.saga_path(saga.id).read_bytes() == before
+
+
+def test_a_saga_file_that_cannot_be_read_is_not_written_over():
+    saga, _ = _saved()
+    storage.saga_path(saga.id).write_bytes(b'{"name": "\xe9"}')
+    saga.description = "changed here"
+    with pytest.raises(ValueError, match="not UTF-8"):
+        storage.save_saga(saga)
+    assert storage.saga_path(saga.id).read_bytes() == b'{"name": "\xe9"}'
+
+
+def test_another_copy_s_unreadable_save_is_said_as_such():
+    saga, _ = _saved()
+    storage.saga_path(saga.id).write_bytes(b'{"name": "\xe9"}')
+    with pytest.raises(ValueError, match="the saga file can't be read"):
+        storage.reload_into(saga)
