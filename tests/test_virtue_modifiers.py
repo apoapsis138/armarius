@@ -126,6 +126,8 @@ def test_soak_virtues_and_flaws_change_soak():
         ("vf_enduring_constitution", Wounds(), "fresh", (0, 0)),
         ("vf_low_tolerance", Wounds(light=1), "weary", (-2, -2)),
         ("vf_low_tolerance", Wounds(), "winded", (0, 0)),
+        # No Fatigue: no Fatigue penalties at all (RoP: Magic p. 40).
+        ("vf_no_fatigue", Wounds(light=1), "dazed", (-1, 0)),
     ],
 )
 def test_wound_and_fatigue_penalties_are_one_better_or_worse(

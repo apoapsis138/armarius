@@ -420,6 +420,11 @@ class AbilityDef:
     #: when it varies), as Houses of Hermes: Societates p. 104 designs one.
     realm: str = ""
     characteristic: str = ""
+    #: Whether it can be used only with experience in it: the book's
+    #: asterisked Abilities (DE p. 159), every Supernatural one and every
+    #: hedge Art. Any other is usable at 0 with three extra botch dice
+    #: (DE p. 157).
+    needs_experience: bool = False
 
     def __post_init__(self) -> None:
         if self.category not in ABILITY_CATEGORIES:

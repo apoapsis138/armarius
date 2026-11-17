@@ -336,6 +336,18 @@ def ability_def(name: str) -> AbilityDef | None:
     return None
 
 
+#: Kinds of Ability never used without experience, a saga's own included.
+UNTRAINED_NEVER = frozenset({"Supernatural", "Hedge Art"})
+
+
+def needs_experience(name: str) -> bool:
+    """Whether the Ability `name` can't be used without experience in it
+    (DE p. 157): an asterisked, Supernatural or hedge one, or one the
+    catalog doesn't know."""
+    entry = ability_def(name)
+    return entry is None or entry.needs_experience or entry.category in UNTRAINED_NEVER
+
+
 def ability_category(name: str) -> str:
     entry = ability_def(name)
     return entry.category if entry is not None else "General"
