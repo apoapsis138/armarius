@@ -552,3 +552,18 @@ def test_another_copy_s_unreadable_save_is_said_as_such():
     storage.saga_path(saga.id).write_bytes(b'{"name": "\xe9"}')
     with pytest.raises(ValueError, match="the saga file can't be read"):
         storage.reload_into(saga)
+
+
+def test_json_just_over_the_depth_limit_is_refused_and_at_it_is_read():
+    deepest = incoming.MAX_DEPTH
+    assert incoming.loads("[" * deepest + "]" * deepest) is not None
+    with pytest.raises(ValueError, match="nested too deeply"):
+        incoming.loads("[" * (deepest + 1) + "]" * (deepest + 1))
+    nested = '{"a": ' * (deepest + 1) + "1" + "}" * (deepest + 1)
+    with pytest.raises(ValueError, match="nested too deeply"):
+        incoming.loads(nested)
+
+
+def test_every_shipped_pack_is_well_within_the_depth_limit():
+    for path in packs.SHIPPED_DIR.glob(f"*{transfer.SUFFIX}"):
+        transfer.read(path)  # refused if it nested past MAX_DEPTH

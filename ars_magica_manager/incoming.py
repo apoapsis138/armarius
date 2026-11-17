@@ -24,6 +24,10 @@ from typing import Any
 MAX_JSON = 50 * 1024 * 1024
 #: Bytes in one picture inside an export (as a Remote seat's picture).
 MAX_PICTURE = 5 * 1024 * 1024
+#: Lists and records inside one another in a JSON file coming in. The
+#: deepest shipped pack or real save nests 12; reading what the app writes
+#: (shape check, from_dict) recurses once a level.
+MAX_DEPTH = 100
 
 
 def _megabytes(limit: int) -> str:
@@ -72,15 +76,39 @@ def text(data: bytes) -> str:
         raise ValueError(f"not UTF-8 text ({problem.reason})") from None
 
 
+_TOO_DEEP = "not a file this app can read (nested too deeply)"
+
+
 def loads(found: str) -> Any:
-    """The JSON in `found`; ValueError if it isn't JSON, or is nested too
-    deeply to read."""
+    """The JSON in `found`; ValueError if it isn't JSON, or nests lists and
+    records more than MAX_DEPTH deep. Where the parser itself gives up
+    first depends on the platform's stack, so the depth is measured too."""
     try:
-        return json.loads(found)
+        data = json.loads(found)
     except json.JSONDecodeError as problem:
         raise ValueError(f"not a JSON file ({problem.msg})") from None
     except RecursionError:
-        raise ValueError("not a file this app can read (nested too deeply)") from None
+        raise ValueError(_TOO_DEEP) from None
+    if _too_deep(data):
+        raise ValueError(_TOO_DEEP)
+    return data
+
+
+def _too_deep(value: object) -> bool:
+    """Whether `value` nests lists and records more than MAX_DEPTH deep,
+    walked a level at a time (no recursion: that is what it guards)."""
+    level = [value]
+    for _ in range(MAX_DEPTH):
+        inner: list[object] = []
+        for item in level:
+            if isinstance(item, dict):
+                inner.extend(v for v in item.values() if isinstance(v, dict | list))
+            elif isinstance(item, list):
+                inner.extend(v for v in item if isinstance(v, dict | list))
+        if not inner:
+            return False
+        level = inner
+    return True
 
 
 def read_text(path: Path) -> str:
