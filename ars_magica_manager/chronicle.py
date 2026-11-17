@@ -20,6 +20,13 @@ whatever each entry's Audience, and the help says so.
 The file is JSON Lines at `chronicles/<saga id>/<session id>.jsonl` in the
 save folder, flushed per entry; a last line left half-written (the app
 stopped mid-write) is dropped when it is read back.
+
+Two processes write it: the Storyguide's window, and the Remote seat
+listener (remote/serve.py), which runs apart from the window. The file is
+the one Chronicle: each writer holds its lock, reads what the other wrote
+since, and numbers the new entry from the file, never from its own copy;
+each catches up with `refresh`, telling its subscribers of every entry new
+to it.
 """
 
 from __future__ import annotations
@@ -28,7 +35,6 @@ import datetime
 import json
 import os
 import random
-import re
 import secrets
 from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
@@ -36,6 +42,7 @@ from pathlib import Path
 from typing import Any
 
 from . import paths, shapes, viewing
+from .files import held_lock
 from .markup import escape
 from .models import Saga, Session
 from .rules import dice
@@ -131,6 +138,19 @@ class Chronicle:
     def __init__(self, path: Path, entries: list[Entry]) -> None:
         self.path = path
         self.entries = entries
+        self._listeners: list[Callable[[Entry], None]] = []
+
+    def subscribe(self, listener: Callable[[Entry], None]) -> Callable[[], None]:
+        """Tell `listener` of each entry added from now on (Observer: a
+        seat's event connection, the desktop pane). Returns the call that
+        stops it."""
+        self._listeners.append(listener)
+
+        def stop() -> None:
+            if listener in self._listeners:
+                self._listeners.remove(listener)
+
+        return stop
 
     @property
     def closed(self) -> bool:
@@ -151,24 +171,53 @@ class Chronicle:
         self, kind: str, author: str, audience: Audience, body: dict[str, Any]
     ) -> Entry:
         """Write a new entry at the end, flushed to the file before it
-        counts."""
-        if self.closed:
-            raise ValueError("This Session has ended: its Chronicle is closed.")
-        entry = Entry(len(self.entries) + 1, clock(), kind, author, audience, body)
+        counts: under the file's lock, after what another process wrote
+        since, numbered from the file."""
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        with self.path.open("a", encoding="utf-8", newline="\n") as out:
-            out.write(json.dumps(asdict(entry), ensure_ascii=False) + "\n")
-            out.flush()
-            os.fsync(out.fileno())
-        self.entries.append(entry)
+        with held_lock(_lock_of(self.path)):
+            caught_up = self._catch_up(mend=True)
+            if self.closed:
+                self._tell(caught_up)
+                raise ValueError("This Session has ended: its Chronicle is closed.")
+            entry = Entry(len(self.entries) + 1, clock(), kind, author, audience, body)
+            with self.path.open("a", encoding="utf-8", newline="\n") as out:
+                out.write(json.dumps(asdict(entry), ensure_ascii=False) + "\n")
+                out.flush()
+                os.fsync(out.fileno())
+            self.entries.append(entry)
+        # Subscribers are told once the lock is let go, so a slow or failing
+        # one never holds up the other process.
+        self._tell([*caught_up, entry])
         return entry
 
+    def refresh(self) -> list[Entry]:
+        """Catch up with what another process wrote since (Observer: each
+        subscriber is told of every entry new here)."""
+        fresh = self._catch_up()
+        self._tell(fresh)
+        return fresh
 
-_SAFE_ID = re.compile(r"[A-Za-z0-9_-]+")
+    def _catch_up(self, *, mend: bool = False) -> list[Entry]:
+        """Read what is new in the file; `mend` (only with the file's lock
+        held) cuts a half-written last line first."""
+        found = _load(self.path, mend=mend)
+        fresh = found[len(self.entries) :]
+        self.entries.extend(fresh)
+        return fresh
+
+    def _tell(self, entries: list[Entry]) -> None:
+        for entry in entries:
+            for listener in list(self._listeners):
+                listener(entry)
+
+
+def _lock_of(path: Path) -> Path:
+    """The lock every writer of the Chronicle file `path` holds."""
+    return path.with_name(f".{path.name}.lock")
 
 
 def _safe(value: str, what: str) -> str:
-    if not _SAFE_ID.fullmatch(value):
+    if not shapes.is_plain_id(value):
         raise ValueError(f"A {what} id can't name a Chronicle file: {value!r}")
     return value
 
@@ -186,7 +235,7 @@ def path_of(saga: Saga, session: Session) -> Path:
 def files_of(saga_id: str) -> list[Path]:
     """Every Chronicle file of the saga `saga_id`, for its backups: none
     for an id no Chronicle file could be named by."""
-    if not _SAFE_ID.fullmatch(saga_id):
+    if not shapes.is_plain_id(saga_id):
         return []
     folder = paths.data_dir() / paths.CHRONICLES / saga_id
     return sorted(folder.glob("*.jsonl")) if folder.is_dir() else []
@@ -237,7 +286,7 @@ def read(saga: Saga, session: Session) -> Chronicle:
     path = path_of(saga, session)
     found = _open.get(path)
     if found is None:
-        found = Chronicle(path, _load(path, mend=session.under_way))
+        found = Chronicle(path, _load(path))
         if session.under_way:
             _open[path] = found
     return found
@@ -298,7 +347,7 @@ def begin(saga: Saga, session: Session, *, by: str) -> Chronicle:
     if problem:
         raise ValueError(problem)
     path = path_of(saga, session)
-    book = Chronicle(path, _load(path, mend=True))
+    book = Chronicle(path, _load(path))
     book.add(BEGIN, by, table(), {})
     session.under_way = True
     _open[path] = book
@@ -531,3 +580,73 @@ def text(entries: list[Entry], book: Chronicle) -> str:
         for e in entries
         if e.kind != VOID
     )
+
+
+# -- Remote seats --
+
+
+@dataclass(frozen=True)
+class Feed:
+    """What a seat is sent: the Session under way, and the entries after
+    the one it holds that its Player may see."""
+
+    session_id: str
+    entries: list[Entry]
+
+
+def feed(saga: Saga, who: str, session_id: str, since: int) -> Feed | None:
+    """The entries `who` may see after `since` in Session `session_id`'s
+    Chronicle, read from the file as it stands. The numbers are that
+    Session's: another Session under way now is fed from its start. A
+    Session ended since is fed to its end (End Session included); None
+    with nothing to feed."""
+    session = under_way(saga)
+    if session is None or session.id != session_id:
+        ended = next((s for s in saga.sessions if s.id == session_id), None)
+        if ended is not None and not ended.under_way and has_chronicle(saga, ended):
+            session = ended
+        elif session is None:
+            return None
+        else:
+            since = 0
+    path = path_of(saga, session)
+    book = Chronicle(path, _load(path))
+    return Feed(
+        session.id, [e for e in book.since(since) if sees(e, who, session, saga)]
+    )
+
+
+class SeatChronicle:
+    """The Chronicle as a Remote seat holds it: what its host sent, in
+    memory only (a restart asks again from the start), told to subscribers
+    as it comes (Observer)."""
+
+    def __init__(self) -> None:
+        self.session_id = ""
+        self.entries: list[Entry] = []
+        self._listeners: list[Callable[[Entry], None]] = []
+
+    @property
+    def last(self) -> int:
+        """The number of the last entry held: what to ask for after."""
+        return self.entries[-1].number if self.entries else 0
+
+    def subscribe(self, listener: Callable[[Entry], None]) -> Callable[[], None]:
+        self._listeners.append(listener)
+
+        def stop() -> None:
+            if listener in self._listeners:
+                self._listeners.remove(listener)
+
+        return stop
+
+    def take(self, session_id: str, entry: Entry) -> None:
+        """An entry the host sent; one already held is passed over, and a
+        new Session's entries start afresh."""
+        if session_id != self.session_id:
+            self.session_id, self.entries = session_id, []
+        if entry.number <= self.last:
+            return
+        self.entries.append(entry)
+        for listener in list(self._listeners):
+            listener(entry)

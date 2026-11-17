@@ -17,18 +17,31 @@ from __future__ import annotations
 import asyncio
 import ipaddress
 import time
+from collections.abc import Callable
 from typing import cast
 
 import aiohttp
 from aiohttp import web
 
+from .events import EVENTS
 from .identity import HostIdentity
 from .limits import ConnectionGate, Limits, RateLimiter
 from .plan import PATH
-from .protocol import Registry, Session, encode, member_registry, public_registry
+from .protocol import (
+    Registry,
+    Reply,
+    Session,
+    encode,
+    member_registry,
+    public_registry,
+)
 from .secure import MAX_FRAME, ChannelClosed, ChannelError, SecureChannel
 
 __all__ = ["FORWARDED_HEADER", "PATH", "RemoteHost"]
+
+#: A Player's events after a cursor (a Session, an entry number): the frames
+#: to send, and where to go on from (events.poller).
+Poll = Callable[[str, tuple[str, int]], tuple[list[Reply], tuple[str, int]]]
 
 #: A tunnel puts the player's real address here; trusted only when told to.
 FORWARDED_HEADER = "CF-Connecting-IP"
@@ -62,6 +75,8 @@ class RemoteHost:
         members: Registry | None = None,
         trust_forwarded_address: bool = False,
         forwarded_header: str = FORWARDED_HEADER,
+        events: Poll | None = None,
+        events_every: float = 1.0,
     ) -> None:
         self._identity = identity
         self._limits = limits or Limits()
@@ -79,6 +94,10 @@ class RemoteHost:
         )
         self._runner: web.AppRunner | None = None
         self._counter = 0
+        #: Where an events connection's entries come from, and how often it
+        #: looks for new ones (ADR 0019); None: no events are sent.
+        self._events = events
+        self._events_every = events_every
 
     async def start(self, port: int = 0, host: str = "127.0.0.1") -> int:
         """Begin listening on the loopback address and return the port."""
@@ -177,10 +196,40 @@ class RemoteHost:
             await channel.send(encode(reply))
             for part in reply.then:
                 await channel.send(encode(part))
+            if acceptable and reply.type == EVENTS and self._events is not None:
+                # From here this connection only carries events, host to seat.
+                cursor = (str(reply.body["session"]), int(reply.body["since"]))
+                await self._send_events(channel, session, cursor)
+                return
             if not acceptable:
                 strikes += 1
                 if strikes >= limits.max_strikes:
                     raise ChannelError("Too many refused messages.")
+
+    async def _send_events(
+        self, channel: SecureChannel, session: Session, cursor: tuple[str, int]
+    ) -> None:
+        """Send the seat each Chronicle entry its Player may see, as the
+        file grows (Observer: the loop watches the file for the seat), until
+        the seat closes the connection, sends anything at all (an events
+        connection carries nothing else), or its sign-in ends."""
+        poll = self._events
+        assert poll is not None
+        heard = asyncio.ensure_future(channel.receive())
+        try:
+            while not heard.done():
+                if not session.still_allowed():
+                    raise ChannelError("This sign-in has ended.")
+                # Read off the event loop: the files may be large, and
+                # other seats' messages go on meanwhile.
+                frames, cursor = await asyncio.to_thread(
+                    poll, session.player_id, cursor
+                )
+                for found in frames:
+                    await channel.send(encode(found))
+                await asyncio.wait({heard}, timeout=self._events_every)
+        finally:
+            heard.cancel()
 
 
 def _bucket(address: str) -> str:

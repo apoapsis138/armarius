@@ -25,8 +25,12 @@ from dataclasses import dataclass, field
 
 from .. import __version__
 
-#: Bumped when a message changes in a way an older app cannot read.
-PROTOCOL_VERSION = 1
+#: Bumped when a message changes in a way an older app cannot read. 2: the
+#: host sends a Session's Chronicle down an events connection (ADR 0019).
+PROTOCOL_VERSION = 2
+#: What a seat speaking an older protocol is told, instead of a welcome.
+UPDATE = "update"
+UPDATE_MESSAGE = "This host needs a newer Armarius: update yours to join."
 
 #: Replies and requests have this shape: type name, then a flat body.
 Body = dict[str, str | int | bool]
@@ -222,6 +226,9 @@ def _hello(session: Session, body: Body) -> Reply:
     # device when it signs in (the storyguide's Players list shows it).
     app = body.get("app", "")
     session.app_version = app if isinstance(app, str) else ""
+    spoken = body["protocol"]
+    if isinstance(spoken, int) and spoken < PROTOCOL_VERSION:
+        return Reply(UPDATE, {"message": UPDATE_MESSAGE})
     return Reply("welcome", {"protocol": PROTOCOL_VERSION, "app": __version__})
 
 
