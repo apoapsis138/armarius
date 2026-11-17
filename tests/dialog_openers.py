@@ -17,6 +17,7 @@ from ars_magica_manager import (
     battle_muster,
     catalog,
     choice_templates,
+    chronicle,
     combat_options_form,
     giving,
     grog_templates,
@@ -30,6 +31,8 @@ from ars_magica_manager import (
     staged_projects,
     storage,
     tombs,
+    viewing,
+    virtual_tabletop,
     vis,
 )
 from ars_magica_manager import economics as eco
@@ -56,6 +59,7 @@ from ars_magica_manager.forms import grogs as grog_forms
 from ars_magica_manager.forms import hook_stories as hook_story_forms
 from ars_magica_manager.forms import inhabitant as inhabitant_forms
 from ars_magica_manager.forms import land_shaping as land_forms
+from ars_magica_manager.forms import sheet_roll as sheet_roll_forms
 from ars_magica_manager.forms import threshold as threshold_forms
 from ars_magica_manager.forms import trait_roll as trait_roll_forms
 from ars_magica_manager.forms import tribunal as tribunal_forms
@@ -98,6 +102,7 @@ from ars_magica_manager.models import (
     Saga,
     SagaSource,
     ScoredTrait,
+    Session,
     Ship,
     Spell,
     VirtueFlawInstance,
@@ -1064,6 +1069,17 @@ async def _open_rhine_rite(ws) -> None:
 def _run(build):
     """An opener that runs `build(ws)`'s first step."""
     return lambda ws: ws._run_steps(build(ws))
+
+
+def _sheet_roll(ws) -> None:
+    """Roll from the sheet: the Virtual Tabletop preview on and a Session
+    begun by the host, as its storyguide, before the card first opens."""
+    virtual_tabletop.set_on(True)
+    if chronicle.under_way(ws.saga) is None:  # opened again: already begun
+        session = Session("contract-vtt")
+        ws.saga.sessions.append(session)
+        chronicle.begin(ws.saga, session, by=viewing.HOST)
+    ws._run_steps(sheet_roll_forms.roll_form(ws.saga, ws.selected_character))
 
 
 async def _open_staged(ws, kind: str, open_form) -> None:
@@ -2341,6 +2357,7 @@ OPENERS: dict[str, Opener] = {
         "character",
         _run(lambda ws: trait_roll_forms.roll_form(ws.saga, ws.selected_character)),
     ),
+    "sheet roll": Opener("character", _sheet_roll),
     "build a ship": Opener(
         "covenant",
         _run(lambda ws: ship_build.build_form(ws.saga, ws.selected_covenant)),

@@ -1,0 +1,1 @@
+**Form checks cover the Chronicle.** The checks that drive every form now count a Session's Chronicle as well as the saga, so a form that rolls must write nothing when cancelled or refused; rolling from the sheet is checked this way.
