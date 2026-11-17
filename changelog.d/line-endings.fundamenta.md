@@ -1,0 +1,1 @@
+**Steadier line endings.** The repository now says its files keep Unix line endings on every computer (Windows scripts keep their own), so a change no longer shows up as a different file on another machine.
