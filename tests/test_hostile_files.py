@@ -9,8 +9,24 @@ from dataclasses import asdict
 import pytest
 from support import everything_saga
 
-from ars_magica_manager import books, creation, portraits, shapes, storage, transfer
-from ars_magica_manager.models import Character, Covenant, Laboratory, LabProject, Saga
+from ars_magica_manager import (
+    books,
+    creation,
+    cult_transfer,
+    packs,
+    portraits,
+    shapes,
+    storage,
+    transfer,
+)
+from ars_magica_manager.models import (
+    Character,
+    Covenant,
+    Laboratory,
+    LabProject,
+    MysteryCult,
+    Saga,
+)
 
 
 def _data() -> dict:
@@ -226,3 +242,181 @@ def test_a_record_id_with_capitals_is_still_refused():
     data["characters"][0]["id"] = "MySaga"
     _write("odd", data)
     assert _refused_on_open("odd").endswith(".id: not a plain id")
+
+
+# -- a supplement overlay touches only what it may (STORY-2332) ----------------
+
+
+def _provence_with_overlay() -> tuple[Saga, dict, dict]:
+    """A saga started from the Provence pack, the shipped Through the Aegis
+    overlay, and that overlay's Provence section (its changes to edit)."""
+    saga = Saga(id="dst", name="Target")
+    packs.start_from(saga, packs.SHIPPED_DIR / "provence.amm.json")
+    overlay = transfer.read(packs.SHIPPED_DIR / "through_the_aegis.amm.json")
+    section = next(s for s in overlay["overlay"] if "Proven" in s["tribunal"])
+    return saga, overlay, section
+
+
+@pytest.mark.parametrize(
+    ("change", "refusal"),
+    [
+        ({"list": "players"}, "list: not a list an overlay can change"),
+        ({"field": "no_such_field"}, "field: not a field of Tribunal"),
+        ({"field": "id", "value": "../x"}, "field: not a field an overlay can change"),
+        ({"value": {"a": "record"}}, "value: covenants_total: expected a single value"),
+    ],
+)
+def test_an_overlay_change_it_may_not_make_is_refused_and_nothing_changes(
+    change: dict, refusal: str
+):
+    saga, overlay, section = _provence_with_overlay()
+    section["changes"][0].update(change)
+    before = asdict(saga)
+    with pytest.raises(ValueError, match=refusal):
+        packs.apply_overlay(saga, overlay)
+    assert asdict(saga) == before
+
+
+def test_an_overlay_link_that_is_not_a_plain_id_is_refused():
+    saga, overlay, section = _provence_with_overlay()
+    section["changes"].append(
+        {
+            "list": "covenants",
+            "name": saga.covenants[0].name,
+            "kind": "",
+            "field": "tribunal_id",
+            "was": None,
+            "value": "../x",
+        }
+    )
+    before = asdict(saga)
+    with pytest.raises(ValueError, match="tribunal_id: not a plain id"):
+        packs.apply_overlay(saga, overlay)
+    assert asdict(saga) == before
+
+
+def test_an_overlay_pack_of_the_wrong_shape_is_refused_before_anything_is_added():
+    saga, overlay, section = _provence_with_overlay()
+    section["pack"]["saga"]["covenants"] = {"not": "a list"}
+    before = asdict(saga)
+    with pytest.raises(ValueError, match="covenants: expected a list"):
+        packs.apply_overlay(saga, overlay)
+    assert asdict(saga) == before
+
+
+def test_a_sound_overlay_still_applies():
+    saga, overlay, _ = _provence_with_overlay()
+    packs.apply_overlay(saga, overlay)
+    assert "Jardin" in {c.name for c in saga.covenants}
+
+
+# -- a Mystery Cult file is shape-checked (STORY-2333) -------------------------
+
+
+def _cult_file(tmp_path, change) -> object:
+    saga = everything_saga()
+    cult = MysteryCult(
+        id="custom_cult_flame", name="The Hidden Flame", lore="Flame Lore"
+    )
+    path = cult_transfer.export_to(tmp_path / "flame.cult.json", cult)
+    data = json.loads(path.read_text(encoding="utf-8"))
+    change(data["cult"])
+    path.write_text(json.dumps(data), encoding="utf-8")
+    return saga, path
+
+
+@pytest.mark.parametrize(
+    ("change", "refusal"),
+    [
+        (lambda c: c.update(degrees={"not": "a list"}), "degrees: expected a list"),
+        (lambda c: c.update(name=["a", "list"]), "name: expected a single value"),
+        (lambda c: c.pop("lore"), "lore: missing"),
+    ],
+)
+def test_a_cult_file_of_the_wrong_shape_is_refused_by_its_field(
+    tmp_path, change, refusal
+):
+    _, path = _cult_file(tmp_path, change)
+    with pytest.raises(ValueError, match=refusal):
+        cult_transfer.read(path)
+
+
+def test_a_sound_cult_file_still_imports_with_an_id_of_its_own(tmp_path):
+    saga, path = _cult_file(
+        tmp_path, lambda c: c.update(id="custom_cult_../x", founder_id="../y")
+    )
+    cult = cult_transfer.add(saga, cult_transfer.read(path))
+    assert shapes.is_plain_id(cult.id) and cult.founder_id == ""
+    storage.save_saga(saga)
+    assert storage.load_saga(saga.id).custom_cults[-1].id == cult.id
+
+
+# -- a saga of the wrong shape is never saved (STORY-2334) ---------------------
+
+
+def _saved() -> tuple[Saga, bytes]:
+    saga = everything_saga()
+    storage.save_saga(saga)
+    return saga, storage.saga_path(saga.id).read_bytes()
+
+
+def test_a_saga_holding_a_value_of_the_wrong_type_is_not_saved():
+    saga, before = _saved()
+    saga.characters[0].name = 5  # type: ignore[assignment]
+    with pytest.raises(ValueError, match=r"characters\[.+\]\.name"):
+        storage.save_saga(saga)
+    assert storage.saga_path(saga.id).read_bytes() == before
+
+
+def test_a_saga_holding_an_id_that_is_not_plain_is_not_saved():
+    saga, before = _saved()
+    saga.characters[0].covenant_id = "../x"
+    with pytest.raises(ValueError, match=r"covenant_id: not a plain id"):
+        storage.save_saga(saga)
+    assert storage.saga_path(saga.id).read_bytes() == before
+    # Put right, it saves.
+    saga.characters[0].covenant_id = None
+    storage.save_saga(saga)
+    assert storage.load_saga(saga.id).characters[0].covenant_id is None
+
+
+def test_a_refused_save_is_said_with_its_field_and_the_file_unchanged():
+    saga, _ = _saved()
+    saga.characters[0].covenant_id = "../x"
+    with pytest.raises(ValueError) as refused:
+        storage.save_saga(saga)
+    assert storage.not_saved_note(refused.value) == (
+        f"Not saved: characters[{saga.characters[0].id}].covenant_id: not a plain id. "
+        "The file is unchanged."
+    )
+
+
+# -- from the review of PR 2 ---------------------------------------------------
+
+
+def test_an_overlay_section_pack_that_cannot_be_planned_changes_nothing():
+    saga, overlay, section = _provence_with_overlay()
+    del section["pack"]["kind"]
+    before = asdict(saga)
+    with pytest.raises(ValueError, match=r"overlay\[\d+\]\.pack"):
+        packs.apply_overlay(saga, overlay)
+    assert asdict(saga) == before
+
+
+def test_a_pack_whose_overlay_key_is_not_a_list_is_still_shape_checked(tmp_path):
+    data = transfer.export_saga_data(Saga(id="src", name="Source"))
+    data["overlay"] = {}
+    data["saga"]["covenants"] = {"not": "a list"}
+    path = tmp_path / "odd.amm.json"
+    path.write_text(json.dumps(data), encoding="utf-8")
+    with pytest.raises(ValueError, match="covenants: expected a list"):
+        transfer.read(path)
+
+
+def test_a_refused_save_leaves_the_saga_as_it_was_in_hand():
+    saga, _ = _saved()
+    saga.saved_by = "Before"
+    saga.characters[0].covenant_id = "../x"
+    with pytest.raises(ValueError):
+        storage.save_saga(saga, storage.Saver("After"))
+    assert saga.saved_by == "Before"

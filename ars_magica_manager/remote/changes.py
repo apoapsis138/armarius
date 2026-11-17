@@ -114,6 +114,9 @@ class SeatChanges:
             if player is None:
                 raise ChangeRefused("The Player is gone.")
             applied = apply_change(saga, player, kind, key, before, after)
+            # A change that would leave a saga that couldn't be opened again
+            # is refused before anything is written (storage.checked).
+            storage.checked(applied.saga)
         except ChangeRefused as refused:
             # Which field, for a change of the wrong shape: the record's
             # structure, never what it held.
@@ -145,6 +148,8 @@ class SeatChanges:
                 raise Refused
             # Never another storyguide's records (ADR 0015).
             folded = fold(saga, before, after, by=player.id)
+            # Checked before the backup, so a refused change leaves none.
+            storage.checked(folded.saga)
         except DeltaRefused as refused:
             if refused.advanced:
                 raise

@@ -18,10 +18,20 @@ import re
 from collections.abc import Callable
 from copy import deepcopy
 from dataclasses import asdict, dataclass, replace
+from dataclasses import fields as record_fields
 from pathlib import Path
 from typing import Any
 
-from . import DATA_DIR, places, sourcebooks, storage, threats, transfer, tribunals
+from . import (
+    DATA_DIR,
+    places,
+    shapes,
+    sourcebooks,
+    storage,
+    threats,
+    transfer,
+    tribunals,
+)
 from .commands import Form, Refuse, notes
 from .files import write_atomic
 from .form_spec import DialogField
@@ -936,6 +946,54 @@ def is_overlay(data: dict[str, Any]) -> bool:
     return isinstance(data.get(OVERLAY), list)
 
 
+def check_overlay(data: dict[str, Any]) -> None:
+    """Refuse (ValueError, naming it) an overlay that isn't of the shape
+    one is: each section's pack shape-checked as an export is, and each
+    change to a list in OVERLAY_KINDS, to a field of that list's record
+    (never its id), with a value of that field's shape (ADR 0012, 0028).
+
+    Pattern: whitelist registry. OVERLAY_KINDS says what an overlay may
+    touch; anything else is refused before any of it is applied."""
+    for index, section in enumerate(data[OVERLAY]):
+        where = f"overlay[{index}]"
+        if not isinstance(section, dict) or not isinstance(
+            section.get("tribunal"), str
+        ):
+            raise ValueError(f"{where}: expected a section naming its Tribunal")
+        pack = section.get("pack")
+        if not isinstance(pack, dict) or not isinstance(pack.get("saga"), dict):
+            raise ValueError(f"{where}.pack: expected an export")
+        try:
+            shapes.check_raw(pack["saga"], Saga, plain_ids=False)
+        except ValueError as problem:
+            raise ValueError(f"{where}.pack.saga.{problem}") from None
+        changes = section.get("changes")
+        if not isinstance(changes, list):
+            raise ValueError(f"{where}.changes: expected a list")
+        for number, change in enumerate(changes):
+            _check_change(change, f"{where}.changes[{number}]")
+
+
+def _check_change(change: object, where: str) -> None:
+    if not isinstance(change, dict):
+        raise ValueError(f"{where}: expected a record")
+    for key in ("name", "kind"):
+        if not isinstance(change.get(key), str):
+            raise ValueError(f"{where}.{key}: expected text")
+    cls = OVERLAY_KINDS.get(str(change.get("list")))
+    if cls is None:
+        raise ValueError(f"{where}.list: not a list an overlay can change")
+    name = change.get("field")
+    if not isinstance(name, str) or name not in {f.name for f in record_fields(cls)}:
+        raise ValueError(f"{where}.field: not a field of {cls.__name__}")
+    if name == "id":
+        raise ValueError(f"{where}.field: not a field an overlay can change")
+    try:
+        shapes.check_field(cls, name, change.get("value"))
+    except ValueError as problem:
+        raise ValueError(f"{where}.value: {problem}") from None
+
+
 def _sections(saga: Saga, data: dict[str, Any]) -> list[dict[str, Any]]:
     """The overlay's sections for the Tribunals `saga` has."""
     held = {t.name.strip().casefold() for t in saga.tribunals}
@@ -969,7 +1027,9 @@ def change_key(section: dict[str, Any], index: int) -> str:
 
 def overlay_fields(data: dict[str, Any], saga: Saga) -> list[DialogField]:
     """A tick for each overwrite this saga could take: ticked if the
-    saga still has the pack's value, unticked if it has been edited."""
+    saga still has the pack's value, unticked if it has been edited.
+    ValueError for an overlay of the wrong shape (check_overlay)."""
+    check_overlay(data)
     fields = []
     for section in _sections(saga, data):
         for index, change in enumerate(section["changes"]):
@@ -1005,11 +1065,43 @@ def _apply_section(
         if record is None:
             continue
         records = getattr(saga, change["list"])
-        rebuilt = OVERLAY_KINDS[change["list"]].from_dict(
-            {**asdict(record), change["field"]: change["value"]}
-        )
-        records[records.index(record)] = rebuilt
+        records[records.index(record)] = _rebuilt(record, change)
     return len(plan.covenants) + len(plan.characters) + len(plan.neighbours)
+
+
+def _rebuilt(record: Any, change: dict[str, Any]) -> Any:
+    """`record` with the change made, checked as a record coming in is
+    (ValueError naming it)."""
+    rebuilt = OVERLAY_KINDS[change["list"]].from_dict(
+        {**asdict(record), change["field"]: change["value"]}
+    )
+    try:
+        shapes.check_built(rebuilt)
+    except ValueError as problem:
+        raise ValueError(f"{change['name']}: {problem}") from None
+    return rebuilt
+
+
+def _check_section(saga: Saga, section: dict[str, Any], index: int) -> None:
+    """Plan the section's pack and build each of its overwrites, changing
+    nothing, so that an overlay that would fail part-way is refused before
+    any of it is applied (ValueError naming it)."""
+    try:
+        plan = transfer.plan_import(saga, section["pack"])
+    except (KeyError, ValueError) as problem:
+        raise ValueError(f"overlay[{index}].pack: {problem}") from None
+    for change in section["changes"]:
+        record = _record(saga, change) or next(
+            (
+                r
+                # The plan names its lists as the saga does.
+                for r in getattr(plan, change["list"])
+                if r.name == change["name"] and getattr(r, "kind", "") == change["kind"]
+            ),
+            None,
+        )
+        if record is not None:
+            _rebuilt(record, change)
 
 
 def apply_overlay(
@@ -1017,12 +1109,16 @@ def apply_overlay(
 ) -> list[str]:
     """Turn a supplement on: its book in play, remembered on the saga so a
     Tribunal pack added later takes its part too, and its sections applied
-    to the Tribunals the saga has. The notes to show."""
+    to the Tribunals the saga has. The notes to show. ValueError, naming
+    it, for an overlay of the wrong shape: then nothing is changed."""
+    check_overlay(data)
+    found = _sections(saga, data)
+    for section in found:
+        _check_section(saga, section, data[OVERLAY].index(section))
     book = str(data.get("book") or "")
     if book not in saga.overlays:
         saga.overlays.append(book)
     sourcebooks.put_in_play(saga, book)
-    found = _sections(saga, data)
     for section in found:
         _apply_section(saga, section, values)
     names = ", ".join(s["tribunal"] for s in found) or "no Tribunal yet"

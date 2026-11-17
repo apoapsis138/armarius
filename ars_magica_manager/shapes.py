@@ -259,6 +259,24 @@ def check_raw(
         raise _named(refused) from None
 
 
+def check_field(cls: type, name: str, value: object) -> None:
+    """Refuse (ValueError, naming it) `value` for field `name` of record
+    `cls` as check_raw would, or a field `cls` hasn't: a single change to a
+    record, such as an overlay's."""
+    plan = dict(_record(cls)).get(name)
+    if plan is None:
+        raise ValueError(f"{name}: not a field of {cls.__name__}")
+    try:
+        _plain_ids({name: value}, cls)  # names the field itself
+        try:
+            _raw(value, plan, False, True)
+        except _Refused as refused:
+            refused.parts.append(name)
+            raise
+    except _Refused as refused:
+        raise _named(refused) from None
+
+
 def _raw_record(data: object, cls: type, strict: bool, plain_ids: bool) -> None:
     if not isinstance(data, dict):
         raise _Refused(f"expected a record ({cls.__name__})")
@@ -300,7 +318,9 @@ def _raw(value: object, plan: _Plan, strict: bool, plain_ids: bool) -> None:
     if kind == RECORD:
         _raw_record(value, plan.cls, strict, plain_ids)
     elif kind == SEQUENCE:
-        if not isinstance(value, list):
+        # A tuple only from `asdict` (a saga checked before it is saved):
+        # JSON has none.
+        if not isinstance(value, list | tuple):
             raise _Refused("expected a list")
         sized = plan.cls[1]
         if not sized and plan.inner[0].kind == ANY:

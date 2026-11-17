@@ -578,7 +578,7 @@ def read(path: Path) -> dict[str, Any]:
     # overlay's saga is never built whole: it is laid over a saga's own.
     # Ids that aren't plain are allowed: the import gives every record it
     # brings in a plain one (_Ids, ADR 0028).
-    if "overlay" not in data:
+    if not isinstance(data.get("overlay"), list):
         shapes.check_raw(data["saga"], Saga, plain_ids=False)
     introduction = data.get(INTRODUCTION)
     if introduction is not None and not isinstance(introduction, str):
