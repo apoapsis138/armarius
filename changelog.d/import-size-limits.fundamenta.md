@@ -1,0 +1,1 @@
+**Security:** Files coming in are read within limits. A saga file, export, content pack or Mystery Cult file over 50 MB, or nested too deeply, is refused with a message instead of filling the memory or stopping the app, and so is a zip that would unpack past that. A picture over 5 MB in an export is left out.

@@ -40,9 +40,19 @@ from dataclasses import asdict, dataclass, field, fields, is_dataclass, replace
 from pathlib import Path
 from typing import Any, TypedDict, cast
 
-from . import __version__, catalog, places, portraits, shapes, storage, viewing
+from . import (
+    __version__,
+    catalog,
+    places,
+    portraits,
+    shapes,
+    storage,
+    viewing,
+)
 from .atlas import maps as atlas_maps
 from .files import write_atomic
+from .incoming import MAX_PICTURE, loads, read_bounded, read_text
+from .incoming import text as utf8_text
 from .models import (
     ITEM_DEVICE_PARAM,
     REALMS,
@@ -549,21 +559,19 @@ def _text(path: Path) -> str:
     """An export's JSON text: the file itself, or the one JSON file at the
     top of its zip."""
     if not zipfile.is_zipfile(path):
-        return path.read_text(encoding="utf-8")
+        return read_text(path)
     with zipfile.ZipFile(path) as archive:
         inside = [n for n in archive.namelist() if "/" not in n and n.endswith(".json")]
         if len(inside) != 1:
             raise ValueError("the zip should hold one export's JSON file")
-        return archive.read(inside[0]).decode("utf-8")
+        return utf8_text(read_bounded(archive, inside[0]))
 
 
 def read(path: Path) -> dict[str, Any]:
     """An export file's data, from a JSON file or a zip holding one.
     Raises ValueError for anything else."""
     try:
-        data = json.loads(_text(path))
-    except json.JSONDecodeError as problem:
-        raise ValueError(f"not a JSON file ({problem.msg})") from problem
+        data = loads(_text(path))
     except (zipfile.BadZipFile, UnicodeDecodeError) as problem:
         raise ValueError(f"the zip can't be read ({problem})") from problem
     if not isinstance(data, dict) or data.get("format") not in FORMATS:
@@ -607,18 +615,21 @@ class Pictures:
         self.zipped = path.is_file() and zipfile.is_zipfile(path)
 
     def get(self, folder: str, name: str) -> bytes | None:
-        """The picture's bytes, or None when the export doesn't carry it
-        or names it unsafely (`picture_files.safe_name`)."""
+        """The picture's bytes, or None when the export doesn't carry it,
+        names it unsafely (`picture_files.safe_name`) or carries one larger
+        than incoming.MAX_PICTURE."""
         if not safe_name(name):
             return None
-        if self.zipped:
-            with zipfile.ZipFile(self.path) as archive:
-                try:
-                    return archive.read(f"{folder}/{name}")
-                except KeyError:
-                    return None
-        beside = self.path.parent / folder / name
-        return beside.read_bytes() if beside.is_file() else None
+        try:
+            if self.zipped:
+                with zipfile.ZipFile(self.path) as archive:
+                    return read_bounded(archive, f"{folder}/{name}", limit=MAX_PICTURE)
+            beside = self.path.parent / folder / name
+            if not beside.is_file():
+                return None
+            return read_bounded(beside, limit=MAX_PICTURE)
+        except KeyError, ValueError:
+            return None
 
 
 @dataclass
