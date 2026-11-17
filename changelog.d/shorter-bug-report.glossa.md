@@ -1,0 +1,1 @@
+**A shorter bug report.** The bug report form is shorter: three required boxes (what happened, the steps, and the version) and one Anything else box for where it runs, error text or a rules page. How to report a bug in Help follows it.
