@@ -330,6 +330,32 @@ class SeatSession:
             return "The host can't be reached just now."
         return None
 
+    def answer(
+        self, request: int, character_id: str, specialty: bool = False
+    ) -> str | None:
+        """Ask the host to answer Roll request `request` for
+        `character_id`; None once it is in the Chronicle, else the host's
+        reason (as `roll`)."""
+        try:
+            self._loop.run(
+                self._answer(request, character_id, specialty), timeout=ROLL_WAIT
+            )
+        except RollRefused as refused:
+            return refused.why
+        except NeedsPasscode, NoCredential:
+            return "Sign in again to roll."
+        except ChannelError, SignInError, ConnectionError, TimeoutError:
+            return "The host can't be reached just now."
+        return None
+
+    async def _answer(self, request: int, character_id: str, specialty: bool) -> int:
+        client = await RemoteClient.connect(self.url, self.pin)
+        try:
+            await client.sign_in_with(self._key, self.vault)
+            return await client.answer(request, character_id, specialty)
+        finally:
+            await client.close()
+
     async def _confidence(self, number: int, points: int) -> int:
         client = await RemoteClient.connect(self.url, self.pin)
         try:

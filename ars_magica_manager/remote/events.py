@@ -19,8 +19,9 @@ A seat rolls with `roll`: what to roll, never a number (from the sheet,
 the Characteristic, the Ability and whether a Specialty applies). The host
 rolls it once (chronicle.free_roll), for a character its Player plays
 tonight, working the sheet's terms out from the saga. `confidence` spends
-Confidence on a roll already made (chronicle.spend_confidence). Both count
-toward the seat's ROLLS_PER_MINUTE.
+Confidence on a roll already made (chronicle.spend_confidence), and
+`answer` answers a Roll request for a character the seat's Player rolls
+for (chronicle.answer). All count toward the seat's ROLLS_PER_MINUTE.
 
 Pattern: Observer. The host's loop for an events connection watches the
 Chronicle file and tells the seat of each entry new to it.
@@ -207,6 +208,34 @@ def event_specs(
             return Reply("roll_refused", {"why": "The Chronicle couldn't be saved."})
         return Reply("rolled", {"number": entry.number})
 
+    def answer(session: Session, body: Body) -> Reply:
+        if not rolls.allow(session.device_id or session.player_id):
+            return Reply("roll_refused", {"why": "Too many rolls: wait a minute."})
+        try:
+            saga = storage.load_saga(saga_id)
+        except OSError, ValueError:
+            return Reply("roll_refused", {"why": "The saga can't be read just now."})
+        under_way = chronicle.under_way(saga)
+        if under_way is None:
+            return Reply("roll_refused", {"why": "No Session is under way."})
+        book = chronicle.Chronicle(chronicle.path_of(saga, under_way), [])
+        try:
+            book.refresh()
+            entry = chronicle.answer(
+                book,
+                saga,
+                under_way,
+                int(body["request"]),
+                str(body["character_id"]),
+                by=session.player_id,
+                specialty=body.get("specialty") is True,
+            )
+        except ValueError as problem:
+            return Reply("roll_refused", {"why": str(problem)[:200]})
+        except OSError:
+            return Reply("roll_refused", {"why": "The roll couldn't be saved."})
+        return Reply("rolled", {"number": entry.number})
+
     return [
         MessageSpec(
             "events_since",
@@ -239,5 +268,14 @@ def event_specs(
                 "points": Field(int, low=1, high=99),
             },
             confidence,
+        ),
+        MessageSpec(
+            "answer",
+            {
+                "request": Field(int, low=1, high=10**6),
+                "character_id": Field(str, max_length=64),
+                "specialty": Field(bool, required=False),
+            },
+            answer,
         ),
     ]

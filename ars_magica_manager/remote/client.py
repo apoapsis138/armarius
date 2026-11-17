@@ -525,6 +525,21 @@ class RemoteClient:
             raise RollRefused(str(reply.body.get("why", "")))
         raise UnreadableReply
 
+    async def answer(self, request: int, character_id: str, specialty: bool) -> int:
+        """Ask the host to answer Roll request `request` for
+        `character_id`: the number of the roll's Chronicle entry.
+        RollRefused with the host's reason."""
+        reply = await self.request(
+            "answer",
+            {"request": request, "character_id": character_id, "specialty": specialty},
+        )
+        entry = reply.body.get("number")
+        if reply.type == "rolled" and isinstance(entry, int):
+            return entry
+        if reply.type == "roll_refused":
+            raise RollRefused(str(reply.body.get("why", "")))
+        raise UnreadableReply
+
     async def events(
         self, since: int, session_id: str = ""
     ) -> AsyncIterator[tuple[str, chronicle.Entry]]:
