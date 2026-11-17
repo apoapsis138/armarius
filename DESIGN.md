@@ -250,6 +250,45 @@ NOTICE.md. Never art from an image generator, nor its mockups.
   `q` quits, and on the desktop alone (`desktop_only`) `c` My sheet; a
   typed key never acts while a field is being filled in.
 
+**Colour vision** (every new screen, in both front-ends)
+
+About 1 man in 12 and 1 woman in 200 sees colour differently, its
+maintainer among them. Design for them from the first sketch, not as a
+fix afterwards.
+
+- **Never signal by colour alone.** Every state, outcome or kind of thing
+  that a colour marks has a second cue that needs no colour: a shape, a
+  fill, an icon, a word, a pattern, a position or a weight. Colour may
+  repeat the cue, never carry it alone. Take most care with red against
+  green, and with gold against amber or orange: the pairs most often seen
+  as one.
+- **Contrast**, measured against the theme's own page, to the targets of
+  WCAG 2.2 level AA: text at least 4.5:1 (1.4.3 Contrast (Minimum));
+  large text, and the marks that carry meaning (icons, dice, rules that
+  divide, focus rings) at least 3:1 (1.4.11 Non-text Contrast); and no
+  information by colour alone (1.4.1 Use of Color). Every theme meets
+  them, the dark House themes included: a mark drawn in a mid-tone accent
+  that passes on Scriptorum's paper can fail on a dark House's.
+- **How we check.** A test measures the contrast a new screen relies on
+  in every theme (the Chronicle pane's, in
+  `tests/test_gui_chronicle_pane.py`, holds the ink to 4.5:1 against the
+  paper of each theme, and is the pattern to follow). A test shows that
+  each state a colour marks is also told apart without it (by a widget's
+  shape or text, not its pen). And a new screen's screenshots are looked
+  at once in grayscale, or through a colour-vision simulator, before it
+  ships.
+- **The worked example: the Chronicle's d10.** A die is drawn in the
+  theme's ink, not its gold. A zero (the botch check, or a botch die) is
+  a solid die with its number knocked out in the paper's colour, and the
+  outcome line says "botch" in words. A 1 that exploded has a second rim
+  inside its face, and the chain is written beside it (×2, ×4) and once
+  more in the outcome ("die 5 ×4 = 20"). The warning colour on a zero is
+  a third cue, never the only one.
+- **What this covers.** This is the rule new work follows, and the
+  checks above hold it for the screens that have them. The older screens
+  have not been audited against it yet, so the app doesn't claim WCAG
+  conformance as a whole; a screen found to break the rule is a bug.
+
 **Terminal only** (Textual)
 
 - **One verb per key**: `a` add, `e` edit, `d` delete; rare actions in
