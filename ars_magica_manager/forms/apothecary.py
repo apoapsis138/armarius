@@ -9,7 +9,7 @@ from __future__ import annotations
 import random
 from typing import Any
 
-from .. import diaries
+from .. import diaries, dice_text
 from ..commands import Command, Form, Refuse, notes
 from ..form_spec import DialogField
 from ..markup import escape
@@ -70,16 +70,21 @@ def _die_problem(values: dict[str, Any], stress: bool) -> str | None:
 def _roll(
     saga: Saga, values: dict[str, Any], rng: random.Random, stress: bool
 ) -> tuple[int, bool, str]:
-    """The die: (its value, whether it botched, as shown)."""
+    """The die: (its value, whether it botched, as shown in the one dice
+    line's words)."""
     typed = values.get("die")
     if typed is not None:
         botched = stress and bool(values.get("botched"))
-        return int(typed), botched, "a botch" if botched else str(typed)
+        return (
+            int(typed),
+            botched,
+            f"Die {typed} (typed)" + (", a botch" if botched else ""),
+        )
     if not stress:
         die = dice.simple_die(rng)
-        return die, False, str(die)
+        return die, False, dice_text.die_text(dice_text.simple(die))
     found = dice.stress_die(rng, 1, saga=saga)
-    return found.value, found.botched, "a botch" if found.botched else str(found.value)
+    return found.value, found.botched, dice_text.die_text(found)
 
 
 # -- Make a Ligature -----------------------------------------------------------
@@ -173,7 +178,7 @@ def apply_ligature(
         outcome = f"{total}: +{bonus} to the roll it was made for."
     else:
         outcome = f"{total}: below 9, it gives nothing."
-    lines = [f"A ligature of {ability} for {purpose}. Die {shown}.", outcome]
+    lines = [f"A ligature of {ability} for {purpose}. {shown}.", outcome]
     if values.get("own_store"):
         character.labor_points -= ph.LIGATURE_LABOR
         lines.append(
@@ -385,7 +390,7 @@ def apply_store(
         else:
             outcome = f"{total} against {ease}: it won't keep even weeks."
         name = f"Preserved: {ingredient}"
-        lines = [f"Preserving {ingredient}. Die {shown}.", outcome]
+        lines = [f"Preserving {ingredient}. {shown}.", outcome]
     else:
         search = _search(values)
         ease = search.ease()
@@ -404,7 +409,7 @@ def apply_store(
         else:
             outcome = f"{total} against {ease}: nothing found this month; he may search again."
         name = f"Searched for: {ingredient}"
-        lines = [f"Searching for {ingredient}. Die {shown}.", outcome]
+        lines = [f"Searching for {ingredient}. {shown}.", outcome]
     diaries.write(
         saga.current_year,
         saga.current_season,
