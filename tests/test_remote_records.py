@@ -13,7 +13,7 @@ import pytest
 import pytest_asyncio
 from test_seat_view import LEAKS, hidden_saga
 
-from ars_magica_manager import players, storage
+from ars_magica_manager import atlas, picture_files, players, storage
 from ars_magica_manager.models import Saga
 from ars_magica_manager.remote import audit, protocol
 from ars_magica_manager.remote import identity as ident
@@ -156,6 +156,34 @@ async def test_only_a_picture_the_saga_names_is_sent(hosted: Hosted) -> None:
         assert await client.picture("portraits", "secret.png") is None
         assert await client.picture("portraits", "../sagas/host_saga.json") is None
         assert await client.picture("sagas", "anna.png") is None
+    finally:
+        await client.close()
+
+
+async def test_each_kind_of_picture_is_sent_up_to_its_own_limit(
+    hosted: Hosted,
+) -> None:
+    """A hand-drawn map is often far larger than a portrait: a 16 MB map
+    reaches the seat, while a map or portrait over its kind's limit is
+    refused (STORY-2339)."""
+    maps_cap = picture_files.KINDS["maps"].cap
+    portraits_cap = picture_files.KINDS["portraits"].cap
+    rhine = bytes(range(256)) * (16 * 4096)  # 16 MB
+    storage.maps_dir().mkdir(parents=True, exist_ok=True)
+    storage.portraits_dir().mkdir(parents=True, exist_ok=True)
+    (storage.maps_dir() / "rhine.png").write_bytes(rhine)
+    (storage.maps_dir() / "huge.png").write_bytes(b"\0" * (maps_cap + 1))
+    (storage.portraits_dir() / "anna.png").write_bytes(b"\0" * (portraits_cap + 1))
+    atlas.add_map(hosted.saga, "Rhine", None, picture="rhine.png")
+    atlas.add_map(hosted.saga, "Huge", None, picture="huge.png")
+    hosted.saga.characters[0].portrait = "anna.png"
+    storage.save_saga(hosted.saga)
+    _bump_mtime(hosted.saga)
+    client = await hosted.signed_in()
+    try:
+        assert await client.picture("maps", "rhine.png") == rhine
+        assert await client.picture("maps", "huge.png") is None
+        assert await client.picture("portraits", "anna.png") is None
     finally:
         await client.close()
 

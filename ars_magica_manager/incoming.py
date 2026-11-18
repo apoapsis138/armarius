@@ -22,8 +22,7 @@ from typing import Any
 
 #: Bytes in any JSON file coming in: a saga file, export, pack or cult.
 MAX_JSON = 50 * 1024 * 1024
-#: Bytes in one picture inside an export (as a Remote seat's picture).
-MAX_PICTURE = 5 * 1024 * 1024
+#: A picture's most is its kind's (picture_files.KINDS).
 #: Lists and records inside one another in a JSON file coming in. The
 #: deepest shipped pack or real save nests 12; reading what the app writes
 #: (shape check, from_dict) recurses once a level.

@@ -17,6 +17,7 @@ from ars_magica_manager import (
     cult_transfer,
     incoming,
     packs,
+    picture_files,
     portraits,
     shapes,
     storage,
@@ -494,7 +495,9 @@ def test_a_picture_over_the_limit_in_an_export_counts_as_missing(tmp_path):
     path = tmp_path / "home.amm.zip"
     with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as archive:
         archive.writestr("home.amm.json", "{}")
-        archive.writestr("portraits/big.jpg", b"\0" * (incoming.MAX_PICTURE + 1))
+        archive.writestr(
+            "portraits/big.jpg", b"\0" * (picture_files.KINDS["portraits"].cap + 1)
+        )
         archive.writestr("portraits/face.jpg", b"a face")
     pictures = transfer.Pictures(path)
     assert pictures.get("portraits", "big.jpg") is None
@@ -505,11 +508,26 @@ def test_a_picture_over_the_limit_beside_a_pack_counts_as_missing(tmp_path):
     pack = tmp_path / "pack.amm.json"
     pack.write_text("{}", encoding="utf-8")
     (tmp_path / "maps").mkdir()
-    _oversize(tmp_path / "maps" / "big.png", incoming.MAX_PICTURE + 1)
+    _oversize(tmp_path / "maps" / "big.png", picture_files.KINDS["maps"].cap + 1)
     (tmp_path / "maps" / "small.png").write_bytes(b"a map")
     pictures = transfer.Pictures(pack)
     assert pictures.get("maps", "big.png") is None
     assert pictures.get("maps", "small.png") == b"a map"
+
+
+def test_each_kind_of_picture_has_its_own_limit_in_an_export(tmp_path):
+    """A hand-drawn map may be far larger than a portrait (STORY-2339)."""
+    six_mb = b"\0" * (6 * 1024 * 1024)
+    path = tmp_path / "home.amm.zip"
+    with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as archive:
+        archive.writestr("home.amm.json", "{}")
+        archive.writestr("maps/rhine.png", six_mb)
+        archive.writestr("portraits/anna.png", six_mb)
+        archive.writestr("handouts/note.png", b"a handout")
+    pictures = transfer.Pictures(path)
+    assert pictures.get("maps", "rhine.png") == six_mb
+    assert pictures.get("portraits", "anna.png") is None
+    assert pictures.get("handouts", "note.png") is None  # no such kind yet
 
 
 def test_a_cult_file_over_the_limit_is_refused(tmp_path):

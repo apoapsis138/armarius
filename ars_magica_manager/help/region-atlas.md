@@ -51,6 +51,9 @@ drawn larger. A record can have a pin on each.
   stay.
 - The picture is copied into the **maps** folder beside the saga files.
   Moving or deleting your own file later changes nothing.
+- A map's picture can be up to 25 MB in an export or on the troupe's
+  Remote seats. A larger one is left out and shows as missing there,
+  so export a smaller copy of a very large map.
 - A map with no picture yet shows a **placeholder**. It's parchment with
   a grid lettered A to J along the top and numbered 1 to 10 down the
   side, a compass rose and the map's name.

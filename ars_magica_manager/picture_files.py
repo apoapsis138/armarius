@@ -7,16 +7,56 @@ Pages ask `picture(folder, name)` for the bytes, so they don't know which.
 A picture's name can come from someone else (an imported saga, a joined
 game's host, a player asking the host), so every path that reads or
 writes one by name asks `safe_name` first.
+
+Each kind of Picture (a map, a portrait) is one entry in KINDS: its folder
+and the most one may be. Everything that reads or sends a picture by its
+folder asks `kind`, and a folder that isn't a kind is never read (ADR 0029).
 """
 
 from __future__ import annotations
 
 from collections.abc import Callable
-from pathlib import PurePosixPath, PureWindowsPath
+from dataclasses import dataclass
+from pathlib import Path, PurePosixPath, PureWindowsPath
 
-from . import storage
+from . import paths
 
-PORTRAITS, MAPS = "portraits", "maps"
+PORTRAITS, MAPS = paths.PORTRAITS, paths.MAPS
+
+_MB = 1024 * 1024
+
+
+@dataclass(frozen=True)
+class PictureKind:
+    """One kind of Picture: the folder it is kept in (in the save folder,
+    and in an export's zip), and the most one may be in bytes, coming in
+    from an export or going between a host and a seat."""
+
+    folder: str
+    cap: int
+
+    def directory(self) -> Path:
+        """This computer's folder for the kind, in the save folder."""
+        return paths.data_dir() / self.folder
+
+    def megabytes(self) -> str:
+        return f"{self.cap // _MB} MB"
+
+
+#: Every kind of Picture, by folder. Pattern: Registry, so a new kind of
+#: record with pictures (a handout) is one entry here. A hand-drawn map is
+#: often far larger than a portrait.
+KINDS: dict[str, PictureKind] = {
+    found.folder: found
+    for found in (PictureKind(PORTRAITS, 5 * _MB), PictureKind(MAPS, 25 * _MB))
+}
+
+
+def kind(folder: str) -> PictureKind | None:
+    """The kind of Picture kept in `folder`, or None for any other name
+    (one from someone else's file or a seat is never a path)."""
+    return KINDS.get(folder)
+
 
 #: The kinds of picture a portrait or map can be.
 SUFFIXES = (".png", ".jpg", ".jpeg", ".webp", ".bmp", ".gif")
@@ -61,7 +101,8 @@ def use_host(fetch: Callable[[str, str], bytes | None] | None) -> None:
 
 def picture(folder: str, name: str) -> bytes | None:
     """The picture's bytes, or None when it isn't there."""
-    if not safe_name(name):
+    found_kind = kind(folder)
+    if found_kind is None or not safe_name(name):
         return None
     if _fetch is not None:
         key = (folder, name)
@@ -71,8 +112,7 @@ def picture(folder: str, name: str) -> bytes | None:
             except ConnectionError, TimeoutError:
                 return None  # the host can't be reached: asked again next time
         return _kept[key]
-    root = storage.portraits_dir() if folder == PORTRAITS else storage.maps_dir()
-    path = root / name
+    path = found_kind.directory() / name
     try:
         return path.read_bytes() if path.is_file() else None
     except OSError:
