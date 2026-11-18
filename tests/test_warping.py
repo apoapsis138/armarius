@@ -79,7 +79,10 @@ def test_two_points_at_once_can_bring_on_twilight():
 def test_resisting_twilight():
     saga = _saga()
     notes = seasons.gain_warping(saga, saga.characters[0], 2, _Dice(9, 0))
-    assert notes[-1] == "The magus regains control in two minutes."
+    assert notes[-2] == "The magus regains control in two minutes."
+    # STORY-2348: both sides' dice; the Warping's die can't botch, so its
+    # 0 is just 0 (DE p. 228).
+    assert notes[-1] == "Stress die 9; Stress die 0"
     assert saga.characters[0].aging.twilight_until == ""
 
 
@@ -101,7 +104,7 @@ def test_the_vim_form_bonus_helps_avoid_twilight():
     person.arts["vim"] = ArtScore(xp=art_xp(10))  # Form Bonus +2
     # Stamina 1 + Vim 2 + die 6 = 9 against 0 + 2 + aura 3 + 4 = 9.
     notes = seasons.gain_warping(saga, person, 2, _Dice(6, 4))
-    assert notes[-1] == "The magus regains control in two minutes."
+    assert notes[-2] == "The magus regains control in two minutes."
 
 
 def test_twilights_effects_are_sized_by_its_points():

@@ -267,11 +267,14 @@ def gain_warping(
     if answer is not None and at_once and points >= divine_state.trigger(character):
         if aura is None:
             aura, _ = home_aura(saga, character)
+        recorded = RecordingDice(rng)  # both sides' dice (DE p. 228)
         result = realm_warping.respond(
-            answer, character, points, aura, rng, saga, enter=enter
+            answer, character, points, aura, recorded, saga, enter=enter
         )
         source = realm_warping.SOURCES[answer]
         notes += result.notes
+        if recorded.said:
+            notes.append(recorded.said)
         if result.entered:
             name = realm_warping.NAMES[answer]
             if answer == realm_warping.MAGIC and (
