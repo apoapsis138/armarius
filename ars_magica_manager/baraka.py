@@ -11,7 +11,7 @@ from __future__ import annotations
 import random
 from typing import Any
 
-from . import diaries
+from . import diaries, table_rolls
 from .commands import Command, Form, Refuse, notes
 from .form_spec import DialogField
 from .markup import escape
@@ -194,7 +194,7 @@ def baraka_form(
     def apply(values: dict[str, Any]) -> list[str]:
         forbear = bk.FORBEARS[str(values["forbear"])]
         found = _asking(character, values)
-        rolled = bk.ask(found.total, rng or random.Random())
+        rolled = bk.ask(found.total, rng or table_rolls.dice())
         lines = [
             f"Die {rolled.die} + {found.total} = {rolled.rolled} against 15 + "
             f"{rolled.ease_die} = {rolled.ease}."
@@ -210,15 +210,19 @@ def baraka_form(
         _diary(saga, character, title, " ".join(lines))
         return notes(*map(escape, lines))
 
-    return Form(
-        f"{INVOKE}: {escape(character.name)}",
-        lambda: baraka_fields(character),
-        apply,
-        validate=_problem,
-        live=baraka_live(character),
-        save_label="Pray",
-        help_id=HELP_ID,
-        inspector="The Baraka",
+    return table_rolls.form(
+        Form(
+            f"{INVOKE}: {escape(character.name)}",
+            lambda: baraka_fields(character),
+            apply,
+            validate=_problem,
+            live=baraka_live(character),
+            save_label="Pray",
+            help_id=HELP_ID,
+            inspector="The Baraka",
+        ),
+        saga,
+        character_id=character.id,
     )
 
 

@@ -11,6 +11,7 @@ import random
 from collections.abc import Callable
 from typing import Any
 
+from .. import table_rolls
 from ..commands import Command, Form, Refuse, notes
 from ..form_spec import DialogField
 from ..markup import BULLET, escape
@@ -205,12 +206,16 @@ def hubris_form(
             "Hubris comes with a Verditius's first Inner Mystery (the Flaw "
             "Hubris; DE p. 241).",
         )
-    chance = rng or random.Random()
+    chance = rng or table_rolls.dice()
     magus = character
-    return Form(
-        f"{TITLE}: {escape(magus.name)}",
-        lambda: hubris_fields(magus),
-        lambda values: record(saga, magus, values, chance),
-        live=_live(magus),
-        help_id=HELP,
+    return table_rolls.form(
+        Form(
+            f"{TITLE}: {escape(magus.name)}",
+            lambda: hubris_fields(magus),
+            lambda values: record(saga, magus, values, chance),
+            live=_live(magus),
+            help_id=HELP,
+        ),
+        saga,
+        character_id=character.id,
     )

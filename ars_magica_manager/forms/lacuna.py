@@ -10,7 +10,7 @@ from __future__ import annotations
 import random
 from typing import Any
 
-from .. import catalog
+from .. import catalog, table_rolls
 from .. import spells as spl
 from ..arts import FORMS, TECHNIQUES
 from ..commands import Command, Form, Refuse, notes
@@ -422,16 +422,20 @@ def lacuna_form(
     """More's Cast in a Lacuna: the calculator; Roll rolls it once."""
     if magus is None or magus.type != "magus":
         return Refuse(TITLE, "Only a magus casts Hermetic spells.")
-    chance = rng or random.Random()
+    chance = rng or table_rolls.dice()
     caster = magus
-    return Form(
-        f"{TITLE}: {escape(caster.name)}",
-        lambda: lacuna_fields(saga, caster),
-        lambda values: roll(saga, caster, values, chance),
-        validate=_validate,
-        live=_live(saga, caster),
-        save_label="Roll",
-        cancel_label="Close",
-        help_id=HELP_ID,
-        inspector="The Casting",
+    return table_rolls.form(
+        Form(
+            f"{TITLE}: {escape(caster.name)}",
+            lambda: lacuna_fields(saga, caster),
+            lambda values: roll(saga, caster, values, chance),
+            validate=_validate,
+            live=_live(saga, caster),
+            save_label="Roll",
+            cancel_label="Close",
+            help_id=HELP_ID,
+            inspector="The Casting",
+        ),
+        saga,
+        character_id=magus.id,
     )

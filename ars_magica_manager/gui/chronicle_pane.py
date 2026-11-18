@@ -220,7 +220,11 @@ class DiceRow(QWidget):
         row.setSpacing(2)
         rows.addLayout(row)
         stress = bool(body.get("stress"))
-        faces = _wholes(body, "faces") if stress else [_whole(body, "die")]
+        if "form" in body:
+            # A form's Table roll: every face the host drew, as drawn.
+            faces = _wholes(body, "faces")
+        else:
+            faces = _wholes(body, "faces") if stress else [_whole(body, "die")]
         for index, face in enumerate(faces):
             shown = face if index == 0 or face or not stress else 10
             zero = stress and index == 0 and shown == 0
@@ -479,6 +483,65 @@ def roll_card(
         why.setObjectName("reason")
         card.column.addWidget(why)
     return card
+
+
+def form_roll_card(
+    entry: chronicle.Entry,
+    line: str,
+    p: Palette,
+    who_rolled: str,
+    reason: str | None,
+    strike: Callable[[], None] | None,
+) -> Card:
+    """A Table roll made from a form: who rolled, the form, every face the
+    host drew, and the form's own result, word for word (or that it was
+    drawn, then cancelled); `reason` when it was struck."""
+    body = entry.body
+    card = Card(line, p)
+    quiet = reason is not None
+    top = QHBoxLayout()
+    top.setSpacing(6)
+    character = str(body.get("character_name") or "") or "The storyguide"
+    name = text(
+        character,
+        p["dim"] if quiet else heading_ink(p),
+        heading_font(12.5, p, caps=True),
+    )
+    name.setObjectName("who")
+    top.addWidget(name)
+    if who_rolled:
+        player = text(who_rolled, p["dim"], serif(10.5, italic=True))
+        player.setObjectName("player")
+        top.addWidget(player, 0, Qt.AlignmentFlag.AlignBottom)
+    top.addStretch(1)
+    if entry.audience.to != chronicle.TABLE:
+        tag = "Blind" if entry.audience.to == chronicle.STORYGUIDE else "Private"
+        mark = text(tag, p["label"], serif(10, caps=True))
+        mark.setObjectName("visibility")
+        top.addWidget(mark)
+    card.column.addLayout(top)
+    ink = p["dim"] if quiet else p["foreground"]
+    what = text(str(body.get("form") or ""), ink, serif(12, italic=True), wrap=True)
+    what.setObjectName("what")
+    card.column.addWidget(what)
+    card.column.addWidget(DiceRow(body, p, quiet, strike))
+    lines = [str(said) for said in _list(body, "lines")]
+    if body.get("cancelled"):
+        lines = ["Drawn, then cancelled."]
+    for said in lines:
+        shown = text(said, p["dim"] if quiet else p["label"], serif(11), wrap=True)
+        shown.setObjectName("result")
+        card.column.addWidget(shown)
+    if reason is not None:
+        why = text(f"Struck: {reason}", p["label"], serif(10.5, italic=True), wrap=True)
+        why.setObjectName("reason")
+        card.column.addWidget(why)
+    return card
+
+
+def _list(body: dict[str, object], key: str) -> list[object]:
+    found = body.get(key)
+    return list(found) if isinstance(found, list) else []
 
 
 def _outcome(body: dict[str, object], p: Palette, struck: bool) -> QWidget:
@@ -781,7 +844,7 @@ class ChroniclePane(QWidget):
         if not self._reads(entry):
             return
         self._card(entry, chronicle.voided(book))
-        if entry.kind in (chronicle.ROLL, chronicle.ROLLED):
+        if entry.kind in (chronicle.ROLL, chronicle.FORM_ROLL, chronicle.ROLLED):
             sounds.play("tock")
         if self.collapsed:
             self.unseen += 1
@@ -845,11 +908,22 @@ class ChroniclePane(QWidget):
             self.cards.insertWidget(self.cards.count() - 1, self._request_card(entry))
             return
         line = chronicle.line(entry, struck)
+        number = entry.number
+        strike = (lambda: self.strike_roll(number)) if self._strikes() else None
+        if entry.kind == chronicle.FORM_ROLL:
+            card = form_roll_card(
+                entry,
+                line,
+                self.p,
+                self._player_name(str(entry.body.get("character_id") or "")),
+                struck.get(number),
+                strike,
+            )
+            self.cards.insertWidget(self.cards.count() - 1, card)
+            return
         if entry.kind != chronicle.ROLL:
             self.cards.insertWidget(self.cards.count() - 1, note_card(line, self.p))
             return
-        number = entry.number
-        strike = (lambda: self.strike_roll(number)) if self._strikes() else None
         spend = (
             (lambda: self.spend_confidence(number)) if self._spends(number) else None
         )

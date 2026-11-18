@@ -83,6 +83,7 @@ from .. import (
     storage,
     stores,
     storyguides,
+    table_rolls,
     title_page,
     undo_season,
     updates,
@@ -2348,6 +2349,7 @@ class MainWindow(QMainWindow):
             self._draw_seat_chronicle(saga, self.session)
             return
         sheet_roll_forms.use_sender(None)
+        table_rolls.use_seat(None)
         session = (
             chronicle.under_way(saga)
             if saga is not None and virtual_tabletop.on()
@@ -2420,6 +2422,7 @@ class MainWindow(QMainWindow):
         if session is None:
             pane.detach()
             sheet_roll_forms.use_sender(None)
+            table_rolls.use_seat(None)
             return
         held = self.seat_chronicle
         if held is None:
@@ -2447,6 +2450,7 @@ class MainWindow(QMainWindow):
             send_answer=seat.answer,
         )
         sheet_roll_forms.use_sender(seat.roll, held)
+        table_rolls.use_seat(seat.open_form_roll)
         if fresh:
             pane.set_collapsed(remembered_collapsed())
 

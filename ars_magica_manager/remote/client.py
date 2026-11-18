@@ -21,10 +21,10 @@ from typing import Any, Self, cast
 
 import aiohttp
 
-from .. import __version__, chronicle, players, storage, updates
+from .. import __version__, chronicle, players, storage, table_rolls, updates
 from ..models import Saga
 from .changes import SAGA, change_messages
-from .events import CHRONICLE, EVENTS, entry_of
+from .events import CHRONICLE, EVENTS, MAX_LINES, entry_of
 from .identity import normalise_pin
 from .proof import NONCE_BYTES, make_proof
 
@@ -539,6 +539,52 @@ class RemoteClient:
         if reply.type == "roll_refused":
             raise RollRefused(str(reply.body.get("why", "")))
         raise UnreadableReply
+
+    async def form_die(
+        self, opening: table_rolls.Opening, start: int, stop: int, step: int = 1
+    ) -> int:
+        """Ask the host for one die of a Table roll made from a form (the
+        first opens the roll on this connection): the face it drew, from
+        `range(start, stop, step)`. RollRefused with the host's reason."""
+        reply = await self.request(
+            "form_die",
+            {
+                "form": opening.form[:120],
+                "character_id": opening.character_id,
+                "visibility": opening.visibility,
+                "start": start,
+                "stop": stop,
+                "step": step,
+            },
+        )
+        face = reply.body.get("face")
+        if reply.type == "die" and isinstance(face, int):
+            if face not in range(start, stop, step):
+                raise UnreadableReply
+            return face
+        if reply.type == "roll_refused":
+            raise RollRefused(str(reply.body.get("why", "")))
+        raise UnreadableReply
+
+    async def form_done(self, lines: list[str]) -> int:
+        """Close this connection's form roll with the form's result lines:
+        the number of its Chronicle entry. RollRefused with the host's
+        reason."""
+        said = "\n".join(line.replace("\n", " ") for line in lines)[:MAX_LINES]
+        reply = await self.request("form_done", {"lines": said})
+        entry = reply.body.get("number")
+        if reply.type == "rolled" and isinstance(entry, int):
+            return entry
+        if reply.type == "roll_refused":
+            raise RollRefused(str(reply.body.get("why", "")))
+        raise UnreadableReply
+
+    async def form_cancel(self) -> None:
+        """Cancel this connection's form roll: the dice drawn stay in the
+        Chronicle, as cancelled."""
+        reply = await self.request("form_cancel")
+        if reply.type != "noted":
+            raise UnreadableReply
 
     async def events(
         self, since: int, session_id: str = ""

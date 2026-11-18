@@ -159,6 +159,9 @@ class RemoteHost:
             finally:
                 if session.device_id:
                     self._live.get(session.device_id, set()).discard(ws)
+                for closing in session.on_close:
+                    # Off the event loop: it may write to the Chronicle.
+                    await asyncio.to_thread(closing)
                 await ws.close()
             return ws
         finally:

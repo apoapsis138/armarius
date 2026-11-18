@@ -1490,7 +1490,7 @@ Choose a Session in Saga Management's Sessions and click **Cast at a Glance**. *
 
 Preview: turn on Virtual Tabletop in Settings.
 
-A Session's record of everything rolled while it's under way. Each line has its number, its time and what happened. A roll shows every die face: each 1 that doubled, and the botch dice after a 0. Then come the modifier, the total and, when the roll had one, the Ease Factor and whether it succeeded and by how much (DE pp. 7-8). A [roll from the sheet](help:sheet-roll) shows how its modifier was made: the Characteristic, the Ability, a Specialty and any wound or Fatigue penalty. Each Remote seat is sent the entries its player may see, as they come, and rolls through the host.
+A Session's record of everything rolled while it's under way. Each line has its number, its time and what happened. A roll shows every die face: each 1 that doubled, and the botch dice after a 0. Then come the modifier, the total and, when the roll had one, the Ease Factor and whether it succeeded and by how much (DE pp. 7-8). A [roll from the sheet](help:sheet-roll) shows how its modifier was made: the Characteristic, the Ability, a Specialty and any wound or Fatigue penalty. A [Table roll](help:table-rolls) made from one of the app's rolling forms shows the form, every face the host drew for it and the form's own result. Each Remote seat is sent the entries its player may see, as they come, and rolls through the host.
 
 <!-- gui -->
 On the desktop, the [Chronicle pane](help:chronicle-pane) shows it as it happens, on the host's computer and at each seat, and makes [Free rolls](help:free-roll).
@@ -1519,7 +1519,25 @@ Choose a Session in the Sessions list and press `m` for More. **Begin Session**,
 Choose a Session in Saga Management's Sessions and click **Begin Session**, **End Session** or **Chronicle**. The preview is turned on in the [Settings window](help:settings-window).
 <!-- /gui -->
 
-**See also:** [Sessions](help:tab-content-sessions)
+**See also:** [Sessions](help:tab-content-sessions), [Table rolls](help:table-rolls)
+
+### Table rolls
+<!-- help: table-rolls -->
+
+Preview: turn on Virtual Tabletop in Settings.
+
+While a Session is under way, a form whose roll the story calls for in the moment, for a character acting in a scene, is a **Table roll**: the host rolls its dice, and the roll goes to the [Chronicle](help:chronicle). These are the Personality Trait roll, Take Harm, Invoke Baraka, a saint's or God's aid, the holy life's and Theban customs' rolls, Holy Influence, Sin, Command the Beast, craft magic, Lacunae, Cast a Power, Galdor, Ars Goetia, the spirits, divination and dreams of Mythic Europe, faerie dealings, Turbulence, Reputation and House Acclaim, a cover's disguise, an agent's risks, a ship's Stress Check and Ship Combat, Open a Tunnel, melee events, disputations and polemic, a Tribunal debate, Sell Finished Goods, the Hunt, a place's roll tables, a town court's case, Exorcism and Hubris.
+
+- Each such form gains **Who sees the roll**: Public, Private, or Blind for the Session's storyguide alone. The storyguide's start at Blind, a player's at Public. A roll made without a form, such as a place's roll table or a Tribunal debate, is Blind for the storyguide and Public for a player.
+- A form's die field ("Stress die", "Blank: rolled") is hidden: the host rolls.
+- The form still works its rule and says what came of it as it always has. Its Chronicle line is the form's name, the character, every face the host drew in order, and the form's result, word for word.
+- At a Remote seat, each die is drawn from the host as the form needs it. The seat can't choose its dice or roll again quietly.
+- A form that fails after its dice are drawn, or a seat that drops mid-roll, leaves its dice in the Chronicle as drawn, then cancelled.
+- The storyguide may Strike a Table roll as any other. Confidence isn't spent on them.
+
+Rolls the season, the year or a project calls for (Advance Season, lab work, experimentation, aging, a covenant's or a manor's years) never post, even while a Session is under way, and outside a Session every form rolls as before. Fights, battles, sieges and certamen aren't Table rolls yet.
+
+**See also:** [The Chronicle](help:chronicle)
 
 ### The Chronicle pane
 <!-- help: chronicle-pane; gui -->

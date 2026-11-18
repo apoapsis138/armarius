@@ -9,7 +9,7 @@ from __future__ import annotations
 import random
 from typing import Any
 
-from .. import diaries, seasons, traditions
+from .. import diaries, seasons, table_rolls, traditions
 from ..commands import Form, notes
 from ..form_spec import DialogField
 from ..markup import escape, plural
@@ -280,7 +280,7 @@ def conjure(
     rng: random.Random | None = None,
 ) -> list[str]:
     """Sing the song and say what comes."""
-    rng = rng or random.Random()
+    rng = rng or table_rolls.dice()
     tradition = _tradition()
     song = values.get("song") or ""
     level = values.get("level") or 0
@@ -336,13 +336,18 @@ def conjure(
 
 
 def conjure_form(saga: Saga, character: Character) -> Form:
-    return Form(
-        f"{CONJURE_TITLE}: {escape(character.name)}",
-        lambda: conjure_fields(saga, character),
-        lambda values: conjure(saga, character, values),
-        validate=lambda values: conjure_problem(character, values),
-        save_label="Sing",
-        help_id=CONJURE_HELP,
+    return table_rolls.form(
+        Form(
+            f"{CONJURE_TITLE}: {escape(character.name)}",
+            lambda: conjure_fields(saga, character),
+            lambda values: conjure(saga, character, values),
+            validate=lambda values: conjure_problem(character, values),
+            save_label="Sing",
+            help_id=CONJURE_HELP,
+        ),
+        saga,
+        character_id=character.id,
+        typed=("die",),
     )
 
 
@@ -492,7 +497,7 @@ def bargain(
     rng: random.Random | None = None,
 ) -> list[str]:
     """Strike the deal, record the refusal, or roll for it."""
-    rng = rng or random.Random()
+    rng = rng or table_rolls.dice()
     lord, service = values["lord"], values.get("service") or ""
     name = f"Bargain: {lord}"
     how = values.get("how") or AGREES
@@ -537,13 +542,18 @@ def _flaw_name(vf_id: str) -> str:
 
 
 def bargain_form(saga: Saga, character: Character) -> Form:
-    return Form(
-        f"{BARGAIN_TITLE}: {escape(character.name)}",
-        lambda: bargain_fields(character),
-        lambda values: bargain(saga, character, values),
-        validate=bargain_problem,
-        save_label="Record",
-        help_id=BARGAIN_HELP,
+    return table_rolls.form(
+        Form(
+            f"{BARGAIN_TITLE}: {escape(character.name)}",
+            lambda: bargain_fields(character),
+            lambda values: bargain(saga, character, values),
+            validate=bargain_problem,
+            save_label="Record",
+            help_id=BARGAIN_HELP,
+        ),
+        saga,
+        character_id=character.id,
+        typed=("die",),
     )
 
 
@@ -656,7 +666,7 @@ def bind(
     rng: random.Random | None = None,
 ) -> list[str]:
     """Roll the binding; an item that takes goes on the chapter's list."""
-    rng = rng or random.Random()
+    rng = rng or table_rolls.dice()
     tradition = _tradition()
     rule = galdor.tradition_rule(tradition, "Galdor Enchantment")
     song = values.get("song") or ""
@@ -718,11 +728,16 @@ def bind(
 
 
 def bind_form(saga: Saga, character: Character) -> Form:
-    return Form(
-        f"{BIND_TITLE}: {escape(character.name)}",
-        lambda: bind_fields(saga, character),
-        lambda values: bind(saga, character, values),
-        validate=lambda values: bind_problem(character, values),
-        save_label="Bind",
-        help_id=BIND_HELP,
+    return table_rolls.form(
+        Form(
+            f"{BIND_TITLE}: {escape(character.name)}",
+            lambda: bind_fields(saga, character),
+            lambda values: bind(saga, character, values),
+            validate=lambda values: bind_problem(character, values),
+            save_label="Bind",
+            help_id=BIND_HELP,
+        ),
+        saga,
+        character_id=character.id,
+        typed=("die",),
     )

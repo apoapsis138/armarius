@@ -19,7 +19,7 @@ from __future__ import annotations
 import random
 from typing import Any
 
-from . import churches, diaries, sourcebooks
+from . import churches, diaries, sourcebooks, table_rolls
 from . import theban_customs as byzantine
 from .commands import Command, Form, Refuse, notes
 from .form_spec import DialogField
@@ -88,7 +88,7 @@ def _yazata_problem(values: dict[str, Any], threat: bool) -> str | None:
 
 
 def _rng(rng: random.Random | None) -> random.Random:
-    return rng or random.Random()
+    return rng or table_rolls.dice()
 
 
 def _number(value: Any) -> int:
@@ -554,15 +554,19 @@ def invoke_form(
         _diary(saga, character, title, " ".join(lines))
         return notes(*map(escape, lines))
 
-    return Form(
-        f"{INVOKE}: {escape(character.name)}",
-        lambda: invoke_fields(saga, character),
-        apply,
-        validate=_invoke_problem,
-        live=invoke_live(saga, character),
-        save_label="Pray",
-        help_id=HELP_ID,
-        inspector="The Invocation",
+    return table_rolls.form(
+        Form(
+            f"{INVOKE}: {escape(character.name)}",
+            lambda: invoke_fields(saga, character),
+            apply,
+            validate=_invoke_problem,
+            live=invoke_live(saga, character),
+            save_label="Pray",
+            help_id=HELP_ID,
+            inspector="The Invocation",
+        ),
+        saga,
+        character_id=character.id,
     )
 
 
@@ -710,15 +714,19 @@ def threaten_form(
         _diary(saga, character, f"Threatened {name}", " ".join(lines))
         return notes(*map(escape, lines))
 
-    return Form(
-        f"{THREATEN}: {escape(character.name)}",
-        lambda: threaten_fields(saga, character),
-        apply,
-        validate=_threat_problem(character),
-        live=threaten_live(saga, character),
-        save_label="Threaten",
-        help_id=HELP_ID,
-        inspector="The Threat",
+    return table_rolls.form(
+        Form(
+            f"{THREATEN}: {escape(character.name)}",
+            lambda: threaten_fields(saga, character),
+            apply,
+            validate=_threat_problem(character),
+            live=threaten_live(saga, character),
+            save_label="Threaten",
+            help_id=HELP_ID,
+            inspector="The Threat",
+        ),
+        saga,
+        character_id=character.id,
     )
 
 

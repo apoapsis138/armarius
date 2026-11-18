@@ -650,8 +650,40 @@ def _carry_out(
         botch_dice=request.botch_dice + extra if request.stress else 0,
         saga=saga,
     )
+    body = _body(saga, request, result, terms) | links
+    return _write_roll(
+        book,
+        saga,
+        session,
+        ROLL,
+        body,
+        visibility=request.visibility,
+        character_id=request.character_id,
+        for_what=request.for_what,
+        by=by,
+        player=player,
+    )
+
+
+def _write_roll(
+    book: Chronicle,
+    saga: Saga,
+    session: Session,
+    kind: str,
+    body: dict[str, Any],
+    *,
+    visibility: str,
+    character_id: str,
+    for_what: str,
+    by: str,
+    player: str | None,
+) -> Entry:
+    """Write a roll of `kind` seen as `visibility` says: a Private roll by
+    its roller, a Blind one by the storyguide alone, with a line told to
+    `player` (None: whoever plays the character tonight) that it was
+    rolled."""
     if player is None:
-        player = _player_of(session, request.character_id)
+        player = _player_of(session, character_id)
         roller = by if by != storyguide_of(session, saga) else ""
     else:
         roller = player
@@ -659,20 +691,99 @@ def _carry_out(
         PUBLIC: table(),
         PRIVATE: chosen(roller) if roller else chosen(),
         BLIND: storyguide_only(),
-    }[request.visibility]
+    }[visibility]
     # Worked out before anything is written, so nothing can fail between
     # the roll and its line.
-    name = _character_name(saga, request.character_id)
-    blind = request.visibility == BLIND and bool(player)
+    name = _character_name(saga, character_id)
+    blind = visibility == BLIND and bool(player)
 
     def rolled(roll: Entry) -> Written | None:
         if not blind:
             return None
-        body = {"roll": roll.number, "for": request.for_what, "character_name": name}
-        return (ROLLED, by, chosen(player), body)
+        told = {"roll": roll.number, "for": for_what, "character_name": name}
+        return (ROLLED, by, chosen(player), told)
 
-    body = _body(saga, request, result, terms) | links
-    return book.add(ROLL, by, audience, body, then=rolled)
+    return book.add(kind, by, audience, body, then=rolled)
+
+
+# -- Table rolls made from a form --
+
+#: A Table roll made from one of the app's rolling forms (table_rolls.py).
+FORM_ROLL = "form_roll"
+
+
+def why_not_form_roll(
+    saga: Saga, session: Session, character_id: str, visibility: str, who: str
+) -> str | None:
+    """Why `who` may not make a Table roll from a form, or None: only the
+    Session's storyguide rolls Blind."""
+    if visibility not in (PUBLIC, PRIVATE, BLIND):
+        return "Choose who sees the roll."
+    if character_id and _character(saga, character_id) is None:
+        return "That character isn't in the saga."
+    if visibility == BLIND and who != storyguide_of(session, saga):
+        return "Only the Session's storyguide rolls Blind."
+    return None
+
+
+def form_roll(
+    book: Chronicle,
+    saga: Saga,
+    session: Session,
+    *,
+    form: str,
+    character_id: str,
+    visibility: str,
+    faces: list[int],
+    lines: list[str],
+    by: str,
+    cancelled: bool = False,
+) -> Entry:
+    """Write a Table roll made from a form: the form's name, the
+    character, every face the host drew for it in order, and the form's
+    own result lines, word for word. A form cancelled after drawing is
+    written all the same, with no result, so nobody re-rolls by
+    cancelling."""
+    if book.closed:
+        raise ValueError("This Session has ended: its Chronicle is closed.")
+    problem = why_not_form_roll(saga, session, character_id, visibility, by)
+    if problem:
+        raise ValueError(problem)
+    body: dict[str, Any] = {
+        "form": form,
+        "character_id": character_id,
+        "character_name": _character_name(saga, character_id),
+        "faces": list(faces),
+        "lines": [] if cancelled else list(lines),
+        "cancelled": cancelled,
+    }
+    return _write_roll(
+        book,
+        saga,
+        session,
+        FORM_ROLL,
+        body,
+        visibility=visibility,
+        character_id=character_id,
+        for_what=form,
+        by=by,
+        player=None,
+    )
+
+
+def form_roll_line(body: dict[str, Any]) -> str:
+    """A form's Table roll as a line: the form, the character, the dice
+    and the form's own result."""
+    who = f", {body['character_name']}" if body.get("character_name") else ""
+    shown = " ".join(str(face) for face in body["faces"])
+    if body.get("cancelled"):
+        return f"{body['form']}{who}: dice {shown}; drawn, then cancelled."
+    said = " ".join(str(line) for line in body.get("lines", []))
+    return f"{body['form']}{who}: dice {shown}; {said}".rstrip("; ")
+
+
+#: The kinds of entry a Strike may take from the count: rolls.
+STRIKABLE = frozenset({ROLL, FORM_ROLL})
 
 
 def strike(
@@ -691,7 +802,7 @@ def strike(
     if not reason.strip():
         raise ValueError("Say why the roll doesn't count.")
     target = next((e for e in book.entries if e.number == number), None)
-    if target is None or target.kind != ROLL:
+    if target is None or target.kind not in STRIKABLE:
         raise ValueError("There is no such roll.")
     if number in voided(book):
         raise ValueError("That roll is already struck.")
@@ -1123,8 +1234,10 @@ def _line(entry: Entry, struck: dict[int, str]) -> str:
         return "Session begun."
     if entry.kind == END:
         return "Session ended."
-    if entry.kind == ROLL:
-        line = _roll_line(entry.body)
+    if entry.kind in STRIKABLE:
+        line = (
+            _roll_line(entry.body) if entry.kind == ROLL else form_roll_line(entry.body)
+        )
         if entry.number in struck:
             line = f"STRUCK ({struck[entry.number]}): {line}"
         if entry.audience.to != TABLE:
@@ -1291,7 +1404,7 @@ def calls_attention(
     """Whether `entry` is meant for `who` alone enough to call a collapsed
     pane's attention: a Blind roll's number for the Session's storyguide,
     or the line telling a player one was rolled for their character."""
-    if entry.kind == ROLL and entry.audience.to == STORYGUIDE:
+    if entry.kind in STRIKABLE and entry.audience.to == STORYGUIDE:
         return who == storyguide_of(session, saga)
     if entry.kind == ROLLED:
         return who in entry.audience.players

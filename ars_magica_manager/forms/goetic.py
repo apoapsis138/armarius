@@ -8,6 +8,7 @@ from __future__ import annotations
 import random
 from typing import Any
 
+from .. import table_rolls
 from ..commands import Command, Form, Refuse, notes
 from ..form_spec import DialogField, pairs
 from ..markup import BULLET, escape
@@ -263,15 +264,19 @@ def goetic_form(
     """More's Ars Goetia: the calculator; Roll rolls it once."""
     if character is None or not gr.holds_goetic_art(character):
         return Refuse(TITLE, "Only one who holds a Goetic Art works the Ars Goetia.")
-    chance = rng or random.Random()
+    chance = rng or table_rolls.dice()
     sorcerer = character
-    return Form(
-        f"{TITLE}: {escape(sorcerer.name)}",
-        lambda: goetic_fields(saga, sorcerer),
-        lambda values: roll(saga, sorcerer, values, chance),
-        live=_live(sorcerer),
-        save_label="Roll",
-        cancel_label="Close",
-        help_id=HELP_ID,
-        inspector="The Goetic Total",
+    return table_rolls.form(
+        Form(
+            f"{TITLE}: {escape(sorcerer.name)}",
+            lambda: goetic_fields(saga, sorcerer),
+            lambda values: roll(saga, sorcerer, values, chance),
+            live=_live(sorcerer),
+            save_label="Roll",
+            cancel_label="Close",
+            help_id=HELP_ID,
+            inspector="The Goetic Total",
+        ),
+        saga,
+        character_id=character.id,
     )

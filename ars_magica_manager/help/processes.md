@@ -1488,8 +1488,9 @@ The preview is turned on in the host's Settings, on the computer the storyguide 
 - The host sends a seat only what its player may see. A Private roll of someone else's, or a Blind roll's number, never leaves the host's computer for that seat. It isn't sent and hidden; it isn't sent at all.
 - A seat keeps the Chronicle in memory only. Nothing of it is written on the player's computer. Reconnecting, or starting the app again, it's sent again from the last entry it holds, or from the start.
 - A roll from a seat says what to roll, never the number. The host rolls it, for a character the player plays tonight, at most 30 a minute.
+- A [Table roll](help:table-rolls) made from a form at a seat draws each die from the host, one at a time, at most 50 dice a minute. The host keeps the faces and writes the roll; the seat sends back only the form's result. A seat that drops mid-roll leaves the dice it drew, as drawn, then cancelled.
 - An entry of a kind this version doesn't know shows as "Something this version can't show; update Armarius."
-- A seat on a version of Armarius from before the Chronicle can't join until it's updated, and an updated seat can't join a host that hasn't been.
+- A seat on a version of Armarius from before Table rolls can't join until it's updated, and an updated seat can't join a host that hasn't been.
 
 **See also:** [The Chronicle](help:chronicle), [Host for Remote Seats](help:host-remote-seats)
 

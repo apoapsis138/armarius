@@ -13,7 +13,7 @@ import random
 from dataclasses import replace
 from typing import Any
 
-from .. import diaries
+from .. import diaries, table_rolls
 from ..commands import Act, Command, Form, Refuse, SectionOps, delete, notes
 from ..form_spec import DialogField
 from ..markup import BULLET, escape, fit, plural
@@ -581,24 +581,31 @@ def impress(
     total, terms = _impress_terms(character)
 
     def apply() -> list[str]:
-        roll = dice.Roll(
-            total,
-            dice.stress_die(rng or random.Random(), saga=saga),
-            ag.IMPRESS_EASE,
-        )
-        shown = "a botch" if roll.die.botched else str(roll.die.value)
+        title = f"Impress: {escape(agent.name)}"
+        try:
+            with table_rolls.drawing(
+                saga, title, character_id=character.id, own=rng
+            ) as drawn:
+                roll = dice.Roll(
+                    total, dice.stress_die(drawn.dice, saga=saga), ag.IMPRESS_EASE
+                )
+                shown = "a botch" if roll.die.botched else str(roll.die.value)
+                said = notes(
+                    f"Impress {escape(agent.name)}: the die shows {shown}, + "
+                    f"{total} ({terms}) = {roll.total} against {ag.IMPRESS_EASE}.",
+                    f"{escape(agent.name)} is impressed: Agency experience can "
+                    "now wear his resistance down."
+                    if roll.succeeded
+                    else "He is not impressed: try again in another story (LoM p. 24).",
+                )
+                drawn.lines = said
+        except (ValueError, table_rolls.DiceUnavailable) as problem:
+            return notes(escape(f"Nothing was rolled: {problem}"))
         if roll.succeeded:
             agent.impressed = True
             if agent.resistance is None:
                 agent.resistance = ag.starting_resistance(agent)
-        return notes(
-            f"Impress {escape(agent.name)}: the die shows {shown}, + {total} "
-            f"({terms}) = {roll.total} against {ag.IMPRESS_EASE}.",
-            f"{escape(agent.name)} is impressed: Agency experience can now wear "
-            "his resistance down."
-            if roll.succeeded
-            else "He is not impressed: try again in another story (LoM p. 24).",
-        )
+        return said
 
     return Act(apply, title=f"Impress: {escape(agent.name)}")
 
@@ -888,7 +895,7 @@ def set_task(
         task, _timeframe, risk, ability, ease, total, _terms = _task_terms(
             character, agent, values
         )
-        die = _risk_die(saga, risk, rng or random.Random())
+        die = _risk_die(saga, risk, rng or table_rolls.dice())
         roll = dice.Roll(total, die, ease)
         shown = _die_shown(die)
         what = (values.get("what") or "").strip()
@@ -903,14 +910,18 @@ def set_task(
             + (", and the botch costs him dearly." if die.botched else "."),
         )
 
-    return Form(
-        f"Set a Task: {escape(agent.name)}",
-        lambda: task_fields(character, agent),
-        apply,
-        live=task_live(character, agent),
-        save_label="Roll",
-        help_id=AGENTS_SECTION,
-        inspector="The Task",
+    return table_rolls.form(
+        Form(
+            f"Set a Task: {escape(agent.name)}",
+            lambda: task_fields(character, agent),
+            apply,
+            live=task_live(character, agent),
+            save_label="Roll",
+            help_id=AGENTS_SECTION,
+            inspector="The Task",
+        ),
+        saga,
+        character_id=character.id,
     )
 
 
@@ -1059,7 +1070,7 @@ def resolve(
 
     def apply(values: dict[str, Any]) -> list[str]:
         total, ease, band, risk = _resolve_terms(values)
-        die = _risk_die(saga, risk, rng or random.Random())
+        die = _risk_die(saga, risk, rng or table_rolls.dice())
         roll = dice.Roll(total, die, ease)
         what = (values.get("what") or "").strip()
         using = (values.get("using") or "").strip() or "Characteristic + Ability"
@@ -1091,13 +1102,17 @@ def resolve(
             f"Written in {escape(character.name)}'s Diary.",
         )
 
-    return Form(
-        f"Resolve the Task: {escape(agent.name)}",
-        lambda: resolve_fields(agent),
-        apply,
-        validate=validate,
-        live=resolve_live(agent),
-        save_label="Roll",
-        help_id=RESOLVE_HELP,
-        inspector="His Roll",
+    return table_rolls.form(
+        Form(
+            f"Resolve the Task: {escape(agent.name)}",
+            lambda: resolve_fields(agent),
+            apply,
+            validate=validate,
+            live=resolve_live(agent),
+            save_label="Roll",
+            help_id=RESOLVE_HELP,
+            inspector="His Roll",
+        ),
+        saga,
+        character_id=character.id,
     )

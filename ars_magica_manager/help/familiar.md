@@ -135,6 +135,8 @@ rolls one of three things, each adding the bond's Silver Cord (DE p. 267).
 
 Leave the die blank to roll it. The result is shown, not kept.
 
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. The die field is hidden then. See [Table rolls](help:table-rolls).
+
 ### Virtues
 <!-- help: section-fam-vf-virtues; tui -->
 

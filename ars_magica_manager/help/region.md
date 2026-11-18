@@ -1356,6 +1356,8 @@ The inspector, The Verdict, shows the total and the die needed as you
 choose. Roll keeps the verdict and the roll on the case, then Edit
 passes sentence. Add, edit or delete a case.
 
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
+
 ### Sentences
 <!-- help: section-nb-sentences -->
 
@@ -2121,6 +2123,8 @@ Only the storyguide sees them and rolls. A player signed in to a hosted
 copy doesn't see them, as with Secrets (see
 [Keeping secrets from players](help:guide-hosting-secrets)). Played
 solo, the one player is the storyguide and sees everything.
+
+**At the table.** While a Session is under way, the host rolls a table's die and the roll goes to the [Chronicle](help:chronicle), Blind for the storyguide. See [Table rolls](help:table-rolls).
 
 ### Writing and rolling a table
 <!-- help: section-nb-tables -->

@@ -22,7 +22,7 @@ from dataclasses import fields as dataclass_fields
 from dataclasses import replace
 from typing import Any
 
-from .. import diaries, shapes, storage
+from .. import diaries, shapes, storage, table_rolls
 from .. import ships as ship_text
 from ..commands import Command, Form, Refuse, notes
 from ..form_spec import DialogField, attr, description_field, pairs
@@ -475,16 +475,19 @@ def stress_check(
         )
 
     def apply(values: dict[str, Any]) -> list[str]:
-        return roll_stress(saga, covenant, record, values, rng or random.Random())
+        return roll_stress(saga, covenant, record, values, rng or table_rolls.dice())
 
-    return Form(
-        f"{STRESS_TITLE}: {escape(record.name)}",
-        lambda: stress_fields(ship),
-        apply,
-        live=stress_live(saga, record),
-        save_label="Roll",
-        help_id=SHIPS_HELP,
-        inspector="Weathering It",
+    return table_rolls.form(
+        Form(
+            f"{STRESS_TITLE}: {escape(record.name)}",
+            lambda: stress_fields(ship),
+            apply,
+            live=stress_live(saga, record),
+            save_label="Roll",
+            help_id=SHIPS_HELP,
+            inspector="Weathering It",
+        ),
+        saga,
     )
 
 
@@ -771,17 +774,20 @@ def ship_combat(
         )
 
     def apply(values: dict[str, Any]) -> list[str]:
-        return roll_combat(saga, covenant, record, values, rng or random.Random())
+        return roll_combat(saga, covenant, record, values, rng or table_rolls.dice())
 
-    return Form(
-        f"{COMBAT_TITLE}: {escape(record.name)}",
-        lambda: combat_fields(saga, record),
-        apply,
-        validate=combat_problem(record),
-        live=combat_live(saga, record),
-        save_label="Roll",
-        help_id=SHIPS_HELP,
-        inspector="The Chase",
+    return table_rolls.form(
+        Form(
+            f"{COMBAT_TITLE}: {escape(record.name)}",
+            lambda: combat_fields(saga, record),
+            apply,
+            validate=combat_problem(record),
+            live=combat_live(saga, record),
+            save_label="Roll",
+            help_id=SHIPS_HELP,
+            inspector="The Chase",
+        ),
+        saga,
     )
 
 

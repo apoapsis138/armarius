@@ -14,6 +14,7 @@ import random
 from collections.abc import Callable
 from typing import Any
 
+from .. import table_rolls
 from ..commands import Command, Form, Refuse, notes
 from ..form_spec import DialogField
 from ..markup import BULLET, escape
@@ -446,16 +447,20 @@ def acclaim_form(
             "House Acclaim is kept by magi of House Bonisagus (True Lineages "
             "p. 21) and House Flambeau (Societates p. 31).",
         )
-    chance = rng or random.Random()
+    chance = rng or table_rolls.dice()
     magus = character
-    return Form(
-        f"{TITLE}: {escape(magus.name)}",
-        lambda: acclaim_fields(magus),
-        lambda values: record(saga, magus, values, chance),
-        validate=_problem(magus),
-        live=_live(magus),
-        help_id=HELP,
-        inspector=TITLE,
+    return table_rolls.form(
+        Form(
+            f"{TITLE}: {escape(magus.name)}",
+            lambda: acclaim_fields(magus),
+            lambda values: record(saga, magus, values, chance),
+            validate=_problem(magus),
+            live=_live(magus),
+            help_id=HELP,
+            inspector=TITLE,
+        ),
+        saga,
+        character_id=character.id,
     )
 
 
@@ -551,16 +556,20 @@ def roll_form(
         return Refuse(ROLL_TITLE, "Choose a character first.")
     if not character.reputations:
         return Refuse(ROLL_TITLE, f"{escape(character.name)} has no Reputation yet.")
-    chance = rng or random.Random()
+    chance = rng or table_rolls.dice()
     who = character
-    return Form(
-        f"{ROLL_TITLE}: {escape(who.name)}",
-        lambda: roll_fields(who),
-        lambda values: record_roll(saga, who, values, chance),
-        live=lambda values: "\n".join(
-            f"{BULLET} {escape(line)}" for line in roll_lines(who, values)
+    return table_rolls.form(
+        Form(
+            f"{ROLL_TITLE}: {escape(who.name)}",
+            lambda: roll_fields(who),
+            lambda values: record_roll(saga, who, values, chance),
+            live=lambda values: "\n".join(
+                f"{BULLET} {escape(line)}" for line in roll_lines(who, values)
+            ),
+            save_label="Roll",
+            help_id=ROLL_HELP,
+            inspector=ROLL_TITLE,
         ),
-        save_label="Roll",
-        help_id=ROLL_HELP,
-        inspector=ROLL_TITLE,
+        saga,
+        character_id=character.id,
     )

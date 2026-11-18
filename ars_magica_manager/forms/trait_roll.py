@@ -14,6 +14,7 @@ import random
 from collections.abc import Callable
 from typing import Any
 
+from .. import table_rolls
 from ..commands import Form, notes
 from ..form_spec import DialogField
 from ..markup import escape
@@ -150,7 +151,7 @@ def live(saga: Saga, bearer: Bearer, values: dict[str, Any]) -> str:
 
 
 def roll_form(saga: Saga, bearer: Bearer, rng: random.Random | None = None) -> Form:
-    dice_ = rng or random.Random()
+    dice_ = rng or table_rolls.dice()
 
     def apply(values: dict[str, Any]) -> list[str]:
         typed = values.get("die")
@@ -168,11 +169,16 @@ def roll_form(saga: Saga, bearer: Bearer, rng: random.Random | None = None) -> F
         kind = values.get("kind") or TRAIT
         return notes(escape(ROLLS[kind](saga, bearer, values, die)))
 
-    return Form(
-        f"{TITLE}: {escape(bearer.name or 'the familiar')}",
-        lambda: fields(saga, bearer),
-        apply,
-        live=lambda values: live(saga, bearer, values),
-        save_label="Roll",
-        help_id=HELP_ID,
+    return table_rolls.form(
+        Form(
+            f"{TITLE}: {escape(bearer.name or 'the familiar')}",
+            lambda: fields(saga, bearer),
+            apply,
+            live=lambda values: live(saga, bearer, values),
+            save_label="Roll",
+            help_id=HELP_ID,
+        ),
+        saga,
+        character_id=bearer.id if isinstance(bearer, Character) else "",
+        typed=("die",),
     )

@@ -11,7 +11,7 @@ from __future__ import annotations
 import random
 from typing import Any
 
-from . import diaries
+from . import diaries, table_rolls
 from .commands import Command, Form, Refuse, notes
 from .form_spec import DialogField
 from .markup import escape
@@ -98,11 +98,15 @@ def roll(
 def melee_form(saga: Saga, character: Character | None) -> Command:
     if character is None:
         return Refuse(TITLE, "Choose a character first.")
-    return Form(
-        f"{TITLE}: {escape(character.name)}",
-        lambda: fields(character),
-        lambda values: roll(saga, character, values, random.Random()),
-        live=live(character),
-        save_label="Roll",
-        help_id=HELP_ID,
+    return table_rolls.form(
+        Form(
+            f"{TITLE}: {escape(character.name)}",
+            lambda: fields(character),
+            lambda values: roll(saga, character, values, table_rolls.dice()),
+            live=live(character),
+            save_label="Roll",
+            help_id=HELP_ID,
+        ),
+        saga,
+        character_id=character.id,
     )

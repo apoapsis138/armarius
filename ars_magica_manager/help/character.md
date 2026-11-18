@@ -927,6 +927,8 @@ water, where Auram or Aquam counts. The bonuses never stack. Where two
 apply only the higher counts, and the result names the one used. Vim's
 bonus to avoiding Twilight is part of the Twilight roll.
 
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
+
 ## Recovery Roll
 <!-- help: recovery-roll -->
 
@@ -1099,6 +1101,8 @@ Tournament is in A Season's Work, under This Season on the Planning
 chapter.
 <!-- /gui -->
 
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
+
 ## Labor Points from a Story
 <!-- help: labor-from-story -->
 
@@ -1175,6 +1179,8 @@ Superior and excellent goods aren't priced by the guild, so give a higher
 standard price for them. The sale is written in the Diary, and the purse
 on Personal Gear isn't changed. This is apart from the Goods catalog's
 commodity prices.
+
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. The die field is hidden then. See [Table rolls](help:table-rolls).
 
 ## Make a Ligature
 <!-- help: ligature -->
@@ -1388,6 +1394,8 @@ requisite, as the Greater Dream Grimoire's Rego Corpus and Rego Terram
 spells have it (pp. 103-104, 109). A spell without one is refused. Only a
 magus with Dream Magic may learn them.
 
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. The die field is hidden then. See [Table rolls](help:table-rolls).
+
 ## Hermetic Sacrifice
 <!-- help: hermetic-sacrifice -->
 
@@ -1593,6 +1601,8 @@ chapter's Faith.
   Only that task done, or divine intervention, lifts it, so remove the Flaw
   then.
 
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
+
 ## Devotion and the Saints
 <!-- help: devotion -->
 
@@ -1699,6 +1709,8 @@ acts of piety:
   - A season's fast gives +1 to invoking a saint that season, and Invoke a
     Saint ticks it. It costs a Fatigue level all season.
 
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
+
 ## Confidence through Sin
 <!-- help: confidence-through-sin -->
 
@@ -1740,6 +1752,8 @@ mark of sin at any time, by confession and penance or a fast of atonement
 changes (p. 89). It also takes the False Gift, with every Supernatural
 Ability learned through it, the Hermetic Arts included (p. 124).
 
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
+
 ## Infernal Influence
 <!-- help: infernal-influence -->
 
@@ -1762,6 +1776,8 @@ Power: The Infernal, Infernal Influence and Tarnish, pp. 23-24).
 ceremony that needs Infernal Lore 1 and spends a Confidence Point.
 **Roll** rolls it, spends a ceremony's point and writes the result in the
 Diary.
+
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
 
 ## Mystic Paths
 <!-- help: mystic-path -->
@@ -1855,6 +1871,8 @@ it off and its margin, and what the Revelation brings. The Diary records
 it. The roll and what each Revelation needs are in
 [Mystic Paths](help:mystic-path).
 
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
+
 ## Holy Influence
 <!-- help: holy-influence -->
 
@@ -1900,6 +1918,8 @@ adds its modifier. That's everyone's Ceremony less their number, and each
 one's Presence + Leadership (p. 36). **Roll** rolls it, spends a
 ceremony's point and writes the result in the Diary.
 
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
+
 ## Invoking God's Aid
 <!-- help: gods-aid -->
 
@@ -1927,6 +1947,8 @@ limit. Only the highest counts, and it's lost when the group fails a roll
 or splits (p. 42). The inspector shows each bonus's chance, and the Diary
 records the prayer.
 
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
+
 ## Font of Knowledge
 <!-- help: font-of-knowledge -->
 
@@ -1944,6 +1966,8 @@ for each time they've drawn on it today, failures counted. Succeeding,
 they attempt a task with the Ability they lack as if they had it at 2.
 Name the Ability, and how often they've drawn on it today. The inspector
 shows the chance, and the Diary the roll.
+
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
 
 ## Commanding Aura
 <!-- help: commanding-aura -->
@@ -2001,6 +2025,8 @@ Infernal Reputation, to the total. The target adds the demon's Hierarchy x
 A magus who holds a Goetic Art may use Rego for it and Vim for the Lore
 (p. 124), and the total uses whichever is higher. Summoning may work as a
 Magic or Faerie Power for the aura. The other Arts are always Infernal.
+
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
 
 ## Spirits and Names
 <!-- help: spirits-and-names -->
@@ -2066,6 +2092,8 @@ repeats the figures. Nothing is kept, so apply what it gives by hand.
   cost + 5 x Decrepitude + 5 x their Flaw points if they outweigh their
   Virtues'. They roll Stamina against 9 or pass out.
 
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
+
 ## Ars Fabulosa
 <!-- help: ars-fabulosa -->
 
@@ -2078,6 +2106,8 @@ A summoner's bargaining powers (Realms of Power: Faerie pp. 131-134). They're of
 - **Dismissing** cancels an effect, ends one on a being, or frees a being from an agreement. Several in a round take 6 off each beyond the first. Deflecting a power first needs Quickness + Finesse against its Initiative.
 - **Experience.** A 1 on the die gives each ticked Trait an experience point, and each botch die's 0 takes one, beyond the Warping limit. A negative Trait works the other way round, a botch deepening the penalty and a 1 lessening it (p. 103). Raising a negative Trait costs 10 xp from -1 to 0, 15 from -2, 20 from -3. Losing a point with none banked lowers the Trait a step. The book doesn't say, so that's the app's assumption. The roll goes into the Diary.
 
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
+
 ## A Faerie Bargain
 <!-- help: faerie-bargain -->
 
@@ -2089,6 +2119,8 @@ How a bargain made in a summoning ended (RoP: Faerie pp. 132-133).
 - A Sympathy Trait used as a specialty on either roll makes it a stress die that may botch. A botch gives Warping Points, and the die's 1 or its botch moves the Trait's experience (pp. 102-103).
 - A summoner who breaks a bargain made in a summoning gains a -3 Sympathy Trait fitting the faerie, and may lose Faerie Rank. Dismissing can free the faerie instead (p. 134). It's kept in the Diary.
 
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
+
 ## An Offer to Faerie
 <!-- help: faerie-offer -->
 
@@ -2099,6 +2131,8 @@ In the Faerie Realm, a character with an unspent fable point may bargain with th
 - **Ease Factor.** It's the threat the change overcomes. Trivial 6, Minor 9, Serious 12, Major 15, Overwhelming 18. Elysium takes 6 off the roll, unless the offer puts its story back on track (Ease Factor 3 less).
 - With Art & Academe, artistic Reputation adds 1 for each 3 or part, and a Faerie Patron's Might 1 for each 5 or part.
 - It costs a fable point and a Long-Term Fatigue level whether or not it's accepted. It's kept in the Diary.
+
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
 
 ## Invest Time or Money
 <!-- help: merchant-investment -->
@@ -2148,6 +2182,8 @@ Choose who gives it, with Animal Handling (Ride for a mount, Magic Lore for a ta
 A feared task also asks a Loyalty test, its Loyal trait + a stress die, against 6 when it has no Confidence Score. A suicidal one always asks one, against 9. A botch may make it flee, do the wrong thing or turn on its master (DE p. 386).
 
 A tamed animal played season by season learns Abilities from anyone with Animal Handling, through **Be trained**. An animal grog has its yearly update instead. One it doesn't have yet asks a Loyalty test against 6 at the season's end, or the season is wasted (DE p. 385). In a fight, a group of tamed animals is led by its leader's Animal Handling, not their Leadership (DE p. 385).
+
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
 
 ## Reward or Punish
 <!-- help: grog-discipline -->
@@ -2221,6 +2257,8 @@ A deep cover's two rolls (Houses of Hermes: Societates pp. 87-88). The Definitiv
 - **Talking with someone** in disguise is Presence + Guile + stress die against their Intelligence + Folk Ken + stress die. It's a social roll, so The Gift's penalty counts.
 
 Leave a die blank to roll it. Nothing is changed, and the form shows whether the cover holds.
+
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. The die field is hidden then. See [Table rolls](help:table-rolls).
 
 ## Constant Effects
 <!-- help: section-char-constant-effects -->
@@ -2409,12 +2447,16 @@ Virtues and Flaws count:
 
 **Before a crowd** takes 3 from each roll of a Gifted disputer, unless theirs is a Gentle Gift. Academic Concentration and Aristotelian Training count for Artes Liberales as logic and rhetoric (Art & Academe, Chapter Eight: Universities).
 
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
+
 ## Cast a Power
 <!-- help: hedge-cast -->
 
 More beside a hedge wizard's Abilities rolls one casting by the tradition's own rule, as its [chapter](help:tradition-chapter) lists it. Choose the **Way of casting** and the **Arts or Ability used**. Type the effect's **Level or Ease Factor**, the **Aura** where it's cast (the covenant's, to start with) and any **Pawns of vis**, then choose Cast.
 
 The app works out the Casting Score and rolls the rule's die, or uses one typed in **Die**. It divides as the rule says and says whether the casting works. A rule that may fall short at a Fatigue level says so. A botch's zeroes give a Warping Point each (DE pp. 227, 389; Hedge Magic RE pp. 37, 96), which can bring on the character's answer to Warping as any other event does. The casting goes in the Diary.
+
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. The die field is hidden then. See [Table rolls](help:table-rolls).
 
 ## Conjure a Spirit
 <!-- help: galdor-conjure -->
@@ -2430,6 +2472,8 @@ More beside a galdraman's Abilities. A song calls a spirit to work one effect (*
 The total is Com + Music + Galdor Wisdom + the Song + the aura + a stress die, and it must be greater than the level. Landvaettir count as Faerie in every aura but a Magic one, so a Dominion hurts as a faerie would feel it. The spirit's Might is the total, and Penetration is reckoned as the Definitive Edition does.
 
 With **Hours he holds the song**, the app rolls Sta + Music for each hour, against 6 + the hours. Up to 3 short costs a Fatigue level, and worse ends the song. A total of twice the level leaves a Concentration effect working on for a die of hours. No vis boosts a song. It goes in the Diary, and a botch's zeroes give Warping Points.
+
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. The die field is hidden then. See [Table rolls](help:table-rolls).
 
 ## Bargain with a Lord
 <!-- help: galdor-bargain -->
@@ -2449,6 +2493,8 @@ The galdraman summoned nothing, so no Summoning Strength adds. Failure is no dea
 
 A missed tithe or service breaks a deal and may bring reprisals.
 
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. The die field is hidden then. See [Table rolls](help:table-rolls).
+
 ## Bind an Item
 <!-- help: galdor-bind -->
 
@@ -2458,6 +2504,8 @@ More beside a galdraman's Abilities, once a deal with a lord is on their sheet (
 - **A single service** needs only the level, and lasts a year and a day.
 
 The total is Com + Music + Galdor Wisdom + the Song + the item's bonuses + the aura + a stress die. Galdor Wisdom and the Song each count no higher than the **Craft used**. Craft: Runes, the book's Scribe Runes, may stand as the Craft and inscribes a ready-made item, but adds nothing. The Song must be at least the magnitude. The spirit takes about the vis a magus would spend, first. The item goes on the tradition's Effects and Items.
+
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. The die field is hidden then. See [Table rolls](help:table-rolls).
 
 ## A tradition's chapter
 <!-- help: tradition-chapter -->
@@ -3386,6 +3434,8 @@ right but has a hidden, fatal flaw. A failed Creo roll still makes the
 thing, without the details. A Creo botch makes something that hinders the
 caster.
 
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
+
 ## Open a Tunnel
 <!-- help: open-tunnel -->
 
@@ -3425,6 +3475,8 @@ it, unless its caster holds the Aegis's token (p. 79). Break the Siege
 suppresses a tunnel of less than its level + 2 magnitudes (errata p. 81).
 **Cast** rolls the tunnel once, and nothing is kept.
 
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
+
 ## Cast in a Lacuna
 <!-- help: cast-in-lacuna -->
 
@@ -3456,6 +3508,8 @@ With Mystical Choreography it takes 5, or 1 in any prepared space (DE p.
 The inspector shows the Casting Score in the lacuna and outside it, what
 the die must reach, the ceremony's time, the botch dice, and the cities
 whose lacunae the magus has found.
+
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
 
 ## Hubris
 <!-- help: verditius-hubris -->
@@ -3490,6 +3544,8 @@ kept in the Diary.
   challenger's (p. 120). Resisting a temptation to sell is left to the
   troupe, as an opposed Personality roll or a Confidence Point spent to
   walk away.
+
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
 
 **See also:** [Personality Traits](help:section-personality-traits),
 [Script components](help:guide-initiation-scripts)
@@ -3536,6 +3592,8 @@ open-ended (p. 62).
 
 The live box shows the total, the chance and the botch dice, one more per
 point of a non-Magic aura. **Roll** rolls it and keeps it in the Diary.
+
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
 
 ## Astrology
 <!-- help: tmre-astrology -->
@@ -3584,6 +3642,8 @@ gold. Then come Know the Heavens (InVi 29) and Track the Heavens (ReTe
 Celestial Magic's Laboratory Horoscope, when its die is typed on the plan,
 takes its bonus off the pawns of vis that open an invested device. At
 least one pawn is still paid (p. 49).
+
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
 
 ## House Acclaim
 <!-- help: house-acclaim -->
@@ -3667,6 +3727,8 @@ Miles gives 5 experience points in it.
 The inspector shows the points, the score they bring House Acclaim to and,
 once it's held, what it does.
 
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
+
 **See also:** [Reputations](help:section-reputations),
 [Reputation Roll](help:reputation-roll)
 
@@ -3693,6 +3755,8 @@ The more it beats the Ease Factor by, the more the listener has heard.
 Between two magi of the same Jerbiton league, every Reputation counts 3
 higher (Houses of Hermes: Societates p. 53). The roll is kept in the
 Diary.
+
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
 
 **See also:** [House Acclaim](help:house-acclaim)
 
@@ -4468,6 +4532,8 @@ The agent form's **The Agent** shows the resistance your choices give
 them. Set a Task's **The Task** shows the Ease Factor, the persuasion
 total and the botch dice before you roll.
 
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
+
 ## Resolve the Task
 <!-- help: agent-task-resolve -->
 
@@ -4488,6 +4554,8 @@ it in the character's Diary under the agent's name and the task.
 
 **His Roll** shows the total, the Ease Factor and the die the agent needs
 before you roll.
+
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
 
 ## Religion
 <!-- help: tab-religion -->
@@ -4617,6 +4685,8 @@ and their powers:
 
 **The Baraka** shows the total, the chance and the forbear's powers.
 **Pray** rolls it, and the Diary records it.
+
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
 
 ## The Hajj
 <!-- help: hajj -->
@@ -4836,6 +4906,8 @@ realms' auras don't hinder it (DE p. 411). It must reach the Might the
 demon invested in the energumen, and Penetrate their Magic Resistance if
 they have any. **Roll** rolls it. Mark the Points spent on the sheet. An
 Irregular cleric can't use Faith Points (p. 37), and the calculator warns.
+
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
 
 ## Edit Holy Orders
 <!-- help: edit-holy-orders -->
@@ -5267,6 +5339,8 @@ Gift as well. On a 0, they roll a botch die for every 10 of the parens'
 Lab Total, and any 0 loses it (p. 59). Then use Lose the Gift.
 
 **Roll** rolls it and writes it in the Diary.
+
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
 
 ## The Gauntlet
 <!-- help: gauntlet -->

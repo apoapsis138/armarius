@@ -16,10 +16,10 @@ from __future__ import annotations
 
 import asyncio
 import secrets
-from collections.abc import Callable
+from collections.abc import Callable, Coroutine
 from typing import Any
 
-from .. import chronicle, players
+from .. import chronicle, players, table_rolls
 from ..models import Saga
 from ..saga_store import NotSaved
 from ..undo_season import Undo
@@ -356,6 +356,21 @@ class SeatSession:
         finally:
             await client.close()
 
+    def open_form_roll(self, opening: table_rolls.Opening) -> SeatFormRoll:
+        """A Table roll made from a form at this seat: its dice drawn from
+        the host one at a time (table_rolls.use_seat takes this)."""
+        return SeatFormRoll(self, opening)
+
+    async def _connect_own(self) -> RemoteClient:
+        """A new connection of its own, signed in with the key kept."""
+        client = await RemoteClient.connect(self.url, self.pin)
+        try:
+            await client.sign_in_with(self._key, self.vault)
+        except BaseException:
+            await client.close()
+            raise
+        return client
+
     async def _confidence(self, number: int, points: int) -> int:
         client = await RemoteClient.connect(self.url, self.pin)
         try:
@@ -427,3 +442,85 @@ class SeatSession:
             except ChannelError, ConnectionError, TimeoutError:
                 pass  # dropped for now: try again shortly
             await asyncio.sleep(CHRONICLE_RETRY)
+
+
+class SeatFormRoll:
+    """A Table roll made from a form at a Remote seat (Remote Proxy): the
+    form takes `dice` as any source of chance, but each die is drawn by
+    the host, on a connection of its own kept open for this roll, so the
+    host can write the dice drawn as cancelled if the seat drops."""
+
+    def __init__(self, seat: SeatSession, opening: table_rolls.Opening) -> None:
+        self._seat, self.opening = seat, opening
+        self._client: RemoteClient | None = None
+        self.dice = _HostDice(self)
+
+    def _run[T](self, work: Callable[[RemoteClient], Coroutine[Any, Any, T]]) -> T:
+        """Run `work` on this roll's connection, opened at its first die."""
+
+        async def go() -> T:
+            if self._client is None:
+                self._client = await self._seat._connect_own()
+            return await work(self._client)
+
+        return self._seat._loop.run(go(), timeout=ROLL_WAIT)
+
+    def draw(self, start: int, stop: int, step: int) -> int:
+        """One die from the host. DiceUnavailable says why it can't be."""
+        try:
+            return self._run(lambda c: c.form_die(self.opening, start, stop, step))
+        except RollRefused as refused:
+            raise table_rolls.DiceUnavailable(refused.why) from None
+        except NeedsPasscode, NoCredential:
+            raise table_rolls.DiceUnavailable("Sign in again to roll.") from None
+        except ChannelError, SignInError, ConnectionError, TimeoutError:
+            raise table_rolls.DiceUnavailable(
+                "The host can't be reached just now."
+            ) from None
+
+    def finish(self, lines: list[str]) -> str | None:
+        if self._client is None:
+            return None  # no die drawn: nothing to write
+        try:
+            self._run(lambda c: c.form_done(lines))
+        except RollRefused as refused:
+            return refused.why
+        except ChannelError, SignInError, ConnectionError, TimeoutError:
+            return "The host can't be reached just now."
+        finally:
+            self._close()
+        return None
+
+    def cancel(self) -> None:
+        if self._client is None:
+            return
+        try:
+            self._run(lambda c: c.form_cancel())
+        except ChannelError, SignInError, ConnectionError, TimeoutError:
+            pass  # the host writes it as cancelled when the connection closes
+        finally:
+            self._close()
+
+    def _close(self) -> None:
+        client, self._client = self._client, None
+        if client is not None:
+            try:
+                self._seat._loop.run(client.close(), timeout=5)
+            except ConnectionError, TimeoutError:
+                pass  # already gone
+
+
+class _HostDice(table_rolls.DrawnDice):
+    """The source of chance a seat's form roll takes: every die the host's."""
+
+    def __init__(self, roll: SeatFormRoll) -> None:
+        super().__init__()
+        self._roll = roll
+
+    def randrange(self, start: int, stop: int | None = None, step: int = 1) -> int:
+        if stop is None:
+            start, stop = 0, start
+        return self._roll.draw(start, stop, step)
+
+    def randint(self, a: int, b: int) -> int:
+        return self.randrange(a, b + 1)

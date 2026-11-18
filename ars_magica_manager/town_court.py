@@ -28,6 +28,7 @@ import random
 from dataclasses import dataclass
 from typing import Any, Required, TypedDict, cast
 
+from . import table_rolls
 from .commands import Command, Form, Refuse, SectionOps, notes
 from .form_spec import DialogField, pairs
 from .grids import Grid
@@ -302,7 +303,7 @@ def court_roll(
 
     def apply(values: dict[str, Any]) -> list[str]:
         p = plea(saga, values)
-        die = dice.stress_die(rng or random.Random(), saga=saga)
+        die = dice.stress_die(rng or table_rolls.dice(), saga=saga)
         roll = dice.Roll(p.total, die, p.ease)
         shown = "a botch" if die.botched else str(die.value)
         innocent = bool(roll.succeeded)
@@ -320,14 +321,17 @@ def court_roll(
             f"({CG} p. 30).",
         )
 
-    return Form(
-        f"Court Roll: {escape(case['accused'])}",
-        lambda: roll_fields(saga),
-        apply,
-        live=roll_live(saga, case),
-        save_label="Roll",
-        help_id=COURT_CASES_SECTION,
-        inspector="The Verdict",
+    return table_rolls.form(
+        Form(
+            f"Court Roll: {escape(case['accused'])}",
+            lambda: roll_fields(saga),
+            apply,
+            live=roll_live(saga, case),
+            save_label="Roll",
+            help_id=COURT_CASES_SECTION,
+            inspector="The Verdict",
+        ),
+        saga,
     )
 
 

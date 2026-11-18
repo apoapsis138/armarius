@@ -10,7 +10,7 @@ from __future__ import annotations
 import random
 from typing import Any
 
-from .. import catalog, diaries
+from .. import catalog, diaries, table_rolls
 from .. import vis as vis_stores
 from ..arts import ARTS, FORMS, TECHNIQUES
 from ..commands import Command, Form, Refuse, notes
@@ -560,15 +560,22 @@ def dream_form(
             DREAM_TITLE,
             f"{escape(character.name)} doesn't know Dream Magic (TMRE p. 102).",
         )
-    return Form(
-        f"{DREAM_TITLE}: {escape(character.name)}",
-        lambda: dream_fields(saga, character),
-        lambda values: apply_dream(saga, character, values, rng or random.Random()),
-        validate=_dream_validate(saga, character),
-        live=dream_live(saga, character),
-        save_label="Roll",
-        help_id=DREAM_HELP,
-        inspector="The Dream",
+    return table_rolls.form(
+        Form(
+            f"{DREAM_TITLE}: {escape(character.name)}",
+            lambda: dream_fields(saga, character),
+            lambda values: apply_dream(
+                saga, character, values, rng or table_rolls.dice()
+            ),
+            validate=_dream_validate(saga, character),
+            live=dream_live(saga, character),
+            save_label="Roll",
+            help_id=DREAM_HELP,
+            inspector="The Dream",
+        ),
+        saga,
+        character_id=character.id,
+        typed=("die",),
     )
 
 

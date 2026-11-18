@@ -8,6 +8,7 @@ import copy
 import random
 from typing import Any
 
+from . import table_rolls
 from .commands import Command, Confirm, Form, Refuse
 from .form_spec import DialogField, pairs
 from .markup import escape
@@ -302,7 +303,7 @@ def take_harm_form(
     and kept (with a Diary entry) when confirmed."""
     if character is None:
         return Refuse(HARM_TITLE, "Choose a character first.")
-    dice = rng or random.Random()
+    dice = rng or table_rolls.dice()
 
     def apply(values: dict[str, Any]) -> Command:
         kind = values["kind"]
@@ -336,12 +337,16 @@ def take_harm_form(
             title=HARM_TITLE,
         )
 
-    return Form(
-        f"{HARM_TITLE}: {escape(character.name)}",
-        lambda: harm_fields(saga),
-        apply,
-        save_label="Roll",
-        help_id="take-harm",
+    return table_rolls.form(
+        Form(
+            f"{HARM_TITLE}: {escape(character.name)}",
+            lambda: harm_fields(saga),
+            apply,
+            save_label="Roll",
+            help_id="take-harm",
+        ),
+        saga,
+        character_id=character.id,
     )
 
 
