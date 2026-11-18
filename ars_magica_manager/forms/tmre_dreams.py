@@ -95,7 +95,7 @@ def _roll(
         return (
             int(typed),
             botched,
-            f"Die {typed} (typed)" + (", a botch" if botched else ""),
+            dice_text.typed(int(typed), botched),
         )
     found = dice.stress_die(rng, botch_dice, saga=saga)
     return found.value, found.botched, dice_text.die_text(found)

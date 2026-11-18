@@ -93,6 +93,11 @@ def terms_text(terms: Sequence[Term]) -> str:
 RolledOrTyped = DieResult | int
 
 
+def typed(value: int, botched: bool = False) -> str:
+    """A die typed in by hand, as the dice line says it."""
+    return f"Die {value} (typed)" + (", a botch" if botched else "")
+
+
 def value_of(die: RolledOrTyped) -> int:
     """What the die adds to the roll."""
     return die if isinstance(die, int) else die.value
@@ -110,7 +115,7 @@ def dice_line(
     higher than 0."""
     rolled = die if isinstance(die, DieResult) else None
     botched = rolled is not None and rolled.botched
-    line = _die(rolled) if rolled is not None else f"Die {die} (typed)"
+    line = _die(rolled) if rolled is not None else typed(value_of(die))
     if terms:
         line += f", {terms_text(terms)}"
     if terms or botched:

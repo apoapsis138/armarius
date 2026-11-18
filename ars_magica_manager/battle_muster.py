@@ -29,6 +29,7 @@ from typing import Any
 
 from . import armies, battles, diaries, lords
 from .commands import Choice, Choose, Command, Form, Refuse, notes
+from .dice_text import RolledOrTyped, dice_line, simple, value_of
 from .form_spec import DialogField
 from .markup import escape, problem
 from .models import Battle, BattleSide, Character, Neighbour, Saga
@@ -211,13 +212,16 @@ def raise_allies(saga: Saga, entry: Battle, rng: random.Random | None = None) ->
         side = _side(entry, values)
         total, _terms = ally_total(saga, values)
         typed = values.get("die")
-        die = typed if typed is not None else dice.simple_die(rolling)
-        rolled = total + die
+        die: RolledOrTyped = (
+            int(typed) if typed is not None else simple(dice.simple_die(rolling))
+        )
+        rolled = total + value_of(die)
         _share, name = battle.allied_proportion(rolled)
         extra = battle.allied_groups(values.get("core") or 0, rolled)
         battles.add_groups(side, battles.ALLIES, extra)
         called = "Crusaders" if values.get("crusade") else "Allies"
-        text = f"{called} called: {total} + die {die} = {rolled}" + (
+        said = dice_line(die, [("Modifier", total)], rolled)
+        text = f"{called} called: {said}" + (
             f": {name}, {extra} group(s) join." if extra else ": none come."
         )
         _diary(saga, entry, side, text)
@@ -431,10 +435,13 @@ def roll_deployment(
         who = saga.character(values.get("who"))
         base = deployment_total(who, (values.get("area") or "").strip())
         typed = values.get("die")
-        die = typed if typed is not None else dice.stress_die(rolling, 0).value
-        side.deployment = base + (values.get("spell") or 0) + die
-        text = f"Deployment Total {side.deployment} (Int + Area Lore {base}, die {die}"
-        text += f", spell {values['spell']})." if values.get("spell") else ")."
+        die: RolledOrTyped = (
+            int(typed) if typed is not None else dice.stress_die(rolling, 0)
+        )
+        spell = values.get("spell") or 0
+        side.deployment = base + spell + value_of(die)
+        terms = [("Int + Area Lore", base)] + ([("Spell", spell)] if spell else [])
+        text = f"Deployment Total: {dice_line(die, terms, side.deployment)}."
         _diary(saga, entry, side, text)
         return notes(escape(text))
 

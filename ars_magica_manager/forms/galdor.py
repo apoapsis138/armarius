@@ -144,7 +144,7 @@ def _die(
     if typed is not None:
         value = max(0, int(typed))
         zeroes = dice.botch_roll(rng, count, saga=saga) if value == 0 else 0
-        said = f"die {value} (typed)"
+        said = dice_text.typed(value)
     else:
         rolled = dice.stress_die(rng, count, saga=saga)
         # The one dice line's words: each doubling and the botch dice.

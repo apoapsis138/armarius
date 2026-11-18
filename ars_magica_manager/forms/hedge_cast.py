@@ -14,6 +14,7 @@ from .. import diaries, seasons, table_rolls
 from ..commands import Form, notes
 from ..dice_text import die_text as dice_words
 from ..dice_text import simple as dice_simple
+from ..dice_text import typed as dice_typed
 from ..form_spec import DialogField
 from ..markup import escape
 from ..models import Character, Saga, TraditionDef
@@ -163,7 +164,7 @@ def cast(
         die_text, value = "no die", 0
     elif typed is not None:
         value = max(0, int(typed))
-        die_text = f"die {value} (typed)"
+        die_text = dice_typed(value)
     elif rule.die == "simple":
         value = dice.simple_die(rng)
         die_text = dice_words(dice_simple(value))

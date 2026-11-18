@@ -233,9 +233,12 @@ def test_a_failed_morale_disorders_a_group_and_a_second_routs_it():
     rolled = fight_morale.rally_form(saga, fight, Faces(1, 4, 1, 3))
     assert isinstance(rolled, Form)
     told = rolled.apply({"group": group.id, "situation": "Not engaged"})
-    assert told[-1] == "Stress die 1, 4 → 4 × 2 = 8"
+    assert told == [
+        "Rallying Levies: Stress die 1, 4 → 4 × 2 = 8, Presence + Leadership +2 "
+        "= 10 vs 3: succeeds by 7. It is steady."
+    ]
     again = rolled.apply({"group": group.id, "situation": "Not engaged"})
-    assert again[-1] == "Stress die 1, 3 → 3 × 2 = 6"  # each save its own dice
+    assert "Stress die 1, 3 → 3 × 2 = 6" in again[0]  # each save its own dice
 
 
 def test_casting_amid_a_battle_needs_concentration():

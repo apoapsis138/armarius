@@ -160,7 +160,7 @@ def _roll(
         return (
             int(typed),
             botched,
-            f"Die {typed} (typed)" + (", a botch" if botched else ""),
+            dice_text.typed(int(typed), botched),
         )
     if not _important(values):
         die = dice.simple_die(rng)
