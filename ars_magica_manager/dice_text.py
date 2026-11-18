@@ -125,6 +125,19 @@ def dice_line(
     return f"{line}; {botch}" if botch else line
 
 
+def simple(value: int) -> DieResult:
+    """A simple die that showed `value` (1-10), as `rules.dice` keeps it."""
+    return DieResult(value=value, faces=(value % 10,), stress=False)
+
+
+def invocation_line(die: int, modifier: int, ease_die: int, base: int = 15) -> str:
+    """A simple die + modifier against `base` + the storyguide's simple die,
+    both sides shown (an Invocation: RoP: The Divine p. 87; baraka, Theban
+    oaths): "Simple die 9, +5 = 14 against 15 + Simple die 2 = 17"."""
+    rolled = dice_line(simple(die), [("Modifier", modifier)], die + modifier)
+    return f"{rolled} against {base} + {die_text(simple(ease_die))} = {base + ease_die}"
+
+
 def already_said(lines: Sequence[str], said: str) -> bool:
     """Whether `lines` already say every part of the dice line `said` (a
     roll that writes its own dice line needs no second)."""
