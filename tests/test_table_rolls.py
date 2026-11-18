@@ -126,11 +126,13 @@ def test_any_draw_through_the_recording_source_is_recorded() -> None:
 # -- outside a Session --
 
 
-def test_outside_a_session_the_form_is_unchanged() -> None:
+def test_outside_a_session_the_form_is_unchanged_but_for_its_dice_line() -> None:
     saga = _saga()
     inner = _rolling_form()
 
-    assert table_rolls.form(inner, saga, character_id="aelfric") is inner
+    shown = table_rolls.form(inner, saga, character_id="aelfric")
+
+    assert shown.title == inner.title and shown.fields is inner.fields
 
 
 def test_outside_a_session_the_form_rolls_its_own_dice() -> None:
@@ -183,7 +185,7 @@ def test_a_saved_form_roll_is_written_with_its_faces_and_result_line(
     lines = _wrapped(saga).apply({"ease": 6, table_rolls.VISIBILITY: chronicle.PUBLIC})
 
     [entry] = _form_rolls(book)
-    assert lines == ["die 8 against 6: [b]it holds[/b]."]
+    assert lines == ["die 8 against 6: [b]it holds[/b].", "Stress die 1, 4 → 4 × 2 = 8"]
     assert entry.author == HOST
     assert entry.audience == chronicle.table()
     assert entry.body["form"] == "Roll: Aelfric"
@@ -412,11 +414,14 @@ def test_at_a_seat_each_die_comes_from_the_host() -> None:
         table_rolls.use_seat(None)
         table_rolls.plain_source = random.Random
 
-    assert lines == ["die 8 against 6: [b]it holds[/b]."]
+    assert lines == ["die 8 against 6: [b]it holds[/b].", "Stress die 1, 4 → 4 × 2 = 8"]
     assert seat.asked == [
         table_rolls.Opening("Roll: Aelfric", "aelfric", chronicle.PUBLIC)
     ]
-    assert seat.finished == [["die 8 against 6: it holds."]]
+    # The host can't group a seat's faces, so the seat says its dice.
+    assert seat.finished == [
+        ["die 8 against 6: it holds.", "Stress die 1, 4 → 4 × 2 = 8"]
+    ]
     assert _form_rolls(book) == []  # the host writes it, not the seat
 
 
@@ -610,3 +615,60 @@ def test_a_form_that_asks_to_keep_its_roll_posts_the_rolls_result(faces: Any) ->
 
     [entry] = _form_rolls(book)
     assert entry.body["lines"] == ["Soak 6.", "No wound."]
+
+
+# -- the dice line on a Table roll form's own result (STORY-2348, part 2) --
+
+
+def test_outside_a_session_a_table_roll_forms_result_shows_its_dice() -> None:
+    saga = _saga()
+    table_rolls.plain_source = lambda: Faces(1, 1, 5)
+    try:
+        shown = _wrapped(saga).apply({"ease": 6})
+    finally:
+        table_rolls.plain_source = random.Random
+
+    assert shown[-1] == "Stress die 1, 1, 5 → 5 × 4 = 20"
+
+
+def test_under_way_the_result_shows_its_dice_and_the_chronicle_keeps_them_once(
+    faces: Any,
+) -> None:
+    saga, _session, book = _begun()
+    faces(0, 0)
+
+    shown = _wrapped(saga).apply({"ease": 6, table_rolls.VISIBILITY: chronicle.PUBLIC})
+
+    assert shown[-1] == "Stress die 0; 1 botch die 0: botch, 1 zero"
+    [entry] = _form_rolls(book)
+    assert chronicle.line(entry, {}) == (
+        "Roll: Aelfric, Aelfric: Stress die 0; 1 botch die 0: botch, 1 zero; "
+        "die 0 against 6: it fails."
+    )
+
+
+def test_a_typed_die_adds_no_dice_line() -> None:
+    shown = _wrapped(_saga()).apply({"ease": 6, "die": 7})
+
+    assert shown == ["die 7 against 6: [b]it holds[/b]."]
+
+
+def test_a_roll_outside_a_form_says_its_dice_in_or_out_of_a_session(
+    faces: Any,
+) -> None:
+    table_rolls.plain_source = lambda: Faces(1, 3)
+    try:
+        with table_rolls.drawing(_saga(), "Impress") as outside:
+            dice.stress_die(outside.dice, 1)
+    finally:
+        table_rolls.plain_source = random.Random
+    saga, _session, book = _begun()
+    faces(0, 4)
+    with table_rolls.drawing(saga, "Impress") as inside:
+        dice.stress_die(inside.dice, 1)
+        inside.lines = ["Not impressed."]
+
+    assert outside.said == "Stress die 1, 3 → 3 × 2 = 6"
+    assert inside.said == "Stress die 0; 1 botch die 4: no zeros"
+    [entry] = _form_rolls(book)
+    assert entry.body["dice"] == [{"stress": True, "faces": [0], "botch_faces": [4]}]

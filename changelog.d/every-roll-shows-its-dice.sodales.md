@@ -1,1 +1,1 @@
-**Every roll shows its dice.** A Table roll made from a form now shows each die in the Chronicle as a roll from the sheet does: a stress die's doublings worked out and its botch dice, in one shared wording. Take Harm and Disputatio rolls now carry their result too.
+**Every roll shows its dice.** Every rolling form that rolls its own dice now ends its result with the dice it rolled: a stress die's doublings worked out and its botch dice, in one shared wording that the Chronicle uses too. Take Harm and Disputatio rolls now post their result to the Chronicle as well.
