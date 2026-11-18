@@ -1626,16 +1626,26 @@ def line(entry: Entry, struck: dict[int, str]) -> str:
 
 
 def calls_attention(
-    entry: Entry, who: str, session: Session, saga: Saga | None = None
+    entry: Entry,
+    who: str,
+    session: Session,
+    saga: Saga | None = None,
+    *,
+    sent: bool = False,
 ) -> bool:
     """Whether `entry` is meant for `who` alone enough to call a collapsed
     pane's attention: a Blind roll's number for the Session's storyguide,
     or the line telling a player one was rolled for their character, or a
-    Whisper to them (named in its body, which a seat is sent too)."""
+    Whisper to them (named in its body, which a seat is sent too).
+    `sent`: the entry is one a host sent to `who`'s seat, which comes
+    without the Players chosen; the host sends the rolled line only to the
+    player it is for (and to the storyguide, whom it doesn't call)."""
     if entry.kind == MESSAGE:
         return who in entry.body.get("to", [])
     if entry.kind in STRIKABLE and entry.audience.to == STORYGUIDE:
         return who == storyguide_of(session, saga)
     if entry.kind == ROLLED:
+        if sent:
+            return who != storyguide_of(session, saga)
         return who in entry.audience.players
     return False

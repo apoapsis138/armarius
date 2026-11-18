@@ -933,7 +933,10 @@ class ChroniclePane(QWidget):
         if self.collapsed:
             self.unseen += 1
             self._draw_strip()
-            if chronicle.calls_attention(entry, self.who, session, self.saga):
+            sent = isinstance(book, chronicle.SeatChronicle)
+            if chronicle.calls_attention(
+                entry, self.who, session, self.saga, sent=sent
+            ):
                 self._pulse()
 
     def _grown(self, _low: int, high: int) -> None:
