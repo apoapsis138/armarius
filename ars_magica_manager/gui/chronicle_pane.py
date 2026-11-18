@@ -47,13 +47,15 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import artwork, chronicle, settings
+from .. import artwork, chronicle, references, settings
 from ..commands import Command, Refuse
 from ..forms import free_roll, roll_request
+from ..forms import message as message_forms
 from ..markup import escape
 from ..models import Saga, Session
 from ..style import fonts
 from . import motion, pictures, sounds
+from .figures import linked_value
 from .style import gilding
 from .style.ornaments import ShortRule
 from .style.paper import paper
@@ -373,6 +375,27 @@ def note_card(line: str, p: Palette) -> Card:
     return card
 
 
+def message_card(
+    line: str,
+    p: Palette,
+    fact: references.Fact,
+    follow: Callable[[references.Ref], None],
+) -> Card:
+    """A Message: who it is from (and for a Whisper, to whom) in small
+    type, then its words, each record named that the reader may open a
+    link."""
+    card = Card(line, p)
+    card.column.addWidget(
+        text(escape(fact.label), p["label"], serif(10.5, italic=True))
+    )
+    words = linked_value(fact, p, follow)
+    # Rich text runs lines together: the line breaks written are kept.
+    words.setText(words.text().replace("\n", "<br>"))
+    words.setObjectName("message-words")
+    card.column.addWidget(words)
+    return card
+
+
 #: One character of a Roll request, as its card shows it: the name,
 #: what came of it so far, and the answers this reader may give (a label
 #: and what it does).
@@ -675,6 +698,10 @@ class ChroniclePane(QWidget):
         self.send_confidence: free_roll.Spend | None = None
         #: Hands an answer to a Roll request to the host from a Remote seat.
         self.send_answer: Callable[[int, str, bool], str | None] | None = None
+        #: Hands a Message to the host from a Remote seat.
+        self.send_message: message_forms.Send | None = None
+        #: Opens a record a Message links (the window's open_ref).
+        self.open_record: Callable[[references.Ref], None] = lambda _ref: None
         self.who = ""
         self._stop: Callable[[], None] | None = None
         self.collapsed = False
@@ -732,6 +759,8 @@ class ChroniclePane(QWidget):
         column.addWidget(self.scroller, 1)
         self.roll_button = edit_button("Free Roll", p, self.free_roll, "add")
         column.addWidget(self.roll_button)
+        self.message_button = edit_button("Message", p, self.compose, "add")
+        column.addWidget(self.message_button)
         #: The storyguide's Roll request, on the host's computer.
         self.request_button = edit_button("Roll Request", p, self.request_rolls, "add")
         self.request_button.setVisible(False)
@@ -747,6 +776,7 @@ class ChroniclePane(QWidget):
         self.title.setFont(heading_font(16, p, caps=True))
         self.rule.p = p
         self.roll_button.setIcon(pictures.icon("add", p["label"], 14))
+        self.message_button.setIcon(pictures.icon("add", p["label"], 14))
         self.request_button.setIcon(pictures.icon("add", p["label"], 14))
         self._redraw_cards()
         self.update()
@@ -762,6 +792,7 @@ class ChroniclePane(QWidget):
         send_roll: free_roll.Submit | None = None,
         send_confidence: free_roll.Spend | None = None,
         send_answer: Callable[[int, str, bool], str | None] | None = None,
+        send_message: message_forms.Send | None = None,
     ) -> None:
         """Show `book`, as `who` may see it, and listen for what comes. A
         Remote seat's book holds only what its host sent it; `send_roll`
@@ -769,6 +800,7 @@ class ChroniclePane(QWidget):
         self.send_roll = send_roll
         self.send_confidence = send_confidence
         self.send_answer = send_answer
+        self.send_message = send_message
         self.request_button.setVisible(
             isinstance(book, chronicle.Chronicle)
             and who == chronicle.storyguide_of(session, saga)
@@ -776,6 +808,7 @@ class ChroniclePane(QWidget):
         same = self.book is book and self.who == who
         self.saga, self.session = saga, session
         self.roll_button.setEnabled(free_roll.may_roll(saga, session, who))
+        self.message_button.setEnabled(who in chronicle.at_session(saga, session))
         if same:
             return
         self.detach()
@@ -919,6 +952,12 @@ class ChroniclePane(QWidget):
                 struck.get(number),
                 strike,
             )
+            self.cards.insertWidget(self.cards.count() - 1, card)
+            return
+        if entry.kind == chronicle.MESSAGE and self.saga is not None:
+            viewer = chronicle.viewer_of(self.saga, self.who)
+            fact = chronicle.message_fact(entry, self.saga, viewer)
+            card = message_card(line, self.p, fact, lambda ref: self.open_record(ref))
             self.cards.insertWidget(self.cards.count() - 1, card)
             return
         if entry.kind != chronicle.ROLL:
@@ -1163,6 +1202,15 @@ class ChroniclePane(QWidget):
 
         sent = self.send_roll or submit
         self.run(free_roll.free_roll_form(saga, session, who, sent))
+
+    def compose(self) -> None:
+        """Write a Message: to the Table, or a Whisper."""
+        saga, session, book = self.saga, self.session, self.book
+        if saga is None or session is None or book is None:
+            return
+        who = self.who
+        sent = self.send_message or message_forms.send_here(saga, session, who)
+        self.run(message_forms.message_form(saga, session, who, sent))
 
 
 def dice_of(card: QWidget) -> DiceRow | None:

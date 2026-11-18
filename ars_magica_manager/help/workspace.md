@@ -1490,7 +1490,7 @@ Choose a Session in Saga Management's Sessions and click **Cast at a Glance**. *
 
 Preview: turn on Virtual Tabletop in Settings.
 
-A Session's record of everything rolled while it's under way. Each line has its number, its time and what happened. A roll shows every die face: each 1 that doubled, and the botch dice after a 0. Then come the modifier, the total and, when the roll had one, the Ease Factor and whether it succeeded and by how much (DE pp. 7-8). A [roll from the sheet](help:sheet-roll) shows how its modifier was made: the Characteristic, the Ability, a Specialty and any wound or Fatigue penalty. A [Table roll](help:table-rolls) made from one of the app's rolling forms shows the form, every face the host drew for it and the form's own result. Each Remote seat is sent the entries its player may see, as they come, and rolls through the host.
+A Session's record of everything said and rolled while it's under way. Each line has its number, its time and what happened. A roll shows every die face: each 1 that doubled, and the botch dice after a 0. Then come the modifier, the total and, when the roll had one, the Ease Factor and whether it succeeded and by how much (DE pp. 7-8). A [roll from the sheet](help:sheet-roll) shows how its modifier was made: the Characteristic, the Ability, a Specialty and any wound or Fatigue penalty. A [Table roll](help:table-rolls) made from one of the app's rolling forms shows the form, every face the host drew for it and the form's own result. A [Message](help:chronicle-messages) shows who it's from, and for a Whisper who it's to, then its words. Each Remote seat is sent the entries its player may see, as they come, and rolls and sends Messages through the host.
 
 <!-- gui -->
 On the desktop, the [Chronicle pane](help:chronicle-pane) shows it as it happens, on the host's computer and at each seat, and makes [Free rolls](help:free-roll).
@@ -1513,13 +1513,39 @@ A **Roll request** is the storyguide's call for chosen characters to roll a Char
 Every die is rolled on the host's computer, and the host's computer keeps the whole Chronicle in a file beside the saga, Private and Blind rolls included. The host's own window shows only what the host may see, but anyone at that computer could open the file. A saga's backups include its Chronicles. A headless host serves Remote seats as before, but the preview needs a host with the desktop app until 5.0.
 
 <!-- tui -->
-Choose a Session in the Sessions list and press `m` for More. **Begin Session**, **End Session** and **Chronicle** are there while the preview is on in the desktop app's Settings.
+Choose a Session in the Sessions list and press `m` for More. **Begin Session**, **End Session** and **Chronicle** are there while the preview is on in the desktop app's Settings, and **Message** while the Session is under way.
 <!-- /tui -->
 <!-- gui -->
 Choose a Session in Saga Management's Sessions and click **Begin Session**, **End Session** or **Chronicle**. The preview is turned on in the [Settings window](help:settings-window).
 <!-- /gui -->
 
-**See also:** [Sessions](help:tab-content-sessions), [Table rolls](help:table-rolls)
+**See also:** [Sessions](help:tab-content-sessions), [Table rolls](help:table-rolls), [Messages and Whispers](help:chronicle-messages)
+
+### Messages and Whispers
+<!-- help: chronicle-messages -->
+
+Preview: turn on Virtual Tabletop in Settings.
+
+Anyone at a Session under way can put words in its [Chronicle](help:chronicle): a **Message** to the Table, which everyone at the Session sees, or a **Whisper** to people you choose there. Players who are Away can't be chosen.
+
+- **The storyguide sees every Whisper.** The Session's storyguide reads every Whisper, between any players, and the composer says so. Under **To**, it says in words who will read what you write: "The Table: everyone at the Session", or "A Whisper to Ben, which the storyguide also sees".
+- **Nothing can be taken back.** Once sent, a Message stays as it was written, like every line of the Chronicle. Check **To** before you send.
+- **Plain words.** Letters of any language, digits, punctuation, maths signs, spaces and line breaks; at most 2,000 characters. Emoji and picture symbols, control characters, and invisible characters (zero-width ones, or ones that change the direction of the text, which could disguise a name or a link) are refused, and the one refused is named. The same rule holds for everything typed into the Chronicle.
+- **Linking a record.** Under **Link records**, choose from the records you may open; its name goes into your words. A reader who may open that record gets a link to it, and anyone else sees its name as you wrote it.
+<!-- gui -->
+- A Whisper to you pulses the collapsed [Chronicle pane](help:chronicle-pane); a Message to the Table only adds to its count.
+<!-- /gui -->
+
+Messages and Whispers stay in the Chronicle's file beside the saga: they're never written into the saga, so an Export or a Content pack can't carry them. The host's computer keeps every one, as it keeps every roll.
+
+<!-- tui -->
+Choose the Session under way in the Sessions list, press `m` for More and choose **Message**.
+<!-- /tui -->
+<!-- gui -->
+Click **Message** at the foot of the [Chronicle pane](help:chronicle-pane).
+<!-- /gui -->
+
+**See also:** [The Chronicle](help:chronicle)
 
 ### Table rolls
 <!-- help: table-rolls -->
@@ -1560,14 +1586,15 @@ A roll from the sheet has a line under what it's for saying how its modifier was
 **Spending Confidence:** click **Confidence** beside your roll's dice, or right-click them and choose **Spend Confidence**. It's there only on a roll you may spend Confidence on (see [The Chronicle](help:chronicle)). Say how many points; the spend shows as a card of its own with the new total.
 
 - **Free Roll**, at the foot, makes a [Free roll](help:free-roll).
+- **Message**, below it, sends a [Message or a Whisper](help:chronicle-messages). A Message is a card of who it's from, in small italic, and its words; a record it names that you may open is a link.
 - **Roll Request**, below it for the Session's storyguide on the host's computer, makes a [Roll request](help:roll-requests).
 - **›** collapses the pane to a thin gilt strip on the right edge, its name running up it and the count of entries come since in a small seal at its head. Click the strip to open it again. **Chronicle** in the top bar opens or collapses it too.
-- A Blind roll's number, for the Session's storyguide, or the line telling you one was rolled for your character pulses the strip once. Not with **Reduce motion** on. The pane never opens by itself.
+- A Blind roll's number, for the Session's storyguide, the line telling you one was rolled for your character, or a Whisper to you pulses the strip once. Not with **Reduce motion** on. The pane never opens by itself.
 - A roll landing plays a soft tock, with **Sounds** on.
 
 Whether it's open or collapsed is remembered for the next time the app starts with a Session under way.
 
-**At a Remote seat** the pane shows while your host's Session is under way, with only what the host sends you. **Free Roll**, Roll on a sheet and Confidence send what you ask to the host, which does it. Strike is the host's alone. On the host's computer, a seat's roll shows as soon as the listener writes it.
+**At a Remote seat** the pane shows while your host's Session is under way, with only what the host sends you. **Free Roll**, **Message**, Roll on a sheet and Confidence send what you ask to the host, which does it. Strike is the host's alone. On the host's computer, a seat's roll shows as soon as the listener writes it.
 
 **See also:** [How to roll at the table](help:guide-rolling), [Sessions](help:tab-content-sessions)
 

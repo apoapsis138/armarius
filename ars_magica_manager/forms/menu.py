@@ -141,6 +141,7 @@ from . import lacuna as lacuna_forms
 from . import land_shaping as land_forms
 from . import library as library_forms
 from . import markdown as markdown_forms
+from . import message as message_forms
 from . import mystery_cults as cult_forms
 from . import neighbour as neighbour_forms
 from . import pilgrimage as pilgrimage_forms
@@ -183,6 +184,8 @@ NOT_ON_PAGES = frozenset(
         "begin_session",
         "close_session",
         "read_chronicle",
+        # The Chronicle pane's own Message button.
+        "send_message",
         # The Secrets list's own row buttons.
         "reveal_secret",
         "conceal_secret",
@@ -2056,6 +2059,7 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "begin_session": lambda page: _on_session(page, session_forms.begin_session),
     "close_session": lambda page: _on_session(page, session_forms.end_session),
     "read_chronicle": lambda page: _on_session(page, session_forms.read_chronicle),
+    "send_message": lambda page: _on_session(page, message_forms.message_here),
     "tourney_season": _needs(_character, tourney_season.tourney_form),
     "melee_event": _needs(_character, melee_events.melee_form),
     "labor_story": _needs(_character, labor.story_form),

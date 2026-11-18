@@ -21,7 +21,15 @@ from typing import Any, Self, cast
 
 import aiohttp
 
-from .. import __version__, chronicle, players, storage, table_rolls, updates
+from .. import (
+    __version__,
+    chronicle,
+    players,
+    references,
+    storage,
+    table_rolls,
+    updates,
+)
 from ..models import Saga
 from .changes import SAGA, change_messages
 from .events import CHRONICLE, EVENTS, MAX_LINES, entry_of
@@ -105,6 +113,15 @@ class AlreadyAdvanced(Exception):
 
 class RollRefused(Exception):
     """The host wouldn't roll it; the reason, as the host said it."""
+
+    def __init__(self, why: str) -> None:
+        super().__init__(why)
+        self.why = why
+
+
+class MessageRefused(Exception):
+    """The host wouldn't write the Message; the reason, as the host said
+    it."""
 
     def __init__(self, why: str) -> None:
         super().__init__(why)
@@ -511,6 +528,30 @@ class RemoteClient:
             return number
         if reply.type == "roll_refused":
             raise RollRefused(str(reply.body.get("why", "")))
+        raise UnreadableReply
+
+    async def say(
+        self,
+        words: str,
+        to: tuple[str, ...] = (),
+        links: tuple[references.Ref, ...] = (),
+    ) -> int:
+        """Ask the host to write a Message: to the Table, or a Whisper to
+        `to`, linking `links`. The number of its Chronicle entry;
+        MessageRefused with the host's reason."""
+        reply = await self.request(
+            "say",
+            {
+                "words": words,
+                "to": "\n".join(to),
+                "links": "\n".join(f"{r.kind}:{r.id}:{r.name}" for r in links),
+            },
+        )
+        number = reply.body.get("number")
+        if reply.type == "said" and isinstance(number, int):
+            return number
+        if reply.type == "message_refused":
+            raise MessageRefused(str(reply.body.get("why", "")))
         raise UnreadableReply
 
     async def confidence(self, number: int, points: int) -> int:
