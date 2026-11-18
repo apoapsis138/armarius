@@ -672,3 +672,36 @@ def test_a_roll_outside_a_form_says_its_dice_in_or_out_of_a_session(
     assert inside.said == "Stress die 0; 1 botch die 4: no zeros"
     [entry] = _form_rolls(book)
     assert entry.body["dice"] == [{"stress": True, "faces": [0], "botch_faces": [4]}]
+
+
+def test_a_form_saved_inside_another_leaves_the_outer_watch_running() -> None:
+    saga = _saga()
+    inner = _wrapped(saga)
+
+    def apply(_values: dict[str, Any]) -> list[str]:
+        inner.apply({"ease": 6, "die": 7})  # typed: draws nothing
+        dice.stress_die(table_rolls.dice(), 1)
+        return notes("Done.")
+
+    table_rolls.plain_source = lambda: Faces(1, 3)
+    try:
+        shown = table_rolls.form(Form("Outer", list, apply), saga).apply({})
+    finally:
+        table_rolls.plain_source = random.Random
+
+    assert shown == ["Done.", "Stress die 1, 3 → 3 × 2 = 6"]
+
+
+def test_a_seat_roll_that_already_says_its_dice_doesnt_say_them_twice() -> None:
+    saga, _session, _book = _begun()
+    viewing.use(viewing.viewer_for(saga.players[0]))
+    seat = _FakeSeat(6)
+    table_rolls.use_seat(seat.open)
+    try:
+        with table_rolls.drawing(saga, "Impress") as drawn:
+            dice.stress_die(drawn.dice, 1)
+            drawn.lines = [f"Impress Udo: {drawn.said}, +5 = 11 vs 6."]
+    finally:
+        table_rolls.use_seat(None)
+
+    assert seat.finished == [["Impress Udo: Stress die 6, +5 = 11 vs 6."]]
