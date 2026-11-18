@@ -87,6 +87,12 @@ A hosted saga a Player's desktop holds a Remote seat in, listed on their
 shelf beside their own sagas.
 _Avoid_: Remote saga, connection
 
+**Picture**:
+An image a record shows: a map's, a character's portrait, and later a
+handout's. The host keeps it, named by its contents, so the same image is
+one Picture wherever it is shown, and each kind has its own largest size.
+_Avoid_: Image file, attachment, upload
+
 ### The table
 
 **Session**:
