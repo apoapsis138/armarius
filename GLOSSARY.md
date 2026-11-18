@@ -165,8 +165,12 @@ _Avoid_: void, cancel, rollback, delete, undo
 A die a person rolled by hand and entered, allowed by a saga option and marked as entered by them.
 _Avoid_: typed die, manual roll
 
+**Message**:
+Words someone at the Session puts in its Chronicle, to the Table or, as a Whisper, to chosen people. Plain words that may name records; once sent, it stays as sent.
+_Avoid_: chat, post, table talk
+
 **Whisper**:
-A message to chosen people at the Session. The Session's storyguide always sees it, and everyone is told so.
+A Message to chosen people at the Session. The Session's storyguide always sees it, and everyone is told so.
 _Avoid_: DM, private message
 
 **Condition**:
@@ -506,12 +510,16 @@ left out; a signed-in player always sees it this way.
 _Avoid_: Player mode, spoiler mode
 
 **Show**:
-To put a record, picture or Handout on chosen Players' screens as it is at that moment, without telling the troupe of it (that is Reveal).
+To put a record, picture or Handout on chosen Players' screens as it is at that moment, without telling the troupe of it (that is Reveal). Only the Session's storyguide Shows; each Show leaves a Handout with each Player shown.
 _Avoid_: push, share
 
+**Withdraw**:
+The storyguide's taking back of a Show: its Handout leaves the Players' Handouts, and the Chronicle keeps a line saying it was withdrawn.
+_Avoid_: unshow, recall, delete, Strike (which is for rolls)
+
 **Handout**:
-Something the characters find or are given (a letter, a picture of a place), shown to chosen Players, who keep it.
-_Avoid_: prop, attachment
+Something Shown to chosen Players that they keep: a letter, a picture, or a copy of a record as it stood when Shown. Each Player keeps theirs in their Handouts, arranged as they like.
+_Avoid_: prop, attachment, journal
 
 **Stationery**:
 The look a Handout is drawn on (vellum, a sealed letter, a proclamation).
