@@ -141,6 +141,14 @@ def whole_die(kept: Mapping[str, Any]) -> DieResult:
     return DieResult(value=value, faces=faces, stress=stress, botch_faces=botch_faces)
 
 
+def whole_dice_text(kept: Sequence[Mapping[str, Any]]) -> str:
+    """The whole dice among `kept` (faces drawn outside the die helpers
+    left to the roll's own words), as a result's last line says them;
+    "" when there are none."""
+    wholes = [die for die in kept if "face" not in die]
+    return dice_text(wholes) if wholes else ""
+
+
 def dice_text(kept: Sequence[Mapping[str, Any]]) -> str:
     """A form roll's dice as its entry keeps them: each whole die as
     `die_text` says it, and faces drawn outside the die helpers together

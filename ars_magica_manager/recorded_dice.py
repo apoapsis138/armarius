@@ -71,10 +71,17 @@ class RecordingDice(DrawnDice):
         self.faces.append(face)
         return face
 
+    def note(self, face: int) -> None:
+        """Keep a face drawn from some other source (a watch's)."""
+        self.faces.append(face)
+
     def die_made(self, die: dice_rules.DieResult) -> None:
         """`die`, just made from the last of the loose faces: kept whole
         (loose faces before it stay loose). A die whose faces aren't the
         last ones drawn is left as loose faces."""
+        listener = getattr(self._source, "die_made", None)
+        if callable(listener):  # a recording source under this one
+            listener(die)
         thrown = [*die.faces, *die.botch_faces]
         loose = self.faces[self._grouped :]
         if not thrown or loose[len(loose) - len(thrown) :] != thrown:
