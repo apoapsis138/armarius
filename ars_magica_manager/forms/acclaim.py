@@ -396,16 +396,12 @@ def record(
             rng, folio_bonus(character, values), int(values.get("opponent") or 0), saga
         )
         name = "An argument over a folio"
-        lines = [
-            f"Stress die {rolled.die} + {rolled.modifiers} = {rolled.total}: {rolled.said}"
-        ]
+        lines = [rolled.line]
     elif what == CIPHER:
         bonus, ease = _cipher(character, values)
         rolled = ac.decode_cipher(rng, bonus, ease, saga)
         name = "Trianoma's cipher"
-        lines = [
-            f"Stress die {rolled.die} + {rolled.modifiers} = {rolled.total}: {rolled.said}"
-        ]
+        lines = [rolled.line]
     else:
         award = _chosen(of, values)
         gained = points(of, values)
@@ -532,10 +528,7 @@ def record_roll(
     rolled = ac.heard_of(
         rng, rep, int(values.get("ease") or 0), bool(values.get("colleague")), saga
     )
-    line = (
-        f"{rep.name}: stress die {rolled.die} + {rolled.modifiers} = "
-        f"{rolled.total}: {rolled.said}"
-    )
+    line = f"{rep.name}: {rolled.line}"
     character.diary.append(
         DiaryEntry(
             saga.current_year,
