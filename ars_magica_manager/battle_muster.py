@@ -32,6 +32,7 @@ from .commands import Choice, Choose, Command, Form, Refuse, notes
 from .form_spec import DialogField
 from .markup import escape, problem
 from .models import Battle, BattleSide, Character, Neighbour, Saga
+from .recorded_dice import recording, showing_dice
 from .rules import battle, confidence, dice
 from .rules import siege as siege_rules
 from .rules.scores import ability_level
@@ -204,11 +205,13 @@ def _ally_problem(saga: Saga, values: dict[str, Any]) -> str | None:
 
 
 def raise_allies(saga: Saga, entry: Battle, rng: random.Random | None = None) -> Form:
+    rolling = recording(rng)
+
     def apply(values: dict[str, Any]) -> list[str]:
         side = _side(entry, values)
         total, _terms = ally_total(saga, values)
         typed = values.get("die")
-        die = typed if typed is not None else dice.simple_die(rng or random.Random())
+        die = typed if typed is not None else dice.simple_die(rolling)
         rolled = total + die
         _share, name = battle.allied_proportion(rolled)
         extra = battle.allied_groups(values.get("core") or 0, rolled)
@@ -220,6 +223,12 @@ def raise_allies(saga: Saga, entry: Battle, rng: random.Random | None = None) ->
         _diary(saga, entry, side, text)
         return notes(escape(text))
 
+    return showing_dice(_allies_form(saga, entry, apply), rolling)
+
+
+def _allies_form(
+    saga: Saga, entry: Battle, apply: Callable[[dict[str, Any]], list[str]]
+) -> Form:
     return Form(
         "Raise Allies",
         lambda: _ally_fields(saga, entry),
@@ -415,28 +424,29 @@ def _deploy_fields(saga: Saga, entry: Battle) -> list[DialogField]:
 def roll_deployment(
     saga: Saga, entry: Battle, rng: random.Random | None = None
 ) -> Form:
+    rolling = recording(rng)
+
     def apply(values: dict[str, Any]) -> list[str]:
         side = _side(entry, values)
         who = saga.character(values.get("who"))
         base = deployment_total(who, (values.get("area") or "").strip())
         typed = values.get("die")
-        die = (
-            typed
-            if typed is not None
-            else dice.stress_die(rng or random.Random(), 0).value
-        )
+        die = typed if typed is not None else dice.stress_die(rolling, 0).value
         side.deployment = base + (values.get("spell") or 0) + die
         text = f"Deployment Total {side.deployment} (Int + Area Lore {base}, die {die}"
         text += f", spell {values['spell']})." if values.get("spell") else ")."
         _diary(saga, entry, side, text)
         return notes(escape(text))
 
-    return Form(
-        "Roll Deployment",
-        lambda: _deploy_fields(saga, entry),
-        apply,
-        save_label="Roll",
-        help_id=HELP_ID,
+    return showing_dice(
+        Form(
+            "Roll Deployment",
+            lambda: _deploy_fields(saga, entry),
+            apply,
+            save_label="Roll",
+            help_id=HELP_ID,
+        ),
+        rolling,
     )
 
 

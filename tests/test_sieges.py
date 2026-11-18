@@ -83,7 +83,10 @@ def test_supplies_rolls_come_only_with_a_stockade():
     open_castle = Siege("S", days=60)
     assert rules.supplies_rolls(open_castle, Scripted()) == []
     held = Siege("S", besieger_walls=[1, 1, 1, 0], days=29)
-    assert rules.pass_interval(held, Scripted(5)) == ["Supplies roll: 8 against 4"]
+    # STORY-2348: the stress die shows beside the total.
+    assert rules.pass_interval(held, Scripted(5)) == [
+        "Supplies roll: 8 (Stress die 5) against 4"
+    ]
     assert (held.days, held.supply_rolls, held.supplies) == (30, 1, "Standard")
 
 

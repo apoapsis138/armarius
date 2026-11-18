@@ -18,7 +18,7 @@ PACKAGE = Path(table_rolls.__file__).parent
 #: own drawing (a picture's jitter), which roll nothing for the rules.
 LEFT_OUT = {"chronicle", "recorded_dice", "table_rolls"}
 BUILDS_A_SOURCE = re.compile(
-    r"random\.Random\(|SystemRandom\(|table_rolls\.(dice|drawing)\("
+    r"random\.Random\(|SystemRandom\(|table_rolls\.(dice|drawing)\(|\brecording\("
 )
 
 

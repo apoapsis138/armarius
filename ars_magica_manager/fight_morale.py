@@ -14,6 +14,7 @@ from .commands import Form, Refuse, notes
 from .form_spec import DialogField
 from .markup import escape
 from .models import Fight, FightEntry, FightGroup, Saga
+from .recorded_dice import recording, showing_dice
 from .rules import combat_options as co
 from .rules import dice, options
 from .rules import fight as fight_rules
@@ -150,7 +151,7 @@ def check_form(
         )
     if not _groups(fight):
         return Refuse(CHECK_TITLE, "The fight has no group to check.")
-    dice_ = rng or random.Random()
+    dice_ = recording(rng)
 
     def apply(values: dict[str, Any]) -> list[str]:
         group = _group(fight, values.get("group"))
@@ -181,12 +182,15 @@ def check_form(
         fight.log.append(FightEntry(fight.round, text))
         return notes(escape(text))
 
-    return Form(
-        CHECK_TITLE,
-        lambda: _check_fields(fight),
-        apply,
-        save_label="Roll",
-        help_id=HELP_ID,
+    return showing_dice(
+        Form(
+            CHECK_TITLE,
+            lambda: _check_fields(fight),
+            apply,
+            save_label="Roll",
+            help_id=HELP_ID,
+        ),
+        dice_,
     )
 
 
@@ -204,7 +208,7 @@ def rally_form(
     groups = _groups(fight, rallying=True)
     if not groups:
         return Refuse(RALLY_TITLE, "No group is disordered or routed.")
-    dice_ = rng or random.Random()
+    dice_ = recording(rng)
 
     def apply(values: dict[str, Any]) -> list[str]:
         group = _group(fight, values.get("group"))
@@ -227,6 +231,13 @@ def rally_form(
         fight.log.append(FightEntry(fight.round, text))
         return notes(escape(text))
 
+    return showing_dice(_rally(groups, apply), dice_)
+
+
+def _rally(
+    groups: list[tuple[str, str]], apply: Callable[[dict[str, Any]], list[str]]
+) -> Form:
+    """The Rally form, rolling with `apply`."""
     return Form(
         RALLY_TITLE,
         lambda: [

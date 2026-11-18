@@ -50,6 +50,7 @@ from __future__ import annotations
 import random
 from dataclasses import dataclass, field
 
+from .. import dice_text
 from ..models import WALLS, Outwork, Saga, Siege
 from . import dice
 from .scores import ability_level
@@ -696,7 +697,7 @@ def _supplies_roll(
     )
     total = 0 if die.botched else castle.supplies_bonus() + bread + die.value
     told = [
-        f"Supplies roll: {total} against {ease}"
+        f"Supplies roll: {total} ({dice_text.die_text(die)}) against {ease}"
         + (f" (Conjuration of Bread +{bread})" if bread else "")
     ]
     if die.botched:
