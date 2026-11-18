@@ -19,6 +19,7 @@ from PySide6.QtWidgets import QApplication, QLabel, QToolButton, QWidget
 from ars_magica_manager import (
     chronicle,
     commands,
+    references,
     settings,
     storage,
     viewing,
@@ -39,6 +40,7 @@ from ars_magica_manager.models import (
     Casting,
     Character,
     Characteristics,
+    Neighbour,
     Player,
     Saga,
     Session,
@@ -732,3 +734,72 @@ def test_a_blind_form_roll_is_marked_blind_for_the_storyguide() -> None:
     card = pane.card_list()[-1]
     labels = {w.objectName(): w.text() for w in card.findChildren(QLabel)}
     assert labels["visibility"] == "Blind"
+
+
+# -- Messages and Whispers --
+
+
+def _messages_pane(
+    who: str,
+) -> tuple[ChroniclePane, Saga, Session, chronicle.Chronicle, list[commands.Command]]:
+    """Ana and Ben at the Session; the players know the abbey."""
+    saga = _saga()
+    saga.players.append(Player("ben", "Ben"))
+    saga.neighbours = [Neighbour(id="abbey", name="St Gall")]
+    session = saga.sessions[0]
+    book = chronicle.begin(saga, session, by=HOST)
+    ran: list[commands.Command] = []
+    pane = ChroniclePane(SCRIPTORUM, ran.append)
+    pane.attach(saga, session, book, who)
+    return pane, saga, session, book, ran
+
+
+@pytest.mark.usefixtures("app")
+def test_message_runs_the_cores_composer() -> None:
+    pane, *_rest, ran = _messages_pane("ana")
+
+    assert pane.message_button.isEnabled()
+    pane.message_button.click()
+
+    assert isinstance(ran[0], commands.Form) and ran[0].title == "Message"
+
+
+@pytest.mark.usefixtures("app")
+def test_a_message_is_a_card_of_who_and_the_words_with_its_links() -> None:
+    pane, saga, session, book, _ran = _messages_pane("ben")
+    link = references.Ref("neighbours", "abbey", "St Gall")
+    chronicle.message(book, saga, session, "To St Gall!", links=(link,), by="ana")
+
+    card = pane.card_list()[-1]
+    assert card.line == "Ana: To St Gall!"
+    words = card.findChild(QLabel, "message-words")
+    assert words is not None and "St Gall" in words.text()
+    assert 'href="' in words.text()
+    followed: list[references.Ref] = []
+    pane.open_record = followed.append
+    words.linkActivated.emit(words.text().split('href="')[1].split('"')[0])
+    assert followed == [link]
+
+
+@pytest.mark.usefixtures("app")
+def test_a_whisper_to_you_pulses_the_strip_and_a_message_to_all_does_not(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(motion, "moving", lambda: True)
+    pane, saga, session, book, _ran = _messages_pane("ben")
+    pane.set_collapsed(True)
+
+    chronicle.message(book, saga, session, "Hello all.", by="ana")
+    chronicle.message(book, saga, session, "Psst.", to=("ben",), by="ana")
+
+    assert pane.unseen == 2 and pane.pulses == 1
+
+
+@pytest.mark.usefixtures("app")
+def test_a_messages_line_breaks_show_on_its_card() -> None:
+    pane, saga, session, book, _ran = _messages_pane("ben")
+    chronicle.message(book, saga, session, "First,\nsecond.", by="ana")
+
+    words = pane.card_list()[-1].findChild(QLabel, "message-words")
+
+    assert words is not None and "First,<br>second." in words.text()

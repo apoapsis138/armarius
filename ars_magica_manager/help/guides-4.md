@@ -2399,10 +2399,11 @@ Friday's game has started round your desk, and Ana's magus Aelfric is climbing a
 6. **Ask everyone to roll.** Click **Roll Request**, leave Aelfric and Brigit ticked, choose Perception and Awareness, Ease Factor 9, tick **Hide Ease Factor**, For "Spot the ambush". Click **Ask**. Ana and Ben each click **Roll** on its card; their totals fill in, and only you see who beat 9. Click **Outcome** to note what they saw. See [Roll requests](help:roll-requests).
 7. **Roll Blind** for something only you should know, such as whether Aelfric notices the ambush. Ana sees only that you rolled.
 8. **Roll from a form.** Aelfric's nerve is tested: on his sheet, click **More**, then **Roll** by Personality Traits. Choose Brave, Ease Factor 9, and leave **Who sees the roll** at Blind. The die field is gone: click **Roll**, and the host rolls. The form says whether his nerve holds, as ever, and the Chronicle shows the same words with the face drawn. See [Table rolls](help:table-rolls).
-9. **Strike a mistake.** Click **Strike** beside the dice of a roll made for the wrong character. Say why: the roll stays in the Chronicle, struck through and marked Struck, with your reason.
-10. **End the Session** with **End Session** on its row. It's marked Played, its Chronicle is kept to read from the row, and the Confidence spent comes off each sheet.
+9. **Whisper.** Click **Message**, choose Ben under **To**, and write that the abbot's ring is missing. Under **Link records**, choose St Gall, and its name goes into your words. **To** reads "A Whisper to Ben, which the storyguide also sees": click **Send**. Only Ben and you see it, and St Gall is a link for Ben if he may open it. See [Messages and Whispers](help:chronicle-messages).
+10. **Strike a mistake.** Click **Strike** beside the dice of a roll made for the wrong character. Say why: the roll stays in the Chronicle, struck through and marked Struck, with your reason.
+11. **End the Session** with **End Session** on its row. It's marked Played, its Chronicle is kept to read from the row, and the Confidence spent comes off each sheet.
 
-**See also:** [The Chronicle](help:chronicle), [Free roll](help:free-roll), [Roll from the sheet](help:sheet-roll), [Roll requests](help:roll-requests), [Table rolls](help:table-rolls)
+**See also:** [The Chronicle](help:chronicle), [Free roll](help:free-roll), [Roll from the sheet](help:sheet-roll), [Roll requests](help:roll-requests), [Table rolls](help:table-rolls), [Messages and Whispers](help:chronicle-messages)
 
 ## Storyguide at a Remote seat
 <!-- help: guide-rolling-seat; gui -->

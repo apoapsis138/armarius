@@ -23,6 +23,12 @@ Confidence on a roll already made (chronicle.spend_confidence), and
 `answer` answers a Roll request for a character the seat's Player rolls
 for (chronicle.answer). All count toward the seat's ROLLS_PER_MINUTE.
 
+A seat sends a Message with `say` (protocol 4): its words, those it
+Whispers to (none: the Table) and the records it links ("kind:id:name",
+refused if the host's saga has renamed one since the seat's copy). The host writes it as its Player
+(chronicle.message), and like any entry it is sent only to the seats
+that may see it. Messages count toward MESSAGES_PER_MINUTE.
+
 A seat's Table roll made from a form (table_rolls.py) works the form's
 rule at the seat, but draws each die from the host with `form_die`, one
 at a time: the first opens the roll on that connection (the form, the
@@ -43,7 +49,8 @@ import time
 from collections.abc import Callable
 from typing import Any
 
-from .. import chronicle, storage, table_rolls
+from .. import chronicle, references, shapes, storage, table_rolls
+from ..models import Saga
 from .limits import RateLimiter
 from .protocol import Body, Field, MessageSpec, Reply, Session
 
@@ -54,6 +61,8 @@ CHRONICLE = "chronicle"
 #: Rolls one seat may ask for in a minute (other requests have their own
 #: limit, Limits.messages_per_window).
 ROLLS_PER_MINUTE = 30
+#: Messages and Whispers one seat may send in a minute.
+MESSAGES_PER_MINUTE = 30
 #: Dice one seat may draw for form rolls in a minute: a form with stress
 #: doublings and botch dice draws several. Kept below a connection's own
 #: limit on messages, so the seat is told why rather than cut off.
@@ -65,7 +74,7 @@ MAX_LINES = 2_000
 EVERY = 1.0
 #: The longest body (as JSON text) a frame carries; an entry's body is a
 #: few hundred characters, far inside the secure channel's message.
-MAX_BODY = 8_000
+MAX_BODY = chronicle.ENTRY_LIMIT
 
 
 #: An entry too large to send whole: the seat shows it as one it can't
@@ -79,7 +88,8 @@ Cursor = tuple[str, int]
 
 def frame(session_id: str, entry: chronicle.Entry) -> Reply:
     """`entry` as a flat frame. Only who may see it in general (Table,
-    Storyguide or Chosen) goes, never the Players chosen."""
+    Storyguide or Chosen) goes, never the Players chosen (a Whisper's body
+    names those it is to, who each see the others' names on its card)."""
     body = json.dumps(entry.body, ensure_ascii=False)
     kind = entry.kind
     if len(body) > MAX_BODY:
@@ -143,6 +153,25 @@ def poller(saga_id: str) -> Callable[[str, Cursor], tuple[list[Reply], Cursor]]:
     return poll
 
 
+def _links(saga: Saga, text: str) -> tuple[references.Ref, ...] | str:
+    """The records a seat's Message links ("kind:id:name" a line, the name
+    as the seat wrote it), or why one can't be linked: no record of the
+    saga, or one renamed on the host since the seat's copy."""
+    found: list[references.Ref] = []
+    for line in text.split("\n"):
+        if not line:
+            continue
+        kind, _, rest = line.partition(":")
+        record_id, _, written = rest.partition(":")
+        record = references.find(saga, kind, record_id)
+        if record is None:
+            return "Link only records you may open."
+        if written and written != record.name:
+            return f"{written} is now {record.name} on the host: link it again."
+        found.append(references.Ref(kind, record_id, record.name))
+    return tuple(found)
+
+
 def _open_form_roll(saga_id: str, session: Session, body: Body) -> table_rolls.HostRoll:
     """A seat's form roll, opened at its first die: the Session under
     way, the form, the character and who sees it, checked as the host's
@@ -154,6 +183,9 @@ def _open_form_roll(saga_id: str, session: Session, body: Body) -> table_rolls.H
     under_way = chronicle.under_way(saga)
     if under_way is None:
         raise ValueError("No Session is under way.")
+    problem = chronicle.typed_problem(chronicle.FORM_ROLL, {"form": str(body["form"])})
+    if problem:
+        raise ValueError(problem)
     opening = table_rolls.Opening(
         str(body["form"]), str(body.get("character_id", "")), str(body["visibility"])
     )
@@ -200,6 +232,13 @@ def _form_roll_specs(saga_id: str, clock: Callable[[], float]) -> list[MessageSp
             return Reply("roll_refused", {"why": "No dice were drawn for that roll."})
         session.form_roll = None
         lines = [line for line in str(body.get("lines", "")).split("\n") if line]
+        problem = next(
+            (said for line in lines if (said := shapes.why_not_words(line))), None
+        )
+        if problem:
+            # Its dice stay in the Chronicle, as drawn, then cancelled.
+            roll.cancel()
+            return Reply("roll_refused", {"why": problem[:200]})
         refused = roll.finish(lines)
         if refused:
             return Reply("roll_refused", {"why": refused[:200]})
@@ -228,6 +267,57 @@ def _form_roll_specs(saga_id: str, clock: Callable[[], float]) -> list[MessageSp
             form_done,
         ),
         MessageSpec("form_cancel", {}, form_cancel),
+    ]
+
+
+def _message_specs(saga_id: str, clock: Callable[[], float]) -> list[MessageSpec]:
+    """`say`: a Message or Whisper from a seat, written by the host as its
+    Player."""
+    messages = RateLimiter(MESSAGES_PER_MINUTE, 60.0, clock)
+
+    def say(session: Session, body: Body) -> Reply:
+        if not messages.allow(session.device_id or session.player_id):
+            return Reply(
+                "message_refused", {"why": "Too many Messages: wait a minute."}
+            )
+        try:
+            saga = storage.load_saga(saga_id)
+        except OSError, ValueError:
+            return Reply("message_refused", {"why": "The saga can't be read just now."})
+        under_way = chronicle.under_way(saga)
+        if under_way is None:
+            return Reply("message_refused", {"why": "No Session is under way."})
+        to = tuple(t for t in str(body.get("to", "")).split("\n") if t)
+        links = _links(saga, str(body.get("links", "")))
+        if isinstance(links, str):
+            return Reply("message_refused", {"why": links[:200]})
+        book = chronicle.Chronicle(chronicle.path_of(saga, under_way), [])
+        try:
+            entry = chronicle.message(
+                book,
+                saga,
+                under_way,
+                str(body["words"]),
+                to=to,
+                links=links,
+                by=session.player_id,
+            )
+        except ValueError as problem:
+            return Reply("message_refused", {"why": str(problem)[:200]})
+        except OSError:
+            return Reply("message_refused", {"why": "The Message couldn't be saved."})
+        return Reply("said", {"number": entry.number})
+
+    return [
+        MessageSpec(
+            "say",
+            {
+                "words": Field(str, max_length=chronicle.MESSAGE_LIMIT),
+                "to": Field(str, max_length=2_000, required=False),
+                "links": Field(str, max_length=4_000, required=False),
+            },
+            say,
+        ),
     ]
 
 
@@ -342,6 +432,7 @@ def event_specs(
 
     return [
         *_form_roll_specs(saga_id, clock),
+        *_message_specs(saga_id, clock),
         MessageSpec(
             "events_since",
             {

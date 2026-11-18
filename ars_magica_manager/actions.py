@@ -53,7 +53,7 @@ from . import mystic_paths as mystic_forms
 from . import sessions as ss
 from . import spells as spl
 from .forms import acclaim as acclaim_forms
-from .forms import careers, go_to, sheet_roll, take_up
+from .forms import careers, go_to, message, sheet_roll, take_up
 from .forms import certamen_duel as certamen_forms
 from .forms import charter as charter_forms
 from .forms import hubris as hubris_forms
@@ -360,6 +360,8 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("b", "begin_session", "Begin Session"),
     MenuItem("n", "close_session", "End Session"),
     MenuItem("r", "read_chronicle", "Chronicle"),
+    # A Message or Whisper at the Session Under way (forms/message.py).
+    MenuItem("s", "send_message", "Message"),
     # Roll from the sheet, at the Session Under way (forms/sheet_roll.py).
     MenuItem("o", "sheet_roll", "Roll"),
     MenuItem("q", "teaching_requests", "Teaching Requests"),
@@ -627,6 +629,7 @@ MORE_SECTIONS: dict[str, str] = {
     "begin_session": SESSIONS_SECTION,
     "close_session": SESSIONS_SECTION,
     "read_chronicle": SESSIONS_SECTION,
+    "send_message": SESSIONS_SECTION,
     "teaching_requests": "section-char-season",
     "study_path": "section-char-season",
     "tourney_season": "section-reputations",
@@ -1785,6 +1788,12 @@ def _reads_chronicle(facts: ActionFacts, section: str) -> bool:
     return session is not None and chronicle.has_chronicle(facts.saga, session)
 
 
+def _sends_message(facts: ActionFacts, section: str) -> bool:
+    """Message, on the Session Under way, for anyone at it."""
+    session = _chosen_session(facts, section)
+    return session is not None and message.why_not_here(facts.saga, session) is None
+
+
 def _on_secret(facts: ActionFacts, section: str, *, revealed: bool) -> bool:
     """Reveal the Secret (one not revealed) or Hide the Secret Again (one
     revealed), on the chosen row of a record's Secrets."""
@@ -2123,6 +2132,7 @@ _SECTION_RULES: dict[str, Callable[[ActionFacts, str], bool]] = {
     "begin_session": _begins_session,
     "close_session": _ends_session,
     "read_chronicle": _reads_chronicle,
+    "send_message": _sends_message,
     "sheet_roll": _rolls_from_sheet,
     # Lords of Men's Morale and Discipline, a saga option.
     "group_morale": _with_morale_rules("group_morale"),
