@@ -254,3 +254,9 @@ def test_the_line_above_schedule_gives_the_season_s_odds():
     assert line.startswith("Odds stabilized 77%")
     assert "(risk +1 and move +1, as before)" in line
     assert form._odds_line(saga, magus, _plan(research="")) == ""
+
+
+def test_a_seasons_roll_has_one_wording_for_both_front_ends():
+    """STORY-2348: the desktop's roll title and the panel say it alike."""
+    _goal, attempt = research_text.log_entries(_magus_with_research())[1]
+    assert research_text.roll_words(attempt) == "die 6 + risk 1 = 7, moved +1 = 8"

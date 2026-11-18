@@ -1524,9 +1524,9 @@ Choose a Session in Saga Management's Sessions and click **Begin Session**, **En
 ### How a roll shows its dice
 <!-- help: dice-line -->
 
-Every rolling form that rolls its own dice ends what it says with a line of the dice it rolled, in the same words wherever a roll shows: the form's result and the Chronicle. A stress die shows each 1 that doubled and works the doubling out (Stress die 1, 1, 5 → 5 × 4 = 20); a 0 shows its botch dice and how many came up 0 (Stress die 0; 2 botch dice 0, 4: botch, 1 zero). A simple die shows its number, a 0 read as 10 (DE p. 7). A roll from the sheet or a Free roll adds its modifiers, total and Ease Factor: Stress die 6, Presence +2, Charm +3 = 11 vs 9: succeeds by 2.
+Every rolling form that rolls its own dice ends what it says with a line of the dice it rolled, in the same words wherever a roll shows: the form's result, the Chronicle, each season's result in Advance Season, and an aging roll's Diary entry. Diary entries written before this version stay as they were. A stress die shows each 1 that doubled and works the doubling out (Stress die 1, 1, 5 → 5 × 4 = 20); a 0 shows its botch dice and how many came up 0 (Stress die 0; 2 botch dice 0, 4: botch, 1 zero). A simple die shows its number, a 0 read as 10 (DE p. 7). A roll from the sheet or a Free roll adds its modifiers, total and Ease Factor: Stress die 6, Presence +2, Charm +3 = 11 vs 9: succeeds by 2.
 
-A die you type in yourself adds no line: only the dice the app rolls are shown.
+A die you type in yourself adds no line: only the dice the app rolls are shown. Two rolls use fixed seeds and show no dice: a generated book-pack character and Hibernia's bidding.
 
 **See also:** [The Chronicle](help:chronicle), [Table rolls](help:table-rolls)
 

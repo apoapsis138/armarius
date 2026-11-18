@@ -114,7 +114,7 @@ def dice_line(
 
 
 def whole_die(kept: Mapping[str, Any]) -> DieResult:
-    """A whole die as a form roll's entry keeps it (table_rolls.Die:
+    """A whole die as a form roll's entry keeps it (recorded_dice.Die:
     stress, faces, botch_faces), with its value worked out again."""
     faces = tuple(int(face) for face in kept["faces"])
     botch_faces = tuple(int(face) for face in kept["botch_faces"])
@@ -128,6 +128,14 @@ def whole_die(kept: Mapping[str, Any]) -> DieResult:
     else:
         value = (faces[-1] or 10) * 2 ** (len(faces) - 1)
     return DieResult(value=value, faces=faces, stress=stress, botch_faces=botch_faces)
+
+
+def whole_dice_text(kept: Sequence[Mapping[str, Any]]) -> str:
+    """The whole dice among `kept` (faces drawn outside the die helpers
+    left to the roll's own words), as a result's last line says them;
+    "" when there are none."""
+    wholes = [die for die in kept if "face" not in die]
+    return dice_text(wholes) if wholes else ""
 
 
 def dice_text(kept: Sequence[Mapping[str, Any]]) -> str:

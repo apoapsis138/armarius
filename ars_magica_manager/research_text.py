@@ -60,6 +60,18 @@ def landed(attempt: ResearchAttempt) -> int | None:
     return None if roll is None else roll + attempt.move
 
 
+def roll_words(attempt: ResearchAttempt) -> str:
+    """A season's chart roll in words, the same in both front-ends: "die 6
+    + risk 1 = 7, moved +1 = 8"; "" with no chart roll."""
+    if attempt.die is None:
+        return ""
+    roll = attempt.die + attempt.risk
+    words = f"die {attempt.die} + risk {attempt.risk} = {roll}"
+    if attempt.move:
+        words += f", moved {attempt.move:+d} = {roll + attempt.move}"
+    return words
+
+
 def outcome(attempt: ResearchAttempt) -> str:
     """A season's result in a word or two (markup)."""
     if attempt.zeroes:
@@ -267,10 +279,7 @@ def attempt_panel(
         )
     if attempt.die is not None:
         roll = attempt.die + attempt.risk
-        text = f"Roll: die {attempt.die} + risk {attempt.risk} = {roll}"
-        if attempt.move:
-            text += f", moved {attempt.move:+d} = {roll + attempt.move}"
-        lines.append(text)
+        lines.append(f"Roll: {roll_words(attempt)}")
         if strip:
             lines += ["", band_strip(roll + attempt.move), ""]
         if attempt.die == 0:

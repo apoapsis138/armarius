@@ -13,9 +13,10 @@ from pathlib import Path
 from ars_magica_manager import table_rolls
 
 PACKAGE = Path(table_rolls.__file__).parent
-#: Where the dice are rolled for the Chronicle itself, and the front-ends'
+#: Where the dice are rolled for the Chronicle itself, the recording die
+#: source, and the front-ends'
 #: own drawing (a picture's jitter), which roll nothing for the rules.
-LEFT_OUT = {"chronicle", "table_rolls"}
+LEFT_OUT = {"chronicle", "recorded_dice", "table_rolls"}
 BUILDS_A_SOURCE = re.compile(
     r"random\.Random\(|SystemRandom\(|table_rolls\.(dice|drawing)\("
 )
