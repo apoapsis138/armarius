@@ -113,12 +113,23 @@ def dice_line(
     return f"{line}; {botch}" if botch else line
 
 
+def _numbers(kept: Mapping[str, Any], key: str) -> tuple[int, ...]:
+    """The whole numbers kept under `key` (read from a file: anything
+    else is left out)."""
+    found = kept.get(key)
+    if not isinstance(found, list):
+        return ()
+    return tuple(n for n in found if isinstance(n, int) and not isinstance(n, bool))
+
+
 def whole_die(kept: Mapping[str, Any]) -> DieResult:
-    """A whole die as a form roll's entry keeps it (table_rolls.Die:
-    stress, faces, botch_faces), with its value worked out again."""
-    faces = tuple(int(face) for face in kept["faces"])
-    botch_faces = tuple(int(face) for face in kept["botch_faces"])
-    stress = bool(kept["stress"])
+    """A whole die as a form roll's entry keeps it (recorded_dice.Die:
+    stress, faces, botch_faces), with its value worked out again by the
+    book's rules (rules.dice; DE p. 7). A missing or odd field reads as
+    empty."""
+    faces = _numbers(kept, "faces")
+    botch_faces = _numbers(kept, "botch_faces")
+    stress = kept.get("stress") is True
     if not faces:
         value = 0
     elif not stress:
@@ -139,7 +150,9 @@ def dice_text(kept: Sequence[Mapping[str, Any]]) -> str:
     wholes = any("face" not in die for die in kept)
     for die in kept:
         if "face" in die:
-            loose.append(str(int(die["face"])))
+            face = die["face"]
+            if isinstance(face, int) and not isinstance(face, bool):
+                loose.append(str(face))
             continue
         if loose:
             said.append(f"other dice {' '.join(loose)}")

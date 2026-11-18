@@ -69,3 +69,11 @@ def test_a_lone_roll_of_botch_dice() -> None:
     die = DieResult(value=0, faces=(), botch_faces=(4, 0, 9))
 
     assert dice_text.die_text(die) == "3 botch dice 4, 0, 9: 1 zero"
+
+
+def test_a_kept_die_missing_a_field_reads_as_far_as_it_can() -> None:
+    """A form roll's kept die is read from a file: a missing or odd field
+    reads as empty, never as an error that hides the whole Chronicle."""
+    kept = [{"stress": True, "faces": [1, "x", 5]}, {"face": "?"}]
+
+    assert dice_text.dice_text(kept) == "Stress die 1, 5 → 5 × 2 = 10"

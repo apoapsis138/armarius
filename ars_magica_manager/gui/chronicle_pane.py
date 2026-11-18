@@ -52,6 +52,7 @@ from ..commands import Command, Refuse
 from ..forms import free_roll, roll_request
 from ..markup import escape
 from ..models import Saga, Session
+from ..rules import dice as dice_rules
 from ..style import fonts
 from . import motion, pictures, sounds
 from .style import gilding
@@ -212,11 +213,13 @@ def _dice_of(body: dict[str, object]) -> list[tuple[list[int], bool, list[int]]]
             continue
         if "face" in die:
             found.append(([_whole(die, "face")], False, []))
-        elif die.get("stress"):
-            found.append((_wholes(die, "faces"), True, _wholes(die, "botch_faces")))
-        else:
-            whole = dice_text.whole_die(die).value
-            found.append(([whole], False, _wholes(die, "botch_faces")))
+            continue
+        whole = dice_text.whole_die(die)
+        if whole.stress:
+            found.append((list(whole.faces), True, list(whole.botch_faces)))
+        else:  # a simple die, or botch dice rolled on their own
+            shown = [whole.value] if whole.faces else []
+            found.append((shown, False, list(whole.botch_faces)))
     return found
 
 
@@ -564,8 +567,12 @@ def form_roll_card(
     card.column.addWidget(what)
     card.column.addWidget(DiceRow(body, p, quiet, strike))
     kept = body.get("dice")
-    wholes = [d for d in kept if isinstance(d, dict)] if isinstance(kept, list) else []
-    if wholes:
+    wholes = (
+        [d for d in kept if isinstance(d, dict) and "face" not in d]
+        if isinstance(kept, list)
+        else []
+    )
+    if wholes:  # faces drawn outside the die helpers are drawn, not said
         said = dice_text.dice_text(wholes)
         line_of_dice = text(said, p["dim"] if quiet else p["label"], serif(10.5))
         line_of_dice.setObjectName("dice-line")
@@ -610,14 +617,19 @@ def _outcome(body: dict[str, object], p: Palette, struck: bool) -> QWidget:
     row.addWidget(total, 0, Qt.AlignmentFlag.AlignVCenter)
     modifier = _whole(body, "modifier")
     sign = "+" if modifier >= 0 else "−"
-    die = chronicle.die_of(body)
+    die = dice_rules.DieResult(
+        value=_whole(body, "die"),
+        faces=tuple(_wholes(body, "faces")),
+        stress=body.get("stress") is True,
+        botch_faces=tuple(_wholes(body, "botch_faces")),
+    )
     said = [f"die {dice_text.doubled(die)} {sign} {abs(modifier)}"]
     if botches:
         said.append(f"botch, {botches} zero{'s' if botches > 1 else ''}")
     if body.get("ease_factor") is not None:
         verdict = "succeeds" if body.get("succeeded") else "fails"
         margin = _whole(body, "margin")
-        said.append(f"against {body['ease_factor']}: {verdict} by {abs(margin)}")
+        said.append(f"vs {body['ease_factor']}: {verdict} by {abs(margin)}")
     words = text(" · ".join(said), p["label"], serif(11.5), wrap=True)
     words.setObjectName("verdict")
     row.addWidget(words, 1, Qt.AlignmentFlag.AlignVCenter)
