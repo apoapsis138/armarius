@@ -48,7 +48,9 @@ Creation Worksheet, which walks through the creation steps.
 The frame beside the name holds the character's portrait. Click it to
 choose a picture from anywhere on the computer, and click again to change
 or remove it. The app keeps a copy in the save folder's `portraits`
-folder, so moving or deleting the original doesn't lose it.
+folder, so moving or deleting the original doesn't lose it. A portrait
+can be up to 5 MB in an export or on the troupe's Remote seats; a larger
+one is left out there.
 
 With no portrait, the frame shows the House symbol. A hedge wizard has
 their tradition's symbol instead, the first of their traditions if they

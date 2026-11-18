@@ -12,7 +12,10 @@ prints one line (ok, or the failing test names / the first lines of the
 tool's output), and the exit code is nonzero if any failed.
 
 The folder is marked busy while it runs (`folder_busy.py`), so a thread
-sharing it waits before a stash, pull, branch switch or reset.
+sharing it waits before a stash, pull, branch switch or reset. Its tests
+wait for this computer's test-runner turn (`runner_turns.py`), so runs
+from other worktrees don't compete for the CPU; the wait doesn't count
+against the limits.
 
 A test run past its limit (FULL_LIMIT, SLICE_LIMIT) is stopped with
 every worker it started, and said; the conftest also fails a test whose
@@ -34,6 +37,7 @@ import os
 import subprocess
 import sys
 
+import runner_turns
 from folder_busy import marked
 from rerun_once import (
     ROOT,
@@ -55,6 +59,9 @@ PARALLEL = ["-q", "-n", "auto", "--dist", "worksteal"]
 #: worker with it: the full suite takes about four minutes.
 FULL_LIMIT = 600
 SLICE_LIMIT = 420
+#: How often a run waiting for another's test-runner turn looks again
+#: (seconds); the wait doesn't count against the limits.
+TURN_EVERY = 5.0
 
 
 #: Each pytest worker's test under way, written by tests/conftest.py.
@@ -186,7 +193,11 @@ def main(argv: list[str]) -> int:
     else:
         tests = [*UV, "python", "tools/slice_tests.py", *PARALLEL]
     bad = 0
-    passed, said = tests_step(tests, FULL_LIMIT if full else SLICE_LIMIT)
+    # Test runs on this computer take turns (runner_turns.py); the checks
+    # after them don't wait.
+    what = f"story_check {'--full' if full else '(slice)'} in {ROOT.name}"
+    with runner_turns.turn(what, every=TURN_EVERY):
+        passed, said = tests_step(tests, FULL_LIMIT if full else SLICE_LIMIT)
     label = "full suite" if full else "slice tests"
     if passed:
         print(f"ok    {label}" + (f"\n{said}" if full else ""))
