@@ -27,7 +27,9 @@ from .. import __version__
 
 #: Bumped when a message changes in a way an older app cannot read. 2: the
 #: host sends a Session's Chronicle down an events connection (ADR 0019).
-PROTOCOL_VERSION = 2
+#: 3: a seat draws a Table roll form's dice from the host (an older seat
+#: would roll them itself, which ADR 0018 forbids).
+PROTOCOL_VERSION = 3
 #: What a seat speaking an older protocol is told, instead of a welcome.
 UPDATE = "update"
 UPDATE_MESSAGE = "This host needs a newer Armarius: update yours to join."
@@ -85,6 +87,12 @@ class Session:
     opened: float = 0.0
     #: The seat's version of Armarius, as its hello said ("" until then).
     app_version: str = ""
+    #: A Table roll made from a form that this connection is drawing dice
+    #: for (table_rolls.HostRoll), until the seat finishes or cancels it.
+    form_roll: object = None
+    #: What to do when the connection closes, whatever closed it (a form
+    #: roll left open is written as cancelled).
+    on_close: list[Callable[[], None]] = field(default_factory=list)
 
 
 @dataclass(frozen=True)

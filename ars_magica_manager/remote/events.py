@@ -23,6 +23,15 @@ Confidence on a roll already made (chronicle.spend_confidence), and
 `answer` answers a Roll request for a character the seat's Player rolls
 for (chronicle.answer). All count toward the seat's ROLLS_PER_MINUTE.
 
+A seat's Table roll made from a form (table_rolls.py) works the form's
+rule at the seat, but draws each die from the host with `form_die`, one
+at a time: the first opens the roll on that connection (the form, the
+character, who sees it), the host draws and keeps every face, and
+`form_done` closes it with the form's result lines, the host writing the
+entry with the faces it drew itself. `form_cancel`, or the connection
+closing first, writes the dice drawn as cancelled. Dice count toward the
+seat's DICE_PER_MINUTE.
+
 Pattern: Observer. The host's loop for an events connection watches the
 Chronicle file and tells the seat of each entry new to it.
 """
@@ -34,7 +43,7 @@ import time
 from collections.abc import Callable
 from typing import Any
 
-from .. import chronicle, storage
+from .. import chronicle, storage, table_rolls
 from .limits import RateLimiter
 from .protocol import Body, Field, MessageSpec, Reply, Session
 
@@ -45,6 +54,13 @@ CHRONICLE = "chronicle"
 #: Rolls one seat may ask for in a minute (other requests have their own
 #: limit, Limits.messages_per_window).
 ROLLS_PER_MINUTE = 30
+#: Dice one seat may draw for form rolls in a minute: a form with stress
+#: doublings and botch dice draws several. Kept below a connection's own
+#: limit on messages, so the seat is told why rather than cut off.
+DICE_PER_MINUTE = 50
+#: The longest result a seat sends back for a form roll (its lines,
+#: joined by newlines).
+MAX_LINES = 2_000
 #: How often an events connection looks for new entries, in seconds.
 EVERY = 1.0
 #: The longest body (as JSON text) a frame carries; an entry's body is a
@@ -125,6 +141,94 @@ def poller(saga_id: str) -> Callable[[str, Cursor], tuple[list[Reply], Cursor]]:
         return frames, (found.session_id, last)
 
     return poll
+
+
+def _open_form_roll(saga_id: str, session: Session, body: Body) -> table_rolls.HostRoll:
+    """A seat's form roll, opened at its first die: the Session under
+    way, the form, the character and who sees it, checked as the host's
+    own window would (ValueError says why not)."""
+    try:
+        saga = storage.load_saga(saga_id)
+    except OSError, ValueError:
+        raise ValueError("The saga can't be read just now.") from None
+    under_way = chronicle.under_way(saga)
+    if under_way is None:
+        raise ValueError("No Session is under way.")
+    opening = table_rolls.Opening(
+        str(body["form"]), str(body.get("character_id", "")), str(body["visibility"])
+    )
+    book = chronicle.Chronicle(chronicle.path_of(saga, under_way), [])
+    return table_rolls.HostRoll(
+        saga, under_way, opening, by=session.player_id, book=book
+    )
+
+
+def _cancel(session: Session) -> None:
+    """Write the dice a seat drew for a form roll it never finished."""
+    roll = session.form_roll
+    session.form_roll = None
+    if isinstance(roll, table_rolls.HostRoll):
+        roll.cancel()
+
+
+def _form_roll_specs(saga_id: str, clock: Callable[[], float]) -> list[MessageSpec]:
+    """`form_die`, `form_done` and `form_cancel`: a seat's Table roll made
+    from a form, its dice drawn by the host one at a time."""
+    dice = RateLimiter(DICE_PER_MINUTE, 60.0, clock)
+
+    def form_die(session: Session, body: Body) -> Reply:
+        if not dice.allow(session.device_id or session.player_id):
+            return Reply("roll_refused", {"why": "Too many dice: wait a minute."})
+        roll = session.form_roll
+        if not isinstance(roll, table_rolls.HostRoll):
+            try:
+                roll = _open_form_roll(saga_id, session, body)
+            except ValueError as problem:
+                return Reply("roll_refused", {"why": str(problem)[:200]})
+            session.form_roll = roll
+            session.on_close.append(lambda: _cancel(session))
+        start, stop, step = int(body["start"]), int(body["stop"]), int(body["step"])
+        try:
+            face = roll.dice.randrange(start, stop, step)
+        except ValueError:
+            return Reply("roll_refused", {"why": "No such die."})
+        return Reply("die", {"face": face})
+
+    def form_done(session: Session, body: Body) -> Reply:
+        roll = session.form_roll
+        if not isinstance(roll, table_rolls.HostRoll) or not roll.faces:
+            return Reply("roll_refused", {"why": "No dice were drawn for that roll."})
+        session.form_roll = None
+        lines = [line for line in str(body.get("lines", "")).split("\n") if line]
+        refused = roll.finish(lines)
+        if refused:
+            return Reply("roll_refused", {"why": refused[:200]})
+        return Reply("rolled", {"number": roll.number})
+
+    def form_cancel(session: Session, _body: Body) -> Reply:
+        _cancel(session)
+        return Reply("noted")
+
+    return [
+        MessageSpec(
+            "form_die",
+            {
+                "form": Field(str, max_length=120),
+                "character_id": Field(str, max_length=64, required=False),
+                "visibility": Field(str, max_length=16),
+                "start": Field(int, low=-(2**31), high=2**31 - 1),
+                "stop": Field(int, low=-(2**31), high=2**31 - 1),
+                "step": Field(int, low=-(2**31), high=2**31 - 1),
+            },
+            form_die,
+        ),
+        MessageSpec(
+            "form_done",
+            {"lines": Field(str, max_length=MAX_LINES, required=False)},
+            form_done,
+        ),
+        MessageSpec("form_cancel", {}, form_cancel),
+    ]
 
 
 def event_specs(
@@ -237,6 +341,7 @@ def event_specs(
         return Reply("rolled", {"number": entry.number})
 
     return [
+        *_form_roll_specs(saga_id, clock),
         MessageSpec(
             "events_since",
             {
