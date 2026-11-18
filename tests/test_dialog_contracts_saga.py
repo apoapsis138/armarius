@@ -4,7 +4,12 @@ Each form runs in one app session; dialog_contract_support.py has the
 contract and the driver, dialog_openers.py how each form is reached."""
 
 import pytest
-from dialog_contract_support import Contract, all_sagas, run_contract
+from dialog_contract_support import (
+    Contract,
+    all_sagas,
+    last_chronicle_entry,
+    run_contract,
+)
 from textual.widgets import Select
 
 from ars_magica_manager import armies, catalog
@@ -12,6 +17,19 @@ from ars_magica_manager import house_rules as hr
 from ars_magica_manager import players as pl
 
 CONTRACTS: dict[str, Contract] = {
+    "send message": Contract(
+        prefill={"Message": ""},
+        edits={"Message": "We ride at dawn."},
+        saved=lambda _s: (
+            (entry.kind, entry.body["words"])
+            if (entry := last_chronicle_entry()) is not None
+            else None
+        ),
+        expected=("message", "We ride at dawn."),
+        invalid=[{"Message": ""}, {"Message": "Huzzah " + chr(0x1F389)}],
+        # The dialog's title is "Message" too.
+        aliases={"Message": "fld-words"},
+    ),
     "create saga": Contract(
         prefill={"Name": "", "Start Year": "1220", "Start Season": "Spring"},
         edits={"Name": "Second Saga", "Storyguide": "Ann"},
