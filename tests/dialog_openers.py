@@ -200,6 +200,9 @@ class Opener:
     node: str | None
     #: Opens the dialog, given the workspace (or saga picker) screen.
     open: Callable[[object], object]
+    #: The More action (actions.MORE_MENU) whose form this opens, if any:
+    #: its contract counts for that action (test_more_action_registered).
+    action: str = ""
 
 
 def _refused_then_threaten(ws) -> None:
@@ -1192,7 +1195,7 @@ OPENERS: dict[str, Opener] = {
     # Saga level
     "create saga": Opener(None, lambda p: p.action_create_saga()),
     "edit saga": Opener("saga", lambda ws: ws._edit_saga()),
-    "set date": Opener("saga", lambda ws: ws.action_set_date()),
+    "set date": Opener("saga", lambda ws: ws.action_set_date(), action="set_date"),
     "add secret": Opener(
         "character", _built(lambda ws: ws._core_verb("section-secrets", "add"))
     ),
@@ -1247,13 +1250,17 @@ OPENERS: dict[str, Opener] = {
         _pick(lambda ws: ws._core_verb("section-sieges", "edit"), "sieges-list"),
     ),
     "add combatant": Opener(
-        "conflicts", _pick(lambda ws: ws.action_add_combatant(), "fights-list")
+        "conflicts",
+        _pick(lambda ws: ws.action_add_combatant(), "fights-list"),
+        action="add_combatant",
     ),
     "form a group": Opener(
         "conflicts", _pick(lambda ws: ws.action_form_group(), "fights-list")
     ),
     "next blow": Opener(
-        "conflicts", _pick(lambda ws: ws.action_next_blow(), "fights-list")
+        "conflicts",
+        _pick(lambda ws: ws.action_next_blow(), "fights-list"),
+        action="next_blow",
     ),
     "hire mercenaries": Opener(
         "conflicts",
@@ -1293,7 +1300,9 @@ OPENERS: dict[str, Opener] = {
         ),
     ),
     "next siege event": Opener(
-        "conflicts", _pick(lambda ws: ws.action_next_siege_event(), "sieges-list")
+        "conflicts",
+        _pick(lambda ws: ws.action_next_siege_event(), "sieges-list"),
+        action="next_siege_event",
     ),
     "edit secrets": Opener("neighbour", _open_secrets),
     "edit neighbour": Opener(
@@ -1311,6 +1320,7 @@ OPENERS: dict[str, Opener] = {
     "battle event": Opener(
         "neighbour",
         _pick(lambda ws: ws.action_battle_event(), "nb-battles-list"),
+        action="battle_event",
     ),
     "edit guild": Opener(
         "town",
@@ -1341,7 +1351,7 @@ OPENERS: dict[str, Opener] = {
     "add court case": Opener(
         "town", _built(lambda ws: ws._core_verb("section-nb-court-cases", "add"))
     ),
-    "court roll": Opener("town", _court_roll),
+    "court roll": Opener("town", _court_roll, action="court_roll"),
     "add manor": Opener(
         "neighbour", _built(lambda ws: ws._core_verb("section-manors", "add"))
     ),
@@ -1351,11 +1361,15 @@ OPENERS: dict[str, Opener] = {
     "edit household": Opener(
         "neighbour", _built(lambda ws: ws._core_verb("section-household", "edit"))
     ),
-    "buy manor": Opener("neighbour", _built(lambda ws: ws.action_buy_manor())),
-    "assart": Opener("neighbour", _assart),
-    "winter roll": Opener("neighbour", _winter_roll),
+    "buy manor": Opener(
+        "neighbour", _built(lambda ws: ws.action_buy_manor()), action="buy_manor"
+    ),
+    "assart": Opener("neighbour", _assart, action="assart"),
+    "winter roll": Opener("neighbour", _winter_roll, action="winter_roll"),
     "settle inheritance": Opener(
-        "neighbour", _built(lambda ws: ws.action_settle_inheritance())
+        "neighbour",
+        _built(lambda ws: ws.action_settle_inheritance()),
+        action="settle_inheritance",
     ),
     "edit church": Opener(
         "church", lambda ws: ws._core_verb("section-nb-info", "edit")
@@ -1384,7 +1398,7 @@ OPENERS: dict[str, Opener] = {
         ),
     ),
     "edit place": Opener("place", lambda ws: ws._core_verb("section-nb-info", "edit")),
-    "found covenant": Opener("place", _found_covenant),
+    "found covenant": Opener("place", _found_covenant, action="found_covenant"),
     "add regio level": Opener(
         "place", lambda ws: ws._core_verb("section-nb-levels", "add")
     ),
@@ -1398,9 +1412,11 @@ OPENERS: dict[str, Opener] = {
         "place", lambda ws: ws._core_verb("section-nb-triggers", "add")
     ),
     "tie trigger": Opener("place", _with_crown_on_a_track),
-    "grow story": Opener("region", _grow_a_story),
-    "delay threat": Opener("threat", lambda ws: ws.action_delay_threat()),
-    "take up story": Opener("region", _take_up_a_story),
+    "grow story": Opener("region", _grow_a_story, action="grow_story"),
+    "delay threat": Opener(
+        "threat", lambda ws: ws.action_delay_threat(), action="delay_threat"
+    ),
+    "take up story": Opener("region", _take_up_a_story, action="take_up_story"),
     "take up threat": Opener("threat", lambda ws: ws.action_take_up_tale()),
     "edit looking ahead": Opener(
         "seasons", lambda ws: ws._core_verb("section-seasons-info", "edit")
@@ -1637,7 +1653,9 @@ OPENERS: dict[str, Opener] = {
     # Character
     "edit character info": Opener("character", lambda ws: ws._edit_character_info()),
     "edit character traditions": Opener(
-        "character", lambda ws: ws._run_more("edit_traditions")
+        "character",
+        lambda ws: ws._run_more("edit_traditions"),
+        action="edit_traditions",
     ),
     "edit characteristics": Opener("character", lambda ws: ws._edit_characteristics()),
     "edit biographical detail": Opener(
@@ -1645,7 +1663,9 @@ OPENERS: dict[str, Opener] = {
     ),
     "edit aging": Opener("character", lambda ws: ws._edit_aging()),
     "edit wounds": Opener("character", lambda ws: ws._edit_wounds()),
-    "edit fatigue": Opener("character", lambda ws: ws._edit_fatigue()),
+    "edit fatigue": Opener(
+        "character", lambda ws: ws._edit_fatigue(), action="edit_fatigue"
+    ),
     "edit hermetic background": Opener(
         "character", lambda ws: ws._edit_hermetic_background()
     ),
@@ -1673,17 +1693,27 @@ OPENERS: dict[str, Opener] = {
     "add tradition effect": Opener("character", _open_tradition_effect),
     "add power": Opener("character", _open_power),
     "add agent": Opener("character", _open_agent),
-    "set agent task": Opener("character", _open_agent_task),
-    "resolve agent task": Opener("character", _open_agent_resolve),
-    "spend agency xp": Opener("character", _open_agency_spend),
-    "labor from story": Opener("character", _open_labor_story),
-    "invest time or money": Opener("character", _open_invest_labor),
+    "set agent task": Opener("character", _open_agent_task, action="set_agent_task"),
+    "resolve agent task": Opener(
+        "character", _open_agent_resolve, action="resolve_agent_task"
+    ),
+    "spend agency xp": Opener(
+        "character", _open_agency_spend, action="spend_agency_xp"
+    ),
+    "labor from story": Opener("character", _open_labor_story, action="labor_story"),
+    "invest time or money": Opener(
+        "character", _open_invest_labor, action="invest_labor"
+    ),
     "add constant effect": Opener("character", _open_constant_effect),
     "add cover": Opener("character", _open_cover),
     "resolve twilight": Opener(
-        "character", lambda ws: ws._run_more("resolve_twilight")
+        "character",
+        lambda ws: ws._run_more("resolve_twilight"),
+        action="resolve_twilight",
     ),
-    "cast a power": Opener("character", lambda ws: ws._run_more("hedge_cast")),
+    "cast a power": Opener(
+        "character", lambda ws: ws._run_more("hedge_cast"), action="hedge_cast"
+    ),
     "add bound being": Opener("character", _open_bound_being),
     "virtue parameters": Opener("character", _open_param_prompt),
     "virtue ability choice": Opener(
@@ -1758,7 +1788,9 @@ OPENERS: dict[str, Opener] = {
             grog_forms.pension_form(ws.saga, ws.saga.character("grog9"))
         ),
     ),
-    "craft by magic": Opener("character", lambda ws: ws._run_more("craft_by_magic")),
+    "craft by magic": Opener(
+        "character", lambda ws: ws._run_more("craft_by_magic"), action="craft_by_magic"
+    ),
     "grog yearly update": Opener(
         "character",
         lambda ws: ws._grog_year_for(ws.saga.character("grog9"), "section-char-season"),
@@ -1789,7 +1821,9 @@ OPENERS: dict[str, Opener] = {
     # Enchanted devices
     "edit enchanted device": Opener("laboratory", _open_device_edit),
     "instill effect": Opener(
-        "laboratory", lambda ws: ws._effect_form(_device(ws, "dev-lab"), None)
+        "laboratory",
+        lambda ws: ws._effect_form(_device(ws, "dev-lab"), None),
+        action="instill_effect",
     ),
     "edit charged item effect": Opener(
         "covenant",
@@ -1867,9 +1901,13 @@ OPENERS: dict[str, Opener] = {
         "covenant",
         lambda ws: ws._book_form(next(b for b in ws.saga.books if b.id == "b-cov")),
     ),
-    "research bonuses": Opener("covenant", _open_research_bonuses),
+    "research bonuses": Opener(
+        "covenant", _open_research_bonuses, action="research_bonuses"
+    ),
     "add lab text": Opener("laboratory", lambda ws: ws._book_form(None)),
-    "perform ritual again": Opener("laboratory", _open_ritual_again),
+    "perform ritual again": Opener(
+        "laboratory", _open_ritual_again, action="perform_ritual"
+    ),
     "lab texts read": Opener("character", lambda ws: ws._edit_lab_text_access()),
     "add house rule": Opener("saga_content", _core_add("section-house-rules")),
     "add player": Opener("saga_content", _core_add("section-players")),
@@ -1879,14 +1917,18 @@ OPENERS: dict[str, Opener] = {
     "edit spell": Opener("saga_content", _open_own_spell),
     "add saga source": Opener("saga_content", _core_add("section-saga-sources")),
     "edit saga source": Opener("saga_content", _open_saga_source),
-    "move to source": Opener("saga_content", _move_to_source),
+    "move to source": Opener("saga_content", _move_to_source, action="move_to_source"),
     "edit catalog": Opener("saga_content", lambda ws: ws._catalog_form("spells")),
     "hide catalog entry": Opener("saga_content", lambda ws: ws._hide_catalog_entry()),
     "add good": Opener("saga_content", _open_good),
-    "add purity": Opener("saga_content", _open_purity),
+    "add purity": Opener("saga_content", _open_purity, action="add_purity"),
     "add ability": Opener("character", _open_ability_details),
     "edit arts": Opener("character", lambda ws: ws._edit_arts()),
-    "edit familiar fatigue": Opener("familiar", lambda ws: ws._edit_familiar_fatigue()),
+    "edit familiar fatigue": Opener(
+        "familiar",
+        lambda ws: ws._edit_familiar_fatigue(),
+        action="edit_familiar_fatigue",
+    ),
     "add bond power": Opener(
         "familiar", lambda ws: ws._core_verb("tab-fam-powers", "add")
     ),
@@ -1984,17 +2026,22 @@ OPENERS: dict[str, Opener] = {
         lambda ws: _open_charter_verb(ws, "section-cov-clauses", "add"),
     ),
     "edit clause": Opener("covenant", _open_edit_clause),
-    "break clause": Opener("covenant", _open_break_clause),
-    "seal charter": Opener("covenant", _open_seal_charter),
-    "censure clause": Opener("covenant", _open_censure_clause),
-    "charge clause": Opener("covenant", _open_charge_clause),
-    "use charter template": Opener("covenant", _open_use_template),
-    "save charter template": Opener("covenant", _open_save_template),
+    "break clause": Opener("covenant", _open_break_clause, action="break_clause"),
+    "seal charter": Opener("covenant", _open_seal_charter, action="seal_charter"),
+    "censure clause": Opener("covenant", _open_censure_clause, action="censure_clause"),
+    "charge clause": Opener("covenant", _open_charge_clause, action="charge_clause"),
+    "use charter template": Opener(
+        "covenant", _open_use_template, action="use_charter_template"
+    ),
+    "save charter template": Opener(
+        "covenant", _open_save_template, action="save_charter_template"
+    ),
     "pay the fee": Opener("covenant", _open_pay_fee),
     # The Theban treasury's loans of vis.
     "lend vis": Opener(
         "theban_tribunal",
         _pick(lambda ws: ws.action_lend_vis(), "trib-tokens-list"),
+        action="lend_vis",
     ),
     "childhood blanks": Opener(
         "character",
@@ -2006,7 +2053,7 @@ OPENERS: dict[str, Opener] = {
         ),
     ),
     # A craftsman's sale of his finished goods (City & Guild).
-    "sell finished goods": Opener("character", _open_sell_goods),
+    "sell finished goods": Opener("character", _open_sell_goods, action="sell_goods"),
     # Complexion, with Art & Academe's medicine.
     "edit biographical detail (complexion)": Opener(
         "character", lambda ws: _open_biographical_academe(ws)
@@ -2026,14 +2073,20 @@ OPENERS: dict[str, Opener] = {
     # The Theban Tribunal's Byzantine customs (The Sundered Eagle).
     "hermetic letter": Opener("character", lambda ws: _open_byzantine(ws, "letter")),
     "invoke a broken oath": Opener("character", lambda ws: _open_byzantine(ws, "oath")),
-    "make greek fire": Opener("character", lambda ws: _open_byzantine(ws, "fire")),
+    "make greek fire": Opener(
+        "character", lambda ws: _open_byzantine(ws, "fire"), action="make_greek_fire"
+    ),
     "paint an icon": Opener("character", lambda ws: _open_byzantine(ws, "paint")),
     "venerate an icon": Opener("character", lambda ws: _open_byzantine(ws, "venerate")),
     "a mother's curse": Opener("character", lambda ws: _open_byzantine(ws, "curse")),
     # Sin, tarnish and the Goetic Arts (RoP: The Infernal).
     "confidence through sin": Opener("character", lambda ws: _open_sin(ws, "sin")),
-    "infernal influence": Opener("character", lambda ws: _open_sin(ws, "influence")),
-    "ars goetia": Opener("character", lambda ws: _open_sin(ws, "goetia")),
+    "infernal influence": Opener(
+        "character", lambda ws: _open_sin(ws, "influence"), action="infernal_influence"
+    ),
+    "ars goetia": Opener(
+        "character", lambda ws: _open_sin(ws, "goetia"), action="ars_goetia"
+    ),
     # Transylvania's promissory notes (Against the Dark).
     "add promissory note": Opener(
         "transylvania_tribunal", lambda ws: _open_treasury_kind(ws, "note")
@@ -2046,9 +2099,13 @@ OPENERS: dict[str, Opener] = {
         "seasons", lambda ws: ws.action_area_lore_on_journey()
     ),
     # An apprentice's magic and the Gauntlet (Apprentices).
-    "turbulence": Opener("character", lambda ws: _open_apprentice(ws, "turbulence")),
+    "turbulence": Opener(
+        "character", lambda ws: _open_apprentice(ws, "turbulence"), action="turbulence"
+    ),
     "the gauntlet": Opener("character", lambda ws: _open_apprentice(ws, "gauntlet")),
-    "lose the gift": Opener("character", lambda ws: _open_apprentice(ws, "lose")),
+    "lose the gift": Opener(
+        "character", lambda ws: _open_apprentice(ws, "lose"), action="lose_the_gift"
+    ),
     "learn a cantation": Opener(
         "character", lambda ws: _open_apprentice(ws, "cantation")
     ),
@@ -2059,60 +2116,114 @@ OPENERS: dict[str, Opener] = {
     "conjure a spirit": Opener("character", lambda ws: _open_galdor(ws, "conjure")),
     "bargain with a lord": Opener("character", lambda ws: _open_galdor(ws, "bargain")),
     "bind an item": Opener("character", lambda ws: _open_galdor(ws, "bind")),
-    "ars fabulosa": Opener("character", lambda ws: _open_faerie(ws, "ars")),
+    "ars fabulosa": Opener(
+        "character", lambda ws: _open_faerie(ws, "ars"), action="ars_fabulosa"
+    ),
     "a faerie bargain": Opener("character", lambda ws: _open_faerie(ws, "bargain")),
     "an offer to faerie": Opener("character", lambda ws: _open_faerie(ws, "offer")),
     # The lacuna and the pilgrim (HoH:S, The Church).
-    "cast in a lacuna": Opener("character", lambda ws: ws._run_more("cast_in_lacuna")),
-    "pilgrimage": Opener("character", lambda ws: ws._run_more("pilgrimage")),
+    "cast in a lacuna": Opener(
+        "character", lambda ws: ws._run_more("cast_in_lacuna"), action="cast_in_lacuna"
+    ),
+    "pilgrimage": Opener(
+        "character", lambda ws: ws._run_more("pilgrimage"), action="pilgrimage"
+    ),
     # Hermetic law on the docket (HoH:S, HoH:TL).
     "add wizard's war": Opener(
         "tribunal",
         _pick(lambda ws: ws._core_verb("section-trib-cases", "add"), "trib-cases"),
     ),
     # Devotion and the saints (The Church, RoP: The Divine).
-    "invoke a saint": Opener("character", lambda ws: ws._run_more("invoke_saint")),
-    "threaten a saint": Opener("character", lambda ws: _refused_then_threaten(ws)),
-    "patron saint": Opener("character", lambda ws: ws._run_more("patron_saint")),
-    "invoke baraka": Opener("character", lambda ws: ws._run_more("invoke_baraka")),
-    "the hajj": Opener("character", lambda ws: ws._run_more("hajj")),
-    "devotion points": Opener("character", lambda ws: ws._run_more("devotion_points")),
+    "invoke a saint": Opener(
+        "character", lambda ws: ws._run_more("invoke_saint"), action="invoke_saint"
+    ),
+    "threaten a saint": Opener(
+        "character", lambda ws: _refused_then_threaten(ws), action="threaten_saint"
+    ),
+    "patron saint": Opener(
+        "character", lambda ws: ws._run_more("patron_saint"), action="patron_saint"
+    ),
+    "invoke baraka": Opener(
+        "character", lambda ws: ws._run_more("invoke_baraka"), action="invoke_baraka"
+    ),
+    "the hajj": Opener("character", lambda ws: ws._run_more("hajj"), action="hajj"),
+    "devotion points": Opener(
+        "character",
+        lambda ws: ws._run_more("devotion_points"),
+        action="devotion_points",
+    ),
     "indulgence, vigil or fast": Opener(
-        "character", lambda ws: ws._run_more("act_of_piety")
+        "character", lambda ws: ws._run_more("act_of_piety"), action="act_of_piety"
     ),
     # Holy influence and tempers (RoP: The Divine).
-    "holy influence": Opener("character", lambda ws: ws._run_more("holy_influence")),
+    "holy influence": Opener(
+        "character", lambda ws: ws._run_more("holy_influence"), action="holy_influence"
+    ),
     # Mystic paths, God's aid, the Font and the Commanding Aura.
-    "mystic path": Opener("character", lambda ws: _open_mystic(ws, "path")),
-    "spiritual path": Opener("character", lambda ws: _open_mystic(ws, "spiritual")),
+    "mystic path": Opener(
+        "character", lambda ws: _open_mystic(ws, "path"), action="mystic_path"
+    ),
+    "spiritual path": Opener(
+        "character", lambda ws: _open_mystic(ws, "spiritual"), action="spiritual_path"
+    ),
     "monistic revelation": Opener(
-        "character", lambda ws: _open_mystic(ws, "revelation")
+        "character",
+        lambda ws: _open_mystic(ws, "revelation"),
+        action="monistic_revelation",
     ),
     "invoke god's aid": Opener("character", lambda ws: _open_mystic(ws, "aid")),
-    "font of knowledge": Opener("character", lambda ws: _open_mystic(ws, "font")),
-    "interests": Opener("character", lambda ws: ws._run_more("edit_interests")),
-    "covenant interests": Opener("covenant", lambda ws: ws._run_more("edit_interests")),
-    "commanding aura": Opener("character", lambda ws: _open_mystic(ws, "aura")),
+    "font of knowledge": Opener(
+        "character", lambda ws: _open_mystic(ws, "font"), action="font_of_knowledge"
+    ),
+    "interests": Opener(
+        "character", lambda ws: ws._run_more("edit_interests"), action="edit_interests"
+    ),
+    "covenant interests": Opener(
+        "covenant", lambda ws: ws._run_more("edit_interests"), action="edit_interests"
+    ),
+    "commanding aura": Opener(
+        "character", lambda ws: _open_mystic(ws, "aura"), action="commanding_aura"
+    ),
     # House Verditius's Hubris and vendettas.
-    "hubris": Opener("character", lambda ws: _open_hubris(ws)),
+    "hubris": Opener(
+        "character", lambda ws: _open_hubris(ws), action="verditius_hubris"
+    ),
     # Hermetic spirit magic and theurgy (The Mysteries Revised Edition).
-    "spirits and names": Opener("character", lambda ws: _open_spirits(ws)),
+    "spirits and names": Opener(
+        "character", lambda ws: _open_spirits(ws), action="spirits_and_names"
+    ),
     # Dream magic and Hermetic sacrifice (The Mysteries Revised Edition).
-    "dream working": Opener("character", lambda ws: _open_dreams(ws, "dream")),
-    "hermetic sacrifice": Opener("character", lambda ws: _open_dreams(ws, "sacrifice")),
+    "dream working": Opener(
+        "character", lambda ws: _open_dreams(ws, "dream"), action="dream_working"
+    ),
+    "hermetic sacrifice": Opener(
+        "character",
+        lambda ws: _open_dreams(ws, "sacrifice"),
+        action="hermetic_sacrifice",
+    ),
     # House Acclaim and Reputation rolls (HoH:TL, HoH:S, LoH, DE).
-    "house acclaim": Opener("character", lambda ws: _open_acclaim(ws)),
-    "reputation roll": Opener("character", lambda ws: _open_reputation_roll(ws)),
+    "house acclaim": Opener(
+        "character", lambda ws: _open_acclaim(ws), action="house_acclaim"
+    ),
+    "reputation roll": Opener(
+        "character", lambda ws: _open_reputation_roll(ws), action="reputation_roll"
+    ),
     # Divination and Hermetic astrology (The Mysteries Revised Edition).
     "divination": Opener("character", lambda ws: _open_tmre_divination(ws, "divine")),
     "astrology": Opener("character", lambda ws: _open_tmre_divination(ws, "stars")),
     # Philosophic Alchemy's digestions (The Mysteries Revised Edition).
-    "philosophic alchemy": Opener("character", lambda ws: _open_alchemy(ws)),
+    "philosophic alchemy": Opener(
+        "character", lambda ws: _open_alchemy(ws), action="philosophic_alchemy"
+    ),
     # The Great Elixir's test (The Mysteries Revised Edition).
-    "test the great elixir": Opener("character", lambda ws: _open_great_elixir(ws)),
+    "test the great elixir": Opener(
+        "character", lambda ws: _open_great_elixir(ws), action="great_elixir"
+    ),
     # Gaining and losing Virtues and Flaws in play (Grogs pp. 61-64).
     "gain or lose in play": Opener(
-        "character", lambda ws: ws._run_more("change_virtues_flaws")
+        "character",
+        lambda ws: ws._run_more("change_virtues_flaws"),
+        action="change_virtues_flaws",
     ),
     # A saga's own Abilities in House Rules (HoH:S pp. 103-106).
     "add house rule ability": Opener("saga_content", _core_add("section-house-rules")),
@@ -2135,10 +2246,14 @@ OPENERS: dict[str, Opener] = {
         "place", _built(lambda ws: ws._core_verb("section-nb-tomb-traps", "add"))
     ),
     "overcome trap": Opener(
-        "place", _pick(lambda ws: ws.action_overcome_trap(), "nb-tomb-traps-list")
+        "place",
+        _pick(lambda ws: ws.action_overcome_trap(), "nb-tomb-traps-list"),
+        action="overcome_trap",
     ),
     "overcome ward": Opener(
-        "place", _pick(lambda ws: ws.action_overcome_ward(), "nb-tomb-wards-list")
+        "place",
+        _pick(lambda ws: ws.action_overcome_ward(), "nb-tomb-wards-list"),
+        action="overcome_ward",
     ),
     "trap spotted": _tomb_step(
         lambda ws: tombs.seen_form(_springing(ws), [_leandro(ws)])
@@ -2151,13 +2266,19 @@ OPENERS: dict[str, Opener] = {
     # A covenant's ships (Hermetic Projects; City & Guild).
     "add ship": Opener("covenant", _core_add("section-pos-ship")),
     "ship stress check": Opener("covenant", lambda ws: _open_ship(ws, "stress")),
-    "ship combat": Opener("covenant", lambda ws: _open_ship(ws, "combat")),
+    "ship combat": Opener(
+        "covenant", lambda ws: _open_ship(ws, "combat"), action="ship_combat"
+    ),
     "sunk or taken": Opener("covenant", _open_ship_fate),
-    "detach ship": Opener("covenant", lambda ws: _open_ship(ws, "detach")),
-    "add a stop": Opener("covenant", _open_add_stop),
-    "plan route": Opener("covenant", _open_plan_route),
+    "detach ship": Opener(
+        "covenant", lambda ws: _open_ship(ws, "detach"), action="detach_ship"
+    ),
+    "add a stop": Opener("covenant", _open_add_stop, action="add_stop"),
+    "plan route": Opener("covenant", _open_plan_route, action="plan_route"),
     # Shaping the land by magic (Transforming Mythic Europe).
-    "shape land": Opener("covenant", lambda ws: ws._run_more("shape_land")),
+    "shape land": Opener(
+        "covenant", lambda ws: ws._run_more("shape_land"), action="shape_land"
+    ),
     "settle new land": Opener("covenant", lambda ws: _open_settle_land(ws)),
     # The Rhine's Great Library at Durenmar (Guardians of the Forests).
     "search the great library": Opener(
@@ -2186,12 +2307,26 @@ OPENERS: dict[str, Opener] = {
         ),
     ),
     # A cleric's career (The Church): the Church tab's forms.
-    "petition the church": Opener("character", lambda ws: _open_church(ws, "petition")),
-    "add canon case": Opener("character", lambda ws: _open_church(ws, "canon")),
-    "edit holy orders": Opener("character", lambda ws: _open_church(ws, "orders")),
-    "edit religion": Opener("character", lambda ws: _open_church(ws, "religion")),
-    "perform an exorcism": Opener("character", lambda ws: _open_church(ws, "exorcism")),
-    "add ordination": Opener("character", lambda ws: _open_church(ws, "ordination")),
+    "petition the church": Opener(
+        "character", lambda ws: _open_church(ws, "petition"), action="perform_exorcism"
+    ),
+    "add canon case": Opener(
+        "character", lambda ws: _open_church(ws, "canon"), action="perform_exorcism"
+    ),
+    "edit holy orders": Opener(
+        "character", lambda ws: _open_church(ws, "orders"), action="perform_exorcism"
+    ),
+    "edit religion": Opener(
+        "character", lambda ws: _open_church(ws, "religion"), action="perform_exorcism"
+    ),
+    "perform an exorcism": Opener(
+        "character", lambda ws: _open_church(ws, "exorcism"), action="perform_exorcism"
+    ),
+    "add ordination": Opener(
+        "character",
+        lambda ws: _open_church(ws, "ordination"),
+        action="perform_exorcism",
+    ),
     # Saga Content's Mystery Cults.
     "add mystery cult": Opener(
         "saga_content", lambda ws: _open_cults(ws, None, "section-content-cults", "add")
@@ -2216,7 +2351,9 @@ OPENERS: dict[str, Opener] = {
     ),
     # A covenant's Hermetic Projects (Hermetic Projects pp. 36-41) and
     # Wizard's War's tunnel (pp. 78-81).
-    "begin project": Opener("covenant", lambda ws: ws.action_begin_project()),
+    "begin project": Opener(
+        "covenant", lambda ws: ws.action_begin_project(), action="begin_project"
+    ),
     "edit project": Opener(
         "covenant",
         lambda ws: _open_tower(ws, lambda: ws._core_verb(TOWER_SECTION, "edit")),
@@ -2237,9 +2374,13 @@ OPENERS: dict[str, Opener] = {
     "conjure levels": Opener(
         "covenant", lambda ws: _open_tower(ws, ws.action_tower_conjure)
     ),
-    "open a tunnel": Opener("character", lambda ws: _open_tunnel(ws)),
+    "open a tunnel": Opener(
+        "character", lambda ws: _open_tunnel(ws), action="open_tunnel"
+    ),
     # A Virtue gained by magic for a while ends (Grogs pp. 62-63).
-    "end a temporary virtue": Opener("character", lambda ws: _open_temporary(ws)),
+    "end a temporary virtue": Opener(
+        "character", lambda ws: _open_temporary(ws), action="change_virtues_flaws"
+    ),
     # Fleet battles (Tales of Power): a Battle at sea with the covenant's ships.
     "edit fleet battle": Opener(
         "conflicts",
@@ -2287,7 +2428,9 @@ OPENERS: dict[str, Opener] = {
         ),
     ),
     "end marriage": Opener(
-        "neighbour", lambda ws: _on_marriage(ws, lambda ws: ws.action_end_marriage())
+        "neighbour",
+        lambda ws: _on_marriage(ws, lambda ws: ws.action_end_marriage()),
+        action="end_marriage",
     ),
     # A Criamon magus's The Enigma tab (HoH:MC pp. 50-73).
     "change path": Opener(
@@ -2297,6 +2440,7 @@ OPENERS: dict[str, Opener] = {
     "follow an avenue": Opener(
         "character",
         lambda ws: _open_criamon(ws, (lambda: ws._run_more("follow_avenue"))),
+        action="follow_avenue",
     ),
     "add stigma": Opener(
         "character",
@@ -2325,12 +2469,17 @@ OPENERS: dict[str, Opener] = {
     "circulate text": Opener(
         "tribunal",
         lambda ws: _on_argument(ws, lambda ws: ws.action_circulate_text(), text=True),
+        action="circulate_text",
     ),
     "draft charter": Opener(
-        "town", lambda ws: _on_charter_lord(ws, lambda ws: ws.action_draft_charter())
+        "town",
+        lambda ws: _on_charter_lord(ws, lambda ws: ws.action_draft_charter()),
+        action="draft_charter",
     ),
     "seek loophole": Opener(
-        "town", lambda ws: _on_charter_lord(ws, lambda ws: ws.action_seek_loophole())
+        "town",
+        lambda ws: _on_charter_lord(ws, lambda ws: ws.action_seek_loophole()),
+        action="seek_loophole",
     ),
     # The guides' gaps, round two.
     "grog story experience": Opener(
@@ -2340,6 +2489,7 @@ OPENERS: dict[str, Opener] = {
     "melee event": Opener(
         "character",
         _run(lambda ws: melee_events.melee_form(ws.saga, ws.selected_character)),
+        action="melee_event",
     ),
     "certamen": Opener(
         "character",
@@ -2356,14 +2506,15 @@ OPENERS: dict[str, Opener] = {
     "trait roll": Opener(
         "character",
         _run(lambda ws: trait_roll_forms.roll_form(ws.saga, ws.selected_character)),
+        action="trait_roll",
     ),
-    "sheet roll": Opener("character", _sheet_roll),
+    "sheet roll": Opener("character", _sheet_roll, action="sheet_roll"),
     "build a ship": Opener(
         "covenant",
         _run(lambda ws: ship_build.build_form(ws.saga, ws.selected_covenant)),
     ),
     "suggest a story": Opener("covenant", _run(_with_hook)),
-    "disguise roll": Opener("character", _run(_with_cover)),
+    "disguise roll": Opener("character", _run(_with_cover), action="disguise_roll"),
     "menagerie reputation award": Opener("covenant", _open_menagerie_award),
     # A staged Hermetic Project (Hermetic Projects pp. 9-118).
     "add project stage": Opener(
@@ -2375,7 +2526,9 @@ OPENERS: dict[str, Opener] = {
         _staged("Burning City", lambda ws: ws._core_verb(STAGE_WORKS_SECTION, "add")),
     ),
     "warning bell": Opener(
-        "covenant", _staged("Burning City", lambda ws: ws.action_warning_bell())
+        "covenant",
+        _staged("Burning City", lambda ws: ws.action_warning_bell()),
+        action="warning_bell",
     ),
     "gather a connection": Opener(
         "covenant",
@@ -2386,7 +2539,9 @@ OPENERS: dict[str, Opener] = {
         _staged("Intangible Assassin", lambda ws: ws.action_lower_aegis()),
     ),
     "death roll": Opener(
-        "covenant", _staged("Living Corpse", lambda ws: ws.action_death_roll())
+        "covenant",
+        _staged("Living Corpse", lambda ws: ws.action_death_roll()),
+        action="death_roll",
     ),
     "war's end": Opener("tribunal", _run(_with_war)),
     "cross the threshold": Opener("place", _run(_faerie_hill)),
