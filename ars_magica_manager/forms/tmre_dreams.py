@@ -10,7 +10,7 @@ from __future__ import annotations
 import random
 from typing import Any
 
-from .. import catalog, diaries, table_rolls
+from .. import catalog, diaries, dice_text, table_rolls
 from .. import vis as vis_stores
 from ..arts import ARTS, FORMS, TECHNIQUES
 from ..commands import Command, Form, Refuse, notes
@@ -87,13 +87,18 @@ def _die_fields() -> list[DialogField]:
 def _roll(
     saga: Saga, values: dict[str, Any], rng: random.Random, botch_dice: int = 1
 ) -> tuple[int, bool, str]:
-    """The stress die: (its value, whether it botched, as shown)."""
+    """The stress die: (its value, whether it botched, as shown in the one
+    dice line's words)."""
     typed = values.get("die")
     if typed is not None:
         botched = bool(values.get("botched"))
-        return int(typed), botched, "a botch" if botched else str(typed)
+        return (
+            int(typed),
+            botched,
+            f"Die {typed} (typed)" + (", a botch" if botched else ""),
+        )
     found = dice.stress_die(rng, botch_dice, saga=saga)
-    return found.value, found.botched, "a botch" if found.botched else str(found.value)
+    return found.value, found.botched, dice_text.die_text(found)
 
 
 # -- Dream Working --------------------------------------------------------------
@@ -452,7 +457,7 @@ def _cast(
             else f"Casting Total {total}: {short} short of the level."
         )
     return f"Dream: {what}", [
-        f"{character.name} casts {what} in a dream. Die {shown}.",
+        f"{character.name} casts {what} in a dream. {shown}.",
         outcome,
     ]
 
@@ -486,7 +491,7 @@ def _dreams(
             outcome += f" The change's magnitude: {dr.reshape_magnitude(total)}."
     else:
         outcome = f"{total} against {ease}: {dreamer.name} {lost}."
-    return name, [f"{dreamer.name} dreams. Die {shown}.", outcome]
+    return name, [f"{dreamer.name} dreams. {shown}.", outcome]
 
 
 def _stays(total: int, ease: int, botched: bool, woken: str) -> str:
@@ -504,7 +509,7 @@ def _wounded(
     base = int(dr.shock_base(character, earlier, _int(values, "modifiers")).total)
     ease = dr.shock_ease(character, earlier.add(wound))
     return f"Dream: a {wound} wound", [
-        f"{character.name} takes a {wound} wound in a dream. Die {shown}.",
+        f"{character.name} takes a {wound} wound in a dream. {shown}.",
         _stays(base + die, ease, botched, "the shock wakes him; it was only a dream."),
     ]
 
@@ -517,7 +522,7 @@ def _disturbed(
     ease = dr.disturbance_ease(disturbance)
     total = dr.disturbance_base(character) + die
     return f"Dream: {disturbance.lower()}", [
-        f"{character.name}'s body: {disturbance.lower()}. Die {shown}.",
+        f"{character.name}'s body: {disturbance.lower()}. {shown}.",
         _stays(total, ease, botched, "he wakes, pulled out of the dream."),
     ]
 

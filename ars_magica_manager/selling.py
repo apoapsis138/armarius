@@ -7,7 +7,7 @@ from __future__ import annotations
 import random
 from typing import Any
 
-from . import diaries, table_rolls
+from . import diaries, dice_text, table_rolls
 from .commands import Command, Form, Refuse, notes
 from .form_spec import DialogField
 from .markup import escape
@@ -152,16 +152,21 @@ def sell_live(character: Character) -> Any:
 def _roll(
     saga: Saga, values: dict[str, Any], rng: random.Random
 ) -> tuple[int, bool, str]:
-    """The craftsman's die: (its value, whether it botched, as shown)."""
+    """The craftsman's die: (its value, whether it botched, as shown in the
+    one dice line's words)."""
     typed = values.get("die")
     if typed is not None:
         botched = _important(values) and bool(values.get("botched"))
-        return int(typed), botched, "a botch" if botched else str(typed)
+        return (
+            int(typed),
+            botched,
+            f"Die {typed} (typed)" + (", a botch" if botched else ""),
+        )
     if not _important(values):
         die = dice.simple_die(rng)
-        return die, False, str(die)
+        return die, False, dice_text.die_text(dice_text.simple(die))
     found = dice.stress_die(rng, 1, saga=saga)
-    return found.value, found.botched, "a botch" if found.botched else str(found.value)
+    return found.value, found.botched, dice_text.die_text(found)
 
 
 def apply_sale(
@@ -175,9 +180,9 @@ def apply_sale(
     theirs = int(values.get("theirs") or 0)
     found = sl.sale(standard, customer, mine, theirs, botched)
     if customer == sl.IMPORTANT:
-        rolled = f"Die {shown}: {mine} against the customer's {theirs}."
+        rolled = f"{shown}: {mine} against the customer's {theirs}."
     else:
-        rolled = f"Die {shown}: {mine} against Ease Factor {sl.EASE}."
+        rolled = f"{shown}: {mine} against Ease Factor {sl.EASE}."
     if found.botched:
         outcome = (
             "A botch: desperate for the sale, he lets the goods go for next to nothing."
