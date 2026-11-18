@@ -12,6 +12,8 @@ from typing import Any
 
 from .. import diaries, seasons, table_rolls
 from ..commands import Form, notes
+from ..dice_text import die_text as dice_words
+from ..dice_text import simple as dice_simple
 from ..form_spec import DialogField
 from ..markup import escape
 from ..models import Character, Saga, TraditionDef
@@ -164,16 +166,13 @@ def cast(
         die_text = f"die {value} (typed)"
     elif rule.die == "simple":
         value = dice.simple_die(rng)
-        die_text = f"simple die {value}"
+        die_text = dice_words(dice_simple(value))
     else:
         rolled = dice.stress_die(rng, botch_dice, saga=saga)
         value = rolled.value
-        zeroes = rolled.botches if rolled.botched else 0
-        die_text = f"stress die {value}" + (
-            f", botched with {zeroes} zero{'' if zeroes == 1 else 's'}"
-            if rolled.botched
-            else ""
-        )
+        zeroes = rolled.botches
+        # The one dice line's words: each doubling and the botch dice.
+        die_text = dice_words(rolled)
     total = hc.casting_total(rule, int(score.total), value)
     against = "Ease Factor" if rule.against != "level" else "level"
     result = hc.outcome(rule, total, level)
