@@ -19,13 +19,14 @@ import secrets
 from collections.abc import Callable, Coroutine
 from typing import Any
 
-from .. import chronicle, players, table_rolls
+from .. import chronicle, players, references, table_rolls
 from ..models import Saga
 from ..saga_store import NotSaved
 from ..undo_season import Undo
 from .bridge import LoopThread
 from .client import (
     ChangeNotSaved,
+    MessageRefused,
     NoCredential,
     RemoteClient,
     RollRefused,
@@ -314,6 +315,37 @@ class SeatSession:
         try:
             await client.sign_in_with(self._key, self.vault)
             return await client.roll(request)
+        finally:
+            await client.close()
+
+    def say(
+        self,
+        words: str,
+        to: tuple[str, ...],
+        links: tuple[references.Ref, ...],
+    ) -> str | None:
+        """Ask the host to write a Message (to `to`, none: the Table); None
+        once it is in the Chronicle, else the host's reason (as `roll`)."""
+        try:
+            self._loop.run(self._say(words, to, links), timeout=ROLL_WAIT)
+        except MessageRefused as refused:
+            return refused.why
+        except NeedsPasscode, NoCredential:
+            return "Sign in again to send a Message."
+        except ChannelError, SignInError, ConnectionError, TimeoutError:
+            return "The host can't be reached just now."
+        return None
+
+    async def _say(
+        self,
+        words: str,
+        to: tuple[str, ...],
+        links: tuple[references.Ref, ...],
+    ) -> int:
+        client = await RemoteClient.connect(self.url, self.pin)
+        try:
+            await client.sign_in_with(self._key, self.vault)
+            return await client.say(words, to, links)
         finally:
             await client.close()
 

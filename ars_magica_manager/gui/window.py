@@ -495,6 +495,7 @@ class MainWindow(QMainWindow):
         #: A roll or a Cancel changes only the Chronicle, which writes
         #: itself: nothing to save or redraw.
         self.chronicle_pane = ChroniclePane(self.palette_, self._run_on_chronicle)
+        self.chronicle_pane.open_record = self.open_ref
         #: The Chronicle file found damaged, said once.
         self._damaged_chronicle: Path | None = None
         #: Watches the host's Chronicle file, so a Remote seat's roll (the
@@ -2448,6 +2449,7 @@ class MainWindow(QMainWindow):
             send_roll=seat.roll,
             send_confidence=seat.spend_confidence,
             send_answer=seat.answer,
+            send_message=seat.say,
         )
         sheet_roll_forms.use_sender(seat.roll, held)
         table_rolls.use_seat(seat.open_form_roll)

@@ -32,6 +32,7 @@ import dataclasses
 import re
 import types
 import typing
+import unicodedata
 from collections.abc import Mapping
 from dataclasses import dataclass
 from functools import cache
@@ -92,6 +93,60 @@ _ADMIN_SAGA_ID = re.compile(r"[A-Za-z0-9_-]{1,200}")
 def is_plain_id(text: str) -> bool:
     """Whether `text` is a plain id (PLAIN_ID)."""
     return PLAIN_ID.fullmatch(text) is not None
+
+
+# -- words typed into the Chronicle --
+
+_EMOJI = "Emoji and picture symbols"
+_INVISIBLE = "Invisible characters"
+_CONTROL = "Control characters"
+_UNKNOWN = "Characters with no meaning"
+
+
+def _emoji_part(code: int) -> bool:
+    """A character that is part of an emoji though not a symbol itself:
+    variation selectors, skin-tone modifiers, the keycap ring."""
+    return (
+        0xFE00 <= code <= 0xFE0F
+        or 0xE0100 <= code <= 0xE01EF
+        or 0x1F3FB <= code <= 0x1F3FF
+        or code == 0x20E3
+    )
+
+
+def _refused_kind(char: str) -> str | None:
+    """Which kind of refused character `char` is, or None if it may be
+    typed: letters and their marks in any language, digits, punctuation,
+    maths and currency signs, spaces and a line break."""
+    if char == "\n":
+        return None
+    code = ord(char)
+    if _emoji_part(code):
+        return _EMOJI
+    category = unicodedata.category(char)
+    if category == "So":
+        return _EMOJI
+    if category == "Cf":
+        return _INVISIBLE
+    if category in ("Cc", "Zl", "Zp"):
+        return _CONTROL
+    if category in ("Co", "Cs", "Cn"):
+        return _UNKNOWN
+    return None
+
+
+def why_not_words(text: str) -> str | None:
+    """Why `text` may not be put in the Chronicle, naming the first
+    character refused, or None when it may. Emoji are refused, and so are
+    the invisible characters (zero-width, or changing the text's direction)
+    that could disguise a name or a link."""
+    for char in text:
+        kind = _refused_kind(char)
+        if kind is None:
+            continue
+        shown = char if kind == _EMOJI else f"U+{ord(char):04X}"
+        return f"{kind} can't be used here ({shown})."
+    return None
 
 
 # The kinds of plan.

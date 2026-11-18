@@ -39,13 +39,14 @@ import datetime
 import json
 import os
 import random
+import re
 import secrets
 from collections.abc import Callable, Mapping
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Protocol
 
-from . import dice_text, paths, sessions, shapes, viewing
+from . import dice_text, paths, references, sessions, shapes, viewing
 from .files import held_lock
 from .markup import escape
 from .models import Character, Saga, Session
@@ -199,6 +200,9 @@ class Chronicle:
         since, numbered from the file. `then` gives an entry that belongs
         with it (a Blind roll's line for its player), written in the same
         hold of the lock, so the two are on file before anyone is told."""
+        problem = typed_problem(kind, body)
+        if problem:
+            raise ValueError(problem)
         self.path.parent.mkdir(parents=True, exist_ok=True)
         with held_lock(_lock_of(self.path)):
             caught_up = self._catch_up(mend=True)
@@ -551,6 +555,9 @@ def why_not_roll(
         return "Choose who sees the roll."
     if request.botch_dice < 0:
         return "Botch dice can't be fewer than none."
+    words = typed_problem(ROLL, {"for": request.for_what})
+    if words:
+        return words
     storyguide = who == storyguide_of(session, saga)
     known = {c.id for c in saga.characters}
     if request.character_id and request.character_id not in known:
@@ -808,6 +815,9 @@ def strike(
         raise ValueError("Only the Session's storyguide strikes a roll.")
     if not reason.strip():
         raise ValueError("Say why the roll doesn't count.")
+    words = typed_problem(VOID, {"reason": reason})
+    if words:
+        raise ValueError(words)
     target = next((e for e in book.entries if e.number == number), None)
     if target is None or target.kind not in STRIKABLE:
         raise ValueError("There is no such roll.")
@@ -980,6 +990,9 @@ def why_not_call(saga: Saga, session: Session, call: RollCall, who: str) -> str 
         return "Choose a Characteristic."
     if call.visibility not in (PUBLIC, PRIVATE, BLIND):
         return "Choose who sees the rolls."
+    words = typed_problem(REQUEST, {"for": call.for_what})
+    if words:
+        return words
     known = {c.id for c in saga.characters}
     if any(c not in known for c in call.characters):
         return "That character isn't in the saga."
@@ -1157,6 +1170,9 @@ def note_outcome(
         raise ValueError("There is no such Roll request.")
     if not text.strip():
         raise ValueError("Say what came of it.")
+    words = typed_problem(OUTCOME, {"text": text})
+    if words:
+        raise ValueError(words)
     return book.add(
         OUTCOME, by, request.audience, {"request": number, "text": text.strip()}
     )
@@ -1184,6 +1200,221 @@ def spend_at_end(saga: Saga, book: HasEntries) -> None:
             character.background.confidence_points = max(
                 0, character.background.confidence_points - spent
             )
+
+
+# -- Messages --
+
+MESSAGE = "message"
+#: The most characters a Message's words may hold.
+MESSAGE_LIMIT = 2000
+#: The most records one Message may link.
+LINKS_LIMIT = 20
+#: The longest body (as JSON text) a seat's event frame carries
+#: (remote/events.MAX_BODY); a Message bigger than this is refused.
+ENTRY_LIMIT = 8_000
+
+
+def at_session(saga: Saga, session: Session) -> list[str]:
+    """Who is at `session` to be sent a Message, each once: its
+    storyguide, and every Player not Away (another storyguide of the
+    troupe counts as a Player)."""
+    away = set(session.away)
+    return list(
+        dict.fromkeys(
+            [
+                storyguide_of(session, saga),
+                *(p.id for p in saga.players if p.id not in away),
+            ]
+        )
+    )
+
+
+def name_at(saga: Saga, session: Session, who: str) -> str:
+    """`who` as a Message names them: the storyguide, or a Player's name."""
+    if who == viewing.HOST:
+        return "the storyguide"
+    found = next((p.name for p in saga.players if p.id == who), "")
+    return found or session.names.get(who, who)
+
+
+def viewer_of(saga: Saga, who: str) -> viewing.Viewer:
+    """The viewer a person at a Session reads as: the host's window as
+    storyguide, a Player as themselves, anyone else as the table."""
+    if who == viewing.HOST:
+        return viewing.STORYGUIDE_VIEWER
+    player = next((p for p in saga.players if p.id == who), None)
+    if player is None:
+        return viewing.TABLE_VIEWER
+    return viewing.viewer_for(player, hosts=False)
+
+
+def _named_at(words: str, name: str) -> int:
+    """Where `name` is written in `words` as a whole word, or -1."""
+    found = re.search(rf"(?<!\w){re.escape(name)}(?!\w)", words)
+    return found.start() if found is not None else -1
+
+
+def _link_problem(
+    saga: Saga, words: str, links: tuple[references.Ref, ...], who: str
+) -> str | None:
+    if len(links) > LINKS_LIMIT:
+        return f"A Message links at most {LINKS_LIMIT} records."
+    if len({(link.kind, link.id) for link in links}) < len(links):
+        return "Link each record once."
+    looking = viewer_of(saga, who)
+    for link in links:
+        record = references.target(saga, link)
+        if record is None or not viewing.readable(looking, record, saga):
+            return "Link only records you may open."
+        if _named_at(words, link.name) < 0:
+            return "A linked record's name must be in the Message."
+    return None
+
+
+def why_not_message(
+    saga: Saga,
+    session: Session,
+    words: str,
+    to: tuple[str, ...],
+    who: str,
+    *,
+    links: tuple[references.Ref, ...] = (),
+) -> str | None:
+    """Why `who` may not send `words` to `to` (none: the Table), or None:
+    anyone at the Session sends one, to people at it, in plain words,
+    linking only records they may open, by the names written."""
+    here_now = at_session(saga, session)
+    if who not in here_now:
+        return "Only someone at the Session sends a Message."
+    if not words.strip():
+        return "Write the Message."
+    if len(words) > MESSAGE_LIMIT:
+        return f"A Message holds at most {MESSAGE_LIMIT} characters."
+    problem = typed_problem(MESSAGE, {"words": words})
+    if problem:
+        return problem
+    if any(t not in here_now for t in to):
+        return "Whisper only to people at the Session."
+    if to and set(to) == {who}:
+        return "Whisper to someone besides yourself."
+    problem = _link_problem(saga, words, links, who)
+    if problem:
+        return problem
+    if len(json.dumps(_message_body(saga, session, words, to, links, who))) > (
+        ENTRY_LIMIT
+    ):
+        return "This Message is too long to send to the seats."
+    return None
+
+
+def _message_body(
+    saga: Saga,
+    session: Session,
+    words: str,
+    to: tuple[str, ...],
+    links: tuple[references.Ref, ...],
+    by: str,
+) -> dict[str, Any]:
+    whispered = [t for t in dict.fromkeys(to) if t != by]
+    return {
+        "words": words,
+        "author_name": name_at(saga, session, by),
+        "to": whispered,
+        "to_names": [name_at(saga, session, t) for t in whispered],
+        "links": [[link.kind, link.id, link.name] for link in links],
+    }
+
+
+def message(
+    book: Chronicle,
+    saga: Saga,
+    session: Session,
+    words: str,
+    *,
+    to: tuple[str, ...] = (),
+    links: tuple[references.Ref, ...] = (),
+    by: str,
+) -> Entry:
+    """Write a Message from `by`: to the Table, or, naming `to`, a Whisper
+    those people and the Session's storyguide see, with the records it
+    links. It is written once and stays as sent."""
+    if book.closed:
+        raise ValueError("This Session has ended: its Chronicle is closed.")
+    problem = why_not_message(saga, session, words, to, by, links=links)
+    if problem:
+        raise ValueError(problem)
+    audience = chosen(*dict.fromkeys(t for t in (by, *to))) if to else table()
+    body = _message_body(saga, session, words, to, links, by)
+    return book.add(MESSAGE, by, audience, body)
+
+
+def _links_of(body: dict[str, Any]) -> tuple[references.Ref, ...]:
+    return tuple(
+        references.Ref(str(kind), str(record_id), str(name))
+        for kind, record_id, name in body.get("links", [])
+    )
+
+
+def message_label(body: dict[str, Any]) -> str:
+    """Who a Message is from, and for a Whisper to whom ("Ana, whispering
+    to Ben")."""
+    author = str(body["author_name"])
+    author = author[:1].upper() + author[1:]
+    to_names = [str(n) for n in body.get("to_names", [])]
+    if not to_names:
+        return author
+    return f"{author}, whispering to {', '.join(to_names)}"
+
+
+def message_fact(entry: Entry, saga: Saga, viewer: viewing.Viewer) -> references.Fact:
+    """A Message as `viewer` reads it: who it is from and to, its words as
+    written, and a link for each record named that they may open now (one
+    they may not, or one gone, stays its name in plain words)."""
+    body = entry.body
+    words = str(body["words"])
+    shown = sorted(
+        (
+            link
+            for link in _links_of(body)
+            if (record := references.target(saga, link)) is not None
+            and viewing.readable(viewer, record, saga)
+        ),
+        key=lambda link: _named_at(words, link.name),
+    )
+    return references.Fact(message_label(body), words, tuple(shown))
+
+
+# -- words typed into the Chronicle --
+
+#: The keys of each kind's body that hold words someone typed, which
+#: Chronicle.add puts through the character rule (shapes.why_not_words).
+TYPED: dict[str, tuple[str, ...]] = {
+    MESSAGE: ("words",),
+    ROLL: ("for",),
+    ROLLED: ("for",),
+    REQUEST: ("for",),
+    VOID: ("reason",),
+    OUTCOME: ("text",),
+    # A form's name may come from a seat; its result lines are checked
+    # where a seat sends them (remote/events), since the host's own forms
+    # write theirs.
+    FORM_ROLL: ("form",),
+}
+#: The kinds whose bodies hold no typed words: numbers and names from the
+#: saga. A ROLLED line's "for" copies its roll's, already checked.
+UNTYPED = frozenset({BEGIN, END, CONFIDENCE, REQUEST_EASE})
+
+
+def typed_problem(kind: str, body: dict[str, Any]) -> str | None:
+    """Why an entry of `kind` may not keep `body`'s typed words (a text,
+    or each of a list of texts), or None."""
+    for key in TYPED.get(kind, ()):
+        value = body.get(key)
+        texts = value if isinstance(value, list) else [value]
+        for text in texts:
+            if isinstance(text, str) and (problem := shapes.why_not_words(text)):
+                return problem
+    return None
 
 
 # -- as text --
@@ -1254,6 +1485,8 @@ def _line(entry: Entry, struck: dict[int, str]) -> str:
         )
     if entry.kind == OUTCOME:
         return f"Request {entry.body['request']}: {entry.body['text']}"
+    if entry.kind == MESSAGE:
+        return f"{message_label(entry.body)}: {entry.body['words']}"
     return UNKNOWN
 
 
@@ -1397,7 +1630,10 @@ def calls_attention(
 ) -> bool:
     """Whether `entry` is meant for `who` alone enough to call a collapsed
     pane's attention: a Blind roll's number for the Session's storyguide,
-    or the line telling a player one was rolled for their character."""
+    or the line telling a player one was rolled for their character, or a
+    Whisper to them (named in its body, which a seat is sent too)."""
+    if entry.kind == MESSAGE:
+        return who in entry.body.get("to", [])
     if entry.kind in STRIKABLE and entry.audience.to == STORYGUIDE:
         return who == storyguide_of(session, saga)
     if entry.kind == ROLLED:
