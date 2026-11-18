@@ -345,7 +345,7 @@ def test_invoking_with_the_saints_relic_from_a_church():
     assert "No -15: he holds the saint's relic" in live
     lines = form.apply(values)
     # 3 + relic 4 + 9 = 16 against 15 + 4 = 19: not heard.
-    assert lines[0] == "Die 9 + 7 = 16 against 15 + 4 = 19."
+    assert lines[0] == "Simple die 9, +7 = 16 against 15 + Simple die 4 = 19."
     assert "may ask again tomorrow" in lines[1]
     assert thomas.diary[-1].name == "Invoked Saint Edmund"
 
@@ -358,7 +358,7 @@ def test_a_heard_invocation_is_a_miracle_in_the_diary():
     values = _values(form, saint="Saint Peter", relic="ch:1", power="expel_demons")
     # 3 + Devotion 1 + relic 6 + 10 = 20 against 16.
     lines = form.apply(values)
-    assert lines[0] == "Die 10 + 10 = 20 against 15 + 1 = 16."
+    assert lines[0] == "Simple die 10, +10 = 20 against 15 + Simple die 1 = 16."
     assert "Saint Peter hears him and works a miracle: Expel Demons." in lines[1]
     assert "5 to 10 Devotion Points" in lines[2]
     assert thomas.diary[-1].name == "Miracle of Saint Peter"
@@ -431,7 +431,7 @@ def test_threatening_spends_confidence_and_is_written_down():
     lines = form.apply(values)
     # Presence 2 + Leadership 3 + bones 1 + Confidence 3 + 2 = 11 against
     # 24 (devoted, so no -15): a miss by 13, a minor curse.
-    assert lines[0] == "Die 2 + 9 = 11 against 24."
+    assert lines[0] == "Stress die 2, +9 = 11 vs 24: fails by 13."
     assert "minor curse" in lines[1]
     assert thomas.background.confidence_points == 1
     assert thomas.diary[-1].name == "Threatened Saint Peter"

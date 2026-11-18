@@ -9,7 +9,7 @@ from __future__ import annotations
 import random
 from typing import Any
 
-from .. import diaries, seasons, table_rolls, traditions
+from .. import diaries, dice_text, seasons, table_rolls, traditions
 from ..commands import Form, notes
 from ..form_spec import DialogField
 from ..markup import escape, plural
@@ -144,12 +144,11 @@ def _die(
     if typed is not None:
         value = max(0, int(typed))
         zeroes = dice.botch_roll(rng, count, saga=saga) if value == 0 else 0
-        said = f"die {value} (typed)"
+        said = dice_text.typed(value)
     else:
         rolled = dice.stress_die(rng, count, saga=saga)
-        value = rolled.value
-        zeroes = rolled.botches if rolled.botched else 0
-        said = f"stress die {value}"
+        # The one dice line's words: each doubling and the botch dice.
+        return rolled.value, rolled.botches, dice_text.die_text(rolled)
     if zeroes:
         said += f", botched with {plural(zeroes, 'zero')}"
     return value, zeroes, said

@@ -7,7 +7,7 @@ import random
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 
-from .. import catalog, manors
+from .. import catalog, dice_text, manors
 from .. import economics as eco
 from ..enchanted_devices import new_day
 from ..markup import escape, problem, todo
@@ -25,6 +25,7 @@ from ..models import (
     new_instance_id,
     next_season,
 )
+from ..recorded_dice import RecordingDice
 from ..rules import activities as rules
 from ..rules import agents as agent_rules
 from ..rules import aging as aging_rules
@@ -80,8 +81,20 @@ from .repeat import reforecast
 def resolve(saga: Saga, rng: random.Random | None = None) -> list[rules.Outcome]:
     """Every current-season plan's outcome, all worked out before any is
     applied. With `rng`, dice are rolled (advancing); without, it is a
-    preview and vis study waits for its roll."""
-    return rules.outcomes(saga, due_plans(saga), rng)
+    preview and vis study waits for its roll. Each season's notes end
+    with the whole dice it rolled (dice_text), recorded as it rolls them."""
+    if rng is None:
+        return rules.outcomes(saga, due_plans(saga), rng)
+    worked: list[rules.Outcome] = []
+    for plan in due_plans(saga):
+        recorded = RecordingDice(rng)
+        found = rules.outcomes(saga, [plan], recorded)
+        said = dice_text.whole_dice_text(recorded.dice)
+        for outcome in found:
+            if said:
+                outcome.notes.append(said)
+        worked += found
+    return worked
 
 
 def _seek_insight(

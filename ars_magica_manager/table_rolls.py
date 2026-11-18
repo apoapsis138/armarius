@@ -392,7 +392,7 @@ def drawing(
 def _saying(lines: list[str], said: str) -> list[str]:
     """`lines` with the dice line `said` last, unless a line already says
     it (a roll that writes its own dice line, as Impress does)."""
-    if not said or any(said in line for line in lines):
+    if not said or dice_text.already_said(lines, said):
         return lines
     return [*lines, said]
 

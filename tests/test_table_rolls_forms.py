@@ -80,9 +80,9 @@ def test_a_trait_roll_at_the_table_takes_the_hosts_dice_and_posts(
     assert entry.body["faces"] == [7]
     assert entry.body["character_name"] == "Aelfric"
     assert entry.body["lines"] == [
-        "Brave +3 + Silver Cord 0 + die 7 = 10 against 9: it holds."
+        "Stress die 7, Brave +3, Silver Cord +0 = 10 vs 9: succeeds by 1. It holds."
     ]
-    assert lines == [*entry.body["lines"], "Stress die 7"]  # its dice line last
+    assert lines == entry.body["lines"]  # it says its own dice: no second line
 
 
 def test_a_places_roll_table_posts_blind_for_the_storyguide(host_faces: Any) -> None:

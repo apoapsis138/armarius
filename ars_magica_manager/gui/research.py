@@ -193,13 +193,7 @@ class RollCard(Card):
 
     def show_attempt(self, goal: Breakthrough, attempt: ResearchAttempt) -> None:
         landed = rt.landed(attempt)
-        if landed is None:
-            words = "No roll on the chart this season."
-        else:
-            roll = landed - attempt.move
-            words = f"Die {attempt.die} + risk {attempt.risk} = {roll}"
-            if attempt.move:
-                words += f", moved {attempt.move:+d} to {landed}"
+        words = rt.roll_words(attempt) or "No roll on the chart this season."
         self.title.setText(f"{attempt.season} {attempt.year}, {goal.name}: {words}")
         self.title.setStyleSheet(f"color:{self.p['foreground']}")
         self.chart.show_roll(landed)

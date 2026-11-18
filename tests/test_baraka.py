@@ -98,7 +98,7 @@ def test_baraka_is_sought_at_the_shrine_but_the_quran_anywhere():
     assert "no such power" in str(form.validate(wrong))
     # Communication 2 + Charm 1 + Pious 2 = 5; 9 + 5 = 14 against 15 + 2.
     lines = form.apply(values)
-    assert lines[0] == "Die 9 + 5 = 14 against 15 + 2 = 17."
+    assert lines[0] == "Simple die 9, +5 = 14 against 15 + Simple die 2 = 17."
     assert yusuf.diary[-1].name.startswith("Sought the baraka of")
     assert isinstance(forms.baraka_form(saga, None), Refuse)
 

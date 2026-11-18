@@ -6,6 +6,7 @@ from __future__ import annotations
 import random
 from collections.abc import Sequence
 
+from .. import dice_text
 from ..models import (
     Ability,
     ArtScore,
@@ -15,6 +16,7 @@ from ..models import (
     SeasonRecordLine,
     next_season,
 )
+from ..recorded_dice import RecordingDice
 from ..rules import activities as rules
 from ..rules import aging as aging_rules
 from ..rules import creation_access as access
@@ -265,11 +267,14 @@ def gain_warping(
     if answer is not None and at_once and points >= divine_state.trigger(character):
         if aura is None:
             aura, _ = home_aura(saga, character)
+        recorded = RecordingDice(rng)  # both sides' dice (DE p. 228)
         result = realm_warping.respond(
-            answer, character, points, aura, rng, saga, enter=enter
+            answer, character, points, aura, recorded, saga, enter=enter
         )
         source = realm_warping.SOURCES[answer]
         notes += result.notes
+        if recorded.said:
+            notes.append(recorded.said)
         if result.entered:
             name = realm_warping.NAMES[answer]
             if answer == realm_warping.MAGIC and (
@@ -330,6 +335,21 @@ def _camp_disease(
 CAMP_DISEASE = "Bloody Flux"
 
 
+def _aging_summary(result: aging_rules.AgingResult) -> str:
+    """An aging roll in a few words, for its Diary name and record line."""
+    return (
+        "no apparent aging"
+        if not result.apparent
+        else "apparent age +1"
+        + (
+            f", {sum(result.points.values()) + result.any_points} Aging Point(s)"
+            if result.points or result.any_points
+            else ""
+        )
+        + (", an Aging Crisis" if result.crisis else "")
+    )
+
+
 def age_character(
     saga: Saga,
     character: Character,
@@ -356,6 +376,7 @@ def age_character(
             "",
             "No aging roll: a being of Magic no longer ages (TMRE p. 44).",
         )
+    rng = recorded = RecordingDice(rng)  # its dice go in the Diary line
     familiar = saga.familiar_of(character.id)
     bronze = familiar.bronze_cord if familiar is not None else 0
     season, year = (
@@ -422,17 +443,10 @@ def age_character(
         if aging_rules.leper(character):
             character.wounds.heavy += 1
             notes.append("Leprosy: a Heavy Wound with the Crisis (DE p. 135).")
-    summary = (
-        "no apparent aging"
-        if not result.apparent
-        else "apparent age +1"
-        + (
-            f", {sum(result.points.values()) + result.any_points} Aging Point(s)"
-            if result.points or result.any_points
-            else ""
-        )
-        + (", an Aging Crisis" if result.crisis else "")
-    )
+    said = dice_text.whole_dice_text(recorded.dice)
+    if said:
+        notes.append(said)
+    summary = _aging_summary(result)
     character.diary.append(
         DiaryEntry(
             year=year,

@@ -2,7 +2,7 @@
 STORY-2348): every face in order, and each whole die `rules.dice` makes
 (its doublings and botch dice) kept together, for the dice line
 (dice_text) to say. Table rolls record a form's dice with it
-(table_rolls).
+(table_rolls), and Advance Season each season's.
 
 Pattern: Decorator. `RecordingDice` wraps any source of chance and adds
 recording, so every rule that takes an `rng` takes it unchanged.
@@ -10,10 +10,13 @@ recording, so every rule that takes an `rng` takes it unchanged.
 
 from __future__ import annotations
 
+import dataclasses
 import random
 import secrets
 from typing import Any
 
+from . import dice_text
+from .commands import Form
 from .rules import dice as dice_rules
 
 #: The most bits one draw asks for: a larger draw is made of several.
@@ -101,3 +104,41 @@ class RecordingDice(DrawnDice):
     def dice(self) -> list[Die]:
         """Every face drawn, as whole dice and loose faces, in order."""
         return [*self._whole, *({"face": f} for f in self.faces[self._grouped :])]
+
+    @property
+    def said(self) -> str:
+        """The whole dice drawn so far, as a result's dice line says them
+        ("" for none). Several dice are in the order rolled: a contested
+        roll's sides as they rolled them."""
+        return dice_text.whole_dice_text(self.dice)
+
+    def clear(self) -> None:
+        """Forget the dice drawn so far (a form saved again starts anew)."""
+        self.faces, self._grouped, self._whole = [], 0, []
+
+
+def recording(rng: random.Random | None) -> RecordingDice:
+    """`rng` (a source of its own when None), recorded."""
+    return RecordingDice(rng if rng is not None else random.Random())
+
+
+def showing_dice(form: Form, dice: RecordingDice) -> Form:
+    """`form`, which rolls with `dice`, ending each save's notes with the
+    dice line of the dice that save drew (none when it drew none, as
+    with a typed die). Decorator: the form's rule is unchanged."""
+
+    def apply(values: dict[str, Any]) -> Any:
+        dice.clear()
+        result = form.apply(values)
+        said = dice.said
+        if (
+            said
+            and isinstance(result, list)
+            and all(isinstance(s, str) for s in result)
+        ):
+            lines: list[str] = result
+            if not dice_text.already_said(lines, said):
+                return [*lines, said]
+        return result
+
+    return dataclasses.replace(form, apply=apply)
