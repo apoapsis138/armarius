@@ -180,6 +180,7 @@ REFRESH: dict[str, Refresh] = {
     "begin_session": changes(SESSIONS_SECTION),
     "close_session": changes(SESSIONS_SECTION),
     "read_chronicle": calculator(),
+    "send_message": calculator(),
     "sheet_roll": calculator(),
     "previously_on": calculator(),
     "teaching_requests": changes(

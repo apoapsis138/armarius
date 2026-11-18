@@ -28,8 +28,9 @@ from .. import __version__
 #: Bumped when a message changes in a way an older app cannot read. 2: the
 #: host sends a Session's Chronicle down an events connection (ADR 0019).
 #: 3: a seat draws a Table roll form's dice from the host (an older seat
-#: would roll them itself, which ADR 0018 forbids).
-PROTOCOL_VERSION = 3
+#: would roll them itself, which ADR 0018 forbids). 4: a seat sends
+#: Messages and Whispers (`say`), which an older host would refuse.
+PROTOCOL_VERSION = 4
 #: What a seat speaking an older protocol is told, instead of a welcome.
 UPDATE = "update"
 UPDATE_MESSAGE = "This host needs a newer Armarius: update yours to join."

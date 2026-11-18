@@ -13,18 +13,20 @@ from pathlib import Path
 import pytest
 import pytest_asyncio
 
-from ars_magica_manager import chronicle, players, storage, viewing
+from ars_magica_manager import chronicle, players, references, storage, viewing
 from ars_magica_manager.models import (
     Ability,
     Casting,
     Character,
     Characteristics,
+    Neighbour,
     Saga,
     Session,
 )
 from ars_magica_manager.remote import events, protocol
 from ars_magica_manager.remote import identity as ident
 from ars_magica_manager.remote.client import (
+    MessageRefused,
     RemoteClient,
     RollRefused,
     new_device_secret,
@@ -380,3 +382,102 @@ async def test_a_seat_answers_a_request_and_never_learns_a_hidden_ease(
     assert all(e.body.get("ease_factor") is None for _s, e in frames)
     assert all("17" not in str(e.body) for _s, e in frames)
     assert number in [e.number for _s, e in frames]
+
+
+async def test_a_seat_sends_a_message_the_host_writes(table: Table) -> None:
+    seat = await table.seat("Anna")
+    try:
+        number = await seat.say("We ride at dawn.")
+    finally:
+        await seat.close()
+
+    entry = chronicle.read(table.saga, table.saga.sessions[0]).refresh()[-1]
+    assert entry.number == number and entry.kind == chronicle.MESSAGE
+    assert entry.author == table.id_of("Anna")
+    assert entry.body["words"] == "We ride at dawn."
+
+
+async def test_a_whisper_marker_never_reaches_another_seat(table: Table) -> None:
+    """ADR 0019: a Whisper goes only to those it names and the storyguide."""
+    anna = await table.seat("Anna")
+    try:
+        await anna.say("MARKER-WHISPER", to=(HOST,))
+    finally:
+        await anna.close()
+    bea = await table.seat("Bea")
+    try:
+        for_bea = await _gather(bea, 0, 10)
+    finally:
+        await bea.close()
+
+    assert "MARKER-WHISPER" not in repr([(e.kind, e.body) for _s, e in for_bea])
+    assert [e.kind for _s, e in for_bea] == ["begin"]
+
+
+async def test_a_seats_message_is_refused_with_why(table: Table) -> None:
+    seat = await table.seat("Anna")
+    try:
+        with pytest.raises(MessageRefused) as refused:
+            await seat.say(f"Huzzah {chr(0x1F389)}")
+    finally:
+        await seat.close()
+
+    assert "Emoji" in refused.value.why
+
+
+async def test_a_link_renamed_on_the_host_is_refused_with_its_new_name(
+    table: Table,
+) -> None:
+    table.saga.neighbours = [Neighbour(id="abbey", name="Abbey of St Gall")]
+    storage.save_saga(table.saga)
+    stale = references.Ref("neighbours", "abbey", "St Gall")
+    seat = await table.seat("Anna")
+    try:
+        with pytest.raises(MessageRefused) as refused:
+            await seat.say("To St Gall!", links=(stale,))
+    finally:
+        await seat.close()
+
+    assert (
+        refused.value.why
+        == "St Gall is now Abbey of St Gall on the host: link it again."
+    )
+
+
+async def test_a_seats_form_roll_with_hidden_characters_is_refused_and_its_dice_kept(
+    table: Table,
+) -> None:
+    hidden = chr(0x202E)
+    seat = await table.seat("Anna")
+    try:
+        named = await seat.request(
+            "form_die",
+            {
+                "form": f"Aegis{hidden}",
+                "character_id": "aelfric",
+                "visibility": chronicle.PUBLIC,
+                "start": 0,
+                "stop": 10,
+                "step": 1,
+            },
+        )
+        drawn = await seat.request(
+            "form_die",
+            {
+                "form": "Personality Trait",
+                "character_id": "aelfric",
+                "visibility": chronicle.PUBLIC,
+                "start": 0,
+                "stop": 10,
+                "step": 1,
+            },
+        )
+        done = await seat.request("form_done", {"lines": f"Brave{hidden} holds."})
+    finally:
+        await seat.close()
+
+    assert named.type == "roll_refused" and "Invisible" in str(named.body["why"])
+    assert drawn.type == "die"
+    assert done.type == "roll_refused" and "Invisible" in str(done.body["why"])
+    last = chronicle.read(table.saga, table.saga.sessions[0]).refresh()[-1]
+    assert last.kind == chronicle.FORM_ROLL and last.body["cancelled"]
