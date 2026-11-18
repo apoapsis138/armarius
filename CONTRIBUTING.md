@@ -14,6 +14,10 @@ Tests run in two tiers.
   `pyright` in one call. `tools/slice_tests.py --dry-run` lists which tests
   it picks: the fast tier (every test file that isn't a screen test) plus
   the screen tests matching the files changed since the last commit.
+- **One run at a time on a computer:** story_check's tests wait while
+  another worktree's are running (it says whose), since runs sharing the
+  cores stop at their time limit and flake. The lint and type checks
+  don't wait.
 - **Before handing a change over:** `uv run python tools/story_check.py
   --full` runs the whole suite in parallel (`python -m pytest -q -n auto
   --dist worksteal`, one worker per core; more workers than cores make the
