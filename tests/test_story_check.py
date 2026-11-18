@@ -4,6 +4,8 @@ The runs are faked; nothing here starts pytest."""
 
 import importlib.util
 import os
+import threading
+import time
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -25,6 +27,9 @@ def check(tmp_path, monkeypatch):
     monkeypatch.setattr(module, "ROOT", tmp_path)
     monkeypatch.setattr(module, "FLAKY_LOG", tmp_path / ".pytest_cache" / "flaky.txt")
     monkeypatch.setattr(module, "RUNNING", tmp_path / "running")
+    # The computer's turn, kept apart from the real one: this test may run
+    # inside a story_check that holds it.
+    monkeypatch.setattr(module.runner_turns, "LOCK", tmp_path / "runner.lock")
     return module
 
 
@@ -39,6 +44,38 @@ def test_all_green_passes(check, monkeypatch) -> None:
     fake_runs(check, monkeypatch, {})
     assert check.main([]) == 0
     assert not check.FLAKY_LOG.exists()
+
+
+def test_the_tests_wait_for_another_runs_turn(check, monkeypatch, capsys) -> None:
+    """Another worktree's run has the turn: the tests start only once it
+    gives it back (STORY-2350)."""
+    runs = fake_runs(check, monkeypatch, {})
+    started: list[float] = []
+    monkeypatch.setattr(
+        check, "run", lambda *a, **k: (started.append(1), runs(*a, **k))[1]
+    )
+    monkeypatch.setattr(check, "TURN_EVERY", 0.05)
+    other = threading.Event()
+    release = threading.Event()
+
+    def other_run() -> None:
+        with check.runner_turns.turn("story_check --full in armarius-other"):
+            other.set()
+            release.wait(10)
+
+    holder = threading.Thread(target=other_run)
+    holder.start()
+    assert other.wait(10)
+    result: list[int] = []
+    checking = threading.Thread(target=lambda: result.append(check.main([])))
+    checking.start()
+    time.sleep(0.3)
+    assert started == []
+    release.set()
+    holder.join(10)
+    checking.join(30)
+    assert result == [0] and started
+    assert "armarius-other" in capsys.readouterr().out
 
 
 def test_a_flaky_test_fails_the_check_and_is_logged(check, monkeypatch, capsys):
