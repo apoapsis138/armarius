@@ -133,7 +133,7 @@ def test_a_roll_is_a_card_of_who_what_the_dice_and_the_outcome(
     assert [t.text() for t in card.findChildren(QLabel, "doubled")] == ["×2", "×4"]
     assert "die 5 × 4 = 20 + 9" in _text(card, "verdict")
     assert _text(card, "total") == "29"
-    assert "against 12: succeeds by 17" in _text(card, "verdict")
+    assert "vs 12: succeeds by 17" in _text(card, "verdict")  # as the line says
     assert quiet == ["tock"]
 
 
@@ -632,6 +632,32 @@ def test_a_form_roll_is_a_card_of_the_form_its_dice_and_its_result(
     assert labels["result"] == "die 8 against 6: it holds."
     assert [d.face for d in card.findChildren(Die)] == [1, 4]
     assert quiet == ["tock"]
+
+
+@pytest.mark.usefixtures("app")
+def test_lone_botch_dice_draw_no_die_and_loose_faces_stay_out_of_the_line() -> None:
+    pane, saga, session, book, _ran = _pane()
+
+    chronicle.form_roll(
+        book,
+        saga,
+        session,
+        form="Lab accident",
+        character_id="aelfric",
+        visibility=chronicle.PUBLIC,
+        faces=[4, 0, 7],
+        whole_dice=[
+            {"stress": False, "faces": [], "botch_faces": [4, 0]},
+            {"face": 7},
+        ],
+        lines=["Something goes wrong."],
+        by=HOST,
+    )
+
+    card = pane.card_list()[-1]
+    assert [d.face for d in card.findChildren(Die, "die")] == [7]
+    assert [d.face for d in card.findChildren(Die, "botch")] == [4, 0]
+    assert _text(card, "dice-line") == "2 botch dice 4, 0: 1 zero"
 
 
 @pytest.mark.usefixtures("app")

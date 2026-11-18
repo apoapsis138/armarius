@@ -240,23 +240,22 @@ def persuasion(
     )
 
 
-def _impress_terms(character: Character) -> tuple[int, str]:
-    presence = character.characteristics.presence
-    leadership = scores.ability_level(character, "Leadership")
-    gift = gift_penalty(character)
-    return ag.impress_total(presence, leadership, gift), (
-        f"Presence {presence} + Leadership {leadership} - Gift {gift}"
-    )
-
-
 def _impress_dice_terms(character: Character) -> list[dice_text.Term]:
-    """What the Impress roll adds to the die, term by term, for its dice
-    line (the same sum as `_impress_terms`)."""
+    """What the Impress roll adds to the die, term by term: the one place
+    its terms are read, for its total, its panel text and its dice line."""
     return [
         ("Presence", character.characteristics.presence),
         ("Leadership", scores.ability_level(character, "Leadership")),
         ("Gift", -gift_penalty(character)),
     ]
+
+
+def _impress_terms(character: Character) -> tuple[int, str]:
+    """The Impress roll's total (ag.impress_total) and its terms in words."""
+    (_, presence), (_, leadership), (_, minus_gift) = _impress_dice_terms(character)
+    return ag.impress_total(presence, leadership, -minus_gift), (
+        f"Presence {presence} + Leadership {leadership} - Gift {-minus_gift}"
+    )
 
 
 def _die_needed(ease: int, total: int) -> str:

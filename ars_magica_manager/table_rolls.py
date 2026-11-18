@@ -384,9 +384,17 @@ def drawing(
         roll.cancel()
         raise
     lines = [plain(line) for line in drawn.lines]
-    if drawn.said and not isinstance(roll, HostRoll):
-        lines.append(drawn.said)  # the host can't group a seat's dice: say them
+    if not isinstance(roll, HostRoll):  # the host can't group a seat's dice
+        lines = _saying(lines, drawn.said)
     drawn.refused = roll.finish(lines)
+
+
+def _saying(lines: list[str], said: str) -> list[str]:
+    """`lines` with the dice line `said` last, unless a line already says
+    it (a roll that writes its own dice line, as Impress does)."""
+    if not said or any(said in line for line in lines):
+        return lines
+    return [*lines, said]
 
 
 # -- the form decorator --
@@ -434,20 +442,22 @@ def with_dice(result: Any, said: str) -> Any:
         return dataclasses.replace(result, question=f"{result.question}\n\n{said}")
     if isinstance(result, list) and all(isinstance(line, str) for line in result):
         lines: list[str] = result
-        return [*lines, said]
+        return _saying(lines, said)
     return result
 
 
 def _watched(inner: Form, values: dict[str, Any]) -> tuple[Any, str]:
     """`inner` saved with `values`, every face it draws watched: its
-    result and its dice line."""
+    result and its dice line. A form saved inside another hands the
+    outer one's watch back when it ends."""
     global _watching
+    outer = _watching
     watch = RecordingDice(random.Random(0))  # only noted, never drawn from
     _watching = watch
     try:
         result = inner.apply(values)
     finally:
-        _watching = None
+        _watching = outer
     return result, dice_said(watch.dice)
 
 
@@ -515,8 +525,8 @@ def form(
         finally:
             _drawing = None
         lines = result_lines(result)
-        if said and not isinstance(roll, HostRoll):
-            lines.append(said)  # the host can't group a seat's dice: say them
+        if not isinstance(roll, HostRoll):  # the host can't group a seat's dice
+            lines = _saying(lines, said)
         refused = roll.finish(lines)
         result = with_dice(result, said)
         if refused and isinstance(result, list):
