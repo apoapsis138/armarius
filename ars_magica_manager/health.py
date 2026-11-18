@@ -335,6 +335,7 @@ def take_harm_form(
             keep,
             yes_label="Keep",
             title=HARM_TITLE,
+            roll_result=True,
         )
 
     return table_rolls.form(
@@ -592,6 +593,7 @@ def recovery_form(
             keep,
             yes_label="Keep",
             title=RECOVERY_TITLE,
+            roll_result=True,
         )
 
     return Form(

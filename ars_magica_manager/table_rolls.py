@@ -45,10 +45,12 @@ from dataclasses import dataclass
 from typing import Any, Protocol
 
 from . import chronicle
-from .commands import Form, notes
+from .commands import Confirm, Form, notes
 from .form_spec import DialogField
 from .markup import plain
 from .models import Saga, Session
+from .recorded_dice import DrawnDice, RecordingDice
+from .rules import dice as dice_rules
 
 # -- which rolls are Table rolls --
 
@@ -134,49 +136,7 @@ FIGHTS: frozenset[str] = frozenset(
     }
 )
 
-# -- the recording die source --
-
-#: The most bits one draw asks for: a larger draw is made of several.
-_CHUNK = 30
-
-
-class DrawnDice(random.Random):
-    """A source of chance whose every draw is a `randrange`: a choice, a
-    shuffle or a float is made of dice too, so a source that records or
-    fetches its dice (the host's, a seat's) sees all of them."""
-
-    def random(self) -> float:
-        return self.getrandbits(_CHUNK) / (1 << _CHUNK)
-
-    def getrandbits(self, k: int, /) -> int:
-        bits = 0
-        while k > 0:
-            take = min(k, _CHUNK)
-            bits = (bits << take) | self.randrange(1 << take)
-            k -= take
-        return bits
-
-
-class RecordingDice(DrawnDice):
-    """A source of chance that keeps every face it gives out, in order:
-    `source`'s own (the host's `secrets.SystemRandom` unless given). A die
-    (`randrange`, `randint`) is kept as its face; any other draw (a choice,
-    a shuffle) goes through `randrange` too, so it is kept the same way."""
-
-    def __init__(self, source: random.Random | None = None) -> None:
-        super().__init__()
-        self._source = source if source is not None else secrets.SystemRandom()
-        self.faces: list[int] = []
-
-    def randrange(self, start: int, stop: int | None = None, step: int = 1) -> int:
-        face = self._source.randrange(start, stop, step)
-        self.faces.append(face)
-        return face
-
-    def randint(self, a: int, b: int) -> int:
-        face = self._source.randint(a, b)
-        self.faces.append(face)
-        return face
+# -- the recording die source (recorded_dice) --
 
 
 def system_source() -> random.Random:
@@ -216,6 +176,12 @@ class _TableDice(DrawnDice):
 
     def randint(self, a: int, b: int) -> int:
         return self._source().randint(a, b)
+
+    def die_made(self, die: dice_rules.DieResult) -> None:
+        """Pass a whole die on to the source it came from, if it listens."""
+        listener = getattr(self._source(), "die_made", None)
+        if callable(listener):
+            listener(die)
 
 
 def dice() -> random.Random:
@@ -317,6 +283,7 @@ class HostRoll:
             character_id=self.opening.character_id,
             visibility=self.opening.visibility,
             faces=self._dice.faces,
+            whole_dice=self._dice.dice,
             lines=lines,
             by=self.by,
             cancelled=cancelled,
@@ -421,7 +388,10 @@ def _never(_values: dict[str, Any]) -> bool:
 
 def result_lines(result: Any) -> list[str]:
     """A form's result as the Chronicle keeps it: its notes, as plain
-    text; nothing for a further step."""
+    text; a question marked as the roll's result (Health, Disputations)
+    line by line; nothing for any other further step."""
+    if isinstance(result, Confirm) and result.roll_result:
+        return [plain(line) for line in result.question.splitlines() if line.strip()]
     if isinstance(result, list) and all(isinstance(line, str) for line in result):
         lines: list[str] = result
         return [plain(line) for line in lines]

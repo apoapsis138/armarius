@@ -419,11 +419,13 @@ def test_the_chronicle_as_text_shows_each_face_and_a_void() -> None:
     shown = chronicle.text(book.seen_by(HOST, session), book)
 
     assert (
-        "STRUCK (Wrong wall): Aelfric (Climb the wall): stress die 1 → 1 → 5" in shown
+        "STRUCK (Wrong wall): Aelfric (Climb the wall): "
+        "Stress die 1, 1, 5 → 5 × 4 = 20, +9 = 29 vs 12: succeeds by 17" in shown
     )
-    assert "+9 = 29 against 12: succeeds, margin 17" in shown
-    assert "Storyguide (The weather): stress die 0; botch dice 0, +3 = 0" in shown
-    assert "botch (1 zero)" in shown
+    assert (
+        "Storyguide (The weather): Stress die 0, +3 = 0; 1 botch die 0: botch, 1 zero"
+        in shown
+    )
 
 
 def test_an_entry_of_a_kind_this_version_doesnt_know_asks_to_update() -> None:
