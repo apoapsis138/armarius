@@ -42,7 +42,7 @@ the same face, so the fight loop never asks which it has.
 from __future__ import annotations
 
 import random
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 
 from .. import catalog
@@ -1220,15 +1220,22 @@ def _next_round(fight: Fight) -> None:
     fight.splits = {}
 
 
-def play_round(saga: Saga, fight: Fight, rng: random.Random) -> list[Played]:
+def play_round(
+    saga: Saga,
+    fight: Fight,
+    rng: random.Random,
+    *,
+    each: Callable[[], random.Random] | None = None,
+) -> list[Played]:
     """Play every turn left in this round, each striking its default
-    target (a new fight's first round from its start)."""
+    target (a new fight's first round from its start). With `each`, every
+    turn takes the source `each` gives (one recording that turn's dice)."""
     played: list[Played] = []
     start = fight.round or 1
     for _ in range(4 * max(1, len(units(saga, fight)))):
         if fight.over or (fight.round > start):
             break
-        played.append(play(saga, fight, Blow(), rng))
+        played.append(play(saga, fight, Blow(), each() if each else rng))
     return played
 
 

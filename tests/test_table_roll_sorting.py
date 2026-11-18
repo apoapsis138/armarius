@@ -13,11 +13,12 @@ from pathlib import Path
 from ars_magica_manager import table_rolls
 
 PACKAGE = Path(table_rolls.__file__).parent
-#: Where the dice are rolled for the Chronicle itself, and the front-ends'
+#: Where the dice are rolled for the Chronicle itself, the recording die
+#: source, and the front-ends'
 #: own drawing (a picture's jitter), which roll nothing for the rules.
 LEFT_OUT = {"chronicle", "recorded_dice", "table_rolls"}
 BUILDS_A_SOURCE = re.compile(
-    r"random\.Random\(|SystemRandom\(|table_rolls\.(dice|drawing)\("
+    r"random\.Random\(|SystemRandom\(|table_rolls\.(dice|drawing)\(|\brecording\("
 )
 
 
@@ -72,6 +73,38 @@ def test_a_table_roll_module_takes_the_sessions_dice_and_posts() -> None:
         if "table_rolls.form(" not in text and not drawn:
             problems.append(f"{name}: its rolls never reach the Chronicle")
     assert not problems, "\n".join(problems)
+
+
+#: A die written by hand into a roll's result ("die {value}", "Die {shown}"),
+#: rather than in dice_text's words (STORY-2348).
+HAND_WRITTEN_DIE = re.compile(r"""f["'][^"'\n]*\b(?:[Ss]tress |[Ss]imple )?[Dd]ie \{""")
+
+#: Modules that may still write "die {...}" by hand, and why.
+WRITES_ITS_OWN_DIE = {
+    # An ordination's record keeps only the die's value: the roll's
+    # result gets the dice line when it is made.
+    "forms.church": "a kept record of the die's value",
+    # The live sum shown before the roll ("Stress die +5 against 9"): no
+    # die has been rolled yet.
+    "baraka": "a preview before rolling",
+    "devotion": "a preview before rolling",
+    "forms.ships": "a preview before rolling",
+    "forms.tmre_spirits": "a preview before rolling",
+}
+
+
+def test_every_table_roll_and_fight_says_its_dice_in_the_one_dice_line() -> None:
+    """A Table roll or a fight writes its die through dice_text, so a roll
+    shows its doublings and botch dice once, in the same words everywhere."""
+    rolling = _rolling()
+    problems = []
+    for name in sorted(table_rolls.TABLE | table_rolls.FIGHTS):
+        if name in WRITES_ITS_OWN_DIE:
+            continue
+        for number, line in enumerate(rolling.get(name, "").splitlines(), 1):
+            if HAND_WRITTEN_DIE.search(line):
+                problems.append(f"{name}:{number}: {line.strip()}")
+    assert not problems, "Write the die with dice_text:\n" + "\n".join(problems)
 
 
 def test_a_module_that_never_posts_takes_no_table_dice() -> None:

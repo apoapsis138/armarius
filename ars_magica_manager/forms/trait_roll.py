@@ -16,6 +16,7 @@ from typing import Any
 
 from .. import table_rolls
 from ..commands import Form, notes
+from ..dice_text import RolledOrTyped, dice_line, value_of
 from ..form_spec import DialogField
 from ..markup import escape
 from ..models import Character, Familiar, Saga
@@ -100,41 +101,45 @@ def _trait_score(bearer: Bearer, values: dict[str, Any]) -> tuple[str, int]:
     return trait.name, trait.score
 
 
-def _roll_trait(saga: Saga, bearer: Bearer, values: dict[str, Any], die: int) -> str:
+def _roll_trait(
+    saga: Saga, bearer: Bearer, values: dict[str, Any], die: RolledOrTyped
+) -> str:
     name, score = _trait_score(bearer, values)
     cord = silver_cord(saga, bearer)
-    total = score + cord + die
+    total = score + cord + value_of(die)
     ease = values.get("ease") or 0
-    return (
-        f"{name or 'Personality Trait'} {score:+d} + Silver Cord {cord} + die "
-        f"{die} = {total} against {ease}: "
-        + ("it holds." if total >= ease else "it fails.")
+    terms = [(name or "Personality Trait", score), ("Silver Cord", cord)]
+    return f"{dice_line(die, terms, total, ease)}. " + (
+        "It holds." if total >= ease else "It fails."
     )
 
 
-def _roll_resist(saga: Saga, bearer: Bearer, values: dict[str, Any], die: int) -> str:
+def _roll_resist(
+    saga: Saga, bearer: Bearer, values: dict[str, Any], die: RolledOrTyped
+) -> str:
     own = values.get("score") or 0
     cord = silver_cord(saga, bearer)
-    total = own + cord + die
+    total = own + cord + value_of(die)
     ease = values.get("ease") or 0
-    return (
-        f"Resisting: {own} + Silver Cord {cord} + die {die} = {total} against "
-        f"{ease}: " + ("resisted." if total >= ease else "overcome.")
+    terms = [("Own total", own), ("Silver Cord", cord)]
+    return f"Resisting: {dice_line(die, terms, total, ease)}. " + (
+        "Resisted." if total >= ease else "Overcome."
     )
 
 
-def _roll_rescue(saga: Saga, bearer: Bearer, _values: dict[str, Any], die: int) -> str:
+def _roll_rescue(
+    saga: Saga, bearer: Bearer, _values: dict[str, Any], die: RolledOrTyped
+) -> str:
     cord = silver_cord(saga, bearer)
-    total = cord + die
-    return (
-        f"The familiar's rescue: die {die} + Silver Cord {cord} = {total} against "
-        f"{RESCUE_EASE}: "
-        + ("the mind is freed." if total >= RESCUE_EASE else "not today: try tomorrow.")
+    total = cord + value_of(die)
+    line = dice_line(die, [("Silver Cord", cord)], total, RESCUE_EASE)
+    return f"The familiar's rescue: {line}. " + (
+        "The mind is freed." if total >= RESCUE_EASE else "Not today: try tomorrow."
     )
 
 
 #: Each kind of roll and what it does with the die.
-ROLLS: dict[str, Callable[[Saga, Bearer, dict[str, Any], int], str]] = {
+ROLLS: dict[str, Callable[[Saga, Bearer, dict[str, Any], RolledOrTyped], str]] = {
     TRAIT: _roll_trait,
     RESIST: _roll_resist,
     RESCUE: _roll_rescue,
@@ -165,7 +170,7 @@ def roll_form(saga: Saga, bearer: Bearer, rng: random.Random | None = None) -> F
                     else "A botch."
                 )
             )
-        die = typed if typed is not None else (rolled.value if rolled else 0)
+        die: RolledOrTyped = typed if typed is not None else (rolled or 0)
         kind = values.get("kind") or TRAIT
         return notes(escape(ROLLS[kind](saga, bearer, values, die)))
 

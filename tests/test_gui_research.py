@@ -80,7 +80,7 @@ def test_choosing_a_season_of_the_log_shows_its_roll_on_the_chart(app):
     log.selectRow(0)
     roll = page.findChild(RollCard)
     assert roll is not None
-    assert "Die 6 + risk 1 = 7, moved +1 to 8" in roll.title.text()
+    assert "die 6 + risk 1 = 7, moved +1 = 8" in roll.title.text()
     assert roll.findChild(ChartStrip).roll == 8
     assert "Winter 1221" in sheet.inspector.title.text()
 

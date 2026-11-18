@@ -334,6 +334,25 @@ def test_a_typed_zero_rolls_the_botch_dice():
     assert "It botches." in forms.conjure(saga(), c, values(die=0), _Zeroes())
 
 
+def test_a_rolled_die_shows_its_doubling_once() -> None:
+    """STORY-2348: 1 then 4 is 4 x 2 = 8 (DE p. 7), in the dice line's words,
+    and the line isn't repeated under the result."""
+    import random
+
+    class Faces(random.Random):
+        def __init__(self, *faces: int) -> None:
+            super().__init__(0)
+            self.faces = list(faces)
+
+        def randrange(self, *_a: object, **_k: object) -> int:  # type: ignore[override]
+            return self.faces.pop(0) if self.faces else 5
+
+    c = galdraman()
+    said = forms.conjure(saga(), c, values(level=5), Faces(1, 4))
+    joined = "\n".join(said)
+    assert joined.count("Stress die 1, 4 → 4 × 2 = 8") == 1
+
+
 def test_a_lone_minute_and_pawn_are_singular():
     c = galdraman()
     said = forms.conjure(saga(), c, values(level=5, die=9, ritual=True))

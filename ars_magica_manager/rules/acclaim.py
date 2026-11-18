@@ -60,6 +60,7 @@ from __future__ import annotations
 import random
 from dataclasses import dataclass
 
+from .. import dice_text
 from ..models import Character, Saga, ScoredTrait
 from . import dice, xp
 from .apprentice_seasons import SEARCH_EASE
@@ -436,20 +437,28 @@ class Rolled:
     """A roll made: the modifiers, the die, the total, and what it did."""
 
     modifiers: int
-    die: int
+    die: dice.DieResult
     botched: bool
     total: int
     said: str
 
+    @property
+    def line(self) -> str:
+        """The roll in the one dice line, then what it did (STORY-2348)."""
+        rolled = dice_text.dice_line(
+            self.die, [("Modifier", self.modifiers)], self.total
+        )
+        return f"{rolled}: {self.said}"
+
 
 def roll(
     rng: random.Random, modifiers: int, saga: Saga | None = None
-) -> tuple[int, int, bool]:
+) -> tuple[dice.DieResult, int, bool]:
     """A stress die added to `modifiers`: (die, total, botched); a botch
     totals 0 at most."""
     rolled = dice.stress_die(rng, 1, saga=saga)
     total = min(0, modifiers) if rolled.botched else modifiers + rolled.value
-    return rolled.value, total, rolled.botched
+    return rolled, total, rolled.botched
 
 
 def decode_cipher(

@@ -333,9 +333,13 @@ def test_the_sale_form():
     lines = form.apply(values)
     # Die 3: 8 against 9, the standard price.
     assert "The standard price: 200 pence." in lines
+    # STORY-2348: the die in the one dice line's words, said once.
+    assert lines[0] == "Sold 8 shortswords. Simple die 3: 8 against Ease Factor 9."
+    assert sum("Simple die 3" in line for line in lines) == 1
     assert wulf.diary[-1].name == "Sold: 8 shortswords"
     typed = form.apply({**values, "die": 7})
     assert "40% over the standard price: 280 pence for 200." in typed
+    assert "Die 7 (typed): " in typed[0]
     against = form.apply(
         {**values, "customer": sl.IMPORTANT, "theirs": 12, "die": 4, "botched": True}
     )

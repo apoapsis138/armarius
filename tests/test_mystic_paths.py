@@ -258,6 +258,10 @@ def test_a_monist_ascends_at_one_point_to_the_gloom():
     assert clara.diary[-1].name == "Divine Ascent"
     assert any("Monistic Revelation" in line for line in notes)
     assert any("4 experience point(s)" in line for line in notes)  # 1 + 3 margin
+    # STORY-2348: both sides' dice, hers then the Warping's (DE p. 228's
+    # contested roll), kept in the Diary too.
+    assert notes[-1] == "Stress die 2; Stress die 9"
+    assert "Stress die 2; Stress die 9" in clara.diary[-1].details
     later = seasons.gain_warping(saga, clara, 1, Faces(9, 0), aura=0, realm="Divine")
     assert any("1 experience point(s)" in line for line in later)
 

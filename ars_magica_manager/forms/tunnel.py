@@ -13,7 +13,7 @@ import random
 from collections.abc import Callable
 from typing import Any
 
-from .. import table_rolls
+from .. import dice_text, table_rolls
 from ..catalog import find_spell
 from ..commands import Command, Form, Refuse, notes
 from ..form_spec import DialogField, pairs
@@ -291,9 +291,10 @@ def cast(
         )
     pen = score + die.value + bonus - level
     opens = hp.penetrates(pen, resistance, aegis)
+    terms = [("Casting Score", score), ("Penetration", bonus), ("Level", -level)]
     return notes(
-        f"{escape(spell.name)}: {score} + die {die.value} + {bonus} − {level} = "
-        f"{pen} against {whose} (Vim) {resistance}"
+        f"{escape(spell.name)}: {dice_text.dice_line(die, terms, pen)} "
+        f"against {whose} (Vim) {resistance}"
         + (f" and the Aegis {aegis}" if aegis else "")
         + (": the tunnel opens." if opens else ": it fails to Penetrate."),
     )

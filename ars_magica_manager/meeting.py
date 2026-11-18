@@ -1420,7 +1420,7 @@ class Hearing(Step):
             record |= {
                 "lost": held.lost,
                 "entered": False,
-                "lines": held.lines,
+                "lines": [*held.lines, *([drawn.said] if drawn.said else [])],
                 "polemic": list(argued),
             }
         meeting.setdefault("debates", {})[case.id] = record

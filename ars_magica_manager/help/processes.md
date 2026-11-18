@@ -389,7 +389,7 @@ Once you say Advance, a dial of the four seasons turns in the middle of the wind
 
 **You type:** only your answers to [its questions](help:advance-season-questions).
 
-**The app works out:** everything else, as below.
+**The app works out:** everything else, as below. Each season's result ends with [the dice it rolled](help:dice-line): the Lab Total's die, the experimentation chart's stress die with its doublings and botch dice, and any further roll on the chart.
 
 ### The confirmation
 <!-- help: advance-season-confirm -->
@@ -537,7 +537,7 @@ When Winter is advanced, the year ends:
 - Each grog's [yearly update](help:grog-year) is applied.
 - A character running a business pays its yearly upkeep in Labor Points (City & Guild), with Perfect Eye for Commodity's gain and Bigamist's second household.
 - Yearly Warping Points are added for a Longevity Ritual, for living in a strong aura of another realm, and for Raised from the Dead, Immortality of the Forest (which makes no aging roll) and Susceptibility to Warping.
-- Every character aged 35 or more makes an aging roll, or 50 or more with Strong Faerie Blood or Dhampir, as does anyone with a Longevity Ritual. It's written in their Diary (Ars Magica Definitive Edition, Chapter 10: Long-Term Events, Aging). A magus the Great Elixir made a being of Magic makes none and gains no Warping (The Mysteries Revised Edition p. 44).
+- Every character aged 35 or more makes an aging roll, or 50 or more with Strong Faerie Blood or Dhampir, as does anyone with a Longevity Ritual. It's written in their Diary with [the dice it rolled](help:dice-line) (Ars Magica Definitive Edition, Chapter 10: Long-Term Events, Aging). A magus the Great Elixir made a being of Magic makes none and gains no Warping (The Mysteries Revised Edition p. 44).
 - Dwindling Resources lose a tenth of the value they had when they began dwindling, so they're gone after ten years. A contested resource still not secured gives nothing that year.
 - Each covenant's surplus is added to its Wealth.
 - Transitions of maturation (Apprentices pp. 14-15). Each character turning 8, 15 or 21 next year gets a line and a Diary entry. In the first season of that year their Virtues and Flaws may be exchanged, Minor for Minor and Major for Major. Child ones must be exchanged by 21, and Inherited ones have manifested.
