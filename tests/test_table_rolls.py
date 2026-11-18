@@ -602,7 +602,9 @@ def test_a_form_that_asks_to_keep_its_roll_posts_the_rolls_result(faces: Any) ->
 
     def apply(_values: dict[str, Any]) -> Confirm:
         die = dice.stress_die(table_rolls.dice(), 1).value
-        return Confirm(f"Soak [b]{die}[/b].\n\nNo wound.", lambda: None)
+        return Confirm(
+            f"Soak [b]{die}[/b].\n\nNo wound.", lambda: None, roll_result=True
+        )
 
     table_rolls.form(Form("Take Harm", list, apply), saga).apply(
         {table_rolls.VISIBILITY: chronicle.PUBLIC}
@@ -610,3 +612,24 @@ def test_a_form_that_asks_to_keep_its_roll_posts_the_rolls_result(faces: Any) ->
 
     [entry] = _form_rolls(book)
     assert entry.body["lines"] == ["Soak 6.", "No wound."]
+
+
+def test_a_question_not_marked_as_the_rolls_result_posts_nothing(faces: Any) -> None:
+    """Only a question a form marks as its roll's result is the roll's
+    result: any other ("Overwrite it?") leaves the entry with its dice."""
+    from ars_magica_manager.commands import Confirm
+
+    saga, _session, book = _begun()
+    faces(6)
+
+    def apply(_values: dict[str, Any]) -> Confirm:
+        dice.stress_die(table_rolls.dice(), 1)
+        return Confirm("Overwrite the old note?", lambda: None)
+
+    table_rolls.form(Form("Take Harm", list, apply), saga).apply(
+        {table_rolls.VISIBILITY: chronicle.PUBLIC}
+    )
+
+    [entry] = _form_rolls(book)
+    assert entry.body["lines"] == []
+    assert entry.body["faces"] == [6]

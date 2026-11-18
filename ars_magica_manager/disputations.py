@@ -204,6 +204,7 @@ def disputatio_form(
             keep,
             yes_label="Keep",
             title=TITLE,
+            roll_result=True,
         )
 
     return table_rolls.form(
