@@ -4,9 +4,9 @@ draw it."""
 
 from __future__ import annotations
 
-import random
 from typing import Any
 
+from .. import table_rolls
 from ..commands import Command, Form, Refuse, notes
 from ..form_spec import DialogField, pairs
 from ..markup import escape
@@ -82,7 +82,7 @@ def command_form(saga: Saga, animal: Character) -> Command:
                 animal,
                 values.get("task") or "unusual",
                 values.get("ability") or tamed.COMMAND_ABILITIES[0],
-                random.Random(),
+                table_rolls.dice(),
             )
         )
 
@@ -103,11 +103,14 @@ def command_form(saga: Saga, animal: Character) -> Command:
             )
         return line + " (DE p. 386)."
 
-    return Form(
-        f"{TITLE}: {escape(animal.name)}",
-        lambda: fields(saga, animal),
-        apply,
-        live=inspect,
-        save_label="Roll",
-        help_id="command-beast",
+    return table_rolls.form(
+        Form(
+            f"{TITLE}: {escape(animal.name)}",
+            lambda: fields(saga, animal),
+            apply,
+            live=inspect,
+            save_label="Roll",
+            help_id="command-beast",
+        ),
+        saga,
     )

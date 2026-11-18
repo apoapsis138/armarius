@@ -16,7 +16,7 @@ from collections.abc import Callable
 from typing import Any
 
 from .. import polemic as pl
-from .. import sourcebooks, viewing
+from .. import sourcebooks, table_rolls, viewing
 from ..commands import Command, Confirm, Form, Refuse, SectionOps
 from ..form_spec import DialogField, attr, pairs
 from ..grids import Grid
@@ -1114,7 +1114,7 @@ def circulate_form(
         return Refuse(CIRCULATE_TITLE, "That text is out already.")
     if pl.book_of(saga, text) is None:
         return Refuse(CIRCULATE_TITLE, "Its book is no longer in the library.")
-    chance = rng or random.Random()
+    chance = rng or table_rolls.dice()
     found = text
 
     def problem(_values: dict[str, Any]) -> str | None:
@@ -1125,17 +1125,20 @@ def circulate_form(
             )
         return None
 
-    return Form(
-        CIRCULATE_TITLE,
-        lambda: circulate_fields(saga, found),
-        lambda values: circulate(
-            saga, tribunal, argument, found, values, dice.simple_die(chance)
+    return table_rolls.form(
+        Form(
+            CIRCULATE_TITLE,
+            lambda: circulate_fields(saga, found),
+            lambda values: circulate(
+                saga, tribunal, argument, found, values, dice.simple_die(chance)
+            ),
+            validate=problem,
+            live=lambda values: circulate_live(saga, argument, found, values),
+            save_label="Roll",
+            help_id=CIRCULATE_HELP,
+            inspector="The Copies Go Out",
         ),
-        validate=problem,
-        live=lambda values: circulate_live(saga, argument, found, values),
-        save_label="Roll",
-        help_id=CIRCULATE_HELP,
-        inspector="The Copies Go Out",
+        saga,
     )
 
 

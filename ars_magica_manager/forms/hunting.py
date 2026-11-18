@@ -22,7 +22,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any
 
-from .. import bestiary_book, diaries, manors
+from .. import bestiary_book, diaries, manors, table_rolls
 from ..commands import Command, Form, Refuse, notes
 from ..form_spec import DialogField, ListEditor
 from ..markup import BULLET, escape, plural
@@ -723,7 +723,7 @@ def hunt(
     """Roll the hunt and write it: each character's Diary, the manor's
     lord's or covenant's, and the hunters' Long-Term Fatigue."""
     saga = ground.saga
-    done = hunt_outcome(ground, values, rng or random.Random())
+    done = hunt_outcome(ground, values, rng or table_rolls.dice())
     note = str(values.get("note") or "")
     text = f"{ground.place}: " + " ".join(done.lines) + (f" {note}" if note else "")
     people = _characters(
@@ -755,15 +755,18 @@ def hunt(
 
 
 def _hunt_form(ground: Ground, rng: random.Random | None) -> Form:
-    return Form(
-        f"{HUNT_TITLE}: {escape(ground.where)}",
-        lambda: hunt_fields(ground),
-        lambda values: hunt(ground, values, rng),
-        validate=hunt_problem(ground),
-        live=hunt_live(ground),
-        save_label="Hunt",
-        help_id=_help(ground),
-        inspector="The Hunt",
+    return table_rolls.form(
+        Form(
+            f"{HUNT_TITLE}: {escape(ground.where)}",
+            lambda: hunt_fields(ground),
+            lambda values: hunt(ground, values, rng),
+            validate=hunt_problem(ground),
+            live=hunt_live(ground),
+            save_label="Hunt",
+            help_id=_help(ground),
+            inspector="The Hunt",
+        ),
+        ground.saga,
     )
 
 
@@ -901,7 +904,7 @@ def seek(
         who.characteristics.intelligence,
         hr.area_lore(who, values.get("area") or None),
         ease,
-        rng or random.Random(),
+        rng or table_rolls.dice(),
         where=values.get("away") or hr.AT_HOME,
         saga=saga,
     )
@@ -923,15 +926,18 @@ def seek(
 
 
 def _lore_form(ground: Ground, rng: random.Random | None) -> Form:
-    return Form(
-        f"{AREA_LORE_TITLE}: {escape(ground.where)}",
-        lambda: lore_fields(ground),
-        lambda values: seek(ground, values, rng),
-        validate=lore_problem,
-        live=lore_live(ground),
-        save_label="Roll",
-        help_id=_help(ground),
-        inspector="Area Lore",
+    return table_rolls.form(
+        Form(
+            f"{AREA_LORE_TITLE}: {escape(ground.where)}",
+            lambda: lore_fields(ground),
+            lambda values: seek(ground, values, rng),
+            validate=lore_problem,
+            live=lore_live(ground),
+            save_label="Roll",
+            help_id=_help(ground),
+            inspector="Area Lore",
+        ),
+        ground.saga,
     )
 
 

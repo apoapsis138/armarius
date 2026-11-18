@@ -13,6 +13,7 @@ from __future__ import annotations
 import random
 from typing import Any
 
+from .. import table_rolls
 from ..commands import Form, Refuse, SectionOps, delete, notes
 from ..form_spec import DialogField, pairs
 from ..markup import escape, problem
@@ -398,7 +399,7 @@ def disguise_form(
     kept."""
     if not _covers_kept(character):
         return Refuse(DISGUISE_TITLE, "Add a deep cover first.")
-    dice_ = rng or random.Random()
+    dice_ = rng or table_rolls.dice()
 
     def roll(typed: Any) -> int:
         return (
@@ -420,11 +421,19 @@ def disguise_form(
             + (": the disguise holds." if own >= ease else ": the disguise fails.")
         )
 
-    return Form(
-        DISGUISE_TITLE,
-        lambda: _disguise_fields(character),
-        apply,
-        live=lambda values: _disguise_live(character, values),
-        save_label="Roll",
-        help_id=DISGUISE_HELP,
+    return table_rolls.form(
+        Form(
+            DISGUISE_TITLE,
+            lambda: _disguise_fields(character),
+            apply,
+            live=lambda values: _disguise_live(character, values),
+            save_label="Roll",
+            help_id=DISGUISE_HELP,
+        ),
+        saga,
+        character_id=character.id,
+        typed=(
+            "die",
+            "their_die",
+        ),
     )

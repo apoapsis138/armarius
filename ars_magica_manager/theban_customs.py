@@ -15,7 +15,7 @@ from __future__ import annotations
 import random
 from typing import Any
 
-from . import catalog, churches, diaries, sourcebooks
+from . import catalog, churches, diaries, sourcebooks, table_rolls
 from .commands import Command, Form, Refuse, notes
 from .form_spec import DialogField
 from .markup import escape
@@ -38,7 +38,7 @@ def _number(value: Any) -> int:
 
 
 def _rng(rng: random.Random | None) -> random.Random:
-    return rng or random.Random()
+    return rng or table_rolls.dice()
 
 
 def _diary(saga: Saga, name: str, text: str, *who: Character) -> None:
@@ -154,15 +154,19 @@ def letter_form(
             f"Die {die} + {found.total} = {total} against {found.ease}.", outcome
         )
 
-    return Form(
-        f"{LETTER}: {escape(character.name)}",
-        lambda: letter_fields(character),
-        apply,
-        live=letter_live(character),
-        save_label="Roll",
-        cancel_label="Close",
-        help_id=HELP_ID,
-        inspector="The Letter",
+    return table_rolls.form(
+        Form(
+            f"{LETTER}: {escape(character.name)}",
+            lambda: letter_fields(character),
+            apply,
+            live=letter_live(character),
+            save_label="Roll",
+            cancel_label="Close",
+            help_id=HELP_ID,
+            inspector="The Letter",
+        ),
+        saga,
+        character_id=character.id,
     )
 
 
@@ -295,15 +299,19 @@ def oath_form(
         )
         return notes(*map(escape, lines))
 
-    return Form(
-        f"{OATH}: {escape(character.name)}",
-        lambda: oath_fields(saga, character),
-        apply,
-        validate=_oath_problem,
-        live=oath_live(saga, character),
-        save_label="Roll",
-        help_id=HELP_ID,
-        inspector="The Oath",
+    return table_rolls.form(
+        Form(
+            f"{OATH}: {escape(character.name)}",
+            lambda: oath_fields(saga, character),
+            apply,
+            validate=_oath_problem,
+            live=oath_live(saga, character),
+            save_label="Roll",
+            help_id=HELP_ID,
+            inspector="The Oath",
+        ),
+        saga,
+        character_id=character.id,
     )
 
 
@@ -403,15 +411,19 @@ def greek_fire_form(
         _diary(saga, "Made Greek Fire", " ".join(lines), character)
         return notes(*lines, f"Written in {escape(character.name)}'s Diary.")
 
-    return Form(
-        f"{GREEK_FIRE}: {escape(character.name)}",
-        lambda: greek_fire_fields(saga, character),
-        apply,
-        validate=_problem,
-        live=greek_fire_live(character),
-        save_label="Roll",
-        help_id=HELP_ID,
-        inspector="The Batch",
+    return table_rolls.form(
+        Form(
+            f"{GREEK_FIRE}: {escape(character.name)}",
+            lambda: greek_fire_fields(saga, character),
+            apply,
+            validate=_problem,
+            live=greek_fire_live(character),
+            save_label="Roll",
+            help_id=HELP_ID,
+            inspector="The Batch",
+        ),
+        saga,
+        character_id=character.id,
     )
 
 
@@ -681,14 +693,18 @@ def venerate_form(
         ]
         return notes(*map(escape, lines))
 
-    return Form(
-        f"{VENERATE}: {escape(character.name)}",
-        lambda: venerate_fields(saga),
-        apply,
-        live=venerate_live(saga, character),
-        save_label="Venerate",
-        help_id=HELP_ID,
-        inspector="The Veneration",
+    return table_rolls.form(
+        Form(
+            f"{VENERATE}: {escape(character.name)}",
+            lambda: venerate_fields(saga),
+            apply,
+            live=venerate_live(saga, character),
+            save_label="Venerate",
+            help_id=HELP_ID,
+            inspector="The Veneration",
+        ),
+        saga,
+        character_id=character.id,
     )
 
 

@@ -541,6 +541,8 @@ counts toward the Argument Total, and Reputations are gained:
   reaching the Tribunal, the House or the Order.
 - No one gains it twice from the same text.
 
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
+
 ## Meeting
 <!-- help: tab-trib-meeting -->
 

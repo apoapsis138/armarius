@@ -7,7 +7,7 @@ from __future__ import annotations
 import random
 from typing import Any
 
-from . import viewing
+from . import table_rolls, viewing
 from .commands import Command, Confirm, Form, Refuse
 from .form_spec import DialogField, pairs
 from .markup import escape
@@ -152,7 +152,7 @@ def disputatio_form(
         return Refuse(TITLE, "Choose a character first.")
     if len(saga.characters) < 2:
         return Refuse(TITLE, "A disputatio needs a second character to dispute with.")
-    dice = rng or random.Random()
+    dice = rng or table_rolls.dice()
 
     def apply(values: dict[str, Any]) -> Command:
         both = sides(saga, character, values)
@@ -206,12 +206,16 @@ def disputatio_form(
             title=TITLE,
         )
 
-    return Form(
-        f"{TITLE}: {escape(character.name)}",
-        lambda: fields(saga, character),
-        apply,
-        validate=problem,
-        live=lambda values: live(saga, character, values),
-        save_label="Dispute",
-        help_id="disputatio",
+    return table_rolls.form(
+        Form(
+            f"{TITLE}: {escape(character.name)}",
+            lambda: fields(saga, character),
+            apply,
+            validate=problem,
+            live=lambda values: live(saga, character, values),
+            save_label="Dispute",
+            help_id="disputatio",
+        ),
+        saga,
+        character_id=character.id,
     )

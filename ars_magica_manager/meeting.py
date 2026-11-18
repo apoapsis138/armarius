@@ -39,6 +39,7 @@ from . import (
     mystery_cults,
     polemic,
     ruling_templates,
+    table_rolls,
     tribunal_packages,
     tribunals,
     world,
@@ -1400,16 +1401,22 @@ class Hearing(Step):
             )
             argued = polemic.case_bonuses(saga, tribunal, case)
             panel = self._panel(saga, tribunal, meeting, speakers, skills, record)
-            held = debate.run(
-                (
-                    replace(sides[0], polemic=argued[0]),
-                    replace(sides[1], polemic=argued[1]),
-                ),
-                testimony,
-                record["rounds"],
-                rng(),
-                panel=[replace(m, polemic=argued[1]) for m in panel] if panel else None,
-            )
+            with table_rolls.drawing(
+                saga, f"Debate: {escape(case.title)}", own=rng()
+            ) as drawn:
+                held = debate.run(
+                    (
+                        replace(sides[0], polemic=argued[0]),
+                        replace(sides[1], polemic=argued[1]),
+                    ),
+                    testimony,
+                    record["rounds"],
+                    drawn.dice,
+                    panel=[replace(m, polemic=argued[1]) for m in panel]
+                    if panel
+                    else None,
+                )
+                drawn.lines = list(held.lines)
             record |= {
                 "lost": held.lost,
                 "entered": False,

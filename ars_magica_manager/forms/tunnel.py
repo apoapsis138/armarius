@@ -13,6 +13,7 @@ import random
 from collections.abc import Callable
 from typing import Any
 
+from .. import table_rolls
 from ..catalog import find_spell
 from ..commands import Command, Form, Refuse, notes
 from ..form_spec import DialogField, pairs
@@ -305,14 +306,18 @@ def tunnel_form(
     rolls the tunnel once, and nothing is kept."""
     if not offers(saga, magus):
         return Refuse(OPEN_TUNNEL, f"{escape(magus.name)} knows no tunnel spell.")
-    chance = rng or random.Random()
-    return Form(
-        f"{OPEN_TUNNEL}: {escape(magus.name)}",
-        lambda: tunnel_fields(saga, magus),
-        lambda values: cast(saga, magus, values, chance),
-        live=tunnel_live(saga, magus),
-        save_label="Cast",
-        cancel_label="Close",
-        inspector="Wizard's War",
-        help_id=HELP_ID,
+    chance = rng or table_rolls.dice()
+    return table_rolls.form(
+        Form(
+            f"{OPEN_TUNNEL}: {escape(magus.name)}",
+            lambda: tunnel_fields(saga, magus),
+            lambda values: cast(saga, magus, values, chance),
+            live=tunnel_live(saga, magus),
+            save_label="Cast",
+            cancel_label="Close",
+            inspector="Wizard's War",
+            help_id=HELP_ID,
+        ),
+        saga,
+        character_id=magus.id,
     )

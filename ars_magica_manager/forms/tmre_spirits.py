@@ -9,6 +9,7 @@ import random
 from collections.abc import Callable
 from typing import Any
 
+from .. import table_rolls
 from ..arts import FORMS, TECHNIQUES
 from ..commands import Command, Form, Refuse, notes
 from ..form_spec import DialogField, pairs
@@ -720,16 +721,20 @@ def spirits_form(
         return Refuse(
             TITLE, "Only a magus with a Mystery of spirit magic or theurgy works this."
         )
-    chance = rng or random.Random()
+    chance = rng or table_rolls.dice()
     magus = character
-    return Form(
-        f"{TITLE}: {escape(magus.name)}",
-        lambda: spirits_fields(saga, magus),
-        lambda values: roll(saga, magus, values, chance),
-        validate=problem,
-        live=_live(magus),
-        save_label="Roll",
-        cancel_label="Close",
-        help_id=HELP_ID,
-        inspector="The Spirits' Totals",
+    return table_rolls.form(
+        Form(
+            f"{TITLE}: {escape(magus.name)}",
+            lambda: spirits_fields(saga, magus),
+            lambda values: roll(saga, magus, values, chance),
+            validate=problem,
+            live=_live(magus),
+            save_label="Roll",
+            cancel_label="Close",
+            help_id=HELP_ID,
+            inspector="The Spirits' Totals",
+        ),
+        saga,
+        character_id=character.id,
     )

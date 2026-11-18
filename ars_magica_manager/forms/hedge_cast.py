@@ -10,7 +10,7 @@ from __future__ import annotations
 import random
 from typing import Any
 
-from .. import diaries, seasons
+from .. import diaries, seasons, table_rolls
 from ..commands import Form, notes
 from ..form_spec import DialogField
 from ..markup import escape
@@ -124,7 +124,7 @@ def cast(
 ) -> list[str]:
     """Roll the casting, write it in the Diary, and give Warping for a
     botch's zeroes."""
-    rng = rng or random.Random()
+    rng = rng or table_rolls.dice()
     tradition, rule, casting = _chosen(character, values)
     assert tradition is not None and rule is not None and casting is not None
     level = values.get("level") or 0
@@ -202,11 +202,16 @@ def cast(
 
 
 def cast_form(saga: Saga, character: Character) -> Form:
-    return Form(
-        f"{TITLE}: {escape(character.name)}",
-        lambda: fields(saga, character),
-        lambda values: cast(saga, character, values),
-        validate=lambda values: problem(character, values),
-        save_label="Cast",
-        help_id=HELP_ID,
+    return table_rolls.form(
+        Form(
+            f"{TITLE}: {escape(character.name)}",
+            lambda: fields(saga, character),
+            lambda values: cast(saga, character, values),
+            validate=lambda values: problem(character, values),
+            save_label="Cast",
+            help_id=HELP_ID,
+        ),
+        saga,
+        character_id=character.id,
+        typed=("die",),
     )

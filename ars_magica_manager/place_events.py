@@ -37,7 +37,7 @@ import re
 from dataclasses import dataclass
 from typing import Any, Required, TypedDict, cast
 
-from . import places, threats, viewing, vis_sites
+from . import places, table_rolls, threats, viewing, vis_sites
 from .commands import Command, Confirm, Refuse, SectionOps
 from .form_spec import DialogField, pairs
 from .grids import Grid
@@ -502,11 +502,16 @@ def roll_table(
         return Refuse("Roll", "Choose a roll table first.")
     table = listed[index]
     rows = parse_rows(table.get("rows", "")) or []
-    value, botched, shown = _roll(
-        table.get("die") or DICE[0], rng or random.Random(), saga
-    )
-    row = next((r for r in rows if r.covers(value, botched)), None)
-    result = row.result if row is not None else "no row covers it"
+    try:
+        with table_rolls.drawing(
+            saga, f"{escape(place.name)}: {escape(table['name'])}", own=rng
+        ) as drawn:
+            value, botched, shown = _roll(table.get("die") or DICE[0], drawn.dice, saga)
+            row = next((r for r in rows if r.covers(value, botched)), None)
+            result = row.result if row is not None else "no row covers it"
+            drawn.lines = [f"{shown}, {result}" if result else shown]
+    except (ValueError, table_rolls.DiceUnavailable) as problem:
+        return Refuse("Roll", escape(str(problem)))
     sg_note = row.note if row is not None else ""
     when = f"{saga.current_season} {saga.current_year}"
     stage = _threat_stage(saga, place)

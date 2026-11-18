@@ -9,6 +9,7 @@ from __future__ import annotations
 import random
 from typing import Any
 
+from .. import table_rolls
 from ..commands import Command, Form, Refuse, notes
 from ..form_spec import DialogField
 from ..markup import BULLET, escape
@@ -305,15 +306,19 @@ def turbulence_form(
         return Refuse(TITLE, "Choose a character first.")
     if not tb.gifted(character):
         return Refuse(TITLE, "Only the Gifted suffer Turbulences (Apprentices p. 22).")
-    chance = rng or random.Random()
+    chance = rng or table_rolls.dice()
     who = character
-    return Form(
-        f"{TITLE}: {escape(who.name)}",
-        lambda: turbulence_fields(saga, who),
-        lambda values: roll(saga, who, values, chance),
-        validate=lambda values: turbulence_problem(who, values),
-        live=lambda values: _bullets(turbulence_lines(saga, who, values)),
-        save_label="Roll",
-        help_id=HELP_ID,
-        inspector="The Turbulence Rolls",
+    return table_rolls.form(
+        Form(
+            f"{TITLE}: {escape(who.name)}",
+            lambda: turbulence_fields(saga, who),
+            lambda values: roll(saga, who, values, chance),
+            validate=lambda values: turbulence_problem(who, values),
+            live=lambda values: _bullets(turbulence_lines(saga, who, values)),
+            save_label="Roll",
+            help_id=HELP_ID,
+            inspector="The Turbulence Rolls",
+        ),
+        saga,
+        character_id=character.id,
     )

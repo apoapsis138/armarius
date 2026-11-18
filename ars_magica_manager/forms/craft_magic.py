@@ -8,6 +8,7 @@ from __future__ import annotations
 import random
 from typing import Any
 
+from .. import table_rolls
 from ..commands import Command, Form, Refuse, notes
 from ..form_spec import DialogField, pairs
 from ..markup import BULLET, escape
@@ -170,15 +171,19 @@ def craft_form(
     """More's Craft by Magic: the calculator; Roll rolls it once."""
     if magus is None or magus.type != "magus":
         return Refuse(TITLE, "Only a magus crafts with Hermetic magic.")
-    chance = rng or random.Random()
+    chance = rng or table_rolls.dice()
     caster = magus
-    return Form(
-        f"{TITLE}: {escape(caster.name)}",
-        craft_fields,
-        lambda values: roll(saga, caster, values, chance),
-        live=_live(caster),
-        save_label="Roll",
-        cancel_label="Close",
-        help_id=HELP_ID,
-        inspector="The Finesse Roll",
+    return table_rolls.form(
+        Form(
+            f"{TITLE}: {escape(caster.name)}",
+            craft_fields,
+            lambda values: roll(saga, caster, values, chance),
+            live=_live(caster),
+            save_label="Roll",
+            cancel_label="Close",
+            help_id=HELP_ID,
+            inspector="The Finesse Roll",
+        ),
+        saga,
+        character_id=magus.id,
     )

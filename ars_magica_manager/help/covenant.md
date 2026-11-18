@@ -1200,6 +1200,8 @@ Sailor, Mariner, Captain, Ship, Navigator or Pilot. Sailing speed is City
 & Guild's 60 to 80 miles a day, about 30 by the Definitive Edition (p.
 408).
 
+**At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
+
 ### Build a Ship
 <!-- help: build-ship -->
 

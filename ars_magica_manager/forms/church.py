@@ -17,7 +17,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, replace
 from typing import Any
 
-from .. import catalog
+from .. import catalog, table_rolls
 from ..commands import Command, Form, Refuse, SectionOps, delete, notes
 from ..form_spec import ChoiceReads, DialogField, pairs
 from ..markup import escape, fit
@@ -1429,7 +1429,7 @@ def exorcism_form(
     def apply(values: dict[str, Any]) -> list[str]:
         total, _terms = _exorcism_terms(character, values)
         might = int(values.get("might") or 0)
-        roll = dice.roll(rng or random.Random(), total, ease_factor=might, saga=saga)
+        roll = dice.roll(rng or table_rolls.dice(), total, ease_factor=might, saga=saga)
         shown = "a botch" if roll.die.botched else str(roll.die.value)
         lines = [
             f"Exorcism: the die shows {shown}, total {roll.total} against {might}."
@@ -1451,15 +1451,19 @@ def exorcism_form(
             lines.append("The demon stays.")
         return notes(*lines)
 
-    return Form(
-        "Perform an Exorcism",
-        lambda: exorcism_fields(saga, character),
-        apply,
-        live=exorcism_live(character),
-        save_label="Roll",
-        cancel_label="Close",
-        help_id=EXORCISM_HELP,
-        inspector="The Rite",
+    return table_rolls.form(
+        Form(
+            "Perform an Exorcism",
+            lambda: exorcism_fields(saga, character),
+            apply,
+            live=exorcism_live(character),
+            save_label="Roll",
+            cancel_label="Close",
+            help_id=EXORCISM_HELP,
+            inspector="The Rite",
+        ),
+        saga,
+        character_id=character.id,
     )
 
 

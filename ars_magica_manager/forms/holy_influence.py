@@ -8,6 +8,7 @@ from __future__ import annotations
 import random
 from typing import Any
 
+from .. import table_rolls
 from ..commands import Command, Form, Refuse, notes
 from ..form_spec import DialogField
 from ..markup import BULLET, escape
@@ -214,15 +215,19 @@ def holy_influence_form(
     a Divine aura; Roll rolls it, kept in the Diary."""
     if character is None:
         return Refuse(TITLE, "Choose a character first.")
-    chance = rng or random.Random()
+    chance = rng or table_rolls.dice()
     who = character
-    return Form(
-        f"{TITLE}: {escape(who.name)}",
-        lambda: fields(who),
-        lambda values: influence(saga, who, values, chance),
-        validate=lambda values: problem(who, values),
-        live=_live(who),
-        save_label="Roll",
-        help_id=HELP,
-        inspector="The Influence Roll",
+    return table_rolls.form(
+        Form(
+            f"{TITLE}: {escape(who.name)}",
+            lambda: fields(who),
+            lambda values: influence(saga, who, values, chance),
+            validate=lambda values: problem(who, values),
+            live=_live(who),
+            save_label="Roll",
+            help_id=HELP,
+            inspector="The Influence Roll",
+        ),
+        saga,
+        character_id=character.id,
     )

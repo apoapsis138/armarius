@@ -7,6 +7,7 @@ from __future__ import annotations
 import random
 from typing import Any
 
+from .. import table_rolls
 from ..commands import Command, Form, Refuse, notes
 from ..form_spec import DialogField
 from ..markup import BULLET, escape
@@ -124,15 +125,19 @@ def sin_form(
             "Confidence through sin needs a Personality Trait or Flaw with a "
             "penchant for a sin (RoP: The Infernal p. 24).",
         )
-    chance = rng or random.Random()
+    chance = rng or table_rolls.dice()
     sinner = character
-    return Form(
-        f"{SIN_TITLE}: {escape(sinner.name)}",
-        lambda: sin_fields(sinner),
-        lambda values: indulge(saga, sinner, values, chance),
-        live=_sin_live(sinner),
-        help_id=SIN_HELP,
-        inspector="Sin and Redemption",
+    return table_rolls.form(
+        Form(
+            f"{SIN_TITLE}: {escape(sinner.name)}",
+            lambda: sin_fields(sinner),
+            lambda values: indulge(saga, sinner, values, chance),
+            live=_sin_live(sinner),
+            help_id=SIN_HELP,
+            inspector="Sin and Redemption",
+        ),
+        saga,
+        character_id=character.id,
     )
 
 
@@ -295,15 +300,19 @@ def influence_form(
     rolls it, kept in the Diary."""
     if character is None:
         return Refuse(INFLUENCE_TITLE, "Choose a character first.")
-    chance = rng or random.Random()
+    chance = rng or table_rolls.dice()
     who = character
-    return Form(
-        f"{INFLUENCE_TITLE}: {escape(who.name)}",
-        lambda: influence_fields(who),
-        lambda values: influence(saga, who, values, chance),
-        validate=lambda values: influence_problem(who, values),
-        live=_influence_live(who),
-        save_label="Roll",
-        help_id=INFLUENCE_HELP,
-        inspector="The Influence Roll",
+    return table_rolls.form(
+        Form(
+            f"{INFLUENCE_TITLE}: {escape(who.name)}",
+            lambda: influence_fields(who),
+            lambda values: influence(saga, who, values, chance),
+            validate=lambda values: influence_problem(who, values),
+            live=_influence_live(who),
+            save_label="Roll",
+            help_id=INFLUENCE_HELP,
+            inspector="The Influence Roll",
+        ),
+        saga,
+        character_id=character.id,
     )

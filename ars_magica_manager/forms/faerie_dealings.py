@@ -10,7 +10,7 @@ from __future__ import annotations
 import random
 from typing import Any
 
-from .. import sourcebooks
+from .. import sourcebooks, table_rolls
 from ..commands import Command, Form, Refuse, notes
 from ..form_spec import DialogField, pairs
 from ..markup import BULLET, escape
@@ -382,17 +382,21 @@ def ars_fabulosa_form(
             "The Ars Fabulosa need a Sympathy Trait that fits the faerie "
             "(RoP: Faerie p. 131); he has none.",
         )
-    chance = rng or random.Random()
+    chance = rng or table_rolls.dice()
     who = character
-    return Form(
-        f"{ARS_TITLE}: {escape(who.name)}",
-        lambda: ars_fields(saga, who),
-        lambda values: ars_roll(saga, who, values, chance),
-        validate=lambda values: ars_problem(who, values),
-        live=lambda values: _bullets(ars_lines(saga, who, values)),
-        save_label="Roll",
-        help_id=ARS_HELP_ID,
-        inspector="The Bargainer's Total",
+    return table_rolls.form(
+        Form(
+            f"{ARS_TITLE}: {escape(who.name)}",
+            lambda: ars_fields(saga, who),
+            lambda values: ars_roll(saga, who, values, chance),
+            validate=lambda values: ars_problem(who, values),
+            live=lambda values: _bullets(ars_lines(saga, who, values)),
+            save_label="Roll",
+            help_id=ARS_HELP_ID,
+            inspector="The Bargainer's Total",
+        ),
+        saga,
+        character_id=character.id,
     )
 
 
@@ -641,17 +645,21 @@ def faerie_bargain_form(
         return Refuse(
             BARGAIN_TITLE, "Only one who holds an Ars Fabulosa power is bound so."
         )
-    chance = rng or random.Random()
+    chance = rng or table_rolls.dice()
     who = character
-    return Form(
-        f"{BARGAIN_TITLE}: {escape(who.name)}",
-        lambda: bargain_fields(who),
-        lambda values: bargain_save(saga, who, values, chance),
-        validate=lambda values: bargain_problem(who, values),
-        live=lambda values: _bullets(bargain_lines(who, values)),
-        save_label="Record",
-        help_id=BARGAIN_HELP_ID,
-        inspector="The Bargain",
+    return table_rolls.form(
+        Form(
+            f"{BARGAIN_TITLE}: {escape(who.name)}",
+            lambda: bargain_fields(who),
+            lambda values: bargain_save(saga, who, values, chance),
+            validate=lambda values: bargain_problem(who, values),
+            live=lambda values: _bullets(bargain_lines(who, values)),
+            save_label="Record",
+            help_id=BARGAIN_HELP_ID,
+            inspector="The Bargain",
+        ),
+        saga,
+        character_id=character.id,
     )
 
 
@@ -817,15 +825,19 @@ def faerie_offer_form(
     the Diary."""
     if character is None or character.animal is not None:
         return Refuse(OFFER_TITLE, "Choose a person first.")
-    chance = rng or random.Random()
+    chance = rng or table_rolls.dice()
     who = character
-    return Form(
-        f"{OFFER_TITLE}: {escape(who.name)}",
-        lambda: offer_fields(saga, who),
-        lambda values: offer_roll(saga, who, values, chance),
-        validate=lambda values: offer_problem(who, values),
-        live=lambda values: _bullets(offer_lines(who, values)),
-        save_label="Roll",
-        help_id=OFFER_HELP_ID,
-        inspector="The Offer",
+    return table_rolls.form(
+        Form(
+            f"{OFFER_TITLE}: {escape(who.name)}",
+            lambda: offer_fields(saga, who),
+            lambda values: offer_roll(saga, who, values, chance),
+            validate=lambda values: offer_problem(who, values),
+            live=lambda values: _bullets(offer_lines(who, values)),
+            save_label="Roll",
+            help_id=OFFER_HELP_ID,
+            inspector="The Offer",
+        ),
+        saga,
+        character_id=character.id,
     )

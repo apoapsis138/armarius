@@ -589,3 +589,87 @@ def test_a_player_answers_for_their_own_character_and_asks_for_nothing() -> None
 def card_outcome_hidden(pane: ChroniclePane) -> bool:
     card = next(c for c in pane.card_list() if c.line.startswith("Roll request"))
     return card.findChild(QToolButton, "outcome") is None
+
+
+# -- Table rolls made from a form --
+
+
+def _form_roll(
+    saga: Saga,
+    session: Session,
+    book: chronicle.Chronicle,
+    *,
+    cancelled: bool = False,
+    visibility: str = chronicle.PUBLIC,
+) -> None:
+    chronicle.form_roll(
+        book,
+        saga,
+        session,
+        form="Roll: Aelfric",
+        character_id="aelfric",
+        visibility=visibility,
+        faces=[1, 4],
+        lines=["die 8 against 6: it holds."],
+        by=HOST,
+        cancelled=cancelled,
+    )
+
+
+@pytest.mark.usefixtures("app")
+def test_a_form_roll_is_a_card_of_the_form_its_dice_and_its_result(
+    quiet: list[str],
+) -> None:
+    pane, saga, session, book, _ran = _pane()
+
+    _form_roll(saga, session, book)
+
+    card = pane.card_list()[-1]
+    labels = {w.objectName(): w.text() for w in card.findChildren(QLabel)}
+    assert labels["who"] == "Aelfric"
+    assert labels["player"] == "Ana"
+    assert labels["what"] == "Roll: Aelfric"
+    assert labels["result"] == "die 8 against 6: it holds."
+    assert [d.face for d in card.findChildren(Die)] == [1, 4]
+    assert quiet == ["tock"]
+
+
+@pytest.mark.usefixtures("app")
+def test_a_cancelled_form_roll_says_so() -> None:
+    pane, saga, session, book, _ran = _pane()
+
+    _form_roll(saga, session, book, cancelled=True)
+
+    card = pane.card_list()[-1]
+    results = [
+        w.text() for w in card.findChildren(QLabel) if w.objectName() == "result"
+    ]
+    assert results == ["Drawn, then cancelled."]
+
+
+@pytest.mark.usefixtures("app")
+def test_the_storyguide_strikes_a_form_roll_from_its_dice() -> None:
+    pane, saga, session, book, ran = _pane()
+    _form_roll(saga, session, book)
+    dice = pane.card_list()[-1].findChild(DiceRow, "dice")
+    assert isinstance(dice, DiceRow) and dice.can_strike
+
+    dice.strike_mark.click()
+    form = ran[-1]
+    assert isinstance(form, commands.Form)
+    form.apply({"reason": "Wrong trait"})
+
+    card = pane.card_list()[-1]
+    labels = {w.objectName(): w.text() for w in card.findChildren(QLabel)}
+    assert labels["reason"] == "Struck: Wrong trait"
+
+
+@pytest.mark.usefixtures("app")
+def test_a_blind_form_roll_is_marked_blind_for_the_storyguide() -> None:
+    pane, saga, session, book, _ran = _pane()
+
+    _form_roll(saga, session, book, visibility=chronicle.BLIND)
+
+    card = pane.card_list()[-1]
+    labels = {w.objectName(): w.text() for w in card.findChildren(QLabel)}
+    assert labels["visibility"] == "Blind"

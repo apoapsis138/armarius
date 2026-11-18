@@ -16,7 +16,7 @@ from __future__ import annotations
 import random
 from typing import Any
 
-from . import catalog, diaries, sourcebooks
+from . import catalog, diaries, sourcebooks, table_rolls
 from .commands import Command, Form, Refuse, notes
 from .form_spec import DialogField
 from .markup import BULLET, escape
@@ -52,7 +52,7 @@ def rop_divine(saga: Saga) -> bool:
 
 
 def _rng(rng: random.Random | None) -> random.Random:
-    return rng or random.Random()
+    return rng or table_rolls.dice()
 
 
 def _number(value: Any) -> int:
@@ -645,15 +645,19 @@ def monistic_revelation_form(
     if character is None:
         return Refuse(REVELATION_TITLE, "Choose a character first.")
     who, chance = character, _rng(rng)
-    return Form(
-        f"{REVELATION_TITLE}: {escape(who.name)}",
-        lambda: revelation_fields(saga, who),
-        lambda values: apply_revelation(saga, who, values, chance),
-        validate=revelation_problem(who),
-        live=lambda values: _bullets(revelation_lines(who, values)),
-        save_label="Roll",
-        help_id=HELP_REVELATION,
-        inspector="The Integration",
+    return table_rolls.form(
+        Form(
+            f"{REVELATION_TITLE}: {escape(who.name)}",
+            lambda: revelation_fields(saga, who),
+            lambda values: apply_revelation(saga, who, values, chance),
+            validate=revelation_problem(who),
+            live=lambda values: _bullets(revelation_lines(who, values)),
+            save_label="Roll",
+            help_id=HELP_REVELATION,
+            inspector="The Integration",
+        ),
+        saga,
+        character_id=character.id,
     )
 
 
@@ -791,15 +795,19 @@ def gods_aid_form(
     if character is None:
         return Refuse(AID_TITLE, "Choose a character first.")
     who, chance = character, _rng(rng)
-    return Form(
-        f"{AID_TITLE}: {escape(who.name)}",
-        lambda: aid_fields(who),
-        lambda values: apply_aid(saga, who, values, chance),
-        validate=aid_problem(who),
-        live=lambda values: _bullets(aid_lines(who, values)),
-        save_label="Pray",
-        help_id=HELP_AID,
-        inspector="The Prayer",
+    return table_rolls.form(
+        Form(
+            f"{AID_TITLE}: {escape(who.name)}",
+            lambda: aid_fields(who),
+            lambda values: apply_aid(saga, who, values, chance),
+            validate=aid_problem(who),
+            live=lambda values: _bullets(aid_lines(who, values)),
+            save_label="Pray",
+            help_id=HELP_AID,
+            inspector="The Prayer",
+        ),
+        saga,
+        character_id=character.id,
     )
 
 
@@ -880,15 +888,19 @@ def font_form(
     if character is None:
         return Refuse(FONT_TITLE, "Choose a character first.")
     who, chance = character, _rng(rng)
-    return Form(
-        f"{FONT_TITLE}: {escape(who.name)}",
-        font_fields,
-        lambda values: apply_font(saga, who, values, chance),
-        validate=font_problem(who),
-        live=lambda values: _bullets(font_lines(who, values)),
-        save_label="Roll",
-        help_id=HELP_FONT,
-        inspector="The Font",
+    return table_rolls.form(
+        Form(
+            f"{FONT_TITLE}: {escape(who.name)}",
+            font_fields,
+            lambda values: apply_font(saga, who, values, chance),
+            validate=font_problem(who),
+            live=lambda values: _bullets(font_lines(who, values)),
+            save_label="Roll",
+            help_id=HELP_FONT,
+            inspector="The Font",
+        ),
+        saga,
+        character_id=character.id,
     )
 
 

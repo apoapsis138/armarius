@@ -2398,10 +2398,23 @@ Friday's game has started round your desk, and Ana's magus Aelfric is climbing a
 5. **Spend Confidence** on a near miss. Ana clicks **Confidence** beside her roll's dice and spends a point: +3, and the new total shows as a card of its own (DE p. 29).
 6. **Ask everyone to roll.** Click **Roll Request**, leave Aelfric and Brigit ticked, choose Perception and Awareness, Ease Factor 9, tick **Hide Ease Factor**, For "Spot the ambush". Click **Ask**. Ana and Ben each click **Roll** on its card; their totals fill in, and only you see who beat 9. Click **Outcome** to note what they saw. See [Roll requests](help:roll-requests).
 7. **Roll Blind** for something only you should know, such as whether Aelfric notices the ambush. Ana sees only that you rolled.
-8. **Strike a mistake.** Click **Strike** beside the dice of a roll made for the wrong character. Say why: the roll stays in the Chronicle, struck through and marked Struck, with your reason.
-9. **End the Session** with **End Session** on its row. It's marked Played, its Chronicle is kept to read from the row, and the Confidence spent comes off each sheet.
+8. **Roll from a form.** Aelfric's nerve is tested: on his sheet, click **More**, then **Roll** by Personality Traits. Choose Brave, Ease Factor 9, and leave **Who sees the roll** at Blind. The die field is gone: click **Roll**, and the host rolls. The form says whether his nerve holds, as ever, and the Chronicle shows the same words with the face drawn. See [Table rolls](help:table-rolls).
+9. **Strike a mistake.** Click **Strike** beside the dice of a roll made for the wrong character. Say why: the roll stays in the Chronicle, struck through and marked Struck, with your reason.
+10. **End the Session** with **End Session** on its row. It's marked Played, its Chronicle is kept to read from the row, and the Confidence spent comes off each sheet.
 
-**See also:** [The Chronicle](help:chronicle), [Free roll](help:free-roll), [Roll from the sheet](help:sheet-roll), [Roll requests](help:roll-requests)
+**See also:** [The Chronicle](help:chronicle), [Free roll](help:free-roll), [Roll from the sheet](help:sheet-roll), [Roll requests](help:roll-requests), [Table rolls](help:table-rolls)
+
+## Storyguide at a Remote seat
+<!-- help: guide-rolling-seat; gui -->
+
+When you run the evening from a Remote seat rather than at the host's computer, as when the saga lives on another computer, your forms roll there as at the host.
+
+1. **Open the form** as you would at home: Cast a Power on a hedge wizard's sheet, a faerie bargain, a Personality Trait roll.
+2. **Choose who sees it.** Your rolls start at Blind. Choose Public when the table should watch.
+3. **Click the form's button.** Each die is drawn on the host's computer as the form needs it, one at a time, so a slow connection shows a short wait. The form works its rule on your computer and shows its result, and the host writes the roll with the faces it drew.
+4. **If the connection drops** mid-roll, nothing is rolled again quietly: the dice already drawn stay in the Chronicle as drawn, then cancelled. Try again once you're back, and Strike the cancelled one if it shouldn't count.
+
+**See also:** [Table rolls](help:table-rolls), [The Chronicle at a Remote seat](help:chronicle-seats)
 
 # How to plan and record a Session
 <!-- help: guide-sessions -->

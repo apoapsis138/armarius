@@ -7,7 +7,7 @@ from __future__ import annotations
 import random
 from typing import Any
 
-from . import diaries
+from . import diaries, table_rolls
 from .commands import Command, Form, Refuse, notes
 from .form_spec import DialogField
 from .markup import escape
@@ -211,13 +211,20 @@ def sell_form(
             f"{escape(character.name)} has no Craft to sell the goods of: add "
             "one on Abilities first.",
         )
-    return Form(
-        f"{TITLE}: {escape(character.name)}",
-        lambda: sell_fields(character),
-        lambda values: apply_sale(saga, character, values, rng or random.Random()),
-        validate=_validate,
-        live=sell_live(character),
-        save_label="Roll",
-        help_id=HELP_ID,
-        inspector="The Sale",
+    return table_rolls.form(
+        Form(
+            f"{TITLE}: {escape(character.name)}",
+            lambda: sell_fields(character),
+            lambda values: apply_sale(
+                saga, character, values, rng or table_rolls.dice()
+            ),
+            validate=_validate,
+            live=sell_live(character),
+            save_label="Roll",
+            help_id=HELP_ID,
+            inspector="The Sale",
+        ),
+        saga,
+        character_id=character.id,
+        typed=("die",),
     )

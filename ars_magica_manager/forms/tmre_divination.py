@@ -15,7 +15,7 @@ import random
 from collections.abc import Callable
 from typing import Any
 
-from .. import diaries
+from .. import diaries, table_rolls
 from ..commands import Command, Form, Refuse, notes
 from ..form_spec import DialogField
 from ..markup import BULLET, escape
@@ -398,16 +398,20 @@ def divination_form(
             "Hermetic divination needs Divination & Augury or Hermetic Dream "
             "Interpreter (The Mysteries Revised Edition, p. 59).",
         )
-    who, chance = character, rng or random.Random()
-    return Form(
-        f"{DIVINATION_TITLE}: {escape(who.name)}",
-        lambda: divination_fields(saga, who),
-        lambda values: apply_divination(saga, who, values, chance),
-        validate=divination_problem(who),
-        live=lambda values: _bullets(divination_lines(who, values)),
-        save_label="Roll",
-        help_id=HELP_DIVINATION,
-        inspector="The Divination",
+    who, chance = character, rng or table_rolls.dice()
+    return table_rolls.form(
+        Form(
+            f"{DIVINATION_TITLE}: {escape(who.name)}",
+            lambda: divination_fields(saga, who),
+            lambda values: apply_divination(saga, who, values, chance),
+            validate=divination_problem(who),
+            live=lambda values: _bullets(divination_lines(who, values)),
+            save_label="Roll",
+            help_id=HELP_DIVINATION,
+            inspector="The Divination",
+        ),
+        saga,
+        character_id=character.id,
     )
 
 
@@ -686,14 +690,18 @@ def astrology_form(
             "Periapt or divining by Astrology (The Mysteries Revised Edition, "
             "pp. 47-50).",
         )
-    who, chance = character, rng or random.Random()
-    return Form(
-        f"{ASTROLOGY_TITLE}: {escape(who.name)}",
-        lambda: astrology_fields(who),
-        lambda values: apply_astrology(saga, who, values, chance),
-        validate=astrology_problem(who),
-        live=lambda values: _bullets(astrology_lines(who, values)),
-        save_label="Roll",
-        help_id=HELP_ASTROLOGY,
-        inspector="The Reckoning",
+    who, chance = character, rng or table_rolls.dice()
+    return table_rolls.form(
+        Form(
+            f"{ASTROLOGY_TITLE}: {escape(who.name)}",
+            lambda: astrology_fields(who),
+            lambda values: apply_astrology(saga, who, values, chance),
+            validate=astrology_problem(who),
+            live=lambda values: _bullets(astrology_lines(who, values)),
+            save_label="Roll",
+            help_id=HELP_ASTROLOGY,
+            inspector="The Reckoning",
+        ),
+        saga,
+        character_id=character.id,
     )
