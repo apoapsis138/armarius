@@ -120,10 +120,13 @@ def test_the_silver_cord_adds_to_a_trait_roll_and_rescues_a_mind():
     form = trait_roll.roll_form(saga, magus)
     # Brave 2 + Silver Cord 3 + die 4 = 9 against 9.
     said = form.apply({"kind": trait_roll.TRAIT, "trait": "0", "ease": 9, "die": 4})
-    assert said[0].endswith("= 9 against 9: it holds.")
+    assert said[0] == (
+        "Die 4 (typed), Brave +2, Silver Cord +3 = 9 vs 9: succeeds by 0. It holds."
+    )
     rescue = trait_roll.roll_form(saga, corax)
     said = rescue.apply({"kind": trait_roll.RESCUE, "die": 5})
-    assert "against 9: not today" in said[0]
+    assert said[0].startswith("The familiar's rescue: Die 5 (typed), Silver Cord +3")
+    assert "vs 9: fails by 1. Not today: try tomorrow." in said[0]
 
 
 def test_a_battle_event_played_as_a_fight():

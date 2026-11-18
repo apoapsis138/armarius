@@ -137,7 +137,8 @@ def showing_dice(form: Form, dice: RecordingDice) -> Form:
             and all(isinstance(s, str) for s in result)
         ):
             lines: list[str] = result
-            return [*lines, said]
+            if not dice_text.already_said(lines, said):
+                return [*lines, said]
         return result
 
     return dataclasses.replace(form, apply=apply)
