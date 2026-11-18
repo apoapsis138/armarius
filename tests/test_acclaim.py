@@ -299,7 +299,10 @@ def test_reputation_roll_form_records_the_roll():
     )
     said = forms.record_roll(saga, character, values, Rigged(4))
     assert "has heard" in said[0]
+    # STORY-2348: the roll in the one dice line, kept in the Diary too.
+    assert said[0].startswith("Painter: Stress die 4, +5 = 9: ")
     assert character.diary[-1].name == "Reputation Roll"
+    assert "Stress die 4, +5 = 9" in character.diary[-1].details
 
 
 def test_rhaetian_is_latin_at_three_less():

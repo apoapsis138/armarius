@@ -93,7 +93,7 @@ def test_the_letter_form_rolls_a_simple_die_and_keeps_nothing():
     values = {"mode": tc.COMPOSE, "lore": "Faerie Lore", "subtlety": None}
     assert "Against [b]6[/]: any die" in form.live(values)
     lines = form.apply(values)
-    assert lines[0] == "Die 1 + 5 = 6 against 6."
+    assert lines[0] == "Simple die 1, +5 = 6 vs 6: succeeds by 0."
     assert "well wrapped" in lines[1]
     assert monk.diary == []
 
@@ -142,7 +142,7 @@ def test_a_heard_oath_lays_the_malediction_on_the_breaker():
     major = {**values, "curse": "vf_greater_malediction_breaking_tools"}
     assert "Might 40" in (form.validate(major) or "")
     lines = form.apply(values)
-    assert lines[0] == "Die 9 + 10 = 19 against 15 + 3 = 18."
+    assert lines[0] == "Simple die 9, +10 = 19 against 15 + Simple die 3 = 18."
     assert VirtueFlawInstance("vf_lesser_malediction_ashen_food") in rogue.virtues_flaws
     assert "Basil now bears Lesser Malediction: Ashen Food." in lines
     assert monk.diary[-1].name == rogue.diary[-1].name
@@ -298,7 +298,7 @@ def test_venerating_an_icon_in_an_emergency_costs_a_fatigue_level():
     # Presence 1 + Concentration 2 + 9 = 12 against 15: it fails.
     rushed = _form(byzantine.venerate_form(saga, monk, Faces(9)))
     lines = rushed.apply({"icon": "ch:0", "emergency": True})
-    assert lines[0].startswith("Die 9 + 3 = 12 against 15")
+    assert lines[0].startswith("Stress die 9, +3 = 12 vs 15: fails by 3")
     assert "no bonus" in lines[1]
     assert monk.fatigue_level == "winded"
 

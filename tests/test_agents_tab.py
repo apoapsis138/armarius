@@ -318,3 +318,25 @@ def test_resolving_rolls_his_scores_and_writes_the_diary():
     hopeless.apply({"total": -20, "band": "impressive", "ease": 18, "risk": "none"})
     assert "He fails, by" in lord.diary[-1].details
     assert lord.diary[-1].name == "Sir Konrad's task"
+
+
+class _Faces(random.Random):
+    def __init__(self, *faces: int) -> None:
+        super().__init__()
+        self.faces = list(faces)
+
+    def randrange(self, *_args: object, **_kwargs: object) -> int:  # type: ignore[override]
+        return self.faces.pop(0)
+
+
+def test_impress_shows_its_dice_line() -> None:
+    """STORY-2348: 1, 4 on the stress die is 4 x 2 = 8 (DE p. 7)."""
+    lord = _lord()
+    saga = Saga(id="s", name="S", characters=[lord])
+    step = agent_forms.impress(saga, lord, 3, _Faces(1, 4))
+    assert isinstance(step, Act)
+
+    first = step.apply()[0]
+
+    assert first.startswith("Impress Magister Hartwig: Stress die 1, 4 → 4 × 2 = 8, ")
+    assert "Presence " in first and "Leadership " in first and " vs 6: " in first

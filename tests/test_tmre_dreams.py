@@ -332,7 +332,8 @@ def test_the_dream_working_form_rolls_its_own_die():
     form = forms.dream_form(saga, morphea, random.Random(3))
     assert isinstance(form, Form)
     lines = form.apply({"roll": forms.AWARE})
-    assert "Die" in lines[0]
+    assert "Stress die " in lines[0]  # in the dice line's words (STORY-2348)
+    assert sum("Stress die " in line for line in lines) == 1  # said once
 
 
 def test_the_sacrifice_form():

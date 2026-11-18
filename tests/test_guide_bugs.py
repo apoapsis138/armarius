@@ -9,6 +9,7 @@ the Dark p. 118)."""
 from __future__ import annotations
 
 from ars_magica_manager import book_packs, choice_templates, deeds, sieges
+from ars_magica_manager.commands import Form
 from ars_magica_manager.models import (
     Case,
     Character,
@@ -119,10 +120,13 @@ def test_the_silver_cord_adds_to_a_trait_roll_and_rescues_a_mind():
     form = trait_roll.roll_form(saga, magus)
     # Brave 2 + Silver Cord 3 + die 4 = 9 against 9.
     said = form.apply({"kind": trait_roll.TRAIT, "trait": "0", "ease": 9, "die": 4})
-    assert said[0].endswith("= 9 against 9: it holds.")
+    assert said[0] == (
+        "Die 4 (typed), Brave +2, Silver Cord +3 = 9 vs 9: succeeds by 0. It holds."
+    )
     rescue = trait_roll.roll_form(saga, corax)
     said = rescue.apply({"kind": trait_roll.RESCUE, "die": 5})
-    assert "against 9: not today" in said[0]
+    assert said[0].startswith("The familiar's rescue: Die 5 (typed), Silver Cord +3")
+    assert "vs 9: fails by 1. Not today: try tomorrow." in said[0]
 
 
 def test_a_battle_event_played_as_a_fight():
@@ -215,6 +219,26 @@ def test_a_failed_morale_disorders_a_group_and_a_second_routs_it():
     rally = fight_morale.rally_form(saga, fight)
     rally.apply({"group": group.id, "situation": "Not engaged", "die": 5})
     assert group.state == group_morale.DISORDERED
+    # STORY-2348: a rolled die shows its dice line; a typed one adds none.
+    import random
+
+    class Faces(random.Random):
+        def __init__(self, *faces: int) -> None:
+            super().__init__(0)
+            self.faces = list(faces)
+
+        def randrange(self, *_a: object, **_k: object) -> int:  # type: ignore[override]
+            return self.faces.pop(0) if self.faces else 5
+
+    rolled = fight_morale.rally_form(saga, fight, Faces(1, 4, 1, 3))
+    assert isinstance(rolled, Form)
+    told = rolled.apply({"group": group.id, "situation": "Not engaged"})
+    assert told == [
+        "Rallying Levies: Stress die 1, 4 → 4 × 2 = 8, Presence + Leadership +2 "
+        "= 10 vs 3: succeeds by 7. It is steady."
+    ]
+    again = rolled.apply({"group": group.id, "situation": "Not engaged"})
+    assert "Stress die 1, 3 → 3 × 2 = 6" in again[0]  # each save its own dice
 
 
 def test_casting_amid_a_battle_needs_concentration():
@@ -793,6 +817,14 @@ def test_a_certamen_duel_ends_in_a_fall_or_a_concession():
         saga, cd.Plan(mora), cd.Plan(caro), "Rego", "Terram", Faces(5, 5, 0, 0)
     )
     assert duel.winner is None and "botches in round 1" in duel.how
+    # STORY-2348: each round shows both sides' dice, attack then defence
+    # (DE p. 231); 1 then 4 doubles to 8 (DE p. 7).
+    duel = cd.play(
+        saga, cd.Plan(mora), cd.Plan(caro), "Rego", "Terram", Faces(5, 5, 1, 4, 6)
+    )
+    first = next(line for line in duel.lines if line.startswith("Round 1:"))
+    assert "(Stress die 1, 4 → 4 × 2 = 8) against" in first
+    assert "(Stress die 6)" in first
 
 
 def test_the_grand_tribunal_counts_its_delegates():

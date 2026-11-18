@@ -368,7 +368,7 @@ def test_a_folk_witch_casts_a_power_and_the_diary_keeps_it():
     values |= {"casting": "Healing", "level": 5, "die": 7}
     assert hedge_cast.problem(grete, values) is None
     told = hedge_cast.cast(saga, grete, values, random.Random(1))
-    assert "Healing" in told[0] and "die 7 (typed)" in told[0]
+    assert "Healing" in told[0] and "Die 7 (typed)" in told[0]
     assert grete.diary[-1].name == "Cast: Healing"
 
 

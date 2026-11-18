@@ -17,6 +17,7 @@ from typing import Any
 
 from . import catalog, churches, diaries, sourcebooks, table_rolls
 from .commands import Command, Form, Refuse, notes
+from .dice_text import dice_line, invocation_line, simple
 from .form_spec import DialogField
 from .markup import escape
 from .models import Character, Neighbour, Saga, VirtueFlawInstance
@@ -150,9 +151,8 @@ def letter_form(
                 if reading
                 else "The tale muddles the message."
             )
-        return notes(
-            f"Die {die} + {found.total} = {total} against {found.ease}.", outcome
-        )
+        rolled = dice_line(simple(die), [("Modifier", found.total)], total, found.ease)
+        return notes(f"{rolled}.", outcome)
 
     return table_rolls.form(
         Form(
@@ -272,10 +272,7 @@ def oath_form(
         rolled = tc.invoke_oath(character, styx, _rng(rng))
         breaker = saga.character(values.get("breaker") or "")
         who = breaker.name if breaker is not None else "the oath-breaker"
-        lines = [
-            f"Die {rolled.die} + {rolled.total} = {rolled.rolled} against 15 + "
-            f"{rolled.ease_die} = {rolled.ease}."
-        ]
+        lines = [f"{invocation_line(rolled.die, rolled.total, rolled.ease_die)}."]
         if not rolled.heard:
             lines.append("The spirit does not hear the complaint.")
         else:
@@ -682,10 +679,11 @@ def venerate_form(
             total, dice.stress_die(_rng(rng), saga=saga), tc.EMERGENCY_EASE
         )
         already_out = harm.lose_fatigue(character, long_term=False)
-        shown = "a botch" if roll.die.botched else str(roll.die.value)
+        rolled = dice_line(
+            roll.die, [("Modifier", total)], roll.total, roll.ease_factor
+        )
         lines = [
-            f"Die {shown} + {total} = {roll.total} against {tc.EMERGENCY_EASE}; "
-            "a Fatigue level spent"
+            f"{rolled}; a Fatigue level spent"
             + (" (already unconscious)." if already_out else "."),
             f"+{bonus} to invoking {relic.get('saint') or 'its saint'}."
             if roll.succeeded

@@ -112,7 +112,7 @@ def test_a_complete_failure_wastes_the_season():
     seasons.set_plan(saga, _plan())
     # Simple die 5 for the Lab Total; the chart's stress die 7 + risk 1 = 8.
     worked = seasons.resolve(saga, _Dice(5, 7))
-    assert "complete failure" in worked[0].notes[-1]
+    assert "complete failure" in worked[0].notes[-2]
     seasons.apply(saga, worked)
     assert saga.character("m").spells_known == []
     assert saga.laboratories[0].diary[-1].name == "Arcane Experimentation"
@@ -483,7 +483,7 @@ def test_stabilizing_repeats_the_discovery_s_risk_and_move():
     seasons.plan_lab_work(saga, _stabilizing(saga))  # the plan's own risk is 0
     # Die 7 + the Discovery's risk 1 = 8, moved +1 = 9: no harm, stabilized.
     worked = seasons.resolve(saga, _Dice(7, 9))
-    assert "The roll 8 moved by +1" in worked[0].notes[-1]
+    assert "The roll 8 moved by +1" in worked[0].notes[-2]
     seasons.apply(saga, worked)
     assert saga.character("m").breakthroughs[0].points == 2
 
@@ -650,7 +650,7 @@ def test_an_accident_in_an_unsafe_lab_spoils_plain_lab_work():
     seasons.set_plan(saga, _plan(experimenting=False, risk=0))
     # Simple die 1 (under 3): three botch dice, two of them zeroes.
     worked = seasons.resolve(saga, _Dice(1, 0, 0, 5))
-    assert worked[0].notes[-1].startswith("Laboratory: The laboratory is unsafe")
+    assert worked[0].notes[-2].startswith("Laboratory: The laboratory is unsafe")
     seasons.apply(saga, worked)
     magus = saga.character("m")
     assert magus.spells_known == []
@@ -681,3 +681,15 @@ def test_stabilizing_keeps_to_the_seasons_vis_limit():
         f"The season uses {limit + 1} pawns of vis; {magus.name} can handle "
         f"{limit} in a season (twice Magic Theory)."
     ]
+
+
+def test_a_seasons_notes_end_with_the_dice_it_rolled():
+    """STORY-2348: Apoapsis's example. The Lab Total's simple die 5 and
+    the chart's stress die 1, 7 (doubled: 14) show as dice (DE p. 7)."""
+    saga = _saga()
+    seasons.set_plan(saga, _plan())
+    worked = seasons.resolve(saga, _Dice(5, 1, 7))
+    said = worked[0].notes[-1]
+    assert said.startswith("Simple die 5; Stress die 1, 7 → 7 × 2 = 14; ")
+    # 14 + risk is Extraordinary: its further rolls (each a 5 here) follow.
+    assert said.endswith("; Stress die 5; Simple die 5")

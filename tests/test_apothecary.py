@@ -305,6 +305,7 @@ def test_the_store_form():
     assert "against [b]8[/]" in form.live(search)
     found = form.apply({**search, "die": 7})
     assert "11 against 8: 4 Labor Point(s)' worth" in found[1]
+    assert found[0] == "Searching for henbane. Die 7 (typed)."  # STORY-2348
     assert apothecary.diary[-1].name == "Searched for: henbane"
     preserve = {"roll": forms.PRESERVE, "ingredient": "a dragon's scale"}
     preserve["duration"] = "Decades"
@@ -313,6 +314,21 @@ def test_the_store_form():
     kept = form.apply({**preserve, "simple_die": 10})
     assert "14 against 15: it keeps only years." in kept[1]
     assert isinstance(forms.store_form(saga, _martin()), Refuse)
+    # A rolled die is said in the one dice line's words (STORY-2348).
+    import random as _random
+
+    class _Faces(_random.Random):
+        def __init__(self, *faces: int) -> None:
+            super().__init__(0)
+            self.faces = list(faces)
+
+        def randrange(self, *_a: object, **_k: object) -> int:  # type: ignore[override]
+            return self.faces.pop(0)
+
+    rolled = forms.store_form(saga, apothecary, _Faces(1, 4))
+    assert isinstance(rolled, Form)
+    said = rolled.apply(search)
+    assert said[0] == "Searching for henbane. Stress die 1, 4 → 4 × 2 = 8."
 
 
 def test_more_offers_the_ligature_and_the_store():

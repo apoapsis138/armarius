@@ -1521,6 +1521,17 @@ Choose a Session in Saga Management's Sessions and click **Begin Session**, **En
 
 **See also:** [Sessions](help:tab-content-sessions), [Table rolls](help:table-rolls)
 
+### How a roll shows its dice
+<!-- help: dice-line -->
+
+Every roll the app makes shows its dice in the same words wherever it shows: a rolling form's result, the Chronicle, each season's result in Advance Season, an aging roll's or a Twilight's Diary entry, a fight's chronicle, a siege's supplies rolls. Most forms write the whole roll in that line (Stress die 7, Brave +3, Silver Cord +0 = 10 vs 9: succeeds by 1. It holds.); others end with it. Diary entries written before this version stay as they were. A stress die shows each 1 that doubled and works the doubling out (Stress die 1, 1, 5 → 5 × 4 = 20); a 0 shows its botch dice and how many came up 0 (Stress die 0; 2 botch dice 0, 4: botch, 1 zero). A simple die shows its number, a 0 read as 10 (DE p. 7). A roll from the sheet or a Free roll adds its modifiers, total and Ease Factor: Stress die 6, Presence +2, Charm +3 = 11 vs 9: succeeds by 2.
+
+A contested roll shows both sides' dice. Certamen puts each beside its total (Rego 15 (Stress die 6) against Carolus's 12 (Stress die 3)); an Invocation shows your simple die and the storyguide's (Simple die 9, +5 = 14 against 15 + Simple die 2 = 17); a blow in a fight and a Twilight list the dice in the order rolled, attacker or character first (DE pp. 228, 231).
+
+A die you type in yourself reads Die 7 (typed), and adds no further line: only the dice the app rolls are shown. Two rolls use fixed seeds and show no dice: a generated book-pack character and Hibernia's bidding.
+
+**See also:** [The Chronicle](help:chronicle), [Table rolls](help:table-rolls)
+
 ### Table rolls
 <!-- help: table-rolls -->
 
@@ -1530,7 +1541,7 @@ While a Session is under way, a form whose roll the story calls for in the momen
 
 - Each such form gains **Who sees the roll**: Public, Private, or Blind for the Session's storyguide alone. The storyguide's start at Blind, a player's at Public. A roll made without a form, such as a place's roll table or a Tribunal debate, is Blind for the storyguide and Public for a player.
 - A form's die field ("Stress die", "Blank: rolled") is hidden: the host rolls.
-- The form still works its rule and says what came of it as it always has. Its Chronicle line is the form's name, the character, each die the host drew in order (a stress die with its doublings and botch dice, a simple die, and any other dice the form drew), and the form's result, word for word. A roll whose result you're asked to keep, such as Take Harm or a Disputatio, shows that result too. A form rolled at a Remote seat shows its faces as drawn, without grouping them into dice.
+- The form still works its rule and says what came of it as it always has, ending with [its dice](help:dice-line). Its Chronicle line is the form's name, the character, each die the host drew in order (a stress die with its doublings and botch dice, a simple die, and any other dice the form drew), and the form's result, word for word. A roll whose result you're asked to keep, such as Take Harm or a Disputatio, shows that result too. A form rolled at a Remote seat shows its faces as drawn, then its dice line.
 - At a Remote seat, each die is drawn from the host as the form needs it. The seat can't choose its dice or roll again quietly.
 - A form that fails after its dice are drawn, or a seat that drops mid-roll, leaves its dice in the Chronicle as drawn, then cancelled.
 - The storyguide may Strike a Table roll as any other. Confidence isn't spent on them.

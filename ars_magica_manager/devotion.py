@@ -22,6 +22,7 @@ from typing import Any
 from . import churches, diaries, sourcebooks, table_rolls
 from . import theban_customs as byzantine
 from .commands import Command, Form, Refuse, notes
+from .dice_text import dice_line, invocation_line
 from .form_spec import DialogField
 from .markup import escape
 from .models import Character, Saga, ScoredTrait
@@ -530,10 +531,7 @@ def invoke_form(
         name = _saint_name(values)
         found, _ = _petition(saga, character, values)
         rolled = dv.invoke(found.total, _rng(rng))
-        lines = [
-            f"Die {rolled.die} + {found.total} = {rolled.rolled} against 15 + "
-            f"{rolled.ease_die} = {rolled.ease}."
-        ]
+        lines = [f"{invocation_line(rolled.die, found.total, rolled.ease_die)}."]
         power = sr.POWERS.get(str(values.get("power") or ""))
         if rolled.heard:
             asked = f": {power.name}" if power is not None else ""
@@ -702,9 +700,8 @@ def threaten_form(
         character.background.confidence_points -= max(0, spent)
         roll = dice.Roll(total, dice.stress_die(_rng(rng), saga=saga), ease)
         outcome = dv.threat_outcome(roll)
-        shown = "a botch" if roll.die.botched else str(roll.die.value)
         lines = [
-            f"Die {shown} + {total} = {roll.total} against {ease}.",
+            f"{dice_line(roll.die, [('Modifier', total)], roll.total, ease)}.",
             dv.THREAT_OUTCOMES[outcome],
         ]
         power = sr.POWERS.get(str(values.get("power") or ""))

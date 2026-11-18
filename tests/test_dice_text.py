@@ -71,6 +71,21 @@ def test_a_lone_roll_of_botch_dice() -> None:
     assert dice_text.die_text(die) == "3 botch dice 4, 0, 9: 1 zero"
 
 
+def test_a_typed_die_is_said_as_typed() -> None:
+    assert dice_text.dice_line(7, NINE, 16, 15) == (
+        "Die 7 (typed), Characteristic + Ability +9 = 16 vs 15: succeeds by 1"
+    )
+
+
+def test_lines_that_already_say_their_dice() -> None:
+    """A form that writes its own dice line needs no second one."""
+    said = "Stress die 0; 1 botch die 7: no zeros"
+    own = ["Stress die 0, +3 = 3 vs 6: fails by 3; 1 botch die 7: no zeros. It fails."]
+
+    assert dice_text.already_said(own, said)
+    assert not dice_text.already_said(["It fails."], said)
+
+
 def test_a_kept_die_missing_a_field_reads_as_far_as_it_can() -> None:
     """A form roll's kept die is read from a file: a missing or odd field
     reads as empty, never as an error that hides the whole Chronicle."""

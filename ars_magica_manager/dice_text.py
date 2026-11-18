@@ -89,28 +89,65 @@ def terms_text(terms: Sequence[Term]) -> str:
     return ", ".join(f"{label} {signed(amount)}" for label, amount in terms)
 
 
+#: A die as a roll has it: rolled (`DieResult`), or typed in by hand.
+RolledOrTyped = DieResult | int
+
+
+def typed(value: int, botched: bool = False) -> str:
+    """A die typed in by hand, as the dice line says it."""
+    return f"Die {value} (typed)" + (", a botch" if botched else "")
+
+
+def value_of(die: RolledOrTyped) -> int:
+    """What the die adds to the roll."""
+    return die if isinstance(die, int) else die.value
+
+
 def dice_line(
-    die: DieResult,
+    die: RolledOrTyped,
     terms: Sequence[Term],
     total: int,
     ease_factor: int | None = None,
 ) -> str:
-    """A whole roll as a line: the die (each doubling worked out), the
-    terms, the total, against the Ease Factor what came of it, and the
-    botch dice last. A botched total is the book's: no higher than 0."""
-    line = _die(die)
+    """A whole roll as a line: the die (each doubling worked out; a typed
+    die as typed), the terms, the total, against the Ease Factor what came
+    of it, and the botch dice last. A botched total is the book's: no
+    higher than 0."""
+    rolled = die if isinstance(die, DieResult) else None
+    botched = rolled is not None and rolled.botched
+    line = _die(rolled) if rolled is not None else typed(value_of(die))
     if terms:
         line += f", {terms_text(terms)}"
-    if terms or die.botched:
+    if terms or botched:
         line += f" = {total}"
     if ease_factor is not None:
         margin = total - ease_factor
-        if not die.botched and margin >= 0:
+        if not botched and margin >= 0:
             line += f" vs {ease_factor}: succeeds by {margin}"
         else:
             line += f" vs {ease_factor}: fails by {abs(margin)}"
-    botch = _botch_dice(die)
+    botch = _botch_dice(rolled) if rolled is not None else ""
     return f"{line}; {botch}" if botch else line
+
+
+def simple(value: int) -> DieResult:
+    """A simple die that showed `value` (1-10), as `rules.dice` keeps it."""
+    return DieResult(value=value, faces=(value % 10,), stress=False)
+
+
+def invocation_line(die: int, modifier: int, ease_die: int, base: int = 15) -> str:
+    """A simple die + modifier against `base` + the storyguide's simple die,
+    both sides shown (an Invocation: RoP: The Divine p. 87; baraka, Theban
+    oaths): "Simple die 9, +5 = 14 against 15 + Simple die 2 = 17"."""
+    rolled = dice_line(simple(die), [("Modifier", modifier)], die + modifier)
+    return f"{rolled} against {base} + {die_text(simple(ease_die))} = {base + ease_die}"
+
+
+def already_said(lines: Sequence[str], said: str) -> bool:
+    """Whether `lines` already say every part of the dice line `said` (a
+    roll that writes its own dice line needs no second)."""
+    text = "\n".join(lines)
+    return all(part in text for part in said.split("; "))
 
 
 def _numbers(kept: Mapping[str, Any], key: str) -> tuple[int, ...]:
@@ -139,6 +176,14 @@ def whole_die(kept: Mapping[str, Any]) -> DieResult:
     else:
         value = (faces[-1] or 10) * 2 ** (len(faces) - 1)
     return DieResult(value=value, faces=faces, stress=stress, botch_faces=botch_faces)
+
+
+def whole_dice_text(kept: Sequence[Mapping[str, Any]]) -> str:
+    """The whole dice among `kept` (faces drawn outside the die helpers
+    left to the roll's own words), as a result's last line says them;
+    "" when there are none."""
+    wholes = [die for die in kept if "face" not in die]
+    return dice_text(wholes) if wholes else ""
 
 
 def dice_text(kept: Sequence[Mapping[str, Any]]) -> str:

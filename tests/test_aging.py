@@ -174,3 +174,12 @@ def test_might_virtues_are_immune_and_faerie_virtues_at_home_in_faerie_auras():
     )
     assert not hybrid_magic.warps_from_aura(fey, "Faerie")
     assert hybrid_magic.warps_from_aura(fey, "Infernal")
+
+
+def test_the_aging_diary_entry_keeps_its_dice():
+    """STORY-2348: the aging roll's stress die 1, 8 is a doubled 8 = 16
+    (DE p. 7), written in the Diary with the rest."""
+    saga = _saga(age=50)
+    seasons.year_end_aging(saga, _Dice(1, 8))
+    entry = saga.character("m").diary[-1]
+    assert "Stress die 1, 8 → 8 × 2 = 16" in entry.details.splitlines()

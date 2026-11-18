@@ -125,13 +125,13 @@ def test_a_failed_roll_at_standard_brings_the_next_a_week_later_not_backdated():
     told = rules.pass_interval(castle, Scripted(2))
     assert castle.days == 36
     assert told == [
-        "Supplies roll: 5 against 6",
+        "Supplies roll: 5 (Stress die 2) against 6",
         "Supplies fall to Shoddy; those inside make deprivation checks (ArM5 p. 180).",
     ]
     assert (castle.supply_rolls, castle.next_supply_day) == (1, 37)
     # The next week brings the roll of day 37, and only that one.
     told = rules.pass_interval(castle, Scripted(9))
-    assert told == ["Supplies roll: 10 against 6"]
+    assert told == ["Supplies roll: 10 (Stress die 9) against 6"]
     assert (castle.supply_rolls, castle.next_supply_day) == (2, 44)
 
 
@@ -154,7 +154,9 @@ def test_intervals_without_a_stockade_pass_with_no_roll_to_make_up():
     assert castle.next_supply_day == 120
     castle.besieger_walls = [1, 1, 1, 0]
     castle.days = 125
-    assert rules.supplies_rolls(castle, Scripted(9)) == ["Supplies roll: 12 against 6"]
+    assert rules.supplies_rolls(castle, Scripted(9)) == [
+        "Supplies roll: 12 (Stress die 9) against 6"
+    ]
     assert castle.supply_rolls == 1
 
 
