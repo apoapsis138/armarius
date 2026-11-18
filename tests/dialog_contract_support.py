@@ -152,7 +152,10 @@ def _text(widget: Widget) -> str:
 
 
 def field_widget(dialog, label: str, aliases: dict[str, str]) -> Widget:
-    """The input widget for the field labelled `label` in `dialog`."""
+    """The input widget for the field labelled `label` in `dialog`; an
+    alias wins, for a label the dialog's own title also starts with."""
+    if label in aliases:
+        return dialog.query_one(f"#{aliases[label]}")
     widgets = list(dialog.query("*"))
     for position, widget in enumerate(widgets):
         if isinstance(widget, Checkbox) and str(widget.label).startswith(label):
@@ -161,8 +164,6 @@ def field_widget(dialog, label: str, aliases: dict[str, str]) -> Widget:
             following = next((w for w in widgets[position + 1 :] if _is_input(w)), None)
             if following is not None:
                 return following
-    if label in aliases:
-        return dialog.query_one(f"#{aliases[label]}")
     raise AssertionError(f"no field labelled {label!r}")
 
 

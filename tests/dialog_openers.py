@@ -59,6 +59,7 @@ from ars_magica_manager.forms import grogs as grog_forms
 from ars_magica_manager.forms import hook_stories as hook_story_forms
 from ars_magica_manager.forms import inhabitant as inhabitant_forms
 from ars_magica_manager.forms import land_shaping as land_forms
+from ars_magica_manager.forms import message as message_forms
 from ars_magica_manager.forms import sheet_roll as sheet_roll_forms
 from ars_magica_manager.forms import threshold as threshold_forms
 from ars_magica_manager.forms import trait_roll as trait_roll_forms
@@ -1083,6 +1084,18 @@ def _sheet_roll(ws) -> None:
         ws.saga.sessions.append(session)
         chronicle.begin(ws.saga, session, by=viewing.HOST)
     ws._run_steps(sheet_roll_forms.roll_form(ws.saga, ws.selected_character))
+
+
+def _send_message(ws) -> None:
+    """A Message: a Session begun by the host, as its storyguide, as for
+    a roll from the sheet."""
+    virtual_tabletop.set_on(True)
+    session = chronicle.under_way(ws.saga)
+    if session is None:  # opened again: already begun
+        session = Session("contract-vtt")
+        ws.saga.sessions.append(session)
+        chronicle.begin(ws.saga, session, by=viewing.HOST)
+    ws._run_steps(message_forms.message_here(ws.saga, session))
 
 
 async def _open_staged(ws, kind: str, open_form) -> None:
@@ -2509,6 +2522,7 @@ OPENERS: dict[str, Opener] = {
         action="trait_roll",
     ),
     "sheet roll": Opener("character", _sheet_roll, action="sheet_roll"),
+    "send message": Opener("saga", _send_message, action="send_message"),
     "build a ship": Opener(
         "covenant",
         _run(lambda ws: ship_build.build_form(ws.saga, ws.selected_covenant)),
