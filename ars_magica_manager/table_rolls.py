@@ -419,9 +419,9 @@ def _never(_values: dict[str, Any]) -> bool:
 
 def result_lines(result: Any) -> list[str]:
     """A form's result as the Chronicle keeps it: its notes, as plain
-    text; a Keep question's (Health, Disputations) the roll's result it
-    asks about, line by line; nothing for any other further step."""
-    if isinstance(result, Confirm):
+    text; a question marked as the roll's result (Health, Disputations)
+    line by line; nothing for any other further step."""
+    if isinstance(result, Confirm) and result.roll_result:
         return [plain(line) for line in result.question.splitlines() if line.strip()]
     if isinstance(result, list) and all(isinstance(line, str) for line in result):
         lines: list[str] = result
@@ -438,7 +438,7 @@ def with_dice(result: Any, said: str) -> Any:
     a Keep question's result; any other further step unchanged."""
     if not said:
         return result
-    if isinstance(result, Confirm):
+    if isinstance(result, Confirm) and result.roll_result:
         return dataclasses.replace(result, question=f"{result.question}\n\n{said}")
     if isinstance(result, list) and all(isinstance(line, str) for line in result):
         lines: list[str] = result

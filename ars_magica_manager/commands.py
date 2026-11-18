@@ -162,12 +162,16 @@ def not_offered(choice: Choice, why: str) -> Choice:
 @dataclass(frozen=True)
 class Confirm:
     """A yes-or-no question (markup); `apply` runs on Yes. `title` heads
-    it where a front-end titles its questions ("" for its own)."""
+    it where a front-end titles its questions ("" for its own).
+    `roll_result` marks a question that shows a roll's result and asks
+    whether to keep it (Take Harm, a Disputatio): a Table roll posts its
+    text as the roll's result (table_rolls.result_lines)."""
 
     question: str
     apply: Callable[[], Any]
     yes_label: str = "Delete"
     title: str = ""
+    roll_result: bool = False
 
 
 @dataclass(frozen=True)
