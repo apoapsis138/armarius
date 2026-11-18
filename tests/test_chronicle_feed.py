@@ -43,7 +43,7 @@ def test_one_entrys_line_is_the_chronicles_line_for_it() -> None:
 
     assert (
         chronicle.line(entry, chronicle.voided(book))
-        == "Storyguide (Weather): stress die 7, +3 = 10"
+        == "Storyguide (Weather): Stress die 7, +3 = 10"
     )
 
 

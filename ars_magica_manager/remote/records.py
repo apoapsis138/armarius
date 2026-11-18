@@ -26,11 +26,11 @@ import zlib
 from collections.abc import Callable, Sequence
 from dataclasses import asdict, dataclass
 
-from .. import presence, storage, viewing
+from .. import picture_files, presence, storage, viewing
 from ..models import Saga
 from ..picture_files import safe_name
 from ..seat_view import seat_view
-from ..transfer import MAPS, PORTRAITS, pictures_named
+from ..transfer import pictures_named
 from . import audit
 from .changes import MEMBER_MESSAGE, SeatChanges, change_specs
 from .protocol import (
@@ -47,9 +47,9 @@ from .protocol import (
 #: Raw bytes in one `part`: base64 makes it about 53 KB, inside the secure
 #: channel's 64 KB a message.
 PART_BYTES = 40_000
-#: The most a snapshot (compressed or not) or a picture may be.
+#: The most a snapshot may be, compressed or not. A picture's most is its
+#: kind's (picture_files.KINDS).
 MAX_SNAPSHOT = 50 * 1024 * 1024
-MAX_PICTURE = 5 * 1024 * 1024
 REVISION_LENGTH = 64
 PICTURE_NAME_MAX = 200
 
@@ -214,8 +214,9 @@ def records_specs(
             raise Refused from None
         if (folder, name) not in found.pictures:
             raise Refused  # one the seat's saga doesn't name: as if none
+        found_kind = picture_files.kind(folder)
         blob = picture_file(folder, name)
-        if blob is None or len(blob) > MAX_PICTURE:
+        if found_kind is None or blob is None or len(blob) > found_kind.cap:
             raise Refused
         return in_parts("picture", blob, {"folder": folder, "name": name})
 
@@ -276,14 +277,15 @@ def seat_registry(
 
 
 def picture_from_disk(folder: str, name: str) -> bytes | None:
-    """A picture from the host's own portraits or maps folder, by its file
-    name only: a name with any path in it is never looked up."""
-    if folder not in (PORTRAITS, MAPS) or not safe_name(name):
+    """A picture from the host's own folder for its kind, by its file name
+    only: a name with any path in it, or a folder that isn't a kind of
+    Picture, is never looked up, and one over its kind's limit isn't read."""
+    found_kind = picture_files.kind(folder)
+    if found_kind is None or not safe_name(name):
         return None
-    root = storage.portraits_dir() if folder == PORTRAITS else storage.maps_dir()
-    path = root / name
+    path = found_kind.directory() / name
     try:
-        if path.stat().st_size > MAX_PICTURE:
+        if path.stat().st_size > found_kind.cap:
             return None
         return path.read_bytes()
     except OSError:

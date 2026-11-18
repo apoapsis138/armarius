@@ -27,6 +27,7 @@ from .commands import Choice, Choose, Command, Form, Refuse, notes
 from .form_spec import DialogField
 from .markup import escape
 from .models import WALLS, Saga, Siege, SiegeEvent
+from .recorded_dice import recording, showing_dice
 from .rules import dice
 from .rules import siege as rules
 
@@ -182,6 +183,8 @@ def _story_fields() -> list[DialogField]:
 
 
 def supplies_story(saga: Saga, siege: Siege, rng: random.Random | None = None) -> Form:
+    rolling = recording(rng)
+
     def apply(values: dict[str, Any]) -> list[str]:
         story = values.get("story") or STORY_BLOCKADE
         if story == STORY_BLOCKADE:
@@ -213,9 +216,7 @@ def supplies_story(saga: Saga, siege: Siege, rng: random.Random | None = None) -
             )
         else:
             typed = values.get("die")
-            die = (
-                typed if typed is not None else dice.simple_die(rng or random.Random())
-            )
+            die = typed if typed is not None else dice.simple_die(rolling)
             total = (values.get("resist") or 0) + die
             if total >= RAISE_EASE:
                 text = f"Raise the Siege: the commander resists ({total} against {RAISE_EASE})."
@@ -229,11 +230,14 @@ def supplies_story(saga: Saga, siege: Siege, rng: random.Random | None = None) -
         siege.events.append(rules_event(siege, text))
         return notes(escape(text), *sieges.record_ending(saga, siege))
 
-    return Form(
-        "A Supplies Story or Spell",
-        _story_fields,
-        apply,
-        help_id=HELP_ID,
+    return showing_dice(
+        Form(
+            "A Supplies Story or Spell",
+            _story_fields,
+            apply,
+            help_id=HELP_ID,
+        ),
+        rolling,
     )
 
 

@@ -12,6 +12,11 @@ caller (or a test) decides the source of chance.
 With the saga's "Simple dice only" option on (rules.options), every stress
 die is rolled as a simple die.
 
+Each whole die made here (a simple die, a stress die with its doublings
+and botch dice, a lone roll of botch dice) is told to the source of
+chance, if it listens (`die_made`), so a recording source can keep the
+die whole rather than as loose faces (table_rolls.RecordingDice).
+
 No screen uses botch_chance(), ease_factor_label() yet: they are the rules
 for screens still to come, and only the tests call them.
 """
@@ -50,7 +55,9 @@ def _d10(rng: random.Random) -> int:
 
 def simple_die(rng: random.Random) -> int:
     """1-10 (a 0 reads as 10)."""
-    return _d10(rng) or 10
+    face = _d10(rng)
+    _tell(rng, DieResult(value=face or 10, faces=(face,), stress=False))
+    return face or 10
 
 
 @dataclass(frozen=True)
@@ -79,6 +86,13 @@ class DieResult:
         return self.faces[:-1].count(1) if self.stress else 0
 
 
+def _tell(rng: random.Random, die: DieResult) -> None:
+    """Tell `rng` the whole die just made from it, if it listens."""
+    listener = getattr(rng, "die_made", None)
+    if callable(listener):
+        listener(die)
+
+
 def stress_die(
     rng: random.Random, botch_dice: int = 1, *, saga: Saga | None = None
 ) -> DieResult:
@@ -90,14 +104,18 @@ def stress_die(
     first = _d10(rng)
     if first == 0:
         botch_faces = tuple(_d10(rng) for _ in range(max(botch_dice, 0)))
-        return DieResult(value=0, faces=(0,), botch_faces=botch_faces)
+        result = DieResult(value=0, faces=(0,), botch_faces=botch_faces)
+        _tell(rng, result)
+        return result
     faces = [first]
     multiplier = 1
     while faces[-1] == 1:
         multiplier *= 2
         faces.append(_d10(rng))
     last = faces[-1] if len(faces) == 1 else (faces[-1] or 10)
-    return DieResult(value=last * multiplier, faces=tuple(faces))
+    result = DieResult(value=last * multiplier, faces=tuple(faces))
+    _tell(rng, result)
+    return result
 
 
 def botch_roll(rng: random.Random, botch_dice: int, *, saga: Saga | None = None) -> int:
@@ -106,11 +124,14 @@ def botch_roll(rng: random.Random, botch_dice: int, *, saga: Saga | None = None)
     dice only."""
     if options.is_on(saga, "simple_dice_only"):
         return 0
-    return sum(_d10(rng) == 0 for _ in range(max(botch_dice, 0)))
+    botch_faces = tuple(_d10(rng) for _ in range(max(botch_dice, 0)))
+    if botch_faces:
+        _tell(rng, DieResult(value=0, faces=(), botch_faces=botch_faces))
+    return botch_faces.count(0)
 
 
 def simple_roll(rng: random.Random) -> DieResult:
-    value = simple_die(rng)
+    value = simple_die(rng)  # told to rng there
     return DieResult(value=value, faces=(value % 10,), stress=False)
 
 

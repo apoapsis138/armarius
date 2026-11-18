@@ -1,0 +1,1 @@
+**Every roll shows its dice.** Every roll the app makes now shows its dice in one wording: a stress die's doublings worked out and its botch dice, a typed die marked as typed. Rolling forms, Advance Season, aging and Twilight, fights, Certamen and sieges all use it, contested rolls show both sides, and the Chronicle shares it.

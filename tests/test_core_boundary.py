@@ -165,12 +165,20 @@ LAYERS: tuple[tuple[str, frozenset[str]], ...] = (
     # The catalogs and the books they come from: data the rules look up.
     ("data", frozenset({"book_kinds", "catalog", "sourcebooks"})),
     # The rules, and the top-level modules that are rules too (a covenant's
-    # Boons and Hooks, what a book is worth, raw vis): they keep to the
-    # layers below.
+    # Boons and Hooks, what a book is worth, raw vis, the dice line every
+    # roll is written in): they keep to the layers below.
     (
         "rules",
         frozenset(
-            {"rules", "book_value", "cast_sheet", "covenants", "vis", "what_changed"}
+            {
+                "rules",
+                "book_value",
+                "cast_sheet",
+                "covenants",
+                "dice_text",
+                "vis",
+                "what_changed",
+            }
         ),
     ),
     ("app", frozenset()),  # every other top-level module and package

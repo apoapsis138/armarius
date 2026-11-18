@@ -41,12 +41,12 @@ import os
 import random
 import re
 import secrets
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Protocol
 
-from . import paths, references, sessions, shapes, viewing
+from . import dice_text, paths, references, sessions, shapes, viewing
 from .files import held_lock
 from .markup import escape
 from .models import Character, Saga, Session
@@ -745,10 +745,12 @@ def form_roll(
     lines: list[str],
     by: str,
     cancelled: bool = False,
+    whole_dice: list[dict[str, Any]] | None = None,
 ) -> Entry:
     """Write a Table roll made from a form: the form's name, the
-    character, every face the host drew for it in order, and the form's
-    own result lines, word for word. A form cancelled after drawing is
+    character, every face the host drew for it in order (and `whole_dice`, the
+    same faces as whole dice, when they are known), and the form's own
+    result lines, word for word. A form cancelled after drawing is
     written all the same, with no result, so nobody re-rolls by
     cancelling."""
     if book.closed:
@@ -761,6 +763,7 @@ def form_roll(
         "character_id": character_id,
         "character_name": _character_name(saga, character_id),
         "faces": list(faces),
+        **({"dice": [dict(d) for d in whole_dice]} if whole_dice is not None else {}),
         "lines": [] if cancelled else list(lines),
         "cancelled": cancelled,
     }
@@ -782,11 +785,15 @@ def form_roll_line(body: dict[str, Any]) -> str:
     """A form's Table roll as a line: the form, the character, the dice
     and the form's own result."""
     who = f", {body['character_name']}" if body.get("character_name") else ""
-    shown = " ".join(str(face) for face in body["faces"])
+    kept = body.get("dice")
+    if isinstance(kept, list):
+        shown = dice_text.dice_text(kept)
+    else:  # written before whole dice were kept
+        shown = "dice " + " ".join(str(face) for face in body["faces"])
     if body.get("cancelled"):
-        return f"{body['form']}{who}: dice {shown}; drawn, then cancelled."
+        return f"{body['form']}{who}: {shown}; drawn, then cancelled."
     said = " ".join(str(line) for line in body.get("lines", []))
-    return f"{body['form']}{who}: dice {shown}; {said}".rstrip("; ")
+    return f"{body['form']}{who}: {shown}; {said}".rstrip("; ")
 
 
 #: The kinds of entry a Strike may take from the count: rolls.
@@ -1415,18 +1422,14 @@ def typed_problem(kind: str, body: dict[str, Any]) -> str | None:
 UNKNOWN = "Something this version can't show; update Armarius."
 
 
-def _faces(body: dict[str, Any]) -> str:
-    if not body["stress"]:
-        return f"simple die {body['die']}"
-    faces: list[int] = body["faces"]
-    shown = " → ".join(str(f if i == 0 or f else 10) for i, f in enumerate(faces))
-    if body["botch_faces"]:
-        shown += f"; botch dice {' '.join(str(f) for f in body['botch_faces'])}"
-    return f"stress die {shown}"
-
-
-def _signed(amount: int) -> str:
-    return f"+{amount}" if amount >= 0 else f"−{abs(amount)}"
+def die_of(body: Mapping[str, Any]) -> dice.DieResult:
+    """A roll entry's die, as `rules.dice` made it."""
+    return dice.DieResult(
+        value=int(body["die"]),
+        faces=tuple(int(face) for face in body["faces"]),
+        stress=bool(body["stress"]),
+        botch_faces=tuple(int(face) for face in body["botch_faces"]),
+    )
 
 
 def terms_of(body: dict[str, Any]) -> list[Term]:
@@ -1438,26 +1441,17 @@ def terms_of(body: dict[str, Any]) -> list[Term]:
     return [(str(label), int(amount)) for label, amount in kept]
 
 
-def terms_text(terms: list[Term]) -> str:
-    """A sheet roll's terms as a line ("Dexterity +2, Athletics +3,
-    Wounds −1"); a Free roll's modifier alone ("+3")."""
-    if len(terms) == 1 and terms[0][0] == "Modifier":
-        return _signed(terms[0][1])
-    return ", ".join(f"{label} {_signed(amount)}" for label, amount in terms)
+#: A roll's terms as a line (dice_text's, kept here for its callers).
+terms_text = dice_text.terms_text
 
 
 def _roll_line(body: dict[str, Any]) -> str:
     who = body["character_name"] or "Storyguide"
     what = f" ({body['for']})" if body["for"] else ""
-    line = (
-        f"{who}{what}: {_faces(body)}, {terms_text(terms_of(body))} = {body['total']}"
+    said = dice_text.dice_line(
+        die_of(body), terms_of(body), int(body["total"]), body["ease_factor"]
     )
-    if body["botches"]:
-        line += f", botch ({body['botches']} zero{'s' if body['botches'] > 1 else ''})"
-    if body["ease_factor"] is not None:
-        verdict = "succeeds" if body["succeeded"] else "fails"
-        line += f" against {body['ease_factor']}: {verdict}, margin {body['margin']}"
-    return line
+    return f"{who}{what}: {said}"
 
 
 def _line(entry: Entry, struck: dict[int, str]) -> str:

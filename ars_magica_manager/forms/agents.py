@@ -13,7 +13,7 @@ import random
 from dataclasses import replace
 from typing import Any
 
-from .. import diaries, table_rolls
+from .. import diaries, dice_text, table_rolls
 from ..commands import Act, Command, Form, Refuse, SectionOps, delete, notes
 from ..form_spec import DialogField
 from ..markup import BULLET, escape, fit, plural
@@ -240,12 +240,21 @@ def persuasion(
     )
 
 
+def _impress_dice_terms(character: Character) -> list[dice_text.Term]:
+    """What the Impress roll adds to the die, term by term: the one place
+    its terms are read, for its total, its panel text and its dice line."""
+    return [
+        ("Presence", character.characteristics.presence),
+        ("Leadership", scores.ability_level(character, "Leadership")),
+        ("Gift", -gift_penalty(character)),
+    ]
+
+
 def _impress_terms(character: Character) -> tuple[int, str]:
-    presence = character.characteristics.presence
-    leadership = scores.ability_level(character, "Leadership")
-    gift = gift_penalty(character)
-    return ag.impress_total(presence, leadership, gift), (
-        f"Presence {presence} + Leadership {leadership} - Gift {gift}"
+    """The Impress roll's total (ag.impress_total) and its terms in words."""
+    (_, presence), (_, leadership), (_, minus_gift) = _impress_dice_terms(character)
+    return ag.impress_total(presence, leadership, -minus_gift), (
+        f"Presence {presence} + Leadership {leadership} - Gift {-minus_gift}"
     )
 
 
@@ -578,7 +587,7 @@ def impress(
         return agent
     if not ag.can_impress(agent):
         return Refuse("Impress", f"{escape(agent.name)} is already impressed.")
-    total, terms = _impress_terms(character)
+    total = _impress_terms(character)[0]
 
     def apply() -> list[str]:
         title = f"Impress: {escape(agent.name)}"
@@ -589,10 +598,14 @@ def impress(
                 roll = dice.Roll(
                     total, dice.stress_die(drawn.dice, saga=saga), ag.IMPRESS_EASE
                 )
-                shown = "a botch" if roll.die.botched else str(roll.die.value)
+                rolled = dice_text.dice_line(
+                    roll.die,
+                    _impress_dice_terms(character),
+                    roll.total,
+                    roll.ease_factor,
+                )
                 said = notes(
-                    f"Impress {escape(agent.name)}: the die shows {shown}, + "
-                    f"{total} ({terms}) = {roll.total} against {ag.IMPRESS_EASE}.",
+                    f"Impress {escape(agent.name)}: {escape(rolled)}.",
                     f"{escape(agent.name)} is impressed: Agency experience can "
                     "now wear his resistance down."
                     if roll.succeeded

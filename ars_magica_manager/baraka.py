@@ -13,6 +13,7 @@ from typing import Any
 
 from . import diaries, table_rolls
 from .commands import Command, Form, Refuse, notes
+from .dice_text import invocation_line
 from .form_spec import DialogField
 from .markup import escape
 from .models import Character, Saga
@@ -195,10 +196,7 @@ def baraka_form(
         forbear = bk.FORBEARS[str(values["forbear"])]
         found = _asking(character, values)
         rolled = bk.ask(found.total, rng or table_rolls.dice())
-        lines = [
-            f"Die {rolled.die} + {found.total} = {rolled.rolled} against 15 + "
-            f"{rolled.ease_die} = {rolled.ease}."
-        ]
+        lines = [f"{invocation_line(rolled.die, found.total, rolled.ease_die)}."]
         power = sr.POWERS.get(str(values.get("power") or ""))
         if rolled.heard:
             asked = f": {power.name}" if power is not None else ""

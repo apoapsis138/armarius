@@ -7,6 +7,7 @@ Restart. The dice are scripted: each test says what each d10 shows."""
 import random
 
 from ars_magica_manager import fights
+from ars_magica_manager.commands import Form
 from ars_magica_manager.models import (
     CREATURE_FIGHTER,
     Ability,
@@ -156,6 +157,20 @@ def test_next_round_plays_to_the_end_and_writes_the_diaries():
     assert grog.diary[-1].details.startswith("Ours win the fight. (1 round")
     # Once only: asking again writes nothing more.
     assert fights.record_ending(saga, fight) == []
+
+
+def test_a_blow_shows_its_dice_and_keeps_them_in_the_fights_chronicle():
+    """STORY-2348: attack and defence are each a stress die (DE p. 231's
+    rule for Certamen, p. 395's combat example): a 1 then 4 is 8 (p. 7)."""
+    fight = fight_of([typed("Quick", init=10)], [typed("Slow", init=0)])
+    saga = saga_with(fight)
+    rules.roll_initiative(saga, fight, Scripted(5, 2))
+    form = fights.next_blow(saga, fight, Scripted(1, 4, 6))
+    assert isinstance(form, Form)
+    told = form.apply({})
+    said = "Stress die 1, 4 → 4 × 2 = 8; Stress die 6"
+    assert told[-1] == said
+    assert said in fight.log[-1].lines or said in fight.log[-2].lines
 
 
 def test_restart_clears_the_order_and_chronicle_but_keeps_wounds():

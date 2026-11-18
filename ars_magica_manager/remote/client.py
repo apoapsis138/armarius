@@ -24,6 +24,7 @@ import aiohttp
 from .. import (
     __version__,
     chronicle,
+    picture_files,
     players,
     references,
     storage,
@@ -48,7 +49,7 @@ from .protocol import (
     encode_request,
     major,
 )
-from .records import MAX_PICTURE, MAX_SNAPSHOT, PART_BYTES, REVISION_LENGTH
+from .records import MAX_SNAPSHOT, PART_BYTES, REVISION_LENGTH
 from .secure import MAX_FRAME, ChannelClosed, ChannelError, SecureChannel
 from .vault import DeviceVault
 
@@ -412,13 +413,15 @@ class RemoteClient:
 
     async def picture(self, folder: str, name: str) -> bytes | None:
         """A portrait or map the seat's saga names, or None if the host
-        hasn't it (or won't send it)."""
+        hasn't it (or won't send it). One larger than its kind's limit is
+        unreadable, as is any picture of a folder that isn't a kind."""
+        found_kind = picture_files.kind(folder)
         head = await self.request("picture", {"folder": folder, "name": name})
         if head.type == "refused":
             return None
         if head.type != "picture":
             raise UnreadableReply
-        return await self._parts(head, MAX_PICTURE)
+        return await self._parts(head, found_kind.cap if found_kind else 0)
 
     async def here(self, record: str) -> list[str]:
         """Say which record this seat has open ("" for none); who else has

@@ -51,7 +51,7 @@ from . import (
 )
 from .atlas import maps as atlas_maps
 from .files import write_atomic
-from .incoming import MAX_PICTURE, loads, read_bounded, read_text
+from .incoming import loads, read_bounded, read_text
 from .incoming import text as utf8_text
 from .models import (
     ITEM_DEVICE_PARAM,
@@ -72,7 +72,7 @@ from .models import (
     Spell,
     Tribunal,
 )
-from .picture_files import safe_name
+from .picture_files import MAPS, PORTRAITS, kind, safe_name
 from .rules import sites
 from .seat_view import seat_view
 
@@ -84,9 +84,6 @@ SUFFIX = ".amm.json"
 #: An export that carries pictures (maps, portraits): a zip of the same
 #: JSON file and the pictures, each in its folder (PICTURE_FOLDERS).
 ZIP_SUFFIX = ".amm.zip"
-#: Where an export's pictures sit, in the zip and beside a shipped pack:
-#: the maps folder's and the portraits folder's names.
-MAPS, PORTRAITS = "maps", "portraits"
 CHARACTER, LABORATORY, COVENANT = "character", "laboratory", "covenant"
 #: The kind of a whole saga's export, and of a content pack's.
 SAGA, PACK = "saga", "pack"
@@ -470,10 +467,10 @@ def pictures_named(data: dict[str, Any]) -> list[tuple[str, str]]:
 
 def _local_picture(folder: str, name: str) -> Path | None:
     """One of this computer's pictures, by its folder and file name."""
-    if not safe_name(name):
+    found_kind = kind(folder)
+    if found_kind is None or not safe_name(name):
         return None
-    root = storage.maps_dir() if folder == MAPS else storage.portraits_dir()
-    found = root / name
+    found = found_kind.directory() / name
     return found if found.is_file() else None
 
 
@@ -616,18 +613,20 @@ class Pictures:
 
     def get(self, folder: str, name: str) -> bytes | None:
         """The picture's bytes, or None when the export doesn't carry it,
-        names it unsafely (`picture_files.safe_name`) or carries one larger
-        than incoming.MAX_PICTURE."""
-        if not safe_name(name):
+        names it unsafely (`picture_files.safe_name`), isn't a kind of
+        Picture, or carries one larger than its kind's limit."""
+        found_kind = kind(folder)
+        if found_kind is None or not safe_name(name):
             return None
+        limit = found_kind.cap
         try:
             if self.zipped:
                 with zipfile.ZipFile(self.path) as archive:
-                    return read_bounded(archive, f"{folder}/{name}", limit=MAX_PICTURE)
+                    return read_bounded(archive, f"{folder}/{name}", limit=limit)
             beside = self.path.parent / folder / name
             if not beside.is_file():
                 return None
-            return read_bounded(beside, limit=MAX_PICTURE)
+            return read_bounded(beside, limit=limit)
         except KeyError, ValueError:
             return None
 

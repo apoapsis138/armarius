@@ -579,3 +579,6 @@ def test_open_a_tunnel_multiplies_penetration_with_the_connection():
     assert "up to level 20" in text
     said = form.apply(values)
     assert said and "The Cursèd Day" in said[0]
+    # STORY-2348: the die in the one dice line's words, said once.
+    assert ": Stress die 5, Casting Score +" in said[0]
+    assert sum("Stress die 5" in line for line in said) == 1

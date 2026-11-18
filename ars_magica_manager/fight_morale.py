@@ -11,9 +11,11 @@ from collections.abc import Callable
 from typing import Any
 
 from .commands import Form, Refuse, notes
+from .dice_text import RolledOrTyped, dice_line, value_of
 from .form_spec import DialogField
 from .markup import escape
 from .models import Fight, FightEntry, FightGroup, Saga
+from .recorded_dice import recording, showing_dice
 from .rules import combat_options as co
 from .rules import dice, options
 from .rules import fight as fight_rules
@@ -131,11 +133,15 @@ def _ease(values: dict[str, Any]) -> int:
     return table.get(cause, values.get("ease") or 0)
 
 
-def _roll(saga: Saga, rng: random.Random, typed: Any) -> tuple[int, bool]:
+def _roll(saga: Saga, rng: random.Random, typed: Any) -> RolledOrTyped:
+    """The stress die rolled, or the one typed in."""
     if typed is not None:
-        return int(typed), False
-    die = dice.stress_die(rng, 1, saga=saga)
-    return die.value, die.botched
+        return int(typed)
+    return dice.stress_die(rng, 1, saga=saga)
+
+
+def _botched(die: RolledOrTyped) -> bool:
+    return not isinstance(die, int) and die.botched
 
 
 def check_form(
@@ -150,7 +156,7 @@ def check_form(
         )
     if not _groups(fight):
         return Refuse(CHECK_TITLE, "The fight has no group to check.")
-    dice_ = rng or random.Random()
+    dice_ = recording(rng)
 
     def apply(values: dict[str, Any]) -> list[str]:
         group = _group(fight, values.get("group"))
@@ -164,29 +170,32 @@ def check_form(
         if unit is None or lead is None:
             held, text = False, f"{group.name} has no leader: its {word} check fails"
         else:
-            bonus = trait_bonus(unit, "Brave" if check == gm.MORALE else "Loyal")
-            die, botched = _roll(saga, dice_, values.get("die"))
-            total = lead + bonus + die
-            held = not botched and total >= ease
-            text = (
-                f"{group.name}'s {word}: Presence + Leadership {lead}"
-                + (f" + {bonus}" if bonus else "")
-                + f" + die {die} = {total} against {ease}"
+            trait = "Brave" if check == gm.MORALE else "Loyal"
+            bonus = trait_bonus(unit, trait)
+            die = _roll(saga, dice_, values.get("die"))
+            total = lead + bonus + value_of(die)
+            held = not _botched(die) and total >= ease
+            terms = [("Presence + Leadership", lead)] + (
+                [(trait, bonus)] if bonus else []
             )
+            text = f"{group.name}'s {word}: {dice_line(die, terms, total, ease)}"
         if held:
-            text += ": it holds."
+            text += ". It holds."
         else:
             group.state = gm.after_failure(group, check)
-            text += f": it is {gm.state_of(group).label}."
+            text += f". It is {gm.state_of(group).label}."
         fight.log.append(FightEntry(fight.round, text))
         return notes(escape(text))
 
-    return Form(
-        CHECK_TITLE,
-        lambda: _check_fields(fight),
-        apply,
-        save_label="Roll",
-        help_id=HELP_ID,
+    return showing_dice(
+        Form(
+            CHECK_TITLE,
+            lambda: _check_fields(fight),
+            apply,
+            save_label="Roll",
+            help_id=HELP_ID,
+        ),
+        dice_,
     )
 
 
@@ -204,7 +213,7 @@ def rally_form(
     groups = _groups(fight, rallying=True)
     if not groups:
         return Refuse(RALLY_TITLE, "No group is disordered or routed.")
-    dice_ = rng or random.Random()
+    dice_ = recording(rng)
 
     def apply(values: dict[str, Any]) -> list[str]:
         group = _group(fight, values.get("group"))
@@ -216,17 +225,25 @@ def rally_form(
             return notes(escape(f"{group.name} has no leader standing to rally it."))
         situation = values.get("situation") or next(iter(gm.RALLY_EASE))
         ease = gm.rally_ease(situation, _casualties(unit), len(unit.fighters))
-        die, botched = _roll(saga, dice_, values.get("die"))
-        total = lead + die
-        text = f"Rallying {group.name}: {lead} + die {die} = {total} against {ease}"
-        if not botched and total >= ease:
+        die = _roll(saga, dice_, values.get("die"))
+        total = lead + value_of(die)
+        rolled = dice_line(die, [("Presence + Leadership", lead)], total, ease)
+        text = f"Rallying {group.name}: {rolled}"
+        if not _botched(die) and total >= ease:
             group.state = gm.after_rally(group)
-            text += f": it is {gm.state_of(group).label}."
+            text += f". It is {gm.state_of(group).label}."
         else:
-            text += ": it doesn't rally."
+            text += ". It doesn't rally."
         fight.log.append(FightEntry(fight.round, text))
         return notes(escape(text))
 
+    return showing_dice(_rally(groups, apply), dice_)
+
+
+def _rally(
+    groups: list[tuple[str, str]], apply: Callable[[dict[str, Any]], list[str]]
+) -> Form:
+    """The Rally form, rolling with `apply`."""
     return Form(
         RALLY_TITLE,
         lambda: [

@@ -126,11 +126,13 @@ def test_any_draw_through_the_recording_source_is_recorded() -> None:
 # -- outside a Session --
 
 
-def test_outside_a_session_the_form_is_unchanged() -> None:
+def test_outside_a_session_the_form_is_unchanged_but_for_its_dice_line() -> None:
     saga = _saga()
     inner = _rolling_form()
 
-    assert table_rolls.form(inner, saga, character_id="aelfric") is inner
+    shown = table_rolls.form(inner, saga, character_id="aelfric")
+
+    assert shown.title == inner.title and shown.fields is inner.fields
 
 
 def test_outside_a_session_the_form_rolls_its_own_dice() -> None:
@@ -183,7 +185,7 @@ def test_a_saved_form_roll_is_written_with_its_faces_and_result_line(
     lines = _wrapped(saga).apply({"ease": 6, table_rolls.VISIBILITY: chronicle.PUBLIC})
 
     [entry] = _form_rolls(book)
-    assert lines == ["die 8 against 6: [b]it holds[/b]."]
+    assert lines == ["die 8 against 6: [b]it holds[/b].", "Stress die 1, 4 → 4 × 2 = 8"]
     assert entry.author == HOST
     assert entry.audience == chronicle.table()
     assert entry.body["form"] == "Roll: Aelfric"
@@ -220,8 +222,34 @@ def test_a_form_roll_line_shows_its_dice_and_result() -> None:
     [entry] = _form_rolls(book)
 
     assert chronicle.line(entry, {}) == (
-        "Roll: Aelfric, Aelfric: dice 1 4; die 8 against 6: it holds."
+        "Roll: Aelfric, Aelfric: Stress die 1, 4 → 4 × 2 = 8; "
+        "die 8 against 6: it holds."
     )
+
+
+def test_a_form_roll_line_names_its_whole_dice_and_loose_faces() -> None:
+    body = {
+        "form": "Hunting",
+        "character_name": "",
+        "faces": [0, 0, 7, 12],
+        "dice": [
+            {"stress": True, "faces": [0], "botch_faces": [0]},
+            {"stress": False, "faces": [7], "botch_faces": []},
+            {"face": 12},
+        ],
+        "lines": ["The quarry gets away."],
+    }
+
+    assert chronicle.form_roll_line(body) == (
+        "Hunting: Stress die 0; 1 botch die 0: botch, 1 zero; Simple die 7; "
+        "other dice 12; The quarry gets away."
+    )
+
+
+def test_a_form_roll_written_before_whole_dice_keeps_its_old_line() -> None:
+    body = {"form": "Hunting", "faces": [3, 7], "lines": ["It works."]}
+
+    assert chronicle.form_roll_line(body) == "Hunting: dice 3 7; It works."
 
 
 def test_nothing_is_written_when_no_die_is_drawn() -> None:
@@ -284,7 +312,7 @@ def test_a_form_that_fails_after_drawing_leaves_its_dice(faces: Any) -> None:
     assert entry.body["cancelled"]
     assert entry.body["lines"] == []
     assert chronicle.line(entry, {}) == (
-        "Roll: Aelfric, Aelfric: dice 9; drawn, then cancelled."
+        "Roll: Aelfric, Aelfric: Stress die 9; drawn, then cancelled."
     )
 
 
@@ -386,11 +414,14 @@ def test_at_a_seat_each_die_comes_from_the_host() -> None:
         table_rolls.use_seat(None)
         table_rolls.plain_source = random.Random
 
-    assert lines == ["die 8 against 6: [b]it holds[/b]."]
+    assert lines == ["die 8 against 6: [b]it holds[/b].", "Stress die 1, 4 → 4 × 2 = 8"]
     assert seat.asked == [
         table_rolls.Opening("Roll: Aelfric", "aelfric", chronicle.PUBLIC)
     ]
-    assert seat.finished == [["die 8 against 6: it holds."]]
+    # The host can't group a seat's faces, so the seat says its dice.
+    assert seat.finished == [
+        ["die 8 against 6: it holds.", "Stress die 1, 4 → 4 × 2 = 8"]
+    ]
     assert _form_rolls(book) == []  # the host writes it, not the seat
 
 
@@ -521,3 +552,197 @@ def test_outside_a_session_a_roll_outside_a_form_writes_nothing() -> None:
 
     assert 0 <= face <= 9
     assert drawn.refused is None
+
+
+# -- whole dice (STORY-2348) --
+
+
+def test_the_recording_source_keeps_whole_dice_with_their_doublings_and_botch_dice() -> (
+    None
+):
+    """DE p. 7: a 1 re-rolls and doubles; a first 0 rolls the botch dice."""
+    recorded = table_rolls.RecordingDice(Faces(1, 1, 5, 0, 3, 0, 8))
+
+    dice.stress_die(recorded, 2)  # 1, 1, 5: 5 x 4 = 20
+    dice.stress_die(recorded, 2)  # 0; botch dice 3, 0
+    dice.simple_die(recorded)  # 8
+
+    assert recorded.dice == [
+        {"stress": True, "faces": [1, 1, 5], "botch_faces": []},
+        {"stress": True, "faces": [0], "botch_faces": [3, 0]},
+        {"stress": False, "faces": [8], "botch_faces": []},
+    ]
+    assert recorded.faces == [1, 1, 5, 0, 3, 0, 8]
+
+
+def test_a_form_roll_keeps_its_whole_dice_and_loose_faces(faces: Any) -> None:
+    saga, _session, book = _begun()
+    faces(1, 4, 9)
+
+    def apply(_values: dict[str, Any]) -> list[str]:
+        rng = table_rolls.dice()
+        dice.stress_die(rng, 1)  # 1, 4: 4 x 2 = 8
+        rng.randrange(10)  # a face drawn outside the die helpers
+        return notes("Done.")
+
+    table_rolls.form(Form("Roll", list, apply), saga).apply(
+        {table_rolls.VISIBILITY: chronicle.PUBLIC}
+    )
+
+    [entry] = _form_rolls(book)
+    assert entry.body["dice"] == [
+        {"stress": True, "faces": [1, 4], "botch_faces": []},
+        {"face": 9},
+    ]
+    assert entry.body["faces"] == [1, 4, 9]
+
+
+def test_a_form_that_asks_to_keep_its_roll_posts_the_rolls_result(faces: Any) -> None:
+    """Health and Disputations end in a Keep question: the entry carries
+    the question's result lines, not just the dice."""
+    from ars_magica_manager.commands import Confirm
+
+    saga, _session, book = _begun()
+    faces(6)
+
+    def apply(_values: dict[str, Any]) -> Confirm:
+        die = dice.stress_die(table_rolls.dice(), 1).value
+        return Confirm(
+            f"Soak [b]{die}[/b].\n\nNo wound.", lambda: None, roll_result=True
+        )
+
+    table_rolls.form(Form("Take Harm", list, apply), saga).apply(
+        {table_rolls.VISIBILITY: chronicle.PUBLIC}
+    )
+
+    [entry] = _form_rolls(book)
+    assert entry.body["lines"] == ["Soak 6.", "No wound."]
+
+
+def test_a_question_not_marked_as_the_rolls_result_posts_nothing(faces: Any) -> None:
+    """Only a question a form marks as its roll's result is the roll's
+    result: any other ("Overwrite it?") leaves the entry with its dice."""
+    from ars_magica_manager.commands import Confirm
+
+    saga, _session, book = _begun()
+    faces(6)
+
+    def apply(_values: dict[str, Any]) -> Confirm:
+        dice.stress_die(table_rolls.dice(), 1)
+        return Confirm("Overwrite the old note?", lambda: None)
+
+    table_rolls.form(Form("Take Harm", list, apply), saga).apply(
+        {table_rolls.VISIBILITY: chronicle.PUBLIC}
+    )
+
+    [entry] = _form_rolls(book)
+    assert entry.body["lines"] == []
+    assert entry.body["faces"] == [6]
+
+
+# -- the dice line on a Table roll form's own result (STORY-2348, part 2) --
+
+
+def test_outside_a_session_a_table_roll_forms_result_shows_its_dice() -> None:
+    saga = _saga()
+    table_rolls.plain_source = lambda: Faces(1, 1, 5)
+    try:
+        shown = _wrapped(saga).apply({"ease": 6})
+    finally:
+        table_rolls.plain_source = random.Random
+
+    assert shown[-1] == "Stress die 1, 1, 5 → 5 × 4 = 20"
+
+
+def test_under_way_the_result_shows_its_dice_and_the_chronicle_keeps_them_once(
+    faces: Any,
+) -> None:
+    saga, _session, book = _begun()
+    faces(0, 0)
+
+    shown = _wrapped(saga).apply({"ease": 6, table_rolls.VISIBILITY: chronicle.PUBLIC})
+
+    assert shown[-1] == "Stress die 0; 1 botch die 0: botch, 1 zero"
+    [entry] = _form_rolls(book)
+    assert chronicle.line(entry, {}) == (
+        "Roll: Aelfric, Aelfric: Stress die 0; 1 botch die 0: botch, 1 zero; "
+        "die 0 against 6: it fails."
+    )
+
+
+def test_a_typed_die_adds_no_dice_line() -> None:
+    shown = _wrapped(_saga()).apply({"ease": 6, "die": 7})
+
+    assert shown == ["die 7 against 6: [b]it holds[/b]."]
+
+
+def test_a_roll_outside_a_form_says_its_dice_in_or_out_of_a_session(
+    faces: Any,
+) -> None:
+    table_rolls.plain_source = lambda: Faces(1, 3)
+    try:
+        with table_rolls.drawing(_saga(), "Impress") as outside:
+            dice.stress_die(outside.dice, 1)
+    finally:
+        table_rolls.plain_source = random.Random
+    saga, _session, book = _begun()
+    faces(0, 4)
+    with table_rolls.drawing(saga, "Impress") as inside:
+        dice.stress_die(inside.dice, 1)
+        inside.lines = ["Not impressed."]
+
+    assert outside.said == "Stress die 1, 3 → 3 × 2 = 6"
+    assert inside.said == "Stress die 0; 1 botch die 4: no zeros"
+    [entry] = _form_rolls(book)
+    assert entry.body["dice"] == [{"stress": True, "faces": [0], "botch_faces": [4]}]
+
+
+def test_a_form_saved_inside_another_leaves_the_outer_watch_running() -> None:
+    saga = _saga()
+    inner = _wrapped(saga)
+
+    def apply(_values: dict[str, Any]) -> list[str]:
+        inner.apply({"ease": 6, "die": 7})  # typed: draws nothing
+        dice.stress_die(table_rolls.dice(), 1)
+        return notes("Done.")
+
+    table_rolls.plain_source = lambda: Faces(1, 3)
+    try:
+        shown = table_rolls.form(Form("Outer", list, apply), saga).apply({})
+    finally:
+        table_rolls.plain_source = random.Random
+
+    assert shown == ["Done.", "Stress die 1, 3 → 3 × 2 = 6"]
+
+
+def test_a_seat_roll_that_already_says_its_dice_doesnt_say_them_twice() -> None:
+    saga, _session, _book = _begun()
+    viewing.use(viewing.viewer_for(saga.players[0]))
+    seat = _FakeSeat(6)
+    table_rolls.use_seat(seat.open)
+    try:
+        with table_rolls.drawing(saga, "Impress") as drawn:
+            dice.stress_die(drawn.dice, 1)
+            drawn.lines = [f"Impress Udo: {drawn.said}, +5 = 11 vs 6."]
+    finally:
+        table_rolls.use_seat(None)
+
+    assert seat.finished == [["Impress Udo: Stress die 6, +5 = 11 vs 6."]]
+
+
+def test_an_unmarked_question_gets_no_dice_line(faces: Any) -> None:
+    from ars_magica_manager.commands import Confirm
+
+    saga, _session, _book = _begun()
+    faces(6)
+
+    def apply(_values: dict[str, Any]) -> Confirm:
+        dice.stress_die(table_rolls.dice(), 1)
+        return Confirm("Overwrite the old note?", lambda: None)
+
+    asked = table_rolls.form(Form("Take Harm", list, apply), saga).apply(
+        {table_rolls.VISIBILITY: chronicle.PUBLIC}
+    )
+
+    assert isinstance(asked, Confirm)
+    assert asked.question == "Overwrite the old note?"

@@ -40,6 +40,7 @@ from .models import (
     FightSide,
     Saga,
 )
+from .recorded_dice import RecordingDice
 from .rules import (
     battle,
     casting_virtues,
@@ -1501,13 +1502,15 @@ def next_blow(
     dice = rng or random.Random()
 
     def apply(values: dict[str, Any]) -> list[str]:
+        recorded = RecordingDice(dice)
         played = rules.play(
             saga,
             fight,
             blow_of(values),
-            dice,
+            recorded,
         )
-        return notes(played.text, *played.lines, *record_ending(saga, fight))
+        said = _keep_dice(fight, played, recorded.said)
+        return notes(played.text, *played.lines, *record_ending(saga, fight), *said)
 
     return Form(
         f"Next Blow: {escape(fight.name)}",
@@ -1531,10 +1534,32 @@ def next_round(
     dice = rng or random.Random()
 
     def apply() -> list[str]:
-        played = rules.play_round(saga, fight, dice)
-        return notes(*(p.text for p in played), *record_ending(saga, fight))
+        recorders: list[RecordingDice] = []
+
+        def each() -> random.Random:
+            recorders.append(RecordingDice(dice))
+            return recorders[-1]
+
+        blows = rules.play_round(saga, fight, dice, each=each)
+        shown = [
+            line
+            for blow, recorded in zip(blows, recorders, strict=True)
+            for line in (blow.text, *_keep_dice(fight, blow, recorded.said))
+        ]
+        return notes(*shown, *record_ending(saga, fight))
 
     return Act(apply)
+
+
+def _keep_dice(fight: Fight, played: rules.Played, said: str) -> list[str]:
+    """A blow's dice line (STORY-2348), kept with its entry in the fight's
+    chronicle: as a list to show, empty when no die was rolled."""
+    if not said:
+        return []
+    entry = next((e for e in reversed(fight.log) if e.text == played.text), None)
+    if entry is not None:
+        entry.lines.append(said)
+    return [said]
 
 
 def restart(saga: Saga, fight: Fight | None) -> Command:

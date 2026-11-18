@@ -44,11 +44,13 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from typing import Any, Protocol
 
-from . import chronicle
-from .commands import Form, notes
+from . import chronicle, dice_text
+from .commands import Confirm, Form, notes
 from .form_spec import DialogField
 from .markup import plain
 from .models import Saga, Session
+from .recorded_dice import DrawnDice, RecordingDice
+from .rules import dice as dice_rules
 
 # -- which rolls are Table rolls --
 
@@ -134,49 +136,7 @@ FIGHTS: frozenset[str] = frozenset(
     }
 )
 
-# -- the recording die source --
-
-#: The most bits one draw asks for: a larger draw is made of several.
-_CHUNK = 30
-
-
-class DrawnDice(random.Random):
-    """A source of chance whose every draw is a `randrange`: a choice, a
-    shuffle or a float is made of dice too, so a source that records or
-    fetches its dice (the host's, a seat's) sees all of them."""
-
-    def random(self) -> float:
-        return self.getrandbits(_CHUNK) / (1 << _CHUNK)
-
-    def getrandbits(self, k: int, /) -> int:
-        bits = 0
-        while k > 0:
-            take = min(k, _CHUNK)
-            bits = (bits << take) | self.randrange(1 << take)
-            k -= take
-        return bits
-
-
-class RecordingDice(DrawnDice):
-    """A source of chance that keeps every face it gives out, in order:
-    `source`'s own (the host's `secrets.SystemRandom` unless given). A die
-    (`randrange`, `randint`) is kept as its face; any other draw (a choice,
-    a shuffle) goes through `randrange` too, so it is kept the same way."""
-
-    def __init__(self, source: random.Random | None = None) -> None:
-        super().__init__()
-        self._source = source if source is not None else secrets.SystemRandom()
-        self.faces: list[int] = []
-
-    def randrange(self, start: int, stop: int | None = None, step: int = 1) -> int:
-        face = self._source.randrange(start, stop, step)
-        self.faces.append(face)
-        return face
-
-    def randint(self, a: int, b: int) -> int:
-        face = self._source.randint(a, b)
-        self.faces.append(face)
-        return face
+# -- the recording die source (recorded_dice) --
 
 
 def system_source() -> random.Random:
@@ -193,12 +153,17 @@ plain_source: Callable[[], random.Random] = random.Random
 
 #: The dice of the form roll being saved here, if any.
 _drawing: random.Random | None = None
+#: Every face a Table roll form hands out while it is being saved, from
+#: whichever source, kept whole for its dice line.
+_watching: RecordingDice | None = None
 
 
 class _TableDice(DrawnDice):
     """What a Table roll form takes instead of `random.Random()`: while a
     form roll is being saved under a Session, each draw comes from that
-    roll's dice; otherwise from a source of its own, as before."""
+    roll's dice; otherwise from a source of its own, as before. Either
+    way, while the form is being saved each face is also kept by the
+    watch, so its result can show its dice."""
 
     def __init__(self) -> None:
         super().__init__()
@@ -211,11 +176,25 @@ class _TableDice(DrawnDice):
             self._own = plain_source()
         return self._own
 
+    def _watched(self, face: int) -> int:
+        if _watching is not None:
+            _watching.note(face)
+        return face
+
     def randrange(self, start: int, stop: int | None = None, step: int = 1) -> int:
-        return self._source().randrange(start, stop, step)
+        return self._watched(self._source().randrange(start, stop, step))
 
     def randint(self, a: int, b: int) -> int:
-        return self._source().randint(a, b)
+        return self._watched(self._source().randint(a, b))
+
+    def die_made(self, die: dice_rules.DieResult) -> None:
+        """Pass a whole die on to the source it came from, if it listens,
+        and to the watch."""
+        listener = getattr(self._source(), "die_made", None)
+        if callable(listener):
+            listener(die)
+        if _watching is not None:
+            _watching.die_made(die)
 
 
 def dice() -> random.Random:
@@ -317,6 +296,7 @@ class HostRoll:
             character_id=self.opening.character_id,
             visibility=self.opening.visibility,
             faces=self._dice.faces,
+            whole_dice=self._dice.dice,
             lines=lines,
             by=self.by,
             cancelled=cancelled,
@@ -363,10 +343,17 @@ class Drawing:
     it, filled in before the roll ends."""
 
     def __init__(self, dice: random.Random) -> None:
-        self.dice = dice
+        self._recorded = RecordingDice(dice)
+        self.dice: random.Random = self._recorded
         self.lines: list[str] = []
         #: Why the roll couldn't be written to the Chronicle, if it couldn't.
         self.refused: str | None = None
+
+    @property
+    def said(self) -> str:
+        """The whole dice drawn so far, as the dice line says them ("" for
+        none): for the roll's own result to show."""
+        return dice_said(self._recorded.dice)
 
 
 @contextmanager
@@ -396,7 +383,18 @@ def drawing(
     except BaseException:
         roll.cancel()
         raise
-    drawn.refused = roll.finish([plain(line) for line in drawn.lines])
+    lines = [plain(line) for line in drawn.lines]
+    if not isinstance(roll, HostRoll):  # the host can't group a seat's dice
+        lines = _saying(lines, drawn.said)
+    drawn.refused = roll.finish(lines)
+
+
+def _saying(lines: list[str], said: str) -> list[str]:
+    """`lines` with the dice line `said` last, unless a line already says
+    it (a roll that writes its own dice line, as Impress does)."""
+    if not said or dice_text.already_said(lines, said):
+        return lines
+    return [*lines, said]
 
 
 # -- the form decorator --
@@ -421,11 +419,52 @@ def _never(_values: dict[str, Any]) -> bool:
 
 def result_lines(result: Any) -> list[str]:
     """A form's result as the Chronicle keeps it: its notes, as plain
-    text; nothing for a further step."""
+    text; a question marked as the roll's result (Health, Disputations)
+    line by line; nothing for any other further step."""
+    if isinstance(result, Confirm) and result.roll_result:
+        return [plain(line) for line in result.question.splitlines() if line.strip()]
     if isinstance(result, list) and all(isinstance(line, str) for line in result):
         lines: list[str] = result
         return [plain(line) for line in lines]
     return []
+
+
+#: The whole dice a form drew, as its result's last line says them.
+dice_said = dice_text.whole_dice_text
+
+
+def with_dice(result: Any, said: str) -> Any:
+    """A form's result with its dice line last: under its notes, or under
+    a Keep question's result; any other further step unchanged."""
+    if not said:
+        return result
+    if isinstance(result, Confirm) and result.roll_result:
+        return dataclasses.replace(result, question=f"{result.question}\n\n{said}")
+    if isinstance(result, list) and all(isinstance(line, str) for line in result):
+        lines: list[str] = result
+        return _saying(lines, said)
+    return result
+
+
+def _watched(inner: Form, values: dict[str, Any]) -> tuple[Any, str]:
+    """`inner` saved with `values`, every face it draws watched: its
+    result and its dice line. A form saved inside another hands the
+    outer one's watch back when it ends."""
+    global _watching
+    outer = _watching
+    watch = RecordingDice(random.Random(0))  # only noted, never drawn from
+    _watching = watch
+    try:
+        result = inner.apply(values)
+    finally:
+        _watching = outer
+    return result, dice_said(watch.dice)
+
+
+def _shown(inner: Form, values: dict[str, Any]) -> Any:
+    """`inner` saved outside a Session: its result, with its dice."""
+    result, said = _watched(inner, values)
+    return with_dice(result, said)
 
 
 def form(
@@ -435,13 +474,14 @@ def form(
     character_id: str = "",
     typed: Sequence[str] = (),
 ) -> Form:
-    """`inner`, a Table roll form, as the table rolls it: unchanged outside
-    a Session; while one is Under way, with who sees the roll, its
+    """`inner`, a Table roll form, as the table rolls it: outside a
+    Session, unchanged but for its dice line under its result (`with_dice`);
+    while one is Under way, with that line, who sees the roll, its
     typed-die fields (the keys `typed`) hidden, and its roll written to
     the Chronicle when it is saved."""
     session = chronicle.under_way(saga)
     if session is None:
-        return inner
+        return dataclasses.replace(inner, apply=lambda values: _shown(inner, values))
     who = chronicle.here()
     storyguide = who == chronicle.storyguide_of(session, saga)
     name = plain(inner.title)
@@ -468,14 +508,14 @@ def form(
         visibility = str(values.get(VISIBILITY) or chronicle.PUBLIC)
         rest = {k: v for k, v in values.items() if k != VISIBILITY}
         if not session.under_way:  # ended while the form was open
-            return inner.apply(rest)
+            return _shown(inner, rest)
         try:
             roll = _open(saga, session, Opening(name, character_id, visibility), who)
         except ValueError as problem:
             return notes(str(problem))
         _drawing = roll.dice
         try:
-            result = inner.apply(rest)
+            result, said = _watched(inner, rest)
         except DiceUnavailable as problem:
             roll.cancel()
             return notes(f"Nothing was rolled: {problem}")
@@ -484,7 +524,11 @@ def form(
             raise
         finally:
             _drawing = None
-        refused = roll.finish(result_lines(result))
+        lines = result_lines(result)
+        if not isinstance(roll, HostRoll):  # the host can't group a seat's dice
+            lines = _saying(lines, said)
+        refused = roll.finish(lines)
+        result = with_dice(result, said)
         if refused and isinstance(result, list):
             shown: list[str] = result
             return [*shown, f"The roll isn't in the Chronicle: {refused}"]

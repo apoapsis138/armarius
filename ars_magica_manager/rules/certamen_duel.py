@@ -29,6 +29,7 @@ from __future__ import annotations
 import random
 from dataclasses import dataclass, field, replace
 
+from .. import dice_text
 from ..models import FATIGUE_LEVELS, Character, Saga
 from . import certamen, dice
 from .derived import fatigue_penalty
@@ -152,12 +153,17 @@ def _attack(
     attack = _total(mine, True, art, technique) + a_die.value + VIS_BONUS * a_vis
     defence = _total(theirs, False, guard, technique) + d_die.value + VIS_BONUS * d_vis
     advantage = certamen.attack_advantage(attack, defence)
+    # Both sides' dice, each beside its total (DE p. 231; STORY-2348).
+    attacked = f"{attack} ({dice_text.die_text(a_die)})"
+    defended = f"{defence} ({dice_text.die_text(d_die)})"
     if not advantage:
-        return f"{name} attacks with {art}: {attack} against {other}'s {defence}; held."
+        return (
+            f"{name} attacks with {art}: {attacked} against {other}'s {defended}; held."
+        )
     lost = certamen.fatigue_lost(mine.weakening_base + advantage, theirs.resistance)
     defender.level = min(len(FATIGUE_LEVELS) - 1, defender.level + lost)
     return (
-        f"{name} attacks with {art}: {attack} against {other}'s {defence}, "
+        f"{name} attacks with {art}: {attacked} against {other}'s {defended}, "
         f"Weakening {mine.weakening_base + advantage} against Resistance "
         f"{theirs.resistance}: {other} loses {lost} Fatigue level(s), now "
         f"{FATIGUE_LEVELS[defender.level]}."
@@ -190,14 +196,16 @@ def play(
     before = [s.level for s in sides]
     lines: list[str] = []
     rolls = []
+    shown = []
     for side in sides:
         totals = certamen.certamen_totals(side.magus, technique, form)
         die = dice.stress_die(rng, 1, saga=saga)
         rolls.append(totals.initiative + die.value)
+        shown.append(f"{rolls[-1]} ({dice_text.die_text(die)})")
     order = [0, 1] if rolls[0] >= rolls[1] else [1, 0]
     lines.append(
-        f"Initiative: {first.magus.name} {rolls[0]}, {second.magus.name} "
-        f"{rolls[1]}; {sides[order[0]].plan.magus.name} attacks first."
+        f"Initiative: {first.magus.name} {shown[0]}, {second.magus.name} "
+        f"{shown[1]}; {sides[order[0]].plan.magus.name} attacks first."
     )
     winner: Character | None = None
     how = "a draw: neither gave way"
