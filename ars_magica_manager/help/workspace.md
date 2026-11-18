@@ -1490,7 +1490,7 @@ Choose a Session in Saga Management's Sessions and click **Cast at a Glance**. *
 
 Preview: turn on Virtual Tabletop in Settings.
 
-A Session's record of everything rolled while it's under way. Each line has its number, its time and what happened. A roll shows every die face: each 1 that doubled, and the botch dice after a 0. Then come the modifier, the total and, when the roll had one, the Ease Factor and whether it succeeded and by how much (DE pp. 7-8). A [roll from the sheet](help:sheet-roll) shows how its modifier was made: the Characteristic, the Ability, a Specialty and any wound or Fatigue penalty. A [Table roll](help:table-rolls) made from one of the app's rolling forms shows the form, every face the host drew for it and the form's own result. Each Remote seat is sent the entries its player may see, as they come, and rolls through the host.
+A Session's record of everything rolled while it's under way. Each line has its number, its time and what happened. A roll shows every die face: each 1 that doubled, and the botch dice after a 0. Then come the modifier, the total and, when the roll had one, the Ease Factor and whether it succeeded and by how much (DE pp. 7-8). A [roll from the sheet](help:sheet-roll) shows how its modifier was made: the Characteristic, the Ability, a Specialty and any wound or Fatigue penalty. A [Table roll](help:table-rolls) made from one of the app's rolling forms shows the form, each die the host drew for it (a stress die with its doublings worked out and its botch dice, as in Stress die 1, 1, 5 → 5 × 4 = 20) and the form's own result. Each Remote seat is sent the entries its player may see, as they come, and rolls through the host.
 
 <!-- gui -->
 On the desktop, the [Chronicle pane](help:chronicle-pane) shows it as it happens, on the host's computer and at each seat, and makes [Free rolls](help:free-roll).
@@ -1530,7 +1530,7 @@ While a Session is under way, a form whose roll the story calls for in the momen
 
 - Each such form gains **Who sees the roll**: Public, Private, or Blind for the Session's storyguide alone. The storyguide's start at Blind, a player's at Public. A roll made without a form, such as a place's roll table or a Tribunal debate, is Blind for the storyguide and Public for a player.
 - A form's die field ("Stress die", "Blank: rolled") is hidden: the host rolls.
-- The form still works its rule and says what came of it as it always has. Its Chronicle line is the form's name, the character, every face the host drew in order, and the form's result, word for word.
+- The form still works its rule and says what came of it as it always has. Its Chronicle line is the form's name, the character, each die the host drew in order (a stress die with its doublings and botch dice, a simple die, and any other dice the form drew), and the form's result, word for word. A roll whose result you're asked to keep, such as Take Harm or a Disputatio, shows that result too. A form rolled at a Remote seat shows its faces as drawn, without grouping them into dice.
 - At a Remote seat, each die is drawn from the host as the form needs it. The seat can't choose its dice or roll again quietly.
 - A form that fails after its dice are drawn, or a seat that drops mid-roll, leaves its dice in the Chronicle as drawn, then cancelled.
 - The storyguide may Strike a Table roll as any other. Confidence isn't spent on them.
@@ -1548,7 +1548,7 @@ While a Session is under way, the [Chronicle](help:chronicle) is docked on the r
 
 - **Who** rolled: the character, in small capitals, and the player in smaller type.
 - **What** it's for, in italic.
-- **The dice**, drawn as ten-sided dice with their faces: the die's throws, then the botch dice. A 0 is drawn solid, its number in white, as well as in the warning colour, so it shows without telling colours apart. A 1 that exploded has a second rim inside its kite, with what the next die is multiplied by beside it (×2, ×4...), and the outcome says it once more: die 5 ×4 = 20.
+- **The dice**, drawn as ten-sided dice with their faces: the die's throws, then the botch dice. A 0 is drawn solid, its number in white, as well as in the warning colour, so it shows without telling colours apart. A 1 that exploded has a second rim inside its kite, with what the next die is multiplied by beside it (×2, ×4...), and the outcome says it once more: die 5 × 4 = 20. A form's Table roll draws each of its dice the same way, with the line of dice under them.
 - **The outcome**, set largest: the total, then whether it beat the Ease Factor and by how much, or a botch and how many zeros.
 
 You see only what you may: a Private roll of someone else's, or a Blind roll's number unless you run the Session, isn't shown. The Session's storyguide sees a Blind roll once, as the roll itself.

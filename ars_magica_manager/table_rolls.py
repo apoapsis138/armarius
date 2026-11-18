@@ -45,10 +45,11 @@ from dataclasses import dataclass
 from typing import Any, Protocol
 
 from . import chronicle
-from .commands import Form, notes
+from .commands import Confirm, Form, notes
 from .form_spec import DialogField
 from .markup import plain
 from .models import Saga, Session
+from .rules import dice as dice_rules
 
 # -- which rolls are Table rolls --
 
@@ -157,16 +158,29 @@ class DrawnDice(random.Random):
         return bits
 
 
+#: A die as a form roll's entry keeps it: a whole die
+#: (`{"stress", "faces", "botch_faces"}`, as `rules.dice.DieResult` has
+#: them) or a face drawn outside the die helpers (`{"face"}`).
+Die = dict[str, Any]
+
+
 class RecordingDice(DrawnDice):
     """A source of chance that keeps every face it gives out, in order:
     `source`'s own (the host's `secrets.SystemRandom` unless given). A die
     (`randrange`, `randint`) is kept as its face; any other draw (a choice,
-    a shuffle) goes through `randrange` too, so it is kept the same way."""
+    a shuffle) goes through `randrange` too, so it is kept the same way.
+
+    `dice` keeps the same faces grouped: each whole die `rules.dice`
+    makes (it tells the source through `die_made`) with its doublings and
+    botch dice, and each face drawn some other way on its own."""
 
     def __init__(self, source: random.Random | None = None) -> None:
         super().__init__()
         self._source = source if source is not None else secrets.SystemRandom()
         self.faces: list[int] = []
+        #: How many of `faces` are already in a whole die of `_whole`.
+        self._grouped = 0
+        self._whole: list[Die] = []
 
     def randrange(self, start: int, stop: int | None = None, step: int = 1) -> int:
         face = self._source.randrange(start, stop, step)
@@ -177,6 +191,30 @@ class RecordingDice(DrawnDice):
         face = self._source.randint(a, b)
         self.faces.append(face)
         return face
+
+    def die_made(self, die: dice_rules.DieResult) -> None:
+        """`die`, just made from the last of the loose faces: kept whole
+        (loose faces before it stay loose). A die whose faces aren't the
+        last ones drawn is left as loose faces."""
+        thrown = [*die.faces, *die.botch_faces]
+        loose = self.faces[self._grouped :]
+        if not thrown or loose[len(loose) - len(thrown) :] != thrown:
+            return
+        before = len(self.faces) - len(thrown)
+        self._whole.extend({"face": f} for f in self.faces[self._grouped : before])
+        self._whole.append(
+            {
+                "stress": die.stress,
+                "faces": list(die.faces),
+                "botch_faces": list(die.botch_faces),
+            }
+        )
+        self._grouped = len(self.faces)
+
+    @property
+    def dice(self) -> list[Die]:
+        """Every face drawn, as whole dice and loose faces, in order."""
+        return [*self._whole, *({"face": f} for f in self.faces[self._grouped :])]
 
 
 def system_source() -> random.Random:
@@ -216,6 +254,12 @@ class _TableDice(DrawnDice):
 
     def randint(self, a: int, b: int) -> int:
         return self._source().randint(a, b)
+
+    def die_made(self, die: dice_rules.DieResult) -> None:
+        """Pass a whole die on to the source it came from, if it listens."""
+        listener = getattr(self._source(), "die_made", None)
+        if callable(listener):
+            listener(die)
 
 
 def dice() -> random.Random:
@@ -317,6 +361,7 @@ class HostRoll:
             character_id=self.opening.character_id,
             visibility=self.opening.visibility,
             faces=self._dice.faces,
+            whole_dice=self._dice.dice,
             lines=lines,
             by=self.by,
             cancelled=cancelled,
@@ -421,7 +466,10 @@ def _never(_values: dict[str, Any]) -> bool:
 
 def result_lines(result: Any) -> list[str]:
     """A form's result as the Chronicle keeps it: its notes, as plain
-    text; nothing for a further step."""
+    text; a Keep question's (Health, Disputations) the roll's result it
+    asks about, line by line; nothing for any other further step."""
+    if isinstance(result, Confirm):
+        return [plain(line) for line in result.question.splitlines() if line.strip()]
     if isinstance(result, list) and all(isinstance(line, str) for line in result):
         lines: list[str] = result
         return [plain(line) for line in lines]

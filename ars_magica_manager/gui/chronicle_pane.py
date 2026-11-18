@@ -47,7 +47,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import artwork, chronicle, settings
+from .. import artwork, chronicle, dice_text, settings
 from ..commands import Command, Refuse
 from ..forms import free_roll, roll_request
 from ..markup import escape
@@ -194,6 +194,32 @@ def margin_mark(name: str, label: str, tip: str, p: Palette, hover: str) -> QToo
     return mark
 
 
+def _dice_of(body: dict[str, object]) -> list[tuple[list[int], bool, list[int]]]:
+    """A roll's dice to draw, each as its faces thrown, whether a stress
+    die, and its botch dice: a sheet or Free roll's one die; a form roll's
+    whole dice (a face drawn outside the die helpers on its own), or,
+    written before whole dice were kept, every face as drawn."""
+    if "form" not in body:
+        stress = bool(body.get("stress"))
+        faces = _wholes(body, "faces") if stress else [_whole(body, "die")]
+        return [(faces, stress, _wholes(body, "botch_faces"))]
+    kept = body.get("dice")
+    if not isinstance(kept, list):
+        return [(_wholes(body, "faces"), False, [])]
+    found: list[tuple[list[int], bool, list[int]]] = []
+    for die in kept:
+        if not isinstance(die, dict):
+            continue
+        if "face" in die:
+            found.append(([_whole(die, "face")], False, []))
+        elif die.get("stress"):
+            found.append((_wholes(die, "faces"), True, _wholes(die, "botch_faces")))
+        else:
+            whole = dice_text.whole_die(die).value
+            found.append(([whole], False, _wholes(die, "botch_faces")))
+    return found
+
+
 class DiceRow(QWidget):
     """A roll's dice: the die's throws, then any botch dice. A struck
     roll's are faded and struck through. `strike` (the Session's
@@ -219,56 +245,10 @@ class DiceRow(QWidget):
         row = QHBoxLayout()
         row.setSpacing(2)
         rows.addLayout(row)
-        stress = bool(body.get("stress"))
-        if "form" in body:
-            # A form's Table roll: every face the host drew, as drawn.
-            faces = _wholes(body, "faces")
-        else:
-            faces = _wholes(body, "faces") if stress else [_whole(body, "die")]
-        for index, face in enumerate(faces):
-            shown = face if index == 0 or face or not stress else 10
-            zero = stress and index == 0 and shown == 0
-            exploded = stress and index < len(faces) - 1 and face == 1
-            colour = (
-                p["dim"] if struck else (p["text-error"] if zero else p["foreground"])
-            )
-            row.addWidget(
-                Die(
-                    shown,
-                    colour,
-                    DIE,
-                    "die",
-                    marked=zero,
-                    doubled=exploded,
-                    paper=p["background"],
-                )
-            )
-            if exploded:
-                # The chain, left to right: what the next die is multiplied by.
-                times = text(f"×{2 ** (index + 1)}", p["label"], number_font(10))
-                times.setObjectName("doubled")
-                times.setToolTip("A 1: roll again and double")
-                row.addWidget(times)
-        botch = _wholes(body, "botch_faces")
-        if botch:
-            row.addSpacing(8)
-            if len(botch) > MOST_ON_A_LINE:
-                row.addStretch(1)
-                row = QHBoxLayout()
-                row.setSpacing(2)
-                rows.addLayout(row)
-            for face in botch:
-                colour = p["text-error"] if face == 0 else p["foreground"]
-                row.addWidget(
-                    Die(
-                        face,
-                        p["dim"] if struck else colour,
-                        BOTCH_DIE,
-                        "botch",
-                        marked=face == 0,
-                        paper=p["background"],
-                    )
-                )
+        for index, (faces, stress, botch) in enumerate(_dice_of(body)):
+            if index:
+                row.addSpacing(10)
+            row = self._draw_die(rows, row, faces, stress, botch)
         row.addStretch(1)
         #: Strike, for the Session's storyguide on a roll still counting, and
         #: Confidence, for whoever may spend it: quiet words in the margin,
@@ -293,6 +273,64 @@ class DiceRow(QWidget):
         self.strike_mark.clicked.connect(self.strike)
         self.strike_mark.setVisible(self.can_strike)
         row.addWidget(self.strike_mark, 0, Qt.AlignmentFlag.AlignBottom)
+
+    def _draw_die(
+        self,
+        rows: QVBoxLayout,
+        row: QHBoxLayout,
+        faces: list[int],
+        stress: bool,
+        botch: list[int],
+    ) -> QHBoxLayout:
+        """One die's throws on `row`, each doubling marked, then its botch
+        dice (on a line of their own when there are many): the row the
+        next die goes on."""
+        p, struck = self.p, self.struck
+        for index, face in enumerate(faces):
+            shown = face if index == 0 or face or not stress else 10
+            zero = stress and index == 0 and shown == 0
+            exploded = stress and index < len(faces) - 1 and face == 1
+            colour = (
+                p["dim"] if struck else (p["text-error"] if zero else p["foreground"])
+            )
+            row.addWidget(
+                Die(
+                    shown,
+                    colour,
+                    DIE,
+                    "die",
+                    marked=zero,
+                    doubled=exploded,
+                    paper=p["background"],
+                )
+            )
+            if exploded:
+                # The chain, left to right: what the next die is multiplied by.
+                times = text(f"×{2 ** (index + 1)}", p["label"], number_font(10))
+                times.setObjectName("doubled")
+                times.setToolTip("A 1: roll again and double")
+                row.addWidget(times)
+        if not botch:
+            return row
+        row.addSpacing(8)
+        if len(botch) > MOST_ON_A_LINE:
+            row.addStretch(1)
+            row = QHBoxLayout()
+            row.setSpacing(2)
+            rows.addLayout(row)
+        for face in botch:
+            colour = p["text-error"] if face == 0 else p["foreground"]
+            row.addWidget(
+                Die(
+                    face,
+                    p["dim"] if struck else colour,
+                    BOTCH_DIE,
+                    "botch",
+                    marked=face == 0,
+                    paper=p["background"],
+                )
+            )
+        return row
 
     @property
     def can_strike(self) -> bool:
@@ -525,6 +563,14 @@ def form_roll_card(
     what.setObjectName("what")
     card.column.addWidget(what)
     card.column.addWidget(DiceRow(body, p, quiet, strike))
+    kept = body.get("dice")
+    wholes = [d for d in kept if isinstance(d, dict)] if isinstance(kept, list) else []
+    if wholes:
+        said = dice_text.dice_text(wholes)
+        line_of_dice = text(said, p["dim"] if quiet else p["label"], serif(10.5))
+        line_of_dice.setObjectName("dice-line")
+        line_of_dice.setWordWrap(True)
+        card.column.addWidget(line_of_dice)
     lines = [str(said) for said in _list(body, "lines")]
     if body.get("cancelled"):
         lines = ["Drawn, then cancelled."]
@@ -564,15 +610,8 @@ def _outcome(body: dict[str, object], p: Palette, struck: bool) -> QWidget:
     row.addWidget(total, 0, Qt.AlignmentFlag.AlignVCenter)
     modifier = _whole(body, "modifier")
     sign = "+" if modifier >= 0 else "−"
-    faces = _wholes(body, "faces")
-    doublings = sum(1 for f in faces[:-1] if f == 1) if body.get("stress") else 0
-    value = _whole(body, "die")
-    if doublings:
-        last = faces[-1] or 10
-        die = f"die {last} ×{2**doublings} = {value}"
-    else:
-        die = f"die {value}"
-    said = [f"{die} {sign} {abs(modifier)}"]
+    die = chronicle.die_of(body)
+    said = [f"die {dice_text.doubled(die)} {sign} {abs(modifier)}"]
     if botches:
         said.append(f"botch, {botches} zero{'s' if botches > 1 else ''}")
     if body.get("ease_factor") is not None:
