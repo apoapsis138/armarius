@@ -43,6 +43,7 @@ from ars_magica_manager.models import (
     Saga,
     Session,
 )
+from ars_magica_manager.remote import events
 
 HOST = viewing.HOST
 
@@ -732,3 +733,28 @@ def test_a_blind_form_roll_is_marked_blind_for_the_storyguide() -> None:
     card = pane.card_list()[-1]
     labels = {w.objectName(): w.text() for w in card.findChildren(QLabel)}
     assert labels["visibility"] == "Blind"
+
+
+@pytest.mark.usefixtures("app")
+def test_at_a_seat_a_blind_roll_for_your_character_pulses_the_strip(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A seat is sent each entry as the host frames it, with no Players
+    chosen; the line that the storyguide rolled for Ana's character still
+    calls Ana's collapsed pane."""
+    monkeypatch.setattr(motion, "moving", lambda: True)
+    saga = _saga()
+    session = saga.sessions[0]
+    book = chronicle.begin(saga, session, by=HOST)
+    _roll(saga, session, book, 6, character_id="aelfric", visibility=chronicle.BLIND)
+    held = chronicle.SeatChronicle()
+    pane = ChroniclePane(SCRIPTORUM, lambda _c: None)
+    pane.attach(saga, session, held, "ana")
+    pane.set_collapsed(True)
+
+    for entry in book.entries:
+        if chronicle.sees(entry, "ana", session, saga):
+            held.take(*events.entry_of(events.frame(session.id, entry).body))
+
+    assert [e.kind for e in held.entries] == ["begin", "rolled"]
+    assert pane.pulses == 1
