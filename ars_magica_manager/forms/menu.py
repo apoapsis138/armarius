@@ -380,6 +380,23 @@ class Page:
     row: int | None = None
     #: Where an export goes instead of a file, when the front-end has one.
     deliver: Deliver | None = None
+    # -- what only the front-end knows (the terminal's; the desktop sets
+    # each action out where it applies) --
+    #: Focus is on the record itself (its tree node or top panel), not on
+    #: one of its sections.
+    on_the_record: bool = True
+    #: Whether whoever is reading may run an action here, when the
+    #: front-end knows better than the seat (the terminal's signed-in
+    #: player, a Steward planning seasons).
+    may: Callable[[str], bool] | None = None
+    #: What More's Give would give: the chosen row's gift.
+    gift: Callable[[], giving.Gift | None] | None = None
+    #: Whether a device action can act on the chosen device row.
+    device_actions: Callable[[str], bool] | None = None
+    #: False where there is nowhere to send a file (over SSH).
+    sends_files: bool = True
+    #: The chosen row of any section's list, when the front-end knows it.
+    rows: Callable[[str], int | None] | None = None
 
     # -- actions.ActionFacts --
 
@@ -403,6 +420,8 @@ class Page:
         return self.section
 
     def player_may(self, action: str) -> bool:
+        if self.may is not None:
+            return self.may(action)
         # The storyguide's own window anything; a player seated here
         # (seat.py) what they may do to the record on show.
         return seat.may_act(
@@ -410,7 +429,7 @@ class Page:
         )
 
     def on_record(self) -> bool:
-        return True
+        return self.on_the_record
 
     def creation_record(self) -> Character | Covenant | Laboratory | None:
         if self.kind == NodeKind.CHARACTER:
@@ -422,11 +441,11 @@ class Page:
         return None
 
     def device_action_enabled(self, action: str) -> bool:
-        return False
+        return self.device_actions(action) if self.device_actions else False
 
     def to_give(self) -> giving.Gift | None:
         # The desktop gives from each row's own Give.
-        return None
+        return self.gift() if self.gift is not None else None
 
     def record_to_export(self) -> transfer.Record | None:
         return self.creation_record()
@@ -443,9 +462,11 @@ class Page:
         return self.creation_record()
 
     def can_send_files(self) -> bool:
-        return True
+        return self.sends_files
 
     def chosen_row(self, section: str) -> int | None:
+        if self.rows is not None:
+            return self.rows(section)
         # The desktop's row buttons act on their own list's chosen row.
         return self.row if section == self.section else None
 

@@ -103,6 +103,7 @@ from ....sections import (
     SIEGES_SECTION,
     TRIBUNAL_INFO_SECTION,
 )
+from ....where import Where
 from ..creation_worksheet import CreationWorksheetScreen
 from ..help import HelpContext, HelpScreen, shown_keys
 from ..prompts import (
@@ -265,77 +266,6 @@ _SEASON_SECTIONS: tuple[str, ...] = (
 )
 
 
-class _ScreenFacts:
-    """The workspace as actions.available sees it (actions.ActionFacts)."""
-
-    def __init__(self, screen: WorkspaceBase) -> None:
-        self._screen = screen
-
-    @property
-    def saga(self) -> Saga:
-        return self._screen.saga
-
-    @property
-    def selected_kind(self) -> NodeKind | None:
-        return self._screen.selected_kind
-
-    @property
-    def selected_covenant(self) -> Covenant | None:
-        return self._screen.selected_covenant
-
-    @property
-    def selected_character(self) -> Character | None:
-        return self._screen.selected_character
-
-    @property
-    def selected_laboratory(self) -> Laboratory | None:
-        return self._screen.selected_laboratory
-
-    def active_section(self) -> str | None:
-        return self._screen._active_section()
-
-    def player_may(self, action: str) -> bool:
-        return self._screen._player_may(action)
-
-    def on_record(self) -> bool:
-        return self._screen._on_record()
-
-    def creation_record(self) -> Character | Covenant | Laboratory | None:
-        view = self._screen._current_sheet_view()
-        return view.creation_record if view is not None else None
-
-    def device_action_enabled(self, action: str) -> bool:
-        return self._screen._device_action_enabled(action)
-
-    def to_give(self) -> giving.Gift | None:
-        return self._screen._to_give()
-
-    def record_to_export(self) -> transfer.Record | None:
-        return self._screen._record_to_export()
-
-    def record_to_delete(
-        self,
-    ) -> (
-        Covenant
-        | Character
-        | Laboratory
-        | Familiar
-        | Tribunal
-        | Neighbour
-        | Creature
-        | None
-    ):
-        return self._screen._record_to_delete()
-
-    def can_send_files(self) -> bool:
-        # Over SSH there is nowhere to send the file.
-        return hosting.transport() != "ssh"
-
-    def chosen_row(self, section: str) -> int | None:
-        view = self._screen._current_sheet_view()
-        return view.section_row(section) if view is not None else None
-
-
 class WorkspaceBase(Screen[None]):
     """The workspace's state and everything its actions share: the navigation
     tree and detail pane, which section is active, saving and refreshing
@@ -443,14 +373,9 @@ class WorkspaceBase(Screen[None]):
         self.saga = saga
         # Its user-made entries join the shared catalogs.
         catalog.use_saga(saga)
-        self.selected_kind: NodeKind = NodeKind.SAGA
-        self.selected_covenant: Covenant | None = None
-        self.selected_character: Character | None = None
-        self.selected_laboratory: Laboratory | None = None
-        self.selected_familiar: Familiar | None = None
-        self.selected_tribunal: Tribunal | None = None
-        self.selected_neighbour: Neighbour | None = None
-        self.selected_creature: Creature | None = None
+        #: The page on show (where.py): the one value the selected_*
+        #: properties below are read from.
+        self.where = Where()
         self._character_sheet_view: CharacterSheetView | None = None
         self._laboratory_sheet_view: LaboratorySheetView | None = None
         self._covenant_sheet_view: CovenantSheetView | None = None
@@ -560,17 +485,7 @@ class WorkspaceBase(Screen[None]):
 
     def _open_record_key(self) -> str | None:
         """The record on show, as "characters:mag1", for presence."""
-        records = {
-            NodeKind.CHARACTER: ("characters", self.selected_character),
-            NodeKind.FAMILIAR: ("familiars", self.selected_familiar),
-            NodeKind.LABORATORY: ("laboratories", self.selected_laboratory),
-            NodeKind.COVENANT: ("covenants", self.selected_covenant),
-            NodeKind.TRIBUNAL: ("tribunals", self.selected_tribunal),
-            NodeKind.NEIGHBOUR: ("neighbours", self.selected_neighbour),
-            NodeKind.CREATURE: ("creatures", self.selected_creature),
-        }
-        kind, record = records.get(self.selected_kind, ("", None))
-        return f"{kind}:{record.id}" if record is not None else None
+        return self.where.presence_key()
 
     async def _shared_tick(self) -> None:
         """Every few seconds: pick up another copy's save, and say who else
@@ -645,17 +560,9 @@ class WorkspaceBase(Screen[None]):
             self.notify(f"Updated by {escape(who)}.", timeout=3)
 
     def _open_record_exists(self) -> bool:
-        records = {
-            NodeKind.CHARACTER: (self.saga.characters, self.selected_character),
-            NodeKind.FAMILIAR: (self.saga.familiars, self.selected_familiar),
-            NodeKind.LABORATORY: (self.saga.laboratories, self.selected_laboratory),
-            NodeKind.COVENANT: (self.saga.covenants, self.selected_covenant),
-            NodeKind.TRIBUNAL: (self.saga.tribunals, self.selected_tribunal),
-            NodeKind.NEIGHBOUR: (self.saga.neighbours, self.selected_neighbour),
-            NodeKind.CREATURE: (self.saga.creatures, self.selected_creature),
-        }
-        listed, record = records.get(self.selected_kind, ([], None))
-        return record is None or any(r is record for r in listed)
+        """The record on show is still in the saga (another copy may have
+        deleted it)."""
+        return not self.where.gone(self.saga)
 
     def _told_refused(self, refused: list[str]) -> None:
         """Tell a signed-in player what their save took back (seat.sign_in's
@@ -836,8 +743,7 @@ class WorkspaceBase(Screen[None]):
         neighbour = self.saga.neighbour(ident)
         if neighbour is None:
             return
-        self.selected_covenant = None
-        self.selected_neighbour = neighbour
+        self.where = Where.of(neighbour)
         view = NeighbourSheetView(self.saga, neighbour)
         await self._set_detail(view)
         self._neighbour_sheet_view = view
@@ -869,7 +775,63 @@ class WorkspaceBase(Screen[None]):
 
     def _available(self, action: str) -> bool:
         """Whether `action` can run where focus is (actions.available)."""
-        return actions.available(action, _ScreenFacts(self))
+        return actions.available(action, self._in_pass("facts", self._facts))
+
+    def _facts(self, **extras: Any) -> menu_forms.Page:
+        """The page on show as the core's actions ask about it
+        (menu.Page): `where`, and what only the terminal knows -- where
+        focus is, who is signed in, the chosen rows."""
+        view = self._current_sheet_view()
+        return menu_forms.page_at(
+            self.saga,
+            self.where,
+            section=self._active_section(),
+            on_the_record=self._on_record(),
+            may=self._player_may,
+            gift=self._to_give,
+            device_actions=self._device_action_enabled,
+            # Over SSH there is nowhere to send the file.
+            sends_files=hosting.transport() != "ssh",
+            rows=view.section_row if view is not None else None,
+            **extras,
+        )
+
+    # -- the page on show: read from `where` --
+
+    @property
+    def selected_kind(self) -> NodeKind:
+        return self.where.kind
+
+    @property
+    def selected_covenant(self) -> Covenant | None:
+        """The covenant on show, whose lists are, or of the character,
+        laboratory or familiar's magus on show."""
+        return self.where.covenant(self.saga)
+
+    @property
+    def selected_character(self) -> Character | None:
+        """The character on show, or the magus of the familiar on show."""
+        return self.where.character(self.saga)
+
+    @property
+    def selected_laboratory(self) -> Laboratory | None:
+        return self.where.laboratory(self.saga)
+
+    @property
+    def selected_familiar(self) -> Familiar | None:
+        return self.where.familiar(self.saga)
+
+    @property
+    def selected_tribunal(self) -> Tribunal | None:
+        return self.where.tribunal(self.saga)
+
+    @property
+    def selected_neighbour(self) -> Neighbour | None:
+        return self.where.neighbour(self.saga)
+
+    @property
+    def selected_creature(self) -> Creature | None:
+        return self.where.creature(self.saga)
 
     # -- focus: one stop per section, the tree, Esc and the tab numbers --
 
@@ -1007,17 +969,7 @@ class WorkspaceBase(Screen[None]):
         """The page on show as the core's More commands ask about it."""
         view = self._current_sheet_view()
         section = self._active_section()
-        return menu_forms.Page(
-            self.saga,
-            self.selected_kind,
-            covenant=self.selected_covenant,
-            character=self.selected_character,
-            laboratory=self.selected_laboratory,
-            familiar=self.selected_familiar,
-            tribunal=self.selected_tribunal,
-            neighbour=self.selected_neighbour,
-            creature=self.selected_creature,
-            section=section,
+        return self._facts(
             row=view.section_row(section) if view is not None and section else None,
             chosen_book=self._chosen_book_id(),
             deliver=self._download if self.app.is_web else None,
@@ -1093,16 +1045,15 @@ class WorkspaceBase(Screen[None]):
         character = saga.character(record_id) if kind == "characters" else None
         laboratory = saga.laboratory(record_id) if kind == "laboratories" else None
         if covenant is not None and covenant.in_creation:
-            self.selected_covenant, self.selected_kind = covenant, NodeKind.COVENANT
+            self.where = Where.of(covenant)
             await self._show_covenant_detail(covenant)
             self._open_creation_worksheet(covenant)
         elif character is not None and character.in_creation:
-            self.selected_character, self.selected_kind = character, NodeKind.CHARACTER
+            self.where = Where.of(character)
             await self._show_character_detail(character)
             self._open_creation_worksheet(character)
         elif laboratory is not None and laboratory.in_creation:
-            self.selected_laboratory = laboratory
-            self.selected_kind = NodeKind.LABORATORY
+            self.where = Where.of(laboratory)
             await self._show_laboratory_detail(laboratory)
             self._open_creation_worksheet(laboratory)
         else:
@@ -1216,15 +1167,9 @@ class WorkspaceBase(Screen[None]):
         }
 
     def _record_to_export(self) -> transfer.Record | None:
-        """The covenant, laboratory or character whose node is selected: what More's
+        """The covenant, laboratory or character on show: what More's
         Export exports."""
-        if self.selected_kind == NodeKind.CHARACTER:
-            return self.selected_character
-        if self.selected_kind == NodeKind.LABORATORY:
-            return self.selected_laboratory
-        if self.selected_kind == NodeKind.COVENANT:
-            return self.selected_covenant
-        return None
+        return self.where.creation_record(self.saga)
 
     def _to_give(self) -> giving.Gift | None:
         """What More's Give would give (see GivingActions)."""
@@ -1464,32 +1409,7 @@ class WorkspaceBase(Screen[None]):
     def _shown_name(self) -> str:
         """What the selected tree node shows: the record's name, or what
         the node lists."""
-        covenant = self.selected_covenant
-        record = {
-            NodeKind.SAGA: self.saga,
-            NodeKind.COVENANT: covenant,
-            NodeKind.CHARACTER: self.selected_character,
-            NodeKind.LABORATORY: self.selected_laboratory,
-            NodeKind.FAMILIAR: self.selected_familiar,
-            NodeKind.TRIBUNAL: self.selected_tribunal,
-            NodeKind.NEIGHBOUR: self.selected_neighbour,
-            NodeKind.CREATURE: self.selected_creature,
-        }.get(self.selected_kind)
-        if record is not None:
-            return record.name
-        where = f" in {covenant.name}" if covenant is not None else ""
-        return {
-            NodeKind.CHARACTER_GROUP: f"Characters{where}",
-            NodeKind.LABORATORY_GROUP: f"Laboratories{where}",
-            NodeKind.SAGA_CONTENT: "Saga Content",
-            NodeKind.SEASONS: "Seasons",
-            NodeKind.ARMARIUM: stores.STORES[stores.ARMARIUM].title,
-            NodeKind.CUSTODIA: stores.STORES[stores.CUSTODIA].title,
-            NodeKind.REGION: "The Region",
-            NodeKind.NEIGHBOUR_GROUP: "The Region",
-            NodeKind.BESTIARY: "The Bestiary",
-            NodeKind.CONFLICTS: "Conflicts",
-        }.get(self.selected_kind, "")
+        return self.where.name(self.saga)
 
     def _update_where(self) -> None:
         """Say where focus is in the row above the footer:
@@ -1831,17 +1751,9 @@ class WorkspaceBase(Screen[None]):
         | Creature
         | None
     ):
-        """The record d deletes: the covenant, character, laboratory or
-        Familiar selected in the tree, if that's what's selected."""
-        return {
-            NodeKind.COVENANT: self.selected_covenant,
-            NodeKind.CHARACTER: self.selected_character,
-            NodeKind.LABORATORY: self.selected_laboratory,
-            NodeKind.FAMILIAR: self.selected_familiar,
-            NodeKind.TRIBUNAL: self.selected_tribunal,
-            NodeKind.NEIGHBOUR: self.selected_neighbour,
-            NodeKind.CREATURE: self.selected_creature,
-        }.get(self.selected_kind)
+        """The record d deletes: the one on show, if the page is one
+        record's."""
+        return self.where.record(self.saga)
 
     def action_delete_record(self) -> None:
         """Delete the record on show, after the core's confirmation that
@@ -1868,11 +1780,7 @@ class WorkspaceBase(Screen[None]):
 
     async def _show_character(self, character: Character) -> None:
         """Select `character`, in the tree and the detail pane."""
-        self.selected_kind = NodeKind.CHARACTER
-        self.selected_character = character
-        self.selected_covenant = self.saga.covenant(character.covenant_id)
-        self.selected_laboratory = None
-        self.selected_familiar = None
+        self.where = Where.of(character)
         self._character_sheet_view = None
         self._familiar_sheet_view = None
         self._saga_content_view = None
@@ -1886,11 +1794,7 @@ class WorkspaceBase(Screen[None]):
 
     async def _show_saga_root(self) -> None:
         """Select the saga itself, in the tree and the detail pane."""
-        self.selected_kind = NodeKind.SAGA
-        self.selected_covenant = None
-        self.selected_character = None
-        self.selected_laboratory = None
-        self.selected_familiar = None
+        self.where = Where()
         self._character_sheet_view = None
         self._laboratory_sheet_view = None
         self._covenant_sheet_view = None
@@ -1975,28 +1879,12 @@ class WorkspaceBase(Screen[None]):
         return section_verbs.refreshed(self._core_record(), section)
 
     def _core_record(self) -> object:
-        """The record the sheet on show is of."""
-        whole_saga = (
-            NodeKind.SAGA_CONTENT,
-            NodeKind.REGION,
-            NodeKind.NEIGHBOUR_GROUP,
-            NodeKind.BESTIARY,
-            NodeKind.CONFLICTS,
-            NodeKind.SEASONS,
-            NodeKind.ARMARIUM,
-            NodeKind.CUSTODIA,
-        )
-        if self.selected_kind in whole_saga:
+        """The record the sheet on show is of: the saga, for a page of the
+        whole saga other than its own (whose sections have no record)."""
+        where = self.where
+        if where.whole_saga and where.kind != NodeKind.SAGA:
             return self.saga
-        return {
-            NodeKind.CHARACTER: self.selected_character,
-            NodeKind.FAMILIAR: self.selected_familiar,
-            NodeKind.LABORATORY: self.selected_laboratory,
-            NodeKind.COVENANT: self.selected_covenant,
-            NodeKind.TRIBUNAL: self.selected_tribunal,
-            NodeKind.NEIGHBOUR: self.selected_neighbour,
-            NodeKind.CREATURE: self.selected_creature,
-        }.get(self.selected_kind)
+        return where.record(self.saga)
 
     def action_add(self) -> None:
         if (handler := self._section_op("add")) is not None:
@@ -2054,15 +1942,7 @@ class WorkspaceBase(Screen[None]):
 
     def _record_on_show(self) -> Any:
         """The record the open page is of (None: the saga's own page)."""
-        return {
-            NodeKind.CHARACTER: self.selected_character,
-            NodeKind.FAMILIAR: self.selected_familiar,
-            NodeKind.LABORATORY: self.selected_laboratory,
-            NodeKind.COVENANT: self.selected_covenant,
-            NodeKind.TRIBUNAL: self.selected_tribunal,
-            NodeKind.NEIGHBOUR: self.selected_neighbour,
-            NodeKind.CREATURE: self.selected_creature,
-        }.get(self.selected_kind)
+        return self.where.record(self.saga)
 
     def _use_viewer(self) -> None:
         """Tell the core who is reading this copy (viewing.use)."""

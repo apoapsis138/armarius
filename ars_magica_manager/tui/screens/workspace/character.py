@@ -60,7 +60,6 @@ class CharacterActions(WorkspaceBase):
             if result is None:
                 return
             character_forms.apply_character_info(self.saga, character, result)
-            self.selected_covenant = self.saga.covenant(character.covenant_id)
             # Only a magus has a free House Virtue.
             self._commit(
                 "section-char-info", "section-vf-virtues", "section-vf-flaws", tree=True

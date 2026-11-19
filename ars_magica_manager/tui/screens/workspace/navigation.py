@@ -18,6 +18,7 @@ from .... import (
 from ....actions import (
     NodeKind,
 )
+from ....where import RECORD_KINDS, Where
 from ..sheets import (
     BestiarySheetView,
     ConflictsSheetView,
@@ -33,6 +34,12 @@ from ..widgets import (
 )
 from .base import WorkspaceBase
 
+#: The tree nodes whose id is the page's: a record's, or the covenant a
+#: list of characters or laboratories belongs to.
+_HAS_ID = frozenset(
+    {*RECORD_KINDS, NodeKind.CHARACTER_GROUP, NodeKind.LABORATORY_GROUP}
+)
+
 
 class NavigationActions(WorkspaceBase):
     async def on_tree_node_selected(self, event: Tree.NodeSelected) -> None:
@@ -41,7 +48,10 @@ class NavigationActions(WorkspaceBase):
             return
 
         kind: NodeKind = data[0]
-        self.selected_kind = kind
+        ident = data[1] if len(data) > 1 else None
+        # A record's id, or the covenant whose lists these are; the
+        # Region's groups are by key, not the page's record.
+        self.where = Where(kind, ident if kind in _HAS_ID else None)
         self.detail_settled = False  # a new view is on its way
         self._character_sheet_view = None
         self._laboratory_sheet_view = None
@@ -59,7 +69,7 @@ class NavigationActions(WorkspaceBase):
 
         handler = self._NODE_SELECTED.get(kind)
         if handler is not None:
-            await handler(self, data[1] if len(data) > 1 else None)
+            await handler(self, ident)
 
         if self._current_sheet_view() is None:
             # Enter on a node moves into what it shows: a list view's list.
@@ -77,24 +87,14 @@ class NavigationActions(WorkspaceBase):
     # show its detail. `ident` is the node's record or covenant id, if any.
 
     async def _select_saga(self, ident: str | None) -> None:
-        self.selected_covenant = None
-        self.selected_character = None
-        self.selected_laboratory = None
-        self.selected_familiar = None
         await self._show_saga_detail()
 
     async def _select_covenant(self, ident: str | None) -> None:
         covenant = next(c for c in self.saga.covenants if c.id == ident)
-        self.selected_covenant = covenant
-        self.selected_character = None
-        self.selected_laboratory = None
-        self.selected_familiar = None
         await self._show_covenant_detail(covenant)
 
     async def _select_character_group(self, ident: str | None) -> None:
         covenant = self.saga.covenant(ident)
-        self.selected_covenant = covenant
-        self.selected_character = None
         await self._show_placeholder_detail(
             f"Characters in {covenant.name}" if covenant else "Unassigned Characters",
             "Select a character from the tree, or press 'n' to add one."
@@ -105,26 +105,14 @@ class NavigationActions(WorkspaceBase):
 
     async def _select_character(self, ident: str | None) -> None:
         character = next(c for c in self.saga.characters if c.id == ident)
-        self.selected_character = character
-        self.selected_covenant = self.saga.covenant(character.covenant_id)
-        self.selected_familiar = None
         await self._show_character_detail(character)
 
     async def _select_familiar(self, ident: str | None) -> None:
         familiar = next(f for f in self.saga.familiars if f.id == ident)
-        self.selected_familiar = familiar
-        self.selected_character = self.saga.character(familiar.character_id)
-        self.selected_covenant = (
-            self.saga.covenant(self.selected_character.covenant_id)
-            if self.selected_character is not None
-            else None
-        )
         await self._show_familiar_detail(familiar)
 
     async def _select_laboratory_group(self, ident: str | None) -> None:
         covenant = self.saga.covenant(ident)
-        self.selected_covenant = covenant
-        self.selected_laboratory = None
         await self._show_placeholder_detail(
             f"Laboratories in {covenant.name}"
             if covenant
@@ -137,12 +125,9 @@ class NavigationActions(WorkspaceBase):
 
     async def _select_laboratory(self, ident: str | None) -> None:
         lab = next(lab for lab in self.saga.laboratories if lab.id == ident)
-        self.selected_laboratory = lab
-        self.selected_covenant = self.saga.covenant(lab.covenant_id)
         await self._show_laboratory_detail(lab)
 
     async def _select_saga_content(self, ident: str | None) -> None:
-        self.selected_covenant = None
         view = SagaContentSheetView(
             self.saga, players=viewing.reads(part="tab-content-players")
         )
@@ -151,7 +136,6 @@ class NavigationActions(WorkspaceBase):
         self._focus_first_section(initial=True)
 
     async def _select_seasons(self, ident: str | None) -> None:
-        self.selected_covenant = None
         view = SeasonsSheetView(self.saga)
         await self._set_detail(view)
         self._seasons_view = view
@@ -160,7 +144,6 @@ class NavigationActions(WorkspaceBase):
     async def _select_region(self, ident: str | None) -> None:
         """The Region, or (`ident`) one of its groups of neighbours, whose
         list takes focus."""
-        self.selected_covenant = None
         view = RegionSheetView(self.saga, ident)
         await self._set_detail(view)
         self._region_sheet_view = view
@@ -173,14 +156,12 @@ class NavigationActions(WorkspaceBase):
             self._focus_first_section(initial=True)
 
     async def _select_bestiary(self, _ident: str | None) -> None:
-        self.selected_covenant = None
         view = BestiarySheetView(self.saga)
         await self._set_detail(view)
         self._bestiary_view = view
         self._focus_first_section(initial=True)
 
     async def _select_conflicts(self, _ident: str | None) -> None:
-        self.selected_covenant = None
         view = ConflictsSheetView(self.saga)
         await self._set_detail(view)
         self._conflicts_view = view
@@ -190,8 +171,6 @@ class NavigationActions(WorkspaceBase):
         creature = self.saga.creature(ident)
         if creature is None:
             return
-        self.selected_covenant = None
-        self.selected_creature = creature
         view = CreatureSheetView(self.saga, creature)
         await self._set_detail(view)
         self._creature_sheet_view = view
@@ -201,14 +180,11 @@ class NavigationActions(WorkspaceBase):
         tribunal = self.saga.tribunal(ident)
         if tribunal is None:
             return
-        self.selected_covenant = None
-        self.selected_tribunal = tribunal
         await self._show_tribunal_detail(tribunal)
 
     async def _select_store(self, _ident: str | None) -> None:
         """The Armarium or the Custodia Mirabilium (the node's kind is the
         store's key)."""
-        self.selected_covenant = None
         view = StoreSheetView(self.saga, stores.STORES[self.selected_kind.value])
         await self._set_detail(view)
         self._store_view = view

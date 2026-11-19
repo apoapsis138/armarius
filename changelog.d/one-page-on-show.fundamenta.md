@@ -1,0 +1,1 @@
+**One answer to what's on show.** The desktop and the terminal now work out the record you have open the same way, so its name, what More offers on it and who else has it open can't disagree between them.
