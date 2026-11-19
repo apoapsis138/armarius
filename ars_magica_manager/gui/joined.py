@@ -251,7 +251,7 @@ def end_joined(window: MainWindow) -> None:
     window.session = None
     # Its Chronicle was held in memory only: it goes with the game (the
     # session's close ends its connection).
-    window.seat_chronicle = None
+    window.chronicle.left_game()
     window.update_notices.set_mismatch(None)
     window.store = LocalStore()
     window.unsent = False

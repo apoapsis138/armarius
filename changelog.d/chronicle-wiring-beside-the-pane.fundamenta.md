@@ -1,0 +1,1 @@
+**The Chronicle pane keeps its own wiring.** What feeds the desktop's Chronicle pane (the host's file watched for a seat's rolls, a seat's entries from its host, a damaged Chronicle said once) now lives beside the pane rather than in the main window, and is tested on its own. Nothing changes in how it works.
