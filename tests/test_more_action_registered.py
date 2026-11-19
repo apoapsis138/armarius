@@ -4,12 +4,12 @@ test run rather than one per registry.
 
 Where a More action lives (each also checked on its own elsewhere):
 
-* `actions.MORE_MENU`: its letter and label (the list this walks);
-* how it runs: a terminal handler (`WorkspaceScreen.action_<name>`, or
-  `base._MENU_HANDLERS`), else the core's first step in
-  `forms/menu._COMMANDS` and what it redraws in `forms/menu_refresh.REFRESH`;
-* where the desktop shows it: `forms/menu.PLACES`, `ON_THE_PAGE` or
-  `NOT_ON_PAGES`;
+* its entry in the More registry (forms/more, ADR 0030): its letter and
+  label, where it shows and when it is offered, and how it runs -- a
+  terminal handler (`WorkspaceScreen.action_<name>`, or
+  `base._MENU_HANDLERS`), else the entry's first step and what it
+  redraws (its `Refresh`);
+* where the desktop shows it: its places, `ON_THE_PAGE`, or not on pages;
 * on a character's page: its book in `action_books.ACTION_BOOKS` or
   `NO_BOOK`;
 * its form's dialog contract: an opener in `tests/dialog_openers.py`
@@ -17,9 +17,7 @@ Where a More action lives (each also checked on its own elsewhere):
   or a reason in `NO_CONTRACT`;
 * who may run it, when not every storyguide action: viewing's
   `LOOKING_ACTIONS` (players too), `STORYGUIDE_ONLY_ACTIONS` or
-  `HOST_ONLY_ACTIONS`; and where it is offered: `actions.MORE_SECTIONS`,
-  `_RECORD_RULES` or `_SECTION_RULES`. Neither is required, so neither is
-  checked here."""
+  `HOST_ONLY_ACTIONS`. Not required, so not checked here."""
 
 import test_dialog_contracts_character as character
 import test_dialog_contracts_covenant as covenant
@@ -32,7 +30,7 @@ from dialog_openers import OPENERS
 from ars_magica_manager import action_books, actions
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.forms import menu as menu_forms
-from ars_magica_manager.forms import menu_refresh
+from ars_magica_manager.forms import more
 from ars_magica_manager.tui.screens.workspace import base
 from ars_magica_manager.tui.screens.workspace.screen import WorkspaceScreen
 
@@ -44,8 +42,8 @@ def _missing(item: actions.MenuItem) -> list[str]:
     if not callable(getattr(WorkspaceScreen, handler, None)):
         if action not in menu_forms._COMMANDS:
             found.append("forms/menu._COMMANDS")
-        if action not in menu_refresh.REFRESH:
-            found.append("forms/menu_refresh.REFRESH")
+        if action not in more.REFRESH:
+            found.append("forms/more.REFRESH")
     placed = (
         action in menu_forms.PLACES
         or action in menu_forms.ON_THE_PAGE
@@ -224,7 +222,7 @@ def test_every_more_action_has_a_dialog_contract_or_says_why_not():
     contracted = _contracted()
     gaps = sorted(
         item.action
-        for item in actions.MORE_MENU
+        for item in more.MORE_MENU
         if item.action not in contracted
         and item.action not in UNCONTRACTED_BEFORE
         and item.action not in NO_CONTRACT
@@ -238,7 +236,7 @@ def test_every_more_action_has_a_dialog_contract_or_says_why_not():
 def test_the_list_of_old_gaps_only_shrinks():
     """An action given a contract leaves UNCONTRACTED_BEFORE, and one no
     longer on the menu does too."""
-    on_menu = {item.action for item in actions.MORE_MENU}
+    on_menu = {item.action for item in more.MORE_MENU}
     contracted = _contracted()
     stale = sorted(
         a for a in UNCONTRACTED_BEFORE if a in contracted or a not in on_menu
@@ -249,7 +247,7 @@ def test_the_list_of_old_gaps_only_shrinks():
 def test_each_reason_for_no_contract_still_holds():
     """An action in NO_CONTRACT is on the menu, has no contract after all,
     and isn't also counted among the old gaps."""
-    on_menu = {item.action for item in actions.MORE_MENU}
+    on_menu = {item.action for item in more.MORE_MENU}
     contracted = _contracted()
     stale = sorted(
         a
@@ -262,9 +260,7 @@ def test_each_reason_for_no_contract_still_holds():
 
 def test_every_more_action_is_registered_everywhere_it_must_be():
     gaps = {
-        item.action: missing
-        for item in actions.MORE_MENU
-        if (missing := _missing(item))
+        item.action: missing for item in more.MORE_MENU if (missing := _missing(item))
     }
     assert not gaps, "\n".join(
         f"{action}: add to {', '.join(where)}" for action, where in gaps.items()

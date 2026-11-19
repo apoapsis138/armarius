@@ -9,10 +9,12 @@ from dataclasses import replace
 
 import pytest
 
-from ars_magica_manager.actions import NodeKind, available
+from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.forms import tmre_dreams as forms
+from ars_magica_manager.forms.more import available
 from ars_magica_manager.models import (
     Ability,
     ArtScore,
@@ -376,7 +378,7 @@ def test_more_offers_the_dream_forms_only_to_their_initiates():
     magus = _morphea("vf_hermetic_sacrifice")
     saga = _saga(magus)
     assert isinstance(forms.dream_form(saga, magus), Form)
-    page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")
+    page = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")
     spells = replace(page, section="section-known-spells")
     assert available("dream_working", spells)
     assert available("hermetic_sacrifice", spells)

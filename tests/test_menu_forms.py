@@ -10,10 +10,13 @@ from typing import Any
 from screen_helpers import _saga_with_familiar, _sample_saga_with_covenant
 
 from ars_magica_manager import commands, deeds, form_spec
-from ars_magica_manager.actions import NodeKind, available
+from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.forms import creation as creation_forms
 from ars_magica_manager.forms import importing as import_forms
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import menu_steps
+from ars_magica_manager.forms import page as page_forms
+from ars_magica_manager.forms.more import available
 from ars_magica_manager.models import (
     Book,
     IncomeSource,
@@ -39,8 +42,8 @@ def _labels(items) -> list[str]:
     return [item.label for item in items]
 
 
-def _page(saga: Saga, kind: NodeKind, **ids: str) -> menu_forms.Page:
-    return menu_forms.page_for(saga, kind, **ids)
+def _page(saga: Saga, kind: NodeKind, **ids: str) -> page_forms.Page:
+    return page_forms.page_for(saga, kind, **ids)
 
 
 def test_each_page_offers_what_applies_there():
@@ -354,9 +357,9 @@ def test_performing_a_ritual_on_the_chosen_text_skips_the_choice():
         )
         for number in (1, 2)
     ]
-    assert [b.id for b in menu_forms.ritual_texts(saga, lab)] == ["ritual1", "ritual2"]
-    assert isinstance(menu_forms.perform_ritual(saga, lab), commands.Choose)
-    chosen = menu_forms.perform_ritual(saga, lab, "ritual2")
+    assert [b.id for b in menu_steps.ritual_texts(saga, lab)] == ["ritual1", "ritual2"]
+    assert isinstance(menu_steps.perform_ritual(saga, lab), commands.Choose)
+    chosen = menu_steps.perform_ritual(saga, lab, "ritual2")
     assert isinstance(chosen, commands.Form)
     # The form is for the text chosen: its first field names it.
     assert chosen.fields()[0].value == "Longevity 2"
@@ -477,7 +480,7 @@ def test_a_ritual_needs_the_laboratory_to_have_an_owner():
     lab = saga.laboratories[0]
     lab.owner_id = None
     assert isinstance(
-        menu_forms.perform_ritual(saga, lab), commands.Refuse
+        menu_steps.perform_ritual(saga, lab), commands.Refuse
     )  # no texts, and no owner
 
 

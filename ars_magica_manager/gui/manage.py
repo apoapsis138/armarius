@@ -28,7 +28,8 @@ from ..actions import NodeKind
 from ..commands import Command
 from ..forms import menu as menu_forms
 from ..forms import reveal as reveal_forms
-from ..forms.menu import DELETE_RECORD, Page
+from ..forms.menu import DELETE_RECORD
+from ..forms.page import Page
 from ..models import FULL, Character, Covenant, Laboratory
 from . import pictures
 from .bookmark import Ribbon, Seal, with_seal

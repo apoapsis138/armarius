@@ -143,7 +143,7 @@ class Where:
         record = self.record(saga)
         return record if isinstance(record, Character | Covenant | Laboratory) else None
 
-    # -- the records the page's actions ask about (menu.Page) --
+    # -- the records the page's actions ask about (page.Page) --
 
     def covenant(self, saga: Saga) -> Covenant | None:
         """The covenant the page belongs to: its own, a list's, or the

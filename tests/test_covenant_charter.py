@@ -11,6 +11,7 @@ from ars_magica_manager import actions
 from ars_magica_manager import covenant_charter as cc
 from ars_magica_manager.commands import Confirm, Form, Refuse
 from ars_magica_manager.forms import charter as charter_forms
+from ars_magica_manager.forms import more
 from ars_magica_manager.models import (
     CLAUSE_AMENDED,
     CLAUSE_BROKEN,
@@ -375,7 +376,7 @@ def test_break_a_clause_is_offered_on_a_clause_not_yet_broken():
     saga = _saga()
 
     def offered(section: str, row: int | None) -> bool:
-        return actions.available("break_clause", _Facts(saga, section, row))  # type: ignore[arg-type]
+        return more.available("break_clause", _Facts(saga, section, row))  # type: ignore[arg-type]
 
     assert offered(CLAUSES_SECTION, 0)
     assert not offered(CLAUSES_SECTION, 2)
@@ -385,7 +386,7 @@ def test_break_a_clause_is_offered_on_a_clause_not_yet_broken():
 
 def test_seal_the_charter_is_offered_on_the_charter():
     saga = _saga()
-    assert actions.available("seal_charter", _Facts(saga, CHARTER_SECTION, 0))  # type: ignore[arg-type]
-    assert not actions.available("seal_charter", _Facts(saga, CLAUSES_SECTION, 0))  # type: ignore[arg-type]
+    assert more.available("seal_charter", _Facts(saga, CHARTER_SECTION, 0))  # type: ignore[arg-type]
+    assert not more.available("seal_charter", _Facts(saga, CLAUSES_SECTION, 0))  # type: ignore[arg-type]
     assert actions.SECTION_VERBS[CLAUSES_SECTION] == {"add", "edit", "remove"}
     assert actions.SECTION_VERBS[CHARTER_SECTION] == {"edit"}

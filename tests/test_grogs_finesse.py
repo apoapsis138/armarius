@@ -6,13 +6,15 @@ import random
 
 import pytest
 
-from ars_magica_manager import actions, deeds, economics
+from ars_magica_manager import deeds, economics
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.casting_text import option_lines
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import craft_magic as craft_forms
 from ars_magica_manager.forms import grogs as grog_forms
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import more
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.models import (
     Ability,
     Character,
@@ -264,7 +266,7 @@ def test_only_a_grog_in_a_covenant_is_rewarded():
 
 def test_the_grog_commands_are_offered_on_a_grog_only():
     saga = _saga()
-    grog = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="g")
+    grog = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="g")
     labels = [item.label for item in menu_forms.placed(grog, "Personality Traits")]
     # Roll: a trait roll, with the Silver Cord's help for a familiar's master.
     # The saints and the Church are on the Religion chapter's Faith; Reward
@@ -283,7 +285,7 @@ def test_the_grog_commands_are_offered_on_a_grog_only():
         "Patron Saint",
         "Indulgence, Vigil or Fast",
     ]
-    magus = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")
+    magus = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")
     assert [i.label for i in menu_forms.placed(magus, "Personality Traits")] == ["Roll"]
     assert not menu_forms.placed(magus, deeds.COVENFOLK)
     assert not menu_forms.placed(magus, "Known Spells")
@@ -297,7 +299,7 @@ def test_the_grog_commands_are_offered_on_a_grog_only():
         "Current Location",
         "Stay as Guest",
     ]
-    assert not actions.available("craft_by_magic", grog)
+    assert not more.available("craft_by_magic", grog)
 
 
 # -- craft magic --

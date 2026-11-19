@@ -655,7 +655,7 @@ def test_a_grog_plans_a_season_of_copying_and_it_takes_a_season_of_the_year():
 
 
 def test_joining_a_tradition_in_play_brings_its_virtues_not_its_opening():
-    from ars_magica_manager.forms import menu
+    from ars_magica_manager.forms import menu_steps as menu
     from ars_magica_manager.models import VirtueFlawInstance
 
     witch = Character(id="w", name="Grete", type="companion")
@@ -979,13 +979,14 @@ def test_the_desktop_places_reputations_health_and_aging_actions():
     offered as its section would offer it."""
     from ars_magica_manager.actions import NodeKind
     from ars_magica_manager.forms import menu
+    from ars_magica_manager.forms import page as page_forms
     from ars_magica_manager.models import Covenant, ScoredTrait
 
     covenant = Covenant(id="c", saga_id="s", name="Keep")
     magus = Character(id="m", name="Leandro", type="magus", covenant_id="c")
     magus.reputations.append(ScoredTrait("Brave", 2))
     saga = Saga(id="s", name="S", characters=[magus], covenants=[covenant])
-    page = menu.Page(saga, NodeKind.CHARACTER, covenant=covenant, character=magus)
+    page = page_forms.Page(saga, NodeKind.CHARACTER, covenant=covenant, character=magus)
     labels = {
         spot: [i.label for i in menu.placed(page, spot)]
         for spot in (deeds.SESSION, deeds.KNIGHTLY, "Health", "Aging")

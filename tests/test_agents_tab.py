@@ -6,10 +6,11 @@ are offered only for a chosen agent they can act on."""
 import random
 from dataclasses import dataclass, field
 
-from ars_magica_manager import actions, seasons
+from ars_magica_manager import seasons
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Act, Form, Refuse
 from ars_magica_manager.forms import agents as agent_forms
+from ars_magica_manager.forms import more
 from ars_magica_manager.models import (
     Ability,
     Agent,
@@ -233,7 +234,7 @@ def test_more_offers_each_command_only_for_an_agent_it_can_act_on():
                 "set_agent_task",
                 "resolve_agent_task",
             )
-            if actions.available(action, facts)  # type: ignore[arg-type]
+            if more.available(action, facts)  # type: ignore[arg-type]
         ]
 
     assert offered(0) == [

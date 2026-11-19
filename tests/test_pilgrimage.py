@@ -6,11 +6,13 @@ import random
 from dataclasses import replace
 
 from ars_magica_manager import catalog, deeds, seasons
-from ars_magica_manager.actions import NodeKind, available
+from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import lacuna as lacuna_forms
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.forms import pilgrimage as pilgrimage_forms
+from ars_magica_manager.forms.more import available
 from ars_magica_manager.models import (
     Ability,
     ArtScore,
@@ -370,7 +372,7 @@ def test_a_claimed_virtue_is_added():
 
 def test_more_offers_them_where_they_belong():
     saga, _magus_on_show = _caster()
-    page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")
+    page = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")
     assert available("cast_in_lacuna", replace(page, section="section-known-spells"))
     assert not available("cast_in_lacuna", replace(page, section="section-char-season"))
     assert available("pilgrimage", replace(page, section="section-char-season"))

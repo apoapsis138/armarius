@@ -106,8 +106,9 @@ rules. A change to how something works updates its help in the same change.
 confirmation; rare actions in More `m`, creation in New `n`). A new section
 gets them from its entry in `actions.SECTION_VERBS` plus its handlers in
 `_section_ops` (`tests/test_menu_items.py` checks the two agree); a new rare
-action is a `MenuItem` in `actions.MORE_MENU` plus an `actions.available`
-clause. Don't bind a new letter.
+action is one `MoreAction` entry in its area's module of `forms/more/`
+(its letter and label, where it shows, when it's offered, its first step and
+what it changes) plus its key in `registry.ORDER`. Don't bind a new letter.
 
 ## Code rules
 

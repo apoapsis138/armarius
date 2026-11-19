@@ -8,10 +8,12 @@ from dataclasses import replace
 import pytest
 
 from ars_magica_manager import deeds, seasons, selling
-from ars_magica_manager.actions import NodeKind, available
+from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.forms import season as season_forms
+from ars_magica_manager.forms.more import available
 from ars_magica_manager.models import (
     Ability,
     Character,
@@ -348,7 +350,7 @@ def test_the_sale_form():
 
 def test_selling_is_offered_to_a_craftsman_on_this_season():
     saga = _saga()
-    page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="c")
+    page = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="c")
     assert available("sell_goods", replace(page, section="section-char-season"))
     assert not available("sell_goods", replace(page, section="section-reputations"))
     assert "sell_goods" in {

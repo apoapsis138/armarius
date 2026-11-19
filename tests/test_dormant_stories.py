@@ -5,8 +5,9 @@ from __future__ import annotations
 
 from support import everything_saga
 
-from ars_magica_manager import actions, packs, storage, threats, transfer
+from ars_magica_manager import packs, storage, threats, transfer
 from ars_magica_manager.commands import Confirm
+from ars_magica_manager.forms import more
 from ars_magica_manager.models import Neighbour, Saga
 from ars_magica_manager.sheets import region as region_sheet
 from ars_magica_manager.sheets import tribunal as tribunal_sheet
@@ -66,7 +67,7 @@ def test_beginning_keeps_dates_still_to_come():
 
 
 def test_begin_is_offered_on_a_dormant_threat_only():
-    assert any(item.action == "begin_story" for item in actions.MORE_MENU)
+    assert any(item.action == "begin_story" for item in more.MORE_MENU)
     saga = everything_saga()
     crown = _threat(saga)
     assert not threats.is_dormant(crown)

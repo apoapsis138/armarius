@@ -10,10 +10,12 @@ import random
 import pytest
 
 from ars_magica_manager import deeds
-from ars_magica_manager.actions import NodeKind, available
+from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.forms import tmre_divination as forms
+from ars_magica_manager.forms.more import available
 from ars_magica_manager.models import (
     INVESTED,
     Ability,
@@ -300,12 +302,12 @@ def test_the_virtues_open_divination_at_creation():
 def test_more_offers_divination_and_astrology_to_those_with_them():
     augur = _augur()
     saga = _saga(augur)
-    page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")
+    page = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")
     assert available("tmre_divination", page)
     assert not available("tmre_astrology", page)
     assert isinstance(menu_forms.command(page, "tmre_divination"), Form)
     augur.virtues_flaws.append(VirtueFlawInstance("vf_planetary_magic"))
-    page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")
+    page = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")
     assert available("tmre_astrology", page)
     placed = {i.action for i in menu_forms.placed(page, deeds.INSIGHT)}
     assert {"tmre_divination", "tmre_astrology"} <= placed

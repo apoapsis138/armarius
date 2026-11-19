@@ -405,7 +405,7 @@ SEASON_WIDE: frozenset[str] = frozenset({"advance_season"})
 
 #: What only the storyguide may do, so Player view leaves it off the
 #: storyguide's own window too (a signed-in player is refused much more:
-#: see the workspace's own list). Each is an actions.MORE_MENU action.
+#: see the workspace's own list). Each is a More action (forms/more).
 STORYGUIDE_ONLY_ACTIONS: frozenset[str] = frozenset(
     {
         "roll_table",

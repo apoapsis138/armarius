@@ -4,7 +4,7 @@ supplement activities, book work, taming, experiments and Discoveries."""
 from __future__ import annotations
 
 import random
-from collections.abc import MutableMapping, Sequence
+from collections.abc import Callable, MutableMapping, Sequence
 from dataclasses import replace
 
 from .. import (
@@ -122,6 +122,39 @@ def _pay_vis(
     return pool
 
 
+def _plan_next_season(saga: Saga, magus: Character, plan: SeasonPlan) -> None:
+    """Work not finished goes on: the same plan next season, unless the
+    magus has one there already."""
+    season, year = next_season(plan.season, plan.year)
+    if plan_for(saga, magus, season, year) is None:
+        set_plan(saga, replace(plan, season=season, year=year, days_away=0))
+
+
+def _drop_later_plans(
+    saga: Saga,
+    magus: Character,
+    plan: SeasonPlan,
+    *,
+    activity: str = "",
+    project: str | None = None,
+) -> None:
+    """Work finished: the magus's other plans made to carry on its project
+    (`project`, the plan's by default; of `activity`, the plan's own by
+    default) are no longer needed."""
+    project = project or project_key(plan)
+    activity = activity or plan.activity
+    saga.season_plans = [
+        p
+        for p in saga.season_plans
+        if not (
+            p.character_id == magus.id
+            and p.activity == activity
+            and project_key(p) == project
+            and (p.season, p.year) != (plan.season, plan.year)
+        )
+    ]
+
+
 def _apply_one_season_work(
     saga: Saga,
     magus: Character,
@@ -141,25 +174,9 @@ def _apply_one_season_work(
         connection.fixed = True
         connection.lasts = ""
         connection.fixed_year, connection.fixed_season = plan.year, plan.season
-    if plan.activity in es.ACTIVITIES:
-        _apply_enchanting(saga, magus, lab, plan, work)
-    if plan.activity in fs.ACTIVITIES:
-        _apply_familiar(saga, magus, plan, work)
-    if plan.activity in ls.ACTIVITIES:
-        _apply_laboratory(saga, magus, lab, plan, work)
-    if plan.activity == lab_seasons.TAMING:
-        _apply_taming(saga, magus, lab, plan, work)
-    if plan.activity == bs.DECODE_TEXT and work.access is not None:
-        key = lab_seasons.decode_key(magus, work.access[1])
-        saga.lab_projects = [p for p in saga.lab_projects if p.spell_id != key]
-        if work.finished:
-            _, author, level = work.access
-            bs.grant_access(magus, author, level, "decoded")
-        else:
-            saga.lab_projects.append(LabProject(magus.id, key, work.points_after))
-            season, year = next_season(plan.season, plan.year)
-            if plan_for(saga, magus, season, year) is None:
-                set_plan(saga, replace(plan, season=season, year=year, days_away=0))
+    family = lab_seasons.family_of(plan.activity)
+    if family is not None:
+        FAMILY_APPLIERS[family.name](saga, magus, lab, plan, work)
     if work.subject is not None and work.longevity:
         # A new ritual replaces the old, with what experimenting left on it;
         # each step of potency moves the modifier by 1.
@@ -310,26 +327,18 @@ def _apply_enchanting(
     elif effect is not None and plan.activity == es.INSTIL:
         if work.finished:
             effect.instilling_progress = None
-            project = project_key(plan)
-            saga.season_plans = [
-                p
-                for p in saga.season_plans
-                if not (
-                    p.character_id == magus.id
-                    and p.activity == es.INSTIL
-                    and project_key(p) == project
-                    and (p.season, p.year) != (plan.season, plan.year)
-                )
-            ]
+            _drop_later_plans(saga, magus, plan)
         else:
             effect.instilling_progress = work.points_after
-            season, year = next_season(plan.season, plan.year)
-            if plan_for(saga, magus, season, year) is None:
-                set_plan(saga, replace(plan, season=season, year=year, days_away=0))
+            _plan_next_season(saga, magus, plan)
 
 
 def _apply_familiar(
-    saga: Saga, magus: Character, plan: SeasonPlan, work: lab_seasons.LabWork
+    saga: Saga,
+    magus: Character,
+    _lab: Laboratory,
+    plan: SeasonPlan,
+    work: lab_seasons.LabWork,
 ) -> None:
     """What a season of familiar work does."""
     familiar = work.familiar
@@ -353,24 +362,12 @@ def _apply_familiar(
     if power is None:
         return
     power.vis_spent += sum(work.vis_cost.values())
-    project = project_key(plan)
     if work.finished:
         power.instilling_progress = None
-        saga.season_plans = [
-            p
-            for p in saga.season_plans
-            if not (
-                p.character_id == magus.id
-                and p.activity == fs.EMPOWER
-                and project_key(p) == project
-                and (p.season, p.year) != (plan.season, plan.year)
-            )
-        ]
+        _drop_later_plans(saga, magus, plan)
     else:
         power.instilling_progress = work.points_after
-        season, year = next_season(plan.season, plan.year)
-        if plan_for(saga, magus, season, year) is None:
-            set_plan(saga, replace(plan, season=season, year=year, days_away=0))
+        _plan_next_season(saga, magus, plan)
 
 
 def _copy_book(saga: Saga, book: Book) -> Book:
@@ -868,9 +865,28 @@ def _apply_taming(
             )
         )
     else:
-        season, year = next_season(plan.season, plan.year)
-        if plan_for(saga, magus, season, year) is None:
-            set_plan(saga, replace(plan, season=season, year=year, days_away=0))
+        _plan_next_season(saga, magus, plan)
+
+
+def _apply_decoding(
+    saga: Saga,
+    magus: Character,
+    _lab: Laboratory,
+    plan: SeasonPlan,
+    work: lab_seasons.LabWork,
+) -> None:
+    """A season decoding an author's raw Lab Texts: done, the magus reads
+    them to that level; not yet, the points carried and the work planned on."""
+    if work.access is None:
+        return
+    key = lab_seasons.decode_key(magus, work.access[1])
+    saga.lab_projects = [p for p in saga.lab_projects if p.spell_id != key]
+    if work.finished:
+        _, author, level = work.access
+        bs.grant_access(magus, author, level, "decoded")
+    else:
+        saga.lab_projects.append(LabProject(magus.id, key, work.points_after))
+        _plan_next_season(saga, magus, plan)
 
 
 def _apply_laboratory(
@@ -891,18 +907,14 @@ def _apply_laboratory(
             lab.move_seasons = 0
         else:
             lab.move_seasons += 1
-            season, year = next_season(plan.season, plan.year)
-            if plan_for(saga, magus, season, year) is None:
-                set_plan(saga, replace(plan, season=season, year=year, days_away=0))
+            _plan_next_season(saga, magus, plan)
         return
     if plan.activity == ls.BUILD:
         if work.second_season:
             ls.remove_vf(lab, ls.BASIC)
         else:
             ls.add_vf(lab, ls.BASIC)
-            season, year = next_season(plan.season, plan.year)
-            if plan_for(saga, magus, season, year) is None:
-                set_plan(saga, replace(plan, season=season, year=year, days_away=0))
+            _plan_next_season(saga, magus, plan)
         return
     if plan.activity == ls.TAKE_OVER and lab.owner_id != magus.id:
         assign_laboratory(saga, magus, lab.id)
@@ -1628,23 +1640,14 @@ def apply_lab_work(saga: Saga, magus: Character, outcome: rules.Outcome) -> None
         if plan.activity in (lab_seasons.INVENT, lab_seasons.LAB_TEXT):
             _write_text(saga, magus, plan, _lab_text_book(saga, magus, lab, spell))
         # Plans made to continue it are no longer needed.
-        saga.season_plans = [
-            p
-            for p in saga.season_plans
-            if not (
-                p.character_id == magus.id
-                and project_key(p) == project
-                and p.activity == lab_seasons.INVENT
-                and (p.season, p.year) != (plan.season, plan.year)
-            )
-        ]
+        _drop_later_plans(
+            saga, magus, plan, activity=lab_seasons.INVENT, project=project
+        )
     else:
         saga.lab_projects.append(
             LabProject(magus.id, spell.id, work.points_after, carried)
         )
-        season, year = next_season(plan.season, plan.year)
-        if plan_for(saga, magus, season, year) is None:
-            set_plan(saga, replace(plan, season=season, year=year, days_away=0))
+        _plan_next_season(saga, magus, plan)
     lab.diary.append(
         DiaryEntry(
             year=plan.year,
@@ -1709,3 +1712,19 @@ def take_discovery_move(saga: Saga, outcome: rules.Outcome, yes: bool) -> None:
     outcome.notes = [
         n for n in outcome.notes if not n.startswith("Extraordinary Results: ")
     ] + ["Extraordinary Results: " + " ".join(chart.results)]
+
+
+#: How a season of each family of lab work (lab_seasons.FAMILIES) changes
+#: the saga, between what every lab season does (vis paid, the lab's
+#: Diary). Pattern: the activity registry (Strategy, reduced to a dict),
+#: as advance.EFFECT_APPLIERS.
+FamilyApplier = Callable[
+    [Saga, Character, Laboratory, SeasonPlan, lab_seasons.LabWork], None
+]
+FAMILY_APPLIERS: dict[str, FamilyApplier] = {
+    lab_seasons.ENCHANTING: _apply_enchanting,
+    lab_seasons.FAMILIAR: _apply_familiar,
+    lab_seasons.LAB_BUILDING: _apply_laboratory,
+    lab_seasons.TAMING_FAMILY: _apply_taming,
+    lab_seasons.DECODING: _apply_decoding,
+}

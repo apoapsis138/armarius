@@ -8,9 +8,11 @@ from dataclasses import replace
 import pytest
 
 from ars_magica_manager import artwork
-from ars_magica_manager.actions import NodeKind, available
+from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.forms import religion as religion_forms
+from ars_magica_manager.forms.more import available
 from ars_magica_manager.models import (
     Character,
     Saga,
@@ -33,8 +35,8 @@ def _person(religion: str = "", *vfs: str) -> Character:
     return c
 
 
-def _faith_page(saga: Saga) -> menu_forms.Page:
-    page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="c")
+def _faith_page(saga: Saga) -> page_forms.Page:
+    page = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="c")
     return replace(page, section=FAITH_SECTION)
 
 

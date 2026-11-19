@@ -10,7 +10,7 @@ import random
 import pytest
 
 from ars_magica_manager import actions, manors
-from ars_magica_manager.forms import land_seasons
+from ars_magica_manager.forms import land_seasons, more
 from ars_magica_manager.forms import land_shaping as land_forms
 from ars_magica_manager.forms import menu as menu_forms
 from ars_magica_manager.models import (
@@ -446,7 +446,7 @@ class _Facts:
 def test_offered_on_income_with_the_book_in_play() -> None:
     magus = _magus()
     saga = _saga(magus, LandProject("i", "Insula"))
-    rule = actions._SECTION_RULES["shape_land"]
+    rule = more.REGISTRY["shape_land"].in_section
     facts = _Facts(saga, saga.covenants[0])
     saga.books_in_play = ["TME"]
     assert rule(facts, "section-eco-income")  # type: ignore[arg-type]
