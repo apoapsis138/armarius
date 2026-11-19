@@ -23,6 +23,7 @@ from ars_magica_manager.commands import Act, Choose, Form, Go, Picked, Refuse
 from ars_magica_manager.forms import go_to as go_to_forms
 from ars_magica_manager.forms import menu as menu_forms
 from ars_magica_manager.forms import neighbour as neighbour_forms
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.models import Link, Saga
 from ars_magica_manager.references import Ref
 from ars_magica_manager.sheets import creature as creature_sheet
@@ -172,8 +173,8 @@ def test_go_to_is_offered_in_more_only_where_the_page_names_a_record():
     coven = saga.neighbour("coven")
     studium = saga.neighbour("studium")
     assert coven is not None and studium is not None
-    on = menu_forms.Page(saga, actions.NodeKind.NEIGHBOUR, neighbour=coven)
-    off = menu_forms.Page(saga, actions.NodeKind.NEIGHBOUR, neighbour=studium)
+    on = page_forms.Page(saga, actions.NodeKind.NEIGHBOUR, neighbour=coven)
+    off = page_forms.Page(saga, actions.NodeKind.NEIGHBOUR, neighbour=studium)
     assert actions.available("go_to", on)
     assert not actions.available("go_to", off)
     # The desktop draws the names as links instead.

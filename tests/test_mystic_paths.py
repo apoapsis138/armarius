@@ -15,6 +15,7 @@ from ars_magica_manager import seasons
 from ars_magica_manager.actions import NodeKind, available
 from ars_magica_manager.commands import Form
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.models import (
     Ability,
     Aging,
@@ -479,7 +480,7 @@ def test_offered_on_a_person_with_the_books(action, book, prepare):
     if prepare:
         ds.set_path(clara, prepare)
         ds.note_ascent(clara)
-    page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="c")
+    page = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="c")
     faith = replace(page, section=FAITH_SECTION)
     assert available(action, faith)
     assert action in {i.action for i in menu_forms.placed(page, "Faith")}
@@ -492,7 +493,7 @@ def test_a_mystic_path_needs_piety_and_a_divine_tie():
     saga = _saga("TC")
     clara = saga.character("c")
     faith = replace(
-        menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="c"),
+        page_forms.page_for(saga, NodeKind.CHARACTER, character_id="c"),
         section=FAITH_SECTION,
     )
     assert available("mystic_path", faith)
@@ -505,11 +506,11 @@ def test_a_mystic_path_needs_piety_and_a_divine_tie():
 def test_the_font_and_the_aura_are_offered_to_those_who_have_them():
     saga = _saga()
     clara = saga.character("c")
-    page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="c")
+    page = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="c")
     assert not available("font_of_knowledge", page)
     assert not available("commanding_aura", page)
     clara.virtues_flaws.append(VirtueFlawInstance("vf_font_of_knowledge"))
     clara.background.church_rank = "Archbishop"
-    page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="c")
+    page = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="c")
     assert available("font_of_knowledge", page)
     assert available("commanding_aura", page)

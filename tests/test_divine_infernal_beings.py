@@ -13,6 +13,7 @@ from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import creature as creature_forms
 from ars_magica_manager.forms import holy_influence as holy_forms
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.models import (
     Ability,
     Character,
@@ -469,12 +470,12 @@ def test_the_holy_influence_roll_spends_a_faith_point():
 def test_holy_influence_is_offered_to_one_of_holy_standing():
     saga = Saga(id="s", name="S")
     saga.characters += [_priest(), Character(id="m", name="M", type="companion")]
-    page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="p")
+    page = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="p")
     labels = [item.label for item in menu_forms.placed(page, "Faith")]
     assert "Holy Influence" in labels
     faith = replace(page, section=FAITH_SECTION)
     assert actions.available("holy_influence", faith)
-    plain = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")
+    plain = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")
     assert not actions.available(
         "holy_influence", replace(plain, section=FAITH_SECTION)
     )

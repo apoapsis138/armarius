@@ -20,7 +20,7 @@ from ..actions import MenuItem
 from ..commands import Command
 from ..forms import menu as menu_forms
 from ..forms import menu_refresh
-from ..forms.menu import Page
+from ..forms.page import Page
 from .markup_html import plain
 from .themes import Palette
 from .widgets import NewCard, edit_button

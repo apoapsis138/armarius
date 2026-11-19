@@ -110,6 +110,7 @@ from ..commands import (
 from ..forms import advance as advance_forms
 from ..forms import creation as creation_forms
 from ..forms import menu as menu_forms
+from ..forms import page as page_forms
 from ..forms import printing as print_forms
 from ..forms import saga as saga_forms
 from ..joined_games import JoinedGame
@@ -2293,13 +2294,13 @@ class MainWindow(QMainWindow):
         button.clicked.connect(self.open_switcher)
         return button
 
-    def menu_page(self) -> menu_forms.Page | None:
+    def menu_page(self) -> page_forms.Page | None:
         """The page on show, as the actions it sets out see it."""
         saga = self.saga
         where = self.trail[-1].where if self.trail else None
         if saga is None or where is None:
             return None
-        return menu_forms.page_at(saga, where)
+        return page_forms.page_at(saga, where)
 
     def _draw_chronicle(self) -> None:
         """The Chronicle pane and its button, while the open saga has a

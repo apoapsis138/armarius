@@ -14,6 +14,7 @@ from ars_magica_manager import connections, storage, world
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Choose, Confirm, Form, Refuse
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.forms import world as world_forms
 from ars_magica_manager.models import (
     FULL,
@@ -170,7 +171,7 @@ def test_a_sketch_covenant_is_left_out_of_play():
     ],
 )
 def test_more_offers_a_covenant_what_its_level_allows(detail, offered):
-    page = menu_forms.page_for(_saga(detail), NodeKind.COVENANT, covenant_id="fen")
+    page = page_forms.page_for(_saga(detail), NodeKind.COVENANT, covenant_id="fen")
     labels = [item.label for item in menu_forms.more_items(page)]
     wanted = {"Promote", "Demote", "In Creation / In Play"}
     assert [label for label in labels if label in wanted] == offered
@@ -301,7 +302,7 @@ def test_the_desktop_draws_a_sketch_covenant_on_one_chapter(detail, chapters):
 
     QApplication.instance() or QApplication([])
     saga = _saga(detail)
-    page = menu_forms.page_for(saga, NodeKind.COVENANT, covenant_id="fen")
+    page = page_forms.page_for(saga, NodeKind.COVENANT, covenant_id="fen")
     controls = RecordControls(
         page,
         lambda *_: None,

@@ -8,6 +8,7 @@ from ars_magica_manager import baraka as forms
 from ars_magica_manager.actions import NodeKind, available
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.models import (
     Ability,
     Character,
@@ -123,7 +124,7 @@ def test_the_hajj_brings_pious_three_and_faith():
 def test_offered_to_a_muslim_with_the_book():
     saga = _saga()
     faith = replace(
-        menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="y"),
+        page_forms.page_for(saga, NodeKind.CHARACTER, character_id="y"),
         section=FAITH_SECTION,
     )
     for action in ("invoke_baraka", "hajj"):

@@ -8,6 +8,7 @@ from ars_magica_manager import actions
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.forms import tmre_spirits as forms
 from ars_magica_manager.models import (
     Ability,
@@ -292,10 +293,10 @@ def test_the_spell_spirit_line_names_its_penetration():
 def test_only_a_mystery_holder_finds_it_on_known_spells():
     magus = _magus(ts.HERMETIC_THEURGY)
     saga = _saga(magus)
-    page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")
+    page = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")
     assert "Spirits and Names" in [
         i.label for i in menu_forms.placed(page, "Magic Outside the Lab")
     ]
-    plain = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="p")
+    plain = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="p")
     assert not actions.available("spirits_and_names", plain)
     assert isinstance(forms.spirits_form(saga, saga.character("p")), Refuse)

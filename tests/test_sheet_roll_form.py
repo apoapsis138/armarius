@@ -12,6 +12,7 @@ from ars_magica_manager import actions, chronicle, commands, viewing, virtual_ta
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.forms import menu as menu_forms
 from ars_magica_manager.forms import menu_refresh, sheet_roll
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.models import (
     Ability,
     Casting,
@@ -42,8 +43,8 @@ def _saga() -> tuple[Saga, Character]:
 
 def _page(
     saga: Saga, character: Character, section: str, row: int | None = None
-) -> menu_forms.Page:
-    return menu_forms.Page(
+) -> page_forms.Page:
+    return page_forms.Page(
         saga, NodeKind.CHARACTER, character=character, section=section, row=row
     )
 

@@ -12,6 +12,7 @@ from ars_magica_manager import sessions as ss
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.forms import menu as menu_forms
 from ars_magica_manager.forms import menu_refresh
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.models import Player, Saga, Session
 from ars_magica_manager.sections import SESSIONS_SECTION
 
@@ -25,8 +26,8 @@ def _saga() -> Saga:
     return saga
 
 
-def _page(saga: Saga, row: int | None = 0) -> menu_forms.Page:
-    return menu_forms.Page(saga, NodeKind.SAGA, section=SESSIONS_SECTION, row=row)
+def _page(saga: Saga, row: int | None = 0) -> page_forms.Page:
+    return page_forms.Page(saga, NodeKind.SAGA, section=SESSIONS_SECTION, row=row)
 
 
 def _offered(saga: Saga, row: int | None = 0) -> set[str]:

@@ -9,6 +9,7 @@ import pytest
 from ars_magica_manager import players, seat, section_verbs, storage, viewing
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.models import Character, Player, Saga
 
 
@@ -75,8 +76,8 @@ def test_the_storyguides_seat_has_no_guard() -> None:
     assert storage.saved_by == "Gus"
 
 
-def _page(saga: Saga, character_id: str) -> menu_forms.Page:
-    return menu_forms.page_for(saga, NodeKind.CHARACTER, character_id=character_id)
+def _page(saga: Saga, character_id: str) -> page_forms.Page:
+    return page_forms.page_for(saga, NodeKind.CHARACTER, character_id=character_id)
 
 
 def test_a_players_menus_leave_off_what_is_barred() -> None:

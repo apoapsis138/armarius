@@ -14,6 +14,7 @@ from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Confirm
 from ars_magica_manager.forms import character as character_forms
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.models import (
     FULL,
     LINE,
@@ -114,7 +115,7 @@ def test_promote_and_demote_step_one_level():
     ],
 )
 def test_more_offers_what_the_level_allows(detail, offered):
-    page = menu_forms.page_for(_saga(detail), NodeKind.CHARACTER, character_id="mag1")
+    page = page_forms.page_for(_saga(detail), NodeKind.CHARACTER, character_id="mag1")
     labels = [item.label for item in menu_forms.more_items(page)]
     wanted = {"Promote", "Demote", "In Creation / In Play"}
     assert [label for label in labels if label in wanted] == offered

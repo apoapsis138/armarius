@@ -17,6 +17,7 @@ from ars_magica_manager import devotion as forms
 from ars_magica_manager.actions import NodeKind, available
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.models import (
     Ability,
     Character,
@@ -510,7 +511,7 @@ def test_devotion_points_wait_for_a_devotion_or_piety():
     saga = _saga()
     thomas = saga.character("t")
     faith = replace(
-        menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="t"),
+        page_forms.page_for(saga, NodeKind.CHARACTER, character_id="t"),
         section=FAITH_SECTION,
     )
     assert available("devotion_points", faith)
@@ -614,7 +615,7 @@ def test_a_season_of_personal_devotion_earns_five_points():
 def test_offered_on_a_person_with_the_books(action, book):
     saga = _saga(book)
     dv.note_answer(saga.character("t"), "Saint Peter", False, "Spring", 1220)
-    page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="t")
+    page = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="t")
     faith = replace(page, section=FAITH_SECTION)
     assert available(action, faith)
     assert not available(action, page)
@@ -631,7 +632,7 @@ def test_threatening_waits_for_a_refusal_and_the_saints_are_christian():
     saga = _saga()
     thomas = saga.character("t")
     faith = replace(
-        menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="t"),
+        page_forms.page_for(saga, NodeKind.CHARACTER, character_id="t"),
         section=FAITH_SECTION,
     )
     assert available("invoke_saint", faith)

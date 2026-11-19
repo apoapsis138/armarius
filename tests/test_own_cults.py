@@ -17,6 +17,7 @@ from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Choose, Confirm, Form, Refuse
 from ars_magica_manager.forms import menu as menu_forms
 from ars_magica_manager.forms import mystery_cults as cf
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.models import (
     Ability,
     Character,
@@ -684,11 +685,11 @@ def test_a_disaster_gives_both_a_major_flaw(saga):
 def test_the_experiment_is_on_the_mystagogues_deeds(saga):
     """TMRE p. 18: the Mystagogue's rolls, so her sheet offers it."""
     assert "experiment_script" not in actions.MORE_SECTIONS
-    hildegund = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="h")
+    hildegund = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="h")
     assert [i.action for i in menu_forms.placed(hildegund, deeds.MYSTERY_CULTS)] == [
         "experiment_script"
     ]
-    wulf = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="w")
+    wulf = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="w")
     assert not menu_forms.placed(wulf, deeds.MYSTERY_CULTS)
     assert isinstance(cf.mystagogue_experiment(saga, saga.character("w")), Refuse)
     form = cf.mystagogue_experiment(saga, saga.character("m"))

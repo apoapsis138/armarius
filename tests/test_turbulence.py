@@ -11,6 +11,7 @@ from ars_magica_manager import actions, deeds, seasons
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.forms import turbulence as tf
 from ars_magica_manager.models import (
     Ability,
@@ -308,7 +309,7 @@ def test_only_the_gifted_have_turbulences():
 
 def test_turbulence_is_offered_on_a_gifted_characters_record():
     saga = _saga()
-    page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="e")
+    page = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="e")
     assert actions.available("turbulence", page)
     assert "Turbulence" in [
         i.label for i in menu_forms.placed(page, deeds.APPRENTICESHIP)

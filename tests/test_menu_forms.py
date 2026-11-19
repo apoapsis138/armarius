@@ -14,6 +14,7 @@ from ars_magica_manager.actions import NodeKind, available
 from ars_magica_manager.forms import creation as creation_forms
 from ars_magica_manager.forms import importing as import_forms
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.models import (
     Book,
     IncomeSource,
@@ -39,8 +40,8 @@ def _labels(items) -> list[str]:
     return [item.label for item in items]
 
 
-def _page(saga: Saga, kind: NodeKind, **ids: str) -> menu_forms.Page:
-    return menu_forms.page_for(saga, kind, **ids)
+def _page(saga: Saga, kind: NodeKind, **ids: str) -> page_forms.Page:
+    return page_forms.page_for(saga, kind, **ids)
 
 
 def test_each_page_offers_what_applies_there():

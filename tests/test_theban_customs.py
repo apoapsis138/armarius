@@ -14,6 +14,7 @@ from ars_magica_manager import theban_customs as byzantine
 from ars_magica_manager.actions import NodeKind, available
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.models import (
     Ability,
     Character,
@@ -336,7 +337,7 @@ _SPOTS = (deeds.TRIBUNAL, deeds.SEASON_WORK, "Faith")
 )
 def test_the_customs_are_offered_on_a_character_with_the_sundered_eagle(action):
     saga = _saga()
-    page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="c")
+    page = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="c")
     assert available(action, page)
     assert action in {
         i.action for spot in _SPOTS for i in menu_forms.placed(page, spot)
@@ -348,7 +349,7 @@ def test_the_customs_are_offered_on_a_character_with_the_sundered_eagle(action):
 
 def test_icons_are_offered_only_where_they_can_be_painted_or_venerated():
     saga = _saga()
-    page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="r")
+    page = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="r")
     assert not available("paint_icon", page)
     assert not available("venerate_icon", page)
     church = saga.neighbour("ch")

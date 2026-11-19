@@ -71,6 +71,7 @@ from ....forms import creation as creation_forms
 from ....forms import menu as menu_forms
 from ....forms import menu_refresh
 from ....forms import neighbour as neighbour_forms
+from ....forms import page as page_forms
 from ....markup import escape
 from ....models import (
     FULL,
@@ -777,12 +778,12 @@ class WorkspaceBase(Screen[None]):
         """Whether `action` can run where focus is (actions.available)."""
         return actions.available(action, self._in_pass("facts", self._facts))
 
-    def _facts(self, **extras: Any) -> menu_forms.Page:
+    def _facts(self, **extras: Any) -> page_forms.Page:
         """The page on show as the core's actions ask about it
         (menu.Page): `where`, and what only the terminal knows -- where
         focus is, who is signed in, the chosen rows."""
         view = self._current_sheet_view()
-        return menu_forms.page_at(
+        return page_forms.page_at(
             self.saga,
             self.where,
             section=self._active_section(),
@@ -965,7 +966,7 @@ class WorkspaceBase(Screen[None]):
         if handler is not None:
             handler()
 
-    def _more_page(self) -> menu_forms.Page:
+    def _more_page(self) -> page_forms.Page:
         """The page on show as the core's More commands ask about it."""
         view = self._current_sheet_view()
         section = self._active_section()

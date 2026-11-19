@@ -12,6 +12,7 @@ from ars_magica_manager.actions import NodeKind, available
 from ars_magica_manager.commands import FormCard
 from ars_magica_manager.forms import interests
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.forms import religion as religion_forms
 from ars_magica_manager.models import Character, Covenant, Saga
 from ars_magica_manager.rules import creation_base
@@ -48,11 +49,11 @@ def _knight(in_creation: bool) -> Saga:
 
 
 def test_deeds_wait_while_the_character_is_in_creation():
-    page = menu_forms.page_for(_knight(True), NodeKind.CHARACTER, character_id="k")
+    page = page_forms.page_for(_knight(True), NodeKind.CHARACTER, character_id="k")
     assert not menu_forms.placed(page, deeds.SESSION)
     reputations = replace(page, section="section-reputations")
     assert not available("end_session", reputations)
-    page = menu_forms.page_for(_knight(False), NodeKind.CHARACTER, character_id="k")
+    page = page_forms.page_for(_knight(False), NodeKind.CHARACTER, character_id="k")
     assert [i.action for i in menu_forms.placed(page, deeds.SESSION)] == [
         "end_session",
         "what_changed",
@@ -60,7 +61,7 @@ def test_deeds_wait_while_the_character_is_in_creation():
 
 
 def test_the_reputations_section_keeps_only_its_own_buttons():
-    page = menu_forms.page_for(_knight(False), NodeKind.CHARACTER, character_id="k")
+    page = page_forms.page_for(_knight(False), NodeKind.CHARACTER, character_id="k")
     assert menu_forms.placed(page, "Reputations") == []
     assert "tourney_season" in {
         i.action for i in menu_forms.placed(page, deeds.SEASON_WORK)
@@ -69,7 +70,7 @@ def test_the_reputations_section_keeps_only_its_own_buttons():
 
 def test_an_unticked_interest_hides_its_actions_but_never_the_session():
     saga = _knight(False)
-    page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="k")
+    page = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="k")
     assert menu_forms.placed(page, deeds.KNIGHTLY)
     saga.characters[0].interests_off = [deeds.KNIGHTLY, deeds.SESSION]
     assert not menu_forms.placed(page, deeds.KNIGHTLY)

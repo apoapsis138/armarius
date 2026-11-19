@@ -5,6 +5,7 @@ from dataclasses import replace
 from ars_magica_manager import action_books, deeds, sourcebooks
 from ars_magica_manager.actions import MORE_MENU, NodeKind
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.models import Character, Saga
 
 
@@ -15,7 +16,7 @@ def _saga(books: list[str] | None) -> Saga:
 
 def _offered(saga: Saga) -> set[str]:
     """What the knight's page offers in the Deeds and Planning chapters."""
-    page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="k")
+    page = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="k")
     spots = (*deeds.INTERESTS, deeds.SEASON_WORK)
     return {item.action for spot in spots for item in menu_forms.placed(page, spot)}
 

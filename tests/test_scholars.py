@@ -10,6 +10,7 @@ from ars_magica_manager.actions import NodeKind, available
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import careers, scholar_seasons
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.forms import season as season_forms
 from ars_magica_manager.models import (
     Ability,
@@ -611,7 +612,7 @@ def test_the_scholars_career_form():
 def test_more_offers_the_careers():
     brogo = _brogo()
     saga = _saga(brogo)
-    page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="b")
+    page = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="b")
     assert available("artist_career", page) and available("scholar_career", page)
     assert "artist_career" in {
         i.action for i in menu_forms.placed(page, deeds.SEASON_WORK)

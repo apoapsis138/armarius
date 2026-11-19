@@ -12,6 +12,7 @@ from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import gauntlet as gf
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.models import (
     Ability,
     ArtScore,
@@ -199,7 +200,7 @@ def test_learning_a_cantation_needs_the_option():
 
 def test_the_commands_are_offered_to_an_apprentice():
     saga = _saga(cantations=True)
-    page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="a")
+    page = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="a")
     labels = [i.label for i in menu_forms.placed(page, deeds.APPRENTICESHIP)]
     assert {"Turbulence", "The Gauntlet", "Lose the Gift"} <= set(labels)
     assert "Learn a Cantation" in [
@@ -208,7 +209,7 @@ def test_the_commands_are_offered_to_an_apprentice():
     saga.character("a").virtues_flaws = [VirtueFlawInstance("vf_the_gift")]
     assert not actions.available("gauntlet", page)
     # The optional rule is for adult magi too (p. 46).
-    grown = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="a")
+    grown = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="a")
     assert "Learn a Cantation" in [
         i.label for i in menu_forms.placed(grown, "Known Spells")
     ]
