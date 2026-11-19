@@ -318,7 +318,7 @@ def since_last_session(saga: Saga, character: Character) -> Form:
 
 def delete_session(saga: Saga, session: Session) -> Confirm:
     def apply() -> None:
-        saga.sessions.remove(session)
+        ss.delete(saga, session)
 
     return Confirm(f"Delete the Session of {escape(ss.when(session))}?", apply)
 

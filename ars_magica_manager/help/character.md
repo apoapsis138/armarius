@@ -157,7 +157,10 @@ Both are in the **Manage** chapter.
 - **Update from a File**, which reads such a file back over them
 - **Print to PDF** (see [Printing a record](help:print-record))
 - **Delete**, which deletes the character after saying what happens to
-  what they own
+  what they own. Everything else that named them lets them go: charter
+  seals, ships, links, pins and season plans. Favours, a neighbour they
+  ruled, a marriage, the items they made and the books they wrote keep
+  their name, and played Sessions keep who played them.
 <!-- /gui -->
 
 ### Characteristics

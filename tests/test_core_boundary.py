@@ -155,6 +155,9 @@ LAYERS: tuple[tuple[str, frozenset[str]], ...] = (
                 "models",
                 "paths",
                 "pdf_outline",
+                # Which fields name which records: data about the models,
+                # which deleting (sessions among others) forgets through.
+                "record_links",
                 "sessions",
                 "shapes",
                 "totals",

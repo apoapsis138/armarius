@@ -1097,9 +1097,7 @@ def delete_book(saga: Saga, book: Book) -> Confirm:
     """Delete `book`, after confirming (a codex it leaves empty goes too)."""
 
     def apply() -> None:
-        if book in saga.books:
-            saga.books.remove(book)
-            bk.prune_codices(saga)
+        bk.delete(saga, book)
 
     return Confirm(f"Delete {escape(book.name or 'this book')}?", apply)
 

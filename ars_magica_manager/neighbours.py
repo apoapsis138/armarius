@@ -24,7 +24,7 @@ from . import (
     marriages,
     place_events,
     places,
-    references,
+    record_links,
     sourcebooks,
     storage,
     story_chapters,
@@ -299,10 +299,9 @@ def deletion_consequences(saga: Saga, neighbour: Neighbour) -> list[str]:
 
 
 def delete(saga: Saga, neighbour: Neighbour) -> None:
-    for other in vassals(saga, neighbour):
-        other.answers_to = None
-    references.forget_ruler(saga, neighbour)
+    """Remove `neighbour`; what names it forgets it (record_links)."""
     saga.neighbours.remove(neighbour)
+    record_links.forget(saga, record_links.NEIGHBOURS, neighbour)
     places.sync(saga)
 
 

@@ -16,8 +16,9 @@ everyone in the troupe plays) is kept on its Biographical Detail
 (Background.steward_id); `stewarded` lists a Player's.
 
 This module knows only the records; who plays whom (players.py) is asked
-by the forms and Needs You, which sit above it, so players.remove can cut
-a deleted Player's links through `forget_player`.
+by the forms and Needs You, which sit above it. A deleted Player or
+character is forgotten through record_links: planned Sessions drop them,
+played ones keep the names as written.
 
 Pattern: a plain dataclass (models.Session) with helpers beside it, as
 troupe.py keeps The Troupe's."""
@@ -27,6 +28,7 @@ from __future__ import annotations
 import uuid
 from datetime import date
 
+from . import record_links
 from .markup import escape, fit
 from .models import SEASONS, Character, Player, Saga, Session
 
@@ -287,35 +289,10 @@ def has_current_plan(saga: Saga, character: Character) -> bool:
     )
 
 
-# -- when a Player or a character goes --
-
-
-def forget_player(saga: Saga, player_id: str) -> None:
-    """Cut a deleted Player's links: from the planned Sessions (coming,
-    Away, who played whom, storyguide), and as anyone's Steward. Played
-    Sessions keep the name as written."""
-    for character in saga.characters:
-        if character.background.steward_id == player_id:
-            character.background.steward_id = ""
-    for session in saga.sessions:
-        if session.played:
-            continue
-        session.coming = [i for i in session.coming if i != player_id]
-        session.away = [i for i in session.away if i != player_id]
-        session.castings = [c for c in session.castings if c.player_id != player_id]
-        if session.storyguide_id == player_id:
-            session.storyguide_id = ""
-        session.names.pop(player_id, None)
-
-
-def forget_character(saga: Saga, character_id: str) -> None:
-    """Take a deleted character out of the planned Sessions' castings;
-    played Sessions keep its name as written."""
-    for session in saga.sessions:
-        if not session.played:
-            session.castings = [
-                c for c in session.castings if c.character_id != character_id
-            ]
+def delete(saga: Saga, session: Session) -> None:
+    """Remove `session`; the Chapters played at it forget it."""
+    saga.sessions.remove(session)
+    record_links.forget(saga, record_links.SESSIONS, session)
 
 
 def season_choices() -> list[tuple[str, str]]:

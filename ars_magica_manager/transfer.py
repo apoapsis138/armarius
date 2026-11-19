@@ -45,6 +45,7 @@ from . import (
     catalog,
     places,
     portraits,
+    record_links,
     shapes,
     storage,
     viewing,
@@ -68,12 +69,12 @@ from .models import (
     Laboratory,
     Neighbour,
     Pin,
+    Possession,
     Saga,
     Spell,
     Tribunal,
 )
 from .picture_files import MAPS, PORTRAITS, kind, safe_name
-from .rules import sites
 from .seat_view import seat_view
 
 FORMAT = "armarius-export"
@@ -450,19 +451,10 @@ def _covenant_stubs(
 
 
 def pictures_named(data: dict[str, Any]) -> list[tuple[str, str]]:
-    """The pictures an export's records name, as (folder, file name): its
-    Tribunals' and the saga's maps, and its characters' portraits."""
-    saga = data.get("saga") or {}
-    found: list[tuple[str, str]] = []
-    holders = [*(saga.get("tribunals") or []), saga]
-    for holder in holders:
-        for atlas_map in holder.get("maps") or []:
-            if atlas_map.get("picture"):
-                found.append((MAPS, str(atlas_map["picture"])))
-    for character in saga.get("characters") or []:
-        if character.get("portrait"):
-            found.append((PORTRAITS, str(character["portrait"])))
-    return list(dict.fromkeys(found))
+    """The pictures an export's records name, as (folder, file name): the
+    Picture fields of the links list (record_links.PICTURES), such as its
+    maps' and its characters' portraits."""
+    return record_links.pictures_in_data(data.get("saga") or {})
 
 
 def _local_picture(folder: str, name: str) -> Path | None:
@@ -1092,71 +1084,64 @@ def _plan_maps(job: _Import) -> None:
         job.plan.maps += _new_maps(job, job.source.maps)
 
 
-def _relink_stops(job: _Import, covenant: Covenant) -> None:
-    """A covenant's stops and route, and its ships', through the maps:
-    those at Places that aren't here are dropped."""
+#: The links list's kinds of record (record_links) as the import's.
+_RECORD_KINDS: dict[str, str] = {
+    record_links.CHARACTERS: CHARACTER,
+    record_links.COVENANTS: COVENANT,
+    record_links.LABORATORIES: LABORATORY,
+    record_links.NEIGHBOURS: NEIGHBOUR,
+    record_links.CREATURES: CREATURE,
+}
 
-    def kept(stops: list[Any]) -> list[Any]:
-        for stop in stops:
-            stop.place_id = job.link(NEIGHBOUR, stop.place_id) or ""
-        return [stop for stop in stops if stop.place_id]
+#: The kinds of record an import maps ids of through the links list.
+_MAPPED_KINDS = frozenset(
+    {
+        *_RECORD_KINDS,
+        record_links.BOOKS,
+        record_links.FAMILIARS,
+        record_links.POSSESSIONS,
+        record_links.TRIBUNALS,
+    }
+)
 
-    covenant.stops = kept(covenant.stops)
-    covenant.route = kept(covenant.route)
-    for record in covenant.possessions:
-        if record.place_id is not None:
-            record.place_id = job.link(NEIGHBOUR, record.place_id)
-            if record.place_id is None:
-                record.place_level = 0
-        if record.ship is not None:
-            record.ship.stops = kept(record.ship.stops)
-            record.ship.aboard = [
-                who
-                for old in record.ship.aboard
-                if (who := job.link(CHARACTER, old)) is not None
-            ]
+#: Links the import pairs or places itself: a magus and his laboratory
+#: (_pair_magi_and_labs), the authors of the Lab Texts he reads, and a
+#: possession's laboratory and keeper (_plan_covenants).
+_MAPPED_BY_HAND: frozenset[tuple[type, str]] = frozenset(
+    {
+        (Laboratory, "owner_id"),
+        (Character, "assigned_lab_id"),
+        (Character, "lab_text_access"),
+        (Possession, "lab_id"),
+        (Possession, "location_id"),
+    }
+)
 
 
 def _relink(job: _Import, record: Any) -> None:
-    """A record's place, attitudes, favours and links, through the maps:
-    those to records that aren't here are dropped (a favour's names
-    stay)."""
-    if hasattr(record, "place_id"):
-        record.place_id = job.link(NEIGHBOUR, record.place_id)
-        if record.place_id is None:
-            record.place_level = 0
-    if hasattr(record, "attitudes"):
-        kept = []
-        for attitude in record.attitudes:
-            attitude.covenant_id = job.link(COVENANT, attitude.covenant_id)
-            if attitude.covenant_id is not None:
-                kept.append(attitude)
-        record.attitudes = kept
-    for favour in getattr(record, "favours", []):
-        for side in ("owed_by", "owed_to"):
-            old = getattr(favour, side)
-            for record_kind in (COVENANT, CHARACTER, NEIGHBOUR):
-                new = job.link(record_kind, old)
-                if new is not None:
-                    setattr(favour, side, new)
-                    break
-    if hasattr(record, "links"):
-        maps: dict[str, Callable[[str], str | None]] = {
-            "characters": lambda old: job.link(CHARACTER, old),
-            "covenants": lambda old: job.link(COVENANT, old),
-            "places": lambda old: job.link(NEIGHBOUR, old),
-            "creatures": lambda old: job.link(CREATURE, old),
-            "books": job.book_map.get,
-            "familiars": job.familiar_map.get,
-            "possessions": lambda old: old if old in job.possessions else None,
-        }
-        kept_links = []
-        for link in record.links:
-            mapped = maps.get(link.kind, lambda _old: None)(link.target_id)
-            if mapped is not None:
-                link.target_id = mapped
-                kept_links.append(link)
-        record.links = kept_links
+    """Every id `record` (and what it holds) keeps of another record, through
+    the import's maps (record_links.map_ids): one of a record that isn't here
+    is dropped or cleared as deleting it would, or kept by its name."""
+
+    def mapped(kind: str, old: str) -> str | None:
+        if kind in _RECORD_KINDS:
+            return job.link(_RECORD_KINDS[kind], old)
+        if kind == record_links.BOOKS:
+            return job.book_map.get(old)
+        if kind == record_links.FAMILIARS:
+            return job.familiar_map.get(old)
+        if kind == record_links.TRIBUNALS:
+            return job.tribunal_map.get(old)
+        return old if old in job.possessions else None
+
+    def name_of(kind: str, old: str) -> str | None:
+        return (
+            job.link_name(_RECORD_KINDS[kind], old) if kind in _RECORD_KINDS else None
+        )
+
+    record_links.map_ids(
+        record, mapped, _MAPPED_KINDS, skip=_MAPPED_BY_HAND, name_of=name_of
+    )
 
 
 def _plan_covenants(job: _Import) -> None:
@@ -1165,21 +1150,13 @@ def _plan_covenants(job: _Import) -> None:
             continue
         covenant.id = job.record_map[COVENANT][covenant.id]
         covenant.saga_id = job.target.id
-        covenant.tribunal_id = job.tribunal_map.get(covenant.tribunal_id or "")
-        covenant.liege_id = job.link(COVENANT, covenant.liege_id)
+        # Its place, liege, Tribunal, attitudes, favours, links, stops and
+        # route, ships' crews, inhabitants' sheets and charter seals; a seal
+        # whose magus isn't here goes (a seal is a magus's, not a name), an
+        # inhabitant stays as a person with no sheet.
         _relink(job, covenant)
-        _relink_stops(job, covenant)
         for held in covenant.boons_hooks:
             held.vf_id = job.entry(held.vf_id)
-        for person in covenant.inhabitants:
-            if person.character_id:
-                # Unmatched: the entry stays, as a person with no sheet.
-                person.character_id = job.link(CHARACTER, person.character_id)
-        # A seal whose magus isn't here goes: a seal is a magus's, not a name.
-        charter = covenant.charter_of_covenant
-        for seal in charter.seals:
-            seal.character_id = job.link(CHARACTER, seal.character_id) or ""
-        charter.seals = [s for s in charter.seals if s.character_id]
         kept = []
         for possession in covenant.possessions:
             if possession.lab_id:
@@ -1204,26 +1181,12 @@ def _plan_characters(job: _Import) -> None:
             continue
         old_id = character.id
         character.id = job.record_map[CHARACTER][old_id]
-        character.covenant_id = job.link(COVENANT, character.covenant_id)
-        if character.stay is not None:
-            # A guest of a covenant this saga hasn't is a guest no more.
-            host = job.link(COVENANT, character.stay.host_id)
-            if host is None:
-                character.stay = None
-            else:
-                character.stay.host_id = host
         for held in character.virtues_flaws:
             held.vf_id = job.entry(held.vf_id)
         for known in character.spells_known:
             known.spell_id = job.new_spell_id(known.spell_id) or known.spell_id
         for spent in character.creation_xp:
             spent.target = job.spell_map.get(spent.target, spent.target)
-        character.tractatus_read = [
-            job.book_map[b] for b in character.tractatus_read if b in job.book_map
-        ]
-        character.summae_read = [
-            job.book_map[b] for b in character.summae_read if b in job.book_map
-        ]
         access = {}
         for author, level in character.lab_text_access.items():
             known_author = (
@@ -1245,7 +1208,6 @@ def _plan_laboratories(job: _Import) -> None:
         if lab.id in job.kept[LABORATORY]:
             continue
         lab.id = job.record_map[LABORATORY][lab.id]
-        lab.covenant_id = job.link(COVENANT, lab.covenant_id)
         _relink(job, lab)
         for held in lab.virtues_flaws:
             held.vf_id = job.entry(held.vf_id)
@@ -1394,19 +1356,9 @@ def _plan_neighbours(job: _Import) -> None:
             _plan_new_tables(job, neighbour)
             continue
         neighbour.id = job.record_map[NEIGHBOUR][neighbour.id]
-        neighbour.answers_to = job.link(NEIGHBOUR, neighbour.answers_to)
-        neighbour.ruler = _ruler(job, neighbour.ruler)
-        if sites.TRAVELS_WITH in neighbour.details:
-            covenant = job.link(COVENANT, neighbour.details.pop(sites.TRAVELS_WITH))
-            if covenant is not None:
-                neighbour.details[sites.TRAVELS_WITH] = covenant
-        _relink_roster(job, neighbour)
-        if neighbour.details.get(places.LANDS):
-            lands = job.tribunal_map.get(str(neighbour.details[places.LANDS]))
-            if lands:
-                neighbour.details[places.LANDS] = lands
-            else:
-                del neighbour.details[places.LANDS]
+        # Its liege, ruler (a record's id, or its name when it isn't here),
+        # the covenant it travels with or is claimed by, the Tribunal whose
+        # lands it is, and a faction's members.
         _relink(job, neighbour)
         job.plan.neighbours.append(neighbour)
 
@@ -1433,43 +1385,6 @@ def _plan_new_tables(job: _Import, neighbour: Neighbour) -> None:
             added.append({**table, "last": ""})
     if added:
         job.plan.new_tables.append((own, added))
-
-
-#: A faction's member's kind (memberships.MEMBER_KINDS) as the import's.
-_MEMBER_KINDS = {
-    "characters": CHARACTER,
-    "covenants": COVENANT,
-    "creatures": CREATURE,
-    "neighbours": NEIGHBOUR,
-}
-
-
-def _relink_roster(job: _Import, neighbour: Neighbour) -> None:
-    """A faction's members through the maps; a member left out of the
-    import (and not already in the saga) is left off."""
-    roster = neighbour.details.get("roster")
-    if not isinstance(roster, list):
-        return
-    kept = []
-    for member in roster:
-        kind, _, old = str(member.get("who") or "").partition(":")
-        new = job.link(_MEMBER_KINDS[kind], old) if kind in _MEMBER_KINDS else None
-        if new is not None:
-            kept.append({**member, "who": f"{kind}:{new}"})
-    neighbour.details["roster"] = kept
-
-
-def _ruler(job: _Import, old: str) -> str:
-    """A neighbour's ruler through the maps: the record's new id, or its
-    name when it isn't here; a typed name stays."""
-    for record_kind in (CHARACTER, NEIGHBOUR, CREATURE):
-        new = job.link(record_kind, old)
-        if new is not None:
-            return new
-        named = job.link_name(record_kind, old)
-        if named:
-            return named
-    return old
 
 
 def _plan_creatures(job: _Import) -> None:

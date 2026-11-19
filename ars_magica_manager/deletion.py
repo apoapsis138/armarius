@@ -20,7 +20,7 @@ confirmation prompt; each `delete_*` does it. Nothing here saves."""
 
 from __future__ import annotations
 
-from . import catalog, references, sessions
+from . import catalog, record_links
 from . import familiars as fam
 from .models import (
     Character,
@@ -166,9 +166,8 @@ def delete_character(saga: Saga, character: Character) -> None:
     saga.spells.extend(spells_still_used(saga, character))
     _rehome_devices(saga, "character", character.id, character.covenant_id)
     _forget_maker(saga, character)
-    references.forget_ruler(saga, character)
-    sessions.forget_character(saga, character.id)
     saga.characters = [c for c in saga.characters if c is not character]
+    record_links.forget(saga, record_links.CHARACTERS, character)
 
 
 # ------------------------------------------------------------------- familiar
@@ -240,6 +239,7 @@ def delete_familiar(saga: Saga, familiar: Familiar) -> None:
         plans = _familiar_plans(saga, magus)
         saga.season_plans = [p for p in saga.season_plans if p not in plans]
     saga.familiars = [f for f in saga.familiars if f is not familiar]
+    record_links.forget(saga, record_links.FAMILIARS, familiar)
 
 
 # ----------------------------------------------------------------- laboratory
@@ -264,9 +264,14 @@ def delete_laboratory(saga: Saga, lab: Laboratory) -> None:
             character.assigned_lab_id = None
     _unassign_books(saga, "laboratory", lab.id)
     _rehome_devices(saga, "laboratory", lab.id, lab.covenant_id)
+    extras = [p for c in saga.covenants for p in c.possessions if p.lab_id == lab.id]
     for covenant in saga.covenants:
-        covenant.possessions = [p for p in covenant.possessions if p.lab_id != lab.id]
+        covenant.possessions = [
+            p for p in covenant.possessions if not any(p is e for e in extras)
+        ]
     saga.laboratories = [x for x in saga.laboratories if x is not lab]
+    record_links.forget(saga, record_links.LABORATORIES, lab)
+    record_links.forget(saga, record_links.POSSESSIONS, *extras)
 
 
 # ------------------------------------------------------------------- covenant
@@ -306,3 +311,5 @@ def delete_covenant(saga: Saga, covenant: Covenant) -> None:
     _unassign_books(saga, "covenant", covenant.id)
     _rehome_devices(saga, "covenant", covenant.id, None)
     saga.covenants = [c for c in saga.covenants if c is not covenant]
+    record_links.forget(saga, record_links.COVENANTS, covenant)
+    record_links.forget(saga, record_links.POSSESSIONS, *covenant.possessions)
