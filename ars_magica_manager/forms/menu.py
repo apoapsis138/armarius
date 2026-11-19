@@ -17,6 +17,7 @@ the last step's apply, so cancelling any step changes nothing.
 
 from __future__ import annotations
 
+import json
 from collections.abc import Callable
 from dataclasses import dataclass, replace
 from pathlib import Path
@@ -346,6 +347,16 @@ PAGE_SECTIONS: dict[NodeKind, tuple[str | None, ...]] = {
 }
 
 
+#: Sends a file straight to the reader (a file name, its bytes and media
+#: type): a browser copy of the terminal downloads it instead of writing
+#: it to a folder on the host.
+Deliver = Callable[[str, bytes, str], None]
+
+
+#: The covenant's Income list, whose chosen source Improve Income acts on.
+INCOME_SECTION = "section-eco-income"
+
+
 @dataclass(frozen=True)
 class Page:
     """The page on show, as actions.available asks about it
@@ -367,6 +378,8 @@ class Page:
     #: The row chosen in `section`'s list, when the front-end knows it (the
     #: terminal does; the desktop's row buttons act on their own row).
     row: int | None = None
+    #: Where an export goes instead of a file, when the front-end has one.
+    deliver: Deliver | None = None
 
     # -- actions.ActionFacts --
 
@@ -1166,16 +1179,33 @@ def export_live(values: dict[str, Any]) -> str:
     return f"[dim]Writes {escape(str(path))}[/]"
 
 
-def export_record(saga: Saga, record: transfer.Record, folder: Path) -> Form:
+def downloaded(
+    deliver: Deliver, name: str, data: dict[str, Any], what: str
+) -> list[str]:
+    """Send `data` as a JSON file called `name` with `deliver`, and say so."""
+    deliver(name, json.dumps(data, indent=2).encode("utf-8"), "application/json")
+    return notes(f"Exported {escape(what)}: your browser downloads it.")
+
+
+def export_record(
+    saga: Saga,
+    record: transfer.Record,
+    folder: Path,
+    deliver: Deliver | None = None,
+) -> Form:
     """Export a covenant, laboratory or character to a file another saga
-    can import."""
+    can import; with `deliver`, straight to a browser."""
 
     def apply(values: dict[str, Any]) -> Command | list[str]:
         path = export_path(values)
-        try:
-            written = transfer.export_to(
-                path, saga, record, with_members=bool(values.get("with_members"))
+        with_members = bool(values.get("with_members"))
+        if deliver is not None:
+            data = transfer.export_data(saga, record, with_members=with_members)
+            return downloaded(
+                deliver, path.name, transfer.for_reader(data), record.name
             )
+        try:
+            written = transfer.export_to(path, saga, record, with_members=with_members)
         except OSError as problem:
             return Refuse(
                 f"Export {escape(record.name)}",
@@ -1398,10 +1428,14 @@ def improve_form(
     )
 
 
-def improve(saga: Saga, covenant: Covenant) -> Command:
+def improve(saga: Saga, covenant: Covenant, row: int | None = None) -> Command:
+    """Improve a source of income: the one chosen in the Income list
+    (`row`), or asked for."""
     sources = covenant.economics.income_sources
     if not sources:
         return Refuse("Improve Income", "No sources of income to improve.")
+    if row is not None and 0 <= row < len(sources):
+        return improve_form(saga, sources[row], covenant)
     return _one_of(
         "Improve which source of income?",
         list(sources),
@@ -1826,11 +1860,15 @@ def export_cult(saga: Saga, folder: Path) -> Form | Refuse:
     )
 
 
-def export_saga(saga: Saga, folder: Path) -> Form:
-    """Export the whole saga to a file Import reads back (A Whole Saga)."""
+def export_saga(saga: Saga, folder: Path, deliver: Deliver | None = None) -> Form:
+    """Export the whole saga to a file Import reads back (A Whole Saga);
+    with `deliver`, straight to a browser."""
 
     def apply(values: dict[str, Any]) -> Command | list[str]:
         path = export_path(values)
+        if deliver is not None:
+            data = transfer.for_reader(transfer.export_saga_data(saga))
+            return downloaded(deliver, path.name, data, saga.name)
         try:
             written = transfer.export_saga_to(path, saga)
         except OSError as problem:
@@ -1883,7 +1921,33 @@ def _export_command(page: Page) -> Command:
     record = page.record_to_export()
     if record is None:
         return Refuse("Export", "Nothing here to export.")
-    return export_record(page.saga, record, storage.exports_dir())
+    return export_record(page.saga, record, storage.exports_dir(), page.deliver)
+
+
+def _markdown_command(page: Page) -> Command:
+    deliver = page.deliver
+    record = page.record_to_delete()
+
+    def download(name: str, words: str) -> list[str]:
+        assert deliver is not None
+        deliver(name, words.encode("utf-8"), "text/markdown")
+        return notes(f"Exported {escape(name)}: your browser downloads it.")
+
+    return markdown_forms.export_markdown(
+        page.saga, record, storage.exports_dir(), download if deliver else None
+    )
+
+
+def _pack_command(page: Page) -> Command:
+    deliver = page.deliver
+
+    def download(name: str, data: dict[str, Any]) -> list[str]:
+        assert deliver is not None
+        return downloaded(deliver, name, data, data["name"])
+
+    return packs.export_pack(
+        page.saga, storage.exports_dir(), download if deliver else None
+    )
 
 
 def _update_command(page: Page) -> Command:
@@ -2029,7 +2093,15 @@ def _arms_command(page: Page) -> Command:
 #: Each menu entry's first step, by its action.
 _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "restore": _needs(_covenant, restore),
-    "improve": _needs(_covenant, improve),
+    "improve": lambda page: (
+        improve(
+            page.saga,
+            page.covenant,
+            page.row if page.section == INCOME_SECTION else None,
+        )
+        if page.covenant is not None
+        else Refuse("More", "That isn't available here.")
+    ),
     "perform_ritual": lambda page: (
         perform_ritual(page.saga, page.laboratory, page.chosen_book)
         if page.laboratory is not None
@@ -2098,12 +2170,12 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "import_data": _import_command,
     "research_bonuses": _needs(_covenant, research_bonuses),
     "export_record": _export_command,
-    "export_markdown": lambda page: markdown_forms.export_markdown(
-        page.saga, page.record_to_delete(), storage.exports_dir()
+    "export_markdown": _markdown_command,
+    "export_saga": lambda page: export_saga(
+        page.saga, storage.exports_dir(), page.deliver
     ),
-    "export_saga": lambda page: export_saga(page.saga, storage.exports_dir()),
     "export_cult": lambda page: export_cult(page.saga, storage.exports_dir()),
-    "export_pack": lambda page: packs.export_pack(page.saga, storage.exports_dir()),
+    "export_pack": _pack_command,
     "host_saga": lambda _page: hosting_forms.host_form(),
     "stop_hosting": lambda _page: hosting_forms.stop_hosting(),
     "update_record": _update_command,

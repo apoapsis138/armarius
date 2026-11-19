@@ -16,7 +16,6 @@ from ....arts import ARTS
 from ....forms import character as character_forms
 from ....models import (
     HermeticBackground,
-    LabTextAccess,
 )
 from ....rules import disease
 from ....sections import (
@@ -32,9 +31,6 @@ from ..forms import (
     _character_info_dialog,
     _characteristics_dialog,
     _characteristics_from,
-)
-from ..prompts import (
-    _lab_text_access_dialog,
 )
 from .base import (
     WorkspaceBase,
@@ -245,27 +241,6 @@ class CharacterActions(WorkspaceBase):
                 ),
             ),
             handle_result,
-        )
-
-    def _edit_lab_text_access(self) -> None:
-        """Set whose raw Lab Texts the magus reads, and to what level: an author's entry
-        is added, changed, or -- at level 0 -- removed."""
-        character = self.selected_character
-        if character is None:
-            return
-
-        def handle_result(result: tuple[str, int, str] | None) -> None:
-            if result is None:
-                return
-            author, level, via = result
-            if level > 0:
-                character.lab_text_access[author] = LabTextAccess(level, via)
-            else:
-                character.lab_text_access.pop(author, None)
-            self._commit("section-hermetic-background", "section-books")
-
-        self.app.push_screen(
-            _lab_text_access_dialog(self.saga, character), handle_result
         )
 
     # -- Spells known (magi only) --

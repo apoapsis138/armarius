@@ -11,15 +11,29 @@ handler the front-end writes.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from typing import NamedTuple
 
 from .. import traditions
+from ..models import Saga
 from ..rules import galdor
 from ..sections import (
     AGENTS_SECTION,
+    DIARY_SECTION,
     FAITH_SECTION,
+    NEIGHBOUR_INFO_SECTION,
     SESSIONS_SECTION,
+    STAGES_SECTION,
     WHEREABOUTS_SECTION,
+)
+
+#: The top panels whose title marks a record known to the players or
+#: hidden, or names its storyguide.
+INFO_SECTIONS = (
+    NEIGHBOUR_INFO_SECTION,
+    "section-cr-info",
+    "section-cov-info",
+    "section-char-info",
 )
 
 
@@ -34,14 +48,68 @@ class Refresh(NamedTuple):
     #: The sheet is built again afterwards: the change adds or removes
     #: tabs (a tradition's, a sketch's).
     reshow: bool = False
+    #: The change can reach anything on the page (an import, a file read
+    #: over the record): all of it, and its book and spell lists, drawn again.
+    whole_page: bool = False
+    #: The saga's date or details changed: its clock, the seasons and
+    #: everything that shows them drawn again.
+    date: bool = False
+    #: The kind of record the action makes (a saga_index kind, such as
+    #: "covenants"): its page is opened afterwards, at its Creation
+    #: Worksheet while it is In Creation.
+    made: str | None = None
 
 
-def changes(*sections: str, tree: bool = False, reshow: bool = False) -> Refresh:
-    return Refresh(sections, tree, reshow=reshow)
+def changes(
+    *sections: str,
+    tree: bool = False,
+    reshow: bool = False,
+    whole_page: bool = False,
+    date: bool = False,
+) -> Refresh:
+    return Refresh(sections, tree, reshow=reshow, whole_page=whole_page, date=date)
+
+
+def makes(kind: str) -> Refresh:
+    """A New action: the tree gains the record, and its page is opened."""
+    return Refresh(tree=True, made=kind)
 
 
 def calculator() -> Refresh:
     return Refresh(saves=False)
+
+
+#: Where each kind of record a New action makes is listed.
+_LISTED: dict[str, Callable[[Saga], list[str]]] = {
+    "covenants": lambda saga: [c.id for c in saga.covenants],
+    "tribunals": lambda saga: [t.id for t in saga.tribunals],
+    "neighbours": lambda saga: [n.id for n in saga.neighbours],
+    "creatures": lambda saga: [c.id for c in saga.creatures],
+    "characters": lambda saga: [c.id for c in saga.characters],
+    "laboratories": lambda saga: [lab.id for lab in saga.laboratories],
+    "familiars": lambda saga: [f.id for f in saga.familiars],
+}
+
+
+def listed(saga: Saga, kind: str) -> list[str]:
+    """The ids of the saga's records of `kind`, in order."""
+    return _LISTED[kind](saga)
+
+
+def made_since(saga: Saga, kind: str, before: set[str]) -> str | None:
+    """The record of `kind` made since `before` was listed (the last, if
+    several were), or None."""
+    fresh = [i for i in listed(saga, kind) if i not in before]
+    return fresh[-1] if fresh else None
+
+
+def told(end: object) -> list[str]:
+    """What a finished action has to say: its notes, or an outcome's
+    message (Undo Last Season's)."""
+    if isinstance(end, list):
+        return [str(line) for line in end]
+    message = getattr(end, "message", None)
+    return [message] if isinstance(message, str) and message else []
 
 
 #: Per More action (the keys of menu.MORE_MENU's actions), what it changes.
@@ -203,4 +271,41 @@ REFRESH: dict[str, Refresh] = {
     "suggest_story": changes("section-cov-hooks", "tab-cov-diary"),
     "add_stop": changes(WHEREABOUTS_SECTION),
     "shape_land": changes("section-eco-income", "tab-cov-diary"),
+    # -- what the terminal used to run with handlers of its own --
+    "improve": changes("section-eco-income"),
+    "give_silver": changes(whole_page=True),
+    "lab_text_access": changes("section-hermetic-background", "section-books"),
+    "import_data": changes(tree=True, whole_page=True),
+    "research_bonuses": changes(whole_page=True),
+    "update_record": changes(tree=True, whole_page=True),
+    "export_record": calculator(),
+    "export_markdown": calculator(),
+    "export_saga": calculator(),
+    "export_cult": calculator(),
+    "export_pack": calculator(),
+    "host_saga": calculator(),
+    "stop_hosting": calculator(),
+    "toggle_mode": changes("section-creation", tree=True),
+    "set_date": changes(date=True),
+    "undo_season": changes(tree=True, date=True),
+    "downtime_run": changes(tree=True, date=True),
+    "edit_arms": changes(NEIGHBOUR_INFO_SECTION, "section-cov-info"),
+    "found_covenant": Refresh((NEIGHBOUR_INFO_SECTION,), tree=True, made="covenants"),
+    "begin_story": changes(NEIGHBOUR_INFO_SECTION, STAGES_SECTION),
+    "delay_threat": changes(NEIGHBOUR_INFO_SECTION, STAGES_SECTION),
+    "take_up_tale": changes(NEIGHBOUR_INFO_SECTION, DIARY_SECTION),
+    "cross_threshold": changes(NEIGHBOUR_INFO_SECTION, DIARY_SECTION),
+    "merge_doubles": changes(tree=True),
+    "reveal": changes(*INFO_SECTIONS, tree=True),
+    "conceal": changes(*INFO_SECTIONS, tree=True),
+    "assign_storyguide": changes(*INFO_SECTIONS, tree=True),
+    "mark_unknown": changes(tree=True),
+    # -- New --
+    "create_covenant": makes("covenants"),
+    "create_tribunal": makes("tribunals"),
+    "create_neighbour": makes("neighbours"),
+    "create_creature": makes("creatures"),
+    "create_character": makes("characters"),
+    "create_laboratory": makes("laboratories"),
+    "create_familiar": makes("familiars"),
 }

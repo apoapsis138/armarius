@@ -15,7 +15,6 @@ from .... import saga_content as sc
 from .... import storage
 from ....form_spec import DialogField
 from ....forms import goods as goods_forms
-from ....forms import importing as import_forms
 from ....forms import saga_content as content_forms
 from ....markup import escape
 from ....models import (
@@ -27,8 +26,6 @@ from ..forms import (
     _book_fields,
     _book_from_values,
     _book_live,
-    _research_fields,
-    _research_from_values,
 )
 from ..pickers import (
     CatalogEntryPickerScreen,
@@ -47,7 +44,6 @@ from ..sheets import (
     HIDDEN_SECTION,
     HOUSE_RULES_SECTION,
     LAB_TEXTS_SECTION,
-    LIBRARY_SECTIONS,
     PLAYERS_SECTION,
     SESSIONS_SECTION,
     SOURCES_SECTION,
@@ -58,7 +54,6 @@ from ..sheets import (
     LabTextListView,
     SpellListView,
 )
-from ..steps import run_steps
 from .base import (
     NodeKind,
     WorkspaceBase,
@@ -280,28 +275,6 @@ class LibraryActions(WorkspaceBase):
             then=lambda index: then(listed[index]),
         )
 
-    def action_research_bonuses(self) -> None:
-        """Set the covenant library's research bonus per subject."""
-        covenant = self.selected_covenant
-        if covenant is None:
-            return
-        saga = self.saga
-
-        def handle_result(values: dict[str, Any] | None) -> None:
-            if values is None:
-                return
-            _research_from_values(saga, covenant, values)
-            storage.save_saga(saga)
-            self._books_changed()
-
-        self.app.push_screen(
-            FieldsDialog(
-                f"Research Bonuses: {escape(covenant.name)}'s library",
-                _research_fields(saga, covenant),
-            ),
-            handle_result,
-        )
-
     def _marked_books(self) -> list[Book]:
         view = self._book_view()
         return view.checked_books() if view is not None else []
@@ -444,30 +417,6 @@ class LibraryActions(WorkspaceBase):
             ConfirmScreen(f"Delete {escape(book.name or 'this book')}?"),
             handle_confirmed,
         )
-
-    def action_import_data(self) -> None:
-        """More's Import (import_forms): on the saga, choose what to import;
-        on a covenant's Library tab, import books straight into its
-        library."""
-        covenant = None
-        if self.selected_kind != NodeKind.SAGA:
-            covenant = self.selected_covenant
-            if covenant is None or self._active_section() not in LIBRARY_SECTIONS:
-                return
-
-        def done(end: object) -> None:
-            if not isinstance(end, list):
-                return
-            storage.save_saga(self.saga)
-            self._books_changed()
-            self._spells_changed()
-            self._rebuild_tree()
-            if self.selected_kind == NodeKind.SAGA:
-                self.call_later(self._show_saga_detail)  # its Books count
-            if end:
-                self.notify("\n".join(end))
-
-        run_steps(self.app, import_forms.import_data(self.saga, covenant), done)
 
     def _books_changed(self) -> None:
         """After any book edit: re-render the book list on show (or the

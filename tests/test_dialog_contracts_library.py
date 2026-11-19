@@ -152,8 +152,9 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Name": ""},
     ),
     "research bonuses": Contract(
-        prefill={"Ignem": "0"},
-        edits={"Ignem": "3"},
+        # The walkthrough's one step: the library's only subject, Ignem.
+        prefill={"Research bonus": "0"},
+        edits={"Research bonus": "3"},
         saved=lambda s: s.covenants[0].library_research,
         expected={"Ignem": 3},
         shown={"#lib-summary-right": "1 subject"},

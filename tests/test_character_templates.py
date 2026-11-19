@@ -180,8 +180,13 @@ async def test_creating_from_a_template_asks_for_its_blanks_then_is_in_play():
 
         def ulla_shown() -> bool:
             view = base._current_sheet_view()
+            # The covenant's sheet stays on show until Ulla's opens.
+            character = getattr(view, "character", None)
             return (
-                view is not None and view.is_mounted and view.character.name == "Ulla"
+                view is not None
+                and view.is_mounted
+                and character is not None
+                and character.name == "Ulla"
             )
 
         # Let the new sheet finish mounting before the app closes.

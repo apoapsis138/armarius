@@ -7,8 +7,6 @@ from ....form_spec import DialogField
 from ....forms import library as library_forms
 from ....forms.library import book_from_values as _book_from_values
 from ....forms.library import book_live as _book_live
-from ....forms.library import research_fields as _research_fields
-from ....forms.library import research_from_values as _research_from_values
 from ....models import Book, Saga
 from ..pickers import SpellChooserScreen
 
@@ -16,8 +14,6 @@ __all__ = [
     "_book_fields",
     "_book_from_values",
     "_book_live",
-    "_research_fields",
-    "_research_from_values",
 ]
 
 

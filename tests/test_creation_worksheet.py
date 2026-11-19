@@ -664,7 +664,7 @@ async def test_a_new_record_opens_its_worksheet():
         await pilot.press("enter")
         assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
         workspace = app.screen
-        workspace.action_create_covenant()
+        workspace._run_more("create_covenant")
         assert await wait_until(pilot, lambda: bool(app.screen.query("#fld-name")))
         app.screen.query_one("#fld-name", Input).value = "Durenmar"
         app.screen.query_one("#btn-save", Button).press()
@@ -672,6 +672,7 @@ async def test_a_new_record_opens_its_worksheet():
             pilot, lambda: isinstance(app.screen, CreationWorksheetScreen)
         )
         assert app.screen.record.name == "Durenmar"
+        assert await wait_until(pilot, lambda: bool(app.screen.query("#ws-steps")))
         assert "Baseline" in _steps(app.screen)[0]
 
 

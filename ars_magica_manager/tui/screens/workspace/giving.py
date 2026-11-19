@@ -10,11 +10,10 @@ from typing import Any
 
 from .... import enchanted_devices as ed
 from .... import giving, vis
-from ....actions import NodeKind, silver_purse
+from ....actions import NodeKind
 from ....possessions import entries_for_kind
 from ....sections import GIVE_SECTIONS
 from ..sheets.lists import BookListView
-from .base import _ScreenFacts
 from .creation import CreationActions
 
 
@@ -98,13 +97,4 @@ class GivingActions(CreationActions):
         if found is not None:
             self._run_steps(
                 giving.give_gift(self.saga, found), then=self.refresh_bindings
-            )
-
-    def action_give_silver(self) -> None:
-        """Give pounds of silver from the purse on show."""
-        purse = silver_purse(_ScreenFacts(self))
-        if purse is not None:
-            self._run_steps(
-                giving.give(self.saga, giving.SILVER, purse),
-                then=self.refresh_bindings,
             )

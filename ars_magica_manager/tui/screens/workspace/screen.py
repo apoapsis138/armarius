@@ -21,7 +21,6 @@ from .character import CharacterActions
 from .covenant import CovenantActions
 from .creation import CreationActions
 from .devices import DeviceActions
-from .export import ExportActions
 from .familiar import FamiliarActions
 from .giving import GivingActions
 from .laboratory import LaboratoryActions
@@ -42,7 +41,6 @@ class WorkspaceScreen(
     VirtueFlawActions,
     RecordActions,
     SeasonActions,
-    ExportActions,
     NavigationActions,
     GivingActions,
     CreationActions,
@@ -69,11 +67,11 @@ class WorkspaceScreen(
             "btn-char-characteristics-edit": self._edit_characteristics,
             "btn-char-health-wounds-edit": self._edit_wounds,
             "btn-char-health-fatigue-edit": self._edit_fatigue,
-            "btn-char-lab-text-access": self._edit_lab_text_access,
+            "btn-char-lab-text-access": partial(self._run_more, "lab_text_access"),
             "btn-fam-info-edit": self._edit_familiar_info,
             "btn-fam-health-wounds-edit": self._edit_familiar_wounds,
             "btn-fam-health-fatigue-edit": self._edit_familiar_fatigue,
-            "btn-mode": self._toggle_creation_mode,
+            "btn-mode": partial(self._run_more, "toggle_mode"),
             "btn-worksheet": self._open_creation_worksheet,
         }.get(event.button.id or "")
         if handler is not None:

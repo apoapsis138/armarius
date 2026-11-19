@@ -2094,12 +2094,10 @@ the library's bonus for
 each subject it has a book on, from None to +5 (a few books, a
 respectable collection, a broad and deep one, specialized, peerless).
 Under each, what the library holds on it is a guide.
-<!-- gui -->
 It walks through the subjects one at a time. Each step lists the books on
 that subject that back its bonus, and its encyclopedias. It shows the
 bonus the level you choose comes to, and the bonuses chosen so far.
 Nothing is saved until the last step's Finish.
-<!-- /gui -->
 
 **Pictorial works** on a subject raise it one level, as does an expert
 correspondence on it. Pictorial works cost 10 Build Points at creation,

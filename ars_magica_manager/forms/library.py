@@ -898,53 +898,6 @@ def book_live(values: dict[str, Any], saga: Saga, editing: Book | None = None) -
     return "\n".join(lines)
 
 
-def research_fields(saga: Saga, covenant: Covenant) -> list[DialogField]:
-    """The covenant library's research bonus per subject: a drop-down for
-    each Art or Ability it has a book on, with what it holds as a guide."""
-    options = [(label, str(level)) for level, label in bv.RESEARCH_LEVELS]
-    fields: list[DialogField] = []
-    for i, (subject, books) in enumerate(bv.library_subjects(saga, covenant).items()):
-        fields.append(
-            DialogField(
-                f"research_{i}",
-                subject,
-                "select",
-                str(covenant.library_research.get(subject, 0)),
-                options=options,
-                hint=bv.guide_text(saga, covenant, subject, books),
-            )
-        )
-        fields.append(
-            DialogField(
-                f"pictorial_{i}",
-                "  Pictorial works (+1)",
-                "check",
-                subject in covenant.pictorial_works,
-            )
-        )
-    return fields
-
-
-def research_from_values(
-    saga: Saga, covenant: Covenant, values: dict[str, Any]
-) -> None:
-    """Write the research form's levels onto the covenant (None dropped).
-    Its fields are numbered in library_subjects' order."""
-    levels = dict(covenant.library_research)
-    for i, subject in enumerate(bv.library_subjects(saga, covenant)):
-        level = int(values.get(f"research_{i}") or 0)
-        if level:
-            levels[subject] = level
-        else:
-            levels.pop(subject, None)
-    covenant.library_research = levels
-    covenant.pictorial_works = [
-        subject
-        for i, subject in enumerate(bv.library_subjects(saga, covenant))
-        if values.get(f"pictorial_{i}")
-    ]
-
-
 def _book_line(book: Book) -> str:
     """A book backing a research bonus: its name, type, Level and Quality."""
     figures = [
