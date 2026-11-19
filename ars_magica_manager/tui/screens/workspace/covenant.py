@@ -7,7 +7,6 @@ from collections.abc import Callable
 from functools import partial
 from typing import Any, ClassVar
 
-from .... import economics as eco
 from .... import (
     guest_stays,
     hermetic_projects,
@@ -29,7 +28,6 @@ from ....models import (
     INHABITANT_KINDS,
     POSSESSION_KINDS,
     Covenant,
-    IncomeSource,
     Saga,
 )
 from ....rules import covenfolk
@@ -42,9 +40,6 @@ from ....sections import (
     WHEREABOUTS_SECTION,
 )
 from ..fields import FieldsDialog
-from ..forms import (
-    _improve_income_dialog,
-)
 from ..pickers import (
     RemovalPickerScreen,
 )
@@ -88,10 +83,6 @@ class CovenantActions(WorkspaceBase):
         "emergency_savings": "Savings (pounds a year)",
     }
 
-    def _selected_economics(self, which: str) -> int | None:
-        view = self._covenant_sheet_view
-        return view.selected_economics(which) if view is not None else None
-
     def _edit_wealth(self) -> None:
         covenant = self.selected_covenant
         if covenant is None:
@@ -105,40 +96,6 @@ class CovenantActions(WorkspaceBase):
             self._commit("section-eco-wealth")
 
         self.app.push_screen(FieldsDialog(form.title, form.fields()), handle_result)
-
-    def _improve_income_source(self) -> None:
-        """Improve the chosen source of income (manually simulating a year's
-        Income Modification)."""
-        covenant = self.selected_covenant
-        if covenant is None:
-            return
-        sources = covenant.economics.income_sources
-        self._chosen_or_pick(
-            self._selected_economics("income"),
-            [escape(s.name) or "(unnamed)" for s in sources],
-            empty="No sources of income to improve.",
-            then=lambda index: self._improve_form(sources[index]),
-        )
-
-    def _improve_form(self, source: IncomeSource) -> None:
-        def handle_result(result: tuple[int, str] | None) -> None:
-            if result is None:
-                return
-            new_income, note = result
-            source.income = new_income
-            source.note = note
-            self._commit("section-eco-income")
-
-        covenant = self.selected_covenant
-        limit = (
-            (eco.magic_limit(self.saga, covenant), eco.magi_count(self.saga, covenant))
-            if covenant is not None
-            else None
-        )
-        self.app.push_screen(
-            _improve_income_dialog(source, self.saga.current_year, limit),
-            handle_result,
-        )
 
     # -- Covenant: Inhabitants tab --
 
@@ -225,9 +182,6 @@ class CovenantActions(WorkspaceBase):
             FieldsDialog(form.title, form.fields(), validate=form.validate),
             handle_result,
         )
-
-    def action_improve(self) -> None:
-        self._improve_income_source()
 
     # -- Covenant: the Ships list's More (Hermetic Projects; City & Guild) --
 

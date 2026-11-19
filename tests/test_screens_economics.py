@@ -324,10 +324,16 @@ async def test_improve_updates_multiplier_and_projected_income_live_then_confirm
         message = str(app.screen.query_one("#confirm-message", Static).render())
         assert message == "Update Salt Mine's income from 100 to 150?"
 
-        await pilot.press("n")  # decline: still on the Improve dialog, unchanged
-        await _wait_for_screen(pilot, app, FieldsDialog)
-        assert isinstance(app.screen, FieldsDialog)
+        # Declining changes nothing (the core's steps: cancelling any step
+        # stops there, as on the desktop).
+        await pilot.press("n")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        assert _eco_labels(app, "income")[0].startswith("Salt Mine Typical 100")
 
+        await menu(pilot, app, "m", "Improve Income")
+        await _wait_for_screen(pilot, app, FieldsDialog)
+        app.screen.query_one("#fld-effect", Select).value = "Boom"
+        await pilot.pause()
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
         await pilot.press("y")

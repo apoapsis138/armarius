@@ -2225,6 +2225,7 @@ def grog_year_form(character: Character) -> Form:
         grog_year_title(character),
         lambda: grog_year_fields(character, character.grog_year),
         apply,
+        help_id="grog-year",
     )
 
 

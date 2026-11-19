@@ -59,7 +59,9 @@ from ars_magica_manager.forms import grogs as grog_forms
 from ars_magica_manager.forms import hook_stories as hook_story_forms
 from ars_magica_manager.forms import inhabitant as inhabitant_forms
 from ars_magica_manager.forms import land_shaping as land_forms
+from ars_magica_manager.forms import menu as menu_forms
 from ars_magica_manager.forms import message as message_forms
+from ars_magica_manager.forms import season as season_forms
 from ars_magica_manager.forms import sheet_roll as sheet_roll_forms
 from ars_magica_manager.forms import threshold as threshold_forms
 from ars_magica_manager.forms import trait_roll as trait_roll_forms
@@ -286,7 +288,7 @@ def _grogs_aging_chart(ws) -> None:
 def _found_covenant(ws) -> None:
     """More's Found a Covenant Here, on the place marked a ruin first."""
     ws.saga.neighbour("drachenfels").details["ruined"] = True
-    ws.action_found_covenant()
+    ws._run_more("found_covenant")
 
 
 async def _open_saga_source(ws) -> None:
@@ -1007,7 +1009,7 @@ def _open_research_bonuses(ws) -> None:
     """The covenant library's research bonuses, with its summa on Ignem."""
     book = next(b for b in ws.saga.books if b.id == "b-cov")
     book.art, book.level, book.quality = "Ignem", 10, 12
-    ws.action_research_bonuses()
+    ws._run_more("research_bonuses")
 
 
 def _open_book_craft(ws) -> None:
@@ -1208,21 +1210,21 @@ OPENERS: dict[str, Opener] = {
     # Saga level
     "create saga": Opener(None, lambda p: p.action_create_saga()),
     "edit saga": Opener("saga", lambda ws: ws._edit_saga()),
-    "set date": Opener("saga", lambda ws: ws.action_set_date(), action="set_date"),
+    "set date": Opener("saga", lambda ws: ws._run_more("set_date"), action="set_date"),
     "add secret": Opener(
         "character", _built(lambda ws: ws._core_verb("section-secrets", "add"))
     ),
     "add goal": Opener(
         "character", _built(lambda ws: ws._core_verb("section-char-notes", "add"))
     ),
-    "hide from the players": Opener("saga", lambda ws: ws.action_mark_unknown()),
-    "create covenant": Opener("saga", lambda ws: ws.action_create_covenant()),
-    "create tribunal": Opener("saga", lambda ws: ws.action_create_tribunal()),
+    "hide from the players": Opener("saga", lambda ws: ws._run_more("mark_unknown")),
+    "create covenant": Opener("saga", lambda ws: ws._run_more("create_covenant")),
+    "create tribunal": Opener("saga", lambda ws: ws._run_more("create_tribunal")),
     "add faction": Opener(
         "region", lambda ws: ws._core_verb("section-region-factions", "add")
     ),
     "filter neighbours": Opener("region", _filter_neighbours),
-    "create creature": Opener("bestiary", lambda ws: ws.action_create_creature()),
+    "create creature": Opener("bestiary", lambda ws: ws._run_more("create_creature")),
     "edit creature": Opener(
         "creature", lambda ws: ws._core_verb("section-cr-info", "edit")
     ),
@@ -1427,10 +1429,10 @@ OPENERS: dict[str, Opener] = {
     "tie trigger": Opener("place", _with_crown_on_a_track),
     "grow story": Opener("region", _grow_a_story, action="grow_story"),
     "delay threat": Opener(
-        "threat", lambda ws: ws.action_delay_threat(), action="delay_threat"
+        "threat", lambda ws: ws._run_more("delay_threat"), action="delay_threat"
     ),
     "take up story": Opener("region", _take_up_a_story, action="take_up_story"),
-    "take up threat": Opener("threat", lambda ws: ws.action_take_up_tale()),
+    "take up threat": Opener("threat", lambda ws: ws._run_more("take_up_tale")),
     "edit looking ahead": Opener(
         "seasons", lambda ws: ws._core_verb("section-seasons-info", "edit")
     ),
@@ -1555,7 +1557,7 @@ OPENERS: dict[str, Opener] = {
         _pick(lambda ws: ws._core_verb("section-trib-diary", "add"), "trib-diary"),
     ),
     # Covenant
-    "create character": Opener("covenant", lambda ws: ws.action_create_character()),
+    "create character": Opener("covenant", lambda ws: ws._run_more("create_character")),
     "grog template": Opener(
         "covenant",
         lambda ws: ws._run_steps(
@@ -1622,10 +1624,12 @@ OPENERS: dict[str, Opener] = {
             tree=True,
         ),
     ),
-    "create laboratory": Opener("covenant", lambda ws: ws.action_create_laboratory()),
-    "bind familiar": Opener("covenant", lambda ws: ws.action_create_familiar()),
+    "create laboratory": Opener(
+        "covenant", lambda ws: ws._run_more("create_laboratory")
+    ),
+    "bind familiar": Opener("covenant", lambda ws: ws._run_more("create_familiar")),
     "edit covenant": Opener("covenant", lambda ws: ws._edit_covenant()),
-    "covenant arms": Opener("covenant", lambda ws: ws.action_edit_arms()),
+    "covenant arms": Opener("covenant", lambda ws: ws._run_more("edit_arms")),
     "edit sketch covenant": Opener("sketch_covenant", lambda ws: ws._edit_covenant()),
     "what matters": Opener(
         "sketch_covenant", lambda ws: ws._core_verb("section-cov-what-matters", "edit")
@@ -1651,7 +1655,13 @@ OPENERS: dict[str, Opener] = {
     ),
     "improve income": Opener(
         "covenant",
-        lambda ws: ws._improve_form(ws.selected_covenant.economics.income_sources[0]),
+        lambda ws: ws._run_steps(
+            menu_forms.improve_form(
+                ws.saga,
+                ws.selected_covenant.economics.income_sources[0],
+                ws.selected_covenant,
+            )
+        ),
     ),
     "edit personality trait": Opener(
         "character",
@@ -1806,7 +1816,9 @@ OPENERS: dict[str, Opener] = {
     ),
     "grog yearly update": Opener(
         "character",
-        lambda ws: ws._grog_year_for(ws.saga.character("grog9"), "section-char-season"),
+        lambda ws: ws._run_steps(
+            season_forms.grog_year_form(ws.saga.character("grog9"))
+        ),
     ),
     "add arcane connection": Opener(
         "laboratory", lambda ws: ws._core_verb("section-lab-connections", "add")
@@ -1921,7 +1933,7 @@ OPENERS: dict[str, Opener] = {
     "perform ritual again": Opener(
         "laboratory", _open_ritual_again, action="perform_ritual"
     ),
-    "lab texts read": Opener("character", lambda ws: ws._edit_lab_text_access()),
+    "lab texts read": Opener("character", lambda ws: ws._run_more("lab_text_access")),
     "add house rule": Opener("saga_content", _core_add("section-house-rules")),
     "add player": Opener("saga_content", _core_add("section-players")),
     "add session": Opener("saga_content", _core_add("section-sessions")),

@@ -11,6 +11,7 @@ from textual.widgets import Markdown, OptionList, TabbedContent, TextArea, Tree
 
 from ars_magica_manager import __version__, staged_projects, storage
 from ars_magica_manager import help_text as ht
+from ars_magica_manager.forms import season as season_forms
 from ars_magica_manager.models import (
     SKETCH,
     Covenant,
@@ -546,7 +547,7 @@ async def test_f1_in_a_form_opens_its_page_and_question_mark_is_typed():
     async with app.run_test(size=(140, 60)) as pilot:
         workspace = await _workspace(pilot, app)
         character = next(c for c in workspace.saga.characters if c.type == "companion")
-        workspace._plan_season_for(character, "section-char-season")
+        workspace._run_steps(season_forms.plan_season(workspace.saga, character))
         assert await wait_until(pilot, lambda: app.screen is not workspace)
         form = app.screen
         assert form.help_id == "plan-season"

@@ -144,7 +144,7 @@ async def test_the_tree_lists_neighbours_and_new_neighbour_opens_the_new_one():
             (NodeKind.NEIGHBOUR, "soest"),
         ]
         workspace.saga.books_in_play = []  # only factions and threats
-        workspace.action_create_neighbour()
+        workspace._run_more("create_neighbour")
         await pilot.pause()
         await pilot.press("enter")  # the first kind offered: Faction
         assert await wait_until(pilot, lambda: bool(app.screen.query("#fld-name")))

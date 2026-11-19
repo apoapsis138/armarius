@@ -17,6 +17,7 @@ the last step's apply, so cancelling any step changes nothing.
 
 from __future__ import annotations
 
+import json
 from collections.abc import Callable
 from dataclasses import dataclass, replace
 from pathlib import Path
@@ -64,7 +65,6 @@ from .. import (
 from .. import baraka as baraka_forms
 from .. import devotion as devotion_forms
 from .. import economics as eco
-from .. import familiars as fam
 from .. import inhabitants as inh
 from .. import lab_texts as lt
 from .. import mystic_paths as mystic_forms
@@ -110,6 +110,7 @@ from ..rules import creation as creation_rules
 from ..rules import creation_covenant as cov_creation
 from ..rules import hedge_casting as hc
 from ..sections import FAITH_SECTION, LAB_TEXTS_SECTION
+from ..where import Where
 from . import acclaim as acclaim_forms
 from . import agents as agent_forms
 from . import apothecary as apothecary_forms
@@ -345,6 +346,16 @@ PAGE_SECTIONS: dict[NodeKind, tuple[str | None, ...]] = {
 }
 
 
+#: Sends a file straight to the reader (a file name, its bytes and media
+#: type): a browser copy of the terminal downloads it instead of writing
+#: it to a folder on the host.
+Deliver = Callable[[str, bytes, str], None]
+
+
+#: The covenant's Income list, whose chosen source Improve Income acts on.
+INCOME_SECTION = "section-eco-income"
+
+
 @dataclass(frozen=True)
 class Page:
     """The page on show, as actions.available asks about it
@@ -366,6 +377,25 @@ class Page:
     #: The row chosen in `section`'s list, when the front-end knows it (the
     #: terminal does; the desktop's row buttons act on their own row).
     row: int | None = None
+    #: Where an export goes instead of a file, when the front-end has one.
+    deliver: Deliver | None = None
+    # -- what only the front-end knows (the terminal's; the desktop sets
+    # each action out where it applies) --
+    #: Focus is on the record itself (its tree node or top panel), not on
+    #: one of its sections.
+    on_the_record: bool = True
+    #: Whether whoever is reading may run an action here, when the
+    #: front-end knows better than the seat (the terminal's signed-in
+    #: player, a Steward planning seasons).
+    may: Callable[[str], bool] | None = None
+    #: What More's Give would give: the chosen row's gift.
+    gift: Callable[[], giving.Gift | None] | None = None
+    #: Whether a device action can act on the chosen device row.
+    device_actions: Callable[[str], bool] | None = None
+    #: False where there is nowhere to send a file (over SSH).
+    sends_files: bool = True
+    #: The chosen row of any section's list, when the front-end knows it.
+    rows: Callable[[str], int | None] | None = None
 
     # -- actions.ActionFacts --
 
@@ -389,6 +419,8 @@ class Page:
         return self.section
 
     def player_may(self, action: str) -> bool:
+        if self.may is not None:
+            return self.may(action)
         # The storyguide's own window anything; a player seated here
         # (seat.py) what they may do to the record on show.
         return seat.may_act(
@@ -396,7 +428,7 @@ class Page:
         )
 
     def on_record(self) -> bool:
-        return True
+        return self.on_the_record
 
     def creation_record(self) -> Character | Covenant | Laboratory | None:
         if self.kind == NodeKind.CHARACTER:
@@ -408,11 +440,11 @@ class Page:
         return None
 
     def device_action_enabled(self, action: str) -> bool:
-        return False
+        return self.device_actions(action) if self.device_actions else False
 
     def to_give(self) -> giving.Gift | None:
         # The desktop gives from each row's own Give.
-        return None
+        return self.gift() if self.gift is not None else None
 
     def record_to_export(self) -> transfer.Record | None:
         return self.creation_record()
@@ -429,11 +461,32 @@ class Page:
         return self.creation_record()
 
     def can_send_files(self) -> bool:
-        return True
+        return self.sends_files
 
     def chosen_row(self, section: str) -> int | None:
+        if self.rows is not None:
+            return self.rows(section)
         # The desktop's row buttons act on their own list's chosen row.
         return self.row if section == self.section else None
+
+
+def page_at(saga: Saga, where: Where, **extras: Any) -> Page:
+    """The Page for `where`: a character's or laboratory's covenant comes
+    with it, and a familiar's magus (Where.covenant, Where.character).
+    `extras` are the front-end's own: the section and row, the chosen
+    book, where a download goes."""
+    return Page(
+        saga,
+        where.kind,
+        covenant=where.covenant(saga),
+        character=where.character(saga),
+        laboratory=where.laboratory(saga),
+        familiar=where.familiar(saga),
+        tribunal=where.tribunal(saga),
+        neighbour=where.neighbour(saga),
+        creature=where.creature(saga),
+        **extras,
+    )
 
 
 def page_for(
@@ -448,32 +501,19 @@ def page_for(
     neighbour_id: str | None = None,
     creature_id: str | None = None,
 ) -> Page:
-    """The Page for a record's page, found by id: a character's or
-    laboratory's covenant comes with it, and a familiar's magus."""
-    character = saga.character(character_id)
-    laboratory = saga.laboratory(laboratory_id)
-    familiar = next((f for f in saga.familiars if f.id == familiar_id), None)
-    if familiar is not None and character is None:
-        character = fam.magus_of(saga, familiar)
-    if covenant_id is None:
-        covenant_id = (
-            character.covenant_id
-            if character is not None
-            else laboratory.covenant_id
-            if laboratory is not None
-            else None
-        )
-    return Page(
-        saga,
-        kind,
-        covenant=saga.covenant(covenant_id),
-        character=character,
-        laboratory=laboratory,
-        familiar=familiar,
-        tribunal=saga.tribunal(tribunal_id),
-        neighbour=saga.neighbour(neighbour_id),
-        creature=saga.creature(creature_id),
+    """page_at the page of `kind` whose id is given."""
+    if kind is None:
+        return Page(saga, None)
+    record_id = (
+        character_id
+        or laboratory_id
+        or familiar_id
+        or tribunal_id
+        or neighbour_id
+        or creature_id
+        or covenant_id
     )
+    return page_at(saga, Where(kind, record_id))
 
 
 #: The sections only a magus's sheet has.
@@ -1165,16 +1205,33 @@ def export_live(values: dict[str, Any]) -> str:
     return f"[dim]Writes {escape(str(path))}[/]"
 
 
-def export_record(saga: Saga, record: transfer.Record, folder: Path) -> Form:
+def downloaded(
+    deliver: Deliver, name: str, data: dict[str, Any], what: str
+) -> list[str]:
+    """Send `data` as a JSON file called `name` with `deliver`, and say so."""
+    deliver(name, json.dumps(data, indent=2).encode("utf-8"), "application/json")
+    return notes(f"Exported {escape(what)}: your browser downloads it.")
+
+
+def export_record(
+    saga: Saga,
+    record: transfer.Record,
+    folder: Path,
+    deliver: Deliver | None = None,
+) -> Form:
     """Export a covenant, laboratory or character to a file another saga
-    can import."""
+    can import; with `deliver`, straight to a browser."""
 
     def apply(values: dict[str, Any]) -> Command | list[str]:
         path = export_path(values)
-        try:
-            written = transfer.export_to(
-                path, saga, record, with_members=bool(values.get("with_members"))
+        with_members = bool(values.get("with_members"))
+        if deliver is not None:
+            data = transfer.export_data(saga, record, with_members=with_members)
+            return downloaded(
+                deliver, path.name, transfer.for_reader(data), record.name
             )
+        try:
+            written = transfer.export_to(path, saga, record, with_members=with_members)
         except OSError as problem:
             return Refuse(
                 f"Export {escape(record.name)}",
@@ -1397,10 +1454,14 @@ def improve_form(
     )
 
 
-def improve(saga: Saga, covenant: Covenant) -> Command:
+def improve(saga: Saga, covenant: Covenant, row: int | None = None) -> Command:
+    """Improve a source of income: the one chosen in the Income list
+    (`row`), or asked for."""
     sources = covenant.economics.income_sources
     if not sources:
         return Refuse("Improve Income", "No sources of income to improve.")
+    if row is not None and 0 <= row < len(sources):
+        return improve_form(saga, sources[row], covenant)
     return _one_of(
         "Improve which source of income?",
         list(sources),
@@ -1825,11 +1886,15 @@ def export_cult(saga: Saga, folder: Path) -> Form | Refuse:
     )
 
 
-def export_saga(saga: Saga, folder: Path) -> Form:
-    """Export the whole saga to a file Import reads back (A Whole Saga)."""
+def export_saga(saga: Saga, folder: Path, deliver: Deliver | None = None) -> Form:
+    """Export the whole saga to a file Import reads back (A Whole Saga);
+    with `deliver`, straight to a browser."""
 
     def apply(values: dict[str, Any]) -> Command | list[str]:
         path = export_path(values)
+        if deliver is not None:
+            data = transfer.for_reader(transfer.export_saga_data(saga))
+            return downloaded(deliver, path.name, data, saga.name)
         try:
             written = transfer.export_saga_to(path, saga)
         except OSError as problem:
@@ -1882,7 +1947,33 @@ def _export_command(page: Page) -> Command:
     record = page.record_to_export()
     if record is None:
         return Refuse("Export", "Nothing here to export.")
-    return export_record(page.saga, record, storage.exports_dir())
+    return export_record(page.saga, record, storage.exports_dir(), page.deliver)
+
+
+def _markdown_command(page: Page) -> Command:
+    deliver = page.deliver
+    record = page.record_to_delete()
+
+    def download(name: str, words: str) -> list[str]:
+        assert deliver is not None
+        deliver(name, words.encode("utf-8"), "text/markdown")
+        return notes(f"Exported {escape(name)}: your browser downloads it.")
+
+    return markdown_forms.export_markdown(
+        page.saga, record, storage.exports_dir(), download if deliver else None
+    )
+
+
+def _pack_command(page: Page) -> Command:
+    deliver = page.deliver
+
+    def download(name: str, data: dict[str, Any]) -> list[str]:
+        assert deliver is not None
+        return downloaded(deliver, name, data, data["name"])
+
+    return packs.export_pack(
+        page.saga, storage.exports_dir(), download if deliver else None
+    )
 
 
 def _update_command(page: Page) -> Command:
@@ -2028,7 +2119,15 @@ def _arms_command(page: Page) -> Command:
 #: Each menu entry's first step, by its action.
 _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "restore": _needs(_covenant, restore),
-    "improve": _needs(_covenant, improve),
+    "improve": lambda page: (
+        improve(
+            page.saga,
+            page.covenant,
+            page.row if page.section == INCOME_SECTION else None,
+        )
+        if page.covenant is not None
+        else Refuse("More", "That isn't available here.")
+    ),
     "perform_ritual": lambda page: (
         perform_ritual(page.saga, page.laboratory, page.chosen_book)
         if page.laboratory is not None
@@ -2097,12 +2196,12 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "import_data": _import_command,
     "research_bonuses": _needs(_covenant, research_bonuses),
     "export_record": _export_command,
-    "export_markdown": lambda page: markdown_forms.export_markdown(
-        page.saga, page.record_to_delete(), storage.exports_dir()
+    "export_markdown": _markdown_command,
+    "export_saga": lambda page: export_saga(
+        page.saga, storage.exports_dir(), page.deliver
     ),
-    "export_saga": lambda page: export_saga(page.saga, storage.exports_dir()),
     "export_cult": lambda page: export_cult(page.saga, storage.exports_dir()),
-    "export_pack": lambda page: packs.export_pack(page.saga, storage.exports_dir()),
+    "export_pack": _pack_command,
     "host_saga": lambda _page: hosting_forms.host_form(),
     "stop_hosting": lambda _page: hosting_forms.stop_hosting(),
     "update_record": _update_command,

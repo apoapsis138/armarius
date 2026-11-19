@@ -4,24 +4,18 @@ its date."""
 from __future__ import annotations
 
 from collections.abc import Callable
-from typing import Any
 
-from .... import places, storage, undo_season
+from .... import places, storage
 from ....actions import (
     NodeKind,
 )
 from ....commands import Command
 from ....forms import advance as advance_forms
-from ....forms import downtime as downtime_forms
 from ....forms import hunting as hunting_forms
 from ....forms import travel as travel_forms
 from ....sections import AHEAD_SECTION, COV_AHEAD_SECTION
-from ..fields import (
-    FieldsDialog,
-)
 from ..prompts import (
     AdvanceSeasonScreen,
-    _date_fields,
 )
 from ..season_records import SeasonSummaryScreen
 from ..steps import run_steps
@@ -106,19 +100,6 @@ class SeasonActions(WorkspaceBase):
 
         run_steps(self.app, travel_forms.travel(self.saga, covenant), done)
 
-    def action_downtime_run(self) -> None:
-        """Run Downtime: several seasons at once (forms/downtime.py), each
-        kept as it is played; the end tells what the run did."""
-        saga = self.saga
-
-        def done(end: object) -> None:
-            storage.save_saga(saga)
-            self.run_worker(self._downtime_kept(end))
-
-        run_steps(
-            self.app, downtime_forms.downtime_form(saga, storage.backup_saga), done
-        )
-
     async def _downtime_kept(self, end: object) -> None:
         """Redraw what a season of the run changed; at the run's end, tell
         what it did."""
@@ -133,39 +114,6 @@ class SeasonActions(WorkspaceBase):
         self._rebuild_tree()
         if isinstance(end, list) and end:
             self.notify("\n".join(str(line) for line in end), timeout=30)
-
-    def action_undo_season(self) -> None:
-        """Undo Last Season (undo_season.py): asked first, then the saga put
-        back in place, saved, and everything drawn again."""
-        saga = self.saga
-
-        def done(end: object) -> None:
-            if isinstance(end, undo_season.Undone):
-                storage.save_saga(saga)
-                self.run_worker(self._downtime_kept([end.message]))
-
-        run_steps(self.app, undo_season.undo_command(saga), done)
-
-    def action_set_date(self) -> None:
-        saga = self.saga
-
-        async def handle_result(result: dict[str, Any] | None) -> None:
-            if result is None:
-                return
-            season, year = result["season"], result["year"]
-            if (season, year) == (saga.current_season, saga.current_year):
-                return
-            await self._apply_saga_date(season, year)
-            self.notify(f"Date set to {season} {year}.")
-
-        self.app.push_screen(
-            FieldsDialog(
-                "Set the Saga's Date",
-                _date_fields(saga.current_season, saga.current_year),
-                save_label="Set",
-            ),
-            handle_result,
-        )
 
     # -- the hunt and Area Lore on the road (Lords of Men, City & Guild) --
 

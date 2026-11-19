@@ -44,6 +44,27 @@ def test_an_action_with_a_handler_of_its_own_is_not_also_in_the_registry():
     assert not both, both
 
 
+#: Actions the core has a command for that the terminal still runs with a
+#: handler of its own, and why. Shrink-only: an action leaves it once its
+#: terminal handler goes (STORY-2362).
+STILL_THE_TERMINALS: dict[str, str] = {
+    "restore": "also the Restore section verb of a covenant's inhabitant "
+    "lists, which restores that list's kind; the core's asks across kinds",
+}
+
+
+def test_an_action_the_core_can_run_runs_the_cores_command():
+    """The terminal runs the core's command for every action that has one
+    (menu_refresh says what it changes), rather than a copy of its own."""
+    copies = sorted(
+        item.action
+        for item in actions.MORE_MENU + actions.NEW_MENU
+        if item.action in menu_forms._COMMANDS
+        and item.action not in menu_refresh.REFRESH
+    )
+    assert copies == sorted(STILL_THE_TERMINALS)
+
+
 def test_the_registry_names_only_actions_the_core_can_run():
     assert set(menu_refresh.REFRESH) <= set(menu_forms._COMMANDS)
     on_menus = {item.action for item in actions.MORE_MENU + actions.NEW_MENU}

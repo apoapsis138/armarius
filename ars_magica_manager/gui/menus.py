@@ -19,8 +19,8 @@ from PySide6.QtWidgets import QPushButton
 from ..actions import MenuItem
 from ..commands import Command
 from ..forms import menu as menu_forms
+from ..forms import menu_refresh
 from ..forms.menu import Page
-from ..models import Saga
 from .markup_html import plain
 from .themes import Palette
 from .widgets import NewCard, edit_button
@@ -28,18 +28,6 @@ from .widgets import NewCard, edit_button
 #: Runs a command, then (once its last step is answered) `then` instead
 #: of drawing the page again.
 RunThen = Callable[[Command, Callable[[], None] | None], None]
-
-#: Where a New entry's record is listed, to find the one it made.
-_MADE: dict[str, Callable[[Saga], list[str]]] = {
-    "create_covenant": lambda saga: [c.id for c in saga.covenants],
-    "found_covenant": lambda saga: [c.id for c in saga.covenants],
-    "create_tribunal": lambda saga: [t.id for t in saga.tribunals],
-    "create_neighbour": lambda saga: [n.id for n in saga.neighbours],
-    "create_creature": lambda saga: [c.id for c in saga.creatures],
-    "create_character": lambda saga: [c.id for c in saga.characters],
-    "create_laboratory": lambda saga: [lab.id for lab in saga.laboratories],
-    "create_familiar": lambda saga: [f.id for f in saga.familiars],
-}
 
 
 def _choose(
@@ -56,18 +44,19 @@ def _choose(
     def steps() -> Command:
         return command if command is not None else menu_forms.command(page, action)
 
-    listed = _MADE.get(action)
-    if listed is None:
+    refresh = menu_refresh.REFRESH.get(action)
+    kind = refresh.made if refresh is not None else None
+    if kind is None:
         return lambda: run(steps(), None)
     saga = page.saga
 
     def made() -> None:
-        before = set(listed(saga))
+        before = set(menu_refresh.listed(saga, kind))
 
         def then() -> None:
-            fresh = [i for i in listed(saga) if i not in before]
-            if fresh:
-                show(action, fresh[-1])
+            fresh = menu_refresh.made_since(saga, kind, before)
+            if fresh is not None:
+                show(action, fresh)
 
         run(steps(), then)
 

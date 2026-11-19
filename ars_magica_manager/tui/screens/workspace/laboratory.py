@@ -83,7 +83,6 @@ class LaboratoryActions(WorkspaceBase):
             if result is None:
                 return
             lf.apply_identity(self.saga, lab, result)
-            self.selected_covenant = self.saga.covenant(lab.covenant_id)
             self._commit("section-lab-identity", tree=True)
 
         self.app.push_screen(

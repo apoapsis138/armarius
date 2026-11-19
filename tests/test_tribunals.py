@@ -517,7 +517,7 @@ async def test_new_tribunal_opens_it_and_d_deletes_it():
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 60)) as pilot:
         workspace = await _workspace(pilot, app)
-        workspace.action_create_tribunal()
+        workspace._run_more("create_tribunal")
         await pilot.pause()
         app.screen.query_one("#fld-name").value = "Provence"
         app.screen.query_one("#btn-save").press()

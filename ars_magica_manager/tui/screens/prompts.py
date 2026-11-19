@@ -6,7 +6,6 @@ from __future__ import annotations
 
 from collections.abc import Callable, Sequence
 from dataclasses import replace
-from pathlib import Path
 from typing import Any, ClassVar
 
 from textual.app import ComposeResult
@@ -21,7 +20,7 @@ from textual.widgets import (
 )
 from textual.widgets.option_list import Option
 
-from ... import hosted_signin, transfer
+from ... import hosted_signin
 from ... import house_rules as hr
 from ... import lab_texts as lt
 from ... import players as pl
@@ -40,7 +39,7 @@ from ...forms import vis as vis_forms
 from ...forms.ability import ability_fields as _ability_fields
 from ...forms.ability import ability_problem as _ability_problem
 from ...forms.advance import AdvanceText
-from ...markup import escape, todo
+from ...markup import escape
 from ...models import (
     LAB_ACTIVITIES,
     LAB_TEXT_KINDS,
@@ -187,69 +186,6 @@ def _raw_vis_dialog(
     )
 
 
-def _export_dialog(
-    record: transfer.Record, folder: Path
-) -> FieldsDialog[tuple[Path, bool]]:
-    """Export a covenant, laboratory or character to a file:
-    where to write it, and for a covenant whether its laboratories and
-    characters go too. Builds (the file, with members?)."""
-    kind = transfer.kind_of(record)
-
-    def path_of(values: dict[str, Any]) -> Path:
-        name = (values.get("file") or "").strip().strip('"')
-        path = Path(name).expanduser()
-        if name and not path.name.lower().endswith(".json"):
-            path = path.with_name(path.name + transfer.SUFFIX)
-        return path
-
-    def problem(values: dict[str, Any]) -> str | None:
-        if not (values.get("file") or "").strip():
-            return "Give the file to write."
-        if path_of(values).is_dir():
-            return "That is a folder: add a file name."
-        return None
-
-    def live(values: dict[str, Any]) -> str:
-        if problem(values):
-            return ""
-        path = path_of(values)
-        if path.exists():
-            return todo(f"{escape(path.name)} exists: it will be replaced.")
-        return f"[dim]Writes {escape(str(path))}[/]"
-
-    fields = [
-        DialogField(
-            "_what", "Exporting", "info", f"{transfer.KIND_LABELS[kind]}: {record.name}"
-        ),
-        DialogField(
-            "file",
-            "File",
-            "text",
-            str(folder / transfer.default_file_name(record)),
-            hint="What it holds travels with it: a character's familiar, devices, "
-            "books and Diary; a laboratory's books and devices. Import it into "
-            "another saga with More's Import on that saga.",
-        ),
-    ]
-    if kind == transfer.COVENANT:
-        fields.append(
-            DialogField(
-                "with_members",
-                "With its laboratories and characters",
-                "check",
-                False,
-            )
-        )
-    return FieldsDialog(
-        f"Export {escape(record.name)}",
-        fields,
-        save_label="Export",
-        validate=problem,
-        live=live,
-        build=lambda values: (path_of(values), bool(values.get("with_members"))),
-    )
-
-
 def _player_dialog(saga: Saga, existing: Player | None) -> FieldsDialog[dict[str, Any]]:
     """Add or edit someone who can sign in to the saga from a browser
     (saga_content_forms.player_fields). Builds the values players.add /
@@ -377,83 +313,6 @@ def _house_rule_dialog(
         validate=lambda values: scf.house_rule_problem(saga, existing, values),
         live=lambda values: scf.house_rule_live(existing, values),
         build=lambda values: scf.house_rule_values(existing, values),
-    )
-
-
-def _lab_text_access_dialog(
-    saga: Saga, character: Character
-) -> FieldsDialog[tuple[str, int, str]]:
-    """Whose raw Lab Texts a magus reads: an author -- a magus
-    of the saga, or a name typed for one outside it --, the level he reads
-    them to (0 forgets the author) and how he came to. Choosing an author
-    he already reads fills in what is recorded. Builds (the author's key,
-    level, how)."""
-    magi = lt.author_options(saga, character)
-    known = dict(lt.access_rows(saga, character))
-    outside = [key for key in known if saga.character(key) is None]
-
-    def recorded(values: dict[str, Any]) -> dict[str, Any]:
-        access = character.lab_text_access.get(values.get("author") or "")
-        if access is None:
-            return {}
-        return {"level": access.level, "via": access.via or None}
-
-    def author(values: dict[str, Any]) -> str:
-        return values.get("author") or (values.get("name") or "").strip()
-
-    def problem(values: dict[str, Any]) -> str | None:
-        if not author(values):
-            return "Choose the author, or type the name of one outside the saga."
-        if values["level"] < 0:
-            return "Level can't be negative."
-        return None
-
-    return FieldsDialog(
-        f"Lab Texts {escape(character.name)} reads",
-        [
-            DialogField(
-                "_known",
-                "Reads now",
-                "info",
-                "; ".join(known.values()) or "(only his own and general texts)",
-            ),
-            DialogField(
-                "author",
-                "Author",
-                "select",
-                None,
-                options=magi,
-                allow_blank=True,
-                placeholder="(a magus of the saga)",
-                fills=recorded,
-            ),
-            DialogField(
-                "name",
-                "or an author outside it",
-                "text",
-                outside[0] if len(outside) == 1 and not magi else "",
-                show_if=lambda values: not values.get("author"),
-            ),
-            DialogField(
-                "level",
-                "Reads to level",
-                "int",
-                0,
-                hint="0 forgets this author. A text above the level needs more "
-                "decoding.",
-            ),
-            DialogField(
-                "via",
-                "How",
-                "select",
-                None,
-                options=[("Decoded", "decoded"), ("Taught", "taught")],
-                allow_blank=True,
-                placeholder="(not recorded)",
-            ),
-        ],
-        validate=problem,
-        build=lambda values: (author(values), values["level"], values.get("via") or ""),
     )
 
 
