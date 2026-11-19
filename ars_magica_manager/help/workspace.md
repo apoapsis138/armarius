@@ -1566,6 +1566,7 @@ Preview: turn on Virtual Tabletop in Settings.
 While a Session is under way, a form whose roll the story calls for in the moment, for a character acting in a scene, is a **Table roll**: the host rolls its dice, and the roll goes to the [Chronicle](help:chronicle). These are the Personality Trait roll, Take Harm, Invoke Baraka, a saint's or God's aid, the holy life's and Theban customs' rolls, Holy Influence, Sin, Command the Beast, craft magic, Lacunae, Cast a Power, Galdor, Ars Goetia, the spirits, divination and dreams of Mythic Europe, faerie dealings, Turbulence, Reputation and House Acclaim, a cover's disguise, an agent's risks, a ship's Stress Check and Ship Combat, Open a Tunnel, melee events, disputations and polemic, a Tribunal debate, Sell Finished Goods, the Hunt, a place's roll tables, a town court's case, Exorcism and Hubris.
 
 - Each such form gains **Who sees the roll**: Public, Private, or Blind for the Session's storyguide alone. The storyguide's start at Blind, a player's at Public. A roll made without a form, such as a place's roll table or a Tribunal debate, is Blind for the storyguide and Public for a player.
+- A form for a character is rolled as any roll is: a player rolls only for the characters they play tonight, and a character who is dead, Incapacitated or Unconscious rolls nothing. A form for no one in particular, such as a place's roll table, is anyone's to roll.
 - A form's die field ("Stress die", "Blank: rolled") is hidden: the host rolls.
 - The form still works its rule and says what came of it as it always has, ending with [its dice](help:dice-line). Its Chronicle line is the form's name, the character, each die the host drew in order (a stress die with its doublings and botch dice, a simple die, and any other dice the form drew), and the form's result, word for word. A roll whose result you're asked to keep, such as Take Harm or a Disputatio, shows that result too. A form rolled at a Remote seat shows its faces as drawn, then its dice line.
 - At a Remote seat, each die is drawn from the host as the form needs it. The seat can't choose its dice or roll again quietly.
@@ -1622,7 +1623,7 @@ A roll made from the Chronicle rather than from a sheet. You say what to roll, n
 - **Ease Factor**: blank for none. With one, the Chronicle says whether the roll succeeded and by how much.
 - **For**: what the roll is for, shown on its card.
 - **Character**: a player rolls only for the characters they play tonight. The Session's storyguide rolls for any character, or for no one.
-- **Who sees it**: Public, Private or, for the Session's storyguide, Blind (see [The Chronicle](help:chronicle)).
+- **Who sees it**: Public, Private or, for the Session's storyguide, Blind (see [The Chronicle](help:chronicle)). The storyguide's start at Blind, a player's at Public, as every roll's do.
 
 **Roll** sends it. If it can't be rolled, the reason is shown and nothing is added. To roll a Characteristic and Ability without adding them up, [roll from the sheet](help:sheet-roll) instead.
 

@@ -14,7 +14,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import Any
 
-from .. import chronicle
+from .. import chronicle, table_rules
 from ..commands import Form, notes
 from ..form_spec import DialogField
 from ..markup import escape
@@ -36,20 +36,17 @@ FREE_ROLL_HELP = "free-roll"
 def character_options(saga: Saga, session: Session, who: str) -> list[tuple[str, str]]:
     """The characters `who` may roll for: a player's own tonight, or for
     the Session's storyguide, no one or any character."""
-    if who == chronicle.storyguide_of(session, saga):
+    if who == table_rules.storyguide_of(session, saga):
         return [("(no one)", "")] + [(escape(c.name), c.id) for c in saga.characters]
-    mine = {c.character_id for c in session.castings if c.player_id == who}
+    mine = table_rules.plays(session, who)
     return [(escape(c.name), c.id) for c in saga.characters if c.id in mine]
 
 
 def visibility_options(saga: Saga, session: Session, who: str) -> list[tuple[str, str]]:
-    shown = [
-        ("Public: everyone at the Session", chronicle.PUBLIC),
-        ("Private: you and the storyguide", chronicle.PRIVATE),
-    ]
-    if who == chronicle.storyguide_of(session, saga):
-        shown.append(("Blind: the number is yours alone", chronicle.BLIND))
-    return shown
+    """Who may see `who`'s roll (table_rules)."""
+    return table_rules.visibility_options(
+        who == table_rules.storyguide_of(session, saga)
+    )
 
 
 def _problem(values: dict[str, Any]) -> str | None:
@@ -211,7 +208,7 @@ def free_roll_form(saga: Saga, session: Session, who: str, submit: Submit) -> Fo
                 "visibility",
                 "Who sees it",
                 "select",
-                chronicle.PUBLIC,
+                table_rules.default_visibility(saga, session, who),
                 options=visibility_options(saga, session, who),
             ),
         ]

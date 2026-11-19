@@ -21,7 +21,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from .. import catalog, chronicle
+from .. import catalog, chronicle, table_rules
 from ..commands import Form, Refuse, notes
 from ..form_spec import DialogField
 from ..markup import escape
@@ -138,7 +138,6 @@ def roll_form(
         if book is not None
         else ROLL_CHARACTERISTICS[0]
     )
-    storyguide = who == chronicle.storyguide_of(session, saga)
     specialties = ", ".join(
         f"{a.name}: {a.specialty}" for a in character.abilities if a.specialty
     )
@@ -199,7 +198,7 @@ def roll_form(
                 "visibility",
                 "Who sees it",
                 "select",
-                chronicle.BLIND if storyguide else chronicle.PUBLIC,
+                table_rules.default_visibility(saga, session, who),
                 options=free_roll.visibility_options(saga, session, who),
             ),
         ]
@@ -239,16 +238,21 @@ def roll_form(
     )
 
 
-def why_not_roll_here(saga: Saga, character: Character) -> str | None:
+def why_not_offered(saga: Saga, character: Character) -> str | None:
     """Why the sheet offers no Roll for `character` now, or None: a Session
     must be Under way, and whoever uses this copy may roll for them (a
-    player for a character cast to them tonight)."""
+    player for a character cast to them tonight). One who can't act is
+    still offered it, and told why when they try."""
     session = chronicle.under_way(saga)
     if session is None:
         return "No Session is under way."
     who = chronicle.here()
-    if who != chronicle.storyguide_of(session, saga):
-        plays = {c.character_id for c in session.castings if c.player_id == who}
-        if character.id not in plays:
-            return "Roll for a character you play tonight."
-    return chronicle.why_not_act(character)
+    return table_rules.why_not_roll_for(
+        saga, session, who, character.id, table_rules.PUBLIC
+    )
+
+
+def why_not_roll_here(saga: Saga, character: Character) -> str | None:
+    """Why `character` can't be rolled for from the sheet now, or None: it
+    must be offered (`why_not_offered`) and the character able to act."""
+    return why_not_offered(saga, character) or table_rules.why_not_act(character)

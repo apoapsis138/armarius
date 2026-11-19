@@ -1779,8 +1779,7 @@ def _rolls_from_sheet(facts: ActionFacts, section: str) -> bool:
         return False
     if viewing.current().hosts and not virtual_tabletop.on():
         return False
-    why = sheet_roll.why_not_roll_here(facts.saga, character)
-    return why is None or why == chronicle.why_not_act(character)
+    return sheet_roll.why_not_offered(facts.saga, character) is None
 
 
 def _reads_chronicle(facts: ActionFacts, section: str) -> bool:
