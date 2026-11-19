@@ -763,10 +763,6 @@ def form_roll_line(body: dict[str, Any]) -> str:
     return f"{body['form']}{who}: {shown}; {said}".rstrip("; ")
 
 
-#: The kinds of entry a Strike may take from the count: rolls.
-STRIKABLE = frozenset({ROLL, FORM_ROLL})
-
-
 def strike(
     book: Chronicle,
     session: Session,
@@ -1348,24 +1344,6 @@ def message_fact(entry: Entry, saga: Saga, viewer: viewing.Viewer) -> references
 
 # -- words typed into the Chronicle --
 
-#: The keys of each kind's body that hold words someone typed, which
-#: Chronicle.add puts through the character rule (shapes.why_not_words).
-TYPED: dict[str, tuple[str, ...]] = {
-    MESSAGE: ("words",),
-    ROLL: ("for",),
-    ROLLED: ("for",),
-    REQUEST: ("for",),
-    VOID: ("reason",),
-    OUTCOME: ("text",),
-    # A form's name may come from a seat; its result lines are checked
-    # where a seat sends them (remote/events), since the host's own forms
-    # write theirs.
-    FORM_ROLL: ("form",),
-}
-#: The kinds whose bodies hold no typed words: numbers and names from the
-#: saga. A ROLLED line's "for" copies its roll's, already checked.
-UNTYPED = frozenset({BEGIN, END, CONFIDENCE, REQUEST_EASE})
-
 
 def typed_problem(kind: str, body: dict[str, Any]) -> str | None:
     """Why an entry of `kind` may not keep `body`'s typed words (a text,
@@ -1417,39 +1395,22 @@ def _roll_line(body: dict[str, Any]) -> str:
 
 
 def _line(entry: Entry, struck: dict[int, str]) -> str:
-    if entry.kind == BEGIN:
-        return "Session begun."
-    if entry.kind == END:
-        return "Session ended."
-    if entry.kind in STRIKABLE:
-        line = (
-            _roll_line(entry.body) if entry.kind == ROLL else form_roll_line(entry.body)
-        )
+    spec = KINDS.get(entry.kind)
+    if spec is None:
+        return UNKNOWN
+    line = spec.line(entry.body)
+    if spec.strikable:
         if entry.number in struck:
             line = f"STRUCK ({struck[entry.number]}): {line}"
         if entry.audience.to != TABLE:
             line += " [Blind]" if entry.audience.to == STORYGUIDE else " [Private]"
-        return line
-    if entry.kind == ROLLED:
-        who = entry.body["character_name"] or "A character"
-        what = f" ({entry.body['for']})" if entry.body["for"] else ""
-        return f"{who}{what}: the storyguide rolled."
-    if entry.kind == VOID:
-        return f"Roll {entry.body['strikes']} is struck: {entry.body['reason']}"
-    if entry.kind == CONFIDENCE:
-        return confidence_line(entry.body)
-    if entry.kind == REQUEST:
-        return request_line(entry.body)
-    if entry.kind == REQUEST_EASE:
-        return (
-            f"Request {entry.body['request']}'s Ease Factor, kept from its "
-            f"players: {entry.body['ease_factor']}"
-        )
-    if entry.kind == OUTCOME:
-        return f"Request {entry.body['request']}: {entry.body['text']}"
-    if entry.kind == MESSAGE:
-        return f"{message_label(entry.body)}: {entry.body['words']}"
-    return UNKNOWN
+    return line
+
+
+def _rolled_line(body: dict[str, Any]) -> str:
+    who = body["character_name"] or "A character"
+    what = f" ({body['for']})" if body["for"] else ""
+    return f"{who}{what}: the storyguide rolled."
 
 
 def confidence_line(body: dict[str, Any]) -> str:
@@ -1464,6 +1425,125 @@ def confidence_line(body: dict[str, Any]) -> str:
         verdict = "succeeds" if body["succeeded"] else "fails"
         line += f", {verdict}, margin {body['margin']}"
     return line
+
+
+# -- the kinds of entry --
+
+#: How an entry is drawn as a card (each front-end keeps its own look):
+#: a note (its line alone), a roll, a form's roll, a Roll request with its
+#: answers gathered, a Message, or nothing (it amends another's card).
+NOTE, ROLL_CARD, FORM_ROLL_CARD, REQUEST_CARD, MESSAGE_CARD, NO_CARD = (
+    "note",
+    "roll",
+    "form_roll",
+    "request",
+    "message",
+    "none",
+)
+
+
+def _never(_entry: Entry) -> bool:
+    return False
+
+
+def _always(_entry: Entry) -> bool:
+    return True
+
+
+@dataclass(frozen=True)
+class Kind:
+    """One kind of entry, described once. `typed`: the keys of its body
+    holding words someone typed, which Chronicle.add puts through the
+    character rule (shapes.why_not_words). `line`: its line from its
+    body. `strikable`: a roll a Strike may take from the count (its line
+    then says so, and who saw it). `card`: how it is drawn. `amends`:
+    whether it changes cards already drawn (a pane draws them again).
+    `sounds`: a roll landing, which a pane may sound. `storyguide_skips`:
+    the Session's storyguide doesn't read it (they have the roll itself)."""
+
+    name: str
+    line: Callable[[dict[str, Any]], str]
+    typed: tuple[str, ...] = ()
+    strikable: bool = False
+    card: str = NOTE
+    amends: Callable[[Entry], bool] = _never
+    sounds: bool = False
+    storyguide_skips: bool = False
+
+
+#: Every kind of entry the Chronicle writes, by name.
+KINDS: dict[str, Kind] = {
+    spec.name: spec
+    for spec in (
+        Kind(BEGIN, lambda _body: "Session begun."),
+        Kind(END, lambda _body: "Session ended."),
+        Kind(
+            ROLL,
+            _roll_line,
+            typed=("for",),
+            strikable=True,
+            card=ROLL_CARD,
+            # An answer to a Roll request is gathered on the request's card.
+            amends=lambda entry: "request" in entry.body,
+            sounds=True,
+        ),
+        Kind(
+            FORM_ROLL,
+            form_roll_line,
+            # A form's name may come from a seat; its result lines are
+            # checked where a seat sends them (remote/events), since the
+            # host's own forms write theirs.
+            typed=("form",),
+            strikable=True,
+            card=FORM_ROLL_CARD,
+            sounds=True,
+        ),
+        # Its "for" copies its roll's, already checked; kept typed all the same.
+        Kind(ROLLED, _rolled_line, typed=("for",), sounds=True, storyguide_skips=True),
+        Kind(
+            VOID,
+            lambda body: f"Roll {body['strikes']} is struck: {body['reason']}",
+            typed=("reason",),
+            card=NO_CARD,
+            amends=_always,
+        ),
+        Kind(CONFIDENCE, confidence_line, amends=_always),
+        Kind(REQUEST, request_line, typed=("for",), card=REQUEST_CARD),
+        Kind(
+            REQUEST_EASE,
+            lambda body: (
+                f"Request {body['request']}'s Ease Factor, kept from its "
+                f"players: {body['ease_factor']}"
+            ),
+            card=NO_CARD,
+            amends=_always,
+        ),
+        Kind(
+            OUTCOME,
+            lambda body: f"Request {body['request']}: {body['text']}",
+            typed=("text",),
+            amends=_always,
+        ),
+        Kind(
+            MESSAGE,
+            lambda body: f"{message_label(body)}: {body['words']}",
+            typed=("words",),
+            card=MESSAGE_CARD,
+        ),
+    )
+}
+
+#: The keys of each kind's body that hold typed words (KINDS' `typed`).
+TYPED: dict[str, tuple[str, ...]] = {k: s.typed for k, s in KINDS.items() if s.typed}
+#: The kinds whose bodies hold no typed words: numbers and names from the saga.
+UNTYPED = frozenset(k for k, s in KINDS.items() if not s.typed)
+#: The kinds of entry a Strike may take from the count: rolls.
+STRIKABLE = frozenset(k for k, s in KINDS.items() if s.strikable)
+
+
+def kind_of(entry: Entry) -> Kind | None:
+    """`entry`'s kind, or None for one this version doesn't know."""
+    return KINDS.get(entry.kind)
 
 
 def text(entries: list[Entry], book: Chronicle) -> str:
@@ -1576,7 +1656,12 @@ def for_reader(
 
 def reads(entry: Entry, who: str, session: Session, saga: Saga | None = None) -> bool:
     """Whether `who` reads `entry` (for_reader, one entry at a time)."""
-    if entry.kind == ROLLED and who == storyguide_of(session, saga):
+    spec = KINDS.get(entry.kind)
+    if (
+        spec is not None
+        and spec.storyguide_skips
+        and who == storyguide_of(session, saga)
+    ):
         return False
     return sees(entry, who, session, saga)
 

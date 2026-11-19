@@ -303,17 +303,25 @@ def test_the_chronicle_itself_refuses_typed_text_with_an_emoji(
         book.add(kind, HOST, chronicle.table(), {key: f"Huzzah {EMOJI}"})
 
 
-def test_every_kind_of_entry_says_which_of_its_texts_are_typed() -> None:
-    """Each kind the Chronicle shows a line for is sorted into TYPED or
-    UNTYPED, so a new kind's typed words can't skip the character rule."""
+def test_every_kind_the_chronicle_writes_is_described_once() -> None:
+    """Each kind of entry the Chronicle writes has its spec in KINDS (its
+    line, its typed words, whether it can be struck, how it is drawn), so
+    a new kind can't skip the character rule or show as unknown."""
     source = Path(chronicle.__file__).read_text(encoding="utf-8")
-    shown = {
-        getattr(chronicle, name) for name in re.findall(r"kind == ([A-Z_]+)", source)
+    written = {
+        getattr(chronicle, name)
+        for pattern in (
+            r"\.add\(\s*([A-Z_]+),",  # book.add(KIND, ...)
+            r"_write_roll\(\s*book,\s*saga,\s*session,\s*([A-Z_]+),",
+            r"\(\s*([A-Z_]+),\s*by,",  # an entry that follows another (then=)
+        )
+        for name in re.findall(pattern, source)
     }
-    shown |= chronicle.STRIKABLE
 
-    assert shown == set(chronicle.TYPED) | chronicle.UNTYPED
+    assert written == set(chronicle.KINDS)
+    assert set(chronicle.TYPED) | chronicle.UNTYPED == set(chronicle.KINDS)
     assert not set(chronicle.TYPED) & chronicle.UNTYPED
+    assert all(spec.name == name for name, spec in chronicle.KINDS.items())
 
 
 def test_the_dice_lines_maths_signs_are_typed_text_the_chronicle_keeps() -> None:
