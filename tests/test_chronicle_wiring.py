@@ -24,6 +24,7 @@ from test_remote_events import PASSCODE, Table
 from ars_magica_manager import chronicle, commands, storage, viewing, virtual_tabletop
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.chronicle_pane import ChroniclePane, DiceRow
+from ars_magica_manager.gui.chronicle_wiring import ChronicleWiring
 from ars_magica_manager.gui.themes import SCRIPTORUM
 from ars_magica_manager.gui.window import MainWindow
 from ars_magica_manager.models import Casting, Character, Player, Saga, Session
@@ -91,6 +92,62 @@ def test_a_failing_subscriber_never_leaves_a_blind_roll_half_written() -> None:
     assert [e.kind for e in on_file.entries] == ["begin", "roll", "rolled"]
 
 
+# -- the wiring on its own, without a window --
+
+
+def _wired() -> tuple[ChronicleWiring, ChroniclePane, list[bool], list[str]]:
+    pane = ChroniclePane(SCRIPTORUM, lambda _c: None)
+    shown: list[bool] = []
+    told: list[str] = []
+    wiring = ChronicleWiring(pane, shown.append, lambda title, _why: told.append(title))
+    return wiring, pane, shown, told
+
+
+@pytest.mark.usefixtures("app")
+def test_the_wiring_shows_the_hosts_chronicle_and_opens_a_session_begun_since(
+    app: QApplication,
+) -> None:
+    virtual_tabletop.set_on(True)
+    saga = _saga()
+    wiring, pane, shown, _told = _wired()
+    wiring.opened(saga)
+    chronicle.begin(saga, saga.sessions[0], by=HOST)
+
+    wiring.draw(saga, None, "")
+
+    assert shown[-1] and isinstance(pane.book, chronicle.Chronicle)
+    assert not pane.collapsed  # begun since the saga was opened
+    assert [str(pane.book.path)] == wiring.watch.files()
+    chronicle.Chronicle(pane.book.path, []).add("note", "ana", chronicle.table(), {})
+    assert _until(app, lambda: len(pane.lines()) == 2)
+
+
+@pytest.mark.usefixtures("app")
+def test_the_wiring_hides_a_damaged_chronicle_and_says_so_once() -> None:
+    virtual_tabletop.set_on(True)
+    saga = _saga()
+    book = chronicle.begin(saga, saga.sessions[0], by=HOST)
+    book.path.write_text("not json\n{}\n", encoding="utf-8")
+    chronicle.forget_open()
+    wiring, pane, shown, told = _wired()
+
+    wiring.draw(saga, None, "")
+    wiring.draw(saga, None, "")
+
+    assert shown[-1] is False and pane.book is None
+    assert told == ["Chronicle"]
+
+
+@pytest.mark.usefixtures("app")
+def test_the_wiring_hides_the_pane_with_no_session_under_way() -> None:
+    virtual_tabletop.set_on(True)
+    wiring, pane, shown, _told = _wired()
+
+    wiring.draw(_saga(), None, "")
+
+    assert shown == [False] and pane.book is None and wiring.watch.files() == []
+
+
 # -- the host's pane and the listener's writes --
 
 
@@ -121,7 +178,7 @@ def test_the_windows_tick_catches_up_too(app: QApplication) -> None:
     chronicle.forget_open()
     window = MainWindow(saga_ids=[saga.id])
     assert window.saga is not None
-    window.chronicle_watch.removePaths(window.chronicle_watch.files())
+    window.chronicle.watch.removePaths(window.chronicle.watch.files())
     session = window.saga.sessions[0]
     chronicle.Chronicle(chronicle.path_of(window.saga, session), []).add(
         "note", "ana", chronicle.table(), {}
