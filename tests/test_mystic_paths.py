@@ -12,10 +12,11 @@ import pytest
 
 from ars_magica_manager import mystic_paths as forms
 from ars_magica_manager import seasons
-from ars_magica_manager.actions import NodeKind, available
+from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Form
 from ars_magica_manager.forms import menu as menu_forms
 from ars_magica_manager.forms import page as page_forms
+from ars_magica_manager.forms.more import available
 from ars_magica_manager.models import (
     Ability,
     Aging,

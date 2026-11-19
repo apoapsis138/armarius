@@ -7,11 +7,12 @@ from __future__ import annotations
 
 import random
 
-from ars_magica_manager import actions, deeds
+from ars_magica_manager import deeds
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import gauntlet as gf
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import more
 from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.models import (
     Ability,
@@ -207,7 +208,7 @@ def test_the_commands_are_offered_to_an_apprentice():
         i.label for i in menu_forms.placed(page, "Known Spells")
     ]
     saga.character("a").virtues_flaws = [VirtueFlawInstance("vf_the_gift")]
-    assert not actions.available("gauntlet", page)
+    assert not more.available("gauntlet", page)
     # The optional rule is for adult magi too (p. 46).
     grown = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="a")
     assert "Learn a Cantation" in [

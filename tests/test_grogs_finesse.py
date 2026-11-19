@@ -6,13 +6,14 @@ import random
 
 import pytest
 
-from ars_magica_manager import actions, deeds, economics
+from ars_magica_manager import deeds, economics
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.casting_text import option_lines
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import craft_magic as craft_forms
 from ars_magica_manager.forms import grogs as grog_forms
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import more
 from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.models import (
     Ability,
@@ -298,7 +299,7 @@ def test_the_grog_commands_are_offered_on_a_grog_only():
         "Current Location",
         "Stay as Guest",
     ]
-    assert not actions.available("craft_by_magic", grog)
+    assert not more.available("craft_by_magic", grog)
 
 
 # -- craft magic --

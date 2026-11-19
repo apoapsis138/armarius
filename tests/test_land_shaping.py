@@ -13,6 +13,7 @@ from ars_magica_manager import actions, manors
 from ars_magica_manager.forms import land_seasons
 from ars_magica_manager.forms import land_shaping as land_forms
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms.more import rules as more_rules
 from ars_magica_manager.models import (
     LAND_KIND,
     ArtScore,
@@ -446,7 +447,7 @@ class _Facts:
 def test_offered_on_income_with_the_book_in_play() -> None:
     magus = _magus()
     saga = _saga(magus, LandProject("i", "Insula"))
-    rule = actions._SECTION_RULES["shape_land"]
+    rule = more_rules._SECTION_RULES["shape_land"]
     facts = _Facts(saga, saga.covenants[0])
     saga.books_in_play = ["TME"]
     assert rule(facts, "section-eco-income")  # type: ignore[arg-type]

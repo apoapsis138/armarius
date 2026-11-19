@@ -8,6 +8,7 @@ from dataclasses import replace
 from ars_magica_manager import actions, catalog
 from ars_magica_manager.commands import Choose
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import more
 from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.forms import vf_change as forms
 from ars_magica_manager.forms import virtue as virtue_forms
@@ -259,10 +260,10 @@ def test_offered_on_a_characters_virtues_and_flaws():
     assert "change_virtues_flaws" in {
         i.action for i in menu_forms.placed(page, "Virtues & Flaws")
     }
-    assert actions.available(
+    assert more.available(
         "change_virtues_flaws", replace(page, section="section-vf-flaws")
     )
-    assert not actions.available(
+    assert not more.available(
         "change_virtues_flaws", replace(page, section="section-char-info")
     )
 

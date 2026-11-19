@@ -36,7 +36,6 @@ from textual.widgets._collapsible import CollapsibleTitle
 from textual.widgets.tree import TreeNode
 
 from .... import (
-    actions,
     catalog,
     creatures,
     deeds,
@@ -69,7 +68,7 @@ from ....actions import (
 )
 from ....forms import creation as creation_forms
 from ....forms import menu as menu_forms
-from ....forms import menu_refresh, menu_steps
+from ....forms import menu_refresh, menu_steps, more
 from ....forms import neighbour as neighbour_forms
 from ....forms import page as page_forms
 from ....markup import escape
@@ -775,8 +774,8 @@ class WorkspaceBase(Screen[None]):
         return self._available(action)
 
     def _available(self, action: str) -> bool:
-        """Whether `action` can run where focus is (actions.available)."""
-        return actions.available(action, self._in_pass("facts", self._facts))
+        """Whether `action` can run where focus is (more.available)."""
+        return more.available(action, self._in_pass("facts", self._facts))
 
     def _facts(self, **extras: Any) -> page_forms.Page:
         """The page on show as the core's actions ask about it

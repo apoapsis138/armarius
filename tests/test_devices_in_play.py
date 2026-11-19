@@ -15,6 +15,7 @@ from ars_magica_manager import enchanted_devices as ed
 from ars_magica_manager.commands import Confirm, Refuse
 from ars_magica_manager.forms import device as device_forms
 from ars_magica_manager.forms import familiar as familiar_forms
+from ars_magica_manager.forms.more import rules as more_rules
 from ars_magica_manager.models import (
     CHARGED,
     INVESTED,
@@ -106,7 +107,7 @@ def test_use_an_effect_asks_first_and_offers_a_new_day_when_spent():
 def test_use_an_effect_is_a_more_menu_entry_for_the_device_lists():
     item = next(i for i in actions.MORE_MENU if i.action == "use_effect")
     assert item.label == "Use an Effect"
-    assert "use_effect" in actions._SECTION_RULES
+    assert "use_effect" in more_rules._SECTION_RULES
 
 
 # -- either Art's vis (DE pp. 258, 266-268) -----------------------------------

@@ -3,7 +3,7 @@ shows one record's page at a time (the desktop), independent of how they
 are drawn.
 
 A `Page` is actions.ActionFacts for such a front-end: the record on show,
-and no focused section. Its menus offer what actions.available offers
+and no focused section. Its menus offer what more.available offers
 anywhere on the page: each More command is asked about with the page's
 sections (PAGE_SECTIONS) one by one, and kept if any offers it. Every
 command acts on the record on show, so the page counts as being "on the
@@ -33,7 +33,6 @@ from ..actions import (
     RECORD_SECTION,
     MenuItem,
     NodeKind,
-    available,
     silver_purse,
 )
 from ..commands import Command, Refuse
@@ -43,6 +42,7 @@ from ..sections import FAITH_SECTION, LAB_TEXTS_SECTION
 from . import hosting as hosting_forms
 from .menu_steps import _COMMANDS as _STEPS
 from .menu_steps import delete_record, familiar_binder
+from .more import available
 from .page import (
     Page,
     Record,

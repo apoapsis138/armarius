@@ -4,12 +4,13 @@ spells (pp. 121-123, Errata p. 56)."""
 
 import random
 
-from ars_magica_manager import actions, catalog, deeds
+from ars_magica_manager import catalog, deeds
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.casting_text import known_spell_casting_lines
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import goetic as goetic_forms
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import more
 from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.forms import sin as sin_forms
 from ars_magica_manager.models import (
@@ -233,7 +234,7 @@ def test_the_sin_commands_are_offered_on_personality_traits():
     plain_labels = [item.label for item in menu_forms.placed(plain, deeds.INFERNAL)]
     assert "Confidence through Sin" not in plain_labels
     assert "Infernal Influence" not in plain_labels
-    assert not actions.available("ars_goetia", page)
+    assert not more.available("ars_goetia", page)
 
 
 # -- the Goetic Arts --

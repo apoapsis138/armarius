@@ -10,6 +10,7 @@ from ars_magica_manager import actions, bestiary_book, manors
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import hunting as hf
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms.more import rules as more_rules
 from ars_magica_manager.models import (
     Ability,
     Character,
@@ -498,7 +499,7 @@ class _Facts:
 def test_the_hunt_is_offered_on_manors_and_on_ahead():
     assert actions.MORE_SECTIONS["hunt_on_manor"] == MANORS_SECTION
     assert actions.MORE_SECTIONS["area_lore_on_manor"] == MANORS_SECTION
-    rule = actions._SECTION_RULES["hunt_on_journey"]
+    rule = more_rules._SECTION_RULES["hunt_on_journey"]
     saga = _saga()
     assert rule(_Facts(saga, AHEAD_SECTION), AHEAD_SECTION)  # type: ignore[arg-type]
     assert not rule(_Facts(saga, MANORS_SECTION), MANORS_SECTION)  # type: ignore[arg-type]

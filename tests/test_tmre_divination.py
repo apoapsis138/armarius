@@ -10,11 +10,12 @@ import random
 import pytest
 
 from ars_magica_manager import deeds
-from ars_magica_manager.actions import NodeKind, available
+from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import menu as menu_forms
 from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.forms import tmre_divination as forms
+from ars_magica_manager.forms.more import available
 from ars_magica_manager.models import (
     INVESTED,
     Ability,

@@ -1,6 +1,6 @@
 """The desktop's equivalent of the terminal's n and m keys: each New and
 More action the core offers on a page (menu_forms, and so
-actions.available), set out where menu_forms.PLACES puts it, as a button
+more.available), set out where menu_forms.PLACES puts it, as a button
 in a chapter or section or a New card at the end of the cards it adds to
 (a Placer draws them). A record's page offers the rest itself
 (menu_forms.ON_THE_PAGE: its Manage chapter, with Delete, and its mode

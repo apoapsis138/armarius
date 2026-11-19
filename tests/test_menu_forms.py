@@ -10,12 +10,13 @@ from typing import Any
 from screen_helpers import _saga_with_familiar, _sample_saga_with_covenant
 
 from ars_magica_manager import commands, deeds, form_spec
-from ars_magica_manager.actions import NodeKind, available
+from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.forms import creation as creation_forms
 from ars_magica_manager.forms import importing as import_forms
 from ars_magica_manager.forms import menu as menu_forms
 from ars_magica_manager.forms import menu_steps
 from ars_magica_manager.forms import page as page_forms
+from ars_magica_manager.forms.more import available
 from ars_magica_manager.models import (
     Book,
     IncomeSource,

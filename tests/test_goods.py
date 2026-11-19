@@ -6,11 +6,12 @@ from dataclasses import asdict
 
 import pytest
 
-from ars_magica_manager import actions, catalog
+from ars_magica_manager import catalog
 from ars_magica_manager import goods as gd
 from ars_magica_manager import saga_content as sc
 from ars_magica_manager.commands import Confirm, Form, Refuse
 from ars_magica_manager.forms import goods as gf
+from ars_magica_manager.forms.more import rules as more_rules
 from ars_magica_manager.models import COMMODITY, COMMON, GoodDef, Saga
 from ars_magica_manager.sections import GOODS_SECTION
 
@@ -437,7 +438,7 @@ class _Facts:
 
 def test_more_offers_add_a_purity_only_on_a_good_priced_by_purity():
     saga = _saga()
-    rule = actions._SECTION_RULES["add_purity"]
+    rule = more_rules._SECTION_RULES["add_purity"]
     assert rule(_Facts(saga, _index(saga, "Silver")), GOODS_SECTION)  # type: ignore[arg-type]
     assert not rule(_Facts(saga, _index(saga, "Grain")), GOODS_SECTION)  # type: ignore[arg-type]
     assert not rule(_Facts(saga, _index(saga, "Silver")), "section-spells")  # type: ignore[arg-type]

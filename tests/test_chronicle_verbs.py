@@ -11,7 +11,7 @@ from ars_magica_manager import actions, chronicle, commands, virtual_tabletop
 from ars_magica_manager import sessions as ss
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.forms import menu as menu_forms
-from ars_magica_manager.forms import menu_refresh
+from ars_magica_manager.forms import menu_refresh, more
 from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.models import Player, Saga, Session
 from ars_magica_manager.sections import SESSIONS_SECTION
@@ -37,7 +37,7 @@ def _offered(saga: Saga, row: int | None = 0) -> set[str]:
         for item in actions.MORE_MENU
         if item.action in VERBS
         and actions.MORE_SECTIONS.get(item.action) == SESSIONS_SECTION
-        and actions.available(item.action, page)
+        and more.available(item.action, page)
     }
 
 

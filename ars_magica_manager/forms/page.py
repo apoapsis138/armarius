@@ -40,7 +40,7 @@ INCOME_SECTION = "section-eco-income"
 
 @dataclass(frozen=True)
 class Page:
-    """The page on show, as actions.available asks about it
+    """The page on show, as more.available asks about it
     (actions.ActionFacts): the saga, what kind of page, whose, and the
     section a command is being asked about (None: the page itself)."""
 

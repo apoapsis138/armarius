@@ -16,6 +16,7 @@ from ars_magica_manager import polemic as pl
 from ars_magica_manager.commands import Confirm, Form, Refuse
 from ars_magica_manager.forms import charter_strength as cs
 from ars_magica_manager.forms import polemic as pf
+from ars_magica_manager.forms.more import rules as more_rules
 from ars_magica_manager.models import (
     Ability,
     Argument,
@@ -494,7 +495,7 @@ def test_draft_and_loophole_are_offered_on_a_charter_lord():
         def chosen_row(self, _section: str) -> int | None:
             return self.row
 
-    rule = actions._SECTION_RULES["draft_charter"]
+    rule = more_rules._SECTION_RULES["draft_charter"]
     assert rule(Facts(0), CHARTER_LORDS_SECTION)  # type: ignore[arg-type]
     assert not rule(Facts(None), CHARTER_LORDS_SECTION)  # type: ignore[arg-type]
     assert not rule(Facts(0), ARGUMENTS_SECTION)  # type: ignore[arg-type]

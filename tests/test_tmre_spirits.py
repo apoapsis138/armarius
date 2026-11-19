@@ -4,10 +4,10 @@ examples, and More's Spirits and Names calculator."""
 
 import random
 
-from ars_magica_manager import actions
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import more
 from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.forms import tmre_spirits as forms
 from ars_magica_manager.models import (
@@ -298,5 +298,5 @@ def test_only_a_mystery_holder_finds_it_on_known_spells():
         i.label for i in menu_forms.placed(page, "Magic Outside the Lab")
     ]
     plain = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="p")
-    assert not actions.available("spirits_and_names", plain)
+    assert not more.available("spirits_and_names", plain)
     assert isinstance(forms.spirits_form(saga, saga.character("p")), Refuse)

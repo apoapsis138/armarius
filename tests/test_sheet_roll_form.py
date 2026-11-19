@@ -8,10 +8,10 @@ from __future__ import annotations
 
 import pytest
 
-from ars_magica_manager import actions, chronicle, commands, viewing, virtual_tabletop
+from ars_magica_manager import chronicle, commands, viewing, virtual_tabletop
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.forms import menu as menu_forms
-from ars_magica_manager.forms import menu_refresh, sheet_roll
+from ars_magica_manager.forms import menu_refresh, more, sheet_roll
 from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.models import (
     Ability,
@@ -50,7 +50,7 @@ def _page(
 
 
 def _offered(saga: Saga, character: Character, section: str) -> bool:
-    return actions.available("sheet_roll", _page(saga, character, section))
+    return more.available("sheet_roll", _page(saga, character, section))
 
 
 @pytest.fixture

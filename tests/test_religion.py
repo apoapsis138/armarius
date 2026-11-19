@@ -8,10 +8,11 @@ from dataclasses import replace
 import pytest
 
 from ars_magica_manager import artwork
-from ars_magica_manager.actions import NodeKind, available
+from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.forms import menu as menu_forms
 from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.forms import religion as religion_forms
+from ars_magica_manager.forms.more import available
 from ars_magica_manager.models import (
     Character,
     Saga,
