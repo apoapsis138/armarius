@@ -532,11 +532,7 @@ def roll_card(
         player.setObjectName("player")
         top.addWidget(player, 0, Qt.AlignmentFlag.AlignBottom)
     top.addStretch(1)
-    if entry.audience.to != chronicle.TABLE:
-        tag = "Blind" if entry.audience.to == chronicle.STORYGUIDE else "Private"
-        mark = text(tag, p["label"], serif(10, caps=True))
-        mark.setObjectName("visibility")
-        top.addWidget(mark)
+    _mark_visibility(top, entry, p)
     card.column.addLayout(top)
     if body.get("for"):
         ink = p["dim"] if quiet else p["foreground"]
@@ -560,6 +556,15 @@ def roll_card(
         why.setObjectName("reason")
         card.column.addWidget(why)
     return card
+
+
+def _mark_visibility(top: QHBoxLayout, entry: chronicle.Entry, p: Palette) -> None:
+    """A roll's Blind or Private mark, at the right of its card's top."""
+    tag = chronicle.visibility_tag(entry.audience)
+    if tag:
+        mark = text(tag, p["label"], serif(10, caps=True))
+        mark.setObjectName("visibility")
+        top.addWidget(mark)
 
 
 def form_roll_card(
@@ -591,11 +596,7 @@ def form_roll_card(
         player.setObjectName("player")
         top.addWidget(player, 0, Qt.AlignmentFlag.AlignBottom)
     top.addStretch(1)
-    if entry.audience.to != chronicle.TABLE:
-        tag = "Blind" if entry.audience.to == chronicle.STORYGUIDE else "Private"
-        mark = text(tag, p["label"], serif(10, caps=True))
-        mark.setObjectName("visibility")
-        top.addWidget(mark)
+    _mark_visibility(top, entry, p)
     card.column.addLayout(top)
     ink = p["dim"] if quiet else p["foreground"]
     what = text(str(body.get("form") or ""), ink, serif(12, italic=True), wrap=True)
@@ -933,10 +934,8 @@ class ChroniclePane(QWidget):
         if self.collapsed:
             self.unseen += 1
             self._draw_strip()
-            sent = isinstance(book, chronicle.SeatChronicle)
-            if chronicle.calls_attention(
-                entry, self.who, session, self.saga, sent=sent
-            ):
+            reader = self._reader()
+            if reader is not None and reader.calls_attention(entry):
                 self._pulse()
 
     def _grown(self, _low: int, high: int) -> None:
@@ -966,18 +965,16 @@ class ChroniclePane(QWidget):
             if self._reads(entry):
                 self._card(entry, struck)
 
+    def _reader(self) -> chronicle.Reader | None:
+        """The Chronicle as whoever sits here reads it (host or seat)."""
+        book, session = self.book, self.session
+        if book is None or session is None:
+            return None
+        return chronicle.Reader(book, self.who, session, self.saga)
+
     def _reads(self, entry: chronicle.Entry) -> bool:
-        """Whether this reader reads `entry`: on the host, through the
-        audience filter; at a seat, what the host sent (already filtered
-        there, and sent without the Players chosen)."""
-        session = self.session
-        if session is None:
-            return False
-        if isinstance(self.book, chronicle.SeatChronicle):
-            spec = chronicle.kind_of(entry)
-            skips = spec is not None and spec.storyguide_skips
-            return not (skips and self._runs_the_session())
-        return chronicle.reads(entry, self.who, session, self.saga)
+        reader = self._reader()
+        return reader is not None and reader.reads(entry)
 
     def _player_name(self, character_id: str) -> str:
         """Who plays `character_id` tonight, by name ("" for no one)."""
@@ -1072,10 +1069,8 @@ class ChroniclePane(QWidget):
     # -- rolling --
 
     def _runs_the_session(self) -> bool:
-        session = self.session
-        return session is not None and self.who == chronicle.storyguide_of(
-            session, self.saga
-        )
+        reader = self._reader()
+        return reader is not None and reader.runs_the_session
 
     def _strikes(self) -> bool:
         """Strike is the host's: its computer keeps the Chronicle."""
@@ -1083,32 +1078,18 @@ class ChroniclePane(QWidget):
 
     def _request_card(self, entry: chronicle.Entry) -> Card:
         """Roll request `entry`'s card, its answers as this reader sees them."""
-        book, saga, session = self.book, self.saga, self.session
+        book = self.book
+        reader = self._reader()
         line = chronicle.line(entry, {})
-        assert book is not None and saga is not None and session is not None
-        runs = self._runs_the_session()
-        hidden = chronicle.hidden_ease(book, entry.number) if runs else None
-        seen = [e for e in chronicle.answers(book, entry.number) if self._reads(e)]
-        made = {
-            str(e.body.get("character_id"))
-            for e in chronicle.answers(book, entry.number)
-        }
+        assert book is not None and reader is not None
+        runs = reader.runs_the_session
+        hidden = reader.kept_ease(entry)
         rows: list[RequestRow] = []
         for asked in entry.body.get("characters", []):
             cid = str(asked.get("id"))
-            mine = next((e for e in seen if e.body.get("character_id") == cid), None)
-            if mine is not None:
-                result = str(mine.body.get("total"))
-                if mine.body.get("botches"):
-                    result = "botch"
-                elif hidden is not None:
-                    result += " ✓" if int(mine.body["total"]) >= hidden else " ✗"
-                elif mine.body.get("succeeded") is not None:
-                    result += " ✓" if mine.body["succeeded"] else " ✗"
-            else:
-                result = "rolled" if cid in made else "…"
+            result = reader.answer_result(entry, cid)
             rolls: list[tuple[str, Callable[[], None]]] = []
-            if self._may_answer(entry, cid, made):
+            if reader.may_answer(entry, cid):
                 rolls.append(("Roll", self._answers(entry.number, cid, False)))
                 specialty = self._specialty(cid, str(entry.body.get("ability") or ""))
                 if specialty:
@@ -1127,20 +1108,6 @@ class ChroniclePane(QWidget):
             else None
         )
         return request_card(line, self.p, rows, kept, outcome)
-
-    def _may_answer(self, request: chronicle.Entry, cid: str, made: set[str]) -> bool:
-        """Whether whoever sits here answers `request` for `cid` now: on the
-        host, as the host checks it; at a seat, the roller the request
-        names (the host checks again when it comes)."""
-        book, saga, session = self.book, self.saga, self.session
-        if cid in made or book is None or saga is None or session is None:
-            return False
-        if isinstance(book, chronicle.Chronicle):
-            why = chronicle.why_not_answer(
-                book, saga, session, request.number, cid, self.who
-            )
-            return why is None
-        return self.who == chronicle.roller_of(request, cid)
 
     def _specialty(self, character_id: str, ability: str) -> str:
         saga = self.saga
