@@ -25,7 +25,6 @@ from typing import Any, NamedTuple
 from .. import (
     aging_due,
     arms,
-    chronicle,
     creation,
     creatures,
     cult_transfer,
@@ -1945,7 +1944,7 @@ def _sheet_roll(page: Page) -> Command:
     character = page.character
     if character is None:
         return Refuse("Roll", "That isn't available here.")
-    problem = chronicle.why_not_act(character)
+    problem = sheet_roll_forms.why_not_roll_here(page.saga, character)
     if problem:
         return Refuse("Roll", escape(problem))
     ability, characteristic = "", ""

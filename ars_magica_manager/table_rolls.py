@@ -44,7 +44,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from typing import Any, Protocol
 
-from . import chronicle, dice_text
+from . import chronicle, dice_text, table_rules
 from .commands import Confirm, Form, notes
 from .form_spec import DialogField
 from .markup import plain
@@ -329,14 +329,6 @@ def _open(saga: Saga, session: Session, opening: Opening, who: str) -> FormRoll:
     return HostRoll(saga, session, opening, by=who)
 
 
-def default_visibility(saga: Saga, session: Session, who: str) -> str:
-    """Who sees a Table roll unless the roller says: the storyguide's are
-    Blind, a player's Public."""
-    if who == chronicle.storyguide_of(session, saga):
-        return chronicle.BLIND
-    return chronicle.PUBLIC
-
-
 class Drawing:
     """A Table roll made outside a form (a roll on a table, a debate, a
     question answered Yes): its dice, and the lines that say what came of
@@ -365,7 +357,7 @@ def drawing(
     own: random.Random | None = None,
 ) -> Iterator[Drawing]:
     """Roll `name` (markup) with the Session's dice when one is Under way:
-    seen as `default_visibility` says, and written to the Chronicle with
+    seen as `table_rules.default_visibility` says, and written to the Chronicle with
     its faces and the lines given when the block ends; drawn, then
     cancelled, if the block fails. Outside a Session, `own` (a source of
     its own unless given). ValueError or DiceUnavailable when the dice
@@ -375,7 +367,9 @@ def drawing(
         yield Drawing(own if own is not None else plain_source())
         return
     who = chronicle.here()
-    opening = Opening(plain(name), character_id, default_visibility(saga, session, who))
+    opening = Opening(
+        plain(name), character_id, table_rules.default_visibility(saga, session, who)
+    )
     roll = _open(saga, session, opening, who)
     drawn = Drawing(roll.dice)
     try:
@@ -401,16 +395,6 @@ def _saying(lines: list[str], said: str) -> list[str]:
 
 #: The field `form` adds: who sees the roll.
 VISIBILITY = "table_visibility"
-
-
-def visibility_options(storyguide: bool) -> list[tuple[str, str]]:
-    shown = [
-        ("Public: everyone at the Session", chronicle.PUBLIC),
-        ("Private: you and the storyguide", chronicle.PRIVATE),
-    ]
-    if storyguide:
-        shown.append(("Blind: the number is yours alone", chronicle.BLIND))
-    return shown
 
 
 def _never(_values: dict[str, Any]) -> bool:
@@ -497,8 +481,8 @@ def form(
                 VISIBILITY,
                 "Who sees the roll",
                 "select",
-                default_visibility(saga, session, who),
-                options=visibility_options(storyguide),
+                table_rules.default_visibility(saga, session, who),
+                options=table_rules.visibility_options(storyguide),
                 hint="The host rolls the dice and keeps them in the Chronicle.",
             ),
         ]

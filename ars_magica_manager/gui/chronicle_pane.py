@@ -47,7 +47,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import artwork, chronicle, dice_text, references, settings
+from .. import artwork, chronicle, dice_text, references, settings, table_rules
 from ..commands import Command, Refuse
 from ..forms import free_roll, roll_request
 from ..forms import message as message_forms
@@ -982,10 +982,7 @@ class ChroniclePane(QWidget):
         saga, session = self.saga, self.session
         if saga is None or session is None or not character_id:
             return ""
-        player = next(
-            (c.player_id for c in session.castings if c.character_id == character_id),
-            "",
-        )
+        player = table_rules.player_of(session, character_id)
         return next((p.name for p in saga.players if p.id == player), "")
 
     def _card(self, entry: chronicle.Entry, struck: dict[int, str]) -> None:

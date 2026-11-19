@@ -46,7 +46,7 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Protocol
 
-from . import dice_text, paths, references, sessions, shapes, viewing
+from . import dice_text, paths, references, sessions, shapes, table_rules, viewing
 from .files import held_lock
 from .markup import escape
 from .models import Character, Saga, Session
@@ -82,15 +82,8 @@ def chosen(*players: str) -> Audience:
     return Audience(CHOSEN, list(players))
 
 
-def storyguide_of(session: Session, saga: Saga | None = None) -> str:
-    """Who runs `session`, as a person at it: the Player named as its
-    storyguide, else the host (the saga's own storyguide). Given the saga,
-    a storyguide no longer among its Players counts as none, so a Session
-    never waits on someone who can't end it."""
-    named = session.storyguide_id
-    if named and saga is not None and named not in {p.id for p in saga.players}:
-        named = ""
-    return named or viewing.HOST
+#: Who runs a Session; the rule lives with the Table's other rules.
+storyguide_of = table_rules.storyguide_of
 
 
 def here() -> str:
@@ -424,9 +417,9 @@ def end(saga: Saga, session: Session, *, by: str) -> Chronicle:
 
 # -- rolling --
 
-PUBLIC = "public"
-PRIVATE = "private"
-BLIND = "blind"
+PUBLIC = table_rules.PUBLIC
+PRIVATE = table_rules.PRIVATE
+BLIND = table_rules.BLIND
 
 ROLL = "roll"
 ROLLED = "rolled"
@@ -479,16 +472,7 @@ def _character(saga: Saga, character_id: str) -> Character | None:
     return next((c for c in saga.characters if c.id == character_id), None)
 
 
-def why_not_act(character: Character) -> str | None:
-    """Why `character` can take no action now (DE p. 404: Incapacitated;
-    an Unconscious or dead character neither), or None."""
-    if character.wounds.dead:
-        return f"{character.name} is dead."
-    if character.wounds.incapacitated:
-        return f"{character.name} is Incapacitated: no actions."
-    if character.fatigue_level == "unconscious":
-        return f"{character.name} is Unconscious."
-    return None
+why_not_act = table_rules.why_not_act
 
 
 def sheet_terms(saga: Saga, request: RollRequest) -> tuple[list[Term], int]:
@@ -551,36 +535,21 @@ def why_not_roll(
     """Why `who` may not make `request` at `session`, or None when they may:
     a player rolls only for a character they play tonight, the Session's
     storyguide for any character or none; only the storyguide rolls Blind."""
-    if request.visibility not in (PUBLIC, PRIVATE, BLIND):
-        return "Choose who sees the roll."
     if request.botch_dice < 0:
         return "Botch dice can't be fewer than none."
     words = typed_problem(ROLL, {"for": request.for_what})
     if words:
         return words
-    storyguide = who == storyguide_of(session, saga)
-    known = {c.id for c in saga.characters}
-    if request.character_id and request.character_id not in known:
-        return "That character isn't in the saga."
+    problem = table_rules.why_not_roll_for(
+        saga, session, who, request.character_id, request.visibility
+    )
+    if problem:
+        return problem
     try:
         sheet_terms(saga, request)
     except ValueError as problem:
         return str(problem)
-    if storyguide:
-        return None
-    if request.visibility == BLIND:
-        return "Only the Session's storyguide rolls Blind."
-    plays = {c.character_id for c in session.castings if c.player_id == who}
-    if request.character_id not in plays:
-        return "Roll for a character you play tonight."
     return None
-
-
-def _player_of(session: Session, character_id: str) -> str:
-    """Who plays `character_id` tonight, or "" for no one."""
-    return next(
-        (c.player_id for c in session.castings if c.character_id == character_id), ""
-    )
 
 
 def _character_name(saga: Saga, character_id: str) -> str:
@@ -623,8 +592,6 @@ def free_roll(
     """Carry out `request` once at the host and write it to the Chronicle.
     A Blind roll's number goes to the Session's storyguide alone, with a
     line for the character's player saying only that it was rolled."""
-    if book.closed:
-        raise ValueError("This Session has ended: its Chronicle is closed.")
     problem = why_not_roll(saga, session, request, by)
     if problem:
         raise ValueError(problem)
@@ -690,7 +657,7 @@ def _write_roll(
     `player` (None: whoever plays the character tonight) that it was
     rolled."""
     if player is None:
-        player = _player_of(session, character_id)
+        player = table_rules.player_of(session, character_id)
         roller = by if by != storyguide_of(session, saga) else ""
     else:
         roller = player
@@ -722,15 +689,17 @@ FORM_ROLL = "form_roll"
 def why_not_form_roll(
     saga: Saga, session: Session, character_id: str, visibility: str, who: str
 ) -> str | None:
-    """Why `who` may not make a Table roll from a form, or None: only the
-    Session's storyguide rolls Blind."""
-    if visibility not in (PUBLIC, PRIVATE, BLIND):
-        return "Choose who sees the roll."
-    if character_id and _character(saga, character_id) is None:
-        return "That character isn't in the saga."
-    if visibility == BLIND and who != storyguide_of(session, saga):
-        return "Only the Session's storyguide rolls Blind."
-    return None
+    """Why `who` may not make a Table roll from a form, or None: the same
+    who-may rule as every roll (table_rules), and a character who can't act
+    rolls nothing. A form for no one in particular (a roll on a table) is
+    anyone's to roll."""
+    problem = table_rules.why_not_roll_for(
+        saga, session, who, character_id, visibility, for_no_one=True
+    )
+    if problem:
+        return problem
+    character = _character(saga, character_id) if character_id else None
+    return table_rules.why_not_act(character) if character is not None else None
 
 
 def form_roll(
@@ -753,8 +722,6 @@ def form_roll(
     result lines, word for word. A form cancelled after drawing is
     written all the same, with no result, so nobody re-rolls by
     cancelling."""
-    if book.closed:
-        raise ValueError("This Session has ended: its Chronicle is closed.")
     problem = why_not_form_roll(saga, session, character_id, visibility, by)
     if problem:
         raise ValueError(problem)
@@ -882,8 +849,9 @@ def why_not_spend(
         return "Only a character's roll takes Confidence."
     if not sees(target, who, session, saga):
         return "Only someone who sees the roll's number spends Confidence on it."
-    plays = {c.character_id for c in session.castings if c.player_id == who}
-    if who != storyguide_of(session, saga) and character.id not in plays:
+    if who != storyguide_of(session, saga) and character.id not in table_rules.plays(
+        session, who
+    ):
         return "Spend Confidence for a character you play tonight."
     if points < 1:
         return "Spend at least one point."
@@ -963,7 +931,7 @@ def answerer(saga: Saga, session: Session, character_id: str) -> str:
     """Who answers a Roll request for `character_id` tonight: whoever plays
     it, else (a character no Player is named on) its Steward, else the
     Session's storyguide."""
-    player = _player_of(session, character_id)
+    player = table_rules.player_of(session, character_id)
     if player:
         return player
     character = _character(saga, character_id)
@@ -988,7 +956,7 @@ def why_not_call(saga: Saga, session: Session, call: RollCall, who: str) -> str 
         return "Choose who rolls."
     if call.characteristic not in ROLL_CHARACTERISTICS:
         return "Choose a Characteristic."
-    if call.visibility not in (PUBLIC, PRIVATE, BLIND):
+    if call.visibility not in table_rules.VISIBILITIES:
         return "Choose who sees the rolls."
     words = typed_problem(REQUEST, {"for": call.for_what})
     if words:
@@ -1009,8 +977,6 @@ def request_rolls(
     is a roll of its own, pointing back at it). The request is seen by
     whoever sees its rolls; a hidden Ease Factor is written beside it for
     the storyguide alone."""
-    if book.closed:
-        raise ValueError("This Session has ended: its Chronicle is closed.")
     problem = why_not_call(saga, session, call, by)
     if problem:
         raise ValueError(problem)
@@ -1120,8 +1086,6 @@ def answer(
     sheet, at the host, seen as the request says (a Blind one's line told
     to whoever answers), pointing back at the request. A hidden Ease
     Factor isn't in the roll: the storyguide reads it beside the request."""
-    if book.closed:
-        raise ValueError("This Session has ended: its Chronicle is closed.")
     problem = why_not_answer(book, saga, session, number, character_id, by)
     if problem:
         raise ValueError(problem)
@@ -1338,8 +1302,6 @@ def message(
     """Write a Message from `by`: to the Table, or, naming `to`, a Whisper
     those people and the Session's storyguide see, with the records it
     links. It is written once and stays as sent."""
-    if book.closed:
-        raise ValueError("This Session has ended: its Chronicle is closed.")
     problem = why_not_message(saga, session, words, to, by, links=links)
     if problem:
         raise ValueError(problem)
