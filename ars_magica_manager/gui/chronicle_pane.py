@@ -206,12 +206,14 @@ def margin_mark(name: str, label: str, tip: str, p: Palette, hover: str) -> QToo
     return mark
 
 
-def _dice_of(body: dict[str, object]) -> list[tuple[list[int], bool, list[int]]]:
+def _dice_of(
+    body: dict[str, object], *, form: bool
+) -> list[tuple[list[int], bool, list[int]]]:
     """A roll's dice to draw, each as its faces thrown, whether a stress
     die, and its botch dice: a sheet or Free roll's one die; a form roll's
-    whole dice (a face drawn outside the die helpers on its own), or,
-    written before whole dice were kept, every face as drawn."""
-    if "form" not in body:
+    (`form`) whole dice (a face drawn outside the die helpers on its own),
+    or, written before whole dice were kept, every face as drawn."""
+    if not form:
         stress = bool(body.get("stress"))
         faces = _wholes(body, "faces") if stress else [_whole(body, "die")]
         return [(faces, stress, _wholes(body, "botch_faces"))]
@@ -248,6 +250,8 @@ class DiceRow(QWidget):
         struck: bool,
         strike: Callable[[], None] | None,
         spend: Callable[[], None] | None = None,
+        *,
+        form: bool = False,
     ) -> None:
         super().__init__()
         self.p, self.struck, self._strike = p, struck, strike
@@ -259,7 +263,7 @@ class DiceRow(QWidget):
         row = QHBoxLayout()
         row.setSpacing(2)
         rows.addLayout(row)
-        for index, (faces, stress, botch) in enumerate(_dice_of(body)):
+        for index, (faces, stress, botch) in enumerate(_dice_of(body, form=form)):
             if index:
                 row.addSpacing(10)
             row = self._draw_die(rows, row, faces, stress, botch)
@@ -597,7 +601,7 @@ def form_roll_card(
     what = text(str(body.get("form") or ""), ink, serif(12, italic=True), wrap=True)
     what.setObjectName("what")
     card.column.addWidget(what)
-    card.column.addWidget(DiceRow(body, p, quiet, strike))
+    card.column.addWidget(DiceRow(body, p, quiet, strike, form=True))
     kept = body.get("dice")
     wholes = (
         [d for d in kept if isinstance(d, dict) and "face" not in d]
@@ -909,28 +913,22 @@ class ChroniclePane(QWidget):
         book, session = self.book, self.session
         if book is None or session is None:
             return
-        if entry.kind == chronicle.VOID:
+        spec = chronicle.kind_of(entry)
+        if spec is not None and spec.amends(entry):
+            # It changes cards already drawn (a Strike, a Roll request's
+            # answer or outcome, Confidence spent): all drawn again.
             self._redraw_cards()
-            return
-        if entry.kind in (chronicle.OUTCOME, chronicle.REQUEST_EASE) or (
-            entry.kind == chronicle.ROLL and "request" in entry.body
-        ):
-            # A Roll request's card gathers its answers: drawn again.
-            self._redraw_cards()
-            if entry.kind == chronicle.ROLL and self._reads(entry):
-                sounds.play("tock")
-            return
-        if entry.kind == chronicle.CONFIDENCE:
-            # Its roll's Confidence may be spent: that card is drawn again.
-            self._redraw_cards()
-            if self.collapsed and self._reads(entry):
-                self.unseen += 1
-                self._draw_strip()
+            if self._reads(entry):
+                if spec.sounds:
+                    sounds.play("tock")
+                if spec.card != chronicle.NO_CARD and self.collapsed:
+                    self.unseen += 1
+                    self._draw_strip()
             return
         if not self._reads(entry):
             return
         self._card(entry, chronicle.voided(book))
-        if entry.kind in (chronicle.ROLL, chronicle.FORM_ROLL, chronicle.ROLLED):
+        if spec is not None and spec.sounds:
             sounds.play("tock")
         if self.collapsed:
             self.unseen += 1
@@ -976,7 +974,9 @@ class ChroniclePane(QWidget):
         if session is None:
             return False
         if isinstance(self.book, chronicle.SeatChronicle):
-            return not (entry.kind == chronicle.ROLLED and self._runs_the_session())
+            spec = chronicle.kind_of(entry)
+            skips = spec is not None and spec.storyguide_skips
+            return not (skips and self._runs_the_session())
         return chronicle.reads(entry, self.who, session, self.saga)
 
     def _player_name(self, character_id: str) -> str:
@@ -988,15 +988,17 @@ class ChroniclePane(QWidget):
         return next((p.name for p in saga.players if p.id == player), "")
 
     def _card(self, entry: chronicle.Entry, struck: dict[int, str]) -> None:
-        if entry.kind in (chronicle.VOID, chronicle.REQUEST_EASE):
+        spec = chronicle.kind_of(entry)
+        shown = spec.card if spec is not None else chronicle.NOTE
+        if shown == chronicle.NO_CARD:
             return
-        if entry.kind == chronicle.REQUEST:
+        if shown == chronicle.REQUEST_CARD:
             self.cards.insertWidget(self.cards.count() - 1, self._request_card(entry))
             return
         line = chronicle.line(entry, struck)
         number = entry.number
         strike = (lambda: self.strike_roll(number)) if self._strikes() else None
-        if entry.kind == chronicle.FORM_ROLL:
+        if shown == chronicle.FORM_ROLL_CARD:
             card = form_roll_card(
                 entry,
                 line,
@@ -1007,13 +1009,13 @@ class ChroniclePane(QWidget):
             )
             self.cards.insertWidget(self.cards.count() - 1, card)
             return
-        if entry.kind == chronicle.MESSAGE and self.saga is not None:
+        if shown == chronicle.MESSAGE_CARD and self.saga is not None:
             viewer = chronicle.viewer_of(self.saga, self.who)
             fact = chronicle.message_fact(entry, self.saga, viewer)
             card = message_card(line, self.p, fact, lambda ref: self.open_record(ref))
             self.cards.insertWidget(self.cards.count() - 1, card)
             return
-        if entry.kind != chronicle.ROLL:
+        if shown != chronicle.ROLL_CARD:
             self.cards.insertWidget(self.cards.count() - 1, note_card(line, self.p))
             return
         spend = (

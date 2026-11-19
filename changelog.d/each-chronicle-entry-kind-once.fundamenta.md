@@ -1,0 +1,1 @@
+**Each kind of Chronicle entry is described once.** Its line, its typed words, whether it can be struck and how the pane draws it live in one place. On the desktop, a Roll request's answer or outcome that comes while the pane is collapsed now counts on its strip like any new entry.
