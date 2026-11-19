@@ -1402,8 +1402,9 @@ def _line(entry: Entry, struck: dict[int, str]) -> str:
     if spec.strikable:
         if entry.number in struck:
             line = f"STRUCK ({struck[entry.number]}): {line}"
-        if entry.audience.to != TABLE:
-            line += " [Blind]" if entry.audience.to == STORYGUIDE else " [Private]"
+        tag = visibility_tag(entry.audience)
+        if tag:
+            line += f" [{tag}]"
     return line
 
 
@@ -1673,12 +1674,15 @@ def line(entry: Entry, struck: dict[int, str]) -> str:
 
 
 def calls_attention(
-    entry: Entry,
-    who: str,
-    session: Session,
-    saga: Saga | None = None,
-    *,
-    sent: bool = False,
+    entry: Entry, who: str, session: Session, saga: Saga | None = None
+) -> bool:
+    """Whether `entry`, in the host's own Chronicle, calls `who`'s collapsed
+    pane (Reader.calls_attention, for any book)."""
+    return _calls_attention(entry, who, session, saga, sent=False)
+
+
+def _calls_attention(
+    entry: Entry, who: str, session: Session, saga: Saga | None, *, sent: bool
 ) -> bool:
     """Whether `entry` is meant for `who` alone enough to call a collapsed
     pane's attention: a Blind roll's number for the Session's storyguide,
@@ -1696,3 +1700,111 @@ def calls_attention(
             return who != storyguide_of(session, saga)
         return who in entry.audience.players
     return False
+
+
+def visibility_tag(audience: Audience) -> str:
+    """How a roll seen by `audience` is marked: "Blind" (the storyguide
+    alone), "Private" (chosen Players), "" (the Table)."""
+    if audience.to == TABLE:
+        return ""
+    return "Blind" if audience.to == STORYGUIDE else "Private"
+
+
+@dataclass(frozen=True)
+class Reader:
+    """The Chronicle as one person reads it, the same whether `book` is
+    the host's own or what a Remote seat was sent (which comes already
+    filtered, and without the Players chosen): which entries they read,
+    which call their attention, whether they may answer a Roll request,
+    and a request's answer as they see it.
+
+    Pattern: an Adapter over two sources, the host's Chronicle and a
+    seat's feed."""
+
+    book: HasEntries
+    who: str
+    session: Session
+    saga: Saga | None = None
+
+    @property
+    def at_seat(self) -> bool:
+        return isinstance(self.book, SeatChronicle)
+
+    @property
+    def runs_the_session(self) -> bool:
+        return self.who == storyguide_of(self.session, self.saga)
+
+    def reads(self, entry: Entry) -> bool:
+        """Whether this person reads `entry`: at the host, through the
+        audience filter; at a seat, what the host sent, less the line
+        telling a player a Blind roll was made, for the storyguide."""
+        if not self.at_seat:
+            return reads(entry, self.who, self.session, self.saga)
+        spec = KINDS.get(entry.kind)
+        return not (
+            spec is not None and spec.storyguide_skips and self.runs_the_session
+        )
+
+    def entries(self) -> list[Entry]:
+        """The entries this person reads, in order."""
+        return [e for e in self.book.entries if self.reads(e)]
+
+    def calls_attention(self, entry: Entry) -> bool:
+        """Whether `entry` calls this person's collapsed pane."""
+        return _calls_attention(
+            entry, self.who, self.session, self.saga, sent=self.at_seat
+        )
+
+    def may_answer(self, request: Entry, character_id: str) -> bool:
+        """Whether this person answers `request` for `character_id` now:
+        at the host, as the host checks it; at a seat, the roller the
+        request names who hasn't answered yet (the host checks again)."""
+        if any(
+            e.body.get("character_id") == character_id
+            for e in answers(self.book, request.number)
+        ):
+            return False
+        if not self.at_seat and self.saga is not None:
+            why = why_not_answer(
+                self.book,
+                self.saga,
+                self.session,
+                request.number,
+                character_id,
+                self.who,
+            )
+            return why is None
+        return self.who == roller_of(request, character_id)
+
+    def kept_ease(self, request: Entry) -> int | None:
+        """`request`'s Ease Factor kept from its players, for the Session's
+        storyguide's eyes; None for anyone else or none kept."""
+        if not self.runs_the_session:
+            return None
+        return hidden_ease(self.book, request.number)
+
+    def answer_result(self, request: Entry, character_id: str) -> str:
+        """`character_id`'s answer to `request` as this person sees it: its
+        total and whether it succeeded (against the Ease Factor kept from
+        the players, for the storyguide), "botch", "rolled" for one they
+        may not see, or "…" for none yet."""
+        made = [
+            e
+            for e in answers(self.book, request.number)
+            if e.body.get("character_id") == character_id
+        ]
+        if not made:
+            return "…"
+        seen = next((e for e in made if self.reads(e)), None)
+        if seen is None:
+            return "rolled"
+        body = seen.body
+        if body.get("botches"):
+            return "botch"
+        result = str(body.get("total"))
+        kept = self.kept_ease(request)
+        if kept is not None:
+            return result + (" ✓" if int(body["total"]) >= kept else " ✗")
+        if body.get("succeeded") is not None:
+            return result + (" ✓" if body["succeeded"] else " ✗")
+        return result

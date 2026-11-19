@@ -1,0 +1,1 @@
+**One reading of the Chronicle.** Which entries you read, which call a collapsed pane, whether you may answer a Roll request and how an answer shows are now worked out in one place, the same on the host's computer and at a Remote seat, and tested to agree. Nothing changes in how it looks.
