@@ -49,6 +49,7 @@ from ..forms import lab_plan as lab_plan_forms
 from ..forms import laboratory as lf
 from ..forms import library as library_forms
 from ..forms import menu as menu_forms
+from ..forms import menu_steps
 from ..markup import escape, markdown_text
 from ..models import LAB_TEXT_KINDS, Book, Laboratory, Saga
 from ..sections import LAB_ITEMS_SECTION, LAB_TRAITS_SECTION
@@ -846,7 +847,7 @@ class LaboratoryPage(QWidget):
             edit_button(
                 "Texts Read",
                 self.p,
-                lambda: self.run(menu_forms.lab_text_access(self.saga, owner)),
+                lambda: self.run(menu_steps.lab_text_access(self.saga, owner)),
                 "lab_text",
             )
         ]

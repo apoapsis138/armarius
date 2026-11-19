@@ -14,6 +14,7 @@ from ars_magica_manager import connections, storage, world
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Choose, Confirm, Form, Refuse
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import menu_steps
 from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.forms import world as world_forms
 from ars_magica_manager.models import (
@@ -180,7 +181,7 @@ def test_more_offers_a_covenant_what_its_level_allows(detail, offered):
 def test_promoting_a_sketch_covenant_starts_its_creation():
     saga = _saga()
     fengheld = saga.covenants[1]
-    step = menu_forms.change_detail(saga, fengheld, FULL)
+    step = menu_steps.change_detail(saga, fengheld, FULL)
     assert isinstance(step, Confirm) and "full covenant" in step.question
     step.apply()
     assert (fengheld.detail, fengheld.in_creation, fengheld.played) == (

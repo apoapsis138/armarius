@@ -31,7 +31,7 @@ from ...form_spec import DialogField, pairs
 from ...forms import ability as ability_forms
 from ...forms import diary as diary_forms
 from ...forms import laboratory as laboratory_forms
-from ...forms import menu as menu_forms
+from ...forms import menu_steps
 from ...forms import saga_content as scf
 from ...forms import trait as trait_forms
 from ...forms import virtue as virtue_forms
@@ -322,10 +322,10 @@ def _ritual_again_dialog(
     """Perform a Longevity Ritual again from its Lab Text: the
     vis to pay with and whose. Refuses what the rules do (the live line says
     what it will cost and restore). Builds (the Art, whose vis)."""
-    problem, live = menu_forms.ritual_again_checks(saga, magus, lab, text)
+    problem, live = menu_steps.ritual_again_checks(saga, magus, lab, text)
     return FieldsDialog(
         "Perform the Longevity Ritual again",
-        menu_forms.ritual_again_fields(magus, text),
+        menu_steps.ritual_again_fields(magus, text),
         save_label="Perform",
         validate=problem,
         live=live,

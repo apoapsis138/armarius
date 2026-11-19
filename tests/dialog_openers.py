@@ -51,6 +51,7 @@ from ars_magica_manager.forms import creation as creation_forms
 from ars_magica_manager.forms import (
     grog_story,
     lab_item,
+    menu_steps,
     ship_build,
     whereabouts,
     wizards_war,
@@ -59,7 +60,6 @@ from ars_magica_manager.forms import grogs as grog_forms
 from ars_magica_manager.forms import hook_stories as hook_story_forms
 from ars_magica_manager.forms import inhabitant as inhabitant_forms
 from ars_magica_manager.forms import land_shaping as land_forms
-from ars_magica_manager.forms import menu as menu_forms
 from ars_magica_manager.forms import message as message_forms
 from ars_magica_manager.forms import season as season_forms
 from ars_magica_manager.forms import sheet_roll as sheet_roll_forms
@@ -1656,7 +1656,7 @@ OPENERS: dict[str, Opener] = {
     "improve income": Opener(
         "covenant",
         lambda ws: ws._run_steps(
-            menu_forms.improve_form(
+            menu_steps.improve_form(
                 ws.saga,
                 ws.selected_covenant.economics.income_sources[0],
                 ws.selected_covenant,

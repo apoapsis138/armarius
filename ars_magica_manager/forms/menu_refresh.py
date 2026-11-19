@@ -2,7 +2,7 @@
 (menu.command) knows what to save and redraw afterwards.
 
 An action with an entry here needs no handler of its own in the terminal:
-it builds the page's `menu.Page`, runs the action's first step, then saves
+it builds the page's `page.Page`, runs the action's first step, then saves
 and redraws the sections named. Where an action is offered is not where its
 result lands (Cast a Power is offered on Aging & Warping and also writes the
 Diary), so these are data of their own. An action with no entry is run by a

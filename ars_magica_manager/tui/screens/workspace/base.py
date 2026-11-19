@@ -69,7 +69,7 @@ from ....actions import (
 )
 from ....forms import creation as creation_forms
 from ....forms import menu as menu_forms
-from ....forms import menu_refresh
+from ....forms import menu_refresh, menu_steps
 from ....forms import neighbour as neighbour_forms
 from ....forms import page as page_forms
 from ....markup import escape
@@ -780,7 +780,7 @@ class WorkspaceBase(Screen[None]):
 
     def _facts(self, **extras: Any) -> page_forms.Page:
         """The page on show as the core's actions ask about it
-        (menu.Page): `where`, and what only the terminal knows -- where
+        (page.Page): `where`, and what only the terminal knows -- where
         focus is, who is signed in, the chosen rows."""
         view = self._current_sheet_view()
         return page_forms.page_at(
@@ -1777,7 +1777,7 @@ class WorkspaceBase(Screen[None]):
             self._commit()
             self.run_worker(gone())
 
-        run_steps(self.app, menu_forms.delete_record(saga, record), finished)
+        run_steps(self.app, menu_steps.delete_record(saga, record), finished)
 
     async def _show_character(self, character: Character) -> None:
         """Select `character`, in the tree and the detail pane."""

@@ -109,7 +109,7 @@ from ..commands import (
 )
 from ..forms import advance as advance_forms
 from ..forms import creation as creation_forms
-from ..forms import menu as menu_forms
+from ..forms import menu_steps
 from ..forms import page as page_forms
 from ..forms import printing as print_forms
 from ..forms import saga as saga_forms
@@ -2193,7 +2193,7 @@ class MainWindow(QMainWindow):
                 self.redraw()
 
         if self.saga is not None:
-            self.run(menu_forms.toggle_mode(self.saga, record), moved)
+            self.run(menu_steps.toggle_mode(self.saga, record), moved)
 
     def _familiar(self, familiar_id: str | None) -> Familiar | None:
         saga = self.saga

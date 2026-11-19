@@ -14,6 +14,7 @@ from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Confirm
 from ars_magica_manager.forms import character as character_forms
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import menu_steps
 from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.models import (
     FULL,
@@ -124,13 +125,13 @@ def test_more_offers_what_the_level_allows(detail, offered):
 def test_promoting_a_sketch_to_full_starts_its_creation():
     saga = _saga()
     character = saga.characters[0]
-    step = menu_forms.change_detail(saga, character, FULL)
+    step = menu_steps.change_detail(saga, character, FULL)
     assert isinstance(step, Confirm) and "Creation Worksheet" in step.question
     step.apply()
     assert (character.detail, character.in_creation) == (FULL, True)
     assert character.arts["rego"].xp == 171  # nothing copied or lost
 
-    step = menu_forms.change_detail(saga, character, SKETCH)
+    step = menu_steps.change_detail(saga, character, SKETCH)
     assert "Demote" in step.question
     step.apply()
     assert (character.detail, character.in_creation) == (SKETCH, False)
