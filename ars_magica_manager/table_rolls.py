@@ -41,10 +41,10 @@ import random
 import secrets
 from collections.abc import Callable, Iterator, Sequence
 from contextlib import contextmanager
-from dataclasses import dataclass
-from typing import Any, Protocol
+from typing import Any
 
-from . import chronicle, dice_text, table_rules
+from . import at_table, chronicle, dice_text, table_rules
+from .at_table import FormRoll, Opening
 from .commands import Confirm, Form, notes
 from .form_spec import DialogField
 from .markup import plain
@@ -205,47 +205,11 @@ def dice() -> random.Random:
 # -- a form roll, at the host or from a seat --
 
 
-@dataclass(frozen=True)
-class Opening:
-    """What a form roll is, as the host is told before its first die: the
-    form's name, the character (none: the storyguide's own) and who sees
-    it."""
-
-    form: str
-    character_id: str
-    visibility: str
+__all__ = ["FormRoll", "Opening"]  # the Table's (at_table.py), named here too
 
 
 class DiceUnavailable(Exception):
     """A seat's dice couldn't be drawn from the host; the reason, to show."""
-
-
-class FormRoll(Protocol):
-    """One form roll being saved: where its dice come from, and how it
-    ends. `finish` writes it with the form's result lines (the reason it
-    couldn't be, or None); `cancel` writes the dice drawn so far as
-    cancelled."""
-
-    @property
-    def dice(self) -> random.Random: ...
-
-    def finish(self, lines: list[str]) -> str | None: ...
-
-    def cancel(self) -> None: ...
-
-
-#: Opens a form roll at a Remote seat (the window sets it while the
-#: seat's Chronicle pane is attached).
-Opener = Callable[[Opening], FormRoll]
-
-_seat: Opener | None = None
-
-
-def use_seat(opener: Opener | None) -> None:
-    """Draw form rolls' dice from the host through `opener` (a Remote
-    seat), or here (None: the host's own copy)."""
-    global _seat
-    _seat = opener
 
 
 class HostRoll:
@@ -322,10 +286,11 @@ class HostRoll:
 
 
 def _open(saga: Saga, session: Session, opening: Opening, who: str) -> FormRoll:
-    """A form roll opened here: through the seat's opener at a Remote
-    seat, else at the host (ValueError says why it can't be made)."""
-    if _seat is not None:
-        return _seat(opening)
+    """A form roll opened here: through the Remote seat's Table, else at
+    the host (ValueError says why it can't be made)."""
+    seat = at_table.seat()
+    if seat is not None:
+        return seat.open_form_roll(opening)
     return HostRoll(saga, session, opening, by=who)
 
 

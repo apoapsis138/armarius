@@ -390,8 +390,12 @@ class SeatSession:
 
     def open_form_roll(self, opening: table_rolls.Opening) -> SeatFormRoll:
         """A Table roll made from a form at this seat: its dice drawn from
-        the host one at a time (table_rolls.use_seat takes this)."""
+        the host one at a time."""
         return SeatFormRoll(self, opening)
+
+    def table(self, held: chronicle.HasEntries) -> SeatTable:
+        """The table as this seat acts at it, its Chronicle being `held`."""
+        return SeatTable(self, held)
 
     async def _connect_own(self) -> RemoteClient:
         """A new connection of its own, signed in with the key kept."""
@@ -474,6 +478,35 @@ class SeatSession:
             except ChannelError, ConnectionError, TimeoutError:
                 pass  # dropped for now: try again shortly
             await asyncio.sleep(CHRONICLE_RETRY)
+
+
+class SeatTable:
+    """The table as a Remote seat acts at it (at_table.Table): each verb
+    asked of the host over the seat's connection, the Chronicle as the
+    host sent it. Pattern: the seat's Adapter at the Table's seam."""
+
+    def __init__(self, seat: SeatSession, held: chronicle.HasEntries) -> None:
+        self.seat, self._held = seat, held
+
+    def roll(self, request: chronicle.RollRequest) -> str | None:
+        return self.seat.roll(request)
+
+    def spend(self, number: int, points: int) -> str | None:
+        return self.seat.spend_confidence(number, points)
+
+    def answer(self, number: int, character_id: str, specialty: bool) -> str | None:
+        return self.seat.answer(number, character_id, specialty)
+
+    def say(
+        self, words: str, to: tuple[str, ...], links: tuple[references.Ref, ...]
+    ) -> str | None:
+        return self.seat.say(words, to, links)
+
+    def open_form_roll(self, opening: table_rolls.Opening) -> SeatFormRoll:
+        return self.seat.open_form_roll(opening)
+
+    def held(self) -> chronicle.HasEntries | None:
+        return self._held
 
 
 class SeatFormRoll:

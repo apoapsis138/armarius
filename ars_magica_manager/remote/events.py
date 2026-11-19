@@ -49,7 +49,7 @@ import time
 from collections.abc import Callable
 from typing import Any
 
-from .. import chronicle, references, shapes, storage, table_rolls
+from .. import chronicle, models, references, shapes, storage, table_rolls
 from ..models import Saga
 from .limits import RateLimiter
 from .protocol import Body, Field, MessageSpec, Reply, Session
@@ -195,6 +195,129 @@ def _open_form_roll(saga_id: str, session: Session, body: Body) -> table_rolls.H
     )
 
 
+#: One verb a seat asks the host to do at the table: given the Session's
+#: Chronicle, the saga, the Session under way, the seat's Player and what
+#: the seat sent, the entry it wrote (ValueError: refused).
+Act = Callable[[chronicle.Chronicle, Saga, models.Session, str, Body], chronicle.Entry]
+
+
+def _at_table(
+    saga_id: str,
+    limiter: RateLimiter,
+    *,
+    refused: str,
+    done: str,
+    too_many: str,
+    unsaved: str,
+    act: Act,
+) -> Callable[[Session, Body], Reply]:
+    """A seat's verb at the table, its steps said once: within the seat's
+    limit, the saga read afresh, a Session under way, its Chronicle caught
+    up, then `act`; its entry's number, or why not (`refused`)."""
+
+    def handle(session: Session, body: Body) -> Reply:
+        if not limiter.allow(session.device_id or session.player_id):
+            return Reply(refused, {"why": too_many})
+        try:
+            saga = storage.load_saga(saga_id)
+        except OSError, ValueError:
+            return Reply(refused, {"why": "The saga can't be read just now."})
+        under_way = chronicle.under_way(saga)
+        if under_way is None:
+            return Reply(refused, {"why": "No Session is under way."})
+        # A Chronicle of this thread's own, never the window's open one.
+        book = chronicle.Chronicle(chronicle.path_of(saga, under_way), [])
+        try:
+            book.refresh()
+            entry = act(book, saga, under_way, session.player_id, body)
+        except ValueError as problem:
+            return Reply(refused, {"why": str(problem)[:200]})
+        except OSError:
+            return Reply(refused, {"why": unsaved})
+        return Reply(done, {"number": entry.number})
+
+    return handle
+
+
+def _request_of(body: Body) -> chronicle.RollRequest:
+    """The roll a seat's `roll` asks for (its fields already checked)."""
+    ease = body.get("ease_factor")
+    characteristic = str(body.get("characteristic", ""))
+    sheet = (
+        chronicle.SheetRoll(
+            characteristic, str(body.get("ability", "")), body.get("specialty") is True
+        )
+        if characteristic
+        else None
+    )
+    return chronicle.RollRequest(
+        stress=body["die"] == "stress",
+        modifier=int(body["modifier"]),
+        botch_dice=int(body["botch_dice"]) if body["die"] == "stress" else 0,
+        ease_factor=ease if isinstance(ease, int) else None,
+        for_what=str(body.get("for", "")),
+        character_id=str(body.get("character_id", "")),
+        visibility=str(body["visibility"]),
+        sheet=sheet,
+    )
+
+
+def _roll(
+    book: chronicle.Chronicle,
+    saga: Saga,
+    under_way: models.Session,
+    by: str,
+    body: Body,
+) -> chronicle.Entry:
+    return chronicle.free_roll(book, saga, under_way, _request_of(body), by=by)
+
+
+def _confidence(
+    book: chronicle.Chronicle,
+    saga: Saga,
+    under_way: models.Session,
+    by: str,
+    body: Body,
+) -> chronicle.Entry:
+    return chronicle.spend_confidence(
+        book, saga, under_way, int(body["roll"]), int(body["points"]), by=by
+    )
+
+
+def _answer(
+    book: chronicle.Chronicle,
+    saga: Saga,
+    under_way: models.Session,
+    by: str,
+    body: Body,
+) -> chronicle.Entry:
+    return chronicle.answer(
+        book,
+        saga,
+        under_way,
+        int(body["request"]),
+        str(body["character_id"]),
+        by=by,
+        specialty=body.get("specialty") is True,
+    )
+
+
+def _say(
+    book: chronicle.Chronicle,
+    saga: Saga,
+    under_way: models.Session,
+    by: str,
+    body: Body,
+) -> chronicle.Entry:
+    to = tuple(t for t in str(body.get("to", "")).split("\n") if t)
+    links = _links(saga, str(body.get("links", "")))
+    if isinstance(links, str):
+        raise ValueError(links)
+    return chronicle.message(
+        book, saga, under_way, str(body["words"]), to=to, links=links, by=by
+    )
+
+
 def _cancel(session: Session) -> None:
     """Write the dice a seat drew for a form roll it never finished."""
     roll = session.form_roll
@@ -273,40 +396,15 @@ def _form_roll_specs(saga_id: str, clock: Callable[[], float]) -> list[MessageSp
 def _message_specs(saga_id: str, clock: Callable[[], float]) -> list[MessageSpec]:
     """`say`: a Message or Whisper from a seat, written by the host as its
     Player."""
-    messages = RateLimiter(MESSAGES_PER_MINUTE, 60.0, clock)
-
-    def say(session: Session, body: Body) -> Reply:
-        if not messages.allow(session.device_id or session.player_id):
-            return Reply(
-                "message_refused", {"why": "Too many Messages: wait a minute."}
-            )
-        try:
-            saga = storage.load_saga(saga_id)
-        except OSError, ValueError:
-            return Reply("message_refused", {"why": "The saga can't be read just now."})
-        under_way = chronicle.under_way(saga)
-        if under_way is None:
-            return Reply("message_refused", {"why": "No Session is under way."})
-        to = tuple(t for t in str(body.get("to", "")).split("\n") if t)
-        links = _links(saga, str(body.get("links", "")))
-        if isinstance(links, str):
-            return Reply("message_refused", {"why": links[:200]})
-        book = chronicle.Chronicle(chronicle.path_of(saga, under_way), [])
-        try:
-            entry = chronicle.message(
-                book,
-                saga,
-                under_way,
-                str(body["words"]),
-                to=to,
-                links=links,
-                by=session.player_id,
-            )
-        except ValueError as problem:
-            return Reply("message_refused", {"why": str(problem)[:200]})
-        except OSError:
-            return Reply("message_refused", {"why": "The Message couldn't be saved."})
-        return Reply("said", {"number": entry.number})
+    say = _at_table(
+        saga_id,
+        RateLimiter(MESSAGES_PER_MINUTE, 60.0, clock),
+        refused="message_refused",
+        done="said",
+        too_many="Too many Messages: wait a minute.",
+        unsaved="The Message couldn't be saved.",
+        act=_say,
+    )
 
     return [
         MessageSpec(
@@ -332,103 +430,20 @@ def event_specs(
             EVENTS, {"session": body.get("session", ""), "since": body["since"]}
         )
 
-    def roll(session: Session, body: Body) -> Reply:
-        if not rolls.allow(session.device_id or session.player_id):
-            return Reply("roll_refused", {"why": "Too many rolls: wait a minute."})
-        try:
-            saga = storage.load_saga(saga_id)
-        except OSError, ValueError:
-            return Reply("roll_refused", {"why": "The saga can't be read just now."})
-        under_way = chronicle.under_way(saga)
-        if under_way is None:
-            return Reply("roll_refused", {"why": "No Session is under way."})
-        book = chronicle.Chronicle(chronicle.path_of(saga, under_way), [])
-        ease = body.get("ease_factor")
-        characteristic = str(body.get("characteristic", ""))
-        sheet = (
-            chronicle.SheetRoll(
-                characteristic,
-                str(body.get("ability", "")),
-                body.get("specialty") is True,
-            )
-            if characteristic
-            else None
+    def rolling(act: Act, unsaved: str) -> Callable[[Session, Body], Reply]:
+        return _at_table(
+            saga_id,
+            rolls,
+            refused="roll_refused",
+            done="rolled",
+            too_many="Too many rolls: wait a minute.",
+            unsaved=unsaved,
+            act=act,
         )
-        request = chronicle.RollRequest(
-            stress=body["die"] == "stress",
-            modifier=int(body["modifier"]),
-            botch_dice=int(body["botch_dice"]) if body["die"] == "stress" else 0,
-            ease_factor=ease if isinstance(ease, int) else None,
-            for_what=str(body.get("for", "")),
-            character_id=str(body.get("character_id", "")),
-            visibility=str(body["visibility"]),
-            sheet=sheet,
-        )
-        try:
-            entry = chronicle.free_roll(
-                book, saga, under_way, request, by=session.player_id
-            )
-        except ValueError as problem:
-            return Reply("roll_refused", {"why": str(problem)[:200]})
-        except OSError:
-            return Reply("roll_refused", {"why": "The roll couldn't be saved."})
-        return Reply("rolled", {"number": entry.number})
 
-    def confidence(session: Session, body: Body) -> Reply:
-        if not rolls.allow(session.device_id or session.player_id):
-            return Reply("roll_refused", {"why": "Too many rolls: wait a minute."})
-        try:
-            saga = storage.load_saga(saga_id)
-        except OSError, ValueError:
-            return Reply("roll_refused", {"why": "The saga can't be read just now."})
-        under_way = chronicle.under_way(saga)
-        if under_way is None:
-            return Reply("roll_refused", {"why": "No Session is under way."})
-        path = chronicle.path_of(saga, under_way)
-        book = chronicle.Chronicle(path, [])
-        try:
-            book.refresh()
-            entry = chronicle.spend_confidence(
-                book,
-                saga,
-                under_way,
-                int(body["roll"]),
-                int(body["points"]),
-                by=session.player_id,
-            )
-        except ValueError as problem:
-            return Reply("roll_refused", {"why": str(problem)[:200]})
-        except OSError:
-            return Reply("roll_refused", {"why": "The Chronicle couldn't be saved."})
-        return Reply("rolled", {"number": entry.number})
-
-    def answer(session: Session, body: Body) -> Reply:
-        if not rolls.allow(session.device_id or session.player_id):
-            return Reply("roll_refused", {"why": "Too many rolls: wait a minute."})
-        try:
-            saga = storage.load_saga(saga_id)
-        except OSError, ValueError:
-            return Reply("roll_refused", {"why": "The saga can't be read just now."})
-        under_way = chronicle.under_way(saga)
-        if under_way is None:
-            return Reply("roll_refused", {"why": "No Session is under way."})
-        book = chronicle.Chronicle(chronicle.path_of(saga, under_way), [])
-        try:
-            book.refresh()
-            entry = chronicle.answer(
-                book,
-                saga,
-                under_way,
-                int(body["request"]),
-                str(body["character_id"]),
-                by=session.player_id,
-                specialty=body.get("specialty") is True,
-            )
-        except ValueError as problem:
-            return Reply("roll_refused", {"why": str(problem)[:200]})
-        except OSError:
-            return Reply("roll_refused", {"why": "The roll couldn't be saved."})
-        return Reply("rolled", {"number": entry.number})
+    roll = rolling(_roll, "The roll couldn't be saved.")
+    confidence = rolling(_confidence, "The Chronicle couldn't be saved.")
+    answer = rolling(_answer, "The roll couldn't be saved.")
 
     return [
         *_form_roll_specs(saga_id, clock),

@@ -14,11 +14,12 @@ from typing import Any
 
 import pytest
 
-from ars_magica_manager import chronicle, table_rolls, viewing
+from ars_magica_manager import at_table, chronicle, table_rolls, viewing
 from ars_magica_manager.commands import Form, notes
 from ars_magica_manager.form_spec import DialogField, shown
 from ars_magica_manager.models import Casting, Character, Player, Saga, Session
 from ars_magica_manager.rules import dice
+from tests.fake_table import FakeTable
 from tests.test_chronicle import Faces
 
 HOST = viewing.HOST
@@ -405,13 +406,13 @@ def test_at_a_seat_each_die_comes_from_the_host() -> None:
     saga, _session, book = _begun()
     viewing.use(viewing.viewer_for(saga.players[0]))
     seat = _FakeSeat(1, 4)
-    table_rolls.use_seat(seat.open)
+    at_table.use_seat(FakeTable(seat.open))
     try:
         form = _wrapped(saga, _rolling_form())
         table_rolls.plain_source = _Untouchable
         lines = form.apply({"ease": 6, table_rolls.VISIBILITY: chronicle.PUBLIC})
     finally:
-        table_rolls.use_seat(None)
+        at_table.use_seat(None)
         table_rolls.plain_source = random.Random
 
     assert lines == ["die 8 against 6: [b]it holds[/b].", "Stress die 1, 4 → 4 × 2 = 8"]
@@ -428,14 +429,14 @@ def test_at_a_seat_each_die_comes_from_the_host() -> None:
 def test_at_a_seat_a_form_that_fails_after_drawing_is_cancelled() -> None:
     saga, _session, _book = _begun()
     seat = _FakeSeat(3)
-    table_rolls.use_seat(seat.open)
+    at_table.use_seat(FakeTable(seat.open))
     try:
         with pytest.raises(ValueError):
             _wrapped(saga, _rolling_form(fail=True)).apply(
                 {"ease": 6, table_rolls.VISIBILITY: chronicle.PUBLIC}
             )
     finally:
-        table_rolls.use_seat(None)
+        at_table.use_seat(None)
 
     assert seat.cancelled == 1
     assert seat.finished == []
@@ -451,13 +452,13 @@ def test_at_a_seat_the_hosts_refusal_is_shown() -> None:
             return roll
 
     seat = Refusing(5)
-    table_rolls.use_seat(seat.open)
+    at_table.use_seat(FakeTable(seat.open))
     try:
         lines = _wrapped(saga).apply(
             {"ease": 0, table_rolls.VISIBILITY: chronicle.PUBLIC}
         )
     finally:
-        table_rolls.use_seat(None)
+        at_table.use_seat(None)
 
     assert (
         lines[-1]
@@ -719,13 +720,13 @@ def test_a_seat_roll_that_already_says_its_dice_doesnt_say_them_twice() -> None:
     saga, _session, _book = _begun()
     viewing.use(viewing.viewer_for(saga.players[0]))
     seat = _FakeSeat(6)
-    table_rolls.use_seat(seat.open)
+    at_table.use_seat(FakeTable(seat.open))
     try:
         with table_rolls.drawing(saga, "Impress") as drawn:
             dice.stress_die(drawn.dice, 1)
             drawn.lines = [f"Impress Udo: {drawn.said}, +5 = 11 vs 6."]
     finally:
-        table_rolls.use_seat(None)
+        at_table.use_seat(None)
 
     assert seat.finished == [["Impress Udo: Stress die 6, +5 = 11 vs 6."]]
 

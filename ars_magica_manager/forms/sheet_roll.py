@@ -9,9 +9,9 @@ The host adds the scores and the wound and Fatigue penalties itself
 An Ability with no score is offered too, unless the book says it needs
 experience (DE p. 157): rolled at 0 with three extra botch dice.
 
-Where the roll goes: into the Chronicle open here on the host's own
-copy; at a Remote seat, to the host, through the sender the window sets
-(`use_sender`) while the seat's pane is attached.
+Where the roll goes: to the table as this copy acts at it
+(host_table.here): the Chronicle open here on the host's own copy, or the
+host, from a Remote seat.
 
 Pattern: the core Form (a FieldsDialog builder), its apply making a
 Command (chronicle.RollRequest with a SheetRoll) for the host to carry out
@@ -21,11 +21,11 @@ from __future__ import annotations
 
 from typing import Any
 
-from .. import catalog, chronicle, table_rules
+from .. import catalog, chronicle, host_table, table_rules
 from ..commands import Form, Refuse, notes
 from ..form_spec import DialogField
 from ..markup import escape
-from ..models import Character, Saga, Session
+from ..models import Character, Saga
 from ..models.definitions import ROLL_CHARACTERISTICS
 from ..rules import creation_access, scores
 from . import free_roll
@@ -35,48 +35,6 @@ HELP_ID = "sheet-roll"
 #: The section names whose Roll this is (section_verbs' ids).
 ABILITIES = "tab-abilities"
 CHARACTERISTICS = "section-char-characteristics"
-
-#: At a Remote seat: hands a request to the host (the seat's connection),
-#: set by the window while the seat's Chronicle pane is attached.
-_sender: free_roll.Submit | None = None
-#: At a Remote seat: the Chronicle as its host sent it.
-_seat_book: chronicle.HasEntries | None = None
-
-
-def use_sender(
-    sender: free_roll.Submit | None, book: chronicle.HasEntries | None = None
-) -> None:
-    """Send rolls from the sheet to the host with `sender`, the seat's
-    Chronicle being `book` (a Remote seat), or roll them here (None: the
-    host's own copy)."""
-    global _sender, _seat_book
-    _sender, _seat_book = sender, book
-
-
-def _book(saga: Saga, session: Session) -> chronicle.HasEntries | None:
-    """The Chronicle as this copy holds it: the seat's, or the one open
-    here; None if it can't be read."""
-    if _sender is not None:
-        return _seat_book
-    try:
-        return chronicle.read(saga, session)
-    except OSError, ValueError:
-        return None
-
-
-def _roll_here(saga: Saga, session: Session, who: str) -> free_roll.Submit:
-    def submit(request: chronicle.RollRequest) -> str | None:
-        try:
-            chronicle.free_roll(
-                chronicle.read(saga, session), saga, session, request, by=who
-            )
-        except ValueError as problem:
-            return str(problem)
-        except OSError:
-            return "The roll couldn't be saved."
-        return None
-
-    return submit
 
 
 def last_characteristic(
@@ -132,7 +90,8 @@ def roll_form(
     if session is None:
         return Refuse("Roll", "No Session is under way.")
     who = chronicle.here()
-    book = _book(saga, session)
+    table = host_table.here(saga, session, who)
+    book = table.held()
     chosen = characteristic or (
         last_characteristic(book, character.id, ability)
         if book is not None
@@ -224,8 +183,7 @@ def roll_form(
         return chronicle.why_not_roll(saga, session, request_of(values), who)
 
     def apply(values: dict[str, Any]) -> list[str]:
-        send = _sender or _roll_here(saga, session, who)
-        refused = send(request_of(values))
+        refused = table.roll(request_of(values))
         return notes(refused) if refused else []
 
     return Form(
