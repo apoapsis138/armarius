@@ -212,6 +212,8 @@ LAYERS: tuple[tuple[str, frozenset[str]], ...] = (
                 "siblings",
                 "theban_meeting",
                 "troupe",
+                # The page on show, as a kind (actions.NodeKind) and an id.
+                "where",
                 "worksheet",
                 "worksheet_feedback",
                 # Transylvania's meeting steps.

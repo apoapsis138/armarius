@@ -118,15 +118,19 @@ from ..markup import escape
 from ..models import (
     Character,
     Covenant,
+    Creature,
     Familiar,
     Laboratory,
+    Neighbour,
     Player,
     Saga,
+    Tribunal,
     season_order,
 )
 from ..paths import APP_NAME
 from ..saga_store import LocalStore, Refreshed, SagaStore
 from ..sheets import laboratory as ls
+from ..where import Where
 from . import atlas as atlas_page
 from . import (
     choices,
@@ -345,6 +349,16 @@ class Place:
     kind: str
     id: str | None = None
 
+    @property
+    def where(self) -> Where | None:
+        """The page as the core sees it (where.py), for a page with a
+        menu: the saga's, Saga Content and one record's. A covenant's page
+        with no covenant is the saga's unassigned characters'."""
+        if self.kind == COVENANT and self.id is None:
+            return Where(NodeKind.CHARACTER_GROUP)
+        kind = _PLACE_NODES.get(self.kind)
+        return Where(kind, self.id) if kind is not None else None
+
 
 #: The page that shows each kind of record a link can name
 #: (references.KINDS).
@@ -357,6 +371,32 @@ _REF_PLACES: dict[str, str] = {
     "neighbours": NEIGHBOUR,
     "creatures": CREATURE,
 }
+
+#: The pages with a menu, as the core's NodeKind (Place.where).
+_PLACE_NODES: dict[str, NodeKind] = {
+    SAGA: NodeKind.SAGA,
+    CONTENT: NodeKind.SAGA_CONTENT,
+    COVENANT: NodeKind.COVENANT,
+    CHARACTER: NodeKind.CHARACTER,
+    LABORATORY: NodeKind.LABORATORY,
+    FAMILIAR: NodeKind.FAMILIAR,
+    TRIBUNAL: NodeKind.TRIBUNAL,
+    NEIGHBOUR: NodeKind.NEIGHBOUR,
+    CREATURE: NodeKind.CREATURE,
+}
+
+#: The pages of one record, and what they say when it isn't there.
+_CHOSEN: dict[str, str] = {
+    TRIBUNAL: "Tribunal",
+    NEIGHBOUR: "neighbour",
+    CREATURE: "creature",
+    LABORATORY: "laboratory",
+    FAMILIAR: "familiar",
+    CHARACTER: "character",
+}
+
+#: The pages whose record the players may not know of yet (Reveal).
+_REVEALED = frozenset({NEIGHBOUR, CREATURE, COVENANT, CHARACTER})
 
 #: The chapter each page lists a Find Spot's records in, by the page's
 #: Ref kind and the Spot's list.
@@ -983,11 +1023,8 @@ class MainWindow(QMainWindow):
     def open_record_key(self) -> str | None:
         """The record on show, as "characters:mag1" (presence.py), or None
         for a page that isn't one record's."""
-        place = self.trail[-1] if self.trail else None
-        if place is None or not place.id:
-            return None
-        kind = next((k for k, v in _REF_PLACES.items() if v == place.kind), None)
-        return f"{kind}:{place.id}" if kind else None
+        where = self.trail[-1].where if self.trail else None
+        return where.presence_key() if where is not None else None
 
     def also_here(self, record: str | None, others: Sequence[str]) -> None:
         """Show who else has `record` open, if it is still the one on show:
@@ -1080,19 +1117,10 @@ class MainWindow(QMainWindow):
         saga = self.saga
         if saga is None or place is None or not place.id:
             return None
-        for records in (
-            saga.characters,
-            saga.covenants,
-            saga.laboratories,
-            saga.familiars,
-            saga.tribunals,
-            saga.neighbours,
-            saga.creatures,
-        ):
-            found = next((r for r in records if r.id == place.id), None)
-            if found is not None:
-                return found
-        return None
+        if place.kind == WORKSHEET:
+            return self._creation_record(place.id)
+        where = place.where
+        return where.record(saga) if where is not None else None
 
     def _use_viewer(self) -> None:
         """Seat whoever reads the saga open (seat.py): the storyguide, the
@@ -2005,21 +2033,16 @@ class MainWindow(QMainWindow):
             return SagaContentPage(saga, p, self.run)
         if place.kind in stores.STORES:
             return StorePage(saga, stores.STORES[place.kind], p, self.run)
-        if place.kind == TRIBUNAL:
-            tribunal = saga.tribunal(place.id)
-            if tribunal is None:
-                return QLabel("No Tribunal chosen.")
-            return TribunalPage(saga, tribunal, p, self.run, self._controls())
-        if place.kind == NEIGHBOUR:
-            neighbour = saga.neighbour(place.id)
-            if neighbour is None:
-                return QLabel("No neighbour chosen.")
-            return NeighbourPage(saga, neighbour, p, self.run, self._controls())
-        if place.kind == CREATURE:
-            creature = saga.creature(place.id)
-            if creature is None:
-                return QLabel("No creature chosen.")
-            return CreaturePage(saga, creature, p, self.run, self._controls())
+        where = place.where
+        record = where.record(saga) if where is not None else None
+        if place.kind in _CHOSEN and record is None:
+            return QLabel(f"No {_CHOSEN[place.kind]} chosen.")
+        if isinstance(record, Tribunal):
+            return TribunalPage(saga, record, p, self.run, self._controls())
+        if isinstance(record, Neighbour):
+            return NeighbourPage(saga, record, p, self.run, self._controls())
+        if isinstance(record, Creature):
+            return CreaturePage(saga, record, p, self.run, self._controls())
         if place.kind == SEASONS:
             played, self._played = self._played, None
             return SeasonsPage(saga, p, played, self.run)
@@ -2035,10 +2058,8 @@ class MainWindow(QMainWindow):
                 self._controls(),
                 self._placer(),
             )
-        if place.kind == LABORATORY:
-            lab = saga.laboratory(place.id)
-            if lab is None:
-                return QLabel("No laboratory chosen.")
+        if isinstance(record, Laboratory):
+            lab = record
             return LaboratoryPage(
                 saga,
                 lab,
@@ -2048,11 +2069,8 @@ class MainWindow(QMainWindow):
                 self._placer(),
                 open_owner=lambda: self.open_owner(lab.id),
             )
-        if place.kind == FAMILIAR:
-            familiar = self._familiar(place.id)
-            if familiar is None:
-                return QLabel("No familiar chosen.")
-            return FamiliarPage(saga, familiar, p, self.run, self._controls())
+        if isinstance(record, Familiar):
+            return FamiliarPage(saga, record, p, self.run, self._controls())
         if place.kind == WORKSHEET:
             record = self._creation_record(place.id)
             if record is None:
@@ -2066,7 +2084,7 @@ class MainWindow(QMainWindow):
                     command, lambda: self._finished(record.id)
                 ),
             )
-        character = saga.character(place.id)
+        character = record if isinstance(record, Character) else None
         if character is None:
             return QLabel("No character chosen.")
         return CharacterSheet(
@@ -2085,14 +2103,9 @@ class MainWindow(QMainWindow):
         saga = self.saga
         if saga is None or place.id is None:
             return None
-        if place.kind == NEIGHBOUR:
-            return saga.neighbour(place.id)
-        if place.kind == CREATURE:
-            return saga.creature(place.id)
-        if place.kind == COVENANT:
-            return saga.covenant(place.id)
-        if place.kind == CHARACTER:
-            return saga.character(place.id)
+        where = place.where
+        if place.kind in _REVEALED and where is not None:
+            return where.record(saga)
         if place.kind == WORKSHEET:
             # The worksheet changes its record: whoever may change that
             # record (a player their own character) gets its buttons.
@@ -2214,34 +2227,20 @@ class MainWindow(QMainWindow):
             return "Seasons"
         if place.kind == HELP:
             return "Help"
-        if place.kind == COVENANT:
-            covenant = saga.covenant(place.id)
-            return covenant.name if covenant else "Unassigned"
-        if place.kind == LABORATORY:
-            lab = saga.laboratory(place.id)
-            return lab.name if lab else ""
-        if place.kind == FAMILIAR:
-            familiar = self._familiar(place.id)
-            return (familiar.name or "(unnamed)") if familiar else ""
+        if place.kind == COVENANT and saga.covenant(place.id) is None:
+            return "Unassigned"
         if place.kind == WORKSHEET:
             return "Creation Worksheet"
-        if place.kind == TRIBUNAL:
-            tribunal = saga.tribunal(place.id)
-            return tribunal.name if tribunal else ""
-        if place.kind == NEIGHBOUR:
-            neighbour = saga.neighbour(place.id)
-            return neighbour.name if neighbour else ""
-        if place.kind == CREATURE:
-            creature = saga.creature(place.id)
-            return creature.name if creature else ""
+        where = place.where
+        if where is not None:
+            return where.name(saga)
         if place.kind == FIGHT:
             fight = next((f for f in saga.fights if f.id == place.id), None)
             return fight.name if fight else ""
         if place.kind == SIEGE:
             siege = next((s for s in saga.sieges if s.id == place.id), None)
             return siege.name if siege else ""
-        character = saga.character(place.id)
-        return character.name if character else ""
+        return ""
 
     def _draw_trail(self) -> None:
         while self.crumbs.count():
@@ -2298,45 +2297,10 @@ class MainWindow(QMainWindow):
     def menu_page(self) -> menu_forms.Page | None:
         """The page on show, as the actions it sets out see it."""
         saga = self.saga
-        place = self.trail[-1] if self.trail else None
-        if (
-            saga is None
-            or place is None
-            or place.kind
-            in (
-                SHELF,
-                WORKSHEET,
-                SEASONS,
-                HELP,
-                FIGHT,
-                SIEGE,
-                ARMARIUM,
-                CUSTODIA,
-            )
-        ):
+        where = self.trail[-1].where if self.trail else None
+        if saga is None or where is None:
             return None
-        if place.kind == SAGA:
-            return menu_forms.page_for(saga, NodeKind.SAGA)
-        if place.kind == CONTENT:
-            return menu_forms.page_for(saga, NodeKind.SAGA_CONTENT)
-        if place.kind == COVENANT:
-            if saga.covenant(place.id) is None:
-                # The saga's unassigned characters and laboratories.
-                return menu_forms.page_for(saga, NodeKind.CHARACTER_GROUP)
-            return menu_forms.page_for(saga, NodeKind.COVENANT, covenant_id=place.id)
-        if place.kind == CHARACTER:
-            return menu_forms.page_for(saga, NodeKind.CHARACTER, character_id=place.id)
-        if place.kind == TRIBUNAL:
-            return menu_forms.page_for(saga, NodeKind.TRIBUNAL, tribunal_id=place.id)
-        if place.kind == NEIGHBOUR:
-            return menu_forms.page_for(saga, NodeKind.NEIGHBOUR, neighbour_id=place.id)
-        if place.kind == CREATURE:
-            return menu_forms.page_for(saga, NodeKind.CREATURE, creature_id=place.id)
-        if place.kind == LABORATORY:
-            return menu_forms.page_for(
-                saga, NodeKind.LABORATORY, laboratory_id=place.id
-            )
-        return menu_forms.page_for(saga, NodeKind.FAMILIAR, familiar_id=place.id)
+        return menu_forms.page_at(saga, where)
 
     def _draw_chronicle(self) -> None:
         """The Chronicle pane and its button, while the open saga has a

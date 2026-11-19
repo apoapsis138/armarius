@@ -66,7 +66,6 @@ from .. import (
 from .. import baraka as baraka_forms
 from .. import devotion as devotion_forms
 from .. import economics as eco
-from .. import familiars as fam
 from .. import inhabitants as inh
 from .. import lab_texts as lt
 from .. import mystic_paths as mystic_forms
@@ -112,6 +111,7 @@ from ..rules import creation as creation_rules
 from ..rules import creation_covenant as cov_creation
 from ..rules import hedge_casting as hc
 from ..sections import FAITH_SECTION, LAB_TEXTS_SECTION
+from ..where import Where
 from . import acclaim as acclaim_forms
 from . import agents as agent_forms
 from . import apothecary as apothecary_forms
@@ -450,6 +450,25 @@ class Page:
         return self.row if section == self.section else None
 
 
+def page_at(saga: Saga, where: Where, **extras: Any) -> Page:
+    """The Page for `where`: a character's or laboratory's covenant comes
+    with it, and a familiar's magus (Where.covenant, Where.character).
+    `extras` are the front-end's own: the section and row, the chosen
+    book, where a download goes."""
+    return Page(
+        saga,
+        where.kind,
+        covenant=where.covenant(saga),
+        character=where.character(saga),
+        laboratory=where.laboratory(saga),
+        familiar=where.familiar(saga),
+        tribunal=where.tribunal(saga),
+        neighbour=where.neighbour(saga),
+        creature=where.creature(saga),
+        **extras,
+    )
+
+
 def page_for(
     saga: Saga,
     kind: NodeKind | None,
@@ -462,32 +481,19 @@ def page_for(
     neighbour_id: str | None = None,
     creature_id: str | None = None,
 ) -> Page:
-    """The Page for a record's page, found by id: a character's or
-    laboratory's covenant comes with it, and a familiar's magus."""
-    character = saga.character(character_id)
-    laboratory = saga.laboratory(laboratory_id)
-    familiar = next((f for f in saga.familiars if f.id == familiar_id), None)
-    if familiar is not None and character is None:
-        character = fam.magus_of(saga, familiar)
-    if covenant_id is None:
-        covenant_id = (
-            character.covenant_id
-            if character is not None
-            else laboratory.covenant_id
-            if laboratory is not None
-            else None
-        )
-    return Page(
-        saga,
-        kind,
-        covenant=saga.covenant(covenant_id),
-        character=character,
-        laboratory=laboratory,
-        familiar=familiar,
-        tribunal=saga.tribunal(tribunal_id),
-        neighbour=saga.neighbour(neighbour_id),
-        creature=saga.creature(creature_id),
+    """page_at the page of `kind` whose id is given."""
+    if kind is None:
+        return Page(saga, None)
+    record_id = (
+        character_id
+        or laboratory_id
+        or familiar_id
+        or tribunal_id
+        or neighbour_id
+        or creature_id
+        or covenant_id
     )
+    return page_at(saga, Where(kind, record_id))
 
 
 #: The sections only a magus's sheet has.
