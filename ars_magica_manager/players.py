@@ -17,7 +17,7 @@ import secrets
 from collections.abc import Sequence
 from typing import Any, cast
 
-from . import sessions, storage
+from . import record_links, sessions, storage
 from .markup import escape, fit
 from .models import (
     Background,
@@ -141,13 +141,9 @@ def update(player: Player, values: dict[str, Any]) -> None:
 
 def remove(saga: Saga, player: Player) -> None:
     """Delete `player`; they no longer play or steward any character, and
-    the planned Sessions forget them (sessions.forget_player)."""
+    the planned Sessions forget them (record_links)."""
     saga.players.remove(player)
-    sessions.forget_player(saga, player.id)
-    for character in saga.characters:
-        ids = character.background.player_ids
-        if player.id in ids:
-            ids.remove(player.id)
+    record_links.forget(saga, record_links.PLAYERS, player)
 
 
 # -- who may change what --

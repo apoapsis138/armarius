@@ -5,7 +5,7 @@ worked out from the covenants and characters that belong to it."""
 
 from __future__ import annotations
 
-from . import storage, world
+from . import record_links, storage, world
 from .models import Covenant, Saga, Tribunal
 
 
@@ -70,8 +70,8 @@ def deletion_consequences(saga: Saga, tribunal: Tribunal) -> list[str]:
 
 
 def delete(saga: Saga, tribunal: Tribunal) -> None:
-    """Remove `tribunal`; its covenants belong to none."""
-    for covenant in saga.covenants:
-        if covenant.tribunal_id == tribunal.id:
-            covenant.tribunal_id = None
+    """Remove `tribunal`; its covenants belong to none, and its maps go
+    with it (and their pins)."""
     saga.tribunals = [t for t in saga.tribunals if t is not tribunal]
+    record_links.forget(saga, record_links.TRIBUNALS, tribunal)
+    record_links.forget(saga, record_links.MAPS_KIND, *tribunal.maps)

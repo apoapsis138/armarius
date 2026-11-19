@@ -137,13 +137,6 @@ def ruled_by(saga: Saga, record: Any) -> list[Neighbour]:
     return [n for n in saga.neighbours if n.ruler and ruler(saga, n) is record]
 
 
-def forget_ruler(saga: Saga, record: Any) -> None:
-    """Before `record` is deleted: the neighbours it rules keep its name."""
-    for neighbour in saga.neighbours:
-        if neighbour.ruler and neighbour.ruler == record.id:
-            neighbour.ruler = record.name
-
-
 # -- drawing a value with its references --
 
 

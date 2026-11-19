@@ -12,7 +12,7 @@ kind of Character; the rules here are plain functions."""
 
 from __future__ import annotations
 
-from . import references, storage, viewing, world
+from . import record_links, storage, viewing, world
 from .models import BodyVis, Creature, CreaturePower, Saga
 from .rules import derived, realms, scores
 
@@ -112,11 +112,9 @@ def deletion_consequences(saga: Saga, creature: Creature) -> list[str]:
 
 
 def delete(saga: Saga, creature: Creature) -> None:
-    """Remove the creature, and every link to it."""
-    for record, link in world.links_to(saga, "creatures", creature.id):
-        record.links.remove(link)
-    references.forget_ruler(saga, creature)
+    """Remove the creature; what names it forgets it (record_links)."""
     saga.creatures.remove(creature)
+    record_links.forget(saga, record_links.CREATURES, creature)
 
 
 def icon_concept(creature: Creature) -> str:

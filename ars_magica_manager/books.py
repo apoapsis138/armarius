@@ -13,7 +13,15 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-from . import book_kinds, book_value, casting_text, catalog, storage, viewing
+from . import (
+    book_kinds,
+    book_value,
+    casting_text,
+    catalog,
+    record_links,
+    storage,
+    viewing,
+)
 from . import enchanted_devices as ed
 from . import spells as spl
 from .arts import ART_LOOKUP
@@ -343,6 +351,16 @@ def enchant_as_epitome(saga: Saga, book: Book) -> EnchantedDevice:
     saga.enchanted_devices.append(device)
     book.device_id = device.id
     return device
+
+
+def delete(saga: Saga, book: Book) -> None:
+    """Remove `book`: what names it forgets it (record_links), and a codex
+    it leaves empty goes too."""
+    if book not in saga.books:
+        return
+    saga.books.remove(book)
+    prune_codices(saga)
+    record_links.forget(saga, record_links.BOOKS, book)
 
 
 def prune_codices(saga: Saga) -> None:

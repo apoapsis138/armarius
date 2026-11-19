@@ -1,0 +1,1 @@
+**Deleting a record leaves nothing pointing at it.** Whatever named a deleted record lets it go: charter seals, ships' crews, links, map pins, season plans, a faction's roster and the rest. Favours, a neighbour's ruler, a marriage, a device's maker and a book's author keep its name, and played Sessions keep who was there.
