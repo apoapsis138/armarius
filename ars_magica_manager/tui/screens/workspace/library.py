@@ -12,7 +12,6 @@ from textual.css.query import NoMatches
 from .... import books as bk
 from .... import lab_texts as lt
 from .... import saga_content as sc
-from .... import storage
 from ....form_spec import DialogField
 from ....forms import goods as goods_forms
 from ....forms import saga_content as content_forms
@@ -95,7 +94,7 @@ class LibraryActions(WorkspaceBase):
                 view.refresh_section(section)
 
     def _saga_content_changed(self, *sections: str) -> None:
-        storage.save_saga(self.saga)
+        self._save()
         self._refresh_saga_content(*sections)
         # Pickers and lists elsewhere follow the books in play.
         house_rules = self._house_rules_view()
@@ -310,7 +309,7 @@ class LibraryActions(WorkspaceBase):
                 kind, owner_id = bk.parse_owner_value(owner)
                 for book in books:
                     bk.set_owner(saga, book, kind, owner_id)
-                storage.save_saga(saga)
+                self._save()
                 self._books_changed()
 
             self.app.push_screen(
@@ -361,7 +360,7 @@ class LibraryActions(WorkspaceBase):
             if target is None:
                 target = bk.add_book(saga, values["name"], values["type"])
             _book_from_values(target, values, saga)
-            storage.save_saga(saga)
+            self._save()
             self._books_changed()
 
         # The Lab Texts list adds Lab Texts.
@@ -389,7 +388,7 @@ class LibraryActions(WorkspaceBase):
                     if book in self.saga.books:
                         self.saga.books.remove(book)
                 bk.prune_codices(self.saga)
-                storage.save_saga(self.saga)
+                self._save()
                 self._books_changed()
 
             self.app.push_screen(
@@ -410,7 +409,7 @@ class LibraryActions(WorkspaceBase):
             if confirmed and book in self.saga.books:
                 self.saga.books.remove(book)
                 bk.prune_codices(self.saga)
-                storage.save_saga(self.saga)
+                self._save()
                 self._books_changed()
 
         self.app.push_screen(
@@ -463,7 +462,7 @@ class LibraryActions(WorkspaceBase):
                 if book in self.saga.books:
                     self.saga.books.remove(book)
             bk.prune_codices(self.saga)
-            storage.save_saga(self.saga)
+            self._save()
             self._books_changed()
 
         self.app.push_screen(

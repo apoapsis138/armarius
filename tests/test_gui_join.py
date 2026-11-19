@@ -19,7 +19,7 @@ from PySide6.QtWidgets import QApplication, QDialog
 from test_remote_records import Hosted
 from test_seat_view import LEAKS, hidden_saga
 
-from ars_magica_manager import joined_games, picture_files, players, storage
+from ars_magica_manager import joined_games, players, storage
 from ars_magica_manager.commands import Form
 from ars_magica_manager.gui import joined, pictures
 from ars_magica_manager.gui.join import JoinWindow
@@ -435,4 +435,3 @@ def test_the_shelf_offers_join_and_lists_joined_games(running: Running) -> None:
     main.show()
     texts = [b.text().strip() for b in main.findChildren(type(main.help))]
     assert "Join a Saga" in texts and "Leave Saga" in texts
-    picture_files.use_host(None)

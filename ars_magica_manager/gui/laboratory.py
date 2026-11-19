@@ -32,6 +32,7 @@ from .. import (
     deeds,
     giving,
     lab_planning,
+    picture_files,
     research_text,
     saga_index,
     seasons,
@@ -284,7 +285,16 @@ class LaboratoryPage(QWidget):
             self.owner_button = edit_button(magus.name, p, self.open_owner, "character")
             # The magus's portrait, House or tradition, as their cards show.
             self.owner_button.setIcon(
-                QIcon(pictures.person_picture(magus, p["label"], 14))
+                QIcon(
+                    pictures.person_picture(
+                        magus,
+                        p["label"],
+                        14,
+                        self.controls.picture
+                        if self.controls
+                        else picture_files.local_picture,
+                    )
+                )
             )
             self.owner_button.setToolTip(f"Open {magus.name}'s sheet")
             row.addWidget(self.owner_button, 0, Qt.AlignmentFlag.AlignTop)

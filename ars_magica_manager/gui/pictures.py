@@ -17,6 +17,7 @@ from PySide6.QtSvg import QSvgRenderer
 
 from .. import artwork, picture_files
 from ..models import Character
+from ..picture_files import PictureSource
 from ..style.fonts import DISPLAY, SERIF, TITLE, UI
 from .style.fonts import register_fonts
 
@@ -52,24 +53,28 @@ def pixmap(path: Path, colour: str, size: int, ratio: float = 1.0) -> QPixmap:
     return picture
 
 
-def portrait(character: Character) -> QPixmap:
-    """The character's portrait, or a null pixmap when they have none (or
-    its file is gone)."""
+def portrait(character: Character, read: PictureSource) -> QPixmap:
+    """The character's portrait, read with `read` (the window's saga
+    store), or a null pixmap when they have none (or its file is gone)."""
     found = QPixmap()
-    data = picture_files.picture(picture_files.PORTRAITS, character.portrait)
+    data = read(picture_files.PORTRAITS, character.portrait)
     if data is not None:
         found.loadFromData(data)
     return found
 
 
 def person_picture(
-    character: Character, colour: str, size: int, ratio: float = 2.0
+    character: Character,
+    colour: str,
+    size: int,
+    read: PictureSource,
+    ratio: float = 2.0,
 ) -> QPixmap:
     """The picture a person is shown by, `size` pixels square: their
     portrait, cropped to fill the square, when they have one; else their
     House's or tradition's symbol, else the figure of a person
     (artwork.person_mark), in `colour`."""
-    picture = portrait(character)
+    picture = portrait(character, read)
     if picture.isNull():
         return pixmap(artwork.person_mark(character), colour, size, ratio)
     side = round(size * ratio)

@@ -34,6 +34,7 @@ from .. import (
     neighbour_filter,
     neighbours,
     open_stories,
+    picture_files,
     players,
     section_verbs,
     sessions,
@@ -51,6 +52,7 @@ from ..forms import diary as diary_forms
 from ..forms import menu as menu_forms
 from ..joined_games import JoinedGame
 from ..models import Character, Creature, Neighbour, Saga, Session, Tribunal
+from ..picture_files import PictureSource
 from ..references import Fact, Ref
 from ..sections import (
     CONFLICT_BATTLES_SECTION,
@@ -116,6 +118,8 @@ class SagaHooks(TypedDict, total=False):
     open_creature: Open
     open_familiar: Open
     run: Callable[[Command], None]
+    #: Where the page's pictures are read from (the window's saga store).
+    picture: PictureSource
     #: Runs a command and calls back with what it ended with, instead of
     #: drawing the page again (the Atlas keeps its place on the map).
     run_ended: Callable[[Command, Callable[[object], None]], None]
@@ -365,13 +369,15 @@ class SagaShelf(QWidget):
         )
 
 
-def person_card(saga: Saga, character: Character, p: Palette, open_: Open) -> QWidget:
+def person_card(
+    saga: Saga, character: Character, p: Palette, open_: Open, read: PictureSource
+) -> QWidget:
     """A person as a card, with their portrait (or their House's or
     tradition's symbol, or a figure: pictures.person_picture), that opens
     their sheet."""
     figures = ov.person_card(saga, character)
     picture = QLabel()
-    picture.setPixmap(pictures.person_picture(character, p["heading"], 40))
+    picture.setPixmap(pictures.person_picture(character, p["heading"], 40, read))
     card = ClickableCard(p, pad=12)
     card_title(card, figures.name, figures.subtitle, p, picture)
     if figures.detail:
@@ -1146,6 +1152,7 @@ def troupe_chapter(
     saga: Saga,
     p: Palette,
     opens: dict[str, Callable[[Any], None]],
+    read: PictureSource,
     new: Callable[[str], QWidget | None] = lambda _spot: None,
     run: Callable[[Command], None] | None = None,
 ) -> QWidget:
@@ -1157,7 +1164,7 @@ def troupe_chapter(
     covenants = {f.id: f for f in ov.covenant_cards(saga)}
     # How each kind of record is drawn as a card.
     cards: dict[str, Callable[[Any], QWidget]] = {
-        "character": lambda r: person_card(saga, r, p, opens["character"]),
+        "character": lambda r: person_card(saga, r, p, opens["character"], read),
         "covenant": lambda r: covenant_card(covenants[r.id], p, opens["covenant"]),
         "laboratory": lambda r: lab_card(
             next(f for f in ov.lab_cards(saga, r.covenant_id) if f.id == r.id),
@@ -1291,6 +1298,8 @@ class SagaPage(QWidget):
         open_fight = hooks.get("open_fight", _ignore)
         open_siege = hooks.get("open_siege", _ignore)
         self.saga, self.p = saga, p
+        #: Where its pictures are read from.
+        self.read: PictureSource = hooks.get("picture", picture_files.local_picture)
         self.open_tribunal = open_tribunal
         self.open_neighbour = open_neighbour
         self.placer = hooks.get("placer")
@@ -1315,7 +1324,9 @@ class SagaPage(QWidget):
             "creature": open_creature,
         }
         self.codex.add(
-            "The Troupe", "troupe", troupe_chapter(saga, p, opens, self._new, run)
+            "The Troupe",
+            "troupe",
+            troupe_chapter(saga, p, opens, self.read, self._new, run),
         )
         self.codex.add("The Covenants", "covenant", self._covenants())
         # The Region and Compendium are built when first opened: a
@@ -1341,7 +1352,9 @@ class SagaPage(QWidget):
         self.codex.add(
             "The Atlas",
             "atlas",
-            lambda: AtlasChapter(saga, p, run, run_ended, self.codex.inspect),
+            lambda: AtlasChapter(
+                saga, p, run, run_ended, self.codex.inspect, self.read
+            ),
         )
         #: The store cards Compendium shows, by store, once built.
         self.store_cards: dict[str, ClickableCard] = {}
@@ -1403,7 +1416,8 @@ class SagaPage(QWidget):
             covenant_card(f, p, self.open_covenant) for f in figures
         ]
         people = [
-            person_card(saga, c, p, self.open_character) for c in ov.members(saga, None)
+            person_card(saga, c, p, self.open_character, self.read)
+            for c in ov.members(saga, None)
         ]
         labs = [lab_card(f, p, self.open_laboratory) for f in ov.lab_cards(saga, None)]
         parts: list[QWidget] = []

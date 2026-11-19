@@ -86,6 +86,7 @@ from ....models import (
 )
 from ....references import Ref
 from ....rules import options as rule_options
+from ....saga_store import LocalStore, Refreshed, SagaStore, picked_up
 from ....sections import (
     AGENTS_SECTION,
     ARMARIUM_SECTION,
@@ -375,6 +376,8 @@ class WorkspaceBase(Screen[None]):
         #: The page on show (where.py): the one value the selected_*
         #: properties below are read from.
         self.where = Where()
+        #: Where the saga is loaded and saved (ADR 0011): its file here.
+        self.store: SagaStore = LocalStore()
         self._character_sheet_view: CharacterSheetView | None = None
         self._laboratory_sheet_view: LaboratorySheetView | None = None
         self._covenant_sheet_view: CovenantSheetView | None = None
@@ -489,8 +492,11 @@ class WorkspaceBase(Screen[None]):
     async def _shared_tick(self) -> None:
         """Every few seconds: pick up another copy's save, and say who else
         has the open record."""
+        saga = self.saga
+        # Read before the refresh, which changes this saga in place.
+        season_was = (saga.current_year, saga.current_season)
         try:
-            changed = storage.reload_into(self.saga)
+            found = self.store.refresh(saga)
         except ValueError as problem:
             if not self._unreadable:
                 self.notify(
@@ -501,11 +507,11 @@ class WorkspaceBase(Screen[None]):
                     timeout=10,
                 )
             self._unreadable = True
-            changed = None
+            found = None
         else:
             self._unreadable = False
-        if changed:
-            await self._show_reloaded(changed)
+        if found is not None:
+            await self._show_reloaded(found, season_was)
         if self._session is None:
             return
         record = self._open_record_key()
@@ -522,46 +528,50 @@ class WorkspaceBase(Screen[None]):
                 timeout=6,
             )
 
-    async def _show_reloaded(self, changed: list[tuple[str, str]]) -> None:
+    async def _show_reloaded(
+        self, found: Refreshed, season_was: tuple[int, str]
+    ) -> None:
         """Show what another copy saved: the tree, the header, and the sheet
         on show refreshed in place (its tab and chosen rows stay), or the
-        saga if its record is gone."""
-        who = self.saga.saved_by or "The storyguide"
-        record = self._open_record_key()
-        open_changed = record is not None and tuple(record.split(":", 1)) in changed
-        gone = record is not None and not self._open_record_exists()
+        saga if its record is gone; then what it means (saga_store.PickedUp)."""
+        saga = self.saga
+        where = self.where
+        told = picked_up(
+            found,
+            open_id=where.id if where.shows_record else None,
+            open_name=where.name(saga),
+            open_gone=where.gone(saga),
+            season_was=season_was,
+        )
         self._update_saga_clock()
         tree = self._nav_tree()
         current = tree.cursor_node.data if tree.cursor_node is not None else None
         self._rebuild_tree()
-        if gone:
+        if told.gone:
             tree.select_node(tree.root)
-            self.notify(f"{escape(who)} deleted what you had open.", severity="warning")
-            return
-        node = _tree_node_with_data(tree, current) if current is not None else None
-        if node is not None:
-            tree.move_cursor(node)
-        view = self._current_sheet_view()
-        if view is not None:
-            for section in list(view._refreshers):
-                view.refresh_section(section)
-        elif node is not None:
-            tree.select_node(node)  # a list node: show it afresh
-        for screen in self.app.screen_stack:
-            record_changed = getattr(screen, "record_changed", None)
-            if callable(record_changed):
-                record_changed()
-        if open_changed:
-            self.notify(
-                f"{escape(who)} changed {escape(self._shown_name())}; reloaded."
-            )
         else:
-            self.notify(f"Updated by {escape(who)}.", timeout=3)
-
-    def _open_record_exists(self) -> bool:
-        """The record on show is still in the saga (another copy may have
-        deleted it)."""
-        return not self.where.gone(self.saga)
+            node = _tree_node_with_data(tree, current) if current is not None else None
+            if node is not None:
+                tree.move_cursor(node)
+            view = self._current_sheet_view()
+            if view is not None:
+                for section in list(view._refreshers):
+                    view.refresh_section(section)
+            elif node is not None:
+                tree.select_node(node)  # a list node: show it afresh
+            for screen in self.app.screen_stack:
+                record_changed = getattr(screen, "record_changed", None)
+                if callable(record_changed):
+                    record_changed()
+        # A plain update is said briefly; anything about the reader's own
+        # page, or the season, stays the usual time.
+        said = "\n".join(escape(line) for line in told.lines)
+        if told.gone:
+            self.notify(said, severity="warning")
+        elif told.changed or told.season:
+            self.notify(said)
+        else:
+            self.notify(said, timeout=3)
 
     def _told_refused(self, refused: list[str]) -> None:
         """Tell a signed-in player what their save took back (seat.sign_in's
@@ -1684,15 +1694,20 @@ class WorkspaceBase(Screen[None]):
         if isinstance(end, list) and end:
             self.notify("\n".join(end))
 
+    def _save(self) -> bool:
+        """Write the saga through its store; one the shape check refuses
+        isn't written, and is said so. True when it was written."""
+        saved = self.store.save(self.saga)
+        if saved.not_saved:
+            self.notify(saved.not_saved, severity="error", markup=False)
+        return not saved.not_saved
+
     def _commit(self, *sections: str, tree: bool = False) -> None:
         """Save a change: write the saga, rebuild the navigation tree if a
         name or the structure changed (`tree`), and refresh `sections` of the
         sheet on show -- the one whose handler made the change. A saga the
         shape check refuses isn't saved, and is said so."""
-        try:
-            storage.save_saga(self.saga)
-        except ValueError as problem:
-            self.notify(storage.not_saved_note(problem), severity="error", markup=False)
+        self._save()
         # The sheet on show, before rebuilding the tree lets it go.
         shown = self._current_sheet_view()
         if tree:

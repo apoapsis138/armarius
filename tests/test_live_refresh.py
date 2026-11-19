@@ -212,3 +212,34 @@ def test_a_damaged_file_is_reported_and_the_next_save_replaces_it():
     assert mine.character("comp1") is not None  # this copy keeps its data
     storage.save_saga(mine)
     assert storage.load_saga("test_saga").character("comp1") is not None
+
+
+async def test_a_refused_save_in_the_season_clock_is_said_not_a_crash():
+    """Setting the saga's date saved straight to the file; a saga the shape
+    check refuses now comes back from the store as a result, said once."""
+    storage.save_saga(_saga())
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        ws = await _open(pilot, app, ("character", "comp1"))
+        before = storage.saga_path("test_saga").read_bytes()
+        ws.saga.characters[0].covenant_id = "../x"
+        await ws._apply_saga_date("Summer", ws.saga.current_year)
+        await pilot.pause()
+        said = [n.message for n in app._notifications]
+        assert any(m.startswith("Not saved: characters[") for m in said)
+        assert storage.saga_path("test_saga").read_bytes() == before
+
+
+async def test_another_copy_advancing_the_season_is_said():
+    storage.save_saga(_saga())
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        ws = await _open(pilot, app, ("character", "comp1"))
+        with _other_copy():
+            theirs = storage.load_saga("test_saga")
+            theirs.current_year += 1
+            storage.save_saga(theirs)
+        await ws._shared_tick()
+        await pilot.pause()
+        said = "\n".join(n.message for n in app._notifications)
+        assert f"Ana advanced the season to {theirs.current_season}" in said

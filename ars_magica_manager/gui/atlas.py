@@ -60,6 +60,7 @@ from ..arms import Arms
 from ..commands import Act, Choose, Command, Go, Picked
 from ..markup import escape
 from ..models import AtlasMap, Covenant, Neighbour, Saga
+from ..picture_files import PictureSource
 from . import pictures, shields
 from .markup_html import plain
 from .themes import Palette
@@ -386,7 +387,7 @@ class MapView(QGraphicsView):
     def _draw_picture(self) -> None:
         scene = self.scene()
         picture = QPixmap()
-        found = picture_files.picture(picture_files.MAPS, self.map.picture)
+        found = self.chapter.read(picture_files.MAPS, self.map.picture)
         if found is not None:
             picture.loadFromData(found)
         if not picture.isNull():
@@ -656,9 +657,12 @@ class AtlasChapter(QWidget):
         run: Callable[[Command], None],
         run_ended: RunEnded,
         inspect: Inspect,
+        read: PictureSource = picture_files.local_picture,
     ) -> None:
         super().__init__()
         self.saga, self.p = saga, p
+        #: Where the map's picture is read from (the window's saga store).
+        self.read = read
         self.run, self.run_ended, self._inspect = run, run_ended, inspect
         self.view: MapView | None = None
         self.view_map: AtlasMap | None = None

@@ -35,7 +35,7 @@ class SeasonActions(WorkspaceBase):
         saga = self.saga
         saga.current_season, saga.current_year = season, year
         places.sync(saga)
-        storage.save_saga(saga)
+        self._save()
         self._update_saga_clock()
         self._refresh_covenant_section("section-cov-info")
         if self.selected_kind == NodeKind.SAGA:
@@ -48,7 +48,7 @@ class SeasonActions(WorkspaceBase):
 
         def done(end: object) -> None:
             if isinstance(end, advance_forms.Played):
-                storage.save_saga(saga)
+                self._save()
                 self.run_worker(self._season_played(end))
 
         def handle_result(confirmed: bool | None) -> None:
