@@ -18,7 +18,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import Any
 
-from .. import chronicle, references, viewing
+from .. import chronicle, host_table, references, viewing
 from ..commands import Choice, Choose, Form, Picked, Refuse, notes
 from ..form_spec import DialogField, ListEditor
 from ..markup import escape
@@ -185,16 +185,4 @@ def send_here(saga: Saga, session: Session, who: str) -> Send:
     """Writes `who`'s Message to the Chronicle open on this computer (the
     host's): the reason it was refused or couldn't be saved, or None."""
 
-    def send(
-        words: str, to: tuple[str, ...], links: tuple[references.Ref, ...]
-    ) -> str | None:
-        try:
-            book = chronicle.read(saga, session)
-            chronicle.message(book, saga, session, words, to=to, links=links, by=who)
-        except ValueError as problem:
-            return str(problem)
-        except OSError:
-            return "The Message couldn't be saved."
-        return None
-
-    return send
+    return host_table.HostTable(saga, session, who).say

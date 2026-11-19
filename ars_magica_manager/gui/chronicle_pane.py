@@ -47,7 +47,16 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import artwork, chronicle, dice_text, references, settings, table_rules
+from .. import (
+    artwork,
+    at_table,
+    chronicle,
+    dice_text,
+    host_table,
+    references,
+    settings,
+    table_rules,
+)
 from ..commands import Command, Refuse
 from ..forms import free_roll, roll_request
 from ..forms import message as message_forms
@@ -742,15 +751,9 @@ class ChroniclePane(QWidget):
         #: What the pane shows: the host's Chronicle, or what a Remote
         #: seat was sent (SeatChronicle).
         self.book: chronicle.Chronicle | chronicle.SeatChronicle | None = None
-        #: Hands a roll to the host from a Remote seat (None: this is the
-        #: host's computer, which rolls itself).
-        self.send_roll: free_roll.Submit | None = None
-        #: Hands a Confidence spend to the host from a Remote seat.
-        self.send_confidence: free_roll.Spend | None = None
-        #: Hands an answer to a Roll request to the host from a Remote seat.
-        self.send_answer: Callable[[int, str, bool], str | None] | None = None
-        #: Hands a Message to the host from a Remote seat.
-        self.send_message: message_forms.Send | None = None
+        #: The table as whoever sits here acts at it: the host's own
+        #: Chronicle, or a Remote seat asking its host (at_table.Table).
+        self.table: at_table.Table | None = None
         #: Opens a record a Message links (the window's open_ref).
         self.open_record: Callable[[references.Ref], None] = lambda _ref: None
         self.who = ""
@@ -840,18 +843,15 @@ class ChroniclePane(QWidget):
         session: Session,
         book: chronicle.Chronicle | chronicle.SeatChronicle,
         who: str,
-        send_roll: free_roll.Submit | None = None,
-        send_confidence: free_roll.Spend | None = None,
-        send_answer: Callable[[int, str, bool], str | None] | None = None,
-        send_message: message_forms.Send | None = None,
+        table: at_table.Table | None = None,
     ) -> None:
         """Show `book`, as `who` may see it, and listen for what comes. A
-        Remote seat's book holds only what its host sent it; `send_roll`
-        sends its rolls to the host, `send_confidence` its Confidence."""
-        self.send_roll = send_roll
-        self.send_confidence = send_confidence
-        self.send_answer = send_answer
-        self.send_message = send_message
+        Remote seat's book holds only what its host sent it, and its
+        `table` asks the host for each roll, spend, answer and Message; on
+        the host's own computer the table is its Chronicle."""
+        if table is None and isinstance(book, chronicle.Chronicle):
+            table = host_table.HostTable(saga, session, who)
+        self.table = table
         self.request_button.setVisible(
             isinstance(book, chronicle.Chronicle)
             and who == chronicle.storyguide_of(session, saga)
@@ -863,6 +863,7 @@ class ChroniclePane(QWidget):
         if same:
             return
         self.detach()
+        self.table = table
         self.book, self.who = book, who
         self.follow = True
         self._redraw_cards()
@@ -884,6 +885,7 @@ class ChroniclePane(QWidget):
             self._stop()
         self._stop = None
         self.book = None
+        self.table = None
         self._clear_cards()
         self.unseen = 0
         self._draw_strip()
@@ -1163,27 +1165,10 @@ class ChroniclePane(QWidget):
     ) -> None:
         """Answer Roll request `number` for `character_id`: rolled at the
         host (sent there from a Remote seat)."""
-        saga, session, book = self.saga, self.session, self.book
-        if saga is None or session is None or book is None:
+        table = self.table
+        if table is None:
             return
-        if self.send_answer is not None:
-            refused = self.send_answer(number, character_id, specialty)
-        elif isinstance(book, chronicle.Chronicle):
-            try:
-                chronicle.answer(
-                    book,
-                    saga,
-                    session,
-                    number,
-                    character_id,
-                    by=self.who,
-                    specialty=specialty,
-                )
-                refused = None
-            except ValueError as problem:
-                refused = str(problem)
-        else:
-            refused = "Rolls go to the host."
+        refused = table.answer(number, character_id, specialty)
         if refused:
             self.run(Refuse("Roll", escape(refused)))
 
@@ -1209,25 +1194,16 @@ class ChroniclePane(QWidget):
 
     def spend_confidence(self, number: int) -> None:
         """Spend Confidence on roll `number`, asking how much."""
-        saga, session, book = self.saga, self.session, self.book
-        if saga is None or session is None or book is None:
+        saga, session, book, table = self.saga, self.session, self.book, self.table
+        if saga is None or session is None or book is None or table is None:
             return
-        who = self.who
 
         def spend(points: int) -> str | None:
-            if not isinstance(book, chronicle.Chronicle):
-                return "Confidence goes to the host."
-            try:
-                chronicle.spend_confidence(book, saga, session, number, points, by=who)
-            except ValueError as problem:
-                return str(problem)
-            return None
+            return table.spend(number, points)
 
-        seat = self.send_confidence
-        sent: free_roll.Spend = (
-            (lambda points: seat(number, points)) if seat is not None else spend
+        self.run(
+            free_roll.confidence_form(book, saga, session, number, self.who, spend)
         )
-        self.run(free_roll.confidence_form(book, saga, session, number, who, sent))
 
     def strike_roll(self, number: int) -> None:
         """Strike roll `number` from the count, asking why."""
@@ -1237,31 +1213,17 @@ class ChroniclePane(QWidget):
         self.run(free_roll.strike_form(book, session, number, self.who, saga))
 
     def free_roll(self) -> None:
-        saga, session, book = self.saga, self.session, self.book
-        if saga is None or session is None or book is None:
+        saga, session, table = self.saga, self.session, self.table
+        if saga is None or session is None or table is None:
             return
-        who = self.who
-
-        def submit(request: chronicle.RollRequest) -> str | None:
-            if not isinstance(book, chronicle.Chronicle):
-                return "Rolls go to the host."
-            try:
-                chronicle.free_roll(book, saga, session, request, by=who)
-            except ValueError as problem:
-                return str(problem)
-            return None
-
-        sent = self.send_roll or submit
-        self.run(free_roll.free_roll_form(saga, session, who, sent))
+        self.run(free_roll.free_roll_form(saga, session, self.who, table.roll))
 
     def compose(self) -> None:
         """Write a Message: to the Table, or a Whisper."""
-        saga, session, book = self.saga, self.session, self.book
-        if saga is None or session is None or book is None:
+        saga, session, table = self.saga, self.session, self.table
+        if saga is None or session is None or table is None:
             return
-        who = self.who
-        sent = self.send_message or message_forms.send_here(saga, session, who)
-        self.run(message_forms.message_form(saga, session, who, sent))
+        self.run(message_forms.message_form(saga, session, self.who, table.say))
 
 
 def dice_of(card: QWidget) -> DiceRow | None:

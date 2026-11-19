@@ -17,6 +17,7 @@ import pytest
 pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
+from fake_table import FakeTable
 from PySide6.QtWidgets import QApplication
 from test_remote_events import PASSCODE, Table
 
@@ -140,15 +141,11 @@ def test_a_seats_pane_shows_what_its_host_sent_and_rolls_through_it() -> None:
     saga = _saga()
     session = saga.sessions[0]
     held = chronicle.SeatChronicle()
-    sent: list[chronicle.RollRequest] = []
+    table = FakeTable(held=held)
     ran: list[commands.Command] = []
 
-    def send(request: chronicle.RollRequest) -> str | None:
-        sent.append(request)
-        return None
-
     pane = ChroniclePane(SCRIPTORUM, ran.append)
-    pane.attach(saga, session, held, "ana", send_roll=send)
+    pane.attach(saga, session, held, "ana", table)
     held.take("s1", chronicle.Entry(1, "", "begin", HOST, chronicle.table()))
     held.take(
         "s1",
@@ -167,7 +164,7 @@ def test_a_seats_pane_shows_what_its_host_sent_and_rolls_through_it() -> None:
     form = ran[-1]
     assert isinstance(form, commands.Form)
     form.apply({f.key: f.value for f in form.fields()})
-    assert sent and sent[0].character_id == "aelfric"
+    assert table.rolled and table.rolled[0].character_id == "aelfric"
 
 
 @pytest.mark.usefixtures("app")
@@ -177,7 +174,7 @@ def test_a_seat_never_offers_strike() -> None:
     saga.sessions[0].storyguide_id = "ana"
     held = chronicle.SeatChronicle()
     pane = ChroniclePane(SCRIPTORUM, lambda _c: None)
-    pane.attach(saga, saga.sessions[0], held, "ana", send_roll=lambda _r: None)
+    pane.attach(saga, saga.sessions[0], held, "ana", FakeTable(held=held))
 
     held.take(
         "s1",
@@ -248,7 +245,7 @@ def test_a_new_session_at_a_seat_clears_the_last_ones_cards() -> None:
     saga = _saga()
     held = chronicle.SeatChronicle()
     pane = ChroniclePane(SCRIPTORUM, lambda _c: None)
-    pane.attach(saga, saga.sessions[0], held, "ana", send_roll=lambda _r: None)
+    pane.attach(saga, saga.sessions[0], held, "ana", FakeTable(held=held))
     held.take("s1", chronicle.Entry(1, "", "begin", HOST, chronicle.table()))
     held.take("s1", chronicle.Entry(2, "", "end", HOST, chronicle.table()))
 
