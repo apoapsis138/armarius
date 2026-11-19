@@ -58,7 +58,7 @@ from ..actions import NodeKind
 from ..commands import Form, SectionOps
 from ..covenants import boon_hook_problems
 from ..forms import covenant as covenant_forms
-from ..forms import covenant_history
+from ..forms import covenant_history, menu_steps
 from ..forms import creation as creation_forms
 from ..forms import inhabitant as inhabitant_forms
 from ..forms import land_shaping as land_forms
@@ -1165,7 +1165,7 @@ class CovenantPage(QWidget):
                     (
                         "Improve",
                         "income",
-                        lambda row: menu_forms.improve_form(
+                        lambda row: menu_steps.improve_form(
                             saga, sources[row], covenant
                         ),
                         lambda _row: True,

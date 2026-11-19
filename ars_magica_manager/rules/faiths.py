@@ -55,7 +55,7 @@ SOURCE = (
     "Church pp. 11-13, 21, 26, 34-36, 46; DE pp. 58, 97"
 )
 
-#: The faith actions, by their menu names (actions.MORE_MENU).
+#: The faith actions, by their menu names (the More registry, forms/more).
 INVOKE_SAINT = "invoke_saint"
 THREATEN_SAINT = "threaten_saint"
 DEVOTION_POINTS = "devotion_points"

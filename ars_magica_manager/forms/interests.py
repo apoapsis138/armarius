@@ -10,10 +10,10 @@ where they are; those places come from deeds' tables, so they can't drift."""
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from typing import Any
 
 from .. import action_books, deeds, sourcebooks
-from ..actions import MORE_MENU
 from ..commands import Form, FormCard, notes
 from ..deeds import OPTIONAL
 from ..form_spec import DialogField
@@ -51,11 +51,6 @@ def _key(interest: str) -> str:
     return "interest_" + "".join(c if c.isalnum() else "_" for c in interest.lower())
 
 
-def _name(action: str) -> str:
-    """What More calls `action`."""
-    return next(item.label for item in MORE_MENU if item.action == action)
-
-
 def _count(ready: int, waiting: int, reader: str = "") -> str:
     """How many actions an interest brings to this saga (for `reader`, an
     interest whose actions go by faith)."""
@@ -74,7 +69,11 @@ def _other_faiths(character: Character, actions: list[str]) -> list[str]:
 
 
 def _detail(
-    interest: str, ready: list[str], waiting: list[str], others: list[str]
+    names: Mapping[str, str],
+    interest: str,
+    ready: list[str],
+    waiting: list[str],
+    others: list[str],
 ) -> str:
     """An interest's inspector: what it is, where each of its actions
     appears, those of other faiths, then those waiting for a book, under
@@ -88,25 +87,27 @@ def _detail(
         ("On Planning, in A Season's Work", deeds.SEASON_NOTES),
         ("Under Aging", deeds.AGING_NOTES),
     ):
-        lines = [f"[b]{_name(a)}[/]: {notes_of[a]}" for a in ready if a in notes_of]
+        lines = [f"[b]{names[a]}[/]: {notes_of[a]}" for a in ready if a in notes_of]
         if lines:
             parts.append("\n".join([f"[$label]{heading}[/]", *lines]))
     if others:
-        names = ", ".join(_name(a) for a in others)
-        parts.append(f"[dim]For other faiths: {names}.[/]")
+        listed = ", ".join(names[a] for a in others)
+        parts.append(f"[dim]For other faiths: {listed}.[/]")
     books: dict[str, list[str]] = {}
     for action in waiting:
         titles = [
             sourcebooks.SOURCEBOOKS[book] for book in action_books.ACTION_BOOKS[action]
         ]
-        books.setdefault(" or ".join(titles), []).append(_name(action))
+        books.setdefault(" or ".join(titles), []).append(names[action])
     parts += [
-        f"[dim]With {book}: {', '.join(names)}.[/]" for book, names in books.items()
+        f"[dim]With {book}: {', '.join(labels)}.[/]" for book, labels in books.items()
     ]
     return "\n\n".join(parts)
 
 
-def _card(saga: Saga, character: Character, interest: str) -> FormCard:
+def _card(
+    saga: Saga, character: Character, interest: str, names: Mapping[str, str]
+) -> FormCard:
     members = deeds.members(interest)
     ready = [a for a in members if action_books.book_allows(a, saga)]
     waiting = [a for a in members if a not in ready]
@@ -116,7 +117,7 @@ def _card(saga: Saga, character: Character, interest: str) -> FormCard:
         others = _other_faiths(character, ready)
         ready = [a for a in ready if a not in others]
         reader = _FOR.get(faiths.religion(character), "their faith")
-    detail = _detail(interest, ready, waiting, others)
+    detail = _detail(names, interest, ready, waiting, others)
     fixed = "" if interest in OPTIONAL else ALWAYS_ON
     gate = deeds.CHARACTER_GATES.get(interest)
     if gate is not None and gate.kept_on(character):
@@ -140,21 +141,25 @@ def _has(character: Character, interest: str) -> bool:
     return character.type == "magus" or interest not in deeds.MAGI_ONLY
 
 
-def interest_cards(saga: Saga, character: Character) -> list[FormCard]:
+def interest_cards(
+    saga: Saga, character: Character, names: Mapping[str, str]
+) -> list[FormCard]:
     """A card for each interest, counting what the saga's books bring and,
     for Religion, what the character's faith offers; whether an action also
     fits the character changes in play, so it isn't counted."""
     return [
-        _card(saga, character, interest)
+        _card(saga, character, interest, names)
         for interest in deeds.INTERESTS
         if _has(character, interest)
     ]
 
 
-def _covenant_card(saga: Saga, covenant: Covenant, interest: str) -> FormCard:
+def _covenant_card(
+    saga: Saga, covenant: Covenant, interest: str, names: Mapping[str, str]
+) -> FormCard:
     heading, notes_of = deeds.COVENANT_ACTIONS[interest]
     ready = [a for a in notes_of if action_books.book_allows(a, saga)]
-    lines = [f"[b]{_name(a)}[/]: {notes_of[a]}" for a in ready]
+    lines = [f"[b]{names[a]}[/]: {notes_of[a]}" for a in ready]
     detail = f"{deeds.COVENANT_ABOUT[interest]}\n\n[$label]{heading}[/]\n" + (
         "\n".join(lines)
     )
@@ -181,7 +186,9 @@ def covenant_interests_text(covenant: Covenant) -> str:
     return "Turned off: " + ", ".join(off) + "."
 
 
-def covenant_interests_form(saga: Saga, covenant: Covenant) -> Form:
+def covenant_interests_form(
+    saga: Saga, covenant: Covenant, names: Mapping[str, str]
+) -> Form:
     """A tick for each interest the covenant may turn off."""
     gates = deeds.COVENANT_GATES
 
@@ -213,7 +220,7 @@ def covenant_interests_form(saga: Saga, covenant: Covenant) -> Form:
         apply,
         help_id=HELP,
         cards=lambda: [
-            _covenant_card(saga, covenant, i) for i in deeds.COVENANT_INTERESTS
+            _covenant_card(saga, covenant, i, names) for i in deeds.COVENANT_INTERESTS
         ],
         cards_lead=COVENANT_LEAD,
     )
@@ -227,7 +234,7 @@ def interests_text(character: Character) -> str:
     return "Turned off: " + ", ".join(off) + "."
 
 
-def interests_form(saga: Saga, character: Character) -> Form:
+def interests_form(saga: Saga, character: Character, names: Mapping[str, str]) -> Form:
     """A tick for each interest he may turn off."""
 
     def fields() -> list[DialogField]:
@@ -261,6 +268,6 @@ def interests_form(saga: Saga, character: Character) -> Form:
         fields,
         apply,
         help_id=HELP,
-        cards=lambda: interest_cards(saga, character),
+        cards=lambda: interest_cards(saga, character, names),
         cards_lead=LEAD,
     )

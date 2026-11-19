@@ -12,6 +12,7 @@ from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Form
 from ars_magica_manager.forms import church as church_forms
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.forms import religion as religion_forms
 from ars_magica_manager.models import (
     Ability,
@@ -462,7 +463,7 @@ def test_the_church_sections_follow_faith_on_the_religion_tab():
     c.church.cases.append(CanonCase("Usury"))
     assert religion_forms.church_shown(saga, c)
     # More no longer offers them: Add on the lists and Edit Holy Orders do.
-    page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="c")
+    page = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="c")
     offered = {i.action for i in menu_forms.more_items(page)}
     assert not offered & {"petition_church", "canon_case", "holy_orders"}
 

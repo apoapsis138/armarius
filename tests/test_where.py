@@ -4,7 +4,7 @@ import pytest
 from support import everything_saga
 
 from ars_magica_manager.actions import NodeKind
-from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.where import Where
 
 #: Each kind of record's page in the test saga: its id and name.
@@ -77,7 +77,7 @@ def test_the_whole_sagas_pages_and_a_covenants_lists_are_named():
 
 def test_the_menu_page_is_built_from_where():
     saga = everything_saga()
-    page = menu_forms.page_at(saga, Where(NodeKind.FAMILIAR, "fam1"), section="x")
+    page = page_forms.page_at(saga, Where(NodeKind.FAMILIAR, "fam1"), section="x")
     assert page.kind == NodeKind.FAMILIAR and page.section == "x"
     assert page.familiar.id == "fam1"
     assert page.character.id == "mag1" and page.covenant.id == "cov1"

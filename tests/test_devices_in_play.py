@@ -10,11 +10,12 @@ from support import strip_markup
 from test_enchant_seasons import _saga as _enchant_saga
 from test_familiar_seasons import _saga as _familiar_saga
 
-from ars_magica_manager import actions, familiars, seasons
 from ars_magica_manager import enchanted_devices as ed
+from ars_magica_manager import familiars, seasons
 from ars_magica_manager.commands import Confirm, Refuse
 from ars_magica_manager.forms import device as device_forms
 from ars_magica_manager.forms import familiar as familiar_forms
+from ars_magica_manager.forms import more
 from ars_magica_manager.models import (
     CHARGED,
     INVESTED,
@@ -104,9 +105,9 @@ def test_use_an_effect_asks_first_and_offers_a_new_day_when_spent():
 
 
 def test_use_an_effect_is_a_more_menu_entry_for_the_device_lists():
-    item = next(i for i in actions.MORE_MENU if i.action == "use_effect")
+    item = next(i for i in more.MORE_MENU if i.action == "use_effect")
     assert item.label == "Use an Effect"
-    assert "use_effect" in actions._SECTION_RULES
+    assert more.REGISTRY["use_effect"].in_section is not None
 
 
 # -- either Art's vis (DE pp. 258, 266-268) -----------------------------------

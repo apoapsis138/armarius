@@ -16,7 +16,7 @@ from ars_magica_manager import (
 )
 from ars_magica_manager import ships as ship_text
 from ars_magica_manager.commands import Confirm, Form, Refuse
-from ars_magica_manager.forms import advance
+from ars_magica_manager.forms import advance, more
 from ars_magica_manager.forms import covenant as covenant_forms
 from ars_magica_manager.forms import ships as ship_forms
 from ars_magica_manager.models import (
@@ -645,7 +645,7 @@ def test_a_pack_takes_the_places_on_a_route():
 
 
 def test_the_more_items_are_offered_where_they_belong():
-    assert actions.MORE_SECTIONS["plan_route"] == mobile_covenants.WHEREABOUTS_SECTION
+    assert more.MORE_SECTIONS["plan_route"] == mobile_covenants.WHEREABOUTS_SECTION
     assert actions.SECTION_VERBS[mobile_covenants.WHEREABOUTS_SECTION] == frozenset(
         {"add", "edit", "remove"}
     )

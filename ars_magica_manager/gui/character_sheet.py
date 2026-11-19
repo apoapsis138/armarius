@@ -86,6 +86,7 @@ from ..forms import criamon as criamon_forms
 from ..forms import device as device_forms
 from ..forms import go_to as go_to_forms
 from ..forms import menu as menu_forms
+from ..forms import menu_steps
 from ..forms import notes_goals as goal_forms
 from ..forms import power as power_forms
 from ..forms import religion as religion_forms
@@ -1474,7 +1475,7 @@ class CharacterSheet(QWidget):
             edit_button(
                 "Texts Read",
                 self.p,
-                lambda: self.run(menu_forms.lab_text_access(self.saga, self.character)),
+                lambda: self.run(menu_steps.lab_text_access(self.saga, self.character)),
                 "lab_text",
             )
         ]

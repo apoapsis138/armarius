@@ -4,7 +4,7 @@ chapter, and hedge Arts on the Art xp table."""
 import pytest
 
 from ars_magica_manager import catalog, traditions
-from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import menu_steps
 from ars_magica_manager.models import (
     Ability,
     Character,
@@ -270,14 +270,14 @@ def test_an_aligned_sihr_changes_the_botch_dice_and_says_what_it_changes():
 def test_the_traditions_form_sets_the_realm_of_sihr_for_one_who_has_it():
     saga = Saga(id="s", name="S")
     sahir = _sahir()
-    fields = {f.key: f for f in menu_forms.character_traditions_fields(saga, sahir)}
+    fields = {f.key: f for f in menu_steps.character_traditions_fields(saga, sahir)}
     assert fields["sihr_realm"].value == "Magic"
-    menu_forms.apply_character_traditions(sahir, {"sihr_realm": "Faerie"})
+    menu_steps.apply_character_traditions(sahir, {"sihr_realm": "Faerie"})
     assert sahir.sihr_realm == "Faerie"
-    menu_forms.apply_character_traditions(sahir, {"sihr_realm": "Magic"})
+    menu_steps.apply_character_traditions(sahir, {"sihr_realm": "Magic"})
     assert sahir.sihr_realm == ""
     other = Character(id="o", name="O", type="companion")
-    keys = [f.key for f in menu_forms.character_traditions_fields(saga, other)]
+    keys = [f.key for f in menu_steps.character_traditions_fields(saga, other)]
     assert "sihr_realm" not in keys
 
 

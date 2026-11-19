@@ -8,9 +8,12 @@ import pytest
 
 from ars_magica_manager import deeds, labor, seasons
 from ars_magica_manager import economics as eco
-from ars_magica_manager.actions import NodeKind, available
+from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import menu_steps
+from ars_magica_manager.forms import page as page_forms
+from ars_magica_manager.forms.more import available
 from ars_magica_manager.models import (
     Ability,
     Character,
@@ -261,7 +264,7 @@ def test_a_craftsman_may_only_put_money_into_his_business():
 @pytest.mark.parametrize("action", ["labor_story", "invest_labor"])
 def test_offered_on_this_season_for_one_who_works(action):
     saga, marco = _merchant()
-    page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="m1")
+    page = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="m1")
     assert available(action, replace(page, section="section-char-season"))
     assert not available(action, replace(page, section="section-reputations"))
     assert action in {i.action for i in menu_forms.placed(page, deeds.SEASON_WORK)}
@@ -287,12 +290,12 @@ def test_wealth_made_by_magic_against_the_tribunals_limit():
     assert "Over the limit" not in eco.magic_wealth_text(8, 8, 4)
     assert "Over the limit" in eco.magic_wealth_text(9, 8, 4)
     source = IncomeSource(id="i", name="Silver mine", type="Typical")
-    live = menu_forms.improve_live(source, (8, 4))
+    live = menu_steps.improve_live(source, (8, 4))
     text = live({"effect": "Growth", "magic": True})
     assert "Made by magic: 5 pound(s) a year" in text and "8 for 4 magi" in text
     assert "Over the limit" in live({"effect": "Boom", "magic": True})
     assert "Made by magic" not in live({"effect": "Boom"})
-    form = menu_forms.improve_form(saga, source, covenant)
+    form = menu_steps.improve_form(saga, source, covenant)
     confirm = form.apply({"effect": "Growth", "magic": True})
     confirm.apply()
     assert source.income == 105 and "Growth by magic" in source.note

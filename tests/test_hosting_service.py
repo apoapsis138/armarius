@@ -14,6 +14,7 @@ from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Confirm, Form, Refuse
 from ars_magica_manager.forms import hosting as hosting_forms
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.models import Saga
 from ars_magica_manager.tui import serve
 
@@ -76,7 +77,7 @@ def test_the_form_refuses_ports_that_clash_or_dont_exist(host):
 
 def test_host_for_players_starts_the_host_and_stop_hosting_ends_it(host):
     saga = Saga(id="test", name="Test")
-    page = menu_forms.Page(saga, NodeKind.SAGA)
+    page = page_forms.Page(saga, NodeKind.SAGA)
     assert menu_forms.placed(page, "Saga Management")[-1].action == "host_saga"
     port = _free_port()
     form = menu_forms.command(page, "host_saga")
@@ -152,7 +153,7 @@ def test_the_server_refuses_a_public_address_itself():
 
 def test_a_players_copy_never_hosts(host, monkeypatch):
     monkeypatch.setenv(hosting.TRANSPORT_VAR, "web")
-    page = menu_forms.Page(Saga(id="test", name="Test"), NodeKind.SAGA)
+    page = page_forms.Page(Saga(id="test", name="Test"), NodeKind.SAGA)
     actions = [i.action for i in menu_forms.placed(page, "Saga Management")]
     assert "host_saga" not in actions
     assert host.start(hosting.Plan(port=_free_port())) is not None

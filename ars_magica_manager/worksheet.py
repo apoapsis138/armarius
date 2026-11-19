@@ -37,6 +37,7 @@ from .forms import interests as interests_forms
 from .forms import lab_item as item_forms
 from .forms import laboratory as labf
 from .forms import library as library_forms
+from .forms import more
 from .forms import possession as posf
 from .forms import trait as tf
 from .forms import virtue as vf
@@ -1206,7 +1207,7 @@ def _interests_actions(saga: Saga, record: Record) -> list[Action]:
     return [
         Action(
             "Edit Interests",
-            lambda: interests_forms.interests_form(saga, character),
+            lambda: interests_forms.interests_form(saga, character, more.LABELS),
         )
     ]
 
@@ -1230,7 +1231,9 @@ def _covenant_interests_actions(saga: Saga, record: Record) -> list[Action]:
     return [
         Action(
             "Edit Interests",
-            lambda: interests_forms.covenant_interests_form(saga, covenant),
+            lambda: interests_forms.covenant_interests_form(
+                saga, covenant, more.LABELS
+            ),
         )
     ]
 

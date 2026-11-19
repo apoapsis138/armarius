@@ -6,9 +6,10 @@ import dataclasses
 
 import pytest
 
-from ars_magica_manager import actions, manors, marriages, neighbours, place_events
+from ars_magica_manager import manors, marriages, neighbours, place_events
 from ars_magica_manager.commands import Confirm, Form, Refuse, Then
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import more
 from ars_magica_manager.forms import neighbour as neighbour_forms
 from ars_magica_manager.models import Character, Marriage, Neighbour, Saga
 from ars_magica_manager.models.marriage import (
@@ -342,7 +343,7 @@ def test_edit_terms_edits_the_standing_marriage_or_refuses():
 
 
 def test_end_a_marriage_is_more_on_the_marriages_list():
-    assert actions.MORE_SECTIONS["end_marriage"] == MARRIAGES_SECTION
+    assert more.MORE_SECTIONS["end_marriage"] == MARRIAGES_SECTION
     assert "end_marriage" in menu_forms.NOT_ON_PAGES
 
 

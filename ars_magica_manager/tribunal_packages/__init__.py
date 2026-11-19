@@ -49,8 +49,8 @@ class RosterColumn:
 
 @dataclass(frozen=True)
 class PackageVerb:
-    """A More command a package's list offers (actions.MORE_MENU names
-    it): the action, its label, and the first step it runs on the
+    """A More command a package's list offers (a key of the More registry,
+    forms/more): the action, its label, and the first step it runs on the
     chosen row."""
 
     action: str

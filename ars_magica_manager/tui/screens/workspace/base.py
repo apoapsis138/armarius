@@ -36,7 +36,6 @@ from textual.widgets._collapsible import CollapsibleTitle
 from textual.widgets.tree import TreeNode
 
 from .... import (
-    actions,
     catalog,
     creatures,
     deeds,
@@ -60,8 +59,6 @@ from .... import familiars as fam
 from .... import players as pl
 from .... import sheet_text as st
 from ....actions import (
-    MORE_MENU,
-    NEW_MENU,
     RECORD_SECTION,
     SECTION_VERBS,
     MenuItem,
@@ -69,8 +66,10 @@ from ....actions import (
 )
 from ....forms import creation as creation_forms
 from ....forms import menu as menu_forms
-from ....forms import menu_refresh
+from ....forms import menu_refresh, menu_steps, more
 from ....forms import neighbour as neighbour_forms
+from ....forms import page as page_forms
+from ....forms.more import MORE_MENU, NEW_MENU
 from ....markup import escape
 from ....models import (
     FULL,
@@ -774,15 +773,15 @@ class WorkspaceBase(Screen[None]):
         return self._available(action)
 
     def _available(self, action: str) -> bool:
-        """Whether `action` can run where focus is (actions.available)."""
-        return actions.available(action, self._in_pass("facts", self._facts))
+        """Whether `action` can run where focus is (more.available)."""
+        return more.available(action, self._in_pass("facts", self._facts))
 
-    def _facts(self, **extras: Any) -> menu_forms.Page:
+    def _facts(self, **extras: Any) -> page_forms.Page:
         """The page on show as the core's actions ask about it
-        (menu.Page): `where`, and what only the terminal knows -- where
+        (page.Page): `where`, and what only the terminal knows -- where
         focus is, who is signed in, the chosen rows."""
         view = self._current_sheet_view()
-        return menu_forms.page_at(
+        return page_forms.page_at(
             self.saga,
             self.where,
             section=self._active_section(),
@@ -956,7 +955,7 @@ class WorkspaceBase(Screen[None]):
     def _run_menu_item(self, item: MenuItem) -> None:
         """The core's command where it has one (menu_refresh says what it
         changes); otherwise the terminal's own handler."""
-        if item.action in menu_refresh.REFRESH:
+        if item.action in more.REFRESH:
             self._run_more(item.action)
             return
         handler = getattr(
@@ -965,7 +964,7 @@ class WorkspaceBase(Screen[None]):
         if handler is not None:
             handler()
 
-    def _more_page(self) -> menu_forms.Page:
+    def _more_page(self) -> page_forms.Page:
         """The page on show as the core's More commands ask about it."""
         view = self._current_sheet_view()
         section = self._active_section()
@@ -997,7 +996,7 @@ class WorkspaceBase(Screen[None]):
         """Run a More or New action the core has a command for: its first
         step on this page, then save and redraw what menu_refresh says it
         changes."""
-        refresh = menu_refresh.REFRESH[action]
+        refresh = more.REFRESH[action]
         step = menu_forms.command(self._more_page(), action)
         before = (
             set(menu_refresh.listed(self.saga, refresh.made)) if refresh.made else set()
@@ -1776,7 +1775,7 @@ class WorkspaceBase(Screen[None]):
             self._commit()
             self.run_worker(gone())
 
-        run_steps(self.app, menu_forms.delete_record(saga, record), finished)
+        run_steps(self.app, menu_steps.delete_record(saga, record), finished)
 
     async def _show_character(self, character: Character) -> None:
         """Select `character`, in the tree and the detail pane."""

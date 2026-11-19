@@ -1,6 +1,6 @@
 """The desktop's equivalent of the terminal's n and m keys: each New and
 More action the core offers on a page (menu_forms, and so
-actions.available), set out where menu_forms.PLACES puts it, as a button
+more.available), set out where menu_forms.PLACES puts it, as a button
 in a chapter or section or a New card at the end of the cards it adds to
 (a Placer draws them). A record's page offers the rest itself
 (menu_forms.ON_THE_PAGE: its Manage chapter, with Delete, and its mode
@@ -19,8 +19,8 @@ from PySide6.QtWidgets import QPushButton
 from ..actions import MenuItem
 from ..commands import Command
 from ..forms import menu as menu_forms
-from ..forms import menu_refresh
-from ..forms.menu import Page
+from ..forms import menu_refresh, more
+from ..forms.page import Page
 from .markup_html import plain
 from .themes import Palette
 from .widgets import NewCard, edit_button
@@ -44,7 +44,7 @@ def _choose(
     def steps() -> Command:
         return command if command is not None else menu_forms.command(page, action)
 
-    refresh = menu_refresh.REFRESH.get(action)
+    refresh = more.REFRESH.get(action)
     kind = refresh.made if refresh is not None else None
     if kind is None:
         return lambda: run(steps(), None)

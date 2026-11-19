@@ -1,0 +1,1 @@
+**Every More action in one place.** Each action the More and New menus offer is now written down once, with where it appears, when it's offered and what it does first, and the menus and pages of both front-ends read it from there.

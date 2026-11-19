@@ -8,11 +8,13 @@ from dataclasses import asdict, replace
 import pytest
 
 from ars_magica_manager import deeds, seasons
-from ars_magica_manager.actions import NodeKind, available
+from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import apothecary as forms
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.forms import season as season_forms
+from ars_magica_manager.forms.more import available
 from ars_magica_manager.models import (
     Ability,
     Character,
@@ -333,7 +335,7 @@ def test_the_store_form():
 
 def test_more_offers_the_ligature_and_the_store():
     saga = _saga(_martin(**{"Profession: Apothecary": 1}))
-    page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")
+    page = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")
     assert available("make_ligature", page)
     assert available("apothecary_store", replace(page, section="section-char-season"))
     assert "apothecary_store" in {

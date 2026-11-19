@@ -3,11 +3,13 @@ pp. 25-29) and the Ars Fabulosa's bargaining powers (pp. 131-134)."""
 
 import random
 
-from ars_magica_manager import actions, deeds
+from ars_magica_manager import deeds
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import faerie_dealings as forms
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import more
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.models import (
     Ability,
     Character,
@@ -325,11 +327,11 @@ def test_offer_form_spends_long_term_fatigue():
 
 def test_the_faerie_commands_are_offered_in_the_deeds_chapter():
     saga = _saga()
-    page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="b")
+    page = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="b")
     labels = [item.label for item in menu_forms.placed(page, deeds.FAERIE)]
     assert {"Ars Fabulosa", "A Faerie Bargain", "An Offer to Faerie"} <= set(labels)
-    plain = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")
-    assert not actions.available("ars_fabulosa", plain)
-    assert actions.available("faerie_offer", plain)
+    plain = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")
+    assert not more.available("ars_fabulosa", plain)
+    assert more.available("faerie_offer", plain)
     saga.books_in_play = ["DE"]
-    assert not actions.available("faerie_offer", plain)
+    assert not more.available("faerie_offer", plain)

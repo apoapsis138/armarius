@@ -8,6 +8,8 @@ from dataclasses import replace
 from ars_magica_manager import actions, catalog
 from ars_magica_manager.commands import Choose
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import more
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.forms import vf_change as forms
 from ars_magica_manager.forms import virtue as virtue_forms
 from ars_magica_manager.models import Ability, Character, Saga, VirtueFlawInstance
@@ -254,14 +256,14 @@ def test_the_status_chooser_lists_only_statuses():
 def test_offered_on_a_characters_virtues_and_flaws():
     character = person()
     saga = saga_with(character)
-    page = menu_forms.page_for(saga, actions.NodeKind.CHARACTER, character_id="c")
+    page = page_forms.page_for(saga, actions.NodeKind.CHARACTER, character_id="c")
     assert "change_virtues_flaws" in {
         i.action for i in menu_forms.placed(page, "Virtues & Flaws")
     }
-    assert actions.available(
+    assert more.available(
         "change_virtues_flaws", replace(page, section="section-vf-flaws")
     )
-    assert not actions.available(
+    assert not more.available(
         "change_virtues_flaws", replace(page, section="section-char-info")
     )
 

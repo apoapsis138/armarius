@@ -4,7 +4,7 @@ while its book is in play.
 An action listed here needs one of its books among the saga's books in
 play (`sourcebooks.saga_books`); one not listed is the Definitive
 Edition's, or spans books in a way its own rule decides (a tradition's
-casting, which Traditions Offered decides). `actions.available` asks this before the
+casting, which Traditions Offered decides). `more.available` asks this before the
 action's own rule, so a rule never has to remember its book.
 
 The book for each action is the one its rules module cites."""
