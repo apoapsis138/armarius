@@ -37,6 +37,7 @@ from .. import (
     hermetic_projects,
     manors,
     mobile_covenants,
+    picture_files,
     players,
     saga_index,
     seasons,
@@ -239,6 +240,8 @@ class CovenantPage(QWidget):
         self.placer = placer
         self.open_character, self.open_laboratory = open_character, open_laboratory
         self.open_familiar = open_familiar
+        #: Where its pictures are read from (the window's saga store).
+        self._read = controls.picture if controls else picture_files.local_picture
         self.covenant_id = covenant_id
         #: Each inhabitant, possession and treasury table, by its kind.
         self.tables: dict[str, QTableView] = {}
@@ -675,7 +678,7 @@ class CovenantPage(QWidget):
         parts: list[QWidget] = []
         for title, people in ov.people_groups(saga, self.covenant_id, every=True):
             cards = [
-                person_card(saga, character, p, self.open_character)
+                person_card(saga, character, p, self.open_character, self._read)
                 for character in people
             ]
             kind, words = ov.NEW_PERSON[title]

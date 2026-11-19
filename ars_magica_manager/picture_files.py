@@ -1,8 +1,9 @@
-"""Where a portrait's or map's picture comes from: this computer's folders,
-or, for a Joined game, the host (fetched by name when a page first needs
-it and kept in memory for the session, never written to disk).
-
-Pages ask `picture(folder, name)` for the bytes, so they don't know which.
+"""A portrait's or map's picture: its kinds, safe names and this
+computer's folders. Pages read pictures through the window's saga store
+(saga_store.SagaStore.picture, a PictureSource): this computer's folders
+(`local_picture`), or, for a Joined game, the host (fetched by name when a
+page first needs it and kept in memory for the session, never written to
+disk), so they don't know which.
 
 A picture's name can come from someone else (an imported saga, a joined
 game's host, a player asking the host), so every path that reads or
@@ -85,33 +86,18 @@ def safe_name(name: str) -> bool:
     return PurePosixPath(name).suffix.lower() in SUFFIXES
 
 
-#: The host's pictures while a Joined game is open: fetched by
-#: (folder, name), None when the host hasn't it.
-_fetch: Callable[[str, str], bytes | None] | None = None
-_kept: dict[tuple[str, str], bytes | None] = {}
+#: Where a page reads a picture from, by (folder, name): None when it isn't
+#: there. The window's saga store (saga_store.SagaStore.picture) is one:
+#: this computer's folders, or a Joined game's host.
+PictureSource = Callable[[str, str], bytes | None]
 
 
-def use_host(fetch: Callable[[str, str], bytes | None] | None) -> None:
-    """Take pictures from the host (`fetch`), or this computer's folders
-    again (None). Either way what was kept is forgotten."""
-    global _fetch
-    _fetch = fetch
-    _kept.clear()
-
-
-def picture(folder: str, name: str) -> bytes | None:
-    """The picture's bytes, or None when it isn't there."""
+def local_picture(folder: str, name: str) -> bytes | None:
+    """The picture's bytes from this computer's folders, or None when it
+    isn't there."""
     found_kind = kind(folder)
     if found_kind is None or not safe_name(name):
         return None
-    if _fetch is not None:
-        key = (folder, name)
-        if key not in _kept:
-            try:
-                _kept[key] = _fetch(folder, name)
-            except ConnectionError, TimeoutError:
-                return None  # the host can't be reached: asked again next time
-        return _kept[key]
     path = found_kind.directory() / name
     try:
         return path.read_bytes() if path.is_file() else None

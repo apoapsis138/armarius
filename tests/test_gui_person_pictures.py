@@ -14,7 +14,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 from PySide6.QtGui import QColor, QImage
 from PySide6.QtWidgets import QApplication
 
-from ars_magica_manager import artwork, storage
+from ars_magica_manager import artwork, picture_files, storage
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.models import Character
 
@@ -53,7 +53,9 @@ def test_without_a_portrait_a_person_is_their_house_or_the_figure(
 ) -> None:
     person = _person(kind, house)
     assert artwork.person_mark(person) == shown
-    drawn = pictures.person_picture(person, INK, 40).toImage()
+    drawn = pictures.person_picture(
+        person, INK, 40, picture_files.local_picture
+    ).toImage()
     assert _same(
         drawn, pictures.pixmap(artwork.person_mark(person), INK, 40, 2.0).toImage()
     )
@@ -67,6 +69,8 @@ def test_a_portrait_is_shown_first_cropped_square() -> None:
     portrait.save(str(storage.portraits_dir() / "face.png"))
     person = _person("magus", "house_tremere")
     person.portrait = "face.png"
-    drawn = pictures.person_picture(person, INK, 40).toImage()
+    drawn = pictures.person_picture(
+        person, INK, 40, picture_files.local_picture
+    ).toImage()
     assert drawn.width() == drawn.height() == 80
     assert drawn.pixelColor(40, 40).name() == "#c04020"

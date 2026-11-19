@@ -23,7 +23,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import atlas, seat, viewing, world
+from .. import atlas, picture_files, seat, viewing, world
 from ..actions import NodeKind
 from ..commands import Command
 from ..forms import menu as menu_forms
@@ -31,6 +31,7 @@ from ..forms import reveal as reveal_forms
 from ..forms.menu import DELETE_RECORD
 from ..forms.page import Page
 from ..models import FULL, Character, Covenant, Laboratory
+from ..picture_files import PictureSource
 from . import pictures
 from .bookmark import Ribbon, Seal, with_seal
 from .markup_html import plain
@@ -102,6 +103,8 @@ class RecordControls:
     print_pdf: Callable[[], None] | None = None
     #: Open the Atlas on a record's pin: its Ref kind and id.
     show_on_map: Callable[[str, str], None] | None = None
+    #: Where the page's pictures are read from (the window's saga store).
+    picture: PictureSource = picture_files.local_picture
 
     def chapter(self, p: Palette) -> QWidget:
         return manage_chapter(self, p)

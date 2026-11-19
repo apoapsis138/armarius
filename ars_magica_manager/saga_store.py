@@ -19,8 +19,8 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 from typing import Any, Protocol
 
-from . import storage
-from .models import Saga
+from . import picture_files, storage
+from .models import Saga, season_order
 from .saga_delta import HOST_ONLY, saga_delta
 from .seat_changes import CHANGEABLE, record_key
 
@@ -42,20 +42,95 @@ class Refreshed:
 @dataclass(frozen=True)
 class Saved:
     """What a save sent back: where it overlapped another's change (kept
-    as this save has it), and what the host refused."""
+    as this save has it), what the host refused, and, when nothing was
+    written at all, why (the shape check refused the saga, ADR 0012)."""
 
     overlaps: list[str]
     refused: list[str]
+    #: What to tell the reader when the saga wasn't saved; "" when it was.
+    not_saved: str = ""
+
+
+@dataclass(frozen=True)
+class PickedUp:
+    """What picking up another copy's save means for the reader: who saved,
+    whether the record they had open is gone or was changed, and where the
+    season moved. Its `lines` are what to tell them."""
+
+    who: str
+    #: The record on show was deleted.
+    gone: bool = False
+    #: The record on show's name, when the save changed it.
+    changed: str = ""
+    #: The season before and after, as (year, season), when it moved.
+    season: tuple[tuple[int, str], tuple[int, str]] | None = None
+
+    @property
+    def season_back(self) -> bool:
+        """The season moved back (Undo Last Season), not on."""
+        if self.season is None:
+            return False
+        (year_was, season_was), (year, season) = self.season
+        return season_order(season=season, year=year) < season_order(
+            season=season_was, year=year_was
+        )
+
+    @property
+    def lines(self) -> list[str]:
+        if self.gone:
+            said = [f"{self.who} deleted what you had open."]
+        elif self.changed:
+            said = [f"{self.who} changed {self.changed}; reloaded."]
+        else:
+            said = [f"Updated by {self.who}."]
+        if self.season is not None:
+            (year_was, season_was), (year, season) = self.season
+            said.append(
+                f"{self.who} undid {season_was} {year_was}: the saga is back "
+                f"to {season} {year}."
+                if self.season_back
+                else f"{self.who} advanced the season to {season} {year}."
+            )
+        return said
+
+
+def picked_up(
+    found: Refreshed,
+    *,
+    open_id: str | None,
+    open_name: str = "",
+    open_gone: bool = False,
+    season_was: tuple[int, str] | None = None,
+) -> PickedUp:
+    """What `found` means for a reader who had the record `open_id` open
+    (None: no one record; `open_gone`: it is no longer in the saga), with
+    the season `season_was` (year, season) before the refresh."""
+    saga = found.saga
+    who = saga.saved_by or "The storyguide"
+    changed_ids = {record_id for _kind, record_id in found.changed}
+    now = (saga.current_year, saga.current_season)
+    return PickedUp(
+        who,
+        gone=open_gone,
+        changed=open_name
+        if not open_gone and open_id is not None and open_id in changed_ids
+        else "",
+        season=(season_was, now)
+        if season_was is not None and season_was != now
+        else None,
+    )
 
 
 class SagaStore(Protocol):
-    """Load, save and keep up to date one saga."""
+    """Load, save and keep up to date one saga, and read its pictures."""
 
     remote: bool
 
     def save(self, saga: Saga) -> Saved: ...
 
     def refresh(self, saga: Saga) -> Refreshed | None: ...
+
+    def picture(self, folder: str, name: str) -> bytes | None: ...
 
 
 class LocalStore:
@@ -64,13 +139,22 @@ class LocalStore:
     remote = False
 
     def save(self, saga: Saga) -> Saved:
-        found = storage.save_saga(saga)
+        """Write the saga; one the shape check refuses isn't written, and
+        the result says so (`not_saved`)."""
+        try:
+            found = storage.save_saga(saga)
+        except ValueError as problem:
+            return Saved([], [], storage.not_saved_note(problem))
         return Saved(found.conflicts, [])
 
     def refresh(self, saga: Saga) -> Refreshed | None:
         """Raises ValueError when the file can't be read (storage.reload_into)."""
         changed = storage.reload_into(saga)
         return Refreshed(saga, changed) if changed else None
+
+    def picture(self, folder: str, name: str) -> bytes | None:
+        """A picture from this computer's folders."""
+        return picture_files.local_picture(folder, name)
 
 
 class RemoteSeat(Protocol):
@@ -88,6 +172,8 @@ class RemoteSeat(Protocol):
 
     def send_saga(self, before: dict[str, Any], after: dict[str, Any]) -> list[str]: ...
 
+    def picture(self, folder: str, name: str) -> bytes | None: ...
+
 
 class RemoteStore:
     """A Joined game's saga, read from and saved to its host. A player's
@@ -101,6 +187,22 @@ class RemoteStore:
         self.whole = whole
         self.revision = ""
         self._base: dict[str, Any] = {}
+        #: The host's pictures fetched so far, by (folder, name): kept for
+        #: the session, never written to disk.
+        self._pictures: dict[tuple[str, str], bytes | None] = {}
+
+    def picture(self, folder: str, name: str) -> bytes | None:
+        """A picture from the host, fetched the first time a page needs it.
+        One the host can't be reached for is asked again next time."""
+        if picture_files.kind(folder) is None or not picture_files.safe_name(name):
+            return None
+        key = (folder, name)
+        if key not in self._pictures:
+            try:
+                self._pictures[key] = self.seat.picture(folder, name)
+            except ConnectionError, TimeoutError:
+                return None
+        return self._pictures[key]
 
     def load(self) -> Saga:
         revision, saga = self.seat.read()

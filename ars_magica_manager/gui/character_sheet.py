@@ -55,6 +55,7 @@ from .. import (
     deeds,
     giving,
     marriages,
+    picture_files,
     portraits,
     saga_index,
     seasons,
@@ -106,6 +107,7 @@ from ..models import (
     ScoredTrait,
     TraditionDef,
 )
+from ..picture_files import PictureSource
 from ..references import Fact
 from ..rules import activities as season_rules
 from ..rules import agents as agent_rules
@@ -847,7 +849,13 @@ class CharacterSheet(QWidget):
         row = QHBoxLayout(box)
         row.setContentsMargins(0, 0, 0, 0)
         row.setSpacing(14)
-        self.portrait = Portrait(self.saga, c, p, self.run)
+        self.portrait = Portrait(
+            self.saga,
+            c,
+            p,
+            self.run,
+            self.controls.picture if self.controls else picture_files.local_picture,
+        )
         row.addWidget(self.portrait, 0, Qt.AlignmentFlag.AlignTop)
         names = QVBoxLayout()
         names.setSpacing(0)
@@ -2238,13 +2246,14 @@ class Portrait(QWidget):
         character: Character,
         p: Palette,
         run: Callable[[Command], None],
+        read: PictureSource,
     ) -> None:
         super().__init__()
         self.p = p
         self.setFixedSize(self.WIDTH, self.HEIGHT)
         self.setCursor(Qt.CursorShape.PointingHandCursor)
         self.clicked = lambda: run(portraits.portrait(saga, character))
-        self.picture = pictures.portrait(character)
+        self.picture = pictures.portrait(character, read)
         self.symbol = pictures.pixmap(
             artwork.person_mark(character), p["heading"], HOUSE_SYMBOL - 12, 2.0
         )

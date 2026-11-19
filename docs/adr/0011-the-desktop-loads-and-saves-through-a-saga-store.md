@@ -10,3 +10,8 @@ The desktop's pages read a saga in memory and the window saves it after each ste
 
 - A second window for Joined games: two copies of every page to keep in step.
 - Sending the whole saga back: impossible by design (the Seat view lacks what is hidden, and the host takes only per-record changes).
+
+## Since
+
+- The terminal saves and picks up through the same store (`LocalStore`): a save the shape check refuses (ADR 0012) comes back as a result (`Saved.not_saved`), not an exception, and what another copy's save means for the reader (`PickedUp`: who, the record on show gone or changed, the season moved) is worded once for both front-ends.
+- Pictures are read through the store too (`SagaStore.picture`): this computer's folders, or a Joined game's host, fetched once each and kept for the session. The module-wide switch that sent pages to the host is gone; the window hands its store's reader to the pages that draw a picture.

@@ -119,10 +119,9 @@ from ..models import (
     Player,
     Saga,
     Tribunal,
-    season_order,
 )
 from ..paths import APP_NAME
-from ..saga_store import LocalStore, Refreshed, SagaStore
+from ..saga_store import LocalStore, Refreshed, SagaStore, picked_up
 from ..sheets import laboratory as ls
 from ..where import Where
 from . import atlas as atlas_page
@@ -921,11 +920,10 @@ class MainWindow(QMainWindow):
                     self.palette_,
                 )
             return
-        try:
-            self.store.save(saga)
-        except ValueError as problem:
+        saved = self.store.save(saga)
+        if saved.not_saved:
             # The shape check refused it (storage.save_saga): kept in hand.
-            self.note.say(storage.not_saved_note(problem), self.palette_)
+            self.note.say(saved.not_saved, self.palette_)
 
     def refused(self, refused: list[str]) -> None:
         """The host didn't take some of a Joined game's changes."""
@@ -1050,36 +1048,24 @@ class MainWindow(QMainWindow):
             # have made them a storyguide, or a player again.
             role_changed = joined.role_changed(self, saga)
             self._use_viewer()
-        changed = found.changed
-        who = saga.saved_by or "The storyguide"
         place = self.trail[-1] if self.trail else None
         open_record = self._shown_record(place)
-        if place is not None and place.id and open_record is None:
+        told = picked_up(
+            found,
+            open_id=open_record.id if open_record is not None else None,
+            open_name=open_record.name if open_record is not None else "",
+            open_gone=place is not None and bool(place.id) and open_record is None,
+            season_was=season_was,
+        )
+        if told.gone:
             self.go(self._up_to(SAGA))
-            self.note.say(f"{who} deleted what you had open.", self.palette_)
         else:
             self.redraw()
-            names = {record_id for _kind, record_id in changed}
-            if open_record is not None and open_record.id in names:
-                self.note.say(
-                    f"{who} changed {open_record.name}; reloaded.", self.palette_
-                )
-            else:
-                self.note.say(f"Updated by {who}.", self.palette_)
-        if (saga.current_year, saga.current_season) != season_was:
+        for line in told.lines:
+            self.note.say(line, self.palette_)
+        if told.season is not None:
             # Another copy advanced (or undid) the season: the dial turns
             # here too.
-            back = season_order(
-                season=saga.current_season, year=saga.current_year
-            ) < season_order(season=season_was[1], year=season_was[0])
-            self.note.say(
-                f"{who} undid {season_was[1]} {season_was[0]}: the saga is back "
-                f"to {saga.current_season} {saga.current_year}."
-                if back
-                else f"{who} advanced the season to {saga.current_season} "
-                f"{saga.current_year}.",
-                self.palette_,
-            )
             self._turn_the_dial(lambda: None)
         if role_changed:
             self.note.say(
@@ -2103,6 +2089,7 @@ class MainWindow(QMainWindow):
             self.open_worksheet,
             self.print_pdf,
             self.show_on_map,
+            self.store.picture,
         )
 
     def show_on_map(self, kind: str, record_id: str) -> None:
@@ -2371,6 +2358,7 @@ class MainWindow(QMainWindow):
             open_creature=self.open_creature,
             open_familiar=self.open_familiar,
             run=self.run,
+            picture=self.store.picture,
             run_ended=lambda command, ended: self.run(command, ended=ended),
             open_fight=self.open_fight,
             open_siege=self.open_siege,
