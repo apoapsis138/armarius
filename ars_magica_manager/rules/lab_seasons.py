@@ -31,7 +31,7 @@ One-season lab work:
 
 from __future__ import annotations
 
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, replace
 
 from .. import catalog
@@ -516,22 +516,15 @@ def _work(
         return [refused], None
     if plan.activity == experiment.STABILIZE:
         return _stabilize(saga, magus, plan)
-    if plan.activity == TAMING:
-        return _taming(saga, magus, plan, lab_)
-    if plan.activity in laboratory_seasons.ACTIVITIES:
-        return laboratory_seasons.work(saga, magus, plan, lab_)
 
     def options(
         m: Character, p: SeasonPlan, technique: str, form: str, total: lab.LabTotal
     ):
         return _with_options(m, p, technique, form, total, saga)
 
-    if plan.activity in enchant_seasons.ACTIVITIES:
-        return enchant_seasons.work(saga, magus, plan, lab_, options)
-    if plan.activity in familiar_seasons.ACTIVITIES:
-        return familiar_seasons.work(saga, magus, plan, lab_, options)
-    if plan.activity == book_seasons.DECODE_TEXT:
-        return _decode(saga, magus, plan, lab_)
+    family = family_of(plan.activity)
+    if family is not None:
+        return family.work(saga, magus, plan, lab_, options)
     if plan.activity == TAUGHT_SPELLS:
         return _taught(saga, magus, plan, lab_)
     if plan.activity not in SPELL_ACTIVITIES:
@@ -1743,3 +1736,73 @@ def digestion_season(
     if lab_ is None:
         return ["The digestion's laboratory is gone."], None
     return _one_season_work(saga, magus, plan, lab_)
+
+
+# -- the families of lab work --
+#
+# Each family of lab work says how a season of it is worked out, and is
+# named so seasons.lab_apply can apply it (its FAMILY_APPLIERS). The checks
+# every lab season shares (a laboratory of the magus's own, experimenting,
+# the lab's restrictions) stay in _work.
+#
+# Pattern: the activity registry (Strategy, reduced to a dict), as
+# activities.HANDLERS: a new family is one entry here and one applier.
+
+#: How a family works out one season: the plan's problems, or its work.
+FamilyWork = Callable[
+    [Saga, Character, SeasonPlan, Laboratory, lab.LabOptions],
+    tuple[list[str], LabWork | None],
+]
+
+ENCHANTING, FAMILIAR, LAB_BUILDING, TAMING_FAMILY, DECODING = (
+    "enchanting",
+    "familiar",
+    "laboratory",
+    "taming",
+    "decoding",
+)
+
+
+@dataclass(frozen=True)
+class LabFamily:
+    """One family of lab work: its name, its activities and how a season
+    of it is worked out."""
+
+    name: str
+    activities: frozenset[str]
+    work: FamilyWork
+
+
+def _without_options(
+    work_: Callable[
+        [Saga, Character, SeasonPlan, Laboratory], tuple[list[str], LabWork | None]
+    ],
+) -> FamilyWork:
+    """A family's work that needs no Lab Total options."""
+    return lambda saga, magus, plan, lab_, _options: work_(saga, magus, plan, lab_)
+
+
+FAMILIES: tuple[LabFamily, ...] = (
+    LabFamily(ENCHANTING, frozenset(enchant_seasons.ACTIVITIES), enchant_seasons.work),
+    LabFamily(FAMILIAR, frozenset(familiar_seasons.ACTIVITIES), familiar_seasons.work),
+    LabFamily(
+        LAB_BUILDING,
+        frozenset(laboratory_seasons.ACTIVITIES),
+        _without_options(laboratory_seasons.work),
+    ),
+    LabFamily(TAMING_FAMILY, frozenset({TAMING}), _without_options(_taming)),
+    LabFamily(
+        DECODING, frozenset({book_seasons.DECODE_TEXT}), _without_options(_decode)
+    ),
+)
+
+#: Each activity of a family, and its family.
+_FAMILY_OF: Mapping[str, LabFamily] = {
+    activity: family for family in FAMILIES for activity in family.activities
+}
+
+
+def family_of(activity: str) -> LabFamily | None:
+    """The family of lab work `activity` belongs to; None for the rest
+    (spells, Stabilizing, being taught spells, one-season work)."""
+    return _FAMILY_OF.get(activity)

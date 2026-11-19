@@ -1,0 +1,1 @@
+**Lab work, family by family.** Enchanting, familiar work, building a laboratory, taming and decoding Lab Texts are each worked out and applied by one entry of their own, and unfinished work is carried into next season in one place. Nothing a season of lab work does changes.
