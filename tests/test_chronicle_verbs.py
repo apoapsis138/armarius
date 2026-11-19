@@ -7,11 +7,11 @@ from __future__ import annotations
 
 import pytest
 
-from ars_magica_manager import actions, chronicle, commands, virtual_tabletop
+from ars_magica_manager import chronicle, commands, virtual_tabletop
 from ars_magica_manager import sessions as ss
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.forms import menu as menu_forms
-from ars_magica_manager.forms import menu_refresh, more
+from ars_magica_manager.forms import more
 from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.models import Player, Saga, Session
 from ars_magica_manager.sections import SESSIONS_SECTION
@@ -34,9 +34,9 @@ def _offered(saga: Saga, row: int | None = 0) -> set[str]:
     page = _page(saga, row)
     return {
         item.action
-        for item in actions.MORE_MENU
+        for item in more.MORE_MENU
         if item.action in VERBS
-        and actions.MORE_SECTIONS.get(item.action) == SESSIONS_SECTION
+        and more.MORE_SECTIONS.get(item.action) == SESSIONS_SECTION
         and more.available(item.action, page)
     }
 
@@ -137,6 +137,6 @@ def test_the_chronicle_shows_only_what_its_reader_may_see() -> None:
 
 
 def test_the_verbs_change_the_sessions_list_and_reading_saves_nothing() -> None:
-    assert menu_refresh.REFRESH["begin_session"].sections == (SESSIONS_SECTION,)
-    assert menu_refresh.REFRESH["close_session"].sections == (SESSIONS_SECTION,)
-    assert menu_refresh.REFRESH["read_chronicle"].saves is False
+    assert more.REFRESH["begin_session"].sections == (SESSIONS_SECTION,)
+    assert more.REFRESH["close_session"].sections == (SESSIONS_SECTION,)
+    assert more.REFRESH["read_chronicle"].saves is False

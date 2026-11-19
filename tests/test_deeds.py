@@ -10,7 +10,7 @@ import pytest
 from ars_magica_manager import deeds
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import FormCard
-from ars_magica_manager.forms import interests
+from ars_magica_manager.forms import interests, more
 from ars_magica_manager.forms import menu as menu_forms
 from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.forms import religion as religion_forms
@@ -87,7 +87,7 @@ def test_an_unticked_interest_hides_its_actions_but_never_the_session():
 def test_the_interests_form_turns_interests_off_and_on():
     saga = _knight(False)
     knight = saga.characters[0]
-    form = interests.interests_form(saga, knight)
+    form = interests.interests_form(saga, knight, more.LABELS)
     values = {f.key: f.value for f in form.fields()}
     assert all(values.values())
     assert len(values) == len(deeds.OPTIONAL) - len(deeds.MAGI_ONLY)
@@ -122,14 +122,14 @@ def _person(religion: str = "") -> Character:
 
 
 def _religion_card(person: Character) -> FormCard:
-    cards = interests.interest_cards(None, person)
+    cards = interests.interest_cards(None, person, more.LABELS)
     return next(c for c in cards if c.title == deeds.RELIGION)
 
 
 def test_every_interest_has_its_words_and_every_action_a_name():
     assert set(deeds.SUMMARIES) == set(deeds.ABOUT) == set(deeds.INTERESTS)
     for action in deeds.INTEREST_OF:
-        assert interests._name(action)
+        assert more.LABELS[action]
 
 
 def test_a_card_counts_what_the_sagas_books_bring(monkeypatch):
@@ -142,7 +142,7 @@ def test_a_card_counts_what_the_sagas_books_bring(monkeypatch):
             and action not in ("melee_event", "tourney_season")
         ),
     )
-    cards = {c.title: c for c in interests.interest_cards(None, _person())}
+    cards = {c.title: c for c in interests.interest_cards(None, _person(), more.LABELS)}
     craft = cards[deeds.CRAFT]
     assert craft.count == "2 actions, 4 more with other books"
     assert "On Planning, in A Season's Work" in craft.detail
@@ -158,7 +158,7 @@ def test_an_action_on_both_pages_shows_on_both_and_counts_once(monkeypatch):
     )
     card = next(
         c
-        for c in interests.interest_cards(None, _person())
+        for c in interests.interest_cards(None, _person(), more.LABELS)
         if c.title == deeds.APPRENTICESHIP
     )
     assert card.count == "4 actions"
@@ -166,14 +166,14 @@ def test_an_action_on_both_pages_shows_on_both_and_counts_once(monkeypatch):
 
 
 def test_session_and_reputation_is_a_card_with_no_switch():
-    card = interests.interest_cards(None, _person())[0]
+    card = interests.interest_cards(None, _person(), more.LABELS)[0]
     assert card.title == deeds.SESSION
     assert card.key == "" and card.fixed == interests.ALWAYS_ON
 
 
 def test_the_terminals_ticks_say_what_each_interest_is():
     knight = Character.from_dict({"id": "k", "name": "K", "type": "grog"})
-    form = interests.interests_form(None, knight)
+    form = interests.interests_form(None, knight, more.LABELS)
     fields = {f.label: f for f in form.fields()}
     assert fields[deeds.INSIGHT].hint == deeds.SUMMARIES[deeds.INSIGHT]
 
@@ -209,7 +209,7 @@ def test_a_church_career_locks_the_religion_card_and_keeps_the_choice(monkeypatc
     card = _religion_card(person)
     assert card.fixed == "On for a Church career" and not card.key
     assert "Church career keeps this on" in card.detail
-    form = interests.interests_form(None, person)
+    form = interests.interests_form(None, person, more.LABELS)
     values = {f.key: f.value for f in form.fields()}
     assert not any("religion" in key for key in values)
     form.apply(values)
@@ -246,7 +246,7 @@ def test_agents_and_research_hide_their_chapters_until_a_record_keeps_them():
 def test_a_card_kept_on_by_its_record_has_no_switch_and_says_why():
     magus = _magus()
     magus.agents.append(object())
-    cards = {c.title: c for c in interests.interest_cards(None, magus)}
+    cards = {c.title: c for c in interests.interest_cards(None, magus, more.LABELS)}
     agents = cards[deeds.AGENTS]
     assert agents.fixed == "On while they have agents" and not agents.key
     assert agents.detail.startswith("[$label]Their agents keep this on")
@@ -255,8 +255,8 @@ def test_a_card_kept_on_by_its_record_has_no_switch_and_says_why():
 
 
 def test_only_a_magus_has_research_and_the_hermetic_mysteries():
-    grog = {c.title for c in interests.interest_cards(None, _person())}
-    magus = {c.title for c in interests.interest_cards(None, _magus())}
+    grog = {c.title for c in interests.interest_cards(None, _person(), more.LABELS)}
+    magus = {c.title for c in interests.interest_cards(None, _magus(), more.LABELS)}
     assert magus - grog == set(deeds.MAGI_ONLY)
 
 
@@ -266,7 +266,7 @@ def _covenant() -> Covenant:
 
 def test_a_covenants_interests_turn_off_and_load_again():
     covenant = _covenant()
-    form = interests.covenant_interests_form(None, covenant)
+    form = interests.covenant_interests_form(None, covenant, more.LABELS)
     values = {f.key: f.value for f in form.fields()}
     assert len(values) == 2 and all(values.values())
     values["interest_ships"] = False
@@ -288,7 +288,7 @@ def test_a_ship_or_a_manor_keeps_a_covenants_interest_on():
     assert deeds.covenant_interests_off(covenant) == [deeds.MANORS, deeds.SHIPS]
     covenant.manors["establishments"] = [{"name": "Mill"}]
     assert deeds.covenant_interests_off(covenant) == [deeds.SHIPS]
-    form = interests.covenant_interests_form(None, covenant)
+    form = interests.covenant_interests_form(None, covenant, more.LABELS)
     assert [f.key for f in form.fields()] == ["interest_ships"]
     assert form.cards is not None
     assert form.cards()[0].fixed == "On while it has manors"

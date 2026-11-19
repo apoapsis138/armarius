@@ -27,9 +27,6 @@ from .. import (
     viewing,
 )
 from ..actions import (
-    MORE_MENU,
-    MORE_SECTIONS,
-    NEW_MENU,
     RECORD_SECTION,
     MenuItem,
     NodeKind,
@@ -40,9 +37,9 @@ from ..markup import escape
 from ..rules import covenfolk
 from ..sections import FAITH_SECTION, LAB_TEXTS_SECTION
 from . import hosting as hosting_forms
-from .menu_steps import _COMMANDS as _STEPS
-from .menu_steps import delete_record, familiar_binder
-from .more import available
+from . import more
+from .menu_steps import OTHER_STEPS, delete_record, familiar_binder
+from .more import MORE_MENU, MORE_SECTIONS, NEW_MENU, available
 from .page import (
     Page,
     Record,
@@ -51,149 +48,6 @@ from .page import (
 #: Delete's action: the record on show, after a confirmation that says
 #: what happens to what it owns.
 DELETE_RECORD = "delete_record"
-
-#: The More commands a page offers nowhere: the desktop shows them as the
-#: section's own button (Fatigue beside Wounds in Health; Instill, Use a
-#: Charge and Use an Effect beside Enchanted Devices). The Creation
-#: Worksheet is offered, but opens a page rather than running a command.
-NOT_ON_PAGES = frozenset(
-    {
-        # The desktop's eye in the title bar.
-        "player_view",
-        # Saga Content's Sessions draws them as row buttons.
-        "cast_glance",
-        "begin_session",
-        "close_session",
-        "read_chronicle",
-        # The Chronicle pane's own Message button.
-        "send_message",
-        # The Secrets list's own row buttons.
-        "reveal_secret",
-        "conceal_secret",
-        "split_secret",
-        # Notes & Goals' own row button.
-        "plan_goal",
-        "edit_arms",
-        "edit_fatigue",
-        "edit_familiar_fatigue",
-        # The familiar's page draws Roll as its Personality Traits' button.
-        "familiar_trait_roll",
-        "instill_effect",
-        "use_charge",
-        "use_effect",
-        "give",
-        "withdraw_case",
-        "war_end",
-        "neutralize_shard",
-        "tribunal_longevity",
-        "roll_fair",
-        "court_roll",
-        "roll_table",
-        # The desktop draws it as the Open Stories' own button.
-        "grow_story",
-        # The desktop draws it as a button on the Diary, Open Stories and
-        # Needs You.
-        "take_up_story",
-        # The desktop's Whereabouts draws it as its Add.
-        "add_stop",
-        "battle_event",
-        "redeem_gratitude",
-        "buy_manor",
-        "assart",
-        "winter_roll",
-        "settle_inheritance",
-        "conflict_battle_event",
-        "battle_muster",
-        "next_blow",
-        "next_round",
-        "add_combatant",
-        "edit_combatant",
-        "remove_combatant",
-        "form_group",
-        "break_group",
-        "restart_fight",
-        "fight_options",
-        "group_morale",
-        "rally_group",
-        "next_siege_event",
-        "siege_actions",
-        # The desktop draws them as the Agents list's own buttons.
-        "impress_agent",
-        "spend_agency_xp",
-        "set_agent_task",
-        "resolve_agent_task",
-        # The desktop draws it as the Goods list's own button.
-        "add_purity",
-        # The desktop draws it as House Rules' own button.
-        "move_to_source",
-        # The desktop draws it as Ahead's own button.
-        "plan_journey",
-        # The desktop draws them as the Charter's and Clauses' own buttons.
-        "seal_charter",
-        "break_clause",
-        "censure_clause",
-        "charge_clause",
-        "use_charter_template",
-        "save_charter_template",
-        "forget_charter_template",
-        "end_membership",
-        # The desktop draws it as the Guests list's own button.
-        "pay_fee",
-        # The desktop draws the names a page holds as links instead.
-        "go_to",
-        # The Theban treasury's loans: the Tokens list's own buttons.
-        "lend_vis",
-        "repay_vis_loan",
-        # The Rhine's ranks: the Gilds list's own buttons.
-        "rhine_mark",
-        "rhine_challenge",
-        # The hunt and Area Lore: the Manors list's and Ahead's own buttons.
-        "hunt_on_manor",
-        "area_lore_on_manor",
-        "hunt_on_journey",
-        "area_lore_on_journey",
-        # The Great Library: the rule of access's own button.
-        "library_search",
-        # A tomb's trap springs: the Traps list's own button.
-        "overcome_trap",
-        "overcome_ward",
-        "cross_threshold",
-        # A covenant's ships: the Ships list's own buttons.
-        "ship_stress",
-        "ship_combat",
-        "ship_fate",
-        "build_ship",
-        "detach_ship",
-        "rejoin_ship",
-        # The desktop draws it as Whereabouts' own button.
-        "plan_route",
-        # A cleric's career: Holy Orders' own button.
-        "perform_exorcism",
-        # A covenant's Hermetic Projects: the tower's and the projects
-        # list's own buttons, and Begin Project on the Overview chapter.
-        "tower_stress",
-        "tower_conjure",
-        "show_project",
-        "begin_project",
-        # A lord's marriages: the Marriages list's own button.
-        "end_marriage",
-        # A covenant's Menagerie: the Beasts list's own button.
-        "tame_beast",
-        "menagerie_award",
-        # A covenant's staged project: its block's own buttons.
-        "warning_bell",
-        "gather_connection",
-        "lower_aegis",
-        "death_roll",
-        # Polemic and Charter Strength: the Texts list's and the charter
-        # lords' own buttons.
-        "circulate_text",
-        "draft_charter",
-        "seek_loophole",
-        # A Criamon magus's path: its own Follow an Avenue button.
-        "follow_avenue",
-    }
-)
 
 #: Per page, the sections whose More commands its menu offers (None: the
 #: page itself, with no section).
@@ -377,191 +231,21 @@ def manage_items(page: Page) -> list[ManageItem]:
 #: edits it.
 EDIT_SAGA = MenuItem("e", "edit_saga", "Edit Saga")
 
-#: Where a front-end that shows one page at a time (the desktop), and so
-#: has no New or More menu, offers each New and More action: in one of the
-#: page's chapters or sections, by its name. A New action there is a New
-#: card at the end of the cards it adds to. An action is offered only
-#: where it is listed (Restore nowhere: Add on the Magi and Companions
-#: lists brings someone back); every New and More action is listed, or
-#: is one a record's page offers itself (ON_THE_PAGE) or a section's own
-#: button (NOT_ON_PAGES).
-PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
+# Where a page sets out what isn't a More or New action.
+_OTHER_PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "edit_saga": ((NodeKind.SAGA, "Saga Settings"),),
-    # On a covenant, books straight into its library.
-    "import_data": ((NodeKind.SAGA, "Saga Management"), (NodeKind.COVENANT, "Library")),
-    "export_saga": ((NodeKind.SAGA, "Saga Management"),),
-    "export_cult": ((NodeKind.SAGA, "Saga Management"),),
-    "export_pack": ((NodeKind.SAGA, "Saga Management"),),
-    "merge_doubles": ((NodeKind.SAGA, "The Region"),),
-    "mark_unknown": ((NodeKind.SAGA, "The Region"),),
-    "host_saga": ((NodeKind.SAGA, "Saga Management"),),
-    "stop_hosting": ((NodeKind.SAGA, "Saga Management"),),
-    "set_date": ((NodeKind.SAGA, "Seasons"),),
-    "undo_season": ((NodeKind.SAGA, "Seasons"),),
-    "downtime_run": ((NodeKind.SAGA, "Seasons"),),
-    "previously_on": ((NodeKind.SAGA, "Seasons"),),
-    "create_covenant": ((NodeKind.SAGA, "Covenants"),),
-    "create_tribunal": ((NodeKind.SAGA, "Tribunals"),),
-    "create_neighbour": ((NodeKind.SAGA, "Neighbours"),),
-    "create_creature": ((NodeKind.SAGA, "Creatures"), (NodeKind.BESTIARY, "Creatures")),
-    "create_character": (
-        (NodeKind.SAGA, "Unassigned Characters"),
-        # A player's own characters, on The Troupe.
-        (NodeKind.SAGA, "Your Characters"),
-        (NodeKind.COVENANT, "People"),
-        (NodeKind.CHARACTER_GROUP, "People"),
-    ),
-    "create_laboratory": (
-        (NodeKind.SAGA, "Unassigned Laboratories"),
-        (NodeKind.COVENANT, "Laboratories"),
-    ),
-    "create_familiar": (
-        (NodeKind.CHARACTER, "Familiar"),
-        (NodeKind.LABORATORY, deeds.SEASON_WORK),
-    ),
-    "restore": (),
-    # On each source of income's row.
-    "improve": ((NodeKind.COVENANT, "Income"),),
-    "lab_text_access": (
-        (NodeKind.CHARACTER, "Hermetic Background"),
-        (NodeKind.LABORATORY, "Lab Texts"),
-    ),
-    # Beside the Abilities chapter's own buttons.
-    "edit_traditions": ((NodeKind.CHARACTER, "Abilities"),),
-    "disputatio": ((NodeKind.CHARACTER, deeds.SCHOLARLY),),
-    "hedge_cast": ((NodeKind.CHARACTER, "Abilities"),),
-    "galdor_conjure": ((NodeKind.CHARACTER, "Abilities"),),
-    "galdor_bargain": ((NodeKind.CHARACTER, "Abilities"),),
-    "galdor_bind": ((NodeKind.CHARACTER, "Abilities"),),
-    # Beside Health's Edit buttons.
-    "take_harm": ((NodeKind.CHARACTER, "Health"),),
-    "recovery_roll": ((NodeKind.CHARACTER, "Health"),),
-    # The Deeds chapter's headers (deeds.INTERESTS), and This Season for
-    # the season-long ones.
-    "end_session": ((NodeKind.CHARACTER, deeds.SESSION),),
-    "what_changed": ((NodeKind.CHARACTER, deeds.SESSION),),
-    "teaching_requests": ((NodeKind.CHARACTER, "This Season"),),
-    "study_path": ((NodeKind.CHARACTER, "This Season"),),
-    "tourney_season": ((NodeKind.CHARACTER, deeds.SEASON_WORK),),
-    "melee_event": ((NodeKind.CHARACTER, deeds.KNIGHTLY),),
-    # Beside This Season's Plan, Edit and Clear.
-    "labor_story": ((NodeKind.CHARACTER, deeds.SEASON_WORK),),
-    "grog_story_xp": ((NodeKind.CHARACTER, deeds.SEASON_WORK),),
-    "plan_copying": ((NodeKind.CHARACTER, "This Season"),),
-    "clear_copying": ((NodeKind.CHARACTER, "This Season"),),
-    "invest_labor": ((NodeKind.CHARACTER, deeds.SEASON_WORK),),
-    "command_beast": ((NodeKind.CHARACTER, "Personality Traits"),),
-    "discipline_grog": ((NodeKind.CHARACTER, deeds.COVENFOLK),),
-    "grog_pension": ((NodeKind.CHARACTER, deeds.COVENFOLK),),
-    "craft_by_magic": ((NodeKind.CHARACTER, "Magic Outside the Lab"),),
-    "place_aging_points": ((NodeKind.CHARACTER, "Aging"),),
-    "resolve_twilight": ((NodeKind.CHARACTER, "Aging"),),
-    "disguise_roll": ((NodeKind.CHARACTER, "Covers"),),
-    # At the top of Hermetic Magic, under where the character is now.
-    "whereabouts": ((NodeKind.CHARACTER, "Current Location"),),
-    "guest_stay": ((NodeKind.CHARACTER, "Current Location"),),
-    # On the Hooks' points line, not their title's, where it would wrap.
-    "suggest_story": ((NodeKind.COVENANT, "Hooks"),),
-    "trait_roll": ((NodeKind.CHARACTER, "Personality Traits"),),
-    "sheet_roll": (
-        (NodeKind.CHARACTER, "Abilities"),
-        (NodeKind.CHARACTER, "Characteristics"),
-    ),
-    # The Shared tick in a known spell's form.
-    "share_spell": ((NodeKind.CHARACTER, "Known Spells"),),
-    "boost_spell": ((NodeKind.CHARACTER, "Known Spells"),),
-    "perform_ritual": ((NodeKind.LABORATORY, deeds.SEASON_WORK),),
-    "give_silver": (
-        (NodeKind.CHARACTER, "Personal Gear"),
-        (NodeKind.COVENANT, "Wealth"),
-    ),
-    "research_bonuses": ((NodeKind.COVENANT, "Library"),),
-    # A craftsman's sale of his finished goods, beside This Season's Plan.
-    "sell_goods": ((NodeKind.CHARACTER, deeds.SEASON_WORK),),
-    # Art & Academe: a ligature beside Disputatio, the apothecary's
-    # store beside This Season's Plan.
-    "make_ligature": ((NodeKind.CHARACTER, deeds.SCHOLARLY),),
-    "apothecary_store": ((NodeKind.CHARACTER, deeds.SEASON_WORK),),
-    # The Theban Tribunal's Byzantine customs: letters and oaths among the
-    # Deeds, Greek Fire's season on This Season, the icons and a mother's
-    # curse in Faith.
-    "theban_letter": ((NodeKind.CHARACTER, deeds.TRIBUNAL),),
-    "invoke_oath": ((NodeKind.CHARACTER, deeds.TRIBUNAL),),
-    "make_greek_fire": ((NodeKind.CHARACTER, deeds.SEASON_WORK),),
-    "paint_icon": ((NodeKind.CHARACTER, "Faith"),),
-    "venerate_icon": ((NodeKind.CHARACTER, "Faith"),),
-    "mothers_curse": ((NodeKind.CHARACTER, "Faith"),),
-    # Sin, tarnish and the Goetic Arts (RoP: The Infernal): beside the
-    # Personality Traits' buttons, and the Abilities chapter's.
-    "indulge_sin": ((NodeKind.CHARACTER, deeds.INFERNAL),),
-    "infernal_influence": ((NodeKind.CHARACTER, deeds.INFERNAL),),
-    "ars_goetia": ((NodeKind.CHARACTER, deeds.INFERNAL),),
-    # A Mystagogue's experiment on a Script (TMRE p. 18).
-    "experiment_script": ((NodeKind.CHARACTER, deeds.MYSTERY_CULTS),),
-    # An apprentice's magic and the Gauntlet (Apprentices): beside the
-    # Abilities chapter's buttons, This Season's, and Known Spells'.
-    "turbulence": (
-        (NodeKind.CHARACTER, deeds.APPRENTICESHIP),
-        (NodeKind.CHARACTER, deeds.SEASON_WORK),
-    ),
-    "gauntlet": ((NodeKind.CHARACTER, deeds.APPRENTICESHIP),),
-    "lose_the_gift": ((NodeKind.CHARACTER, deeds.APPRENTICESHIP),),
-    "learn_cantation": ((NodeKind.CHARACTER, "Known Spells"),),
-    # Art & Academe's artists and scholars, beside Disputatio.
-    "artist_career": ((NodeKind.CHARACTER, deeds.SEASON_WORK),),
-    "scholar_career": ((NodeKind.CHARACTER, deeds.SEASON_WORK),),
-    # Dealing with faeries (RoP: Faerie), beside the Abilities chapter's.
-    "ars_fabulosa": ((NodeKind.CHARACTER, deeds.FAERIE),),
-    "faerie_bargain": ((NodeKind.CHARACTER, deeds.FAERIE),),
-    "faerie_offer": ((NodeKind.CHARACTER, deeds.FAERIE),),
-    # The lacuna and the pilgrim (HoH:S, The Church): in Magic Outside
-    # the Lab, and beside This Season's buttons.
-    "cast_in_lacuna": ((NodeKind.CHARACTER, "Magic Outside the Lab"),),
-    "pilgrimage": ((NodeKind.CHARACTER, deeds.SEASON_WORK),),
-    # Devotion and the saints, holy influence, the mystic paths and God's
-    # aid (The Church, RoP: The Divine): in the Religion chapter's Faith
-    # section, each where his faith offers it (rules.faiths). The Font
-    # beside the Abilities' buttons, the Commanding Aura beside Health's
-    # (its Soak).
-    "invoke_saint": ((NodeKind.CHARACTER, "Faith"),),
-    "threaten_saint": ((NodeKind.CHARACTER, "Faith"),),
-    "patron_saint": ((NodeKind.CHARACTER, "Faith"),),
-    "devotion_points": ((NodeKind.CHARACTER, "Faith"),),
-    "act_of_piety": ((NodeKind.CHARACTER, "Faith"),),
-    "invoke_baraka": ((NodeKind.CHARACTER, "Faith"),),
-    "hajj": ((NodeKind.CHARACTER, "Faith"),),
-    "holy_influence": ((NodeKind.CHARACTER, "Faith"),),
-    "mystic_path": ((NodeKind.CHARACTER, "Faith"),),
-    "spiritual_path": ((NodeKind.CHARACTER, "Faith"),),
-    "monistic_revelation": ((NodeKind.CHARACTER, "Faith"),),
-    "gods_aid": ((NodeKind.CHARACTER, "Faith"),),
-    "font_of_knowledge": ((NodeKind.CHARACTER, deeds.INSIGHT),),
-    "commanding_aura": ((NodeKind.CHARACTER, "Health"),),
-    # House Verditius's Hubris beside the Personality Traits' buttons.
-    "verditius_hubris": ((NodeKind.CHARACTER, "Personality Traits"),),
-    # Hermetic spirit magic and theurgy, dream magic, Hermetic sacrifice
-    # and certamen in Magic Outside the Lab, under Raw Vis.
-    "spirits_and_names": ((NodeKind.CHARACTER, "Magic Outside the Lab"),),
-    "dream_working": ((NodeKind.CHARACTER, "Magic Outside the Lab"),),
-    "hermetic_sacrifice": ((NodeKind.CHARACTER, "Magic Outside the Lab"),),
-    "certamen_duel": ((NodeKind.CHARACTER, "Magic Outside the Lab"),),
-    # Divination and Hermetic astrology beside the Abilities' buttons.
-    "tmre_divination": ((NodeKind.CHARACTER, deeds.INSIGHT),),
-    "tmre_astrology": ((NodeKind.CHARACTER, deeds.INSIGHT),),
-    # House Acclaim and Reputation rolls beside the Reputations' buttons.
-    "house_acclaim": ((NodeKind.CHARACTER, deeds.SESSION),),
-    "reputation_roll": ((NodeKind.CHARACTER, deeds.SESSION),),
-    # Philosophic Alchemy's digestions.
-    "philosophic_alchemy": ((NodeKind.CHARACTER, deeds.SEASON_WORK),),
-    # The Great Elixir's test.
-    "great_elixir": ((NodeKind.CHARACTER, "Aging"),),
-    # Gaining and losing Virtues and Flaws in play, beside their buttons.
-    "change_virtues_flaws": ((NodeKind.CHARACTER, "Virtues & Flaws"),),
-    # Shaping the land by magic, beside Improve Income.
-    "shape_land": ((NodeKind.COVENANT, "Income"),),
-    # Wizard's War's tunnel (Hermetic Projects), in Magic Outside the Lab.
-    "open_tunnel": ((NodeKind.CHARACTER, "Magic Outside the Lab"),),
 }
+
+#: Where a page sets each action out itself (the registry's, and the
+#: page's own).
+PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
+    **more.PLACES,
+    **_OTHER_PLACES,
+}
+
+#: The More actions a page offers nowhere: a section's or row's own button.
+NOT_ON_PAGES = more.NOT_ON_PAGES
+
 
 #: The saga page's Saga Management: each entry with what it does.
 SAGA_MANAGEMENT: dict[str, str] = {
@@ -715,8 +399,10 @@ def _silver_command(page: Page) -> Command:
     return giving.give(page.saga, giving.SILVER, purse)
 
 
-#: Each More action's first step (menu_steps), with Give Silver's.
+#: Each action's first step: the registry's, the page's own, and Give
+#: Silver's.
 _COMMANDS: dict[str, Callable[[Page], Command]] = {
-    **_STEPS,
+    **more.STEPS,
+    **OTHER_STEPS,
     "give_silver": _silver_command,
 }

@@ -1,3 +1,4 @@
+from ars_magica_manager.forms import more
 from ars_magica_manager.models import secret_words
 
 """Galdor and trollskap (Land of Fire & Ice, with Hedge Magic RE's frame):
@@ -8,7 +9,7 @@ import random
 
 import pytest
 
-from ars_magica_manager import actions, catalog, tradition_text, traditions
+from ars_magica_manager import catalog, tradition_text, traditions
 from ars_magica_manager.book_packs import iceland
 from ars_magica_manager.book_packs.fourth import Fourth, convert
 from ars_magica_manager.forms import galdor as forms
@@ -147,7 +148,7 @@ def test_cast_a_power_leaves_the_songs_to_their_own_form():
 
 
 def test_more_offers_a_character_the_forms_their_virtues_open():
-    menu = {item.action for item in actions.MORE_MENU}
+    menu = {item.action for item in more.MORE_MENU}
     assert {"galdor_conjure", "galdor_bargain", "galdor_bind"} <= menu
     assert galdor.conjures(galdraman()) and galdor.enchants(galdraman())
     assert not galdor.bargains(Character("c2", "No", "companion"))
@@ -319,7 +320,7 @@ class _Zeroes(random.Random):
 
 
 def test_the_galdor_forms_leave_exports_key_alone():
-    letters = {item.action: item.letter for item in actions.MORE_MENU}
+    letters = {item.action: item.letter for item in more.MORE_MENU}
     assert letters["export_record"] not in (
         letters["galdor_conjure"],
         letters["galdor_bargain"],

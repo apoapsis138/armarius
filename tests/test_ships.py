@@ -11,6 +11,7 @@ from ars_magica_manager import actions, ships
 from ars_magica_manager import possessions as pos
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import more
 from ars_magica_manager.forms import possession as possession_forms
 from ars_magica_manager.forms import ships as sf
 from ars_magica_manager.models import (
@@ -303,8 +304,8 @@ def test_editing_fewer_damage_levels_lost_marks_her_repaired():
 
 
 def test_the_more_items_are_offered_on_the_ships_list():
-    assert actions.MORE_SECTIONS["ship_stress"] == "section-pos-ship"
-    assert actions.MORE_SECTIONS["ship_combat"] == "section-pos-ship"
+    assert more.MORE_SECTIONS["ship_stress"] == "section-pos-ship"
+    assert more.MORE_SECTIONS["ship_combat"] == "section-pos-ship"
     assert {"ship_stress", "ship_combat"} <= menu_forms.NOT_ON_PAGES
     assert actions.SECTION_VERBS["section-pos-ship"] == frozenset(
         {"add", "edit", "remove"}

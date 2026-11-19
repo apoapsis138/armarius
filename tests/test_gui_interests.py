@@ -18,7 +18,7 @@ from PySide6.QtWidgets import (
 )
 
 from ars_magica_manager import action_books, deeds
-from ars_magica_manager.forms import interests
+from ars_magica_manager.forms import interests, more
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.forms import CardsDialog, answer, step_dialog
 from ars_magica_manager.gui.themes import PALETTES
@@ -40,7 +40,7 @@ def _open(monkeypatch, off=(), books=("LoM",)) -> tuple:
     monkeypatch.setattr(interests.action_books, "book_allows", allowed)
     character = Character.from_dict({"id": "k", "name": "K", "type": "grog"})
     character.interests_off = list(off)
-    form = interests.interests_form(None, character)
+    form = interests.interests_form(None, character, more.LABELS)
     dialog = step_dialog(form, PALETTES[0], None)
     assert isinstance(dialog, CardsDialog)
     return form, dialog, character

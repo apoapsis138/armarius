@@ -11,7 +11,6 @@ import pytest
 from support import everything_saga
 
 from ars_magica_manager import (
-    actions,
     lords,
     neighbours,
     packs,
@@ -20,6 +19,7 @@ from ars_magica_manager import (
     transfer,
 )
 from ars_magica_manager.commands import Confirm
+from ars_magica_manager.forms import more
 from ars_magica_manager.models import Neighbour, Saga
 from ars_magica_manager.sections import TABLES_SECTION
 
@@ -190,7 +190,7 @@ def test_a_row_that_is_only_a_note_writes_just_the_roll():
 
 
 def test_mores_roll_follows_the_section_not_the_kind():
-    assert actions.MORE_SECTIONS["roll_table"] == TABLES_SECTION
+    assert more.MORE_SECTIONS["roll_table"] == TABLES_SECTION
 
 
 RUMOURS = [

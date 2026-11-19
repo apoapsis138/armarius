@@ -10,7 +10,7 @@ from ars_magica_manager import health, staged_projects
 from ars_magica_manager import hermetic_projects as hpc
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.form_spec import DialogField
-from ars_magica_manager.forms.more import rules as more_rules
+from ars_magica_manager.forms import more
 from ars_magica_manager.manors import manors_of
 from ars_magica_manager.models import (
     Ability,
@@ -294,7 +294,7 @@ def test_the_staged_commands_are_offered_only_on_their_kind():
             return STAGED_SECTION
 
     def offered(action: str) -> bool:
-        return more_rules._RECORD_RULES[action](Facts())  # type: ignore[arg-type]
+        return more.REGISTRY[action].on_record(Facts())  # type: ignore[arg-type]
 
     assert offered("gather_connection") and offered("lower_aegis")
     assert not offered("warning_bell") and not offered("death_roll")

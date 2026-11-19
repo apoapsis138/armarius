@@ -203,7 +203,7 @@ class Opener:
     node: str | None
     #: Opens the dialog, given the workspace (or saga picker) screen.
     open: Callable[[object], object]
-    #: The More action (actions.MORE_MENU) whose form this opens, if any:
+    #: The More action (more.MORE_MENU) whose form this opens, if any:
     #: its contract counts for that action (test_more_action_registered).
     action: str = ""
 

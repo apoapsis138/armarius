@@ -15,8 +15,8 @@ from ars_magica_manager import actions, meeting, storage, town_charter
 from ars_magica_manager import polemic as pl
 from ars_magica_manager.commands import Confirm, Form, Refuse
 from ars_magica_manager.forms import charter_strength as cs
+from ars_magica_manager.forms import more
 from ars_magica_manager.forms import polemic as pf
-from ars_magica_manager.forms.more import rules as more_rules
 from ars_magica_manager.models import (
     Ability,
     Argument,
@@ -338,7 +338,7 @@ def test_a_bad_argument_on_disk_is_named():
 
 
 def test_circulate_is_offered_on_the_texts_only():
-    assert actions.MORE_SECTIONS["circulate_text"] == ARGUMENT_TEXTS_SECTION
+    assert more.MORE_SECTIONS["circulate_text"] == ARGUMENT_TEXTS_SECTION
     assert "add" in actions.SECTION_VERBS[ARGUMENTS_SECTION]
 
 
@@ -495,7 +495,7 @@ def test_draft_and_loophole_are_offered_on_a_charter_lord():
         def chosen_row(self, _section: str) -> int | None:
             return self.row
 
-    rule = more_rules._SECTION_RULES["draft_charter"]
+    rule = more.REGISTRY["draft_charter"].in_section
     assert rule(Facts(0), CHARTER_LORDS_SECTION)  # type: ignore[arg-type]
     assert not rule(Facts(None), CHARTER_LORDS_SECTION)  # type: ignore[arg-type]
     assert not rule(Facts(0), ARGUMENTS_SECTION)  # type: ignore[arg-type]

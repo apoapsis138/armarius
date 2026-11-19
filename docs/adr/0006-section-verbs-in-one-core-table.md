@@ -11,8 +11,10 @@ Where the two front-ends had behaved differently, the core's behaviour won:
 the Add dialogs became the core's chooser, and Edit or Delete on an empty
 list does nothing.
 
-The More menu follows the same rule. `forms/menu.py` holds each action's
-first step, and `forms/menu_refresh.py` names what the action changes: the
+The More menu follows the same rule (since ADR 0030, each action's step and
+what it changes are in its registry entry, `forms/more/`). `forms/menu.py`
+held each action's first step, and `forms/menu_refresh.py` named what it
+changes: the
 sections to redraw, whether the tree changes, whether to rebuild the sheet,
 and whether it saves at all (a calculator does not). The terminal's
 `_run_more` builds the page (including the chosen row and book), runs the

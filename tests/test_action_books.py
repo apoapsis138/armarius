@@ -3,9 +3,10 @@
 from dataclasses import replace
 
 from ars_magica_manager import action_books, deeds, sourcebooks
-from ars_magica_manager.actions import MORE_MENU, NodeKind
+from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.forms import menu as menu_forms
 from ars_magica_manager.forms import page as page_forms
+from ars_magica_manager.forms.more import MORE_MENU
 from ars_magica_manager.models import Character, Saga
 
 

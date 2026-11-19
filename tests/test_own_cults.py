@@ -11,11 +11,12 @@ from dataclasses import asdict
 
 import pytest
 
-from ars_magica_manager import actions, catalog, deeds, traditions
+from ars_magica_manager import catalog, deeds, traditions
 from ars_magica_manager import mystery_cults as mc
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Choose, Confirm, Form, Refuse
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import more
 from ars_magica_manager.forms import mystery_cults as cf
 from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.models import (
@@ -684,7 +685,7 @@ def test_a_disaster_gives_both_a_major_flaw(saga):
 
 def test_the_experiment_is_on_the_mystagogues_deeds(saga):
     """TMRE p. 18: the Mystagogue's rolls, so her sheet offers it."""
-    assert "experiment_script" not in actions.MORE_SECTIONS
+    assert "experiment_script" not in more.MORE_SECTIONS
     hildegund = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="h")
     assert [i.action for i in menu_forms.placed(hildegund, deeds.MYSTERY_CULTS)] == [
         "experiment_script"

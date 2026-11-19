@@ -19,7 +19,7 @@ from PySide6.QtWidgets import QPushButton
 from ..actions import MenuItem
 from ..commands import Command
 from ..forms import menu as menu_forms
-from ..forms import menu_refresh
+from ..forms import menu_refresh, more
 from ..forms.page import Page
 from .markup_html import plain
 from .themes import Palette
@@ -44,7 +44,7 @@ def _choose(
     def steps() -> Command:
         return command if command is not None else menu_forms.command(page, action)
 
-    refresh = menu_refresh.REFRESH.get(action)
+    refresh = more.REFRESH.get(action)
     kind = refresh.made if refresh is not None else None
     if kind is None:
         return lambda: run(steps(), None)

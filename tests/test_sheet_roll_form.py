@@ -11,7 +11,7 @@ import pytest
 from ars_magica_manager import chronicle, commands, viewing, virtual_tabletop
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.forms import menu as menu_forms
-from ars_magica_manager.forms import menu_refresh, more, sheet_roll
+from ars_magica_manager.forms import more, sheet_roll
 from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.models import (
     Ability,
@@ -175,4 +175,4 @@ def test_the_characteristic_last_rolled_with_an_ability_is_chosen_again() -> Non
 
 
 def test_rolling_saves_nothing_of_the_saga() -> None:
-    assert menu_refresh.REFRESH["sheet_roll"].saves is False
+    assert more.REFRESH["sheet_roll"].saves is False

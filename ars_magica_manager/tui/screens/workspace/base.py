@@ -59,8 +59,6 @@ from .... import familiars as fam
 from .... import players as pl
 from .... import sheet_text as st
 from ....actions import (
-    MORE_MENU,
-    NEW_MENU,
     RECORD_SECTION,
     SECTION_VERBS,
     MenuItem,
@@ -71,6 +69,7 @@ from ....forms import menu as menu_forms
 from ....forms import menu_refresh, menu_steps, more
 from ....forms import neighbour as neighbour_forms
 from ....forms import page as page_forms
+from ....forms.more import MORE_MENU, NEW_MENU
 from ....markup import escape
 from ....models import (
     FULL,
@@ -956,7 +955,7 @@ class WorkspaceBase(Screen[None]):
     def _run_menu_item(self, item: MenuItem) -> None:
         """The core's command where it has one (menu_refresh says what it
         changes); otherwise the terminal's own handler."""
-        if item.action in menu_refresh.REFRESH:
+        if item.action in more.REFRESH:
             self._run_more(item.action)
             return
         handler = getattr(
@@ -997,7 +996,7 @@ class WorkspaceBase(Screen[None]):
         """Run a More or New action the core has a command for: its first
         step on this page, then save and redraw what menu_refresh says it
         changes."""
-        refresh = menu_refresh.REFRESH[action]
+        refresh = more.REFRESH[action]
         step = menu_forms.command(self._more_page(), action)
         before = (
             set(menu_refresh.listed(self.saga, refresh.made)) if refresh.made else set()
