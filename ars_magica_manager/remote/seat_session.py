@@ -19,7 +19,7 @@ import secrets
 from collections.abc import Callable, Coroutine
 from typing import Any
 
-from .. import chronicle, players, references, table_rolls
+from .. import chronicle, players, references, shows, table_rolls
 from ..models import Saga
 from ..saga_store import NotSaved
 from ..undo_season import Undo
@@ -30,6 +30,7 @@ from .client import (
     NoCredential,
     RemoteClient,
     RollRefused,
+    ShowRefused,
     SignInError,
     UnreadableReply,
     new_device_secret,
@@ -59,6 +60,9 @@ class NeedsPasscode(Exception):
 CHRONICLE_RETRY = 3.0
 #: The longest a roll may hold the window.
 ROLL_WAIT = 8.0
+#: The longest opening a Show's copy may hold the window: a map may be
+#: large, but a lost host must not freeze the seat for long.
+OPEN_WAIT = 12.0
 
 
 class SeatSession:
@@ -301,7 +305,7 @@ class SeatSession:
         goes on a short connection of its own, so it never crosses the
         game's own talk with the host, and waits a few seconds at most."""
         try:
-            self._loop.run(self._roll(request), timeout=ROLL_WAIT)
+            self._loop.run(self._own(lambda c: c.roll(request)), timeout=ROLL_WAIT)
         except RollRefused as refused:
             return refused.why
         except NeedsPasscode, NoCredential:
@@ -309,14 +313,6 @@ class SeatSession:
         except ChannelError, SignInError, ConnectionError, TimeoutError:
             return "The host can't be reached just now."
         return None
-
-    async def _roll(self, request: chronicle.RollRequest) -> int:
-        client = await RemoteClient.connect(self.url, self.pin)
-        try:
-            await client.sign_in_with(self._key, self.vault)
-            return await client.roll(request)
-        finally:
-            await client.close()
 
     def say(
         self,
@@ -327,7 +323,9 @@ class SeatSession:
         """Ask the host to write a Message (to `to`, none: the Table); None
         once it is in the Chronicle, else the host's reason (as `roll`)."""
         try:
-            self._loop.run(self._say(words, to, links), timeout=ROLL_WAIT)
+            self._loop.run(
+                self._own(lambda c: c.say(words, to, links)), timeout=ROLL_WAIT
+            )
         except MessageRefused as refused:
             return refused.why
         except NeedsPasscode, NoCredential:
@@ -336,16 +334,50 @@ class SeatSession:
             return "The host can't be reached just now."
         return None
 
-    async def _say(
-        self,
-        words: str,
-        to: tuple[str, ...],
-        links: tuple[references.Ref, ...],
-    ) -> int:
-        client = await RemoteClient.connect(self.url, self.pin)
+    def show(self, call: chronicle.ShowCall) -> str | None:
+        """Ask the host to make Show `call`; None once it is in the
+        Chronicle, else the host's reason (as `roll`)."""
         try:
-            await client.sign_in_with(self._key, self.vault)
-            return await client.say(words, to, links)
+            self._loop.run(self._own(lambda c: c.show(call)), timeout=ROLL_WAIT)
+        except ShowRefused as refused:
+            return refused.why
+        except NeedsPasscode, NoCredential:
+            return "Sign in again to show something."
+        except ChannelError, SignInError, ConnectionError, TimeoutError:
+            return "The host can't be reached just now."
+        return None
+
+    def open_show(self, entry: chronicle.Entry) -> shows.Shown | str:
+        """Show `entry`'s copy, from the host (its picture too), which sends
+        it only while this seat's Player sees the Show; else why not."""
+        show_id = str(entry.body.get("show", ""))
+        name = str(entry.body.get("picture", ""))
+
+        async def fetch(client: RemoteClient) -> shows.Shown:
+            kept = await client.show_copy(show_id)
+            picture = await client.picture(shows.FOLDER, name) if name else None
+            if name and picture is None:
+                raise ShowRefused("This Show's picture can't be fetched.")
+            return shows.from_copy(kept, picture)
+
+        try:
+            return self._loop.run(self._own(fetch), timeout=OPEN_WAIT)
+        except ShowRefused as refused:
+            return refused.why
+        except NeedsPasscode, NoCredential:
+            return "Sign in again to open it."
+        # UnreadableReply is a ChannelError.
+        except ChannelError, SignInError, ConnectionError, TimeoutError:
+            return "The host can't be reached just now."
+
+    async def _own[T](
+        self, work: Callable[[RemoteClient], Coroutine[Any, Any, T]]
+    ) -> T:
+        """`work` on a short connection of its own, signed in with the key
+        kept, closed after."""
+        client = await self._connect_own()
+        try:
+            return await work(client)
         finally:
             await client.close()
 
@@ -353,7 +385,9 @@ class SeatSession:
         """Ask the host to spend `points` Confidence on roll `number`; None
         once it is in the Chronicle, else the host's reason (as `roll`)."""
         try:
-            self._loop.run(self._confidence(number, points), timeout=ROLL_WAIT)
+            self._loop.run(
+                self._own(lambda c: c.confidence(number, points)), timeout=ROLL_WAIT
+            )
         except RollRefused as refused:
             return refused.why
         except NeedsPasscode, NoCredential:
@@ -370,7 +404,8 @@ class SeatSession:
         reason (as `roll`)."""
         try:
             self._loop.run(
-                self._answer(request, character_id, specialty), timeout=ROLL_WAIT
+                self._own(lambda c: c.answer(request, character_id, specialty)),
+                timeout=ROLL_WAIT,
             )
         except RollRefused as refused:
             return refused.why
@@ -379,14 +414,6 @@ class SeatSession:
         except ChannelError, SignInError, ConnectionError, TimeoutError:
             return "The host can't be reached just now."
         return None
-
-    async def _answer(self, request: int, character_id: str, specialty: bool) -> int:
-        client = await RemoteClient.connect(self.url, self.pin)
-        try:
-            await client.sign_in_with(self._key, self.vault)
-            return await client.answer(request, character_id, specialty)
-        finally:
-            await client.close()
 
     def open_form_roll(self, opening: table_rolls.Opening) -> SeatFormRoll:
         """A Table roll made from a form at this seat: its dice drawn from
@@ -406,14 +433,6 @@ class SeatSession:
             await client.close()
             raise
         return client
-
-    async def _confidence(self, number: int, points: int) -> int:
-        client = await RemoteClient.connect(self.url, self.pin)
-        try:
-            await client.sign_in_with(self._key, self.vault)
-            return await client.confidence(number, points)
-        finally:
-            await client.close()
 
     def follow_chronicle(
         self,
@@ -504,6 +523,12 @@ class SeatTable:
 
     def open_form_roll(self, opening: table_rolls.Opening) -> SeatFormRoll:
         return self.seat.open_form_roll(opening)
+
+    def show(self, call: chronicle.ShowCall) -> str | None:
+        return self.seat.show(call)
+
+    def open_show(self, entry: chronicle.Entry) -> shows.Shown | str:
+        return self.seat.open_show(entry)
 
     def held(self) -> chronicle.HasEntries | None:
         return self._held

@@ -11,7 +11,14 @@ import pytest
 import pytest_asyncio
 from test_remote_events import PASSCODE, Table
 
-from ars_magica_manager import at_table, chronicle, host_table
+from ars_magica_manager import (
+    at_table,
+    chronicle,
+    host_table,
+    references,
+    show_copy,
+    viewing,
+)
 from ars_magica_manager.remote.host import PATH
 from ars_magica_manager.remote.seat_session import SeatSession, SeatTable
 
@@ -84,6 +91,39 @@ async def test_each_verb_answers_the_same_at_the_host_and_from_a_seat(
         (chronicle.ROLL, anna),
         (chronicle.MESSAGE, anna),
     ]
+
+
+@pytest.mark.parametrize("where", ["host", "seat"])
+async def test_only_the_sessions_storyguide_shows_at_the_host_or_from_a_seat(
+    hosted: Table, where: str
+) -> None:
+    """Anna isn't the Session's storyguide: she is refused the same way at
+    either adapter, and the storyguide's Show is in the Chronicle."""
+    table, seat = await _table(hosted, where)
+    call = chronicle.ShowCall("Aelfric", references.Ref("characters", "aelfric", ""))
+    try:
+        refused = await asyncio.to_thread(table.show, call)
+    finally:
+        if seat is not None:
+            await asyncio.to_thread(seat.close)
+    assert refused == "Only the Session's storyguide shows something."
+
+    session = hosted.saga.sessions[0]
+    host = host_table.HostTable(
+        hosted.saga, session, viewing.HOST, show_copy.player_copy
+    )
+    assert host.show(call) is None
+    book = chronicle.read(hosted.saga, session)
+    book.refresh()
+    assert book.entries[-1].kind == chronicle.SHOW
+
+
+def test_a_host_table_given_no_copier_makes_no_show() -> None:
+    hosted = Table()
+    session = hosted.saga.sessions[0]
+    call = chronicle.ShowCall("Aelfric", references.Ref("characters", "aelfric", ""))
+    table = host_table.HostTable(hosted.saga, session, viewing.HOST)
+    assert table.show(call) == host_table.NO_COPIER
 
 
 def test_the_host_table_is_the_default_until_a_seat_is_attached() -> None:

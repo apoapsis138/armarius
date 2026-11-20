@@ -30,7 +30,6 @@ from .markup import escape
 from .models import (
     CHAPTER,
     SEASONS,
-    STORY_EVENT,
     STORY_EVENT_STATUSES,
     Covenant,
     CovenantDiaryEntry,
@@ -68,12 +67,10 @@ class Chapter:
         return season_order(season=self.season, year=self.year or 0)
 
 
-def is_story(entry: CovenantDiaryEntry) -> bool:
-    return entry.category == STORY_EVENT
-
-
-def is_open(entry: CovenantDiaryEntry) -> bool:
-    return is_story(entry) and (entry.status or OPEN) == OPEN
+#: Whether a Diary entry is a story, and an open one (world.py, which the
+#: modules below this one read too).
+is_story = world.is_story
+is_open = world.is_open_story
 
 
 def story_id(entry: CovenantDiaryEntry) -> str:

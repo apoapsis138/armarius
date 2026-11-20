@@ -8,16 +8,32 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from . import at_table, chronicle, references, table_rolls
+from . import at_table, chronicle, references, shows, table_rolls
 from .at_table import FormRoll, Opening, Table
 from .models import Saga, Session
 
+#: Why a record's Show can't be made from here: no copier was given.
+NO_COPIER = "Show from the Session's page."
+
+
+def _no_copier(_saga: Saga, _record: object) -> str:
+    raise ValueError(NO_COPIER)
+
 
 class HostTable:
-    """The table at the host: `who` acts in `session`'s Chronicle."""
+    """The table at the host: `who` acts in `session`'s Chronicle. A Show's
+    copy is made by `copier` (show_copy.player_copy, which the forms that
+    show give, from a layer above)."""
 
-    def __init__(self, saga: Saga, session: Session, who: str) -> None:
+    def __init__(
+        self,
+        saga: Saga,
+        session: Session,
+        who: str,
+        copier: shows.Copier | None = None,
+    ) -> None:
         self.saga, self.session, self.who = saga, session, who
+        self.copier = copier
 
     def _write(
         self, act: Callable[[chronicle.Chronicle], object], saved: str
@@ -74,6 +90,23 @@ class HostTable:
     def open_form_roll(self, opening: Opening) -> FormRoll:
         return table_rolls.HostRoll(self.saga, self.session, opening, by=self.who)
 
+    def show(self, call: chronicle.ShowCall) -> str | None:
+        copier = self.copier or _no_copier
+        return self._write(
+            lambda book: shows.show(
+                book, self.saga, self.session, call, by=self.who, copier=copier
+            ),
+            "The Show couldn't be saved.",
+        )
+
+    def open_show(self, entry: chronicle.Entry) -> shows.Shown | str:
+        if not chronicle.sees(entry, self.who, self.session, self.saga):
+            return "This Show isn't for you."
+        try:
+            return shows.opened(self.saga.id, entry)
+        except ValueError as problem:
+            return str(problem)
+
     def held(self) -> chronicle.HasEntries | None:
         try:
             return chronicle.read(self.saga, self.session)
@@ -81,8 +114,11 @@ class HostTable:
             return None
 
 
-def here(saga: Saga, session: Session, who: str) -> Table:
+def here(
+    saga: Saga, session: Session, who: str, copier: shows.Copier | None = None
+) -> Table:
     """The table as this copy acts at it: the Remote seat's, while one is
-    attached, else the host's own Chronicle by `who`."""
+    attached, else the host's own Chronicle by `who` (Shows' copies made
+    by `copier`)."""
     seat = at_table.seat()
-    return seat if seat is not None else HostTable(saga, session, who)
+    return seat if seat is not None else HostTable(saga, session, who, copier)

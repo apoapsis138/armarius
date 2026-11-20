@@ -7,6 +7,7 @@ from functools import partial
 from ... import storyguides
 from ...sections import DIARY_SECTION, NEIGHBOUR_INFO_SECTION, STAGES_SECTION
 from .. import reveal as reveal_forms
+from .. import show as show_forms
 from .. import take_up
 from ..menu_refresh import INFO_SECTIONS, Refresh, calculator, changes
 from ..menu_steps import (
@@ -43,6 +44,7 @@ from .rules import (
     on_threat_under_way,
     restores,
     reveals,
+    shows_record,
     splits_secret,
     updates_record,
 )
@@ -95,6 +97,15 @@ ENTRIES: tuple[MoreAction, ...] = (
         step=markdown_command,
         refresh=calculator(),
         on_record=exports_markdown,
+    ),
+    # A Show of this record at the Session Under way (forms/show.py).
+    MoreAction(
+        "show_record",
+        "h",
+        "Show to the Table",
+        step=lambda page: show_forms.show_record(page.saga, page.record_to_delete()),
+        refresh=calculator(),
+        on_record=shows_record,
     ),
     # Which interests' deeds a character's sheet offers (deeds).
     MoreAction(

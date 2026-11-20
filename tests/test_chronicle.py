@@ -430,7 +430,7 @@ def test_the_chronicle_as_text_shows_each_face_and_a_void() -> None:
 
 def test_an_entry_of_a_kind_this_version_doesnt_know_asks_to_update() -> None:
     book = _begun()[2]
-    book.add("show", HOST, chronicle.table(), {"picture": "map"})
+    book.add("handout", HOST, chronicle.table(), {"picture": "map"})
 
     assert chronicle.UNKNOWN in chronicle.text(book.entries, book)
 

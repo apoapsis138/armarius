@@ -14,7 +14,7 @@ from pathlib import Path
 import pytest
 from admin_support import FakeConsole, ok, refused
 
-from ars_magica_manager import chronicle, host_backup, storage, viewing
+from ars_magica_manager import chronicle, host_backup, shows, storage, viewing
 from ars_magica_manager import players as pl
 from ars_magica_manager.models import Saga, Session
 from ars_magica_manager.remote.devices import devices_path
@@ -55,6 +55,19 @@ def test_a_backup_holds_the_sagas_chronicles(saga: Saga, folder: Path) -> None:
     with zipfile.ZipFile(made.path) as archive:
         kept = archive.read("chronicles/dammerstein/s1.jsonl").decode()
     assert json.loads(kept.splitlines()[0])["kind"] == "begin"
+
+
+def test_a_backup_holds_the_sagas_show_copies(saga: Saga, folder: Path) -> None:
+    """ADR 0020: a saga's backup includes its Shows' copies."""
+    kept = shows.folder_of(saga.id)
+    kept.mkdir(parents=True)
+    (kept / "abc.json").write_text('{"title": "A letter"}', encoding="utf-8")
+
+    made = host_backup.take(saga.id, saga.name, folder)
+
+    with zipfile.ZipFile(made.path) as archive:
+        copy = json.loads(archive.read("shows/dammerstein/abc.json"))
+    assert copy["title"] == "A letter"
 
 
 def test_a_backup_holds_the_saga_and_its_seat_files(saga: Saga, folder: Path) -> None:

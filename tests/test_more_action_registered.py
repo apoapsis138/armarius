@@ -199,7 +199,10 @@ UNCONTRACTED_BEFORE: frozenset[str] = frozenset(
 )
 
 #: More actions that open no form to contract, with why.
-NO_CONTRACT: dict[str, str] = {}
+NO_CONTRACT: dict[str, str] = {
+    "open_show": "It only reads: a list of the Session's Shows, then one's copy "
+    "with nothing to change (test_show_forms.py drives it).",
+}
 
 
 def _contracted() -> set[str]:

@@ -212,7 +212,7 @@ def _open_form_roll(saga_id: str, session: Session, body: Body) -> table_rolls.H
 Act = Callable[[chronicle.Chronicle, Saga, models.Session, str, Body], chronicle.Entry]
 
 
-def _at_table(
+def table_verb(
     saga_id: str,
     limiter: RateLimiter,
     *,
@@ -407,7 +407,7 @@ def _form_roll_specs(saga_id: str, clock: Callable[[], float]) -> list[MessageSp
 def _message_specs(saga_id: str, clock: Callable[[], float]) -> list[MessageSpec]:
     """`say`: a Message or Whisper from a seat, written by the host as its
     Player."""
-    say = _at_table(
+    say = table_verb(
         saga_id,
         RateLimiter(MESSAGES_PER_MINUTE, 60.0, clock),
         refused="message_refused",
@@ -442,7 +442,7 @@ def event_specs(
         )
 
     def rolling(act: Act, unsaved: str) -> Callable[[Session, Body], Reply]:
-        return _at_table(
+        return table_verb(
             saga_id,
             rolls,
             refused="roll_refused",

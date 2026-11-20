@@ -1353,6 +1353,32 @@ def message_fact(entry: Entry, saga: Saga, viewer: viewing.Viewer) -> references
     return references.Fact(message_label(body), words, tuple(shown))
 
 
+# -- Shows --
+
+SHOW = "show"
+
+
+@dataclass(frozen=True)
+class ShowCall:
+    """A Show, as data (the glossary's): its title, what is shown (a
+    record, or a picture already in the saga as its folder and file name),
+    the Players shown (none: the Table) and the open story it belongs to,
+    by id, if any. The host builds the one frozen copy (shows.py)."""
+
+    title: str
+    record: references.Ref | None = None
+    picture: tuple[str, str] | None = None
+    to: tuple[str, ...] = ()
+    story_id: str = ""
+
+
+def show_line(body: dict[str, Any]) -> str:
+    """A Show's line: its title, and to whom for chosen Players."""
+    line = f"The storyguide shows: {body['title']}"
+    names = [str(n) for n in body.get("to_names", [])]
+    return f"{line} (to {', '.join(names)})" if names else line
+
+
 # -- words typed into the Chronicle --
 
 
@@ -1443,13 +1469,15 @@ def confidence_line(body: dict[str, Any]) -> str:
 
 #: How an entry is drawn as a card (each front-end keeps its own look):
 #: a note (its line alone), a roll, a form's roll, a Roll request with its
-#: answers gathered, a Message, or nothing (it amends another's card).
-NOTE, ROLL_CARD, FORM_ROLL_CARD, REQUEST_CARD, MESSAGE_CARD, NO_CARD = (
+#: answers gathered, a Message, a Show (which opens its copy), or nothing
+#: (it amends another's card).
+NOTE, ROLL_CARD, FORM_ROLL_CARD, REQUEST_CARD, MESSAGE_CARD, SHOW_CARD, NO_CARD = (
     "note",
     "roll",
     "form_roll",
     "request",
     "message",
+    "show",
     "none",
 )
 
@@ -1490,7 +1518,8 @@ def _rolled_for(entry: Entry, _session: Session, _saga: Saga | None) -> frozense
 def _whispered_to(
     entry: Entry, _session: Session, _saga: Saga | None
 ) -> frozenset[str]:
-    """A Whisper: for each person it is to (a Message to the Table: no one)."""
+    """A Whisper or a Show: for each person it is to (one to the Table: no
+    one, as for any Table entry)."""
     return frozenset(str(t) for t in entry.body.get("to", []))
 
 
@@ -1624,6 +1653,16 @@ KINDS: dict[str, Kind] = {
             for_whom=_whispered_to,
             # A seat is told whether it is for them (for_you), and reads
             # the others' names; their ids stay here (ADR 0031).
+            held_back=("to",),
+        ),
+        Kind(
+            SHOW,
+            show_line,
+            # The story's name comes from the saga, a seat's copy of it.
+            typed=("title", "story"),
+            card=SHOW_CARD,
+            for_whom=_whispered_to,
+            # As a Whisper's: the Players shown by name only (ADR 0031).
             held_back=("to",),
         ),
     )

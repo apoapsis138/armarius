@@ -72,6 +72,8 @@ PORTRAITS = "portraits"
 MAPS = "maps"
 #: Each Session's Chronicle, by saga (chronicle.py).
 CHRONICLES = "chronicles"
+#: Each Show's frozen copy, by saga (shows.py).
+SHOWS = "shows"
 SETTINGS = "app_settings.json"
 #: The hosted app's SSH host key (tui/hosting.py).
 HOST_KEY = "ssh_host_key"
@@ -266,7 +268,8 @@ def move_legacy_data(old: Path = DATA_DIR, new: Path | None = None) -> list[str]
 
 def move_user_data(old: Path, new: Path) -> list[str]:
     """Move the user data from the folder `old` to `new`: each saga file,
-    backup, export, portrait, map picture, Chronicle, the settings file and the host key not already at
+    backup, export, portrait, map picture, Chronicle, Show's copy, the
+    settings file and the host key not already at
     `new` is moved; one already there is left where it was, never
     overwritten. Hidden files (a saga's presence marks) stay. Returns a
     line per thing moved or left, for the app to say so."""
@@ -280,6 +283,7 @@ def move_user_data(old: Path, new: Path) -> list[str]:
         old / PORTRAITS,
         old / MAPS,
         old / CHRONICLES,
+        old / SHOWS,
     ):
         if folder.is_dir():
             sources += sorted(

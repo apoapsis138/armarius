@@ -27,6 +27,7 @@ from .. import (
     picture_files,
     players,
     references,
+    shows,
     storage,
     table_rolls,
     updates,
@@ -123,6 +124,14 @@ class RollRefused(Exception):
 class MessageRefused(Exception):
     """The host wouldn't write the Message; the reason, as the host said
     it."""
+
+    def __init__(self, why: str) -> None:
+        super().__init__(why)
+        self.why = why
+
+
+class ShowRefused(Exception):
+    """The host wouldn't make the Show, or send its copy; the reason."""
 
     def __init__(self, why: str) -> None:
         super().__init__(why)
@@ -414,14 +423,18 @@ class RemoteClient:
     async def picture(self, folder: str, name: str) -> bytes | None:
         """A portrait or map the seat's saga names, or None if the host
         hasn't it (or won't send it). One larger than its kind's limit is
-        unreadable, as is any picture of a folder that isn't a kind."""
+        unreadable, as is any picture of a folder that isn't a kind. A
+        Show's picture is asked for in the Show folder (shows.FOLDER)."""
         found_kind = picture_files.kind(folder)
+        cap = found_kind.cap if found_kind else 0
+        if folder == shows.FOLDER:
+            cap = shows.PICTURE_CAP
         head = await self.request("picture", {"folder": folder, "name": name})
         if head.type == "refused":
             return None
         if head.type != "picture":
             raise UnreadableReply
-        return await self._parts(head, found_kind.cap if found_kind else 0)
+        return await self._parts(head, cap)
 
     async def here(self, record: str) -> list[str]:
         """Say which record this seat has open ("" for none); who else has
@@ -556,6 +569,44 @@ class RemoteClient:
         if reply.type == "message_refused":
             raise MessageRefused(str(reply.body.get("why", "")))
         raise UnreadableReply
+
+    async def show(self, call: chronicle.ShowCall) -> int:
+        """Ask the host to make Show `call` (its copy made there): the
+        number of its Chronicle entry. ShowRefused with the host's reason."""
+        body: Body = {
+            "title": call.title,
+            "to": "\n".join(call.to),
+            "story_id": call.story_id,
+        }
+        if call.record is not None:
+            body |= {"kind": call.record.kind, "id": call.record.id}
+        elif call.picture is not None:
+            body |= {"folder": call.picture[0], "name": call.picture[1]}
+        reply = await self.request("show", body)
+        number = reply.body.get("number")
+        if reply.type == "shown" and isinstance(number, int):
+            return number
+        if reply.type == "show_refused":
+            raise ShowRefused(str(reply.body.get("why", "")))
+        raise UnreadableReply
+
+    async def show_copy(self, show_id: str) -> dict[str, Any]:
+        """Show `show_id`'s copy, as the host keeps it: sent only while this
+        seat's Player sees the Show. ShowRefused when it isn't sent."""
+        head = await self.request("show_copy", {"show": show_id})
+        if head.type == "refused":
+            raise ShowRefused("This Show can't be opened.")
+        if head.type == "show_refused":
+            raise ShowRefused(str(head.body.get("why", ""))[:200])
+        if head.type != "show_copy":
+            raise UnreadableReply
+        try:
+            found = json.loads(await self._parts(head, shows.COPY_CAP))
+        except ValueError, RecursionError:
+            raise UnreadableReply from None
+        if not isinstance(found, dict):
+            raise UnreadableReply
+        return cast(dict[str, Any], found)
 
     async def confidence(self, number: int, points: int) -> int:
         """Ask the host to spend `points` Confidence on roll `number`: the

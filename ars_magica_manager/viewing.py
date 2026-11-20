@@ -534,6 +534,8 @@ LOOKING_ACTIONS: frozenset[str] = frozenset(
         "previously_on",
         # A Session's Chronicle, as its reader may see it.
         "read_chronicle",
+        # A Show's copy, to one who sees the Show.
+        "open_show",
         # A calculator: it records nothing.
         "plan_journey",
         "craft_by_magic",

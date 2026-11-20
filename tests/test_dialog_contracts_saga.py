@@ -30,6 +30,29 @@ CONTRACTS: dict[str, Contract] = {
         # The dialog's title is "Message" too.
         aliases={"Message": "fld-words"},
     ),
+    "show": Contract(
+        prefill={"Title": ""},
+        # Choosing what to show names the Show after it.
+        edits={"Show": "record:characters:mag1"},
+        saved=lambda _s: (
+            (entry.kind, entry.body["title"], entry.body["ref"][1])
+            if (entry := last_chronicle_entry()) is not None
+            else None
+        ),
+        expected=("show", "Leandro", "mag1"),
+        invalid=[{"Show": ""}],
+    ),
+    "show to the table": Contract(
+        prefill={},
+        edits={"Title": "What we found"},
+        saved=lambda _s: (
+            (entry.kind, entry.body["title"], entry.body["ref"][1])
+            if (entry := last_chronicle_entry()) is not None
+            else None
+        ),
+        expected=("show", "What we found", "mag1"),
+        invalid=[{"Title": ""}],
+    ),
     "create saga": Contract(
         prefill={"Name": "", "Start Year": "1220", "Start Season": "Spring"},
         edits={"Name": "Second Saga", "Storyguide": "Ann"},

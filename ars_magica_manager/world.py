@@ -13,9 +13,12 @@ from .models import (
     DETAIL_LEVELS,
     FULL,
     SEASONS,
+    STORY_EVENT,
+    STORY_EVENT_STATUSES,
     Attitude,
     Character,
     Covenant,
+    CovenantDiaryEntry,
     Creature,
     Favour,
     Link,
@@ -45,6 +48,9 @@ ATTITUDE_WORDS: dict[int, str] = {
     2: "Friendly",
     3: "Allied",
 }
+
+#: An open story's status.
+_OPEN = STORY_EVENT_STATUSES[0]
 
 #: The seal drawn for an attitude, before its score and word.
 SEAL_GLYPH = "◉"
@@ -96,6 +102,30 @@ def holds_standing(saga: Saga, record: Character | Creature) -> bool:
 def player_covenants(saga: Saga) -> list[Covenant]:
     """The covenants the troupe plays, which attitudes point at."""
     return [c for c in saga.covenants if c.played]
+
+
+def is_story(entry: CovenantDiaryEntry) -> bool:
+    """Whether a covenant's Diary entry is a story (story_chapters.py)."""
+    return entry.category == STORY_EVENT
+
+
+def is_open_story(entry: CovenantDiaryEntry) -> bool:
+    """Whether a covenant's Diary entry is a story still open."""
+    return is_story(entry) and (entry.status or _OPEN) == _OPEN
+
+
+def open_story(saga: Saga, story_id: str) -> CovenantDiaryEntry | None:
+    """The open story of a troupe covenant with id `story_id`, or None (the
+    stories open_stories.stories lists, by id)."""
+    return next(
+        (
+            entry
+            for covenant in player_covenants(saga)
+            for entry in covenant.diary
+            if story_id and entry.id == story_id and is_open_story(entry)
+        ),
+        None,
+    )
 
 
 def attitude_toward(

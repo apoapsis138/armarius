@@ -10,7 +10,9 @@ compressed. A revision is a hash of that view, so a player learns that
 something changed only when it is something they can see.
 
 Pictures (portraits, maps) are asked for by name with `picture`, and only
-a picture the seat's snapshot names is sent; never by a path.
+a picture the seat's snapshot names is sent; never by a path. A Show's
+picture is asked for the same way in the Show folder, and sent only while
+the seat's Player sees that Show (shows.py).
 
 Pattern: the host's half of a Remote Proxy. The player's app (client.py)
 reads the saga through these messages as if it were a file.
@@ -26,7 +28,7 @@ import zlib
 from collections.abc import Callable, Sequence
 from dataclasses import asdict, dataclass
 
-from .. import picture_files, presence, storage, viewing
+from .. import picture_files, presence, shows, storage, viewing
 from ..models import Saga
 from ..picture_files import safe_name
 from ..seat_view import seat_view
@@ -151,6 +153,10 @@ class SeatSnapshots:
             self._views.clear()
         return self._saga
 
+    def saga(self) -> Saga:
+        """The hosted saga as its file is now (LookupError: it isn't there)."""
+        return self._current()
+
     def for_player(self, player_id: str) -> Snapshot:
         """The seat's view, or LookupError once the player is gone."""
         saga = self._current()
@@ -212,6 +218,8 @@ def records_specs(
             found = snapshots.for_player(session.player_id)
         except LookupError, ValueError:
             raise Refused from None
+        if folder == shows.FOLDER:
+            return _shown_picture(snapshots, session, name)
         if (folder, name) not in found.pictures:
             raise Refused  # one the seat's saga doesn't name: as if none
         found_kind = picture_files.kind(folder)
@@ -255,6 +263,21 @@ def records_specs(
             here,
         ),
     ]
+
+
+def _shown_picture(snapshots: SeatSnapshots, session: Session, name: str) -> Reply:
+    """A Show's picture, sent only while the seat's Player sees the Show
+    (shows.py); any other name is refused as if there were none."""
+    try:
+        saga = snapshots.saga()
+    except LookupError, OSError, ValueError:
+        raise Refused from None
+    if not shows.shows_picture(saga, name, session.player_id):
+        raise Refused
+    blob = shows.picture_bytes(saga.id, name)
+    if blob is None:
+        raise Refused
+    return in_parts("picture", blob, {"folder": shows.FOLDER, "name": name})
 
 
 def seat_registry(
