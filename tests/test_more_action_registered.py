@@ -199,7 +199,10 @@ UNCONTRACTED_BEFORE: frozenset[str] = frozenset(
 )
 
 #: More actions that open no form to contract, with why.
-NO_CONTRACT: dict[str, str] = {}
+NO_CONTRACT: dict[str, str] = {
+    "open_session": "opens the Session's page, not a dialog "
+    "(test_session_page.py, test_tui_session_page.py)",
+}
 
 
 def _contracted() -> set[str]:

@@ -20,6 +20,7 @@ from ..models import (
     Laboratory,
     Neighbour,
     Saga,
+    Session,
     Tribunal,
 )
 from ..where import Where
@@ -53,6 +54,8 @@ class Page:
     tribunal: Tribunal | None = None
     neighbour: Neighbour | None = None
     creature: Creature | None = None
+    #: The Session on show, on a Session's own page.
+    session: Session | None = None
     section: str | None = None
     #: The book chosen in the Library or Lab Texts list on show, if any.
     chosen_book: str | None = None
@@ -96,6 +99,10 @@ class Page:
     @property
     def selected_laboratory(self) -> Laboratory | None:
         return self.laboratory
+
+    @property
+    def selected_session(self) -> Session | None:
+        return self.session
 
     def active_section(self) -> str | None:
         return self.section
@@ -167,6 +174,7 @@ def page_at(saga: Saga, where: Where, **extras: Any) -> Page:
         tribunal=where.tribunal(saga),
         neighbour=where.neighbour(saga),
         creature=where.creature(saga),
+        session=where.session(saga),
         **extras,
     )
 

@@ -31,6 +31,7 @@ from . import (
     town_charter,
     traditions,
 )
+from . import sessions as ss
 from .commands import SectionOps
 from .forms import ability as ability_forms
 from .forms import agents as agent_forms
@@ -75,6 +76,7 @@ from .models import (
     Laboratory,
     Neighbour,
     Saga,
+    Session,
     Tribunal,
 )
 from .models.holdings import INHABITANT_KINDS, POSSESSION_KINDS
@@ -94,6 +96,7 @@ from .sections import (
     LAB_VF_SECTIONS,
     PLAYERS_SECTION,
     POWERS_SECTION,
+    SESSION_INFO_SECTION,
     SESSIONS_SECTION,
     SOURCES_SECTION,
     SPELL_SECTION,
@@ -281,6 +284,17 @@ def saga_ops(saga: Saga, record: Saga) -> dict[str, SectionOps]:
     }
 
 
+def session_ops(saga: Saga, session: Session) -> dict[str, SectionOps]:
+    """A Session page's sections: its top panel's Edit is the Sessions
+    list's own form."""
+    return {
+        SESSION_INFO_SECTION: SectionOps(
+            edit=lambda _row: session_forms.session_form(saga, session),
+            rows=lambda: [ss.when(session)],
+        )
+    }
+
+
 def covenant_ops(saga: Saga, covenant: Covenant) -> dict[str, SectionOps]:
     """The covenant sheet's sections that have Add, Edit and Delete. An
     inhabitant's Restore (a departed Magus or Companion) is a sheet's own."""
@@ -395,6 +409,7 @@ BUILDERS: dict[type, OpsBuilder] = {
     Tribunal: tribunal_ops,
     Neighbour: neighbour_ops,
     Creature: creature_ops,
+    Session: session_ops,
 }
 
 

@@ -21,10 +21,11 @@ from typing import Any
 from .. import cast_sheet, chronicle, recap, story_aftermath, viewing, what_changed
 from .. import players as pl
 from .. import sessions as ss
-from ..commands import Confirm, Form, Refuse, SectionOps, notes
+from ..commands import Act, Confirm, Form, Go, Refuse, SectionOps, notes
 from ..form_spec import DialogField
 from ..markup import escape
 from ..models import Casting, Character, Player, Saga, Session
+from ..references import Ref
 from ..seasons import defaults
 
 #: The keys of a Player's attendance choice and a character's "Played by"
@@ -321,6 +322,15 @@ def delete_session(saga: Saga, session: Session) -> Confirm:
         ss.delete(saga, session)
 
     return Confirm(f"Delete the Session of {escape(ss.when(session))}?", apply)
+
+
+#: How a link names a Session's page (references.Ref's kind).
+SESSION_REF = "sessions"
+
+
+def open_page(session: Session) -> Act:
+    """Open `session`'s own page (a commands.Go each front-end follows)."""
+    return Act(lambda: Go(Ref(SESSION_REF, session.id, ss.title(session))))
 
 
 def session_ops(saga: Saga) -> SectionOps:

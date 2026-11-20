@@ -12,6 +12,7 @@ from textual.widgets import (
 
 from .... import (
     neighbours,
+    sessions,
     stores,
     viewing,
 )
@@ -26,6 +27,7 @@ from ..sheets import (
     RegionSheetView,
     SagaContentSheetView,
     SeasonsSheetView,
+    SessionSheetView,
 )
 from ..sheets.stores import StoreSheetView
 from ..widgets import (
@@ -63,6 +65,7 @@ class NavigationActions(WorkspaceBase):
         self._neighbour_sheet_view = None
         self._bestiary_view = None
         self._creature_sheet_view = None
+        self._session_sheet_view = None
         self._conflicts_view = None
         self._seasons_view = None
         self._store_view = None
@@ -176,6 +179,15 @@ class NavigationActions(WorkspaceBase):
         self._creature_sheet_view = view
         self._focus_first_section(initial=True)
 
+    async def _select_session(self, ident: str | None) -> None:
+        session = sessions.find(self.saga, ident)
+        if session is None:
+            return
+        view = SessionSheetView(self.saga, session)
+        await self._set_detail(view)
+        self._session_sheet_view = view
+        self._focus_first_section(initial=True)
+
     async def _select_tribunal(self, ident: str | None) -> None:
         tribunal = self.saga.tribunal(ident)
         if tribunal is None:
@@ -212,4 +224,5 @@ class NavigationActions(WorkspaceBase):
         NodeKind.BESTIARY: _select_bestiary,
         NodeKind.CREATURE: _select_creature,
         NodeKind.CONFLICTS: _select_conflicts,
+        NodeKind.SESSION: _select_session,
     }

@@ -30,6 +30,7 @@ from .models import (
     Laboratory,
     Neighbour,
     Saga,
+    Session,
     Tribunal,
 )
 from .rules import (
@@ -48,6 +49,7 @@ from .sections import (
     LAB_VF_SECTIONS,
     NEIGHBOUR_INFO_SECTION,
     PLAYERS_SECTION,
+    SESSION_INFO_SECTION,
     SESSIONS_SECTION,
     SILVER_SECTIONS,
     SOURCES_SECTION,
@@ -84,6 +86,8 @@ class NodeKind(StrEnum):
     BESTIARY = "bestiary"
     CREATURE = "creature"
     CONFLICTS = "conflicts"
+    #: One Session's own page (sheets/session.py).
+    SESSION = "session"
 
 
 # -- the section verbs: a / d / e, and More's Restore --
@@ -102,6 +106,7 @@ def _section_verbs() -> dict[str, frozenset[str]]:
         HOUSE_RULES_SECTION: _ALL3,
         PLAYERS_SECTION: _ALL3,
         SESSIONS_SECTION: _ALL3,
+        SESSION_INFO_SECTION: _EDIT,
         BOOKS_SECTION: _EDIT,
         TRADITIONS_SECTION: _EDIT,
         SOURCES_SECTION: _ALL3,
@@ -253,6 +258,7 @@ RECORD_SECTION: dict[NodeKind, str] = {
     NodeKind.TRIBUNAL: TRIBUNAL_INFO_SECTION,
     NodeKind.NEIGHBOUR: NEIGHBOUR_INFO_SECTION,
     NodeKind.CREATURE: CREATURE_INFO_SECTION,
+    NodeKind.SESSION: SESSION_INFO_SECTION,
 }
 
 
@@ -276,6 +282,11 @@ class ActionFacts(Protocol):
 
     @property
     def selected_laboratory(self) -> Laboratory | None: ...
+
+    @property
+    def selected_session(self) -> Session | None:
+        """The Session on show, on a Session's own page."""
+        ...
 
     def active_section(self) -> str | None:
         """The id of the section focus is in, if any."""

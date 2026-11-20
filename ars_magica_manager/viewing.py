@@ -530,6 +530,8 @@ LOOKING_ACTIONS: frozenset[str] = frozenset(
         "find",
         # A character's changes since the last Session: it only reads.
         "what_changed",
+        # A Session's own page: it only reads.
+        "open_session",
         "cast_glance",
         "previously_on",
         # A Session's Chronicle, as its reader may see it.

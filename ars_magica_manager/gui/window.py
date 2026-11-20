@@ -75,6 +75,7 @@ from .. import (
     references,
     saga_index,
     seat,
+    sessions,
     siblings,
     storage,
     stores,
@@ -107,6 +108,7 @@ from ..forms import menu_steps
 from ..forms import page as page_forms
 from ..forms import printing as print_forms
 from ..forms import saga as saga_forms
+from ..forms import sessions as session_forms
 from ..joined_games import JoinedGame
 from ..markup import escape
 from ..models import (
@@ -169,6 +171,7 @@ from .saga_content import SagaContentPage
 from .season_panel import SeasonPanel
 from .seasons import SeasonsPage
 from .seat_chip import SeatChip, cut
+from .session_page import SessionPage
 from .sessions_section import sessions_section
 from .settings_window import SettingsWindow
 from .stores import SPOT_LISTS, StorePage
@@ -213,6 +216,7 @@ from .worksheet import WorksheetPage
     CREATURE,
     FIGHT,
     SIEGE,
+    SESSION,
     ARMARIUM,
     CUSTODIA,
 ) = (
@@ -231,6 +235,7 @@ from .worksheet import WorksheetPage
     "creature",
     "fight",
     "siege",
+    "session",
     # The saga's stores: a Place's kind is the store's key (stores.STORES).
     stores.ARMARIUM,
     stores.CUSTODIA,
@@ -263,6 +268,7 @@ _HELP_IDS = {
     CREATURE: ["creature"],
     FIGHT: ["fights", "conflicts"],
     SIEGE: ["sieges", "conflicts"],
+    SESSION: ["session-page", "tab-content-sessions"],
     ARMARIUM: [stores.ARMARIUM],
     CUSTODIA: [stores.CUSTODIA],
 }
@@ -377,6 +383,7 @@ _PLACE_NODES: dict[str, NodeKind] = {
     TRIBUNAL: NodeKind.TRIBUNAL,
     NEIGHBOUR: NodeKind.NEIGHBOUR,
     CREATURE: NodeKind.CREATURE,
+    SESSION: NodeKind.SESSION,
 }
 
 #: The pages of one record, and what they say when it isn't there.
@@ -1326,6 +1333,9 @@ class MainWindow(QMainWindow):
     def open_siege(self, siege_id: str) -> None:
         self.go([*self._up_to(SAGA), Place(SIEGE, siege_id)])
 
+    def open_session(self, session_id: str) -> None:
+        self.go([*self._up_to(SAGA), Place(SESSION, session_id)])
+
     def show_character(self, character_id: str) -> None:
         """Open a character's sheet, below their covenant."""
         character = self.saga.character(character_id) if self.saga else None
@@ -1393,6 +1403,13 @@ class MainWindow(QMainWindow):
         if found.kind in stores.STORES:
             # Find's book or device: the store, at its row.
             self.open_store(found.kind)
+            return
+        if found.kind == session_forms.SESSION_REF and self.saga is not None:
+            # A Session isn't a named record of references.KINDS.
+            if sessions.find(self.saga, found.id) is None:
+                self.tell("Open", "That Session is no longer in the saga.")
+                return
+            self._visit(Place(SESSION, found.id))
             return
         kind = _REF_PLACES.get(found.kind)
         if self.saga is None or kind is None:
@@ -1992,6 +2009,11 @@ class MainWindow(QMainWindow):
             if siege is None:
                 return QLabel("No siege chosen.")
             return SiegePage(saga, siege, p, self.run)
+        if place.kind == SESSION:
+            session = sessions.find(saga, place.id)
+            if session is None:
+                return QLabel("No Session chosen.")
+            return SessionPage(saga, session, p, self.run)
         if place.kind == CONTENT:
             return SagaContentPage(saga, p, self.run)
         if place.kind in stores.STORES:
