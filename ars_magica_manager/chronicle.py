@@ -1514,11 +1514,14 @@ class Kind:
     `for_whom`: who it is meant for, whose collapsed pane it calls; the
     host's own pane and the "for you" it tells each seat both ask it.
     Every kind names its rule, `_no_one` included, so a new kind can't
-    leave it out by mistake."""
+    leave it out by mistake. `held_back`: the keys of its body the host
+    keeps and never sends a seat (a Whisper's recipients' Player ids);
+    every kind names it too, `()` for one that sends its whole body."""
 
     name: str
     line: Callable[[dict[str, Any]], str]
     for_whom: ForWhom
+    held_back: tuple[str, ...]
     typed: tuple[str, ...] = ()
     strikable: bool = False
     card: str = NOTE
@@ -1531,8 +1534,8 @@ class Kind:
 KINDS: dict[str, Kind] = {
     spec.name: spec
     for spec in (
-        Kind(BEGIN, lambda _body: "Session begun.", for_whom=_no_one),
-        Kind(END, lambda _body: "Session ended.", for_whom=_no_one),
+        Kind(BEGIN, lambda _body: "Session begun.", for_whom=_no_one, held_back=()),
+        Kind(END, lambda _body: "Session ended.", for_whom=_no_one, held_back=()),
         Kind(
             ROLL,
             _roll_line,
@@ -1543,6 +1546,7 @@ KINDS: dict[str, Kind] = {
             amends=lambda entry: "request" in entry.body,
             sounds=True,
             for_whom=_blind_number,
+            held_back=(),
         ),
         Kind(
             FORM_ROLL,
@@ -1555,6 +1559,7 @@ KINDS: dict[str, Kind] = {
             card=FORM_ROLL_CARD,
             sounds=True,
             for_whom=_blind_number,
+            held_back=(),
         ),
         # Its "for" copies its roll's, already checked; kept typed all the same.
         Kind(
@@ -1564,6 +1569,7 @@ KINDS: dict[str, Kind] = {
             sounds=True,
             storyguide_skips=True,
             for_whom=_rolled_for,
+            held_back=(),
         ),
         Kind(
             VOID,
@@ -1572,14 +1578,24 @@ KINDS: dict[str, Kind] = {
             card=NO_CARD,
             amends=_always,
             for_whom=_no_one,
+            held_back=(),
         ),
-        Kind(CONFIDENCE, confidence_line, amends=_always, for_whom=_no_one),
+        Kind(
+            CONFIDENCE,
+            confidence_line,
+            amends=_always,
+            for_whom=_no_one,
+            held_back=(),
+        ),
         Kind(
             REQUEST,
             request_line,
             typed=("for",),
             card=REQUEST_CARD,
             for_whom=_offered_to,
+            # Each character's roller (a Player id) travels: a seat reads
+            # it to know whether it answers (Reader.may_answer).
+            held_back=(),
         ),
         Kind(
             REQUEST_EASE,
@@ -1590,6 +1606,7 @@ KINDS: dict[str, Kind] = {
             card=NO_CARD,
             amends=_always,
             for_whom=_no_one,
+            held_back=(),
         ),
         Kind(
             OUTCOME,
@@ -1597,6 +1614,7 @@ KINDS: dict[str, Kind] = {
             typed=("text",),
             amends=_always,
             for_whom=_no_one,
+            held_back=(),
         ),
         Kind(
             MESSAGE,
@@ -1604,6 +1622,9 @@ KINDS: dict[str, Kind] = {
             typed=("words",),
             card=MESSAGE_CARD,
             for_whom=_whispered_to,
+            # A seat is told whether it is for them (for_you), and reads
+            # the others' names; their ids stay here (ADR 0031).
+            held_back=("to",),
         ),
     )
 }
@@ -1674,9 +1695,15 @@ def feed(saga: Saga, who: str, session_id: str, since: int) -> Feed | None:
 
 def stamped(entry: Entry, who: str, session: Session, saga: Saga | None) -> Entry:
     """`entry` as the host hands it to `who`'s seat, told whether it is for
-    them (ADR 0031). The one place "for you" is worked out, so live
-    sending and catching up after a drop give the same pulses."""
-    return replace(entry, for_you=calls_attention(entry, who, session, saga))
+    them, and without what its kind holds back (ADR 0031). The one place
+    this is done, so live sending and catching up after a drop give the
+    same pulses and send the same."""
+    for_you = calls_attention(entry, who, session, saga)
+    spec = kind_of(entry)
+    body = entry.body
+    if spec is not None and spec.held_back:
+        body = {k: v for k, v in body.items() if k not in spec.held_back}
+    return replace(entry, body=body, for_you=for_you)
 
 
 class SeatChronicle:
@@ -1788,10 +1815,12 @@ def visibility_tag(audience: Audience) -> str:
 class Reader:
     """The Chronicle as one person reads it, the same whether `book` is
     the host's own or what a Remote seat was sent (which comes already
-    filtered, without the Players chosen, and told which entries are for
-    it): which entries they read,
-    which call their attention, whether they may answer a Roll request,
-    and a request's answer as they see it.
+    filtered, without the Players chosen or what each kind holds back, so
+    a Whisper there has no recipients' ids, and told which entries are for
+    it): which entries they read, which call their attention, whether they
+    may answer a Roll request, and a request's answer as they see it. At
+    a seat, attention is the host's word (`for_you`), never the kind's
+    rule, which needs what was held back.
 
     Pattern: an Adapter over two sources, the host's Chronicle and a
     seat's feed."""

@@ -153,7 +153,9 @@ def test_each_kind_says_who_it_is_for() -> None:
     assert kinds_for("ben") == ["message"]
 
 
-def test_an_entry_at_a_seat_equals_the_hosts_whatever_it_was_told() -> None:
+def test_for_you_is_not_part_of_what_an_entry_is() -> None:
+    """Being told "for you" doesn't make a seat's copy unequal; a kind
+    that holds nothing back reaches a seat equal to the host's."""
     saga, session, book = _begun()
     _blind(saga, session, book)
     rolled = book.entries[-1]
@@ -161,10 +163,31 @@ def test_an_entry_at_a_seat_equals_the_hosts_whatever_it_was_told() -> None:
     assert chronicle.stamped(rolled, "ana", session, saga) == rolled
 
 
+def test_a_whisper_as_fed_to_a_seat_keeps_names_and_drops_ids() -> None:
+    saga, session, book = _begun()
+    chronicle.message(book, saga, session, "Psst.", to=("ana",), by="ben")
+
+    whisper = _sent(saga, session, "ana").entries[-1]
+
+    assert whisper.body["to_names"] == ["Ana"] and "to" not in whisper.body
+    assert book.entries[-1].body["to"] == ["ana"]
+    assert chronicle.message_label(whisper.body) == "Ben, whispering to Ana"
+
+
 def test_a_kind_must_say_who_it_is_for() -> None:
     """A new kind can't forget its rule: leaving it out is refused."""
     with pytest.raises(TypeError):
-        chronicle.Kind("handout", lambda _body: "A handout.")  # type: ignore[call-arg]
+        chronicle.Kind(  # type: ignore[call-arg]
+            "handout", lambda _body: "A handout.", held_back=()
+        )
+
+
+def test_a_kind_must_say_what_it_holds_back_from_seats() -> None:
+    """Nor what a seat isn't sent: even "nothing" is said."""
+    with pytest.raises(TypeError):
+        chronicle.Kind(  # type: ignore[call-arg]
+            "handout", lambda _body: "A handout.", for_whom=chronicle.for_whom
+        )
 
 
 def test_a_rolled_line_is_for_its_chosen_player_alone() -> None:
