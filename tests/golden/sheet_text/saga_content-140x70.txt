@@ -1,6 +1,6 @@
 ===== tab-content-books
 
-   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Players
+   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Playe
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -68,7 +68,7 @@
 
 ===== tab-content-catalogs
 
-   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Players
+   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Playe
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -136,7 +136,7 @@
 
 ===== tab-content-goods
 
-   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Players
+   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Playe
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -204,7 +204,7 @@
 
 ===== tab-content-house-rules
 
-   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Players
+   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Playe
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -272,7 +272,7 @@
 
 ===== tab-content-cults
 
-   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Players
+  Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Players
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -340,7 +340,7 @@
 
 ===== tab-content-spells
 
-   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Players
+  Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Players
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
     Search spell names and descriptions...                                         Source: any      ▼
@@ -408,7 +408,7 @@
 
 ===== tab-content-sessions
 
-   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Players
+  Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Players
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -474,9 +474,77 @@
   ▌
 
 
+===== tab-content-scenes
+
+  Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Players
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Scenes (0)
+
+      None yet: a adds one.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ▌
+  ▌  Choose a Scene to see it; a adds one.
+  ▌
+
+
 ===== tab-content-players
 
-   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Players
+  Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Players
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔

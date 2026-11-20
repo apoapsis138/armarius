@@ -1462,6 +1462,16 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-scenes": {
+      "active": "section-scenes",
+      "keys": {
+        "a": "FieldsDialog: Add a Scene",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-players": {
       "active": "section-players",
       "keys": {

@@ -331,6 +331,8 @@ from .saga import Casting as Casting
 from .saga import Player as Player
 from .saga import Saga as Saga
 from .saga import SagaSource as SagaSource
+from .saga import Scene as Scene
+from .saga import SceneUse as SceneUse
 from .saga import Session as Session
 from .saga import TeachRequest as TeachRequest
 from .saga import _key_lab_text_access_by_author as _key_lab_text_access_by_author

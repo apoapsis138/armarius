@@ -168,11 +168,11 @@ from .pages import JoinedShelf, SagaPage, SagaShelf
 from .players_section import players_section
 from .region import NeighbourPage
 from .saga_content import SagaContentPage
+from .scenes_section import sessions_and_scenes
 from .season_panel import SeasonPanel
 from .seasons import SeasonsPage
 from .seat_chip import SeatChip, cut
 from .session_page import SessionPage
-from .sessions_section import sessions_section
 from .settings_window import SettingsWindow
 from .stores import SPOT_LISTS, StorePage
 from .style import gilding, snapping
@@ -2385,7 +2385,7 @@ class MainWindow(QMainWindow):
             open_fight=self.open_fight,
             open_siege=self.open_siege,
             open_hosting=self.open_hosting,
-            sessions=lambda inspect: sessions_section(saga, p, self.run, inspect),
+            sessions=lambda inspect: sessions_and_scenes(saga, p, self.run, inspect),
             players=lambda inspect: players_section(
                 saga, p, self.run, inspect, self.issue_invite
             ),
