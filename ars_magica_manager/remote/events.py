@@ -91,8 +91,8 @@ Cursor = tuple[str, int]
 def frame(session_id: str, entry: chronicle.Entry) -> Reply:
     """`entry` as a flat frame, as chronicle.stamped hands it to a seat.
     Only who may see it in general (Table, Storyguide or Chosen) goes,
-    never the Players chosen (a Whisper's body names those it is to, who
-    each see the others' names on its card), and whether it is for this
+    never the Players chosen (a Whisper's body names those it is to by
+    name alone, as its card shows them), and whether it is for this
     seat's Player (`for_you`, ADR 0031)."""
     body = json.dumps(entry.body, ensure_ascii=False)
     kind = entry.kind

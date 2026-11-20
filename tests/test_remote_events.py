@@ -6,6 +6,7 @@ an older seat is told to update."""
 from __future__ import annotations
 
 import asyncio
+import json
 import random
 from collections.abc import AsyncIterator
 from pathlib import Path
@@ -246,6 +247,65 @@ async def test_each_seat_is_told_for_you_on_exactly_its_entries(table: Table) ->
         (4, False),  # her own Whisper is not for her
         (5, True),  # a Roll request offered to Brigit
     ]
+
+
+async def test_a_whisper_reaches_its_seats_without_any_players_id(
+    table: Table,
+) -> None:
+    """A seat is told only whether an entry is for it, never who else it
+    is for (ADR 0031): a Whisper keeps its recipients' names, which its card
+    shows, and leaves their Player ids at the host."""
+    anna_id, bea_id = table.id_of("Anna"), table.id_of("Bea")
+    session = table.saga.sessions[0]
+    chronicle.message(
+        table.book, table.saga, session, "Both of you.", to=(anna_id, bea_id), by=HOST
+    )
+    anna, bea = await table.seat("Anna"), await table.seat("Bea")
+    try:
+        for_anna = await _gather(anna, 1, 1)
+        for_bea = await _gather(bea, 1, 1)
+    finally:
+        await anna.close()
+        await bea.close()
+
+    for got in (for_anna, for_bea):
+        whisper = got[0][1]
+        sent = json.dumps(whisper.body)
+        assert anna_id not in sent and bea_id not in sent
+        assert "to" not in whisper.body
+        assert whisper.body["to_names"] == ["Anna", "Bea"]
+        assert whisper.for_you is True
+    chronicle.forget_open()
+    on_file = chronicle.read(table.saga, session).entries[-1]
+    assert on_file.body["to"] == [anna_id, bea_id]  # the host keeps them
+
+
+async def test_a_players_whisper_sends_no_recipients_id_to_any_seat(
+    table: Table,
+) -> None:
+    """Anna Whispers to Bea from her seat: neither seat's frame names Bea
+    by id anywhere. The author (Anna, whose name the card shows) travels,
+    as every entry's does: Player ids are not secrets (threat model)."""
+    anna_id, bea_id = table.id_of("Anna"), table.id_of("Bea")
+    anna = await table.seat("Anna")
+    try:
+        number = await anna.say("Psst.", to=(bea_id,))
+    finally:
+        await anna.close()
+    anna, bea = await table.seat("Anna"), await table.seat("Bea")
+    try:
+        for_anna = await _gather(anna, number - 1, 1)
+        for_bea = await _gather(bea, number - 1, 1)
+    finally:
+        await anna.close()
+        await bea.close()
+
+    for got in (for_anna, for_bea):
+        whisper = got[0][1]
+        assert whisper.number == number and whisper.author == anna_id
+        assert bea_id not in repr((whisper.audience, whisper.body))
+        assert whisper.body["to_names"] == ["Bea"]
+    assert [got[0][1].for_you for got in (for_anna, for_bea)] == [False, True]
 
 
 async def test_a_seat_that_reconnects_catches_up_from_what_it_holds(
