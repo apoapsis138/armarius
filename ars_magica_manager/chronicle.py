@@ -42,7 +42,7 @@ import random
 import re
 import secrets
 from collections.abc import Callable, Mapping
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
 from typing import Any, Protocol
 
@@ -104,7 +104,9 @@ def person(viewer: viewing.Viewer) -> str:
 
 @dataclass(frozen=True)
 class Entry:
-    """One line of a Chronicle."""
+    """One line of a Chronicle. `for_you`: at a Remote seat, whether its
+    host said the entry is for the seat's Player (ADR 0031); None in the
+    host's own Chronicle, which works it out (for_whom), and never on file."""
 
     number: int
     time: str
@@ -112,6 +114,15 @@ class Entry:
     author: str
     audience: Audience
     body: dict[str, Any] = field(default_factory=dict)
+    # Not part of what the entry is: a seat's copy equals the host's.
+    for_you: bool | None = field(default=None, compare=False)
+
+
+def _on_file(entry: Entry) -> dict[str, Any]:
+    """`entry` as the Chronicle file keeps it."""
+    kept = asdict(entry)
+    del kept["for_you"]
+    return kept
 
 
 def sees(entry: Entry, who: str, session: Session, saga: Saga | None = None) -> bool:
@@ -219,7 +230,7 @@ class Chronicle:
         """Append one entry (the file's lock held)."""
         entry = Entry(len(self.entries) + 1, clock(), kind, author, audience, body)
         with self.path.open("a", encoding="utf-8", newline="\n") as out:
-            out.write(json.dumps(asdict(entry), ensure_ascii=False) + "\n")
+            out.write(json.dumps(_on_file(entry), ensure_ascii=False) + "\n")
             out.flush()
             os.fsync(out.fileno())
         self.entries.append(entry)
@@ -1451,6 +1462,45 @@ def _always(_entry: Entry) -> bool:
     return True
 
 
+#: Who an entry is meant for, enough to call a collapsed pane's attention:
+#: one kind's rule (Strategy), given the entry, its Session and the saga.
+ForWhom = Callable[[Entry, Session, "Saga | None"], frozenset[str]]
+
+NO_ONE: frozenset[str] = frozenset()
+
+
+def _no_one(_entry: Entry, _session: Session, _saga: Saga | None) -> frozenset[str]:
+    return NO_ONE
+
+
+def _blind_number(entry: Entry, session: Session, saga: Saga | None) -> frozenset[str]:
+    """A Blind roll's number: for the Session's storyguide."""
+    if entry.audience.to != STORYGUIDE:
+        return NO_ONE
+    return frozenset({storyguide_of(session, saga)})
+
+
+def _rolled_for(entry: Entry, _session: Session, _saga: Saga | None) -> frozenset[str]:
+    """The line that the storyguide rolled: for the player it is for."""
+    if entry.audience.to != CHOSEN:
+        return NO_ONE
+    return frozenset(entry.audience.players)
+
+
+def _whispered_to(
+    entry: Entry, _session: Session, _saga: Saga | None
+) -> frozenset[str]:
+    """A Whisper: for each person it is to (a Message to the Table: no one)."""
+    return frozenset(str(t) for t in entry.body.get("to", []))
+
+
+def _offered_to(entry: Entry, session: Session, saga: Saga | None) -> frozenset[str]:
+    """A Roll request: for whoever rolls each character offered it, but
+    the Session's storyguide, who made it."""
+    rollers = {str(c.get("roller", "")) for c in entry.body.get("characters", [])}
+    return frozenset(rollers - {"", storyguide_of(session, saga)})
+
+
 @dataclass(frozen=True)
 class Kind:
     """One kind of entry, described once. `typed`: the keys of its body
@@ -1460,10 +1510,15 @@ class Kind:
     then says so, and who saw it). `card`: how it is drawn. `amends`:
     whether it changes cards already drawn (a pane draws them again).
     `sounds`: a roll landing, which a pane may sound. `storyguide_skips`:
-    the Session's storyguide doesn't read it (they have the roll itself)."""
+    the Session's storyguide doesn't read it (they have the roll itself).
+    `for_whom`: who it is meant for, whose collapsed pane it calls; the
+    host's own pane and the "for you" it tells each seat both ask it.
+    Every kind names its rule, `_no_one` included, so a new kind can't
+    leave it out by mistake."""
 
     name: str
     line: Callable[[dict[str, Any]], str]
+    for_whom: ForWhom
     typed: tuple[str, ...] = ()
     strikable: bool = False
     card: str = NOTE
@@ -1476,8 +1531,8 @@ class Kind:
 KINDS: dict[str, Kind] = {
     spec.name: spec
     for spec in (
-        Kind(BEGIN, lambda _body: "Session begun."),
-        Kind(END, lambda _body: "Session ended."),
+        Kind(BEGIN, lambda _body: "Session begun.", for_whom=_no_one),
+        Kind(END, lambda _body: "Session ended.", for_whom=_no_one),
         Kind(
             ROLL,
             _roll_line,
@@ -1487,6 +1542,7 @@ KINDS: dict[str, Kind] = {
             # An answer to a Roll request is gathered on the request's card.
             amends=lambda entry: "request" in entry.body,
             sounds=True,
+            for_whom=_blind_number,
         ),
         Kind(
             FORM_ROLL,
@@ -1498,18 +1554,33 @@ KINDS: dict[str, Kind] = {
             strikable=True,
             card=FORM_ROLL_CARD,
             sounds=True,
+            for_whom=_blind_number,
         ),
         # Its "for" copies its roll's, already checked; kept typed all the same.
-        Kind(ROLLED, _rolled_line, typed=("for",), sounds=True, storyguide_skips=True),
+        Kind(
+            ROLLED,
+            _rolled_line,
+            typed=("for",),
+            sounds=True,
+            storyguide_skips=True,
+            for_whom=_rolled_for,
+        ),
         Kind(
             VOID,
             lambda body: f"Roll {body['strikes']} is struck: {body['reason']}",
             typed=("reason",),
             card=NO_CARD,
             amends=_always,
+            for_whom=_no_one,
         ),
-        Kind(CONFIDENCE, confidence_line, amends=_always),
-        Kind(REQUEST, request_line, typed=("for",), card=REQUEST_CARD),
+        Kind(CONFIDENCE, confidence_line, amends=_always, for_whom=_no_one),
+        Kind(
+            REQUEST,
+            request_line,
+            typed=("for",),
+            card=REQUEST_CARD,
+            for_whom=_offered_to,
+        ),
         Kind(
             REQUEST_EASE,
             lambda body: (
@@ -1518,18 +1589,21 @@ KINDS: dict[str, Kind] = {
             ),
             card=NO_CARD,
             amends=_always,
+            for_whom=_no_one,
         ),
         Kind(
             OUTCOME,
             lambda body: f"Request {body['request']}: {body['text']}",
             typed=("text",),
             amends=_always,
+            for_whom=_no_one,
         ),
         Kind(
             MESSAGE,
             lambda body: f"{message_label(body)}: {body['words']}",
             typed=("words",),
             card=MESSAGE_CARD,
+            for_whom=_whispered_to,
         ),
     )
 }
@@ -1589,8 +1663,20 @@ def feed(saga: Saga, who: str, session_id: str, since: int) -> Feed | None:
     path = path_of(saga, session)
     book = Chronicle(path, _load(path))
     return Feed(
-        session.id, [e for e in book.since(since) if sees(e, who, session, saga)]
+        session.id,
+        [
+            stamped(e, who, session, saga)
+            for e in book.since(since)
+            if sees(e, who, session, saga)
+        ],
     )
+
+
+def stamped(entry: Entry, who: str, session: Session, saga: Saga | None) -> Entry:
+    """`entry` as the host hands it to `who`'s seat, told whether it is for
+    them (ADR 0031). The one place "for you" is worked out, so live
+    sending and catching up after a drop give the same pulses."""
+    return replace(entry, for_you=calls_attention(entry, who, session, saga))
 
 
 class SeatChronicle:
@@ -1673,33 +1759,21 @@ def line(entry: Entry, struck: dict[int, str]) -> str:
     return _line(entry, struck)
 
 
+def for_whom(
+    entry: Entry, session: Session, saga: Saga | None = None
+) -> frozenset[str]:
+    """Who `entry`, in the host's own Chronicle, is meant for: its kind's
+    rule (Kind.for_whom); no one for a kind this version doesn't know."""
+    spec = kind_of(entry)
+    return spec.for_whom(entry, session, saga) if spec is not None else NO_ONE
+
+
 def calls_attention(
     entry: Entry, who: str, session: Session, saga: Saga | None = None
 ) -> bool:
     """Whether `entry`, in the host's own Chronicle, calls `who`'s collapsed
     pane (Reader.calls_attention, for any book)."""
-    return _calls_attention(entry, who, session, saga, sent=False)
-
-
-def _calls_attention(
-    entry: Entry, who: str, session: Session, saga: Saga | None, *, sent: bool
-) -> bool:
-    """Whether `entry` is meant for `who` alone enough to call a collapsed
-    pane's attention: a Blind roll's number for the Session's storyguide,
-    or the line telling a player one was rolled for their character, or a
-    Whisper to them (named in its body, which a seat is sent too).
-    `sent`: the entry is one a host sent to `who`'s seat, which comes
-    without the Players chosen; the host sends the rolled line only to the
-    player it is for (and to the storyguide, whom it doesn't call)."""
-    if entry.kind == MESSAGE:
-        return who in entry.body.get("to", [])
-    if entry.kind in STRIKABLE and entry.audience.to == STORYGUIDE:
-        return who == storyguide_of(session, saga)
-    if entry.kind == ROLLED:
-        if sent:
-            return who != storyguide_of(session, saga)
-        return who in entry.audience.players
-    return False
+    return who in for_whom(entry, session, saga)
 
 
 def visibility_tag(audience: Audience) -> str:
@@ -1714,7 +1788,8 @@ def visibility_tag(audience: Audience) -> str:
 class Reader:
     """The Chronicle as one person reads it, the same whether `book` is
     the host's own or what a Remote seat was sent (which comes already
-    filtered, and without the Players chosen): which entries they read,
+    filtered, without the Players chosen, and told which entries are for
+    it): which entries they read,
     which call their attention, whether they may answer a Roll request,
     and a request's answer as they see it.
 
@@ -1750,10 +1825,11 @@ class Reader:
         return [e for e in self.book.entries if self.reads(e)]
 
     def calls_attention(self, entry: Entry) -> bool:
-        """Whether `entry` calls this person's collapsed pane."""
-        return _calls_attention(
-            entry, self.who, self.session, self.saga, sent=self.at_seat
-        )
+        """Whether `entry` calls this person's collapsed pane: at the host,
+        its kind's rule; at a seat, what the host said ("for you")."""
+        if self.at_seat:
+            return entry.for_you is True
+        return calls_attention(entry, self.who, self.session, self.saga)
 
     def may_answer(self, request: Entry, character_id: str) -> bool:
         """Whether this person answers `request` for `character_id` now:

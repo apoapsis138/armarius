@@ -227,6 +227,23 @@ def test_collapsed_it_counts_what_came_and_never_opens_itself(
 
 
 @pytest.mark.usefixtures("app")
+def test_a_blind_answer_to_a_roll_request_pulses_the_storyguides_strip(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """An answer is gathered on its request's card rather than drawn as one
+    of its own, but a Blind answer's number is still for the storyguide."""
+    monkeypatch.setattr(motion, "moving", lambda: True)
+    pane, saga, session, book, _ran = _pane()
+    call = chronicle.RollCall(("aelfric",), "Perception", visibility=chronicle.BLIND)
+    request = chronicle.request_rolls(book, saga, session, call, by=HOST)
+    pane.set_collapsed(True)
+
+    chronicle.answer(book, saga, session, request.number, "aelfric", by="ana")
+
+    assert pane.pulses == 1
+
+
+@pytest.mark.usefixtures("app")
 def test_no_pulse_with_reduce_motion(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(motion, "moving", lambda: False)
     pane, saga, session, book, _ran = _pane("ana")
@@ -742,8 +759,8 @@ def test_at_a_seat_a_blind_roll_for_your_character_pulses_the_strip(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """A seat is sent each entry as the host frames it, with no Players
-    chosen; the line that the storyguide rolled for Ana's character still
-    calls Ana's collapsed pane."""
+    chosen but told which are for it; the line that the storyguide rolled
+    for Ana's character calls Ana's collapsed pane."""
     monkeypatch.setattr(motion, "moving", lambda: True)
     saga = _saga()
     session = saga.sessions[0]
@@ -754,9 +771,10 @@ def test_at_a_seat_a_blind_roll_for_your_character_pulses_the_strip(
     pane.attach(saga, session, held, "ana")
     pane.set_collapsed(True)
 
-    for entry in book.entries:
-        if chronicle.sees(entry, "ana", session, saga):
-            held.take(*events.entry_of(events.frame(session.id, entry).body))
+    found = chronicle.feed(saga, "ana", session.id, 0)
+    assert found is not None
+    for entry in found.entries:
+        held.take(*events.entry_of(events.frame(session.id, entry).body))
 
     assert [e.kind for e in held.entries] == ["begin", "rolled"]
     assert pane.pulses == 1

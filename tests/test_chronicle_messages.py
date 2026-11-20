@@ -17,6 +17,7 @@ from ars_magica_manager.models import (
     Saga,
     Session,
 )
+from ars_magica_manager.remote import events
 
 HOST = viewing.HOST
 
@@ -235,20 +236,23 @@ def test_a_whisper_calls_the_attention_of_those_it_is_to_alone() -> None:
     assert not called(to_all, "ben")
 
 
-def test_a_whisper_calls_attention_at_a_seat_which_is_sent_no_players() -> None:
-    """A seat's entries come without the Players chosen (ADR 0019)."""
+def test_a_whisper_calls_attention_at_a_seat_on_the_hosts_word() -> None:
+    """A seat's entries come without the Players chosen (ADR 0019), but
+    told which are for it (ADR 0031)."""
     saga, session, book = _begun()
-    sent = chronicle.message(book, saga, session, "Psst.", to=("ben",), by="ana")
-    at_seat = chronicle.Entry(
-        sent.number,
-        sent.time,
-        sent.kind,
-        sent.author,
-        chronicle.Audience(sent.audience.to),
-        sent.body,
-    )
+    chronicle.message(book, saga, session, "Psst.", to=("ben",), by="ana")
 
-    assert chronicle.calls_attention(at_seat, "ben", session, saga)
+    def called_at_seat(who: str) -> bool:
+        found = chronicle.feed(saga, who, session.id, 0)
+        assert found is not None
+        held = chronicle.SeatChronicle()
+        for entry in found.entries:
+            held.take(*events.entry_of(events.frame(found.session_id, entry).body))
+        reader = chronicle.Reader(held, who, session, saga)
+        return reader.calls_attention(held.entries[-1])
+
+    assert called_at_seat("ben")
+    assert not called_at_seat("ana")  # its writer
 
 
 # -- the same rule for every text typed into the Chronicle --

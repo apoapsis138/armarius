@@ -13,7 +13,9 @@ connection, and its one-request-one-answer loop, is unchanged.
 There is one `chronicle` frame for every kind of entry: its envelope,
 with the body as JSON text. A seat that meets a kind it doesn't know
 shows that this version can't show it. Who may see an entry is decided
-here, at the host: an entry the Player may not see is never sent.
+here, at the host: an entry the Player may not see is never sent. Each
+frame also says whether the entry is for the seat's Player (`for_you`,
+ADR 0031), worked out at the host by chronicle.stamped.
 
 A seat rolls with `roll`: what to roll, never a number (from the sheet,
 the Characteristic, the Ability and whether a Specialty applies). The host
@@ -87,9 +89,11 @@ Cursor = tuple[str, int]
 
 
 def frame(session_id: str, entry: chronicle.Entry) -> Reply:
-    """`entry` as a flat frame. Only who may see it in general (Table,
-    Storyguide or Chosen) goes, never the Players chosen (a Whisper's body
-    names those it is to, who each see the others' names on its card)."""
+    """`entry` as a flat frame, as chronicle.stamped hands it to a seat.
+    Only who may see it in general (Table, Storyguide or Chosen) goes,
+    never the Players chosen (a Whisper's body names those it is to, who
+    each see the others' names on its card), and whether it is for this
+    seat's Player (`for_you`, ADR 0031)."""
     body = json.dumps(entry.body, ensure_ascii=False)
     kind = entry.kind
     if len(body) > MAX_BODY:
@@ -104,6 +108,7 @@ def frame(session_id: str, entry: chronicle.Entry) -> Reply:
             "author": entry.author,
             "audience": entry.audience.to,
             "body": body,
+            "for_you": entry.for_you is True,
         },
     )
 
@@ -122,7 +127,13 @@ def entry_of(body: Body) -> tuple[str, chronicle.Entry]:
     if not isinstance(data, dict):
         raise ValueError("A Chronicle entry's body isn't a record.")
     return session_id, chronicle.Entry(
-        number, time_, kind, author, chronicle.Audience(audience), data
+        number,
+        time_,
+        kind,
+        author,
+        chronicle.Audience(audience),
+        data,
+        for_you=body.get("for_you") is True,
     )
 
 
