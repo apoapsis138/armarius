@@ -211,6 +211,11 @@ LAYERS: tuple[tuple[str, frozenset[str]], ...] = (
                 "saga_overview",
                 "section_verbs",
                 "sheets",
+                # A Show's copy of a record: its printed sheet (print_records),
+                # made for a seat by the listener's Show messages.
+                "show_copy",
+                "remote.showing",
+                "remote.serve",
                 # The records beside one on the trail (by saga_overview's groups).
                 "siblings",
                 "theban_meeting",

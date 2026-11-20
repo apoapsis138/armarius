@@ -36,8 +36,10 @@ from PySide6.QtGui import (
 )
 from PySide6.QtWidgets import (
     QAbstractButton,
+    QDialog,
     QFrame,
     QHBoxLayout,
+    QLabel,
     QMenu,
     QPushButton,
     QScrollArea,
@@ -55,11 +57,13 @@ from .. import (
     host_table,
     references,
     settings,
+    shows,
     table_rules,
 )
 from ..commands import Command, Refuse
 from ..forms import free_roll, roll_request
 from ..forms import message as message_forms
+from ..forms import show as show_forms
 from ..markup import escape
 from ..models import Saga, Session
 from ..rules import dice as dice_rules
@@ -450,6 +454,84 @@ def message_card(
     return card
 
 
+def show_card(
+    entry: chronicle.Entry,
+    line: str,
+    p: Palette,
+    open_copy: Callable[[], None],
+    open_live: Callable[[], None] | None,
+) -> Card:
+    """A Show: its title, to whom (chosen Players), and Open for the copy
+    as it was shown; "Open the live record" when the reader may read the
+    record now. It never opens by itself."""
+    body = entry.body
+    card = Card(line, p)
+    said = "The storyguide shows"
+    names = [str(n) for n in _list(body, "to_names")]
+    if names:
+        said += f" {', '.join(names)}"
+    card.column.addWidget(text(escape(said), p["label"], serif(10.5, italic=True)))
+    title = text(
+        escape(str(body.get("title") or "")),
+        heading_ink(p),
+        heading_font(12.5, p, caps=True),
+        wrap=True,
+    )
+    title.setObjectName("show-title")
+    card.column.addWidget(title)
+    row = QHBoxLayout()
+    row.setSpacing(10)
+    opens = margin_mark(
+        "open-show", "Open", "Open it as it was shown", p, p["foreground"]
+    )
+    opens.clicked.connect(lambda _checked=False: open_copy())
+    row.addWidget(opens)
+    if open_live is not None:
+        live = margin_mark(
+            "open-live",
+            "Open the live record",
+            "Open the record as it is now",
+            p,
+            p["foreground"],
+        )
+        live.clicked.connect(lambda _checked=False: open_live())
+        row.addWidget(live)
+    row.addStretch(1)
+    card.column.addLayout(row)
+    return card
+
+
+#: The most a shown picture is drawn at, in pixels: a larger one is scaled
+#: down to fit; a smaller one is drawn at its own size.
+PICTURE_FIT = (900, 700)
+
+
+class ShownPicture(QDialog):
+    """A shown picture, as it was shown: at its own size, or scaled down
+    to fit PICTURE_FIT."""
+
+    def __init__(self, shown: shows.Shown, parent: QWidget | None = None) -> None:
+        super().__init__(parent)
+        self.setObjectName("shown-picture")
+        self.setWindowTitle(shown.title)
+        column = QVBoxLayout(self)
+        picture = QPixmap()
+        picture.loadFromData(shown.picture or b"")
+        self.picture = QLabel()
+        self.picture.setObjectName("picture")
+        if not picture.isNull():
+            if picture.width() > PICTURE_FIT[0] or picture.height() > PICTURE_FIT[1]:
+                picture = picture.scaled(
+                    *PICTURE_FIT,
+                    Qt.AspectRatioMode.KeepAspectRatio,
+                    Qt.TransformationMode.SmoothTransformation,
+                )
+            self.picture.setPixmap(picture)
+        else:
+            self.picture.setText("This picture can't be drawn.")
+        column.addWidget(self.picture)
+
+
 #: One character of a Roll request, as its card shows it: the name,
 #: what came of it so far, and the answers this reader may give (a label
 #: and what it does).
@@ -768,6 +850,8 @@ class ChroniclePane(QWidget):
         self.unseen = 0
         #: How many times the strip has pulsed (one per entry for you).
         self.pulses = 0
+        #: The shown picture open last, kept while its window is.
+        self.shown_picture: ShownPicture | None = None
         outer = QHBoxLayout(self)
         outer.setContentsMargins(0, 4, 4, 4)
         outer.setSpacing(0)
@@ -1011,6 +1095,21 @@ class ChroniclePane(QWidget):
             )
             self.cards.insertWidget(self.cards.count() - 1, card)
             return
+        if shown == chronicle.SHOW_CARD:
+            live = (
+                show_forms.live_record(self.saga, entry, self.who)
+                if self.saga is not None
+                else None
+            )
+            card = show_card(
+                entry,
+                line,
+                self.p,
+                lambda: self.open_show(entry),
+                (lambda: self.open_record(live)) if live is not None else None,
+            )
+            self.cards.insertWidget(self.cards.count() - 1, card)
+            return
         if shown == chronicle.MESSAGE_CARD and self.saga is not None:
             viewer = chronicle.viewer_of(self.saga, self.who)
             fact = chronicle.message_fact(entry, self.saga, viewer)
@@ -1191,6 +1290,21 @@ class ChroniclePane(QWidget):
         if saga is None or session is None or table is None:
             return
         self.run(free_roll.free_roll_form(saga, session, self.who, table.roll))
+
+    def open_show(self, entry: chronicle.Entry) -> None:
+        """Open Show `entry`'s copy: fetched from the host at a Remote
+        seat, which sends it only while this seat holds the Show."""
+        table = self.table
+        if table is None:
+            return
+        found = table.open_show(entry)
+        if isinstance(found, str):
+            self.run(Refuse(show_forms.TITLE, escape(found)))
+        elif found.picture is not None:
+            self.shown_picture = ShownPicture(found, self)
+            self.shown_picture.open()
+        else:
+            self.run(show_forms.copy_form(found))
 
     def compose(self) -> None:
         """Write a Message: to the Table, or a Whisper."""

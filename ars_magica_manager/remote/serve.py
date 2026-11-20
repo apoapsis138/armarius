@@ -46,6 +46,7 @@ from .plan import (
 from .records import SeatSnapshots, picture_from_disk, seat_registry
 from .redemption import door_registry
 from .season_undo import undo_specs
+from .showing import show_specs
 from .switches import switch_specs
 
 #: How often the listener looks for devices the window has revoked.
@@ -116,6 +117,7 @@ def build(
                 *undo_specs(saga_id, log),
                 *switch_specs(saga_id, log),
                 *event_specs(saga_id),
+                *show_specs(saga_id),
             ],
         ),
         events=poller(saga_id),

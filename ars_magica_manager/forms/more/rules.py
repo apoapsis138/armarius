@@ -20,6 +20,7 @@ from ... import (
     merges,
     places,
     seasons,
+    shows,
     sourcebooks,
     storyguides,
     threats,
@@ -45,7 +46,7 @@ from ...actions import (
     silver_purse,
 )
 from ...forms import acclaim as acclaim_forms
-from ...forms import careers, go_to, message, sheet_roll
+from ...forms import careers, go_to, message, sheet_roll, show
 from ...forms import charter as charter_forms
 from ...forms import hubris as hubris_forms
 from ...forms import notes_goals as goal_forms
@@ -909,6 +910,34 @@ def rolls_from_sheet(facts: ActionFacts, section: str) -> bool:
 def reads_chronicle(facts: ActionFacts, section: str) -> bool:
     session = _chosen_session(facts, section)
     return session is not None and chronicle.has_chronicle(facts.saga, session)
+
+
+def shows_at_session(facts: ActionFacts, section: str) -> bool:
+    """Show, on the Session Under way, for its storyguide."""
+    session = _chosen_session(facts, section)
+    return session is not None and show.why_not_here(facts.saga, session) is None
+
+
+def opens_show(facts: ActionFacts, section: str) -> bool:
+    """Open a Show, on a Session whose Chronicle, as this copy holds it,
+    has one this copy's reader sees."""
+    session = _chosen_session(facts, section)
+    if session is None or not chronicle.has_chronicle(facts.saga, session):
+        return False
+    return bool(show.shows_held(facts.saga, session, chronicle.here())[1])
+
+
+def shows_record(facts: ActionFacts) -> bool:
+    """Show, on the page of a record that may be shown, for the storyguide
+    of the Session Under way."""
+    session = chronicle.under_way(facts.saga)
+    return (
+        virtual_tabletop.on()
+        and session is not None
+        and isinstance(facts.record_to_delete(), shows.SHOWABLE)
+        and facts.on_record()
+        and show.why_not_here(facts.saga, session) is None
+    )
 
 
 def sends_message(facts: ActionFacts, section: str) -> bool:

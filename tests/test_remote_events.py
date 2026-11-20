@@ -369,7 +369,7 @@ async def test_rolls_are_limited_per_seat(table: Table) -> None:
 async def test_an_entry_of_a_kind_the_seat_doesnt_know_still_arrives(
     table: Table,
 ) -> None:
-    table.book.add("show", HOST, chronicle.table(), {"picture": "map.png"})
+    table.book.add("handout", HOST, chronicle.table(), {"picture": "map.png"})
     seat = await table.seat("Anna")
     try:
         got = await _gather(seat, 1, 1)
@@ -377,7 +377,7 @@ async def test_an_entry_of_a_kind_the_seat_doesnt_know_still_arrives(
         await seat.close()
 
     entry = got[0][1]
-    assert entry.kind == "show"
+    assert entry.kind == "handout"
     assert chronicle.text([entry], chronicle.Chronicle(table.book.path, [entry]))
     assert chronicle.UNKNOWN in chronicle.text(
         [entry], chronicle.Chronicle(table.book.path, [entry])

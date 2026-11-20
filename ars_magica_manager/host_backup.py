@@ -3,7 +3,8 @@
 One zip per backup, named for the saga and the moment (UTC), holding the
 saga's file and its Remote seat files laid out as in the data folder
 (`sagas/ID.json`, `remote/NAME-devices.json`, its Sessions' Chronicles
-`chronicles/ID/SESSION.jsonl`...), so restoring is
+`chronicles/ID/SESSION.jsonl`, its Shows' copies `shows/ID/...`), so
+restoring is
 unzipping into the data folder. Each file is read under the lock every
 writer of it holds, so a backup taken while players save is whole: never
 half of one save and half of the next.
@@ -25,7 +26,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
-from . import chronicle, paths, storage
+from . import chronicle, paths, shows, storage
 from .files import held_lock
 from .remote.folder import lock_of, saga_remote_files
 from .remote.key_files import FOLDER_VARIABLE
@@ -79,6 +80,9 @@ def _contents(saga_id: str, saga_name: str) -> dict[str, bytes]:
     # taken mid-write ends in a half line, which reading it back drops.
     for path in chronicle.files_of(saga_id):
         found[f"{paths.CHRONICLES}/{saga_id}/{path.name}"] = path.read_bytes()
+    # A Show's copy is written once, before its entry, and never changed.
+    for path in shows.files_of(saga_id):
+        found[f"{paths.SHOWS}/{saga_id}/{path.name}"] = path.read_bytes()
     return found
 
 

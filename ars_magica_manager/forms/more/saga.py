@@ -10,6 +10,7 @@ from .. import hosting as hosting_forms
 from .. import message as message_forms
 from .. import reveal as reveal_forms
 from .. import sessions as session_forms
+from .. import show as show_forms
 from ..menu_refresh import calculator, changes
 from ..menu_steps import (
     export_cult,
@@ -32,8 +33,10 @@ from .rules import (
     on_region,
     on_saga,
     opens_session,
+    opens_show,
     reads_chronicle,
     sends_message,
+    shows_at_session,
     stops_hosting,
 )
 
@@ -102,6 +105,28 @@ ENTRIES: tuple[MoreAction, ...] = (
         section="section-sessions",
         on_page=False,
         in_section=sends_message,
+    ),
+    # A Show to the Table or chosen Players (forms/show.py).
+    MoreAction(
+        "show_at_session",
+        "w",
+        "Show",
+        step=lambda page: on_session(page, show_forms.show_here),
+        refresh=calculator(),
+        section="section-sessions",
+        on_page=False,
+        in_section=shows_at_session,
+    ),
+    # A Show's copy, as the Chronicle's Show cards open it.
+    MoreAction(
+        "open_show",
+        "o",
+        "Open a Show",
+        step=lambda page: on_session(page, show_forms.open_show),
+        refresh=calculator(),
+        section="section-sessions",
+        on_page=False,
+        in_section=opens_show,
     ),
     MoreAction(
         "import_data",

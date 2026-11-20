@@ -1,6 +1,6 @@
 """What can be done at the table while a Session is under way, as one
 interface: roll, spend Confidence, answer a Roll request, send a Message,
-and open a form's roll. The host's own window does each in its Chronicle
+open a form's roll, and Show something and open a Show's copy. The host's own window does each in its Chronicle
 (host_table.HostTable); a Remote seat asks its host (seat_session's
 SeatTable). The pane, the sheet's Roll and the Table roll forms take a
 Table and never ask which one they have.
@@ -18,7 +18,7 @@ import random
 from dataclasses import dataclass
 from typing import Protocol
 
-from . import chronicle, references
+from . import chronicle, references, shows
 
 
 @dataclass(frozen=True)
@@ -64,6 +64,13 @@ class Table(Protocol):
     def open_form_roll(self, opening: Opening) -> FormRoll:
         """A form's roll opened at the table; ValueError says why it
         can't be made."""
+        ...
+
+    def show(self, call: chronicle.ShowCall) -> str | None: ...
+
+    def open_show(self, entry: chronicle.Entry) -> shows.Shown | str:
+        """The copy Show `entry` names, as this person may open it, or why
+        it can't be opened."""
         ...
 
     def held(self) -> chronicle.HasEntries | None:

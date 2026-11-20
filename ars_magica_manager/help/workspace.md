@@ -1519,7 +1519,7 @@ Choose a Session in the Sessions list and press `m` for More. **Begin Session**,
 Choose a Session in Saga Management's Sessions and click **Begin Session**, **End Session** or **Chronicle**. The preview is turned on in the [Settings window](help:settings-window).
 <!-- /gui -->
 
-**See also:** [Sessions](help:tab-content-sessions), [Table rolls](help:table-rolls), [Messages and Whispers](help:chronicle-messages)
+**See also:** [Sessions](help:tab-content-sessions), [Table rolls](help:table-rolls), [Messages and Whispers](help:chronicle-messages), [Show](help:chronicle-shows)
 
 ### Messages and Whispers
 <!-- help: chronicle-messages -->
@@ -1546,6 +1546,32 @@ Click **Message** at the foot of the [Chronicle pane](help:chronicle-pane).
 <!-- /gui -->
 
 **See also:** [The Chronicle](help:chronicle)
+
+### Show
+<!-- help: chronicle-shows -->
+
+Preview: turn on Virtual Tabletop in Settings.
+
+While a Session is under way, its storyguide can **Show** the players something to look at: a character's, covenant's, laboratory's or familiar's record, or a picture already in the saga, such as a map or a portrait. Show it to the Table, which everyone at the Session sees, or to the Players you choose. Only the Session's storyguide shows, from the host's computer or a Remote seat.
+
+- **What, title, story, to whom.** Choose what to show; its name becomes the title, which you can change. Choose the open story it belongs to, if any (a story is listed once it has been taken up). Under **To**, no one chosen means the Table.
+- **A copy, as the players read it now.** A record is copied once, at the moment you Show it, as the players may read it: no Secret you haven't revealed, no private notes, and the name of any record they don't know of left out. A picture is copied as it is. The copy never changes, even if the record does later.
+- **Each one shown gets a Show** in the [Chronicle](help:chronicle), with its title, to open and read the copy. It never opens by itself.
+<!-- gui -->
+- A Show to you pulses the collapsed [Chronicle pane](help:chronicle-pane); a Show to the Table only adds to its count. **Open the live record** sits beside **Open** on its card when you may read the record as it is now.
+<!-- /gui -->
+- **At a Remote seat,** the copy and its picture are fetched from the host only while your seat holds the Show: a Show that isn't yours never reaches your computer.
+
+The copies are kept on the host's computer, in a folder beside the saga, never written into the saga, so an Export or a Content pack can't carry them.
+
+<!-- tui -->
+To Show, choose the Session under way in the Sessions list, press `m` for More and choose **Show**; on a record's page, More offers **Show to the Table**. To read a Show, choose the Session and choose **Open a Show** in More: a record's copy is shown as text, and a picture is named (open it on the desktop to see it).
+<!-- /tui -->
+<!-- gui -->
+To Show, choose **Show to the Table** in a record's Manage chapter, or choose the Session under way in Sessions and click **Show**. Click **Open** on a Show card to read its copy; a picture opens in a window of its own.
+<!-- /gui -->
+
+**See also:** [The Chronicle](help:chronicle), [Messages and Whispers](help:chronicle-messages)
 
 ### How a roll shows its dice
 <!-- help: dice-line -->
@@ -1600,8 +1626,9 @@ A roll from the sheet has a line under what it's for saying how its modifier was
 - **Free Roll**, at the foot, makes a [Free roll](help:free-roll).
 - **Message**, below it, sends a [Message or a Whisper](help:chronicle-messages). A Message is a card of who it's from, in small italic, and its words; a record it names that you may open is a link.
 - **Roll Request**, below it for the Session's storyguide on the host's computer, makes a [Roll request](help:roll-requests).
+- A [Show](help:chronicle-shows) is a card of its title and to whom, with **Open** for the copy as it was shown and, when you may read the record now, **Open the live record**.
 - **›** collapses the pane to a thin gilt strip on the right edge, its name running up it and the count of entries come since in a small seal at its head. Click the strip to open it again. **Chronicle** in the top bar opens or collapses it too.
-- A Blind roll's number, for the Session's storyguide, the line telling you one was rolled for your character, a Whisper to you, or a Roll request offered to your character pulses the strip once. Not with **Reduce motion** on. The pane never opens by itself.
+- A Blind roll's number, for the Session's storyguide, the line telling you one was rolled for your character, a Whisper or a Show to you, or a Roll request offered to your character pulses the strip once. Not with **Reduce motion** on. The pane never opens by itself.
 - A roll landing plays a soft tock, with **Sounds** on.
 
 Whether it's open or collapsed is remembered for the next time the app starts with a Session under way.

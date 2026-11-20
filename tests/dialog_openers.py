@@ -63,6 +63,7 @@ from ars_magica_manager.forms import land_shaping as land_forms
 from ars_magica_manager.forms import message as message_forms
 from ars_magica_manager.forms import season as season_forms
 from ars_magica_manager.forms import sheet_roll as sheet_roll_forms
+from ars_magica_manager.forms import show as show_forms
 from ars_magica_manager.forms import threshold as threshold_forms
 from ars_magica_manager.forms import trait_roll as trait_roll_forms
 from ars_magica_manager.forms import tribunal as tribunal_forms
@@ -1098,6 +1099,21 @@ def _send_message(ws) -> None:
         ws.saga.sessions.append(session)
         chronicle.begin(ws.saga, session, by=viewing.HOST)
     ws._run_steps(message_forms.message_here(ws.saga, session))
+
+
+def _show(ws, preset: bool) -> None:
+    """A Show: a Session begun by the host, as its storyguide, as for a
+    Message; opened at the Session, or on the chosen character's page."""
+    virtual_tabletop.set_on(True)
+    session = chronicle.under_way(ws.saga)
+    if session is None:  # opened again: already begun
+        session = Session("contract-vtt")
+        ws.saga.sessions.append(session)
+        chronicle.begin(ws.saga, session, by=viewing.HOST)
+    if preset:
+        ws._run_steps(show_forms.show_record(ws.saga, ws.selected_character))
+    else:
+        ws._run_steps(show_forms.show_here(ws.saga, session))
 
 
 async def _open_staged(ws, kind: str, open_form) -> None:
@@ -2535,6 +2551,10 @@ OPENERS: dict[str, Opener] = {
     ),
     "sheet roll": Opener("character", _sheet_roll, action="sheet_roll"),
     "send message": Opener("saga", _send_message, action="send_message"),
+    "show": Opener("saga", lambda ws: _show(ws, False), action="show_at_session"),
+    "show to the table": Opener(
+        "character", lambda ws: _show(ws, True), action="show_record"
+    ),
     "build a ship": Opener(
         "covenant",
         _run(lambda ws: ship_build.build_form(ws.saga, ws.selected_covenant)),

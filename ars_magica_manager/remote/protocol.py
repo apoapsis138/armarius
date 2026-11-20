@@ -30,7 +30,9 @@ from .. import __version__
 #: 3: a seat draws a Table roll form's dice from the host (an older seat
 #: would roll them itself, which ADR 0018 forbids). 4: a seat sends
 #: Messages and Whispers (`say`), which an older host would refuse, and
-#: is told which entries are for it (`for_you`, ADR 0031). It rises at
+#: is told which entries are for it (`for_you`, ADR 0031); a storyguide's
+#: seat Shows (`show`) and any seat fetches a Show's copy (`show_copy`) and
+#: picture (in the Show folder). It rises at
 #: most once between releases: 2 to 4 have never shipped.
 PROTOCOL_VERSION = 4
 #: What a seat speaking an older protocol is told, instead of a welcome.

@@ -106,7 +106,8 @@ def _every_kind(saga: Saga, session: Session, book: chronicle.Chronicle) -> None
     table: a Blind roll for Ana's character (and its line for her), a
     Private and a Table roll, a form's roll, a Roll request to Ana's
     character with its Ease Factor kept, a Strike, a Confidence spend, an
-    outcome, a Message to the Table, Whispers each way, and the end."""
+    outcome, a Message to the Table, Whispers each way, a Show to Ana, and
+    the end."""
     _blind(saga, session, book)
     rolled = chronicle.RollRequest(character_id="aelfric", visibility=chronicle.PRIVATE)
     chronicle.free_roll(book, saga, session, rolled, by="ana", rng=Faces(3))
@@ -132,14 +133,16 @@ def _every_kind(saga: Saga, session: Session, book: chronicle.Chronicle) -> None
     chronicle.message(book, saga, session, "Evening.", by="ben")
     chronicle.message(book, saga, session, "Psst.", to=("ana",), by="ben")
     chronicle.message(book, saga, session, "Hush.", to=("ben",), by=HOST)
+    shown = {"show": "x", "title": "A map", "to": ["ana"], "to_names": ["Ana"]}
+    book.add(chronicle.SHOW, HOST, chronicle.chosen("ana"), shown)
     chronicle.end(saga, session, by=HOST)
 
 
 def test_each_kind_says_who_it_is_for() -> None:
     """The kind registry holds the "for whom" rule (Strategy): a Blind
     roll's number is for the storyguide, its line for the player rolled
-    for, a Whisper for those it is to, a Roll request for the player of
-    each character offered it, and anything else for no one."""
+    for, a Whisper or Show for those it is to, a Roll request for the
+    player of each character offered it, and anything else for no one."""
     saga, session, book = _begun()
     _every_kind(saga, session, book)
 
@@ -149,7 +152,7 @@ def test_each_kind_says_who_it_is_for() -> None:
         ]
 
     assert kinds_for(HOST) == ["roll", "form_roll"]
-    assert kinds_for("ana") == ["rolled", "request", "message"]
+    assert kinds_for("ana") == ["rolled", "request", "message", "show"]
     assert kinds_for("ben") == ["message"]
 
 

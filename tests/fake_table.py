@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from ars_magica_manager import chronicle, references, table_rolls
+from ars_magica_manager import chronicle, references, shows, table_rolls
 
 
 class FakeTable:
@@ -24,6 +24,8 @@ class FakeTable:
         self.spent: list[tuple[int, int]] = []
         self.answered: list[tuple[int, str, bool]] = []
         self.said: list[tuple[str, tuple[str, ...]]] = []
+        self.shown: list[chronicle.ShowCall] = []
+        self.opened: list[int] = []
 
     def roll(self, request: chronicle.RollRequest) -> str | None:
         self.rolled.append(request)
@@ -48,6 +50,14 @@ class FakeTable:
         if self.opener is None:
             raise ValueError("This table opens no form rolls.")
         return self.opener(opening)
+
+    def show(self, call: chronicle.ShowCall) -> str | None:
+        self.shown.append(call)
+        return self.refuse
+
+    def open_show(self, entry: chronicle.Entry) -> shows.Shown | str:
+        self.opened.append(entry.number)
+        return self.refuse or shows.Shown(str(entry.body.get("title", "")), "Copy.")
 
     def held(self) -> chronicle.HasEntries | None:
         return self._held

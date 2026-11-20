@@ -46,6 +46,17 @@ def player_of(session: Session, character_id: str) -> str:
     )
 
 
+def why_not_lead(saga: Saga, session: Session, who: str, act: str) -> str | None:
+    """Why `who` may not do what only the Session's storyguide does while
+    it is Under way (`act`, as "shows something": Show, and the verbs that
+    run a Scene), or None."""
+    if not session.under_way:
+        return "The Session isn't under way."
+    if who != storyguide_of(session, saga):
+        return f"Only the Session's storyguide {act}."
+    return None
+
+
 def why_not_act(character: Character) -> str | None:
     """Why `character` can take no action now (DE p. 404: Incapacitated;
     an Unconscious or dead character neither), or None."""
