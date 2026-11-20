@@ -848,14 +848,33 @@ def _chosen_secret(facts: ActionFacts, section: str) -> tuple[Any, int] | None:
     return record, row
 
 
-def _chosen_session(facts: ActionFacts, section: str) -> Session | None:
-    """The Session chosen in the Sessions list, while the Virtual Tabletop
-    (Preview) is on; None otherwise."""
-    if section != SESSIONS_SECTION or not virtual_tabletop.on():
+def _session_here(facts: ActionFacts, section: str) -> Session | None:
+    """The Session on show on its own page, or chosen in the Sessions
+    list; None otherwise."""
+    if facts.selected_kind == NodeKind.SESSION:
+        return facts.selected_session
+    if section != SESSIONS_SECTION:
         return None
     row = facts.chosen_row(section)
     shown = ss.in_order(facts.saga)
     return shown[row] if row is not None and 0 <= row < len(shown) else None
+
+
+def _chosen_session(facts: ActionFacts, section: str) -> Session | None:
+    """_session_here, while the Virtual Tabletop (Preview) is on."""
+    return _session_here(facts, section) if virtual_tabletop.on() else None
+
+
+def opens_session(facts: ActionFacts, section: str) -> bool:
+    """Open Session, on a row of the Sessions list."""
+    return facts.selected_kind != NodeKind.SESSION and (
+        _session_here(facts, section) is not None
+    )
+
+
+def glances_cast(facts: ActionFacts, section: str) -> bool:
+    """Cast at a Glance, on a Session's page or its row."""
+    return _session_here(facts, section) is not None
 
 
 def begins_session(facts: ActionFacts, section: str) -> bool:

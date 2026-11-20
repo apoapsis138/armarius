@@ -2,9 +2,8 @@
 
 from __future__ import annotations
 
-from ... import merges, sessions, storage, undo_season
+from ... import merges, storage, undo_season
 from ...actions import NodeKind
-from ...commands import Refuse
 from ...sections import SESSIONS_SECTION
 from .. import downtime
 from .. import hosting as hosting_forms
@@ -27,11 +26,13 @@ from .rules import (
     ends_session,
     exports_cult,
     exports_saga,
+    glances_cast,
     hosts,
     imports,
     merges_doubles,
     on_region,
     on_saga,
+    opens_session,
     opens_show,
     reads_chronicle,
     sends_message,
@@ -42,17 +43,26 @@ from .rules import (
 #: This area's actions, in the order More lists them.
 ENTRIES: tuple[MoreAction, ...] = (
     MoreAction(
-        "cast_glance",
-        "g",
-        "Cast at a Glance",
-        step=lambda page: (
-            session_forms.cast_glance(page.saga, sessions.in_order(page.saga)[page.row])
-            if page.row is not None and page.row < len(page.saga.sessions)
-            else Refuse("Cast at a Glance", "Choose a Session first.")
+        "open_session",
+        "o",
+        "Open Session",
+        step=lambda page: on_session(
+            page, lambda _saga, session: session_forms.open_page(session)
         ),
         refresh=calculator(),
         section="section-sessions",
         on_page=False,
+        in_section=opens_session,
+    ),
+    MoreAction(
+        "cast_glance",
+        "g",
+        "Cast at a Glance",
+        step=lambda page: on_session(page, session_forms.cast_glance),
+        refresh=calculator(),
+        section="section-sessions",
+        on_page=False,
+        in_section=glances_cast,
     ),
     # The Virtual Tabletop (Preview): a Session's Chronicle (chronicle.py).
     MoreAction(

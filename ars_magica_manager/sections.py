@@ -19,6 +19,10 @@ PLAYERS_SECTION = "section-players"
 #: The Sessions list (a / e / d act on the evenings of play).
 SESSIONS_SECTION = "section-sessions"
 
+#: A Session page's top panel: when, who storyguides, who comes, who plays
+#: whom (e edits the Session; sheets/session.py).
+SESSION_INFO_SECTION = "section-session-info"
+
 #: The Saga Content sheet's sections.
 BOOKS_SECTION = "section-books-in-play"
 SOURCES_SECTION = "section-saga-sources"

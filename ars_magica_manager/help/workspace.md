@@ -1438,7 +1438,7 @@ Marking a Session **Played** keeps a copy of each player character as they stand
 
 **The app works out:** which Session is next, and the names as written, so a played Session still reads right after a Player or character is deleted. Deleting one takes them out of the planned Sessions only. On [Needs You](help:section-attention), it shows an open story about a character none of whose Players is coming.
 
-**See also:** [How to plan and record a Session](help:guide-sessions), [Players](help:tab-content-players)
+**See also:** [How to plan and record a Session](help:guide-sessions), [Players](help:tab-content-players), [A Session's page](help:session-page)
 
 ### Previously On
 <!-- help: previously-on -->
@@ -1771,6 +1771,22 @@ While the player you sit as has characters, the button is split. "Playing as" an
 <!-- /gui -->
 
 **See also:** [Signing in](help:sign-in), [How to host a saga](help:guide-hosting), [The saga](help:saga)
+
+# A Session's page
+<!-- help: session-page -->
+
+Each Session has a page of its own: its date, whether it's planned, under way or played, its game date, its storyguide, who's coming and who's Away, who plays whom, and its notes.
+
+<!-- tui -->
+Each Session is under **Sessions** in the tree, in the Sessions list's order. In Saga Content's Sessions tab, choose a Session and use More's **Open Session** (`m`, then `o`). On the page, `e` edits the Session, and More has Cast at a Glance and, with the Virtual Tabletop (Preview) on, Begin Session, End Session and its Chronicle. The notes have a tab of their own.
+<!-- /tui -->
+<!-- gui -->
+On Saga Management's Sessions, choose a Session and click **Open**. The page has **Edit**, **Cast at a Glance** and **Print the Cast**, and, with the Virtual Tabletop (Preview) on, **Begin Session**, **End Session** and its **Chronicle**.
+<!-- /gui -->
+
+Players read a Session's page as they read the Sessions list, with nothing to change.
+
+**See also:** [Sessions](help:tab-content-sessions), [The Chronicle](help:chronicle)
 
 # A record's Secrets
 <!-- help: tab-secrets -->

@@ -62,6 +62,7 @@ ORDER: tuple[str, ...] = (
     "recovery_roll",
     "end_session",
     "what_changed",
+    "open_session",
     "cast_glance",
     "begin_session",
     "close_session",

@@ -89,6 +89,8 @@ _REF_NODES: dict[str, NodeKind] = {
     "tribunals": NodeKind.TRIBUNAL,
     "neighbours": NodeKind.NEIGHBOUR,
     "creatures": NodeKind.CREATURE,
+    # A Session's own page (forms/sessions.SESSION_REF).
+    "sessions": NodeKind.SESSION,
 }
 
 

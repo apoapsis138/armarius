@@ -1,6 +1,7 @@
 """The Sessions section of the saga page's Saga Management: the evenings
 of play, planned soonest first then played newest first, with Add, Edit
-and Delete (the core's SectionOps), Cast at a Glance and Print the Cast on
+and Delete (the core's SectionOps), Open (the Session's own page,
+session_page.py), Cast at a Glance and Print the Cast on
 the chosen row, and Previously On beside them. With the Virtual Tabletop
 (Preview) on, the chosen row also has Begin Session, End Session and its
 Chronicle (the core's forms, as the terminal's More offers them)."""
@@ -64,6 +65,12 @@ def sessions_section(saga: Saga, p: Palette, run: Run, inspect: Inspect) -> QWid
         run,
         p,
         more=[
+            (
+                "Open",
+                "season",
+                lambda row: session_forms.open_page(shown[row]),
+                lambda _row: True,
+            ),
             (
                 "Cast at a Glance",
                 "players",

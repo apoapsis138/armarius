@@ -1071,7 +1071,10 @@ def update_command(page: Page) -> Command:
 
 
 def on_session(page: Page, step: Callable[[Saga, Session], Command]) -> Command:
-    """`step` for the Session chosen in the Sessions list."""
+    """`step` for the Session on show on its own page, or chosen in the
+    Sessions list."""
+    if page.session is not None:
+        return step(page.saga, page.session)
     shown = sessions.in_order(page.saga)
     if page.row is None or not 0 <= page.row < len(shown):
         return Refuse("Sessions", "Choose a Session first.")
