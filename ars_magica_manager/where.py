@@ -11,7 +11,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from . import familiars as fam
-from . import stores
+from . import sessions, stores
 from .actions import NodeKind
 from .models import (
     Character,
@@ -21,6 +21,7 @@ from .models import (
     Laboratory,
     Neighbour,
     Saga,
+    Session,
     Tribunal,
 )
 
@@ -36,6 +37,7 @@ RECORD_KINDS: dict[NodeKind, str] = {
     NodeKind.TRIBUNAL: "tribunals",
     NodeKind.NEIGHBOUR: "neighbours",
     NodeKind.CREATURE: "creatures",
+    NodeKind.SESSION: "sessions",
 }
 
 #: A covenant's lists, the id the covenant's (None: the saga's unassigned).
@@ -66,6 +68,7 @@ _KIND_OF: dict[type, NodeKind] = {
     Tribunal: NodeKind.TRIBUNAL,
     Neighbour: NodeKind.NEIGHBOUR,
     Creature: NodeKind.CREATURE,
+    Session: NodeKind.SESSION,
 }
 
 
@@ -79,7 +82,7 @@ class Where:
     id: str | None = None
 
     @classmethod
-    def of(cls, record: Record) -> Where:
+    def of(cls, record: Record | Session) -> Where:
         """The page of `record`."""
         return cls(_KIND_OF[type(record)], record.id)
 
@@ -102,6 +105,8 @@ class Where:
             return None
         if self.kind == NodeKind.FAMILIAR:
             return next((f for f in saga.familiars if f.id == self.id), None)
+        if self.kind == NodeKind.SESSION:
+            return None  # not a named record: Where.session finds it
         find = {
             NodeKind.CHARACTER: saga.character,
             NodeKind.COVENANT: saga.covenant,
@@ -114,6 +119,8 @@ class Where:
 
     def gone(self, saga: Saga) -> bool:
         """The page's record is no longer in the saga."""
+        if self.kind == NodeKind.SESSION:
+            return self.session(saga) is None
         return self.shows_record and self.record(saga) is None
 
     def presence_key(self) -> str | None:
@@ -132,6 +139,9 @@ class Where:
             covenant = saga.covenant(self.id)
             where = f" in {covenant.name}" if covenant is not None else ""
             return f"{_GROUPS[self.kind]}{where}"
+        if self.kind == NodeKind.SESSION:
+            session = self.session(saga)
+            return sessions.title(session) if session is not None else ""
         record = self.record(saga)
         if record is None:
             return ""
@@ -178,3 +188,6 @@ class Where:
 
     def creature(self, saga: Saga) -> Creature | None:
         return saga.creature(self.id) if self.kind == NodeKind.CREATURE else None
+
+    def session(self, saga: Saga) -> Session | None:
+        return sessions.find(saga, self.id) if self.kind == NodeKind.SESSION else None

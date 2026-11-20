@@ -41,4 +41,5 @@ from .region import RegionSheetView as RegionSheetView
 from .saga_content import TAB_SECTIONS as TAB_SECTIONS
 from .saga_content import SagaContentSheetView as SagaContentSheetView
 from .seasons import SeasonsSheetView as SeasonsSheetView
+from .session import SessionSheetView as SessionSheetView
 from .tribunal import TribunalSheetView as TribunalSheetView

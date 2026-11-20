@@ -1458,7 +1458,7 @@
         "a": "FieldsDialog: Add a Session",
         "e": "(nothing)",
         "d": "(nothing)",
-        "m": "notice: Choose a Session first.",
+        "m": "(disabled)",
         "slash": "(disabled)"
       }
     },

@@ -145,6 +145,17 @@ def when(session: Session) -> str:
     return day.strftime("%d %b %Y").lstrip("0") if day else "No date yet"
 
 
+def title(session: Session) -> str:
+    """What a Session's page is called: "Session of 21 Nov 2026"."""
+    day = real_day(session)
+    return f"Session of {when(session)}" if day else "Session (no date yet)"
+
+
+def find(saga: Saga, session_id: str | None) -> Session | None:
+    """The Session with `session_id`, or None when it is gone."""
+    return next((s for s in saga.sessions if s.id == session_id), None)
+
+
 def attendance_line(saga: Saga, session: Session) -> str:
     """Who is coming and who is Away (plain text); "" in a Solo saga."""
     if is_solo(saga) and session.solo:

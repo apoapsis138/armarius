@@ -47,6 +47,7 @@ from .... import (
     saga_index,
     seat,
     section_verbs,
+    sessions,
     sourcebooks,
     storage,
     stores,
@@ -82,6 +83,7 @@ from ....models import (
     Neighbour,
     Player,
     Saga,
+    Session,
     Tribunal,
 )
 from ....references import Ref
@@ -100,6 +102,7 @@ from ....sections import (
     NEIGHBOUR_INFO_SECTION,
     REGION_INFO_SECTION,
     SEASONS_INFO_SECTION,
+    SESSION_INFO_SECTION,
     SIEGES_SECTION,
     TRIBUNAL_INFO_SECTION,
 )
@@ -126,6 +129,7 @@ from ..sheets import (
     RegionSheetView,
     SagaContentSheetView,
     SeasonsSheetView,
+    SessionSheetView,
     SheetView,
     TribunalSheetView,
 )
@@ -182,6 +186,7 @@ _HELP_PAGES: dict[NodeKind, str] = {
     NodeKind.BESTIARY: "bestiary",
     NodeKind.CREATURE: "creature",
     NodeKind.CONFLICTS: "conflicts",
+    NodeKind.SESSION: "session-page",
 }
 
 #: How often, in seconds, a hosted saga's copies look for each other's saves
@@ -350,6 +355,7 @@ class WorkspaceBase(Screen[None]):
         NodeKind.SEASONS: (set(), SEASONS_INFO_SECTION),
         NodeKind.ARMARIUM: (set(), ARMARIUM_SECTION),
         NodeKind.CUSTODIA: (set(), CUSTODIA_SECTION),
+        NodeKind.SESSION: (set(), SESSION_INFO_SECTION),
     }
 
     DEFAULT_CSS = """
@@ -388,6 +394,7 @@ class WorkspaceBase(Screen[None]):
         self._neighbour_sheet_view: NeighbourSheetView | None = None
         self._bestiary_view: BestiarySheetView | None = None
         self._creature_sheet_view: CreatureSheetView | None = None
+        self._session_sheet_view: SessionSheetView | None = None
         self._conflicts_view: ConflictsSheetView | None = None
         self._seasons_view: SeasonsSheetView | None = None
         #: The Armarium or the Custodia Mirabilium, whichever is on show.
@@ -645,6 +652,7 @@ class WorkspaceBase(Screen[None]):
             f"Seasons ({len(self.saga.season_records)})",
             data=(NodeKind.SEASONS,),
         )
+        self._add_sessions(tree.root)
         tree.root.add_leaf("Saga Content", data=(NodeKind.SAGA_CONTENT,))
         # Every book and device, held or not: the storyguide's alone.
         for store in stores.STORES.values():
@@ -721,6 +729,20 @@ class WorkspaceBase(Screen[None]):
                 node.add_leaf(
                     escape(neighbour.name), data=(NodeKind.NEIGHBOUR, neighbour.id)
                 )
+
+    def _add_sessions(self, parent: TreeNode[Any]) -> None:
+        """The Sessions, each opening its own page, in the Sessions list's
+        order; choosing the group shows Saga Content, where they are made."""
+        listed = sessions.in_order(self.saga)
+        if not listed:
+            return
+        node = parent.add(
+            f"Sessions ({len(listed)})", data=(NodeKind.SAGA_CONTENT,), expand=False
+        )
+        for session in listed:
+            node.add_leaf(
+                escape(sessions.title(session)), data=(NodeKind.SESSION, session.id)
+            )
 
     def _add_bestiary(self, parent: TreeNode[Any]) -> None:
         """The Bestiary: every creature, by name."""
@@ -829,6 +851,10 @@ class WorkspaceBase(Screen[None]):
     @property
     def selected_familiar(self) -> Familiar | None:
         return self.where.familiar(self.saga)
+
+    @property
+    def selected_session(self) -> Session | None:
+        return self.where.session(self.saga)
 
     @property
     def selected_tribunal(self) -> Tribunal | None:
@@ -1596,6 +1622,7 @@ class WorkspaceBase(Screen[None]):
             NodeKind.SEASONS: self._seasons_view,
             NodeKind.ARMARIUM: self._store_view,
             NodeKind.CUSTODIA: self._store_view,
+            NodeKind.SESSION: self._session_sheet_view,
         }.get(self.selected_kind)
 
     def _open_creation_worksheet(
@@ -1898,6 +1925,8 @@ class WorkspaceBase(Screen[None]):
         where = self.where
         if where.whole_saga and where.kind != NodeKind.SAGA:
             return self.saga
+        if where.kind == NodeKind.SESSION:
+            return where.session(self.saga)
         return where.record(self.saga)
 
     def action_add(self) -> None:
