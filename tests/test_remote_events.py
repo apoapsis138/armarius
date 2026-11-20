@@ -206,6 +206,48 @@ async def test_a_private_or_blind_marker_never_reaches_another_seat(
     assert for_anna[-1][1].author == anna_id
 
 
+async def test_each_seat_is_told_for_you_on_exactly_its_entries(table: Table) -> None:
+    """The host works "for you" out for each seat it sends to (ADR 0031):
+    live and on catching up after a drop, through the one stamp."""
+    anna_id, bea_id = table.id_of("Anna"), table.id_of("Bea")
+    session = table.saga.sessions[0]
+    table.roll(character_id="aelfric", visibility=chronicle.BLIND)  # 2, 3
+    chronicle.message(
+        table.book, table.saga, session, "Psst.", to=(anna_id,), by=bea_id
+    )  # 4
+    anna, bea = await table.seat("Anna"), await table.seat("Bea")
+    try:
+        anna_stream, bea_stream = anna.events(0), bea.events(0)
+        caught_up_anna = [
+            await asyncio.wait_for(anext(anna_stream), 2) for _ in range(3)
+        ]
+        caught_up_bea = [await asyncio.wait_for(anext(bea_stream), 2) for _ in range(2)]
+        call = chronicle.RollCall(
+            ("brigit",), "Perception", visibility=chronicle.PUBLIC
+        )
+        chronicle.request_rolls(table.book, table.saga, session, call, by=HOST)  # 5
+        live_anna = await asyncio.wait_for(anext(anna_stream), 2)
+        live_bea = await asyncio.wait_for(anext(bea_stream), 2)
+    finally:
+        await anna.close()
+        await bea.close()
+
+    def told(got: list[tuple[str, chronicle.Entry]]) -> list[tuple[int, bool | None]]:
+        return [(e.number, e.for_you) for _s, e in got]
+
+    assert told([*caught_up_anna, live_anna]) == [
+        (1, False),
+        (3, True),  # the line that the storyguide rolled for Aelfric
+        (4, True),  # Bea's Whisper to her
+        (5, False),
+    ]
+    assert told([*caught_up_bea, live_bea]) == [
+        (1, False),
+        (4, False),  # her own Whisper is not for her
+        (5, True),  # a Roll request offered to Brigit
+    ]
+
+
 async def test_a_seat_that_reconnects_catches_up_from_what_it_holds(
     table: Table,
 ) -> None:

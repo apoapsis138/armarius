@@ -922,21 +922,26 @@ class ChroniclePane(QWidget):
             if self._reads(entry):
                 if spec.sounds:
                     sounds.play("tock")
-                if spec.card != chronicle.NO_CARD and self.collapsed:
-                    self.unseen += 1
-                    self._draw_strip()
+                if spec.card != chronicle.NO_CARD:
+                    self._came_while_collapsed(entry)
             return
         if not self._reads(entry):
             return
         self._card(entry, chronicle.voided(book))
         if spec is not None and spec.sounds:
             sounds.play("tock")
-        if self.collapsed:
-            self.unseen += 1
-            self._draw_strip()
-            reader = self._reader()
-            if reader is not None and reader.calls_attention(entry):
-                self._pulse()
+        self._came_while_collapsed(entry)
+
+    def _came_while_collapsed(self, entry: chronicle.Entry) -> None:
+        """Count `entry` on a collapsed strip, and pulse it if the entry is
+        for whoever reads (its kind's rule, or the host's word at a seat)."""
+        if not self.collapsed:
+            return
+        self.unseen += 1
+        self._draw_strip()
+        reader = self._reader()
+        if reader is not None and reader.calls_attention(entry):
+            self._pulse()
 
     def _grown(self, _low: int, high: int) -> None:
         """The feed grew: keep to the newest card, once laid out."""

@@ -136,7 +136,7 @@ A part of a Session at one place and time, with who is present and its aura, pre
 _Avoid_: encounter
 
 **Audience**:
-Who may see a Chronicle entry: the Table (everyone at the Session), the Session's storyguide alone, or chosen Players (with the Session's storyguide always). Any other storyguide of the troupe at the Session counts as a Player that evening.
+Who may see a Chronicle entry: the Table (everyone at the Session), the Session's storyguide alone, or chosen Players (with the Session's storyguide always). Any other storyguide of the troupe at the Session counts as a Player that evening. A Remote seat is told only whether an entry is for it, never who else it is for.
 _Avoid_: visibility (for the entry's setting), permissions, scope
 
 **Public roll**:

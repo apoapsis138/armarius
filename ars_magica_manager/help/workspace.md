@@ -1601,7 +1601,7 @@ A roll from the sheet has a line under what it's for saying how its modifier was
 - **Message**, below it, sends a [Message or a Whisper](help:chronicle-messages). A Message is a card of who it's from, in small italic, and its words; a record it names that you may open is a link.
 - **Roll Request**, below it for the Session's storyguide on the host's computer, makes a [Roll request](help:roll-requests).
 - **›** collapses the pane to a thin gilt strip on the right edge, its name running up it and the count of entries come since in a small seal at its head. Click the strip to open it again. **Chronicle** in the top bar opens or collapses it too.
-- A Blind roll's number, for the Session's storyguide, the line telling you one was rolled for your character, or a Whisper to you pulses the strip once. Not with **Reduce motion** on. The pane never opens by itself.
+- A Blind roll's number, for the Session's storyguide, the line telling you one was rolled for your character, a Whisper to you, or a Roll request offered to your character pulses the strip once. Not with **Reduce motion** on. The pane never opens by itself.
 - A roll landing plays a soft tock, with **Sounds** on.
 
 Whether it's open or collapsed is remembered for the next time the app starts with a Session under way.

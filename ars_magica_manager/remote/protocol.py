@@ -29,7 +29,9 @@ from .. import __version__
 #: host sends a Session's Chronicle down an events connection (ADR 0019).
 #: 3: a seat draws a Table roll form's dice from the host (an older seat
 #: would roll them itself, which ADR 0018 forbids). 4: a seat sends
-#: Messages and Whispers (`say`), which an older host would refuse.
+#: Messages and Whispers (`say`), which an older host would refuse, and
+#: is told which entries are for it (`for_you`, ADR 0031). It rises at
+#: most once between releases: 2 to 4 have never shipped.
 PROTOCOL_VERSION = 4
 #: What a seat speaking an older protocol is told, instead of a welcome.
 UPDATE = "update"
