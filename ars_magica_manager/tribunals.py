@@ -58,20 +58,10 @@ def add(saga: Saga, name: str) -> Tribunal:
     return tribunal
 
 
-def deletion_consequences(saga: Saga, tribunal: Tribunal) -> list[str]:
-    """What deleting `tribunal` does besides removing it."""
-    members = [c.name for c in saga.covenants if c.tribunal_id == tribunal.id]
-    if not members:
-        return []
-    return [
-        f"{', '.join(members)} will belong to no Tribunal; "
-        "nothing else about them changes."
-    ]
-
-
-def delete(saga: Saga, tribunal: Tribunal) -> None:
+def delete(saga: Saga, tribunal: Tribunal) -> list[record_links.Change]:
     """Remove `tribunal`; its covenants belong to none, and its maps go
     with it (and their pins)."""
     saga.tribunals = [t for t in saga.tribunals if t is not tribunal]
-    record_links.forget(saga, record_links.TRIBUNALS, tribunal)
-    record_links.forget(saga, record_links.MAPS_KIND, *tribunal.maps)
+    return record_links.forget(
+        saga, record_links.TRIBUNALS, tribunal
+    ) + record_links.forget(saga, record_links.MAPS_KIND, *tribunal.maps)

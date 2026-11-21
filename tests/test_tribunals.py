@@ -15,6 +15,7 @@ from ars_magica_manager import storage, transfer, tribunal_packages
 from ars_magica_manager import tribunals as trib
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Choose, Confirm, Form, Refuse
+from ars_magica_manager.forms import menu_steps
 from ars_magica_manager.forms import tribunal as tribunal_forms
 from ars_magica_manager.models import Covenant, Saga, Tribunal, TribunalDiaryEntry
 from ars_magica_manager.sheets import tribunal as tribunal_sheet
@@ -98,12 +99,12 @@ def test_new_tribunal_adds_one_and_edit_changes_it():
     assert tribunal_sheet.next_meeting(rhine) == "Summer 1228, at Durenmar"
 
 
-def test_deleting_a_tribunal_names_and_frees_its_covenants():
+def test_deleting_a_tribunal_counts_and_frees_its_covenants():
     saga = everything_saga()
     rhine = saga.tribunals[0]
-    assert trib.deletion_consequences(saga, rhine) == [
-        "Keep, Fengheld will belong to no Tribunal; nothing else about them changes."
-    ]
+    question = menu_steps.delete_record(saga, rhine).question
+    assert question.startswith("Delete Rhine?\n\n")
+    assert "Emptied: 2 covenants' Tribunals" in question
     trib.delete(saga, rhine)
     assert [t.id for t in saga.tribunals] == [
         "thebes",

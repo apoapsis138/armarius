@@ -19,6 +19,7 @@ from .. import (
     neighbours,
     packs,
     places,
+    record_links,
     ruins,
     seasons,
     sessions,
@@ -37,7 +38,16 @@ from .. import spells as spl
 from ..actions import (
     NodeKind,
 )
-from ..commands import Choice, Choose, Command, Confirm, Form, Refuse, notes
+from ..commands import (
+    Choice,
+    Choose,
+    Command,
+    Confirm,
+    Form,
+    Refuse,
+    confirm_delete,
+    notes,
+)
 from ..form_spec import DialogField, pairs
 from ..markup import escape, todo
 from ..models import (
@@ -101,49 +111,28 @@ def familiar_binder(page: Page) -> Character | None:
 
 
 def delete_record(saga: Saga, record: Record) -> Confirm:
-    """ "Delete <name>?", saying what happens to what it owns."""
-    consequences, do = _deletion_of(saga, record)
-    message = f"Delete {escape(record.name)}?"
-    if consequences:
-        message += "\n\n" + "\n".join(map(escape, consequences))
-    return Confirm(message, do)
-
-
-def _deletion_of(saga: Saga, record: Record) -> tuple[list[str], Callable[[], None]]:
-    if isinstance(record, Creature):
-        return (
-            creatures.deletion_consequences(saga, record),
-            lambda: creatures.delete(saga, record),
-        )
-    if isinstance(record, Tribunal):
-        return (
-            tribunals.deletion_consequences(saga, record),
-            lambda: tribunals.delete(saga, record),
-        )
-    if isinstance(record, Neighbour):
-        return (
-            neighbours.deletion_consequences(saga, record),
-            lambda: neighbours.delete(saga, record),
-        )
-    if isinstance(record, Covenant):
-        return (
-            deletion.covenant_consequences(saga, record),
-            lambda: deletion.delete_covenant(saga, record),
-        )
-    if isinstance(record, Character):
-        return (
-            deletion.character_consequences(saga, record),
-            lambda: deletion.delete_character(saga, record),
-        )
-    if isinstance(record, Familiar):
-        return (
-            deletion.familiar_consequences(saga, record),
-            lambda: deletion.delete_familiar(saga, record),
-        )
-    return (
-        deletion.laboratory_consequences(saga, record),
-        lambda: deletion.delete_laboratory(saga, record),
+    """ "Delete <name>?", saying what happens to what it owns, then what
+    else changes (record_links.warning)."""
+    consequences, delete = _deletion_of(saga, record)
+    return confirm_delete(
+        saga, record, delete, f"Delete {escape(record.name)}?", consequences
     )
+
+
+def _deletion_of(saga: Saga, record: Record) -> tuple[list[str], record_links.Delete]:
+    if isinstance(record, Creature):
+        return [], creatures.delete
+    if isinstance(record, Tribunal):
+        return [], tribunals.delete
+    if isinstance(record, Neighbour):
+        return [], neighbours.delete
+    if isinstance(record, Covenant):
+        return deletion.covenant_consequences(saga, record), deletion.delete_covenant
+    if isinstance(record, Character):
+        return deletion.character_consequences(saga, record), deletion.delete_character
+    if isinstance(record, Familiar):
+        return deletion.familiar_consequences(saga, record), deletion.delete_familiar
+    return deletion.laboratory_consequences(saga, record), deletion.delete_laboratory
 
 
 def toggle_mode(saga: Saga, record: Character | Covenant | Laboratory) -> Command:

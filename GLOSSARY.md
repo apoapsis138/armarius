@@ -55,6 +55,15 @@ Any one thing the saga holds that opens on its own sheet: a character,
 covenant, laboratory, familiar, book, Tribunal, neighbour or creature.
 _Avoid_: Entity, item, object
 
+**Connections**:
+The records a record is tied to, as its sheet lists them, each under a
+heading that says why (Located in, Member of, Rules, Linked from).
+_Avoid_: References, backlinks
+
+**Link**:
+A tie between two records that a person typed in, with a note. Linked
+from on a sheet lists the Links made to it.
+
 **Hosted saga**:
 A saga the storyguide opens to the troupe, so each player reads and changes
 it from their own computer while everyone's changes are kept.

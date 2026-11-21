@@ -768,6 +768,8 @@ Mark books with Space or Ctrl+click to act on them together. With books marked, 
 **You type:** **Add** makes a book with no owner, and **Edit** and **Delete** act on the chosen row, in the same form as a library's. **Give** hands the chosen book to a covenant, laboratory or character. **Change Owner** gives several of the books listed one new owner at once.
 <!-- /gui -->
 
+Deleting a book counts first what loses it, such as the glosses on it, the season plans reading it and the links to it.
+
 Give on an unassigned book writes only the receiver's Diary ("Received ..."). On a held book it's the usual Give, in both Diaries. To take a book away from its holder, edit its Owner to "(none - unassigned)", and nothing is written in a Diary. A book bound in a codex takes its whole codex with it, and the form says so. Deleting a held book names its holder first.
 
 Books imported from a CSV file on the saga land here, unassigned.
@@ -1429,6 +1431,7 @@ Then **Who Played Whom**: for each character, the Player playing them that eveni
 <!-- gui -->
 **Delete** deletes a Session after a confirmation.
 <!-- /gui -->
+The confirmation counts what loses the Session, such as the Chapters played at it.
 
 A character is played by one person at most each evening, though it may have several Players and a Player may play several characters. Who Played Whom comes filled in from who usually plays whom. A character goes to its Player when exactly one of its Players is coming. It's left for you to choose when two or more are, as with a shared character or one everyone plays. The characters of the Players coming are listed first.
 
@@ -1745,6 +1748,8 @@ The list of players, with the details panel below it.
 <!-- gui -->
 The list of players, in Saga Management. The Inspector shows the one last clicked. When a player last joined by Remote seat on another version of Armarius than yours, their Remote seat says so, as "4.13.1, not tested with yours". They can still play.
 <!-- /gui -->
+
+Deleting a player asks first, and counts what loses them: the characters they play or steward, and the planned Sessions they run or come to. Played Sessions keep their name.
 
 ### What a signed-in player can do
 <!-- help: players-access -->

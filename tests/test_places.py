@@ -123,7 +123,8 @@ def test_deleting_a_place_places_what_was_in_it_nowhere():
     row = shown.index(_drachenfels(saga))
     command = neighbour_forms.group_ops(saga, "places").remove(row)
     assert isinstance(command, Confirm)
-    assert "Keep, Aeolus will be placed nowhere" in command.question
+    assert "1 covenant's place" in command.question
+    assert "1 creature's place" in command.question
     command.apply()
     assert (covenant.place_id, covenant.aura) == (None, 2)
 

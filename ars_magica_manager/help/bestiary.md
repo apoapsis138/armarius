@@ -256,9 +256,9 @@ queen or a dragon lording it over a valley, its facts say so under
 **Rules**. The place it's found at and each neighbour it rules are links
 that open them (see [Following a record's links](help:record-links)).
 
-Deleting a creature removes the links to it from other records. A
-neighbour it ruled keeps its name as a name typed, and nothing else
-changes.
+Deleting a creature removes the links, map pins and faction places that
+name it. A neighbour it ruled keeps its name as a name typed. The
+confirmation counts these first.
 
 **A vampire** (Against the Dark pp. 115-117) is a faerie. Its Edit form
 also asks:

@@ -15,7 +15,7 @@ from typing import Any
 
 from .. import bestiary_book, creatures, places, sourcebooks, storage
 from ..arts import ARTS, FORMS
-from ..commands import Confirm, Form, SectionOps, delete
+from ..commands import Confirm, Form, SectionOps, confirm_delete, delete
 from ..form_spec import EMPHASIS_HINT, DialogField, attr, pairs
 from ..markup import escape
 from ..models import (
@@ -756,11 +756,9 @@ def creature_ops(saga: Saga, creature: Creature) -> dict[str, SectionOps]:
 
 
 def delete_creature(saga: Saga, creature: Creature) -> Confirm:
-    message = f"Delete {escape(creature.name)}?"
-    consequences = creatures.deletion_consequences(saga, creature)
-    if consequences:
-        message += "\n\n" + "\n".join(escape(c) for c in consequences)
-    return Confirm(message, lambda: creatures.delete(saga, creature))
+    return confirm_delete(
+        saga, creature, creatures.delete, f"Delete {escape(creature.name)}?"
+    )
 
 
 def bestiary_ops(saga: Saga) -> dict[str, SectionOps]:

@@ -300,10 +300,10 @@ def has_current_plan(saga: Saga, character: Character) -> bool:
     )
 
 
-def delete(saga: Saga, session: Session) -> None:
+def delete(saga: Saga, session: Session) -> list[record_links.Change]:
     """Remove `session`; the Chapters played at it forget it."""
     saga.sessions.remove(session)
-    record_links.forget(saga, record_links.SESSIONS, session)
+    return record_links.forget(saga, record_links.SESSIONS, session)
 
 
 def season_choices() -> list[tuple[str, str]]:
