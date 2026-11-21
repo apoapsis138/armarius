@@ -16,7 +16,7 @@ from .models import Saga, Session
 NO_COPIER = "Show from the Session's page."
 
 
-def _no_copier(_saga: Saga, _record: object) -> str:
+def _no_copier(_saga: Saga, _record: object, _ticked: tuple[int, ...]) -> str:
     raise ValueError(NO_COPIER)
 
 

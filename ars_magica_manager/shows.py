@@ -21,9 +21,11 @@ printed sheet it draws on sits a layer above the Chronicle's verbs."""
 
 from __future__ import annotations
 
+import contextlib
+import hashlib
 import json
 import secrets
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Generator, Iterator
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -36,9 +38,18 @@ from . import (
     references,
     shapes,
     table_rules,
+    viewing,
     world,
 )
-from .models import Character, Covenant, Familiar, Laboratory, Saga, Session
+from .models import (
+    Character,
+    Covenant,
+    Familiar,
+    Laboratory,
+    Saga,
+    Secret,
+    Session,
+)
 
 FOLDER = paths.SHOWS
 #: The most a shown picture may be: a map's most (picture_files.KINDS).
@@ -49,10 +60,24 @@ COPY_CAP = 5 * 1024 * 1024
 #: (print_records.LAYOUTS).
 SHOWABLE: tuple[type, ...] = (Character, Covenant, Laboratory, Familiar)
 
-#: Makes a record's copy: its sheet as the players read it, as Markdown.
-Copier = Callable[[Saga, Any], str]
+#: Makes a record's copy: its sheet as the players read it, as Markdown,
+#: with the Secrets at the places ticked as if revealed.
+Copier = Callable[[Saga, Any, tuple[int, ...]], str]
 
 _CHOOSE = "Choose a record or picture to show."
+NOT_A_SECRET = (
+    "Tick only the record's Secrets not yet revealed; if they have just "
+    "changed, tick them again."
+)
+NOT_YOURS = "Only the record's own storyguide sends its Secrets."
+
+
+def secret_mark(secret: Secret) -> str:
+    """A short mark of a Secret's words, sent with its place when it is
+    ticked, so a list changed since is refused rather than another Secret
+    sent in its place."""
+    words = f"{secret.title}\n{secret.text}".encode()
+    return hashlib.sha256(words).hexdigest()[:12]
 
 
 @dataclass(frozen=True)
@@ -121,6 +146,53 @@ def picture_label(saga: Saga, picture: tuple[str, str]) -> str:
     return name
 
 
+def unrevealed(record: Any) -> list[int]:
+    """The places of `record`'s Secrets not yet revealed, which may go
+    with its Show (none for a record that keeps no Secrets)."""
+    found = getattr(record, "secrets", None)
+    if not isinstance(found, list):
+        return []
+    return [row for row, secret in enumerate(found) if not secret.revealed]
+
+
+def sends_secrets(saga: Saga, record: Any, who: str) -> bool:
+    """Whether `who` may send `record`'s Secrets with a Show: they read it
+    whole, as its storyguide (viewing.holds), never another storyguide's."""
+    return viewing.holds(chronicle.viewer_of(saga, who), record, saga)
+
+
+def _why_not_secrets(
+    saga: Saga, record: Any, ticked: tuple[tuple[int, str], ...], who: str
+) -> str | None:
+    """Why the Secrets `ticked` may not go with `record`'s Show, or None:
+    each must be one of its Secrets not yet revealed, its words as when it
+    was ticked, and the record `who`'s to send."""
+    if record is None:
+        return NOT_A_SECRET
+    if not sends_secrets(saga, record, who):
+        return NOT_YOURS
+    open_rows = set(unrevealed(record))
+    for row, mark in ticked:
+        if row not in open_rows or secret_mark(record.secrets[row]) != mark:
+            return NOT_A_SECRET
+    return None
+
+
+@contextlib.contextmanager
+def _known_while(record: Any, reveal: bool) -> Generator[None]:
+    """While the block runs, `record` reads as known to the players when
+    its Show also reveals it, so its copy is as they will know it; then as
+    before (the form reveals it once the Show is made)."""
+    if not (reveal and viewing.can_be_unknown(record)) or record.known:
+        yield
+        return
+    record.known = True
+    try:
+        yield
+    finally:
+        record.known = False
+
+
 def why_not_show(
     saga: Saga, session: Session, call: chronicle.ShowCall, who: str
 ) -> str | None:
@@ -149,11 +221,16 @@ def why_not_ask(
     words = chronicle.typed_problem(chronicle.SHOW, {"title": call.title})
     if words:
         return words
+    record = references.target(saga, call.record) if call.record else None
     if call.record is not None:
-        if not isinstance(references.target(saga, call.record), SHOWABLE):
+        if not isinstance(record, SHOWABLE):
             return _CHOOSE
     elif call.picture is None or call.picture not in record_links.pictures(saga):
         return _CHOOSE
+    if call.secrets:
+        problem = _why_not_secrets(saga, record, call.secrets, who)
+        if problem:
+            return problem
     storyguide = table_rules.storyguide_of(session, saga)
     shown = set(chronicle.at_session(saga, session)) - {storyguide}
     if any(t not in shown for t in call.to):
@@ -166,15 +243,19 @@ def why_not_ask(
 # -- showing --
 
 
-def _copy_record(saga: Saga, ref: references.Ref, copier: Copier) -> dict[str, Any]:
-    """The record's copy; ValueError when it can't be made (a record with
-    no printed sheet, or a lookup in its sheet's builders that finds
+def _copy_record(
+    saga: Saga, call: chronicle.ShowCall, copier: Copier
+) -> dict[str, Any]:
+    """The copy of the record `call` shows, with the Secrets it ticked, as
+    the players will know it; ValueError when it can't be made (a record
+    with no printed sheet, or a lookup in its sheet's builders that finds
     nothing)."""
-    record = references.target(saga, ref)
+    record = references.target(saga, call.record) if call.record else None
     if record is None:
         raise ValueError(_CHOOSE)
     try:
-        text = copier(saga, record)
+        with _known_while(record, call.reveal):
+            text = copier(saga, record, tuple(row for row, _ in call.secrets))
     except (KeyError, IndexError) as problem:
         raise ValueError(f"{record.name}'s copy couldn't be made.") from problem
     return {"name": record.name, "text": text}
@@ -235,7 +316,7 @@ def _show(
     title = call.title.strip()
     kept: dict[str, Any] = {"show": show_id, "title": title, "time": chronicle.clock()}
     if call.record is not None:
-        kept |= _copy_record(saga, call.record, copier)
+        kept |= _copy_record(saga, call, copier)
         ref = [call.record.kind, call.record.id, kept["name"]]
     else:
         assert call.picture is not None

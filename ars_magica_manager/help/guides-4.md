@@ -2231,6 +2231,10 @@ find it.
 <!-- /gui -->
    It shows in the grove's Known section, dated, and the Diary says so.
    A secret written as one long piece? **Split by Paragraph** first.
+6. **At the table, show and reveal at once.** While a Session is under
+   way, [Show](help:chronicle-shows) the grove, tick the secrets they
+   found, and tick **Also reveal**: the players get the copy, and the
+   grove and those secrets are revealed as in steps 3 and 5.
 
 **See also:** [Player view](help:player-view), [How to host a saga](help:guide-hosting)
 

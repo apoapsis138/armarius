@@ -219,6 +219,91 @@ def test_the_copy_is_the_player_view_without_kept_secrets_notes_or_unknown_names
     assert copy.picture is None
 
 
+def test_the_copy_holds_exactly_the_ticked_secrets_and_the_saga_is_unchanged() -> None:
+    saga, session, book = _begun()
+    hilda = saga.characters[2]
+    hilda.secrets.append(Secret("Other", "OTHER-SECRET"))
+
+    entry = _show(
+        book,
+        saga,
+        session,
+        chronicle.ShowCall("Hilda", _hilda_ref(), secrets=_ticked(hilda, 1)),
+    )
+    copy = shows.opened(saga.id, entry)
+
+    assert "SHOWN-SECRET" in copy.text and "KEPT-SECRET" in copy.text
+    assert "OTHER-SECRET" not in copy.text
+    assert not hilda.secrets[1].revealed
+
+
+def _ticked(record: Character, *rows: int) -> tuple[tuple[int, str], ...]:
+    return tuple((row, shows.secret_mark(record.secrets[row])) for row in rows)
+
+
+def test_only_a_records_secrets_not_yet_revealed_may_go_with_it() -> None:
+    saga, session, _book = _begun()
+    hilda = saga.characters[2]
+
+    def why(**asked: object) -> str | None:
+        call = chronicle.ShowCall(**{"title": "T", "record": _hilda_ref(), **asked})  # type: ignore[arg-type]
+        return shows.why_not_show(saga, session, call, HOST)
+
+    kept = _ticked(hilda, 1)
+    assert why(secrets=kept) is None
+    for wrong in (_ticked(hilda, 0), ((2, "x"),), ((-1, "x"),)):
+        assert why(secrets=wrong) == shows.NOT_A_SECRET
+    assert why(record=None, picture=("maps", "rhine.png"), secrets=kept) == (
+        shows.NOT_A_SECRET
+    )
+
+
+def test_a_secret_ticked_is_the_one_sent_even_if_the_list_has_moved() -> None:
+    saga, session, _book = _begun()
+    hilda = saga.characters[2]
+    kept = _ticked(hilda, 1)
+    hilda.secrets.insert(1, Secret("New", "NEW-SECRET"))  # Kept is now third
+
+    call = chronicle.ShowCall("T", _hilda_ref(), secrets=kept)
+    assert shows.why_not_show(saga, session, call, HOST) == shows.NOT_A_SECRET
+
+
+def test_only_the_records_own_storyguide_may_send_its_secrets() -> None:
+    saga, session, _book = _begun()
+    hilda = saga.characters[2]
+    saga.players.append(Player("gail", "Gail", role=viewing.STORYGUIDE))
+    hilda.storyguide_id = "gail"
+
+    call = chronicle.ShowCall("T", _hilda_ref(), secrets=_ticked(hilda, 1))
+    assert shows.why_not_show(saga, session, call, HOST) == shows.NOT_YOURS
+    plain = chronicle.ShowCall("T", _hilda_ref())
+    assert shows.why_not_show(saga, session, plain, HOST) is None
+
+
+def test_a_show_that_also_reveals_is_copied_as_the_players_will_know_it() -> None:
+    saga, session, book = _begun()
+    hilda = saga.characters[2]
+    hilda.known = False
+    seen: list[bool] = []
+
+    def spy(saga: Saga, record: object, ticked: tuple[int, ...]) -> str:
+        seen.append(viewing.is_known(record))
+        return show_copy.player_copy(saga, record, ticked)
+
+    for reveal in (False, True):
+        shows.show(
+            book,
+            saga,
+            session,
+            chronicle.ShowCall("Hilda", _hilda_ref(), reveal=reveal),
+            by=HOST,
+            copier=spy,
+        )
+
+    assert seen == [False, True]
+    assert not hilda.known  # the form reveals it, once the Show is made
+
+
 def test_the_copy_is_kept_beside_the_saga_and_stays_as_it_was_shown() -> None:
     saga, session, book = _begun()
     entry = _show(book, saga, session, chronicle.ShowCall("Hilda", _hilda_ref()))
@@ -312,7 +397,7 @@ def test_a_damaged_chronicle_hides_only_its_own_shows() -> None:
 def test_a_copy_that_cant_be_made_says_so_and_leaves_no_file() -> None:
     saga, session, book = _begun()
 
-    def broken(_saga: Saga, _record: object) -> str:
+    def broken(_saga: Saga, _record: object, _ticked: tuple[int, ...]) -> str:
         raise KeyError("sheet")
 
     with pytest.raises(ValueError, match="copy couldn't be made"):
