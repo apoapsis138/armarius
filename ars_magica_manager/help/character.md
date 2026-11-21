@@ -126,7 +126,8 @@ Miracles aren't worked out.
 
 <!-- tui -->
 With the top panel focused, `d` deletes the character after saying what
-happens to what they own. More (`m`) offers Export, which writes the
+happens to what they own and counting what else changes (see Delete
+below). More (`m`) offers Export, which writes the
 character to a file another saga can import, and Update from a File, which
 reads such a file back over them.
 <!-- /tui -->
@@ -157,11 +158,17 @@ Both are in the **Manage** chapter.
 - **Update from a File**, which reads such a file back over them
 - **Print to PDF** (see [Printing a record](help:print-record))
 - **Delete**, which deletes the character after saying what happens to
-  what they own. Everything else that named them lets them go: charter
-  seals, ships, links, pins and season plans. Favours, a neighbour they
-  ruled, a marriage, the items they made and the books they wrote keep
-  their name, and played Sessions keep who played them.
+  what they own.
 <!-- /gui -->
+
+Everything else that named them lets them go: charter seals, ships,
+links, pins and season plans. Favours, a neighbour they ruled, a
+marriage, the items they made and the books they wrote keep their name,
+and played Sessions keep who played them. The confirmation counts these
+first, in up to three lines: what goes ("Goes: 1 charter seal, 2 map
+pins"), what is emptied ("Emptied: 1 ship's captain") and what keeps
+their name. It gives counts, not names, and leaves out history, which
+doesn't change. Every Delete of a whole record warns this way.
 
 ### Characteristics
 <!-- help: section-char-characteristics -->

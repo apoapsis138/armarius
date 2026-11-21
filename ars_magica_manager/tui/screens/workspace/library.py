@@ -14,6 +14,7 @@ from .... import lab_texts as lt
 from .... import saga_content as sc
 from ....form_spec import DialogField
 from ....forms import goods as goods_forms
+from ....forms import library as library_forms
 from ....forms import saga_content as content_forms
 from ....markup import escape
 from ....models import (
@@ -391,9 +392,7 @@ class LibraryActions(WorkspaceBase):
                 if not confirmed:
                     return
                 for book in marked:
-                    if book in self.saga.books:
-                        self.saga.books.remove(book)
-                bk.prune_codices(self.saga)
+                    bk.delete(self.saga, book)
                 self._save()
                 self._books_changed()
 
@@ -409,19 +408,16 @@ class LibraryActions(WorkspaceBase):
         self._pick_book(self._delete_book)
 
     def _delete_book(self, book: Book) -> None:
-        """Delete `book` after confirming."""
+        """Delete `book` after confirming, as the Library's Delete does."""
+        confirm = library_forms.delete_book(self.saga, book)
 
         def handle_confirmed(confirmed: bool | None) -> None:
             if confirmed and book in self.saga.books:
-                self.saga.books.remove(book)
-                bk.prune_codices(self.saga)
+                confirm.apply()
                 self._save()
                 self._books_changed()
 
-        self.app.push_screen(
-            ConfirmScreen(f"Delete {escape(book.name or 'this book')}?"),
-            handle_confirmed,
-        )
+        self.app.push_screen(ConfirmScreen(confirm.question), handle_confirmed)
 
     def _books_changed(self) -> None:
         """After any book edit: re-render the book list on show (or the

@@ -139,11 +139,11 @@ def update(player: Player, values: dict[str, Any]) -> None:
         set_passcode(player, values["passcode"])
 
 
-def remove(saga: Saga, player: Player) -> None:
+def remove(saga: Saga, player: Player) -> list[record_links.Change]:
     """Delete `player`; they no longer play or steward any character, and
     the planned Sessions forget them (record_links)."""
     saga.players.remove(player)
-    record_links.forget(saga, record_links.PLAYERS, player)
+    return record_links.forget(saga, record_links.PLAYERS, player)
 
 
 # -- who may change what --

@@ -77,13 +77,12 @@ def test_deleting_a_liege_frees_those_who_answered_to_it():
     saga = everything_saga()
     cologne = saga.neighbour("cologne")
     assert cologne is not None
-    assert neighbours.deletion_consequences(saga, cologne) == [
-        "Gottfried of Arnsberg will answer to no one; nothing else changes."
-    ]
     ops = neighbour_forms.region_ops(saga)["section-region-church"]
     assert ops.remove is not None
     confirm = ops.remove(0)
     assert isinstance(confirm, Confirm)
+    # Counts only: no names a player might not be allowed to read.
+    assert confirm.question == f"Delete {cologne.name}?\n\nEmptied: 1 neighbour's lord."
     confirm.apply()
     assert saga.neighbour("cologne") is None
     gottfried = saga.neighbour("gottfried")

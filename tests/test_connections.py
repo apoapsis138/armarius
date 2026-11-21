@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from support import everything_saga
 
-from ars_magica_manager import connections, creatures, neighbours
+from ars_magica_manager import connections, neighbours
 from ars_magica_manager.forms import go_to as go_to_forms
 from ars_magica_manager.forms import world as world_forms
 from ars_magica_manager.models import Link, Saga
@@ -147,7 +147,6 @@ def test_linked_from_counts_only_links_of_the_record_s_own_kind():
     assert creature["Linked from"].refs == (
         Ref("neighbours", "crown", "The Hollow Crown"),
     )
-    assert creatures.linked_from(saga, aeolus) == ["The Hollow Crown"]
 
 
 def test_links_rows_list_only_the_record_s_own_links():

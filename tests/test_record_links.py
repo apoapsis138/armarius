@@ -6,7 +6,6 @@ import copy
 import importlib
 import pkgutil
 import re
-from collections.abc import Callable
 from dataclasses import fields, is_dataclass
 from typing import Any
 
@@ -23,6 +22,10 @@ from ars_magica_manager import (
     sessions,
     tribunals,
 )
+from ars_magica_manager.forms import library as library_forms
+from ars_magica_manager.forms import menu_steps
+from ars_magica_manager.forms import saga_content as saga_content_forms
+from ars_magica_manager.forms import sessions as session_forms
 from ars_magica_manager.models import (
     AtlasMap,
     Attitude,
@@ -53,6 +56,8 @@ from ars_magica_manager.models import (
     Possession,
     Saga,
     SeasonPlan,
+    SeasonRecord,
+    SeasonRecordLine,
     Session,
     Ship,
     TeachRequest,
@@ -368,7 +373,7 @@ def _find(saga: Saga, kind: str, record_id: str) -> Any:
 
 
 #: Each kind of record, and how Delete removes one.
-DELETES: dict[str, tuple[str, Callable[[Saga, Any], None]]] = {
+DELETES: dict[str, tuple[str, record_links.Delete]] = {
     "characters": ("id-mag", deletion.delete_character),
     "familiars": ("id-fam", deletion.delete_familiar),
     "laboratories": ("id-lab", deletion.delete_laboratory),
@@ -400,6 +405,121 @@ def test_after_deleting_a_place_nothing_points_at_it() -> None:
     saga = _everything()
     neighbours.delete(saga, _find(saga, "neighbours", "id-place"))
     assert pointers_to(saga, "id-place") == []
+
+
+@pytest.mark.parametrize("kind", DELETES)
+def test_the_warning_counts_what_delete_then_does(kind: str) -> None:
+    """The warning runs the Delete on a copy, so it counts exactly what
+    the Delete itself then changes, and changes nothing."""
+    saga = _everything()
+    record_id, delete = DELETES[kind]
+    record = _find(saga, kind, record_id)
+    warned = record_links.warning(saga, record, delete)
+    assert _find(saga, kind, record_id) is record
+    assert pointers_to(saga, record_id)
+    assert warned == record_links.change_lines(delete(saga, record))
+
+
+def test_deleting_a_magus_warns_in_three_groups() -> None:
+    saga = _everything()
+    lines = record_links.warning(
+        saga, _find(saga, "characters", "id-mag"), deletion.delete_character
+    )
+    assert [line.partition(":")[0] for line in lines] == [
+        "Goes",
+        "Emptied",
+        "Keeps the name",
+    ]
+    goes, emptied, named = lines
+    assert "1 charter seal" in goes and "1 map pin" in goes
+    # Its captain and one of its crew: one ship, counted once.
+    assert "1 ship's captain" in emptied and "crew" not in emptied
+    assert named == "Keeps the name: 1 neighbour's ruler, 1 book's author."
+    # The device's maker is kept by Delete's own step, so isn't counted.
+    assert "maker" not in " ".join(lines)
+    # History (a played Session's casting, a season record) isn't counted:
+    # only the planned Session's casting goes.
+    assert "1 casting in a Session" in goes
+    assert "season record" not in " ".join(lines)
+
+
+def test_a_record_named_twice_by_one_entry_counts_once() -> None:
+    saga = _everything()
+    magus = _find(saga, "characters", "id-mag")
+    saga.season_plans = [
+        SeasonPlan(
+            character_id="id-com",
+            year=1220,
+            season="Spring",
+            activity="Taught",
+            teacher_id="id-mag",
+            partner_id="id-mag",
+        )
+    ]
+    lines = record_links.warning(saga, magus, deletion.delete_character)
+    assert "1 season plan's teacher" in " ".join(lines)
+    assert "partner" not in " ".join(lines)
+
+
+def test_a_record_named_only_in_history_gets_no_lines() -> None:
+    saga = _everything()
+    ghost = Character(id="id-ghost", name="Ghost", type="grog")
+    saga.characters.append(ghost)
+    saga.season_records.append(
+        SeasonRecord(
+            year=1220,
+            season="Spring",
+            lines=[SeasonRecordLine(character_id="id-ghost", name="Ghost")],
+        )
+    )
+    assert record_links.pointing_at(saga, "characters", "id-ghost")
+    assert record_links.warning(saga, ghost, deletion.delete_character) == []
+
+
+@pytest.mark.parametrize(
+    "kind",
+    [
+        "characters",
+        "familiars",
+        "laboratories",
+        "covenants",
+        "creatures",
+        "neighbours",
+        "tribunals",
+    ],
+)
+def test_a_more_menu_delete_ends_with_the_counts(kind: str) -> None:
+    saga = _everything()
+    record_id, delete = DELETES[kind]
+    record = _find(saga, kind, record_id)
+    counts = record_links.warning(saga, record, delete)
+    question = menu_steps.delete_record(saga, record).question
+    assert counts and question.endswith("\n" + "\n".join(counts))
+
+
+def test_book_session_and_player_deletes_count_what_else_changes() -> None:
+    saga = _everything()
+    book = _find(saga, "books", "id-book")
+    session = _find(saga, "sessions", "id-ses")
+    player = _find(saga, "players", "id-pl")
+    for question, counts in (
+        (
+            library_forms.delete_book(saga, book).question,
+            record_links.warning(saga, book, books.delete),
+        ),
+        (
+            session_forms.delete_session(saga, session).question,
+            record_links.warning(saga, session, sessions.delete),
+        ),
+    ):
+        assert counts and question.endswith("\n\n" + "\n".join(counts))
+    question = saga_content_forms.delete_player(saga, player).question
+    assert "They will no longer be able to sign in." in question
+    # The planned Session they run and are coming to: one Session.
+    assert question.endswith(
+        "\nGoes: 1 casting in a Session."
+        "\nEmptied: 1 character's Player, 1 Session's storyguide."
+    )
 
 
 def test_a_tribunals_maps_and_their_pins_go_with_it() -> None:
@@ -727,6 +847,20 @@ def test_every_id_field_is_in_the_links_list_or_ruled_out() -> None:
         and (cls.__name__, f.name) not in NOT_RECORD_LINKS
     )
     assert missing == []
+
+
+def test_every_link_field_names_what_it_is() -> None:
+    """A Delete's warning counts entries by their noun, so each field
+    carries one, singular and plural."""
+    missing = [
+        f"{cls.__name__}.{link.name}"
+        for cls, links in record_links.LINKS.items()
+        for link in links
+        if not link.noun or not link.nouns
+    ]
+    assert missing == []
+    pin = record_links.LINKS[Pin][1]
+    assert (pin.noun, pin.nouns) == ("map pin", "map pins")
 
 
 def test_the_walk_finds_entries_inside_a_copy() -> None:

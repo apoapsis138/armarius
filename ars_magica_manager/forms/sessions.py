@@ -21,7 +21,7 @@ from typing import Any
 from .. import cast_sheet, chronicle, recap, story_aftermath, viewing, what_changed
 from .. import players as pl
 from .. import sessions as ss
-from ..commands import Act, Confirm, Form, Go, Refuse, SectionOps, notes
+from ..commands import Act, Confirm, Form, Go, Refuse, SectionOps, confirm_delete, notes
 from ..form_spec import DialogField
 from ..markup import escape
 from ..models import Casting, Character, Player, Saga, Session
@@ -318,10 +318,12 @@ def since_last_session(saga: Saga, character: Character) -> Form:
 
 
 def delete_session(saga: Saga, session: Session) -> Confirm:
-    def apply() -> None:
-        ss.delete(saga, session)
-
-    return Confirm(f"Delete the Session of {escape(ss.when(session))}?", apply)
+    return confirm_delete(
+        saga,
+        session,
+        ss.delete,
+        f"Delete the Session of {escape(ss.when(session))}?",
+    )
 
 
 #: How a link names a Session's page (references.Ref's kind).
