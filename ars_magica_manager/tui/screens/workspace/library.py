@@ -23,6 +23,7 @@ from ....models import (
 from ....sections import (
     ARMARIUM_SECTION,
     GOODS_SECTION,
+    HANDOUTS_SECTION,
     SCENES_SECTION,
     SESSION_INFO_SECTION,
     SESSION_SCENES_SECTION,
@@ -496,6 +497,7 @@ class LibraryActions(WorkspaceBase):
             SESSIONS_SECTION: self._core_ops_of(SESSIONS_SECTION),
             SESSION_INFO_SECTION: self._core_ops_of(SESSION_INFO_SECTION),
             SCENES_SECTION: self._core_ops_of(SCENES_SECTION),
+            HANDOUTS_SECTION: self._core_ops_of(HANDOUTS_SECTION),
             SESSION_SCENES_SECTION: self._core_ops_of(SESSION_SCENES_SECTION),
             BOOKS_SECTION: _SectionOps(edit=self._edit_books_in_play),
             TRADITIONS_SECTION: _SectionOps(edit=self._edit_traditions),

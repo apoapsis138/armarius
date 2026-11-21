@@ -22,6 +22,11 @@ SESSIONS_SECTION = "section-sessions"
 #: The saga's Scenes library (a / e / d act on its Scenes, scenes.py).
 SCENES_SECTION = "section-scenes"
 
+#: The saga's written Handouts (a / e / d act on them, handouts.py), in
+#: Saga Content's Handouts tab.
+HANDOUTS_SECTION = "section-handouts"
+CONTENT_HANDOUTS_TAB = "tab-content-handouts"
+
 #: A Session page's Scenes: those loaded into it, in order (a loads one,
 #: e changes who is present, its order or its Session, d takes it out).
 SESSION_SCENES_SECTION = "section-session-scenes"

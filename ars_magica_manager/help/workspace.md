@@ -1811,6 +1811,50 @@ Deleting a Scene asks first, and takes it out of the planned Sessions it's loade
 
 **See also:** [A Session's Scenes](help:scenes), [A Session's page](help:session-page)
 
+## Written Handouts
+<!-- help: tab-content-handouts -->
+
+The letters, proclamations and pages the players' characters find, written ahead of the Session. They're the storyguide's: players don't see one until you show it to them.
+
+<!-- tui -->
+They're in Saga Content's Handouts tab, with the chosen Handout under the list: its text under its Stationery's name, each picture named.
+<!-- /tui -->
+<!-- gui -->
+They're in the saga's **Saga Content**, under **Handouts**. Choose one to read it beside the list.
+<!-- /gui -->
+
+**See also:** [Handouts](help:section-handouts), [Writing a Handout](help:handouts-written)
+
+### Handouts
+<!-- help: section-handouts -->
+
+Each written Handout: its title, its Stationery, who found it and the Story it belongs to. Add writes one, Edit changes the chosen one, and Delete takes it out after asking. Its pictures' files stay.
+
+**See also:** [Writing a Handout](help:handouts-written)
+
+### Writing a Handout
+<!-- help: handouts-written -->
+
+**You type:**
+
+- its **Title**
+- its **Stationery**: vellum, a sealed letter or a proclamation, which it is drawn on
+- its **Text**, at most 20,000 characters, with \*\*bold\*\* and \*italic\* as anywhere, and six tags of its own. Each starts a line:
+  - `[heading] A Proclamation`: a heading
+  - `[centre] By order of the Count`: a centred line (`[center]` works too)
+  - `[right] Given at Cologne`: a line set to the right
+  - `[initial] Know all men…`: a paragraph opening on an illuminated initial, running on to the next blank line
+  - `[flourish]`, alone on its line: a flourish
+  - `[picture 1]`, alone on its line: its first picture, placed there
+
+  Anything else in square brackets is shown as you typed it.
+- its **Pictures**, up to four: a map or portrait already in the saga, or **A new picture file…**, copied into the save folder's handouts folder
+- who it was **Found by**, **Where** (a Place), and the open **Story** it belongs to
+
+Like everything the Chronicle carries, a Handout can't hold emoji or invisible characters. Deleting the character who found it, or the Place, keeps their name on the Handout.
+
+**See also:** [Handouts](help:section-handouts)
+
 # A Session's page
 <!-- help: session-page -->
 

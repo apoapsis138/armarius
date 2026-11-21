@@ -67,7 +67,15 @@ def seat_view(saga: Saga, viewer: viewing.Viewer) -> Saga:
         _hide_private(view, viewer)
         _hide_unknown(view, viewer)
         _hide_scenes(view, viewer)
+        _hide_handouts(view, viewer)
     return view
+
+
+def _hide_handouts(view: Saga, viewer: viewing.Viewer) -> None:
+    """The written Handouts, the storyguide's until Shown, for anyone but a
+    storyguide: a player holds only the copies they were Shown."""
+    if not viewer.is_storyguide:
+        view.handouts = []
 
 
 def _hide_scenes(view: Saga, viewer: viewing.Viewer) -> None:

@@ -1988,6 +1988,7 @@ OPENERS: dict[str, Opener] = {
     "add player": Opener("saga_content", _core_add("section-players")),
     "add session": Opener("saga_content", _core_add("section-sessions")),
     "add scene": Opener("saga_content", _core_add("section-scenes")),
+    "add handout": Opener("saga_content", _core_add("section-handouts")),
     "edit scene use": Opener("saga_content", _edit_scene_use),
     "edit traditions offered": Opener("saga_content", lambda ws: ws._edit_traditions()),
     "add spell": Opener("saga_content", _core_add("section-spells")),

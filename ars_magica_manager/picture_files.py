@@ -22,7 +22,7 @@ from pathlib import Path, PurePosixPath, PureWindowsPath
 
 from . import paths
 
-PORTRAITS, MAPS = paths.PORTRAITS, paths.MAPS
+PORTRAITS, MAPS, HANDOUTS = paths.PORTRAITS, paths.MAPS, paths.HANDOUTS
 
 _MB = 1024 * 1024
 
@@ -46,10 +46,15 @@ class PictureKind:
 
 #: Every kind of Picture, by folder. Pattern: Registry, so a new kind of
 #: record with pictures (a handout) is one entry here. A hand-drawn map is
-#: often far larger than a portrait.
+#: often far larger than a portrait; a handout's picture (a seal, a page
+#: drawn) sits between.
 KINDS: dict[str, PictureKind] = {
     found.folder: found
-    for found in (PictureKind(PORTRAITS, 5 * _MB), PictureKind(MAPS, 25 * _MB))
+    for found in (
+        PictureKind(PORTRAITS, 5 * _MB),
+        PictureKind(MAPS, 25 * _MB),
+        PictureKind(HANDOUTS, 10 * _MB),
+    )
 }
 
 

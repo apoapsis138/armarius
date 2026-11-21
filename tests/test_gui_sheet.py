@@ -707,6 +707,7 @@ def test_saga_content_opens_from_the_saga_page_with_its_chapters(app):
         "House Rules",
         "Mystery Cults",
         "Spells",
+        "Handouts",
     ]  # the Players are in the saga page's Saga Management
 
 
