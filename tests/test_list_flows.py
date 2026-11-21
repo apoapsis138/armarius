@@ -11,10 +11,18 @@ import pytest
 from support import build_all_tabs, menu, wait_until
 from textual.widgets import Checkbox, Input, Select, TabPane, TextArea, Tree
 
-from ars_magica_manager import battles, place_events, sieges, storage, tombs
+from ars_magica_manager import (
+    battles,
+    handouts,
+    place_events,
+    sieges,
+    storage,
+    tombs,
+)
 from ars_magica_manager import goods as gd
 from ars_magica_manager import mystery_cults as cult_core
 from ars_magica_manager.models import (
+    STORY_EVENT,
     Ability,
     AbilityDef,
     Agent,
@@ -845,6 +853,41 @@ async def test_the_handouts_list_edits_and_deletes_the_chosen_handout():
         await pilot.press("y")
         assert await wait_until(pilot, lambda: len(_saved(case)) == 1)
         assert app.screen is workspace
+
+
+async def test_slash_narrows_the_handouts_to_one_story_and_e_follows_it():
+    case = ListCase(
+        ("saga_content",),
+        "section-handouts",
+        "content-handouts-list",
+        lambda s: s.handouts,
+    )
+    saga = _saga()
+    saga.covenants[0].diary.append(
+        CovenantDiaryEntry(
+            1220, name="The Black Tower", category=STORY_EVENT, status="Open", id="st1"
+        )
+    )
+    saga.handouts = [
+        Handout("h1", title="Of nothing"),
+        Handout("h2", title="Of the tower", story_id="st1"),
+    ]
+    storage.save_saga(saga)
+    app = ArsMagicaManagerApp()
+    try:
+        async with app.run_test(size=(140, 70)) as pilot:
+            _workspace, view = await _open(pilot, app, case)
+            await _press(pilot, app, "slash", FieldsDialog)
+            dialog = app.screen
+            dialog.query_one("#fld-story", Select).value = "st1"
+            dialog.query_one("#btn-save").press()
+            assert await wait_until(pilot, lambda: app.screen is _workspace)
+            # Row 0 is now the tower's: e opens it, not the first written.
+            await _choose_row(pilot, view, case, 0)
+            await _press(pilot, app, "e", FieldsDialog)
+            assert app.screen.query_one("#fld-title", Input).value == "Of the tower"
+    finally:
+        handouts.choose_story(saga, "")
 
 
 # -- Saga Content's own lists --

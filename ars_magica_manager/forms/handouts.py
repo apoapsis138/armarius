@@ -196,10 +196,38 @@ def delete_handout(saga: Saga, handout: Handout) -> Confirm:
 
 
 def handout_ops(saga: Saga) -> SectionOps:
-    """Add, Edit and Delete for the saga's written Handouts."""
+    """Add, Edit and Delete for the saga's written Handouts, by their row
+    in the list as shown (handouts.shown: narrowed to a Story or not)."""
     return SectionOps(
         add=lambda: handout_form(saga, None),
-        edit=lambda index: handout_form(saga, saga.handouts[index]),
-        remove=lambda index: delete_handout(saga, saga.handouts[index]),
-        rows=lambda: [handouts.row(h) for h in saga.handouts],
+        edit=lambda index: handout_form(saga, handouts.shown(saga)[index]),
+        remove=lambda index: delete_handout(saga, handouts.shown(saga)[index]),
+        rows=lambda: [handouts.row(h) for h in handouts.shown(saga)],
+    )
+
+
+def filter_form(saga: Saga) -> Form:
+    """Narrow the Handouts list to the Handouts of one Story; blank shows
+    them all."""
+
+    def apply(values: dict[str, Any]) -> None:
+        handouts.choose_story(saga, values.get("story") or "")
+
+    return Form(
+        "Narrow the Handouts",
+        lambda: [
+            DialogField(
+                "story",
+                "Story",
+                "select",
+                handouts.current_story(saga) or None,
+                options=[(escape(n), i) for n, i in handouts.story_filters(saga)],
+                allow_blank=True,
+                placeholder="(every story)",
+                hint="Only the Handouts of this story.",
+            )
+        ],
+        apply,
+        save_label="Show",
+        help_id=HANDOUTS_HELP,
     )

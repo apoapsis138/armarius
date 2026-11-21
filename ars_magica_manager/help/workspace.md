@@ -1832,6 +1832,14 @@ They're in the saga's **Saga Content**, under **Handouts**. Choose one to read i
 
 Each written Handout: its title, its Stationery, who found it and the Story it belongs to. Add writes one, Edit changes the chosen one, and Delete takes it out after asking. Its pictures' files stay.
 
+To see only one Story's Handouts, narrow the list to it, and the title counts what it shows, as "Handouts (1 of 3)". Edit and Delete act on the list as it's shown. The list stays narrowed until you choose every story again or close the app.
+<!-- tui -->
+Press `/` on the list to choose the Story; leave it blank for every story.
+<!-- /tui -->
+<!-- gui -->
+Choose the Story above the list, or **Every story**.
+<!-- /gui -->
+
 **See also:** [Writing a Handout](help:handouts-written)
 
 ### Writing a Handout

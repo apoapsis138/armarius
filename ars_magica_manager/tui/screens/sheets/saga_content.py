@@ -395,7 +395,7 @@ class SagaContentSheetView(SheetView):
                     title=self._titled(
                         HANDOUTS_SECTION,
                         HANDOUTS_SECTION,
-                        lambda: counted("Handouts", len(saga.handouts)),
+                        lambda: handouts.title(saga),
                     ),
                     id=HANDOUTS_SECTION,
                 ),
@@ -405,9 +405,16 @@ class SagaContentSheetView(SheetView):
                     lambda: (
                         [
                             (i, escape(handouts.row(h)))
-                            for i, h in enumerate(saga.handouts)
+                            for i, h in enumerate(handouts.shown(saga))
                         ]
-                        or [(None, "[$label]None yet: a writes one.[/]")]
+                        or [
+                            (
+                                None,
+                                "[$label]None of this story: / shows them all.[/]"
+                                if saga.handouts
+                                else "[$label]None yet: a writes one.[/]",
+                            )
+                        ]
                     ),
                     id=HANDOUTS_LIST,
                 )
@@ -418,7 +425,7 @@ class SagaContentSheetView(SheetView):
             )
 
     def _handout_text(self, row: int | None) -> str:
-        listed = self.saga.handouts
+        listed = handouts.shown(self.saga)
         chosen = listed[row] if row is not None and row < len(listed) else None
         return handouts.detail(self.saga, chosen)
 
