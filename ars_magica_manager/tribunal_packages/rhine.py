@@ -24,7 +24,7 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from .. import tribunals, world
+from .. import tribunals, viewing, world
 from ..commands import Command, Confirm, Form, Refuse, SectionOps
 from ..form_spec import DialogField
 from ..grids import Grid
@@ -788,7 +788,7 @@ def magus_facts(
         found.append(("Gild", gild["name"]))
     holder = saga.character(sigil_held_by(tribunal).get(character.id))
     if holder is not None:
-        found.append(("Sigil", f"cast by {holder.name}"))
+        found.append(("Sigil", f"cast by {viewing.name_of(holder)}"))
     held = _mapping(tribunal, "marks").get(character.id, [])
     if held and not ranks.is_master(character):
         found.append(("Marks", f"{len(held)} of {ranks.MARKS} toward master"))
@@ -800,7 +800,8 @@ def magus_facts(
             found.append(
                 (
                     "Apprentice",
-                    f"{apprentice.name}: a journeyman's, so a recruited hedge "
+                    f"{viewing.name_of(apprentice)}: a journeyman's, so a recruited "
+                    "hedge "
                     "wizard at his Gauntlet, never his filius (GotF p. 24)",
                 )
             )

@@ -12,7 +12,14 @@ from collections.abc import Collection, Mapping, Sequence
 from dataclasses import dataclass
 
 from .. import casting_text as ct
-from .. import catalog, experiment_text, faith, traditions, tribunal_packages
+from .. import (
+    catalog,
+    experiment_text,
+    faith,
+    traditions,
+    tribunal_packages,
+    viewing,
+)
 from .. import lab_texts as lt
 from .. import players as pl
 from .. import possessions as pos
@@ -81,7 +88,7 @@ def info_right_text(saga: Saga, character: Character) -> str:
     Faith and Size."""
     covenant = saga.covenant(character.covenant_id)
     place = tribunal_packages.place_word(saga, covenant).title()
-    rows = [(place, escape(covenant.name) if covenant else "(unassigned)")]
+    rows = [(place, escape(viewing.name_of(covenant)) if covenant else "(unassigned)")]
     rows += [
         (label, escape(value))
         for label, value in tribunal_packages.magus_facts(saga, character)
@@ -551,7 +558,7 @@ def subtitle(saga: Saga, character: Character) -> str:
     house = house_name(character)
     kind = f"Magus of House {house}" if house else character.type.title()
     covenant = saga.covenant(character.covenant_id)
-    parts = [kind, covenant.name if covenant else "no covenant"]
+    parts = [kind, viewing.name_of(covenant) if covenant else "no covenant"]
     if character.background.setting:
         parts.append(character.background.setting)
     parts.append(f"{saga.current_season} {saga.current_year}")
@@ -806,7 +813,7 @@ def glance_facts(saga: Saga, character: Character) -> list[Fact]:
         _fact("Age", character_age(b.year_born, saga.current_year)),
         _fact(
             tribunal_packages.place_word(saga, covenant).title(),
-            covenant.name if covenant else None,
+            viewing.name_of(covenant) if covenant else None,
         ),
         *(
             _fact(label, value)
