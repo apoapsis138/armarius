@@ -19,7 +19,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from . import tribunal_packages
+from . import tribunal_packages, viewing
 from .form_spec import DialogField
 from .markup import escape
 from .models import (
@@ -63,10 +63,10 @@ def rows(saga: Saga, covenant: Covenant) -> list[tuple[str, str]]:
     shown = []
     liege = liege_of(saga, covenant)
     if liege is not None:
-        shown.append(("Vassal of", liege.name))
+        shown.append(("Vassal of", viewing.name_of(liege)))
     sworn = vassals_of(saga, covenant)
     if sworn:
-        shown.append(("Vassals", ", ".join(c.name for c in sworn)))
+        shown.append(("Vassals", ", ".join(viewing.name_of(c) for c in sworn)))
     return shown
 
 

@@ -670,6 +670,20 @@ def shown[R](
     ]
 
 
+#: What a page or copy writes where it names a record its reader doesn't
+#: know of.
+UNKNOWN = "(unknown)"
+
+
+def name_of(record: Any, viewer: Viewer | None = None) -> str:
+    """`record`'s name as the viewer (by default whoever is looking) may
+    read it: UNKNOWN for a record they don't know of. Every page and copy
+    that names another record asks this, so a hidden name is never
+    written."""
+    looking = viewer or _in_use
+    return record.name if readable(looking, record, _saga) else UNKNOWN
+
+
 def unknown_names(saga: Saga) -> set[str]:
     """The names of the records the players don't know of, for words that
     name a record without a Ref (a list's "at", a date's source)."""
