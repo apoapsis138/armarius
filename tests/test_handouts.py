@@ -17,6 +17,7 @@ from ars_magica_manager import (
     transfer,
     viewing,
 )
+from ars_magica_manager.forms import handouts as handout_forms
 from ars_magica_manager.models import (
     PROCLAMATION,
     STATIONERY,
@@ -288,6 +289,59 @@ def test_the_list_can_be_narrowed_to_one_story():
     assert [h.title for h in handouts.listed(saga)] == ["Of the tower", "Of nothing"]
     assert [h.title for h in handouts.listed(saga, story_id)] == ["Of the tower"]
     assert handouts.story_filters(saga) == [("The Black Tower", story_id)]
+
+
+def _two_stories(saga: Saga) -> str:
+    """Of the tower, then Of nothing: the Black Tower's id."""
+    story = _fields(_ops(saga).add())["story"].options[0][1]  # type: ignore[misc]
+    _add(saga, title="Of nothing")
+    _add(saga, title="Of the tower", story=story)
+    return saga.handouts[1].story_id
+
+
+def test_the_list_its_title_and_its_verbs_follow_the_chosen_story():
+    saga = _saga()
+    story_id = _two_stories(saga)
+    handouts.choose_story(saga, "")
+    assert handouts.title(saga) == "Handouts (2)"
+    handouts.choose_story(saga, story_id)
+    try:
+        assert handouts.current_story(saga) == story_id
+        assert [h.title for h in handouts.shown(saga)] == ["Of the tower"]
+        assert handouts.title(saga) == "Handouts (1 of 2)"
+        ops = _ops(saga)
+        assert ops.rows() == ["Of the tower (vellum)"]
+        assert ops.edit is not None and ops.remove is not None
+        assert "Of the tower" in _fields(ops.edit(0))["title"].value  # type: ignore[operator]
+        step = ops.remove(0)
+        assert isinstance(step, commands.Confirm)
+        assert step.question == "Delete the Handout Of the tower?"
+    finally:
+        handouts.choose_story(saga, "")
+
+
+def test_a_story_since_gone_no_longer_narrows_the_list():
+    saga = _saga()
+    story_id = _two_stories(saga)
+    handouts.choose_story(saga, story_id)
+    saga.covenants[0].diary = []
+    assert handouts.current_story(saga) == ""
+    assert len(handouts.shown(saga)) == 2
+
+
+def test_the_filter_form_offers_the_handouts_stories():
+    saga = _saga()
+    story_id = _two_stories(saga)
+    form = handout_forms.filter_form(saga)
+    (field,) = form.fields()
+    assert field.options == [("The Black Tower", story_id)] and field.allow_blank
+    try:
+        form.apply({"story": story_id})
+        assert handouts.current_story(saga) == story_id
+        form.apply({"story": None})
+        assert handouts.current_story(saga) == ""
+    finally:
+        handouts.choose_story(saga, "")
 
 
 def test_the_detail_shows_the_text_under_its_stationery_and_names_pictures():

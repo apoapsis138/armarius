@@ -494,29 +494,63 @@ class SagaContentPage(QWidget):
         )
 
     def _handouts(self) -> QWidget:
-        """The written Handouts as a table; choosing one reads it in the
-        inspector. Add, Edit and Delete act on the chosen row."""
+        """The written Handouts as a table, narrowed to one Story by the
+        choice above it (handouts.current_story); choosing one reads it in
+        the inspector. Add, Edit and Delete act on the chosen row."""
         p, saga = self.p, self.saga
+        box = QWidget()
+        column = QVBoxLayout(box)
+        column.setContentsMargins(0, 0, 0, 0)
+        holder = QVBoxLayout()
+        stories = handouts.story_filters(saga)
+        if stories:
+            choice = filter_choice("Every story", stories)
+            choice.setCurrentIndex(
+                max(0, choice.findData(handouts.current_story(saga)))
+            )
+
+            def narrow(_index: int) -> None:
+                handouts.choose_story(saga, choice.currentData() or "")
+                self._fill_handouts(holder)
+
+            choice.currentIndexChanged.connect(narrow)
+            column.addWidget(choice)
+        column.addLayout(holder)
+        self._fill_handouts(holder)
+        return scrolling_page(p, box)
+
+    def _fill_handouts(self, holder: QVBoxLayout) -> None:
+        """Put the Handouts section, as narrowed now, into `holder`."""
+        while holder.count():
+            item = holder.takeAt(0)
+            old = item.widget() if item is not None else None
+            if old is not None:
+                old.setParent(None)
+                old.deleteLater()
+        p, saga = self.p, self.saga
+        shown = handouts.shown(saga)
         chooser = Chooser()
         rows = cells_table(
             handouts.COLUMNS,
-            [handouts.cells(saga, h) for h in saga.handouts],
+            [handouts.cells(saga, h) for h in shown],
             p,
             lambda row: self.inspect(
-                saga.handouts[row].title or "(untitled)",
+                shown[row].title or "(untitled)",
                 "Handout",
-                handouts.detail(saga, saga.handouts[row]),
+                handouts.detail(saga, shown[row]),
             ),
         )
         choose_rows(rows, chooser)
-        return scrolling_page(
-            p,
+        empty = (
+            "None of this story."
+            if saga.handouts
+            else "None yet: Add writes one to show the players."
+        )
+        holder.addWidget(
             section(
-                f"Handouts ({len(saga.handouts)})",
+                handouts.title(saga),
                 p,
-                rows
-                if saga.handouts
-                else _none("None yet: Add writes one to show the players.", p),
+                rows if shown else _none(empty, p),
                 buttons=verb_buttons(
                     section_verbs.ops_of(saga, saga)[HANDOUTS_SECTION],
                     chooser,
@@ -526,7 +560,7 @@ class SagaContentPage(QWidget):
                     part=HANDOUTS_SECTION,
                 ),
                 part=HANDOUTS_SECTION,
-            ),
+            )
         )
 
     def _house_rules(self) -> QWidget:
