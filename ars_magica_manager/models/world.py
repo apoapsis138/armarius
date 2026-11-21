@@ -91,7 +91,7 @@ LINK_KINDS: tuple[str, ...] = (
 class Link:
     """A link to another record (`kind`, one of LINK_KINDS, and its
     `target_id`) with a short note. The link back is worked out
-    (world.links_to), never stored twice."""
+    (record_links.pointing_at), never stored twice."""
 
     kind: str
     target_id: str

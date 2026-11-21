@@ -1,10 +1,10 @@
 """The pieces every record of the saga's world shares, worked out: whether
 a record takes part in play, its attitude toward a player covenant, the
-favours still open, and the links that point at a record."""
+favours still open, and where a link leads. The links that point at a
+record are found through the links list (record_links.links_naming)."""
 
 from __future__ import annotations
 
-from collections.abc import Iterator
 from typing import Any
 
 from .markup import escape
@@ -225,13 +225,6 @@ def favour_rows(favours: list[Favour]) -> list[tuple[int | None, str]]:
     return rows
 
 
-def _records(saga: Saga) -> Iterator[Character | Covenant | Neighbour | Creature]:
-    yield from saga.covenants
-    yield from saga.characters
-    yield from saga.neighbours
-    yield from saga.creatures
-
-
 def link_target(saga: Saga, link: Link) -> Any | None:
     """The record `link` points at, or None if it is gone."""
     if link.kind == "possessions":
@@ -252,17 +245,6 @@ def link_label(saga: Saga, link: Link) -> str:
     target = link_target(saga, link)
     name = escape(getattr(target, "name", "")) if target else "[$label](gone)[/]"
     return f"{name}: {escape(link.note)}" if link.note else name
-
-
-def links_to(saga: Saga, kind: str, target_id: str) -> list[tuple[Any, Link]]:
-    """The links back: each (record, link) whose link points at the record
-    `target_id` of `kind`."""
-    return [
-        (record, link)
-        for record in _records(saga)
-        for link in record.links
-        if link.kind == kind and link.target_id == target_id
-    ]
 
 
 # -- a covenant's magi and votes --
