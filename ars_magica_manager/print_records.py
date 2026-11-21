@@ -734,7 +734,7 @@ def familiar_document(
         ),
         Facts(
             (
-                ("Master", magus.name if magus else "—"),
+                ("Master", viewing.name_of(magus) if magus else "—"),
                 ("Species", familiar.species or "—"),
                 (
                     "Magic Might",

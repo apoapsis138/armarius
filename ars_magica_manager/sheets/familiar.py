@@ -12,6 +12,7 @@ from dataclasses import dataclass
 from .. import familiars as fam
 from .. import possessions as pos
 from .. import sheet_text as st
+from .. import viewing
 from ..models import Familiar, Saga
 from ..references import Fact
 from ..rules import derived, enchantment, familiar_seasons
@@ -23,7 +24,7 @@ def subtitle(saga: Saga, familiar: Familiar) -> str:
     """The line under the name: whose familiar, what it is, when it was
     bound, and the saga's season."""
     magus = fam.magus_of(saga, familiar)
-    parts = [f"Familiar of {magus.name}" if magus else "Familiar"]
+    parts = [f"Familiar of {viewing.name_of(magus)}" if magus else "Familiar"]
     if familiar.species:
         parts.append(familiar.species)
     if familiar.season_bound and familiar.year_bound is not None:
@@ -184,7 +185,7 @@ def familiar_card(saga: Saga, familiar: Familiar) -> FamiliarCard:
         familiar.id,
         familiar.name or "(unnamed)",
         "  ·  ".join(
-            [f"Familiar of {magus.name}" if magus else "Familiar"]
+            [f"Familiar of {viewing.name_of(magus)}" if magus else "Familiar"]
             + ([familiar.species] if familiar.species else [])
         ),
         "  ·  ".join(detail),

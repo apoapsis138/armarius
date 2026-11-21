@@ -10,7 +10,7 @@ from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from typing import Any
 
-from . import catalog, ships, storage, vis
+from . import catalog, ships, storage, viewing, vis
 from .markup import escape, fit, markdown_text
 from .models import (
     GEAR_POINTS,
@@ -277,7 +277,10 @@ def entries_for_kind(
                 ),
                 None,
             )
-            owner = next((c.name for c in saga.characters if c.id == lab.owner_id), "")
+            owner = next(
+                (viewing.name_of(c) for c in saga.characters if c.id == lab.owner_id),
+                "",
+            )
             entries.append(
                 PossessionEntry(
                     kind,

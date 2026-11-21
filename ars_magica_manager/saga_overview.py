@@ -192,7 +192,7 @@ def _lab_card(saga: Saga, lab: Laboratory) -> LabCard:
     return LabCard(
         lab.id,
         lab.name,
-        f"The sanctum of {owner.name}" if owner else "No one's sanctum",
+        f"The sanctum of {viewing.name_of(owner)}" if owner else "No one's sanctum",
         (
             cs.Fact("Aura", str(aura)),
             cs.Fact("Size", total("size")),

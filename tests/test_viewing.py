@@ -85,6 +85,23 @@ def test_the_troupes_own_records_are_always_known():
     assert viewing.can_be_unknown(saga.covenant("rival"))
 
 
+def test_a_record_is_named_as_the_reader_knows_it():
+    saga = _saga()
+    rival, home = saga.covenant("rival"), saga.covenant("home")
+    assert rival is not None and home is not None
+    rival.known = False
+
+    _as_table(saga)
+    try:
+        assert viewing.name_of(rival) == viewing.UNKNOWN
+        assert viewing.name_of(home) == "Home"
+        assert viewing.name_of(rival, viewing.STORYGUIDE_VIEWER) == "Rival"
+    finally:
+        viewing.use(viewing.STORYGUIDE_VIEWER)
+    assert viewing.name_of(rival) == "Rival"
+    assert viewing.name_of(rival, viewing.TABLE_VIEWER) == viewing.UNKNOWN
+
+
 def test_every_storyguide_only_part_names_a_section_tab_or_chapter():
     known = {value for value in vars(sections).values() if isinstance(value, str)} | {
         topic_id

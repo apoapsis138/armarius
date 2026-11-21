@@ -312,7 +312,13 @@ def inhabitant_groups(saga: Saga, covenant: Covenant) -> list[Group]:
     """Each kind of inhabitant the covenant has, Magi first."""
     groups = []
     for kind in INHABITANT_KINDS:
-        entries = covenfolk.entries_for_kind(saga, covenant, kind)
+        # A character listed from their sheet is left off, as People leaves
+        # them, while the reader doesn't know of them.
+        entries = [
+            e
+            for e in covenfolk.entries_for_kind(saga, covenant, kind)
+            if not (e.auto and e.character and not viewing.reads(e.character))
+        ]
         if not entries:
             continue
         table = _table(_INHABITANT_COLUMNS[kind], entries)

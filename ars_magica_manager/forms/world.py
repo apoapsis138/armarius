@@ -787,9 +787,15 @@ def link_table(saga: Saga, record: Any) -> Table:
 
 
 def magi_table(saga: Saga, covenant: Covenant) -> Table:
+    """A sketch covenant's magi, each keyed by its place among them. A
+    magus the reader doesn't know of is counted with the unnamed ones."""
     rows: list[list[str]] = []
     keys: list[int | None] = []
+    unnamed = covenant.unnamed_magi
     for index, magus in enumerate(world.covenant_magi(saga, covenant)):
+        if not viewing.reads(magus):
+            unnamed += 1
+            continue
         rows.append(
             [
                 escape(magus.name),
@@ -800,12 +806,12 @@ def magi_table(saga: Saga, covenant: Covenant) -> Table:
             ]
         )
         keys.append(index)
-    if covenant.unnamed_magi:
+    if unnamed:
         rows.append(
             [
-                f"{covenant.unnamed_magi} more",
+                f"{unnamed} more",
                 "",
-                str(covenant.unnamed_magi),
+                str(unnamed),
                 "Unnamed",
                 "Count only",
             ]
