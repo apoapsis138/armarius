@@ -66,6 +66,7 @@ from .models import (
     Creature,
     EnchantedDevice,
     Familiar,
+    Handout,
     Laboratory,
     Neighbour,
     Pin,
@@ -74,7 +75,7 @@ from .models import (
     Spell,
     Tribunal,
 )
-from .picture_files import MAPS, PORTRAITS, kind, safe_name
+from .picture_files import HANDOUTS, MAPS, PORTRAITS, kind, safe_name
 from .seat_view import seat_view
 
 FORMAT = "armarius-export"
@@ -300,6 +301,26 @@ def without_players(data: dict[str, Any]) -> dict[str, Any]:
     return {**data, "saga": kept_saga}
 
 
+def _spells_used(
+    saga: Saga, characters: list[Character], books: list[Book]
+) -> list[Spell]:
+    """The spells the records use that aren't the catalog's and don't
+    already travel on an exported magus: the saga's own, and other magi's."""
+    carried = {s.id for c in characters for s in c.invented_spells}
+    shared = catalog.load_spell_catalog_by_id()
+    wanted = [k.spell_id for c in characters for k in c.spells_known] + [
+        b.spell_id for b in books if b.spell_id
+    ]
+    spells: list[Spell] = []
+    for spell_id in wanted:
+        if spell_id in shared or spell_id in carried:
+            continue
+        found = catalog.find_spell(saga, spell_id)
+        if found is not None and all(s.id != found.id for s in spells):
+            spells.append(found)
+    return spells
+
+
 def bundle_data(
     saga: Saga,
     kind: str,
@@ -312,6 +333,7 @@ def bundle_data(
     neighbours: list[Neighbour] | None = None,
     calendar: list[CalendarEntry] | None = None,
     creatures: list[Creature] | None = None,
+    handouts: list[Handout] | None = None,
 ) -> dict[str, Any]:
     """An export of the records given, and what travels with them, as
     JSON-ready data. A Tribunal's meeting under way stays behind."""
@@ -329,20 +351,7 @@ def bundle_data(
     devices = [
         d for d in saga.enchanted_devices if (d.holder_kind, d.holder_id) in owners
     ]
-    # Spells the records use that aren't the catalog's and don't already
-    # travel on an exported magus: the saga's own, and other magi's.
-    carried = {s.id for c in characters for s in c.invented_spells}
-    shared = catalog.load_spell_catalog_by_id()
-    wanted = [k.spell_id for c in characters for k in c.spells_known] + [
-        b.spell_id for b in books if b.spell_id
-    ]
-    spells: list[Spell] = []
-    for spell_id in wanted:
-        if spell_id in shared or spell_id in carried:
-            continue
-        found = catalog.find_spell(saga, spell_id)
-        if found is not None and all(s.id != found.id for s in spells):
-            spells.append(found)
+    spells = _spells_used(saga, characters, books)
     held = {
         vf.vf_id
         for holder in [*characters, *familiars, *labs, *creatures]
@@ -365,6 +374,7 @@ def bundle_data(
         neighbours=neighbours,
         creatures=creatures,
         calendar=list(calendar or []),
+        handouts=list(handouts or []),
         characters=characters,
         laboratories=labs,
         familiars=familiars,
@@ -649,6 +659,8 @@ class ImportPlan:
     neighbours: list[Neighbour] = field(default_factory=list)
     creatures: list[Creature] = field(default_factory=list)
     calendar: list[CalendarEntry] = field(default_factory=list)
+    #: The written Handouts it adds (a whole saga's, or a pack's).
+    handouts: list[Handout] = field(default_factory=list)
     #: A pack's records the saga already has one of the same name of:
     #: "Covenant Keep". The saga's own is kept as it is, and links to the
     #: pack's go to it.
@@ -1418,6 +1430,43 @@ def _plan_calendar(job: _Import) -> None:
         job.plan.calendar.append(entry)
 
 
+def _story_ids(saga: Saga, covenants: Iterable[Covenant]) -> set[str]:
+    """The ids of the stories in the covenants' Diaries, the saga's own
+    and those the import adds."""
+    return {
+        entry.id
+        for covenant in [*saga.covenants, *covenants]
+        for entry in covenant.diary
+        if entry.id
+    }
+
+
+def _plan_handouts(job: _Import) -> None:
+    """Written Handouts: each given an id free in the saga, its finder and
+    place linked to the records here or kept by name, its Story kept only
+    when that story is here. A pack's Handout the saga already has one of
+    the same title of is skipped."""
+    ids = _Ids(h.id for h in job.target.handouts)
+    stories = _story_ids(job.target, job.plan.covenants)
+    for handout in job.source.handouts:
+        title = handout.title or "(untitled)"
+        if job.match and any(h.title == handout.title for h in job.target.handouts):
+            job.plan.skipped.append(f"Handout {title}: already here")
+            continue
+        handout.id = ids.new(handout.id, title)
+        _relink(job, handout)
+        # One the file can't name either (no record, no name) is no one.
+        people = {c.id for c in [*job.target.characters, *job.plan.characters]}
+        if handout.found_by_id not in people:
+            handout.found_by_id = ""
+        where = {n.id for n in [*job.target.neighbours, *job.plan.neighbours]}
+        if handout.place_id not in where:
+            handout.place_id = ""
+        if handout.story_id not in stories:
+            handout.story_id = ""
+        job.plan.handouts.append(handout)
+
+
 #: How each kind of record in the file is added, in order: a laboratory
 #: pairs with a magus planned before it, and a familiar follows its magus.
 _PLANNERS: dict[str, Callable[[_Import], None]] = {
@@ -1433,6 +1482,8 @@ _PLANNERS: dict[str, Callable[[_Import], None]] = {
     CREATURE: _plan_creatures,
     "calendar": _plan_calendar,
     "pins": _plan_pins,
+    # After the covenants, whose Diaries hold the stories a Handout names.
+    "handouts": _plan_handouts,
 }
 
 
@@ -1540,6 +1591,7 @@ def preview(plan: ImportPlan) -> str:
         (len(plan.spells), "spell"),
         (sum(len(added) for added in plan.custom.values()), "House Rule"),
         (len(plan.calendar), "calendar entry"),
+        (len(plan.handouts), "written Handout"),
     ):
         if number:
             lines.append(f"  {_count(number, noun)}")
@@ -1582,6 +1634,17 @@ def _copy_pictures(target: Saga, plan: ImportPlan) -> None:
         if found is not None:
             storage.maps_dir().mkdir(parents=True, exist_ok=True)
             (storage.maps_dir() / name).write_bytes(found)
+    # A Handout's own pictures, named by their bytes as a map's are.
+    for picture in (p for h in plan.handouts for p in h.pictures):
+        folder = kind(HANDOUTS) if picture.folder == HANDOUTS else None
+        if folder is None or not safe_name(picture.name):
+            continue
+        if (folder.directory() / picture.name).is_file():
+            continue
+        found = pictures.get(HANDOUTS, picture.name)
+        if found is not None:
+            folder.directory().mkdir(parents=True, exist_ok=True)
+            (folder.directory() / picture.name).write_bytes(found)
     for character in plan.characters:
         found = pictures.get(PORTRAITS, character.portrait)
         if found is None:
@@ -1621,6 +1684,7 @@ def add_records(target: Saga, plan: ImportPlan) -> None:
     target.neighbours += plan.neighbours
     target.creatures += plan.creatures
     target.calendar += plan.calendar
+    target.handouts += plan.handouts
     for own, tables in plan.new_tables:
         own.details[TABLES] = [*(own.details.get(TABLES) or []), *tables]
     for lab, owner_id in plan.new_owners:

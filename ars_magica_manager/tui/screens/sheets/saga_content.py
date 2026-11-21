@@ -12,8 +12,8 @@ from textual.css.query import NoMatches
 from textual.widget import Widget
 from textual.widgets import Static, TabbedContent, TabPane
 
+from .... import handouts, scenes, viewing
 from .... import saga_content as sc
-from .... import scenes, viewing
 from ....boon_hook_text import counted
 from ....forms import goods as goods_forms
 from ....forms import mystery_cults as cult_forms
@@ -23,11 +23,13 @@ from ....models import Saga, SagaSource, Spell
 from ....sections import (
     BOOKS_SECTION,
     CATALOGS_SECTION,
+    CONTENT_HANDOUTS_TAB,
     CULT_DEGREES_SECTION,
     CULT_SCRIPT_SECTION,
     CULT_SECTION,
     CULTS_SECTION,
     GOODS_SECTION,
+    HANDOUTS_SECTION,
     HIDDEN_SECTION,
     HOUSE_RULES_SECTION,
     PLAYERS_SECTION,
@@ -53,12 +55,17 @@ TAB_SECTIONS: dict[str, str] = {
     "tab-content-players": PLAYERS_SECTION,
     "tab-content-sessions": SESSIONS_SECTION,
     "tab-content-scenes": SCENES_SECTION,
+    CONTENT_HANDOUTS_TAB: HANDOUTS_SECTION,
     "tab-content-cults": CULTS_SECTION,
 }
 
 #: The Scenes tab's list and its details panel.
 SCENES_LIST = "content-scenes-list"
 SCENES_INFO = "content-scenes-info"
+
+#: The Handouts tab's list and its details panel.
+HANDOUTS_LIST = "content-handouts-list"
+HANDOUTS_INFO = "content-handouts-info"
 
 #: The Goods tab's list and its details panel.
 GOODS_LIST = "content-goods-list"
@@ -144,6 +151,9 @@ class SagaContentSheetView(SheetView):
             # The storyguide's prep (viewing.STORYGUIDE_ONLY).
             if viewing.reads(part="tab-content-scenes"):
                 yield self._tab("Scenes", "tab-content-scenes", self._scenes_tab)
+            # The written Handouts, the storyguide's until Shown.
+            if viewing.reads(part=CONTENT_HANDOUTS_TAB):
+                yield self._tab("Handouts", CONTENT_HANDOUTS_TAB, self._handouts_tab)
             if self.players:
                 yield self._tab(
                     "Players",
@@ -372,6 +382,46 @@ class SagaContentSheetView(SheetView):
                 id=SCENES_INFO,
             )
 
+    # -- Handouts --
+
+    def _handouts_tab(self) -> ComposeResult:
+        """The written Handouts, with the chosen one's text under it, under
+        its Stationery's name, its pictures named."""
+        saga = self.saga
+        with Vertical(classes="panel-body"):
+            with (
+                VerticalScroll(),
+                SheetSection(
+                    title=self._titled(
+                        HANDOUTS_SECTION,
+                        HANDOUTS_SECTION,
+                        lambda: counted("Handouts", len(saga.handouts)),
+                    ),
+                    id=HANDOUTS_SECTION,
+                ),
+            ):
+                yield self._list(
+                    HANDOUTS_SECTION,
+                    lambda: (
+                        [
+                            (i, escape(handouts.row(h)))
+                            for i, h in enumerate(saga.handouts)
+                        ]
+                        or [(None, "[$label]None yet: a writes one.[/]")]
+                    ),
+                    id=HANDOUTS_LIST,
+                )
+            yield self._panel(
+                HANDOUTS_SECTION,
+                lambda: self._handout_text(self.section_row(HANDOUTS_SECTION)),
+                id=HANDOUTS_INFO,
+            )
+
+    def _handout_text(self, row: int | None) -> str:
+        listed = self.saga.handouts
+        chosen = listed[row] if row is not None and row < len(listed) else None
+        return handouts.detail(self.saga, chosen)
+
     def _scene_text(self, row: int | None) -> str:
         """The details panel for the Scene at `row` (None, or one since
         gone: the panel's prompt)."""
@@ -508,6 +558,12 @@ class SagaContentSheetView(SheetView):
             event.stop()
             self.query_one(f"#{SCENES_INFO}", Static).update(
                 self._scene_text(event.data_index)
+            )
+            return
+        if list_id == HANDOUTS_LIST:
+            event.stop()
+            self.query_one(f"#{HANDOUTS_INFO}", Static).update(
+                self._handout_text(event.data_index)
             )
             return
         if list_id == GOODS_LIST:

@@ -524,10 +524,15 @@ def test_each_kind_of_picture_has_its_own_limit_in_an_export(tmp_path):
         archive.writestr("maps/rhine.png", six_mb)
         archive.writestr("portraits/anna.png", six_mb)
         archive.writestr("handouts/note.png", b"a handout")
+        archive.writestr("handouts/big.png", b"\0" * (11 * 1024 * 1024))
+        archive.writestr("sagas/other.png", b"not a kind")
     pictures = transfer.Pictures(path)
     assert pictures.get("maps", "rhine.png") == six_mb
     assert pictures.get("portraits", "anna.png") is None
-    assert pictures.get("handouts", "note.png") is None  # no such kind yet
+    # A written Handout's own pictures: at most 10 MB.
+    assert pictures.get("handouts", "note.png") == b"a handout"
+    assert pictures.get("handouts", "big.png") is None
+    assert pictures.get("sagas", "other.png") is None  # no such kind
 
 
 def test_a_cult_file_over_the_limit_is_refused(tmp_path):

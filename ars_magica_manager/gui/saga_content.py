@@ -28,8 +28,10 @@ from PySide6.QtWidgets import (
 
 from .. import (
     artwork,
+    handouts,
     section_verbs,
     traditions,
+    viewing,
 )
 from .. import house_rules as hr
 from .. import saga_content as sc
@@ -39,7 +41,9 @@ from ..forms import goods as goods_forms
 from ..forms import saga_content as scf
 from ..models import Saga, Spell
 from ..sections import (
+    CONTENT_HANDOUTS_TAB,
     GOODS_SECTION,
+    HANDOUTS_SECTION,
     HOUSE_RULES_SECTION,
     SOURCES_SECTION,
 )
@@ -89,6 +93,9 @@ CHAPTERS = (
     ("Mystery Cults", "secrets"),
     ("Spells", "enchanted_item"),
 )
+
+#: The written Handouts' chapter, shown to the storyguide only.
+HANDOUTS_CHAPTER = ("Handouts", "lab_text")
 
 #: The chapters too long to draw every time the page opens.
 LATER = ("Goods", "Traditions")
@@ -144,9 +151,14 @@ class SagaContentPage(QWidget):
             "House Rules": self._house_rules,
             "Mystery Cults": self._mystery_cults,
             "Spells": self._spells,
+            "Handouts": self._handouts,
         }
         # The Players are in the saga page's Saga Management on the desktop.
-        for name, concept in CHAPTERS:
+        # The written Handouts are the storyguide's until Shown.
+        shown = CHAPTERS + (
+            (HANDOUTS_CHAPTER,) if viewing.reads(part=CONTENT_HANDOUTS_TAB) else ()
+        )
+        for name, concept in shown:
             # The Goods ledger and the traditions' cards are long: drawn
             # when first turned to.
             build = builders[name]
@@ -478,6 +490,42 @@ class SagaContentPage(QWidget):
                     nouns=("Add", "Edit", "Hide"),
                     more=more,
                 ),
+            ),
+        )
+
+    def _handouts(self) -> QWidget:
+        """The written Handouts as a table; choosing one reads it in the
+        inspector. Add, Edit and Delete act on the chosen row."""
+        p, saga = self.p, self.saga
+        chooser = Chooser()
+        rows = cells_table(
+            handouts.COLUMNS,
+            [handouts.cells(saga, h) for h in saga.handouts],
+            p,
+            lambda row: self.inspect(
+                saga.handouts[row].title or "(untitled)",
+                "Handout",
+                handouts.detail(saga, saga.handouts[row]),
+            ),
+        )
+        choose_rows(rows, chooser)
+        return scrolling_page(
+            p,
+            section(
+                f"Handouts ({len(saga.handouts)})",
+                p,
+                rows
+                if saga.handouts
+                else _none("None yet: Add writes one to show the players.", p),
+                buttons=verb_buttons(
+                    section_verbs.ops_of(saga, saga)[HANDOUTS_SECTION],
+                    chooser,
+                    self.run,
+                    p,
+                    nouns=("Write a Handout", "Edit", "Delete"),
+                    part=HANDOUTS_SECTION,
+                ),
+                part=HANDOUTS_SECTION,
             ),
         )
 

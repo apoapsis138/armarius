@@ -403,6 +403,19 @@ CONTRACTS: dict[str, Contract] = {
         expected=[("The ford", "A glade", 2)],
         invalid=[{"Title": ""}, {"Aura": "two"}],
     ),
+    # A written Handout: its text at most 20,000 characters, keeping the
+    # character rule.
+    "add handout": Contract(
+        prefill={"Title": "", "Text": ""},
+        edits={"Title": "A letter", "Text": "[heading] To the magus\nCome."},
+        saved=lambda s: [(h.title, h.stationery, h.text) for h in s.handouts],
+        expected=[("A letter", "vellum", "[heading] To the magus\nCome.")],
+        invalid=[
+            {"Title": ""},
+            {"Title": "A letter", "Text": "x" * 20_001},
+            {"Title": "A letter", "Text": "A hidden" + chr(0x200B) + "word"},
+        ],
+    ),
     # A Scene loaded into a Session: this evening's notes on it.
     "edit scene use": Contract(
         prefill={"Notes": ""},

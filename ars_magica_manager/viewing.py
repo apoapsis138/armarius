@@ -388,6 +388,10 @@ STORYGUIDE_ONLY: frozenset[str] = frozenset(
         "section-scenes",
         "tab-session-scenes",
         "section-session-scenes",
+        # The written Handouts (handouts.py): the storyguide's until one is
+        # Shown, when the player holds that Show's own copy.
+        "tab-content-handouts",
+        "section-handouts",
     }
 )
 

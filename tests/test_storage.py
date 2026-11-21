@@ -726,6 +726,15 @@ def _saga_with_every_record() -> Saga:  # noqa: PLR0915
         )
     )
     saga.scenes.append(models.Scene("sc1", title="The ford"))
+    # A written Handout with a picture.
+    saga.handouts.append(
+        models.Handout(
+            "h1",
+            title="A letter",
+            pictures=[models.HandoutPicture("handouts", "seal.png")],
+            found_by_id=magus.id,
+        )
+    )
     # An ask for a teacher's season.
     saga.teach_requests.append(
         models.TeachRequest("t1", magus.id, magus.id, "ability:Latin", "Spring", 1220)
