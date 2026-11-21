@@ -20,18 +20,24 @@ A use is Prepared, Playing or Ended, and what the storyguide may do to one
 depends on which: a Prepared use can be changed, put elsewhere in the
 order, moved to another planned Session or taken out; a Playing one can
 change who is present but not move or be taken out; an Ended one keeps who
-was there, and only its notes change. Setting and ending a Scene, the
-transitions, come with the Table's verbs.
+was there, and only its notes change.
 
-Pattern: State, as a field on the use and one table of what each state
-allows (ALLOWS), not a class per state; a use names its Scene, and a Scene
-its actors and what to show, by id, resolved when shown, as a chapter
-names its story."""
+Setting a Scene plays it and ends the one playing; End scene ends it; an
+Ended one can be set again (MOVES). Those moves are the Table's verbs
+(scene_play.py), written to the Chronicle, which a Remote seat can reach
+and the saga file can't: while the Session is Under way a use's state is
+the one kept on it with the Chronicle's moves replayed over it (replay),
+and End Session writes where they ended back to the use.
+
+Pattern: State, as a field on the use, one table of moves (MOVES) and one
+of what each state allows (ALLOWS), not a class per state; a use names its
+Scene, and a Scene its actors and what to show, by id, resolved when
+shown, as a chapter names its story."""
 
 from __future__ import annotations
 
 import uuid
-from collections.abc import Sequence
+from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass
 
 from . import catalog, open_stories, places, references, story_chapters
@@ -71,22 +77,66 @@ ALLOWS: dict[str, Allows] = {
 }
 
 
-def state(session: Session, use: SceneUse) -> str:
-    """`use`'s state as it stands: Ended in a played Session, whatever it
-    was left as; a state this copy doesn't know counts as Ended too, so
+#: A use's states as the Chronicle has moved them this evening, by the
+#: use's id (scene_play.now); empty outside a Session Under way.
+Now = Mapping[str, str]
+
+#: The moves: setting a Scene, and ending it.
+SET, END = "set", "end"
+
+#: Where each move takes a use from each state it may be made in.
+MOVES: dict[tuple[str, str], str] = {
+    (PREPARED, SET): PLAYING,
+    (ENDED, SET): PLAYING,
+    (PLAYING, END): ENDED,
+}
+
+
+def why_not_move(current: str, move: str) -> str | None:
+    """Why `move` can't be made from the state `current`, or None."""
+    if (current, move) in MOVES:
+        return None
+    return (
+        "This Scene is already playing." if move == SET else "This Scene isn't playing."
+    )
+
+
+def replay(session: Session, moves: Iterable[tuple[str, str]]) -> dict[str, str]:
+    """Each of `session`'s uses' states after `moves` (a use's id and
+    SET or END, in order), from those kept on them: setting one ends the
+    one playing. A move this table refuses, or of a use no longer in the
+    Session, is passed over, so the Chronicle always reads back."""
+    found = {u.id: state(session, u) for u in session.scenes}
+    for use_id, move in moves:
+        if use_id not in found or why_not_move(found[use_id], move):
+            continue
+        if move == SET:
+            for other, current in found.items():
+                if current == PLAYING:
+                    found[other] = ENDED
+        found[use_id] = MOVES[found[use_id], move]
+    return found
+
+
+def state(session: Session, use: SceneUse, now: Now | None = None) -> str:
+    """`use`'s state as it stands: as `now` has it while the Session is
+    Under way, else as kept on it. One left Playing in a played Session is
+    Ended, and a state this copy doesn't know counts as Ended too, so
     nothing played is lost."""
-    if session.played or use.state not in ALLOWS:
+    if now and use.id in now:
+        return now[use.id]
+    if use.state not in ALLOWS or (session.played and use.state == PLAYING):
         return ENDED
     return use.state
 
 
-def allows(session: Session, use: SceneUse) -> Allows:
+def allows(session: Session, use: SceneUse, now: Now | None = None) -> Allows:
     """What `use`'s state allows (state)."""
-    return ALLOWS[state(session, use)]
+    return ALLOWS[state(session, use, now)]
 
 
-def state_label(session: Session, use: SceneUse) -> str:
-    return STATE_LABELS[state(session, use)]
+def state_label(session: Session, use: SceneUse, now: Now | None = None) -> str:
+    return STATE_LABELS[state(session, use, now)]
 
 
 def new_scene_id() -> str:
@@ -342,9 +392,9 @@ def uses_of(saga: Saga, scene: Scene) -> list[tuple[Session, SceneUse]]:
     return [(s, u) for s in saga.sessions for u in s.scenes if u.scene_id == scene.id]
 
 
-def why_not_delete(saga: Saga, scene: Scene) -> str | None:
+def why_not_delete(saga: Saga, scene: Scene, now: Now | None = None) -> str | None:
     """Why `scene` can't be deleted (a Session plays or played it), or None."""
-    held = [s for s, u in uses_of(saga, scene) if state(s, u) != PREPARED]
+    held = [s for s, u in uses_of(saga, scene) if state(s, u, now) != PREPARED]
     if not held:
         return None
     return (
@@ -430,12 +480,14 @@ def scene_cells(saga: Saga, scene: Scene) -> list[str]:
     ]
 
 
-def use_cells(saga: Saga, session: Session, use: SceneUse) -> list[str]:
+def use_cells(
+    saga: Saga, session: Session, use: SceneUse, now: Now | None = None
+) -> list[str]:
     """A use's row of a Session's Scenes' table (plain text)."""
     scene = find(saga, use.scene_id)
     return [
         title(saga, use),
-        state_label(session, use),
+        state_label(session, use, now),
         (place_text(saga, scene) if scene is not None else "") or "-",
         ", ".join(actor_names(saga, use.present, use)) or "-",
     ]
@@ -466,25 +518,27 @@ def scene_detail(saga: Saga, scene: Scene | None) -> str:
     return "\n".join(lines)
 
 
-def use_row(saga: Saga, session: Session, use: SceneUse) -> str:
+def use_row(saga: Saga, session: Session, use: SceneUse, now: Now | None = None) -> str:
     """A use's row (markup): its Scene's title, state and place."""
     scene = find(saga, use.scene_id)
     where = place_text(saga, scene) if scene is not None else ""
     return (
-        f"{escape(title(saga, use))}  [dim]{state_label(session, use)}"
+        f"{escape(title(saga, use))}  [dim]{state_label(session, use, now)}"
         + (f" · {escape(where)}" if where else "")
         + "[/]"
     )
 
 
-def use_detail(saga: Saga, session: Session, use: SceneUse | None) -> str:
+def use_detail(
+    saga: Saga, session: Session, use: SceneUse | None, now: Now | None = None
+) -> str:
     """A Session's Scenes' details panel (markup) for a chosen use: its
     Scene, then who is present this time and the evening's notes."""
     if use is None:
         return "[dim]Choose a Scene to see it; a loads one.[/]"
     scene = find(saga, use.scene_id)
     lines = [scene_detail(saga, scene) if scene else escape(title(saga, use))]
-    lines.append(f"[$label]State:[/] {state_label(session, use)}")
+    lines.append(f"[$label]State:[/] {state_label(session, use, now)}")
     lines.append(
         "[$label]Present:[/] "
         + escape(", ".join(actor_names(saga, use.present, use)) or "no one yet")

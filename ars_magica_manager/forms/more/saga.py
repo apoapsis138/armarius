@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from ... import merges, storage, undo_season
 from ...actions import NodeKind
-from ...sections import SESSIONS_SECTION
-from .. import downtime
+from ...sections import SESSION_SCENES_SECTION, SESSIONS_SECTION
+from .. import downtime, scene_verbs
 from .. import hosting as hosting_forms
 from .. import message as message_forms
 from .. import reveal as reveal_forms
@@ -23,6 +23,7 @@ from ..menu_steps import (
 from .entry import MoreAction
 from .rules import (
     begins_session,
+    ends_scene,
     ends_session,
     exports_cult,
     exports_saga,
@@ -36,6 +37,7 @@ from .rules import (
     opens_show,
     reads_chronicle,
     sends_message,
+    sets_scene,
     shows_at_session,
     stops_hosting,
 )
@@ -116,6 +118,27 @@ ENTRIES: tuple[MoreAction, ...] = (
         section="section-sessions",
         on_page=False,
         in_section=shows_at_session,
+    ),
+    # Set and end a Scene loaded into the Session (forms/scene_verbs.py).
+    MoreAction(
+        "set_scene",
+        "c",
+        "Set Scene",
+        step=lambda page: on_session(page, scene_verbs.set_here),
+        refresh=changes(SESSION_SCENES_SECTION),
+        section="section-sessions",
+        on_page=False,
+        in_section=sets_scene,
+    ),
+    MoreAction(
+        "end_scene",
+        "j",
+        "End Scene",
+        step=lambda page: on_session(page, scene_verbs.end_here),
+        refresh=changes(SESSION_SCENES_SECTION),
+        section="section-sessions",
+        on_page=False,
+        in_section=ends_scene,
     ),
     # A Show's copy, as the Chronicle's Show cards open it.
     MoreAction(

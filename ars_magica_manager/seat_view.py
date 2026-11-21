@@ -66,7 +66,19 @@ def seat_view(saga: Saga, viewer: viewing.Viewer) -> Saga:
         _hide_tables_and_targets(view, held)
         _hide_private(view, viewer)
         _hide_unknown(view, viewer)
+        _hide_scenes(view, viewer)
     return view
+
+
+def _hide_scenes(view: Saga, viewer: viewing.Viewer) -> None:
+    """The Scenes library and each Session's Scenes, the storyguide's prep
+    (its notes, who is there, an aura kept from the table), for anyone but
+    a storyguide: a player learns a Scene from its banner (scene_play.py)."""
+    if viewer.is_storyguide:
+        return
+    view.scenes = []
+    for session in view.sessions:
+        session.scenes = []
 
 
 def _hide_private(view: Saga, viewer: viewing.Viewer) -> None:

@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 
-from ars_magica_manager import chronicle, references, shows, viewing
+from ars_magica_manager import chronicle, references, scene_play, shows, viewing
 from ars_magica_manager.models import (
     Casting,
     Character,
@@ -321,12 +321,14 @@ def test_every_kind_the_chronicle_writes_is_described_once() -> None:
         )
         for name in re.findall(pattern, source)
     }
-    # A Show is written beside its copy (shows.py).
-    shown = Path(shows.__file__).read_text(encoding="utf-8")
-    written |= {
-        getattr(chronicle, name)
-        for name in re.findall(r"\.add\(\s*chronicle\.([A-Z_]+),", shown)
-    }
+    # A Show is written beside its copy (shows.py), a Scene's moves by
+    # scene_play.py.
+    for module in (shows.__file__, scene_play.__file__):
+        elsewhere = Path(str(module)).read_text(encoding="utf-8")
+        written |= {
+            getattr(chronicle, name)
+            for name in re.findall(r"\.add\(\s*chronicle\.([A-Z_]+),", elsewhere)
+        }
 
     assert written == set(chronicle.KINDS)
     assert set(chronicle.TYPED) | chronicle.UNTYPED == set(chronicle.KINDS)

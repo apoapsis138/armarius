@@ -17,8 +17,10 @@ from ars_magica_manager import (
     host_table,
     references,
     show_copy,
+    storage,
     viewing,
 )
+from ars_magica_manager.models import Scene, SceneUse
 from ars_magica_manager.remote.host import PATH
 from ars_magica_manager.remote.seat_session import SeatSession, SeatTable
 
@@ -116,6 +118,42 @@ async def test_only_the_sessions_storyguide_shows_at_the_host_or_from_a_seat(
     book = chronicle.read(hosted.saga, session)
     book.refresh()
     assert book.entries[-1].kind == chronicle.SHOW
+
+
+@pytest.mark.parametrize("where", ["host", "seat"])
+async def test_only_the_sessions_storyguide_sets_a_scene_at_the_host_or_a_seat(
+    hosted: Table, where: str
+) -> None:
+    """Anna isn't the Session's storyguide: setting and ending a Scene are
+    refused her the same way at either adapter; the storyguide's are in
+    the Chronicle."""
+    session = hosted.saga.sessions[0]
+    hosted.saga.scenes = [Scene("ford", title="The ford", place_name="A ford")]
+    session.scenes = [SceneUse("u", scene_id="ford")]
+    storage.save_saga(hosted.saga)
+    table, seat = await _table(hosted, where)
+    try:
+        refused = [
+            await asyncio.to_thread(table.set_scene, chronicle.SceneCall("u")),
+            await asyncio.to_thread(table.end_scene),
+        ]
+    finally:
+        if seat is not None:
+            await asyncio.to_thread(seat.close)
+    assert refused == [
+        "Only the Session's storyguide sets a Scene.",
+        "Only the Session's storyguide ends a Scene.",
+    ]
+
+    host = host_table.HostTable(hosted.saga, session, viewing.HOST)
+    assert host.set_scene(chronicle.SceneCall("u")) is None
+    assert host.end_scene() is None
+    book = chronicle.read(hosted.saga, session)
+    book.refresh()
+    assert [e.kind for e in book.entries[-2:]] == [
+        chronicle.SCENE_SET,
+        chronicle.SCENE_ENDED,
+    ]
 
 
 def test_a_host_table_given_no_copier_makes_no_show() -> None:

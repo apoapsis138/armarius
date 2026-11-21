@@ -379,12 +379,14 @@ def test_the_scenes_are_the_storyguides_alone():
         assert not viewing.reads(part=part), part
 
 
-def test_a_played_sessions_scenes_count_as_ended():
+def test_a_played_sessions_ended_scenes_stay_ended():
     saga = _saga()
     saga.scenes = [Scene("a", title="The ford")]
     session = saga.sessions[0]
     session.played = True
-    session.scenes = [SceneUse("u", scene_id="a", present=["characters:gus"])]
+    session.scenes = [
+        SceneUse("u", scene_id="a", state=scenes.ENDED, present=["characters:gus"])
+    ]
     use = session.scenes[0]
     assert scenes.state_label(session, use) == "Ended"
     ops = _uses(saga, session)

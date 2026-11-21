@@ -11,7 +11,8 @@ A Session's Scenes: Load a Scene (from the library, or a New Scene made
 there, which joins the library), Edit a use (who is present this time,
 its place in the order, and which planned Session it is in) and Take it
 out. What a use's form offers follows its state (scenes.allows): an Ended
-use's form changes only its notes.
+use's form changes only its notes. While the Session is Under way the
+state is as the Chronicle this copy holds has moved it (now_of).
 
 Pattern: one core Form per record, with each list's verbs one
 commands.SectionOps registered in section_verbs (the library for the
@@ -22,7 +23,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import Any
 
-from .. import scenes
+from .. import chronicle, host_table, scene_play, scenes
 from .. import sessions as ss
 from ..commands import (
     Choice,
@@ -42,6 +43,24 @@ SCENES_HELP = "scenes"
 
 #: The key of a present cast member's tick, before the character's id.
 PRESENT = "present_"
+
+
+def now_of(saga: Saga, session: Session) -> scenes.Now:
+    """`session`'s uses' states as the Chronicle this copy holds has moved
+    them (the host's own, or what a Remote seat was sent): empty unless it
+    is Under way."""
+    if not session.under_way:
+        return {}
+    book = host_table.here(saga, session, chronicle.here()).held()
+    if isinstance(book, chronicle.SeatChronicle) and book.session_id != session.id:
+        book = None
+    return scene_play.now(session, book)
+
+
+def _under_way_now(saga: Saga) -> scenes.Now:
+    """The Session Under way's uses' states (now_of), if one is."""
+    session = chronicle.under_way(saga)
+    return now_of(saga, session) if session is not None else {}
 
 
 def _refs_field(
@@ -254,7 +273,7 @@ def scene_form(
 
 def delete_scene(saga: Saga, scene: Scene) -> Confirm | Refuse:
     """Delete a Scene, asking first; one a Session played stays."""
-    why = scenes.why_not_delete(saga, scene)
+    why = scenes.why_not_delete(saga, scene, _under_way_now(saga))
     if why is not None:
         return Refuse("Delete the Scene", escape(why))
     used = {s.id for s, _u in scenes.uses_of(saga, scene)}
@@ -378,7 +397,7 @@ def _order_fields(saga: Saga, session: Session, use: SceneUse) -> list[DialogFie
 
 def use_fields(saga: Saga, session: Session, use: SceneUse) -> list[DialogField]:
     """A use's form, as its state allows."""
-    allows = scenes.allows(session, use)
+    allows = scenes.allows(session, use, now_of(saga, session))
     fields: list[DialogField] = []
     if allows.present:
         fields += _present_fields(saga, session, use)
@@ -411,7 +430,7 @@ def use_fields(saga: Saga, session: Session, use: SceneUse) -> list[DialogField]
 def _store_use(
     saga: Saga, session: Session, use: SceneUse, values: dict[str, Any]
 ) -> None:
-    allows = scenes.allows(session, use)
+    allows = scenes.allows(session, use, now_of(saga, session))
     if allows.present:
         ticked = [
             ref
@@ -444,10 +463,11 @@ def take_out(saga: Saga, session: Session, use: SceneUse) -> Confirm | Refuse:
     """Take a Prepared use out of `session`, asking first; the Scene stays
     in the library. A Playing or Ended one stays."""
     name = escape(scenes.title(saga, use))
-    if not scenes.allows(session, use).take_out:
+    now = now_of(saga, session)
+    if not scenes.allows(session, use, now).take_out:
         return Refuse(
             "Take the Scene out",
-            f"{name} is {scenes.state_label(session, use)}: only a Prepared "
+            f"{name} is {scenes.state_label(session, use, now)}: only a Prepared "
             "Scene can be taken out.",
         )
 

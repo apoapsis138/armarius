@@ -55,17 +55,20 @@ from .. import (
     chronicle,
     dice_text,
     host_table,
+    paths,
+    picture_files,
     references,
     settings,
     shows,
     table_rules,
 )
 from ..commands import Command, Refuse
-from ..forms import free_roll, roll_request
+from ..forms import free_roll, roll_request, scene_verbs
 from ..forms import message as message_forms
 from ..forms import show as show_forms
 from ..markup import escape
 from ..models import Saga, Session
+from ..picture_files import PictureSource
 from ..rules import dice as dice_rules
 from ..style import fonts
 from . import motion, pictures, sounds
@@ -501,6 +504,47 @@ def show_card(
     return card
 
 
+def scene_card(
+    entry: chronicle.Entry,
+    line: str,
+    p: Palette,
+    open_picture: Callable[[], None] | None,
+) -> Card:
+    """A Scene's banner: "A new Scene" in small type, its title set large,
+    where it is as the players know it, its aura when the table was told
+    it, and "See the map" for its picture."""
+    body = entry.body
+    card = Card(line, p)
+    card.column.addWidget(text("A new Scene", p["label"], serif(10.5, italic=True)))
+    title = text(
+        escape(str(body.get("title") or "")),
+        heading_ink(p),
+        heading_font(13.5, p, caps=True),
+        wrap=True,
+    )
+    title.setObjectName("scene-title")
+    card.column.addWidget(title)
+    where = text(
+        escape(f"At {body.get('place') or ''}"), p["foreground"], serif(11.5), wrap=True
+    )
+    where.setObjectName("scene-place")
+    card.column.addWidget(where)
+    if "aura" in body:
+        aura = text(escape(f"Aura: {body['aura']}"), p["label"], serif(11))
+        aura.setObjectName("scene-aura")
+        card.column.addWidget(aura)
+    if open_picture is not None:
+        row = QHBoxLayout()
+        sees = margin_mark(
+            "scene-picture", "See the map", "Open the Scene's map", p, p["foreground"]
+        )
+        sees.clicked.connect(lambda _checked=False: open_picture())
+        row.addWidget(sees)
+        row.addStretch(1)
+        card.column.addLayout(row)
+    return card
+
+
 #: The most a shown picture is drawn at, in pixels: a larger one is scaled
 #: down to fit; a smaller one is drawn at its own size.
 PICTURE_FIT = (900, 700)
@@ -843,6 +887,9 @@ class ChroniclePane(QWidget):
         self.table: at_table.Table | None = None
         #: Opens a record a Message links (the window's open_ref).
         self.open_record: Callable[[references.Ref], None] = lambda _ref: None
+        #: Reads a picture by folder and name: this computer's, or the
+        #: host's for a Joined game (the window's store).
+        self.read_picture: PictureSource = picture_files.local_picture
         self.who = ""
         self._stop: Callable[[], None] | None = None
         self.collapsed = False
@@ -882,6 +929,15 @@ class ChroniclePane(QWidget):
         column.addLayout(head)
         self.rule = ShortRule(p)
         column.addWidget(self.rule)
+        #: The Scene playing, above the feed: hidden while none plays.
+        self.now_strip = QWidget()
+        self.now_strip.setObjectName("now-playing")
+        self.now_strip.setStyleSheet("background:transparent")
+        self.now_column = QVBoxLayout(self.now_strip)
+        self.now_column.setContentsMargins(0, 2, 0, 6)
+        self.now_column.setSpacing(2)
+        self.now_strip.setVisible(False)
+        column.addWidget(self.now_strip)
         self.feed = QWidget()
         self.feed.setStyleSheet("background:transparent")
         self.cards = QVBoxLayout(self.feed)
@@ -950,6 +1006,8 @@ class ChroniclePane(QWidget):
         self.roll_button.setEnabled(free_roll.may_roll(saga, session, who))
         self.message_button.setEnabled(who in chronicle.at_session(saga, session))
         if same:
+            # The saga may be read again since, or the Scene playing edited.
+            self._draw_now()
             return
         self.detach()
         self.table = table
@@ -1012,6 +1070,8 @@ class ChroniclePane(QWidget):
         if not self._reads(entry):
             return
         self._card(entry, chronicle.voided(book))
+        if entry.kind in (chronicle.SCENE_SET, chronicle.SCENE_ENDED, chronicle.END):
+            self._draw_now()
         if spec is not None and spec.sounds:
             sounds.play("tock")
         self._came_while_collapsed(entry)
@@ -1053,6 +1113,87 @@ class ChroniclePane(QWidget):
         for entry in book.entries:
             if self._reads(entry):
                 self._card(entry, struck)
+        self._draw_now()
+
+    def now_playing(self) -> scene_verbs.NowPlaying | None:
+        """The Scene playing, as whoever sits here reads it."""
+        saga, session = self.saga, self.session
+        if saga is None or session is None or self.book is None:
+            return None
+        return scene_verbs.now_playing(saga, session, self.who, self.book)
+
+    def _draw_now(self) -> None:
+        """The "Now playing" strip: the Scene's title and its place (a link
+        when the reader may open it); for the Session's storyguide, a Show
+        for each thing it has to show, and End Scene."""
+        column, p = self.now_column, self.p
+        while column.count():
+            item = column.takeAt(0)
+            widget = item.widget() if item is not None else None
+            if widget is not None:
+                widget.setParent(None)
+                widget.deleteLater()
+        # Hidden while it is filled, then shown: a widget added to a parent
+        # already on show would stay hidden.
+        self.now_strip.setVisible(False)
+        found = self.now_playing()
+        if found is None:
+            return
+        column.addWidget(text("Now playing", p["label"], serif(10.5, italic=True)))
+        title = text(
+            escape(found.title),
+            heading_ink(p),
+            heading_font(12.5, p, caps=True),
+            wrap=True,
+        )
+        title.setObjectName("now-title")
+        column.addWidget(title)
+        link = found.place_link
+        if link is not None:
+            opens = margin_mark(
+                "now-place", f"At {found.place}", "Open the place", p, p["foreground"]
+            )
+            opens.clicked.connect(lambda _checked=False: self.open_record(link))
+            column.addWidget(opens)
+        else:
+            place = text(
+                escape(f"At {found.place}"), p["foreground"], serif(11), wrap=True
+            )
+            place.setObjectName("now-place")
+            column.addWidget(place)
+        if found.runs:
+            self._draw_now_verbs(found)
+        self.now_strip.setVisible(True)
+
+    def _draw_now_verbs(self, found: scene_verbs.NowPlaying) -> None:
+        saga, session, p = self.saga, self.session, self.p
+        if saga is None or session is None:
+            return
+        row = QHBoxLayout()
+        row.setSpacing(8)
+        for name, preset in found.to_show:
+            shows_it = margin_mark(
+                "now-show",
+                f"Show {name}",
+                f"Show {name} to the table",
+                p,
+                p["foreground"],
+            )
+            shows_it.clicked.connect(
+                lambda _checked=False, preset=preset: self.run(
+                    show_forms.show_here(saga, session, preset)
+                )
+            )
+            row.addWidget(shows_it)
+        ends = margin_mark("now-end", "End Scene", "End the Scene", p, p["foreground"])
+        ends.clicked.connect(
+            lambda _checked=False: self.run(scene_verbs.end_here(saga, session))
+        )
+        row.addWidget(ends)
+        row.addStretch(1)
+        holder = QWidget()
+        holder.setLayout(row)
+        self.now_column.addWidget(holder)
 
     def _reader(self) -> chronicle.Reader | None:
         """The Chronicle as whoever sits here reads it (host or seat)."""
@@ -1107,6 +1248,16 @@ class ChroniclePane(QWidget):
                 self.p,
                 lambda: self.open_show(entry),
                 (lambda: self.open_record(live)) if live is not None else None,
+            )
+            self.cards.insertWidget(self.cards.count() - 1, card)
+            return
+        if shown == chronicle.SCENE_CARD:
+            picture = str(entry.body.get("picture") or "")
+            card = scene_card(
+                entry,
+                line,
+                self.p,
+                (lambda: self.open_scene_picture(entry)) if picture else None,
             )
             self.cards.insertWidget(self.cards.count() - 1, card)
             return
@@ -1305,6 +1456,19 @@ class ChroniclePane(QWidget):
             self.shown_picture.open()
         else:
             self.run(show_forms.copy_form(found))
+
+    def open_scene_picture(self, entry: chronicle.Entry) -> None:
+        """Open a Scene banner's map: from this computer's maps, or fetched
+        from the host at a Remote seat (the picture request)."""
+        name = str(entry.body.get("picture") or "")
+        found = self.read_picture(paths.MAPS, name) if name else None
+        if found is None:
+            self.run(Refuse("Scene", "The Scene's map can't be read just now."))
+            return
+        title = str(entry.body.get("title") or "")
+        shown = shows.Shown(title, picture=found, picture_name=name)
+        self.shown_picture = ShownPicture(shown, self)
+        self.shown_picture.open()
 
     def compose(self) -> None:
         """Write a Message: to the Table, or a Whisper."""
