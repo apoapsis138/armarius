@@ -1,6 +1,7 @@
 """What can be done at the table while a Session is under way, as one
 interface: roll, spend Confidence, answer a Roll request, send a Message,
-open a form's roll, and Show something and open a Show's copy. The host's own window does each in its Chronicle
+open a form's roll, Show something and open a Show's copy, and set and
+end a Scene. The host's own window does each in its Chronicle
 (host_table.HostTable); a Remote seat asks its host (seat_session's
 SeatTable). The pane, the sheet's Roll and the Table roll forms take a
 Table and never ask which one they have.
@@ -72,6 +73,10 @@ class Table(Protocol):
         """The copy Show `entry` names, as this person may open it, or why
         it can't be opened."""
         ...
+
+    def set_scene(self, call: chronicle.SceneCall) -> str | None: ...
+
+    def end_scene(self) -> str | None: ...
 
     def held(self) -> chronicle.HasEntries | None:
         """The Chronicle as this copy holds it (None: it can't be read)."""

@@ -42,6 +42,16 @@ CONTRACTS: dict[str, Contract] = {
         expected=("show", "Leandro", "mag1"),
         invalid=[{"Show": ""}],
     ),
+    "set scene": Contract(
+        prefill={"Scene": "u-ford", "Tell the table the aura": False},
+        edits={"Tell the table the aura": True},
+        saved=lambda _s: (
+            (entry.kind, entry.body["title"], entry.body.get("aura"))
+            if (entry := last_chronicle_entry()) is not None
+            else None
+        ),
+        expected=("scene set", "The ford", "Magic 3"),
+    ),
     "show to the table": Contract(
         prefill={},
         edits={"Title": "What we found"},

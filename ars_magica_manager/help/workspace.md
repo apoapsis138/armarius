@@ -1496,7 +1496,7 @@ A Session's record of everything said and rolled while it's under way. Each line
 On the desktop, the [Chronicle pane](help:chronicle-pane) shows it as it happens, on the host's computer and at each seat, and makes [Free rolls](help:free-roll).
 <!-- /gui -->
 
-**Begin Session** puts a planned Session under way and opens its Chronicle. **End Session** marks it Played, as ticking Played does, and closes its Chronicle. The Chronicle is still read from the Session's row afterwards, but nothing more is added. Only the Session's storyguide begins or ends it, and only one Session of a saga is under way at a time. End Session isn't **End of Session** on a character's More, which gives Confidence Points for an evening of play.
+**Begin Session** puts a planned Session under way and opens its Chronicle. **End Session** marks it Played, as ticking Played does, ends the [Scene](help:scenes-play) playing, and closes its Chronicle. The Chronicle is still read from the Session's row afterwards, but nothing more is added. Only the Session's storyguide begins or ends it, and only one Session of a saga is under way at a time. End Session isn't **End of Session** on a character's More, which gives Confidence Points for an evening of play.
 
 Who sees each roll:
 
@@ -1513,7 +1513,7 @@ A **Roll request** is the storyguide's call for chosen characters to roll a Char
 Every die is rolled on the host's computer, and the host's computer keeps the whole Chronicle in a file beside the saga, Private and Blind rolls included. The host's own window shows only what the host may see, but anyone at that computer could open the file. A saga's backups include its Chronicles. A headless host serves Remote seats as before, but the preview needs a host with the desktop app until 5.0.
 
 <!-- tui -->
-Choose a Session in the Sessions list and press `m` for More. **Begin Session**, **End Session** and **Chronicle** are there while the preview is on in the desktop app's Settings, and **Message** while the Session is under way.
+Choose a Session in the Sessions list and press `m` for More. **Begin Session**, **End Session** and **Chronicle** are there while the preview is on in the desktop app's Settings, and **Message**, **Set Scene** and **End Scene** while the Session is under way.
 <!-- /tui -->
 <!-- gui -->
 Choose a Session in Saga Management's Sessions and click **Begin Session**, **End Session** or **Chronicle**. The preview is turned on in the [Settings window](help:settings-window).
@@ -1627,6 +1627,7 @@ A roll from the sheet has a line under what it's for saying how its modifier was
 - **Message**, below it, sends a [Message or a Whisper](help:chronicle-messages). A Message is a card of who it's from, in small italic, and its words; a record it names that you may open is a link.
 - **Roll Request**, below it for the Session's storyguide on the host's computer, makes a [Roll request](help:roll-requests).
 - A [Show](help:chronicle-shows) is a card of its title and to whom, with **Open** for the copy as it was shown and, when you may read the record now, **Open the live record**.
+- A Scene's banner, when the storyguide [sets a Scene](help:scenes), is a card of its title in capitals, where it is, its aura when the table is told it, and **See the map** for its map, which opens in a window of its own. See [Setting and ending a Scene](help:scenes-play).
 - **›** collapses the pane to a thin gilt strip on the right edge, its name running up it and the count of entries come since in a small seal at its head. Click the strip to open it again. **Chronicle** in the top bar opens or collapses it too.
 - A Blind roll's number, for the Session's storyguide, the line telling you one was rolled for your character, a Whisper or a Show to you, or a Roll request offered to your character pulses the strip once. Not with **Reduce motion** on. The pane never opens by itself.
 - A roll landing plays a soft tock, with **Sounds** on.
@@ -1837,9 +1838,33 @@ On the Session's page, under its facts: **Load a Scene**, **Edit Scene** and **T
 
 **You type:** for a Scene loaded, who is **Present** this time (tonight's cast ticked, and anyone else under **Also present**: grogs, creatures, your own characters), where it **Comes after** in the evening's order, which planned **Session** it belongs to (choose another to move it there), and this evening's **Notes** on it.
 
-Each loaded Scene is **Prepared**, **Playing** or **Ended**, and every Scene of a played Session counts as Ended. A Prepared one can be changed, moved or taken out after a confirmation; the Scene stays in the library. Moved to another Session, it goes last there. A Playing one can change who is present, but not move or be taken out. An Ended one keeps who was there, even someone since deleted, and only its notes change.
+Each loaded Scene is **Prepared**, **Playing** or **Ended**. A Prepared one can be changed, moved or taken out after a confirmation; the Scene stays in the library. Moved to another Session, it goes last there. A Playing one can change who is present, but not move or be taken out. An Ended one keeps who was there, even someone since deleted, and only its notes change.
 
-**See also:** [The Scenes library](help:tab-content-scenes), [A Session's page](help:session-page)
+### Setting and ending a Scene
+<!-- help: scenes-play -->
+
+Preview: turn on Virtual Tabletop in Settings.
+
+While the Session is under way, its storyguide plays its Scenes one at a time, from the host's computer or a Remote seat.
+
+- **Set Scene** asks which Scene to play, starting on the next Prepared one, and whether to **Tell the table the aura**. Its line shows the Scene's aura, so you know what you'd be telling. Setting a Scene ends the one playing.
+- **A banner** goes to everyone at the Session in the [Chronicle](help:chronicle): the Scene's title, where it is as the players know it, and its map. A Place or covenant the players don't know of reads as the place name you typed for the Scene, or "an unknown place". The aura is on the banner only when you tick **Tell the table the aura**; otherwise only you know it.
+- **End Scene** ends the one playing, after a confirmation, and the Chronicle says so.
+- **Going back.** An Ended Scene can be set again, when the troupe returns there: it plays once more, with a new banner.
+- **End Session** ends the Scene playing. The Scenes never set stay Prepared on the Session, to move to another Session or take out.
+
+The players' copies of the saga don't hold the Scenes, their notes or an aura you keep: players learn of a Scene from its banner.
+
+<!-- tui -->
+Choose the Session in the Sessions list and press `m` for More: **Set Scene** and **End Scene** are there for the Session's storyguide while it's under way. The banner is a line in its Chronicle.
+<!-- /tui -->
+<!-- gui -->
+On the Session's page, click **Set Scene** or **End Scene**. The banner is a card in the [Chronicle pane](help:chronicle-pane).
+
+While a Scene plays, **Now playing** sits at the top of the Chronicle pane for everyone at the Session: the Scene's title and where it is. A place the players know of is a link that opens it, as they may read it. The Session's storyguide also sees there a **Show** for each thing on the Scene's **To show** list that can be shown (a record with a page, or a map), which opens the [Show](help:chronicle-shows) form on it, and **End Scene**.
+<!-- /gui -->
+
+**See also:** [The Scenes library](help:tab-content-scenes), [A Session's page](help:session-page), [The Chronicle](help:chronicle)
 
 # A record's Secrets
 <!-- help: tab-secrets -->

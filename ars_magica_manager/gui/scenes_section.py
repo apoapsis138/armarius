@@ -10,6 +10,7 @@ from collections.abc import Callable
 from PySide6.QtWidgets import QVBoxLayout, QWidget
 
 from .. import scenes, section_verbs
+from ..forms import scenes as scene_forms
 from ..models import Saga, Session
 from ..sections import SCENES_SECTION, SESSION_SCENES_SECTION
 from .character_sheet import section
@@ -69,9 +70,10 @@ def session_scenes_section(
 ) -> QWidget:
     """A Session's Scenes, in the evening's order."""
     chooser = Chooser()
+    now = scene_forms.now_of(saga, session)
     rows = cells_table(
         scenes.USE_COLUMNS,
-        [scenes.use_cells(saga, session, u) for u in session.scenes],
+        [scenes.use_cells(saga, session, u, now) for u in session.scenes],
         p,
         lambda _row: None,
     )

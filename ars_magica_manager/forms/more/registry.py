@@ -68,6 +68,8 @@ ORDER: tuple[str, ...] = (
     "close_session",
     "read_chronicle",
     "send_message",
+    "set_scene",
+    "end_scene",
     "show_at_session",
     "show_record",
     "open_show",

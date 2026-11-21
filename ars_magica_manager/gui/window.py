@@ -526,6 +526,10 @@ class MainWindow(QMainWindow):
         #: itself: nothing to save or redraw.
         self.chronicle_pane = ChroniclePane(self.palette_, self._run_on_chronicle)
         self.chronicle_pane.open_record = self.open_ref
+        # A Scene's map: this computer's, or the host's while Joined.
+        self.chronicle_pane.read_picture = lambda folder, name: self.store.picture(
+            folder, name
+        )
         #: What feeds the pane: the host's Chronicle file, or a seat's host.
         self.chronicle = ChronicleWiring(
             self.chronicle_pane,

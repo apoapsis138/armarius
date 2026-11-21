@@ -1379,6 +1379,29 @@ def show_line(body: dict[str, Any]) -> str:
     return f"{line} (to {', '.join(names)})" if names else line
 
 
+# -- Scenes --
+
+SCENE_SET = "scene set"
+SCENE_ENDED = "scene ended"
+
+
+@dataclass(frozen=True)
+class SceneCall:
+    """Set a Scene, as data: which of the Session's uses of a Scene to
+    play (by its id), and whether the table is told its aura. The host
+    writes the banner from the saga (scene_play.py)."""
+
+    use_id: str
+    tell_aura: bool = False
+
+
+def scene_set_line(body: dict[str, Any]) -> str:
+    """A banner's line: the Scene's title and place, and its aura when the
+    table was told it."""
+    line = f"Scene: {body['title']}, at {body['place']}"
+    return f"{line} (aura {body['aura']})" if "aura" in body else line
+
+
 # -- words typed into the Chronicle --
 
 
@@ -1469,15 +1492,25 @@ def confidence_line(body: dict[str, Any]) -> str:
 
 #: How an entry is drawn as a card (each front-end keeps its own look):
 #: a note (its line alone), a roll, a form's roll, a Roll request with its
-#: answers gathered, a Message, a Show (which opens its copy), or nothing
-#: (it amends another's card).
-NOTE, ROLL_CARD, FORM_ROLL_CARD, REQUEST_CARD, MESSAGE_CARD, SHOW_CARD, NO_CARD = (
+#: answers gathered, a Message, a Show (which opens its copy), a Scene's
+#: banner, or nothing (it amends another's card).
+(
+    NOTE,
+    ROLL_CARD,
+    FORM_ROLL_CARD,
+    REQUEST_CARD,
+    MESSAGE_CARD,
+    SHOW_CARD,
+    SCENE_CARD,
+    NO_CARD,
+) = (
     "note",
     "roll",
     "form_roll",
     "request",
     "message",
     "show",
+    "scene",
     "none",
 )
 
@@ -1664,6 +1697,21 @@ KINDS: dict[str, Kind] = {
             for_whom=_whispered_to,
             # As a Whisper's: the Players shown by name only (ADR 0031).
             held_back=("to",),
+        ),
+        # A Scene's banner and its end: words from the saga, and the place
+        # as the players know it (scene_play.py); for the Table, so no one.
+        Kind(
+            SCENE_SET,
+            scene_set_line,
+            card=SCENE_CARD,
+            for_whom=_no_one,
+            held_back=(),
+        ),
+        Kind(
+            SCENE_ENDED,
+            lambda body: f"Scene ended: {body['title']}",
+            for_whom=_no_one,
+            held_back=(),
         ),
     )
 }

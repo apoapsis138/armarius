@@ -18,7 +18,15 @@ from __future__ import annotations
 
 from typing import Any
 
-from .. import cast_sheet, chronicle, recap, story_aftermath, viewing, what_changed
+from .. import (
+    cast_sheet,
+    chronicle,
+    recap,
+    scene_play,
+    story_aftermath,
+    viewing,
+    what_changed,
+)
 from .. import players as pl
 from .. import sessions as ss
 from ..commands import Act, Confirm, Form, Go, Refuse, SectionOps, notes
@@ -376,7 +384,8 @@ def end_session(saga: Saga, session: Session) -> Confirm | Refuse:
 
     def apply() -> list[str]:
         was_played = session.played
-        chronicle.end(saga, session, by=chronicle.here())
+        # The Scene playing ends with it (scene_play.py).
+        scene_play.end_session(saga, session, by=chronicle.here())
         if was_played:
             return []
         _keep_copies(saga, session)

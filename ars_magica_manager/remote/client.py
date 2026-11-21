@@ -138,6 +138,14 @@ class ShowRefused(Exception):
         self.why = why
 
 
+class SceneRefused(Exception):
+    """The host wouldn't set or end the Scene; the reason."""
+
+    def __init__(self, why: str) -> None:
+        super().__init__(why)
+        self.why = why
+
+
 class VersionMismatch(ChannelError):
     """The host runs another major version of the app."""
 
@@ -588,6 +596,27 @@ class RemoteClient:
             return number
         if reply.type == "show_refused":
             raise ShowRefused(str(reply.body.get("why", "")))
+        raise UnreadableReply
+
+    async def set_scene(self, call: chronicle.SceneCall) -> int:
+        """Ask the host to set the Scene `call` names (the banner written
+        there): the number of its Chronicle entry. SceneRefused with the
+        host's reason."""
+        body: Body = {"use": call.use_id, "tell_aura": call.tell_aura}
+        return await self._scene_move("set_scene", body)
+
+    async def end_scene(self) -> int:
+        """Ask the host to end the Scene playing: the number of its
+        Chronicle entry. SceneRefused with the host's reason."""
+        return await self._scene_move("end_scene", {})
+
+    async def _scene_move(self, kind: str, body: Body) -> int:
+        reply = await self.request(kind, body)
+        number = reply.body.get("number")
+        if reply.type == "scene_moved" and isinstance(number, int):
+            return number
+        if reply.type == "scene_refused":
+            raise SceneRefused(str(reply.body.get("why", "")))
         raise UnreadableReply
 
     async def show_copy(self, show_id: str) -> dict[str, Any]:

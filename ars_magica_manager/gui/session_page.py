@@ -1,8 +1,8 @@
 """A Session's own page on the desktop: its title and state, its facts
 (sheets/session.py), and its buttons: Edit, Cast at a Glance, Print the
 Cast and, with the Virtual Tabletop (Preview) on, Begin Session, End
-Session and its Chronicle, each offered as the Sessions list offers it;
-then the Scenes loaded into it (scenes_section.py)."""
+Session, Set Scene, End Scene and its Chronicle, each offered as More
+offers it; then the Scenes loaded into it (scenes_section.py)."""
 
 from __future__ import annotations
 
@@ -12,6 +12,7 @@ from PySide6.QtWidgets import QVBoxLayout, QWidget
 
 from .. import chronicle, section_verbs, viewing, virtual_tabletop
 from ..commands import Command
+from ..forms import scene_verbs
 from ..forms import sessions as session_forms
 from ..models import Saga, Session
 from ..sections import SESSION_INFO_SECTION, SESSION_SCENES_SECTION
@@ -93,6 +94,22 @@ class SessionPage(QWidget):
                     "End Session",
                     "season",
                     lambda: run(session_forms.end_session(saga, session)),
+                )
+            )
+        if scene_verbs.why_not_set_here(saga, session) is None:
+            verbs.append(
+                (
+                    "Set Scene",
+                    "place",
+                    lambda: run(scene_verbs.set_here(saga, session)),
+                )
+            )
+        if scene_verbs.why_not_end_here(saga, session) is None:
+            verbs.append(
+                (
+                    "End Scene",
+                    "place",
+                    lambda: run(scene_verbs.end_here(saga, session)),
                 )
             )
         if chronicle.has_chronicle(saga, session):
