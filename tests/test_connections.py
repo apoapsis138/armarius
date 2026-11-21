@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from support import everything_saga
 
-from ars_magica_manager import connections, neighbours
+from ars_magica_manager import connections, creatures, neighbours
 from ars_magica_manager.forms import go_to as go_to_forms
 from ars_magica_manager.forms import world as world_forms
 from ars_magica_manager.models import Link, Saga
@@ -129,6 +129,25 @@ def test_a_place_and_a_creature_list_what_links_to_them():
         Ref("neighbours", "coven", "The Black Pool Coven"),
         Ref("neighbours", "crown", "The Hollow Crown"),
     )
+
+
+def test_linked_from_counts_only_links_of_the_record_s_own_kind():
+    """A Link with no kind, or the saga's word for a place's list, is not a
+    Link to the place or creature, though its id matches."""
+    saga = _court()
+    coven = saga.neighbour("coven")
+    drachenfels = saga.neighbour("drachenfels")
+    aeolus = saga.creature("aeolus")
+    assert coven is not None and drachenfels is not None and aeolus is not None
+    coven.links.append(Link("neighbours", "drachenfels"))
+    coven.links.append(Link("", "aeolus"))
+    place = {f.label: f for f in region_sheet.neighbour_facts(saga, drachenfels)}
+    assert "Linked from" not in place
+    creature = {f.label: f for f in creature_sheet.facts(saga, aeolus)}
+    assert creature["Linked from"].refs == (
+        Ref("neighbours", "crown", "The Hollow Crown"),
+    )
+    assert creatures.linked_from(saga, aeolus) == ["The Hollow Crown"]
 
 
 def test_links_rows_list_only_the_record_s_own_links():

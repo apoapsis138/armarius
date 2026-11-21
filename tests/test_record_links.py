@@ -496,14 +496,47 @@ def test_lab_text_access_is_kept_by_the_authors_name() -> None:
 def test_pointing_at_lists_every_entry_that_names_a_record() -> None:
     saga = _everything()
     found = {
-        (type(entry).__name__, link.name)
-        for entry, link in record_links.pointing_at(saga, "creatures", "id-beast")
+        (type(n.entry).__name__, n.link.name)
+        for n in record_links.pointing_at(saga, "creatures", "id-beast")
     }
     assert found == {
         ("Link", "target_id"),
         ("Pin", "record_id"),
         ("Neighbour", "details"),
     }
+
+
+def test_pointing_at_gives_the_record_holding_each_entry() -> None:
+    """The magus whose Links, the faction whose roster; an entry kept on
+    the saga itself (a pin) is its own record."""
+    saga = _everything()
+    held = {
+        (type(n.entry).__name__, getattr(n.record, "id", None))
+        for n in record_links.pointing_at(saga, "creatures", "id-beast")
+    }
+    assert held == {
+        ("Link", "id-mag"),
+        ("Pin", None),
+        ("Neighbour", "id-faction"),
+    }
+    (pin,) = [
+        n
+        for n in record_links.pointing_at(saga, "creatures", "id-beast")
+        if isinstance(n.entry, Pin)
+    ]
+    assert pin.record is pin.entry
+
+
+def test_pointing_at_finds_each_link_back_to_a_record() -> None:
+    saga = _everything()
+    magus = _find(saga, "characters", "id-mag")
+    links = [
+        (n.record, n.entry)
+        for n in record_links.pointing_at(saga, "creatures", "id-beast")
+        if isinstance(n.entry, Link)
+    ]
+    assert links == [(magus, magus.links[0])]
+    assert record_links.pointing_at(saga, "characters", "nobody") == []
 
 
 def test_a_deleted_covenants_possessions_lose_their_links() -> None:

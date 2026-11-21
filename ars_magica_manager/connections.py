@@ -19,12 +19,20 @@ from . import (
     memberships,
     open_stories,
     places,
+    record_links,
     references,
     story_chapters,
     viewing,
-    world,
 )
-from .models import Character, Covenant, Creature, Familiar, Laboratory, Neighbour, Saga
+from .models import (
+    Character,
+    Covenant,
+    Creature,
+    Familiar,
+    Laboratory,
+    Neighbour,
+    Saga,
+)
 from .references import Fact, Ref
 from .rules import sites
 from .tribunal_packages import rhine
@@ -61,13 +69,15 @@ def _named(label: str, found: list[tuple[Any, str]]) -> list[Fact]:
 
 
 def _linking(saga: Saga, record: Any) -> list[tuple[Any, str]]:
+    """Each other record whose Links include `record`, with that Link's
+    note, as the links list finds them."""
     kind = link_kind(record)
     if kind is None:
         return []
     return [
-        (other, link.note)
-        for other, link in world.links_to(saga, kind, record.id)
-        if other is not record
+        (p.record, p.entry.note)
+        for p in record_links.links_naming(saga, kind, record.id)
+        if p.record is not record
     ]
 
 
