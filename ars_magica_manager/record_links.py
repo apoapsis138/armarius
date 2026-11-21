@@ -18,10 +18,10 @@ record it names is deleted:
 A field's `kept_while` keeps it instead while its entry is history (a
 planned Session's castings go, a played one's stay).
 
-Deleting a record forgets it through the list (forget); Find follows it
-(pointing_at); an export's pictures are its PICTURES fields (pictures,
-pictures_in_data). Deleting a record keeps its Picture file: only tidying
-unused pictures removes one.
+Deleting a record forgets it through the list (forget); a sheet's Linked
+from follows it back (pointing_at, links_naming); an export's pictures
+are its PICTURES fields (pictures, pictures_in_data). Deleting a record
+keeps its Picture file: only tidying unused pictures removes one.
 
 Pattern: Strategy dict keyed by record type, as in section_verbs: LINKS
 maps an entry's type to its link fields; each user brings its own action
@@ -657,19 +657,47 @@ def _exists(saga: Saga, kind: str, record_id: str) -> bool:
     )
 
 
-# -- Find: who points at a record --
+# -- follow: who points at a record --
 
 
-def pointing_at(saga: Saga, kind: str, record_id: str) -> list[tuple[Any, LinkField]]:
-    """Each (entry, field) in the saga that names the record `kind`
-    `record_id`, history (KEEP) included; an entry naming it twice in one
-    field is listed once."""
-    found: list[tuple[Any, LinkField]] = []
+@dataclass(frozen=True)
+class Pointer:
+    """An entry naming a record: the top-level record it is kept on (the
+    magus whose Links, the covenant whose seal; an entry kept on the saga
+    itself is its own), the entry, and the field that names it."""
+
+    record: Any
+    entry: Any
+    link: LinkField
+
+
+def _record_of(found: Found) -> Any:
+    # above[0] is the saga; the record kept in one of its lists follows.
+    return found.above[1] if len(found.above) > 1 else found.entry
+
+
+def pointing_at(saga: Saga, kind: str, record_id: str) -> list[Pointer]:
+    """Each entry and field in the saga that names the record `kind`
+    `record_id`, with the record holding it, history (KEEP) included; an
+    entry naming it twice in one field is listed once."""
+    found: list[Pointer] = []
     for naming in _naming(saga, kind, {record_id}):
-        pair = (naming.found.entry, naming.link)
-        if not any(e is pair[0] and f is pair[1] for e, f in found):
-            found.append(pair)
+        entry, link = naming.found.entry, naming.link
+        if not any(p.entry is entry and p.link is link for p in found):
+            found.append(Pointer(_record_of(naming.found), entry, link))
     return found
+
+
+def links_naming(saga: Saga, link_kind: str, record_id: str) -> list[Pointer]:
+    """The Links a person typed in to the record `record_id`, of the Link
+    kind `link_kind` ("places" for a place), each with the record keeping
+    it. Only a Link saying that kind counts: one with no kind, or some
+    other word, isn't to this record, whatever its id."""
+    return [
+        p
+        for p in pointing_at(saga, LINK_KIND[link_kind], record_id)
+        if isinstance(p.entry, Link) and p.entry.kind == link_kind
+    ]
 
 
 # -- delete: forget a record --

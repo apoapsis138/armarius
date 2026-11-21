@@ -12,7 +12,7 @@ kind of Character; the rules here are plain functions."""
 
 from __future__ import annotations
 
-from . import record_links, storage, viewing, world
+from . import record_links, storage, viewing
 from .models import BodyVis, Creature, CreaturePower, Saga
 from .rules import derived, realms, scores
 
@@ -99,8 +99,10 @@ def wound_ranges(creature: Creature) -> list[tuple[str, int, int | None]]:
 
 
 def linked_from(saga: Saga, creature: Creature) -> list[str]:
-    """The names of the records that link to the creature."""
-    return [record.name for record, _ in world.links_to(saga, "creatures", creature.id)]
+    """The names of the records whose Links include the creature."""
+    return [
+        p.record.name for p in record_links.links_naming(saga, "creatures", creature.id)
+    ]
 
 
 def deletion_consequences(saga: Saga, creature: Creature) -> list[str]:
