@@ -46,7 +46,7 @@ from ...actions import (
     silver_purse,
 )
 from ...forms import acclaim as acclaim_forms
-from ...forms import careers, go_to, message, sheet_roll, show
+from ...forms import careers, go_to, message, scene_verbs, sheet_roll, show
 from ...forms import charter as charter_forms
 from ...forms import hubris as hubris_forms
 from ...forms import notes_goals as goal_forms
@@ -916,6 +916,24 @@ def shows_at_session(facts: ActionFacts, section: str) -> bool:
     """Show, on the Session Under way, for its storyguide."""
     session = _chosen_session(facts, section)
     return session is not None and show.why_not_here(facts.saga, session) is None
+
+
+def sets_scene(facts: ActionFacts, section: str) -> bool:
+    """Set Scene, on the Session Under way, for its storyguide, while a
+    Scene loaded into it may be set."""
+    session = _chosen_session(facts, section)
+    return session is not None and (
+        scene_verbs.why_not_set_here(facts.saga, session) is None
+    )
+
+
+def ends_scene(facts: ActionFacts, section: str) -> bool:
+    """End Scene, on the Session Under way, for its storyguide, while a
+    Scene plays."""
+    session = _chosen_session(facts, section)
+    return session is not None and (
+        scene_verbs.why_not_end_here(facts.saga, session) is None
+    )
 
 
 def opens_show(facts: ActionFacts, section: str) -> bool:

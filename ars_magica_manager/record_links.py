@@ -31,6 +31,7 @@ so no field's place in the saga is written down twice."""
 
 from __future__ import annotations
 
+import copy
 from collections.abc import Callable, Iterator, Mapping
 from dataclasses import MISSING, dataclass, field, fields, is_dataclass
 from functools import cache
@@ -66,6 +67,8 @@ from .models import (
     Fight,
     FightSide,
     GuestStay,
+    Handout,
+    HandoutPicture,
     HermeticProject,
     Inhabitant,
     Laboratory,
@@ -90,7 +93,7 @@ from .models import (
     TeachRequest,
     Tribunal,
 )
-from .paths import MAPS, PORTRAITS
+from .paths import HANDOUTS, MAPS, PORTRAITS
 
 # -- the kinds of record, as the saga lists them --
 
@@ -112,6 +115,9 @@ SIEGES = "sieges"
 POSSESSIONS = "possessions"
 #: A Picture, by file name in its folder (LinkField.folder).
 PICTURES = "pictures"
+#: The folders a Picture may be in: picture_files.KINDS's, which sits a
+#: layer above (a test keeps the two the same).
+PICTURE_FOLDERS: tuple[str, ...] = (PORTRAITS, MAPS, HANDOUTS)
 #: The saga's Scenes library (scenes.py).
 SCENES = "scenes"
 #: What a Scene's actors may be, as "kind:id": who can rule a neighbour
@@ -191,10 +197,16 @@ class LinkField:
     - `clears_too`: siblings set back to their defaults when it is
       cleared (a place's level);
     - `kept_while`: KEEP instead while this says the entry is history;
-    - `folder`: for PICTURES, the folder the file is in."""
+    - `folder`: for PICTURES, the folder the file is in; `folder_from`
+      instead, a sibling naming it (a Handout's picture);
+    - `noun`, `nouns`: what a Delete's warning counts it as, one and
+      many ("map pin", "map pins"; "laboratory's owner", "laboratories'
+      owners")."""
 
     name: str
     kinds: tuple[str, ...]
+    noun: str = ""
+    nouns: str = ""
     on_delete: str = CLEAR
     kind_from: str = ""
     kind_names: Mapping[str, str] = field(default_factory=dict)
@@ -206,6 +218,20 @@ class LinkField:
     clears_too: tuple[str, ...] = ()
     kept_while: Callable[[Any, tuple[Any, ...]], bool] | None = None
     folder: str = ""
+    folder_from: str = ""
+
+    def folder_of(self, entry: Mapping[str, Any] | Any) -> str:
+        """For PICTURES, the folder the file is in: the field's own, or its
+        entry's `folder_from` sibling's when that is a picture folder
+        (anything else is no folder, so nothing is read)."""
+        if not self.folder_from:
+            return self.folder
+        said = (
+            entry.get(self.folder_from)
+            if isinstance(entry, Mapping)
+            else getattr(entry, self.folder_from, "")
+        )
+        return said if isinstance(said, str) and said in PICTURE_FOLDERS else ""
 
     def kind_of(self, entry: Any, raw: str) -> str | None:
         """The kind of record the stored value `raw` names; None when the
@@ -306,8 +332,17 @@ def _row_slots(rows: list[Any], key: str) -> list[Slot]:
     ]
 
 
-def _f(name: str, *kinds: str, **how: Any) -> LinkField:
-    return LinkField(name, kinds, **how)
+def _f(name: str, *kinds: str, noun: str | tuple[str, str], **how: Any) -> LinkField:
+    """A link field; `noun` is what the warning calls it, with its plural
+    when that isn't the noun and an "s"."""
+    one, many = noun if isinstance(noun, tuple) else (noun, noun + "s")
+    return LinkField(name, kinds, one, many, **how)
+
+
+def _of(owner: str, owners: str, what: str, whats: str = "") -> tuple[str, str]:
+    """An emptied field's noun: "laboratory's owner", "laboratories'
+    owners"."""
+    return f"{owner}'s {what}", f"{owners}' {whats or what + 's'}"
 
 
 _ANY_HOLDER = (CHARACTERS, COVENANTS, LABORATORIES)
@@ -316,123 +351,223 @@ _ANY_HOLDER = (CHARACTERS, COVENANTS, LABORATORIES)
 _PERSON = (COVENANTS, CHARACTERS, NEIGHBOURS)
 #: What a neighbour's ruler may be, in the order references.ruler looks.
 _RULER = (CHARACTERS, NEIGHBOURS, CREATURES)
-_STORYGUIDE = _f("storyguide_id", PLAYERS)
 
 
-def _place(name: str = "place_id", **how: Any) -> LinkField:
+def _storyguide(owner: str, owners: str) -> LinkField:
+    """Who runs a record as its storyguide."""
+    return _f("storyguide_id", PLAYERS, noun=_of(owner, owners, "storyguide"))
+
+
+def _place(owner: str, owners: str, name: str = "place_id", **how: Any) -> LinkField:
     """A place (a place neighbour) and which of its levels."""
-    return _f(name, NEIGHBOURS, clears_too=("place_level",), **how)
+    return _f(
+        name,
+        NEIGHBOURS,
+        noun=_of(owner, owners, "place"),
+        clears_too=("place_level",),
+        **how,
+    )
 
+
+_CHARACTER = ("character", "characters")
+_COVENANT = ("covenant", "covenants")
+_LAB = ("laboratory", "laboratories")
+_NEIGHBOUR = ("neighbour", "neighbours")
+_POSSESSION = ("possession", "possessions")
+_PLAN = ("season plan", "season plans")
+_SESSION = ("Session", "Sessions")
 
 #: Each kind of entry that names records, and its fields that do.
 LINKS: dict[type, tuple[LinkField, ...]] = {
     # -- a character and what hangs off one --
     Character: (
-        _f("covenant_id", COVENANTS),
-        _f("assigned_lab_id", LABORATORIES),
-        _f("away_place_id", NEIGHBOURS),
-        _f("lab_text_access", CHARACTERS, on_delete=NAME, keys=True),
-        _f("tractatus_read", BOOKS),
-        _f("summae_read", BOOKS),
-        _STORYGUIDE,
-        _f("portrait", PICTURES, on_delete=KEEP, folder=PORTRAITS),
+        _f("covenant_id", COVENANTS, noun=_of(*_CHARACTER, "covenant")),
+        _f(
+            "assigned_lab_id",
+            LABORATORIES,
+            noun=_of(*_CHARACTER, "laboratory", "laboratories"),
+        ),
+        _f("away_place_id", NEIGHBOURS, noun=_of(*_CHARACTER, "place away")),
+        _f(
+            "lab_text_access",
+            CHARACTERS,
+            noun="Lab Text a character may copy",
+            on_delete=NAME,
+            keys=True,
+        ),
+        _f(
+            "tractatus_read",
+            BOOKS,
+            noun=_of(*_CHARACTER, "tractatus read", "tractatus read"),
+        ),
+        _f("summae_read", BOOKS, noun=_of(*_CHARACTER, "summa read", "summae read")),
+        _storyguide(*_CHARACTER),
+        _f("portrait", PICTURES, noun="portrait", on_delete=KEEP, folder=PORTRAITS),
     ),
-    Background: (_f("player_ids", PLAYERS), _f("steward_id", PLAYERS)),
-    GuestStay: (_f("host_id", COVENANTS, on_delete=DROP),),
-    BoundBeing: (_f("creature_id", CREATURES),),
-    ResearchAttempt: (_f("lab_id", LABORATORIES),),
-    Enigma: (_f("guide_id", CHARACTERS),),
-    Familiar: (_f("character_id", CHARACTERS, on_delete=DROP),),
+    Background: (
+        _f("player_ids", PLAYERS, noun=_of(*_CHARACTER, "Player")),
+        _f("steward_id", PLAYERS, noun=_of(*_CHARACTER, "steward")),
+    ),
+    GuestStay: (_f("host_id", COVENANTS, noun="guest's stay", on_delete=DROP),),
+    BoundBeing: (_f("creature_id", CREATURES, noun=_of(*_CHARACTER, "bound being")),),
+    ResearchAttempt: (
+        _f(
+            "lab_id",
+            LABORATORIES,
+            noun=_of(
+                "research attempt", "research attempts", "laboratory", "laboratories"
+            ),
+        ),
+    ),
+    Enigma: (_f("guide_id", CHARACTERS, noun=_of(*_CHARACTER, "Enigma guide")),),
+    Familiar: (_f("character_id", CHARACTERS, noun="Familiar", on_delete=DROP),),
     # -- covenants --
     Covenant: (
-        _f("tribunal_id", TRIBUNALS),
-        _f("liege_id", COVENANTS),
-        _place(),
-        _STORYGUIDE,
+        _f("tribunal_id", TRIBUNALS, noun=_of(*_COVENANT, "Tribunal")),
+        _f("liege_id", COVENANTS, noun=_of(*_COVENANT, "liege")),
+        _place(*_COVENANT),
+        _storyguide(*_COVENANT),
     ),
-    CharterSeal: (_f("character_id", CHARACTERS, on_delete=DROP),),
-    Censure: (_f("character_id", CHARACTERS, on_delete=DROP),),
-    Inhabitant: (_f("character_id", CHARACTERS),),
+    CharterSeal: (_f("character_id", CHARACTERS, noun="charter seal", on_delete=DROP),),
+    Censure: (_f("character_id", CHARACTERS, noun="censure", on_delete=DROP),),
+    Inhabitant: (
+        _f(
+            "character_id",
+            CHARACTERS,
+            noun=_of("inhabitant", "inhabitants", "character"),
+        ),
+    ),
     Possession: (
-        _f("lab_id", LABORATORIES),
+        _f(
+            "lab_id", LABORATORIES, noun=_of(*_POSSESSION, "laboratory", "laboratories")
+        ),
         _f(
             "location_id",
             *_ANY_HOLDER,
+            noun=_of(*_POSSESSION, "keeper"),
             kind_from="location_kind",
             kind_names=SINGULAR,
         ),
-        _place(),
+        _place(*_POSSESSION),
     ),
-    Ship: (_f("captain_id", CHARACTERS), _f("aboard", CHARACTERS)),
-    CovenantStop: (_f("place_id", NEIGHBOURS, on_delete=DROP),),
-    RouteStop: (_f("place_id", NEIGHBOURS, on_delete=DROP),),
+    Ship: (
+        _f("captain_id", CHARACTERS, noun=_of("ship", "ships", "captain")),
+        _f("aboard", CHARACTERS, noun=_of("ship", "ships", "crew", "crews")),
+    ),
+    CovenantStop: (
+        _f("place_id", NEIGHBOURS, noun="covenant's route stop", on_delete=DROP),
+    ),
+    RouteStop: (_f("place_id", NEIGHBOURS, noun="route stop", on_delete=DROP),),
     CovenantDiaryEntry: (
         # What a line the app wrote is about: kept, so it stays hidden
         # from players as it was (viewing.py).
-        _f("about", *_RULER, COVENANTS, LABORATORIES, on_delete=KEEP, prefixed=True),
-        _f("concerns", CHARACTERS, LABORATORIES, prefixed=True),
-        _f("cast", CHARACTERS),
-        _f("session_id", SESSIONS),
+        _f(
+            "about",
+            *_RULER,
+            COVENANTS,
+            LABORATORIES,
+            noun="diary line",
+            on_delete=KEEP,
+            prefixed=True,
+        ),
+        _f(
+            "concerns",
+            CHARACTERS,
+            LABORATORIES,
+            noun=_of("diary line", "diary lines", "subject"),
+            prefixed=True,
+        ),
+        _f("cast", CHARACTERS, noun=_of("diary line", "diary lines", "cast", "casts")),
+        _f("session_id", SESSIONS, noun=_of("Chapter", "Chapters", "Session")),
     ),
     # -- laboratories, books, devices --
     Laboratory: (
-        _f("covenant_id", COVENANTS),
-        _f("owner_id", CHARACTERS),
-        _place(),
+        _f("covenant_id", COVENANTS, noun=_of(*_LAB, "covenant")),
+        _f("owner_id", CHARACTERS, noun=_of(*_LAB, "owner")),
+        _place(*_LAB),
     ),
     Book: (
         _f(
             "owner_id",
             *_ANY_HOLDER,
+            noun=_of("book", "books", "owner"),
             kind_from="owner_kind",
             kind_names=SINGULAR,
         ),
-        _f("author_id", CHARACTERS, on_delete=NAME, name_into="author"),
-        _f("commentary_on", BOOKS),
+        _f(
+            "author_id",
+            CHARACTERS,
+            noun=_of("book", "books", "author"),
+            on_delete=NAME,
+            name_into="author",
+        ),
+        _f("commentary_on", BOOKS, noun="gloss"),
     ),
     EnchantedDevice: (
         _f(
             "holder_id",
             *_ANY_HOLDER,
+            noun=_of("enchanted device", "enchanted devices", "holder"),
             kind_from="holder_kind",
             kind_names=SINGULAR,
         ),
-        _f("maker_id", CHARACTERS, on_delete=NAME, name_into="maker_name"),
+        _f(
+            "maker_id",
+            CHARACTERS,
+            noun=_of("enchanted device", "enchanted devices", "maker"),
+            on_delete=NAME,
+            name_into="maker_name",
+        ),
     ),
-    Digestion: (_f("lab_id", LABORATORIES),),
+    Digestion: (
+        _f(
+            "lab_id",
+            LABORATORIES,
+            noun=_of("vis digestion", "vis digestions", "laboratory", "laboratories"),
+        ),
+    ),
     # -- the world: neighbours, creatures, standing, links, the Atlas --
     Neighbour: (
-        _f("ruler", *_RULER, on_delete=NAME),
-        _f("answers_to", NEIGHBOURS),
-        _place(),
-        _STORYGUIDE,
+        _f("ruler", *_RULER, noun=_of(*_NEIGHBOUR, "ruler"), on_delete=NAME),
+        _f("answers_to", NEIGHBOURS, noun=_of(*_NEIGHBOUR, "lord")),
+        _place(*_NEIGHBOUR),
+        _storyguide(*_NEIGHBOUR),
         # Its kind's own fields (neighbour_lists, places, ruins).
-        _f("details", COVENANTS, within="travels_with"),
-        _f("details", COVENANTS, within="claimed_by"),
-        _f("details", TRIBUNALS, within="tribunal"),
+        _f(
+            "details",
+            COVENANTS,
+            noun=_of(*_NEIGHBOUR, "travelling companion"),
+            within="travels_with",
+        ),
+        _f(
+            "details", COVENANTS, noun=_of(*_NEIGHBOUR, "claimant"), within="claimed_by"
+        ),
+        _f("details", TRIBUNALS, noun=_of(*_NEIGHBOUR, "Tribunal"), within="tribunal"),
         _f(
             "details",
             CHARACTERS,
             COVENANTS,
             CREATURES,
             NEIGHBOURS,
+            noun="faction member",
             on_delete=DROP,
             prefixed=True,
             within="roster",
             row_key="who",
         ),
     ),
-    Creature: (_place(), _STORYGUIDE),
-    Agent: (_f("neighbour_id", NEIGHBOURS),),
-    Attitude: (_f("covenant_id", COVENANTS, on_delete=DROP),),
+    Creature: (_place("creature", "creatures"), _storyguide("creature", "creatures")),
+    Agent: (_f("neighbour_id", NEIGHBOURS, noun=_of("agent", "agents", "neighbour")),),
+    Attitude: (_f("covenant_id", COVENANTS, noun="attitude", on_delete=DROP),),
     Favour: (
-        _f("owed_by", *_PERSON, on_delete=NAME),
-        _f("owed_to", *_PERSON, on_delete=NAME),
+        _f("owed_by", *_PERSON, noun="favour", on_delete=NAME),
+        _f("owed_to", *_PERSON, noun="favour", on_delete=NAME),
     ),
     Link: (
         _f(
             "target_id",
             *LINK_KIND.values(),
+            noun="link",
             on_delete=DROP,
             kind_from="kind",
             kind_names=LINK_KIND,
@@ -443,6 +578,7 @@ LINKS: dict[type, tuple[LinkField, ...]] = {
             "bride_ref",
             CHARACTERS,
             NEIGHBOURS,
+            noun="marriage",
             on_delete=NAME,
             prefixed=True,
             kind_names=SINGULAR,
@@ -452,17 +588,28 @@ LINKS: dict[type, tuple[LinkField, ...]] = {
             "groom_ref",
             CHARACTERS,
             NEIGHBOURS,
+            noun="marriage",
             on_delete=NAME,
             prefixed=True,
             kind_names=SINGULAR,
             name_into="groom",
         ),
-        _f("bride_house", NEIGHBOURS),
-        _f("groom_house", NEIGHBOURS),
+        _f(
+            "bride_house",
+            NEIGHBOURS,
+            noun=_of("marriage", "marriages", "bride's house", "brides' houses"),
+        ),
+        _f(
+            "groom_house",
+            NEIGHBOURS,
+            noun=_of("marriage", "marriages", "groom's house", "grooms' houses"),
+        ),
     ),
-    AtlasMap: (_f("picture", PICTURES, on_delete=KEEP, folder=MAPS),),
+    AtlasMap: (
+        _f("picture", PICTURES, noun="map picture", on_delete=KEEP, folder=MAPS),
+    ),
     Pin: (
-        _f("map_id", MAPS_KIND, on_delete=DROP),
+        _f("map_id", MAPS_KIND, noun="map pin", on_delete=DROP),
         _f(
             "record_id",
             COVENANTS,
@@ -470,83 +617,213 @@ LINKS: dict[type, tuple[LinkField, ...]] = {
             CREATURES,
             LABORATORIES,
             CHARACTERS,
+            noun="map pin",
             on_delete=DROP,
             kind_from="kind",
         ),
     ),
     Tribunal: (
-        _f("praeco_id", CHARACTERS),
-        _f("quaesitor_id", CHARACTERS),
-        _f("proxies", COVENANTS, keys=True),
-        _STORYGUIDE,
+        _f(
+            "praeco_id",
+            CHARACTERS,
+            noun=_of("Tribunal", "Tribunals", "Praeco", "Praecones"),
+        ),
+        _f(
+            "quaesitor_id",
+            CHARACTERS,
+            noun=_of("Tribunal", "Tribunals", "Quaesitor", "Quaesitores"),
+        ),
+        _f(
+            "proxies",
+            COVENANTS,
+            noun=_of("Tribunal", "Tribunals", "proxy", "proxies"),
+            keys=True,
+        ),
+        _storyguide("Tribunal", "Tribunals"),
     ),
     # -- Hermetic Projects, cults, Polemic --
     HermeticProject: (
-        _f("mason_id", CHARACTERS),
-        _f("place_id", NEIGHBOURS),
-        _f("handler_ids", CHARACTERS),
-        _f("owner_id", CHARACTERS),
+        _f(
+            "mason_id",
+            CHARACTERS,
+            noun=_of("Hermetic Project", "Hermetic Projects", "mason"),
+        ),
+        _f(
+            "place_id",
+            NEIGHBOURS,
+            noun=_of("Hermetic Project", "Hermetic Projects", "place"),
+        ),
+        _f(
+            "handler_ids",
+            CHARACTERS,
+            noun=_of("Hermetic Project", "Hermetic Projects", "handler"),
+        ),
+        _f(
+            "owner_id",
+            CHARACTERS,
+            noun=_of("Hermetic Project", "Hermetic Projects", "owner"),
+        ),
     ),
-    Beast: (_f("creature_id", CREATURES), _f("tamer_id", CHARACTERS)),
-    MysteryCult: (_f("founder_id", CHARACTERS),),
+    Beast: (
+        _f("creature_id", CREATURES, noun=_of("beast", "beasts", "creature")),
+        _f("tamer_id", CHARACTERS, noun=_of("beast", "beasts", "tamer")),
+    ),
+    MysteryCult: (
+        _f(
+            "founder_id",
+            CHARACTERS,
+            noun=_of("Mystery Cult", "Mystery Cults", "founder"),
+        ),
+    ),
     PolemicText: (
-        _f("book_id", BOOKS),
-        _f("author_id", CHARACTERS),
-        _f("circulated_by_id", CHARACTERS),
+        _f("book_id", BOOKS, noun=_of("polemic", "polemics", "book")),
+        _f("author_id", CHARACTERS, noun=_of("polemic", "polemics", "author")),
+        _f(
+            "circulated_by_id",
+            CHARACTERS,
+            noun=_of("polemic", "polemics", "circulator"),
+        ),
     ),
-    Argument: (_f("proponent_id", CHARACTERS),),
+    Argument: (
+        _f("proponent_id", CHARACTERS, noun=_of("argument", "arguments", "proponent")),
+    ),
     # -- seasons and the table --
     SeasonPlan: (
-        _f("character_id", CHARACTERS, on_delete=DROP),
-        _f("book_id", BOOKS),
-        _f("more_book_ids", BOOKS),
-        _f("teacher_id", CHARACTERS),
-        _f("lab_id", LABORATORIES),
-        _f("subject_id", CHARACTERS),
-        _f("assistant_ids", CHARACTERS),
-        _f("partner_id", CHARACTERS),
+        _f("character_id", CHARACTERS, noun=_PLAN, on_delete=DROP),
+        _f("book_id", BOOKS, noun=_of(*_PLAN, "book")),
+        _f("more_book_ids", BOOKS, noun=_of(*_PLAN, "book")),
+        _f("teacher_id", CHARACTERS, noun=_of(*_PLAN, "teacher")),
+        _f("lab_id", LABORATORIES, noun=_of(*_PLAN, "laboratory", "laboratories")),
+        _f("subject_id", CHARACTERS, noun=_of(*_PLAN, "subject")),
+        _f("assistant_ids", CHARACTERS, noun=_of(*_PLAN, "assistant")),
+        _f("partner_id", CHARACTERS, noun=_of(*_PLAN, "partner")),
     ),
-    LabProject: (_f("character_id", CHARACTERS, on_delete=DROP),),
-    CalendarEntry: (_f("covenant_id", COVENANTS),),
+    LabProject: (_f("character_id", CHARACTERS, noun="lab project", on_delete=DROP),),
+    CalendarEntry: (
+        _f(
+            "covenant_id",
+            COVENANTS,
+            noun=_of("calendar entry", "calendar entries", "covenant"),
+        ),
+    ),
     SeasonRecordLine: (
-        _f("character_id", CHARACTERS, on_delete=KEEP),
-        _f("covenant_id", COVENANTS, on_delete=KEEP),
+        _f("character_id", CHARACTERS, noun="season record", on_delete=KEEP),
+        _f("covenant_id", COVENANTS, noun="season record", on_delete=KEEP),
     ),
     TeachRequest: (
-        _f("student_id", CHARACTERS, on_delete=DROP),
-        _f("teacher_id", CHARACTERS, on_delete=DROP),
+        _f("student_id", CHARACTERS, noun="request to be taught", on_delete=DROP),
+        _f("teacher_id", CHARACTERS, noun="request to be taught", on_delete=DROP),
     ),
     Session: (
-        _f("storyguide_id", PLAYERS, kept_while=_in_played_session),
-        _f("coming", PLAYERS, kept_while=_in_played_session),
-        _f("away", PLAYERS, kept_while=_in_played_session),
+        _f(
+            "storyguide_id",
+            PLAYERS,
+            noun=_of(*_SESSION, "storyguide"),
+            kept_while=_in_played_session,
+        ),
+        _f(
+            "coming",
+            PLAYERS,
+            noun=_of(*_SESSION, "Player coming", "Players coming"),
+            kept_while=_in_played_session,
+        ),
+        _f(
+            "away",
+            PLAYERS,
+            noun=_of(*_SESSION, "Player away", "Players away"),
+            kept_while=_in_played_session,
+        ),
         # The names as written, by Player: what a played Session reads.
-        _f("names", PLAYERS, keys=True, kept_while=_in_played_session),
+        _f(
+            "names",
+            PLAYERS,
+            noun=_of(*_SESSION, "Player's name", "Players' names"),
+            keys=True,
+            kept_while=_in_played_session,
+        ),
     ),
     Scene: (
-        _place(),
-        _f("covenant_id", COVENANTS),
-        _f("regulars", *ACTORS, prefixed=True),
-        _f("to_show", *SHOWABLE, prefixed=True),
-        _f("picture", PICTURES, on_delete=KEEP, folder=MAPS),
+        _place("Scene", "Scenes"),
+        _f("covenant_id", COVENANTS, noun=_of("Scene", "Scenes", "covenant")),
+        _f("regulars", *ACTORS, noun=_of("Scene", "Scenes", "regular"), prefixed=True),
+        _f(
+            "to_show",
+            *SHOWABLE,
+            noun=_of("Scene", "Scenes", "thing to show", "things to show"),
+            prefixed=True,
+        ),
+        _f("picture", PICTURES, noun="Scene picture", on_delete=KEEP, folder=MAPS),
+    ),
+    # -- a written Handout: who found it and where keep their names --
+    Handout: (
+        _f(
+            "found_by_id",
+            CHARACTERS,
+            noun=_of("Handout", "Handouts", "finder"),
+            on_delete=NAME,
+            name_into="found_by",
+        ),
+        _f(
+            "place_id",
+            NEIGHBOURS,
+            noun=_of("Handout", "Handouts", "place found"),
+            on_delete=NAME,
+            name_into="place_name",
+        ),
+    ),
+    HandoutPicture: (
+        _f(
+            "name",
+            PICTURES,
+            noun="Handout picture",
+            on_delete=KEEP,
+            folder_from="folder",
+        ),
     ),
     SceneUse: (
         # A use of a Scene since deleted goes with it (scenes.delete refuses
         # one playing or played).
-        _f("scene_id", SCENES, on_delete=DROP, kept_while=_in_played_session),
+        _f(
+            "scene_id",
+            SCENES,
+            noun="Scene in a Session",
+            on_delete=DROP,
+            kept_while=_in_played_session,
+        ),
         # Who was there stays in a played Session, named as written.
-        _f("present", *ACTORS, prefixed=True, kept_while=_in_played_session),
+        _f(
+            "present",
+            *ACTORS,
+            noun=_of(
+                "Scene in a Session", "Scenes in Sessions", "who's there", "who's there"
+            ),
+            prefixed=True,
+            kept_while=_in_played_session,
+        ),
         _f(
             "names",
             *ACTORS,
+            noun=_of("Scene in a Session", "Scenes in Sessions", "name", "names"),
             prefixed=True,
             keys=True,
             kept_while=_in_played_session,
         ),
     ),
     Casting: (
-        _f("player_id", PLAYERS, on_delete=DROP, kept_while=_in_played_session),
-        _f("character_id", CHARACTERS, on_delete=DROP, kept_while=_in_played_session),
+        _f(
+            "player_id",
+            PLAYERS,
+            noun="casting in a Session",
+            on_delete=DROP,
+            kept_while=_in_played_session,
+        ),
+        _f(
+            "character_id",
+            CHARACTERS,
+            noun="casting in a Session",
+            on_delete=DROP,
+            kept_while=_in_played_session,
+        ),
     ),
     # -- conflicts: each side and fighter keeps its name --
     Combatant: (
@@ -554,24 +831,45 @@ LINKS: dict[type, tuple[LinkField, ...]] = {
             "ref_id",
             CHARACTERS,
             CREATURES,
+            noun=_of("combatant", "combatants", "sheet"),
             kind_from="kind",
             kind_names={"character": CHARACTERS, "creature": CREATURES},
         ),
     ),
-    FightSide: (_f("covenant_id", COVENANTS),),
-    Fight: (_f("battle_id", BATTLES),),
+    FightSide: (
+        _f(
+            "covenant_id",
+            COVENANTS,
+            noun=_of("fight's side", "fights' sides", "covenant"),
+        ),
+    ),
+    Fight: (_f("battle_id", BATTLES, noun=_of("fight", "fights", "battle")),),
     Siege: (
-        _f("covenant_id", COVENANTS),
-        _f("castle_id", NEIGHBOURS),
-        _f("besieger_id", NEIGHBOURS),
+        _f("covenant_id", COVENANTS, noun=_of("siege", "sieges", "covenant")),
+        _f("castle_id", NEIGHBOURS, noun=_of("siege", "sieges", "castle")),
+        _f("besieger_id", NEIGHBOURS, noun=_of("siege", "sieges", "besieger")),
     ),
     BattleSide: (
-        _f("neighbour_id", NEIGHBOURS),
-        _f("covenant_id", COVENANTS),
-        _f("pilot_id", CHARACTERS),
+        _f(
+            "neighbour_id",
+            NEIGHBOURS,
+            noun=_of("battle's side", "battles' sides", "neighbour"),
+        ),
+        _f(
+            "covenant_id",
+            COVENANTS,
+            noun=_of("battle's side", "battles' sides", "covenant"),
+        ),
+        _f(
+            "pilot_id",
+            CHARACTERS,
+            noun=_of("battle's side", "battles' sides", "commander"),
+        ),
     ),
-    BattleEvent: (_f("fight_id", FIGHTS),),
-    Battle: (_f("siege_id", SIEGES),),
+    BattleEvent: (
+        _f("fight_id", FIGHTS, noun=_of("battle event", "battle events", "fight")),
+    ),
+    Battle: (_f("siege_id", SIEGES, noun=_of("battle", "battles", "siege")),),
 }
 
 
@@ -703,15 +1001,39 @@ def links_naming(saga: Saga, link_kind: str, record_id: str) -> list[Pointer]:
 # -- delete: forget a record --
 
 
-def forget(saga: Saga, kind: str, *records: Any) -> None:
+#: What a Delete's warning says happens to an entry, in the order it
+#: says them.
+GOES, EMPTIED, KEEPS_NAME = "Goes", "Emptied", "Keeps the name"
+_GROUP = {DROP: GOES, CLEAR: EMPTIED, NAME: KEEPS_NAME}
+_GROUPS = (GOES, EMPTIED, KEEPS_NAME)
+
+
+@dataclass(frozen=True)
+class Change:
+    """What forget did to one entry: it went, a field was emptied, or it
+    kept the record's name, by the field that named it."""
+
+    group: str
+    link: LinkField
+    entry: Any
+
+
+#: A Delete: removes the record from the saga and says what forget
+#: changed besides.
+Delete = Callable[[Saga, Any], list[Change]]
+
+
+def forget(saga: Saga, kind: str, *records: Any) -> list[Change]:
     """Once `records` (of `kind`) are taken out of the saga: every value
     that names one is dropped, cleared or turned into its name, as LINKS
-    says; history stays. One walk of the saga, however many."""
+    says; history stays. One walk of the saga, however many. Returns
+    what it changed."""
     names = {r.id: getattr(r, "name", "") for r in records if r.id}
     if not names:
-        return
+        return []
     todo = list(_naming(saga, kind, set(names)))
     dropped: list[Any] = []
+    changes: list[Change] = []
     for naming in todo:
         found, link, slot = naming.found, naming.link, naming.slot
         if any(found.entry is d for d in dropped):
@@ -721,6 +1043,7 @@ def forget(saga: Saga, kind: str, *records: Any) -> None:
             how = KEEP
         if how == KEEP:
             continue
+        changes.append(Change(_GROUP[how], link, found.entry))
         if how == DROP and slot.alone:
             _drop(found)
             dropped.append(found.entry)
@@ -728,6 +1051,40 @@ def forget(saga: Saga, kind: str, *records: Any) -> None:
             _remember_name(found.entry, link, slot, names[link.id_in(slot.raw)])
         else:
             _clear(found.entry, link, slot)
+    return changes
+
+
+def change_lines(changes: list[Change]) -> list[str]:
+    """The warning's lines for `changes`: "Goes: 2 map pins, 1 charter
+    seal.", then what is emptied, then what keeps the name, each left out
+    when it has nothing. An entry counts once, for the most it undergoes
+    (going before emptied before keeping the name)."""
+    kept: dict[int, Change] = {}
+    for change in changes:
+        held = kept.get(id(change.entry))
+        if held is None or _GROUPS.index(change.group) < _GROUPS.index(held.group):
+            kept[id(change.entry)] = change
+    lines: list[str] = []
+    for group in _GROUPS:
+        counts: dict[tuple[str, str], int] = {}
+        for change in kept.values():
+            if change.group == group:
+                noun = (change.link.noun, change.link.nouns)
+                counts[noun] = counts.get(noun, 0) + 1
+        if counts:
+            said = ", ".join(
+                f"{n} {one if n == 1 else many}" for (one, many), n in counts.items()
+            )
+            lines.append(f"{group}: {said}.")
+    return lines
+
+
+def warning(saga: Saga, record: Any, delete: Delete) -> list[str]:
+    """What deleting `record` with `delete` would change besides, as the
+    confirmation's lines: the Delete runs on a copy of the saga, so the
+    counts are what it then does, and the saga is left as it was."""
+    copied, gone = copy.deepcopy((saga, record))
+    return change_lines(delete(copied, gone))
 
 
 def _drop(found: Found) -> None:
@@ -849,8 +1206,9 @@ def pictures(root: Any) -> list[tuple[str, str]]:
     found: list[tuple[str, str]] = []
     for each in entries(root):
         for link in LINKS[type(each.entry)]:
-            if PICTURES in link.kinds:
-                found += [(link.folder, name) for name in link.ids(each.entry)]
+            folder = link.folder_of(each.entry)
+            if PICTURES in link.kinds and folder:
+                found += [(folder, name) for name in link.ids(each.entry)]
     return list(dict.fromkeys(found))
 
 
@@ -869,8 +1227,9 @@ def _data_pictures(data: Any, cls: type, found: list[tuple[str, str]]) -> None:
         return
     for link in LINKS.get(cls, ()):
         value = data.get(link.name)
-        if PICTURES in link.kinds and isinstance(value, str) and value:
-            found.append((link.folder, value))
+        folder = link.folder_of(data)
+        if PICTURES in link.kinds and folder and isinstance(value, str) and value:
+            found.append((folder, value))
     for name, (inner, by_key) in _nested(cls).items():
         value = data.get(name)
         if isinstance(value, list):

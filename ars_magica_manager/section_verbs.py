@@ -49,6 +49,7 @@ from .forms import device as device_forms
 from .forms import diary as diary_forms
 from .forms import familiar as familiar_forms
 from .forms import goods as goods_forms
+from .forms import handouts as handout_forms
 from .forms import inhabitant as inhabitant_forms
 from .forms import lab_item as lab_item_forms
 from .forms import laboratory as lab_forms
@@ -91,6 +92,7 @@ from .sections import (
     COVERS_SECTION,
     DEVICE_SECTIONS,
     GOODS_SECTION,
+    HANDOUTS_SECTION,
     HOUSE_RULES_SECTION,
     LAB_ITEMS_SECTION,
     LAB_TRAITS_SECTION,
@@ -279,6 +281,7 @@ def saga_ops(saga: Saga, record: Saga) -> dict[str, SectionOps]:
         PLAYERS_SECTION: content_forms.player_ops(saga),
         SESSIONS_SECTION: session_forms.session_ops(saga),
         SCENES_SECTION: scene_forms.library_ops(saga),
+        HANDOUTS_SECTION: handout_forms.handout_ops(saga),
         **{
             store.section: store_forms.store_ops(
                 saga, store, lambda store=store: stores.shown(saga, store)

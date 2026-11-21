@@ -26,8 +26,10 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from . import record_links
 from .form_spec import DialogField
 from .markup import escape
+from .models import Saga
 
 
 @dataclass(frozen=True)
@@ -351,6 +353,22 @@ def delete(entries: MutableSequence[Any], index: int, name: str) -> Confirm:
         del entries[index]
 
     return Confirm(f"Delete {escape(name)}?", apply)
+
+
+def confirm_delete(
+    saga: Saga,
+    record: Any,
+    remove: record_links.Delete,
+    question: str,
+    consequences: Sequence[str] = (),
+) -> Confirm:
+    """Confirm deleting a top-level `record` with `remove`: `question`
+    (markup), then each of the Delete's own `consequences` and what the
+    links list will change besides (record_links.warning), a line each."""
+    lines = [*consequences, *record_links.warning(saga, record, remove)]
+    if lines:
+        question += "\n\n" + "\n".join(map(escape, lines))
+    return Confirm(question, lambda: remove(saga, record))
 
 
 def notes(*lines: str) -> list[str]:

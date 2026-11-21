@@ -353,14 +353,14 @@ def enchant_as_epitome(saga: Saga, book: Book) -> EnchantedDevice:
     return device
 
 
-def delete(saga: Saga, book: Book) -> None:
+def delete(saga: Saga, book: Book) -> list[record_links.Change]:
     """Remove `book`: what names it forgets it (record_links), and a codex
     it leaves empty goes too."""
     if book not in saga.books:
-        return
+        return []
     saga.books.remove(book)
     prune_codices(saga)
-    record_links.forget(saga, record_links.BOOKS, book)
+    return record_links.forget(saga, record_links.BOOKS, book)
 
 
 def prune_codices(saga: Saga) -> None:

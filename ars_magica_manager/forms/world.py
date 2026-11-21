@@ -8,7 +8,16 @@ from __future__ import annotations
 from typing import Any
 
 from .. import catalog, creation, deletion, places, vassals, viewing, world
-from ..commands import Choice, Choose, Command, Confirm, Form, Refuse, SectionOps
+from ..commands import (
+    Choice,
+    Choose,
+    Command,
+    Confirm,
+    Form,
+    Refuse,
+    SectionOps,
+    confirm_delete,
+)
 from ..form_spec import EMPHASIS_HINT, DialogField, attr, pairs
 from ..markup import escape
 from ..models import (
@@ -641,11 +650,13 @@ def magus_ops(saga: Saga, covenant: Covenant) -> SectionOps:
 
     def remove(index: int) -> Command:
         magus = magi()[index]
-        consequences = deletion.character_consequences(saga, magus)
-        message = f"Delete {escape(magus.name)}?"
-        if consequences:
-            message += "\n\n" + "\n".join(map(escape, consequences))
-        return Confirm(message, lambda: deletion.delete_character(saga, magus))
+        return confirm_delete(
+            saga,
+            magus,
+            deletion.delete_character,
+            f"Delete {escape(magus.name)}?",
+            deletion.character_consequences(saga, magus),
+        )
 
     return SectionOps(
         add=add, edit=edit, remove=remove, rows=lambda: [m.name for m in magi()]

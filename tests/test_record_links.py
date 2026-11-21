@@ -6,8 +6,7 @@ import copy
 import importlib
 import pkgutil
 import re
-from collections.abc import Callable
-from dataclasses import fields, is_dataclass
+from dataclasses import asdict, fields, is_dataclass
 from typing import Any
 
 import pytest
@@ -18,11 +17,16 @@ from ars_magica_manager import (
     deletion,
     models,
     neighbours,
+    picture_files,
     players,
     record_links,
     sessions,
     tribunals,
 )
+from ars_magica_manager.forms import library as library_forms
+from ars_magica_manager.forms import menu_steps
+from ars_magica_manager.forms import saga_content as saga_content_forms
+from ars_magica_manager.forms import sessions as session_forms
 from ars_magica_manager.models import (
     AtlasMap,
     Attitude,
@@ -42,6 +46,8 @@ from ars_magica_manager.models import (
     Familiar,
     Favour,
     GuestStay,
+    Handout,
+    HandoutPicture,
     Inhabitant,
     Laboratory,
     LabTextAccess,
@@ -53,11 +59,14 @@ from ars_magica_manager.models import (
     Possession,
     Saga,
     SeasonPlan,
+    SeasonRecord,
+    SeasonRecordLine,
     Session,
     Ship,
     TeachRequest,
     Tribunal,
 )
+from ars_magica_manager.paths import HANDOUTS, MAPS
 
 # -- an independent look: every place a record's id still appears --
 
@@ -353,6 +362,19 @@ def _everything() -> Saga:
                 names={"id-pl": "Pat"},
             ),
         ],
+        handouts=[
+            Handout(
+                id="id-hand",
+                title="A letter",
+                text="[heading] To the magus\n[picture 1]",
+                pictures=[
+                    HandoutPicture(MAPS, "ford.png"),
+                    HandoutPicture(HANDOUTS, "seal.png"),
+                ],
+                found_by_id="id-mag",
+                place_id="id-place",
+            )
+        ],
         pins=[
             Pin(map_id="id-map", kind="characters", record_id="id-mag", x=0.1, y=0.1),
             Pin(map_id="id-map", kind="neighbours", record_id="id-lord", x=0.2, y=0.2),
@@ -368,7 +390,7 @@ def _find(saga: Saga, kind: str, record_id: str) -> Any:
 
 
 #: Each kind of record, and how Delete removes one.
-DELETES: dict[str, tuple[str, Callable[[Saga, Any], None]]] = {
+DELETES: dict[str, tuple[str, record_links.Delete]] = {
     "characters": ("id-mag", deletion.delete_character),
     "familiars": ("id-fam", deletion.delete_familiar),
     "laboratories": ("id-lab", deletion.delete_laboratory),
@@ -400,6 +422,150 @@ def test_after_deleting_a_place_nothing_points_at_it() -> None:
     saga = _everything()
     neighbours.delete(saga, _find(saga, "neighbours", "id-place"))
     assert pointers_to(saga, "id-place") == []
+
+
+@pytest.mark.parametrize("kind", DELETES)
+def test_the_warning_counts_what_delete_then_does(kind: str) -> None:
+    """The warning runs the Delete on a copy, so it counts exactly what
+    the Delete itself then changes, and changes nothing."""
+    saga = _everything()
+    record_id, delete = DELETES[kind]
+    record = _find(saga, kind, record_id)
+    warned = record_links.warning(saga, record, delete)
+    assert _find(saga, kind, record_id) is record
+    assert pointers_to(saga, record_id)
+    assert warned == record_links.change_lines(delete(saga, record))
+
+
+def test_deleting_a_magus_warns_in_three_groups() -> None:
+    saga = _everything()
+    lines = record_links.warning(
+        saga, _find(saga, "characters", "id-mag"), deletion.delete_character
+    )
+    assert [line.partition(":")[0] for line in lines] == [
+        "Goes",
+        "Emptied",
+        "Keeps the name",
+    ]
+    goes, emptied, named = lines
+    assert "1 charter seal" in goes and "1 map pin" in goes
+    # Its captain and one of its crew: one ship, counted once.
+    assert "1 ship's captain" in emptied and "crew" not in emptied
+    assert named == (
+        "Keeps the name: 1 neighbour's ruler, 1 book's author, 1 Handout's finder."
+    )
+    # The device's maker is kept by Delete's own step, so isn't counted.
+    assert "maker" not in " ".join(lines)
+    # History (a played Session's casting, a season record) isn't counted:
+    # only the planned Session's casting goes.
+    assert "1 casting in a Session" in goes
+    assert "season record" not in " ".join(lines)
+
+
+def test_a_record_named_twice_by_one_entry_counts_once() -> None:
+    saga = _everything()
+    magus = _find(saga, "characters", "id-mag")
+    saga.season_plans = [
+        SeasonPlan(
+            character_id="id-com",
+            year=1220,
+            season="Spring",
+            activity="Taught",
+            teacher_id="id-mag",
+            partner_id="id-mag",
+        )
+    ]
+    lines = record_links.warning(saga, magus, deletion.delete_character)
+    assert "1 season plan's teacher" in " ".join(lines)
+    assert "partner" not in " ".join(lines)
+
+
+def test_a_record_named_only_in_history_gets_no_lines() -> None:
+    saga = _everything()
+    ghost = Character(id="id-ghost", name="Ghost", type="grog")
+    saga.characters.append(ghost)
+    saga.season_records.append(
+        SeasonRecord(
+            year=1220,
+            season="Spring",
+            lines=[SeasonRecordLine(character_id="id-ghost", name="Ghost")],
+        )
+    )
+    assert record_links.pointing_at(saga, "characters", "id-ghost")
+    assert record_links.warning(saga, ghost, deletion.delete_character) == []
+
+
+@pytest.mark.parametrize(
+    "kind",
+    [
+        "characters",
+        "familiars",
+        "laboratories",
+        "covenants",
+        "creatures",
+        "neighbours",
+        "tribunals",
+    ],
+)
+def test_a_more_menu_delete_ends_with_the_counts(kind: str) -> None:
+    saga = _everything()
+    record_id, delete = DELETES[kind]
+    record = _find(saga, kind, record_id)
+    counts = record_links.warning(saga, record, delete)
+    question = menu_steps.delete_record(saga, record).question
+    assert counts and question.endswith("\n" + "\n".join(counts))
+
+
+def test_book_session_and_player_deletes_count_what_else_changes() -> None:
+    saga = _everything()
+    book = _find(saga, "books", "id-book")
+    session = _find(saga, "sessions", "id-ses")
+    player = _find(saga, "players", "id-pl")
+    for question, counts in (
+        (
+            library_forms.delete_book(saga, book).question,
+            record_links.warning(saga, book, books.delete),
+        ),
+        (
+            session_forms.delete_session(saga, session).question,
+            record_links.warning(saga, session, sessions.delete),
+        ),
+    ):
+        assert counts and question.endswith("\n\n" + "\n".join(counts))
+    question = saga_content_forms.delete_player(saga, player).question
+    assert "They will no longer be able to sign in." in question
+    # The planned Session they run and are coming to: one Session.
+    assert question.endswith(
+        "\nGoes: 1 casting in a Session."
+        "\nEmptied: 1 character's Player, 1 Session's storyguide."
+    )
+
+
+def test_a_handout_keeps_its_finder_and_where_by_name() -> None:
+    saga = _everything()
+    deletion.delete_character(saga, _find(saga, "characters", "id-mag"))
+    neighbours.delete(saga, _find(saga, "neighbours", "id-place"))
+    handout = saga.handouts[0]
+    assert (handout.found_by_id, handout.found_by) == ("", "Aldo")
+    assert handout.place_id == ""
+    assert handout.place_name == _everything().neighbour("id-place").name
+
+
+def test_a_handouts_pictures_are_listed_by_their_own_folders() -> None:
+    saga = _everything()
+    found = record_links.pictures(saga)
+    assert (MAPS, "ford.png") in found and (HANDOUTS, "seal.png") in found
+    in_data = record_links.pictures_in_data(asdict(saga))
+    assert (MAPS, "ford.png") in in_data and (HANDOUTS, "seal.png") in in_data
+
+
+def test_a_handout_picture_in_a_folder_that_isnt_a_kind_is_never_listed() -> None:
+    saga = _everything()
+    saga.handouts[0].pictures.append(HandoutPicture("sagas", "x.png"))
+    assert all(folder != "sagas" for folder, _ in record_links.pictures(saga))
+    assert all(
+        folder != "sagas" for folder, _ in record_links.pictures_in_data(asdict(saga))
+    )
 
 
 def test_a_tribunals_maps_and_their_pins_go_with_it() -> None:
@@ -629,13 +795,16 @@ def test_import_drops_or_names_what_has_no_copy_here() -> None:
 def test_pictures_are_the_picture_fields_of_the_links_list() -> None:
     saga = _everything()
     saga.characters[0].portrait = "aldo.png"
-    assert record_links.pictures(saga) == [
+    assert sorted(record_links.pictures(saga)) == [
+        ("handouts", "seal.png"),
+        ("maps", "ford.png"),
         ("maps", "rhine.png"),
         ("portraits", "aldo.png"),
-    ] or record_links.pictures(saga) == [
-        ("portraits", "aldo.png"),
-        ("maps", "rhine.png"),
     ]
+
+
+def test_the_picture_folders_are_the_picture_kinds() -> None:
+    assert set(record_links.PICTURE_FOLDERS) == set(picture_files.KINDS)
 
 
 # -- the list is complete --
@@ -666,6 +835,8 @@ NOT_RECORD_LINKS: set[tuple[str, str]] = {
     # A story is a Diary entry, not a record of the saga's lists; a Scene
     # names its story the way a chapter does, resolved when shown.
     ("Scene", "story_id"),
+    # A Handout names its story as a Scene does.
+    ("Handout", "story_id"),
     ("Censure", "case_id"),
     ("Argument", "case_id"),
     ("Ruling", "case_id"),
@@ -727,6 +898,20 @@ def test_every_id_field_is_in_the_links_list_or_ruled_out() -> None:
         and (cls.__name__, f.name) not in NOT_RECORD_LINKS
     )
     assert missing == []
+
+
+def test_every_link_field_names_what_it_is() -> None:
+    """A Delete's warning counts entries by their noun, so each field
+    carries one, singular and plural."""
+    missing = [
+        f"{cls.__name__}.{link.name}"
+        for cls, links in record_links.LINKS.items()
+        for link in links
+        if not link.noun or not link.nouns
+    ]
+    assert missing == []
+    pin = record_links.LINKS[Pin][1]
+    assert (pin.noun, pin.nouns) == ("map pin", "map pins")
 
 
 def test_the_walk_finds_entries_inside_a_copy() -> None:

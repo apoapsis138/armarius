@@ -98,25 +98,10 @@ def wound_ranges(creature: Creature) -> list[tuple[str, int, int | None]]:
     return derived.wound_ranges(creature.size)
 
 
-def linked_from(saga: Saga, creature: Creature) -> list[str]:
-    """The names of the records whose Links include the creature."""
-    return [
-        p.record.name for p in record_links.links_naming(saga, "creatures", creature.id)
-    ]
-
-
-def deletion_consequences(saga: Saga, creature: Creature) -> list[str]:
-    """What deleting the creature does besides removing it."""
-    names = linked_from(saga, creature)
-    if not names:
-        return []
-    return [f"The links to it from {', '.join(names)} go; nothing else changes."]
-
-
-def delete(saga: Saga, creature: Creature) -> None:
+def delete(saga: Saga, creature: Creature) -> list[record_links.Change]:
     """Remove the creature; what names it forgets it (record_links)."""
     saga.creatures.remove(creature)
-    record_links.forget(saga, record_links.CREATURES, creature)
+    return record_links.forget(saga, record_links.CREATURES, creature)
 
 
 def icon_concept(creature: Creature) -> str:

@@ -146,7 +146,7 @@ def character_consequences(saga: Saga, character: Character) -> list[str]:
     return lines
 
 
-def delete_character(saga: Saga, character: Character) -> None:
+def delete_character(saga: Saga, character: Character) -> list[record_links.Change]:
     saga.familiars = [f for f in saga.familiars if f.character_id != character.id]
     for lab in saga.laboratories:
         if lab.owner_id == character.id:
@@ -167,7 +167,7 @@ def delete_character(saga: Saga, character: Character) -> None:
     _rehome_devices(saga, "character", character.id, character.covenant_id)
     _forget_maker(saga, character)
     saga.characters = [c for c in saga.characters if c is not character]
-    record_links.forget(saga, record_links.CHARACTERS, character)
+    return record_links.forget(saga, record_links.CHARACTERS, character)
 
 
 # ------------------------------------------------------------------- familiar
@@ -224,7 +224,7 @@ def familiar_consequences(saga: Saga, familiar: Familiar) -> list[str]:
     return lines
 
 
-def delete_familiar(saga: Saga, familiar: Familiar) -> None:
+def delete_familiar(saga: Saga, familiar: Familiar) -> list[record_links.Change]:
     magus = fam.magus_of(saga, familiar)
     if magus is not None:
         bond = _bond_virtues(magus)
@@ -239,7 +239,7 @@ def delete_familiar(saga: Saga, familiar: Familiar) -> None:
         plans = _familiar_plans(saga, magus)
         saga.season_plans = [p for p in saga.season_plans if p not in plans]
     saga.familiars = [f for f in saga.familiars if f is not familiar]
-    record_links.forget(saga, record_links.FAMILIARS, familiar)
+    return record_links.forget(saga, record_links.FAMILIARS, familiar)
 
 
 # ----------------------------------------------------------------- laboratory
@@ -258,7 +258,7 @@ def laboratory_consequences(saga: Saga, lab: Laboratory) -> list[str]:
     return lines
 
 
-def delete_laboratory(saga: Saga, lab: Laboratory) -> None:
+def delete_laboratory(saga: Saga, lab: Laboratory) -> list[record_links.Change]:
     for character in saga.characters:
         if character.assigned_lab_id == lab.id:
             character.assigned_lab_id = None
@@ -270,8 +270,9 @@ def delete_laboratory(saga: Saga, lab: Laboratory) -> None:
             p for p in covenant.possessions if not any(p is e for e in extras)
         ]
     saga.laboratories = [x for x in saga.laboratories if x is not lab]
-    record_links.forget(saga, record_links.LABORATORIES, lab)
-    record_links.forget(saga, record_links.POSSESSIONS, *extras)
+    return record_links.forget(
+        saga, record_links.LABORATORIES, lab
+    ) + record_links.forget(saga, record_links.POSSESSIONS, *extras)
 
 
 # ------------------------------------------------------------------- covenant
@@ -298,7 +299,7 @@ def covenant_consequences(saga: Saga, covenant: Covenant) -> list[str]:
     return lines
 
 
-def delete_covenant(saga: Saga, covenant: Covenant) -> None:
+def delete_covenant(saga: Saga, covenant: Covenant) -> list[record_links.Change]:
     for character in saga.characters:
         if character.covenant_id == covenant.id:
             character.covenant_id = None
@@ -311,5 +312,6 @@ def delete_covenant(saga: Saga, covenant: Covenant) -> None:
     _unassign_books(saga, "covenant", covenant.id)
     _rehome_devices(saga, "covenant", covenant.id, None)
     saga.covenants = [c for c in saga.covenants if c is not covenant]
-    record_links.forget(saga, record_links.COVENANTS, covenant)
-    record_links.forget(saga, record_links.POSSESSIONS, *covenant.possessions)
+    return record_links.forget(
+        saga, record_links.COVENANTS, covenant
+    ) + record_links.forget(saga, record_links.POSSESSIONS, *covenant.possessions)

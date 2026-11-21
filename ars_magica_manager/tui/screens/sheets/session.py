@@ -13,6 +13,7 @@ from textual.widgets import Collapsible, Static, TabbedContent
 
 from .... import scenes, viewing
 from ....boon_hook_text import counted
+from ....forms import scenes as scene_forms
 from ....markup import aligned, escape
 from ....models import Saga, Session
 from ....sections import (
@@ -106,7 +107,8 @@ class SessionSheetView(SheetView):
                     SESSION_SCENES_SECTION,
                     lambda: (
                         [
-                            (i, scenes.use_row(saga, session, u))
+                            (i, scenes.use_row(saga, session, u, now))
+                            for now in [scene_forms.now_of(saga, session)]
                             for i, u in enumerate(session.scenes)
                         ]
                         or [(None, "[$label]None yet: a loads a Scene.[/]")]
@@ -124,7 +126,8 @@ class SessionSheetView(SheetView):
         the panel's prompt)."""
         uses = self.session.scenes
         chosen = uses[row] if row is not None and row < len(uses) else None
-        return scenes.use_detail(self.saga, self.session, chosen)
+        now = scene_forms.now_of(self.saga, self.session)
+        return scenes.use_detail(self.saga, self.session, chosen, now)
 
     def on_selectable_list_chosen(self, event: SelectableList.Chosen) -> None:
         if event.selectable_list.id != _SCENES_LIST:

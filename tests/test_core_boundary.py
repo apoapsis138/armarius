@@ -149,6 +149,8 @@ LAYERS: tuple[tuple[str, frozenset[str]], ...] = (
             {
                 "",
                 "arts",
+                # A written Handout's text read into blocks (ADR 0021).
+                "handout_markup",
                 "launch",
                 "lockout",
                 "markup",

@@ -26,6 +26,7 @@ from ..commands import (
     Form,
     Picked,
     SectionOps,
+    confirm_delete,
     not_offered,
 )
 from ..form_spec import EMPHASIS_HINT, DialogField, pairs
@@ -320,11 +321,9 @@ def new_neighbour(saga: Saga, group: str | None = None) -> Command:
 
 
 def _delete(saga: Saga, neighbour: Neighbour) -> Confirm:
-    consequences = neighbours.deletion_consequences(saga, neighbour)
-    message = f"Delete {escape(neighbour.name)}?"
-    if consequences:
-        message += "\n\n" + "\n".join(escape(c) for c in consequences)
-    return Confirm(message, lambda: neighbours.delete(saga, neighbour))
+    return confirm_delete(
+        saga, neighbour, neighbours.delete, f"Delete {escape(neighbour.name)}?"
+    )
 
 
 def group_ops(saga: Saga, group: str) -> SectionOps:

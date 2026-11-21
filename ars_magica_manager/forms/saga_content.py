@@ -18,8 +18,8 @@ from typing import Any
 from .. import house_rules as hr
 from .. import own_abilities as oa
 from .. import players as pl
+from .. import record_links, sourcebooks, storyguides, traditions, viewing
 from .. import saga_content as sc
-from .. import sourcebooks, storyguides, traditions, viewing
 from .. import spells as spl
 from ..arts import FORMS, TECHNIQUES
 from ..commands import Act, Choice, Choose, Confirm, Form, Refuse, SectionOps
@@ -37,6 +37,7 @@ from ..models import (
     SagaSource,
     Spell,
 )
+from ..record_links import Change
 from ..remote import audit
 from ..remote.audit import AuditLog, audit_path
 from ..remote.devices import DeviceBook, devices_path
@@ -820,17 +821,24 @@ def _seated(devices: DeviceBook, player: Player | None) -> list[str]:
 
 
 def delete_player(saga: Saga, player: Player) -> Confirm:
-    """Delete a player, after asking."""
+    """Delete a player, after asking: what they ran as storyguide is
+    freed, then the links list forgets them."""
+
+    def remove(saga: Saga, player: Player) -> list[Change]:
+        viewing.free_records(saga, player.id)
+        return pl.remove(saga, player)
+
+    counts = record_links.warning(saga, player, remove)
 
     def apply() -> None:
-        viewing.free_records(saga, player.id)
-        pl.remove(saga, player)
+        remove(saga, player)
         RemotePasscodes(passcodes_path(saga.name)).forget(player.id)
 
     return Confirm(
         f"Delete the player {escape(player.name)}?\n\n"
         "They will no longer be able to sign in."
-        + storyguides.freed_warning(saga, player.id),
+        + storyguides.freed_warning(saga, player.id)
+        + "".join(f"\n{escape(line)}" for line in counts),
         apply,
     )
 

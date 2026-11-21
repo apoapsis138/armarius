@@ -106,8 +106,8 @@ def _every_kind(saga: Saga, session: Session, book: chronicle.Chronicle) -> None
     table: a Blind roll for Ana's character (and its line for her), a
     Private and a Table roll, a form's roll, a Roll request to Ana's
     character with its Ease Factor kept, a Strike, a Confidence spend, an
-    outcome, a Message to the Table, Whispers each way, a Show to Ana, and
-    the end."""
+    outcome, a Message to the Table, Whispers each way, a Show to Ana, a
+    Scene set and ended, and the end."""
     _blind(saga, session, book)
     rolled = chronicle.RollRequest(character_id="aelfric", visibility=chronicle.PRIVATE)
     chronicle.free_roll(book, saga, session, rolled, by="ana", rng=Faces(3))
@@ -135,6 +135,10 @@ def _every_kind(saga: Saga, session: Session, book: chronicle.Chronicle) -> None
     chronicle.message(book, saga, session, "Hush.", to=("ben",), by=HOST)
     shown = {"show": "x", "title": "A map", "to": ["ana"], "to_names": ["Ana"]}
     book.add(chronicle.SHOW, HOST, chronicle.chosen("ana"), shown)
+    banner = {"use": "u", "title": "The ford", "place": "A ford"}
+    book.add(chronicle.SCENE_SET, HOST, chronicle.table(), banner)
+    ended = {"use": "u", "title": "The ford"}
+    book.add(chronicle.SCENE_ENDED, HOST, chronicle.table(), ended)
     chronicle.end(saga, session, by=HOST)
 
 

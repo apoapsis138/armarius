@@ -42,6 +42,16 @@ CONTRACTS: dict[str, Contract] = {
         expected=("show", "Leandro", "mag1"),
         invalid=[{"Show": ""}],
     ),
+    "set scene": Contract(
+        prefill={"Scene": "u-ford", "Tell the table the aura": False},
+        edits={"Tell the table the aura": True},
+        saved=lambda _s: (
+            (entry.kind, entry.body["title"], entry.body.get("aura"))
+            if (entry := last_chronicle_entry()) is not None
+            else None
+        ),
+        expected=("scene set", "The ford", "Magic 3"),
+    ),
     "show to the table": Contract(
         prefill={},
         edits={"Title": "What we found"},
@@ -392,6 +402,19 @@ CONTRACTS: dict[str, Contract] = {
         saved=lambda s: [(x.title, x.place_name, x.aura) for x in s.scenes],
         expected=[("The ford", "A glade", 2)],
         invalid=[{"Title": ""}, {"Aura": "two"}],
+    ),
+    # A written Handout: its text at most 20,000 characters, keeping the
+    # character rule.
+    "add handout": Contract(
+        prefill={"Title": "", "Text": ""},
+        edits={"Title": "A letter", "Text": "[heading] To the magus\nCome."},
+        saved=lambda s: [(h.title, h.stationery, h.text) for h in s.handouts],
+        expected=[("A letter", "vellum", "[heading] To the magus\nCome.")],
+        invalid=[
+            {"Title": ""},
+            {"Title": "A letter", "Text": "x" * 20_001},
+            {"Title": "A letter", "Text": "A hidden" + chr(0x200B) + "word"},
+        ],
     ),
     # A Scene loaded into a Session: this evening's notes on it.
     "edit scene use": Contract(

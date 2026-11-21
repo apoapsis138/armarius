@@ -26,6 +26,8 @@ class FakeTable:
         self.said: list[tuple[str, tuple[str, ...]]] = []
         self.shown: list[chronicle.ShowCall] = []
         self.opened: list[int] = []
+        self.scenes_set: list[chronicle.SceneCall] = []
+        self.scenes_ended = 0
 
     def roll(self, request: chronicle.RollRequest) -> str | None:
         self.rolled.append(request)
@@ -58,6 +60,14 @@ class FakeTable:
     def open_show(self, entry: chronicle.Entry) -> shows.Shown | str:
         self.opened.append(entry.number)
         return self.refuse or shows.Shown(str(entry.body.get("title", "")), "Copy.")
+
+    def set_scene(self, call: chronicle.SceneCall) -> str | None:
+        self.scenes_set.append(call)
+        return self.refuse
+
+    def end_scene(self) -> str | None:
+        self.scenes_ended += 1
+        return self.refuse
 
     def held(self) -> chronicle.HasEntries | None:
         return self._held

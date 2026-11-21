@@ -1,6 +1,6 @@
 ===== tab-content-books
 
-   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Playe
+   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Hando
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -68,7 +68,7 @@
 
 ===== tab-content-catalogs
 
-   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Playe
+   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Hando
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -136,7 +136,7 @@
 
 ===== tab-content-goods
 
-   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Playe
+   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Hando
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -204,7 +204,7 @@
 
 ===== tab-content-house-rules
 
-   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Playe
+   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Hando
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -272,7 +272,7 @@
 
 ===== tab-content-cults
 
-  Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Players
+  Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Handouts
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -340,7 +340,7 @@
 
 ===== tab-content-spells
 
-  Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Players
+  alogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Handouts  0 Players
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
     Search spell names and descriptions...                                         Source: any      ▼
@@ -408,7 +408,7 @@
 
 ===== tab-content-sessions
 
-  Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Players
+  alogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Handouts  0 Players
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -476,7 +476,7 @@
 
 ===== tab-content-scenes
 
-  Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Players
+  alogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Handouts  0 Players
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -542,9 +542,77 @@
   ▌
 
 
+===== tab-content-handouts
+
+  alogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Handouts  0 Players
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Handouts (0)
+
+      None yet: a writes one.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ▌
+  ▌  Choose a Handout to read it; a writes one.
+  ▌
+
+
 ===== tab-content-players
 
-  Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Players
+  alogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Handouts  0 Players
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔

@@ -17,7 +17,16 @@ from .. import book_value as bv
 from .. import books as bk
 from .. import spells as spl
 from ..arts import ARTS, FORMS, TECHNIQUES
-from ..commands import Choose, Command, Confirm, Form, Picked, Refuse, SectionOps
+from ..commands import (
+    Choose,
+    Command,
+    Confirm,
+    Form,
+    Picked,
+    Refuse,
+    SectionOps,
+    confirm_delete,
+)
 from ..form_spec import DialogField, attr, description_field, pairs
 from ..markup import escape, problem
 from ..models import (
@@ -1048,11 +1057,9 @@ def book_form(
 
 def delete_book(saga: Saga, book: Book) -> Confirm:
     """Delete `book`, after confirming (a codex it leaves empty goes too)."""
-
-    def apply() -> None:
-        bk.delete(saga, book)
-
-    return Confirm(f"Delete {escape(book.name or 'this book')}?", apply)
+    return confirm_delete(
+        saga, book, bk.delete, f"Delete {escape(book.name or 'this book')}?"
+    )
 
 
 def change_owner_fields(saga: Saga, books: Sequence[Book]) -> list[DialogField]:

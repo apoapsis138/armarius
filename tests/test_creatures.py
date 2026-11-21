@@ -92,10 +92,8 @@ def test_adding_gives_a_free_id_and_deleting_drops_the_links_to_it():
     cologne = saga.neighbour("cologne")
     assert cologne is not None
     cologne.links.append(Link("creatures", creature.id, "Stabled here"))
-    assert creatures.deletion_consequences(saga, creature) == [
-        f"The links to it from {cologne.name}, The Hollow Crown go; nothing else "
-        "changes."
-    ]
+    question = creature_forms.delete_creature(saga, creature).question
+    assert question == f"Delete {creature.name}?\n\nGoes: 2 links."
     creatures.delete(saga, creature)
     assert creature not in saga.creatures
     assert all(link.kind != "creatures" for link in cologne.links)

@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from . import at_table, chronicle, references, shows, table_rolls
+from . import at_table, chronicle, references, scene_play, shows, table_rolls
 from .at_table import FormRoll, Opening, Table
 from .models import Saga, Session
 
@@ -106,6 +106,22 @@ class HostTable:
             return shows.opened(self.saga.id, entry)
         except ValueError as problem:
             return str(problem)
+
+    def set_scene(self, call: chronicle.SceneCall) -> str | None:
+        return self._write(
+            lambda book: scene_play.set_scene(
+                book, self.saga, self.session, call, by=self.who
+            ),
+            "The Scene couldn't be saved.",
+        )
+
+    def end_scene(self) -> str | None:
+        return self._write(
+            lambda book: scene_play.end_scene(
+                book, self.saga, self.session, by=self.who
+            ),
+            "The Scene's end couldn't be saved.",
+        )
 
     def held(self) -> chronicle.HasEntries | None:
         try:

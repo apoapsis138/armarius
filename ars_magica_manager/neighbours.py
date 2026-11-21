@@ -284,25 +284,12 @@ def vassals(saga: Saga, neighbour: Neighbour) -> list[Neighbour]:
     return [n for n in saga.neighbours if n.answers_to == neighbour.id]
 
 
-def deletion_consequences(saga: Saga, neighbour: Neighbour) -> list[str]:
-    """What deleting `neighbour` does besides removing it."""
-    found = []
-    below = [n.name for n in vassals(saga, neighbour)]
-    if below:
-        found.append(f"{', '.join(below)} will answer to no one.")
-    held = places.here(saga, neighbour)
-    if held:
-        found.append(f"{', '.join(held)} will be placed nowhere.")
-    if found:
-        found[-1] = found[-1].removesuffix(".") + "; nothing else changes."
-    return found
-
-
-def delete(saga: Saga, neighbour: Neighbour) -> None:
+def delete(saga: Saga, neighbour: Neighbour) -> list[record_links.Change]:
     """Remove `neighbour`; what names it forgets it (record_links)."""
     saga.neighbours.remove(neighbour)
-    record_links.forget(saga, record_links.NEIGHBOURS, neighbour)
+    changes = record_links.forget(saga, record_links.NEIGHBOURS, neighbour)
     places.sync(saga)
+    return changes
 
 
 # -- attitude, as the Region shows it --

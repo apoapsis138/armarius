@@ -30,6 +30,7 @@ from .client import (
     NoCredential,
     RemoteClient,
     RollRefused,
+    SceneRefused,
     ShowRefused,
     SignInError,
     UnreadableReply,
@@ -347,6 +348,28 @@ class SeatSession:
             return "The host can't be reached just now."
         return None
 
+    def set_scene(self, call: chronicle.SceneCall) -> str | None:
+        """Ask the host to set the Scene `call` names; None once its banner
+        is in the Chronicle, else the host's reason (as `roll`)."""
+        return self._scene_move(lambda c: c.set_scene(call))
+
+    def end_scene(self) -> str | None:
+        """Ask the host to end the Scene playing (as `set_scene`)."""
+        return self._scene_move(lambda c: c.end_scene())
+
+    def _scene_move(
+        self, work: Callable[[RemoteClient], Coroutine[Any, Any, int]]
+    ) -> str | None:
+        try:
+            self._loop.run(self._own(work), timeout=ROLL_WAIT)
+        except SceneRefused as refused:
+            return refused.why
+        except NeedsPasscode, NoCredential:
+            return "Sign in again to run the Scene."
+        except ChannelError, SignInError, ConnectionError, TimeoutError:
+            return "The host can't be reached just now."
+        return None
+
     def open_show(self, entry: chronicle.Entry) -> shows.Shown | str:
         """Show `entry`'s copy, from the host (its picture too), which sends
         it only while this seat's Player sees the Show; else why not."""
@@ -529,6 +552,12 @@ class SeatTable:
 
     def open_show(self, entry: chronicle.Entry) -> shows.Shown | str:
         return self.seat.open_show(entry)
+
+    def set_scene(self, call: chronicle.SceneCall) -> str | None:
+        return self.seat.set_scene(call)
+
+    def end_scene(self) -> str | None:
+        return self.seat.end_scene()
 
     def held(self) -> chronicle.HasEntries | None:
         return self._held

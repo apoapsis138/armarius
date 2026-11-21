@@ -45,6 +45,7 @@ from .plan import (
 )
 from .records import SeatSnapshots, picture_from_disk, seat_registry
 from .redemption import door_registry
+from .scening import scene_specs
 from .season_undo import undo_specs
 from .showing import show_specs
 from .switches import switch_specs
@@ -118,6 +119,7 @@ def build(
                 *switch_specs(saga_id, log),
                 *event_specs(saga_id),
                 *show_specs(saga_id),
+                *scene_specs(saga_id),
             ],
         ),
         events=poller(saga_id),

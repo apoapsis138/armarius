@@ -61,6 +61,7 @@ from ars_magica_manager.forms import hook_stories as hook_story_forms
 from ars_magica_manager.forms import inhabitant as inhabitant_forms
 from ars_magica_manager.forms import land_shaping as land_forms
 from ars_magica_manager.forms import message as message_forms
+from ars_magica_manager.forms import scene_verbs as scene_verb_forms
 from ars_magica_manager.forms import scenes as scene_forms
 from ars_magica_manager.forms import season as season_forms
 from ars_magica_manager.forms import sheet_roll as sheet_roll_forms
@@ -1117,6 +1118,23 @@ def _send_message(ws) -> None:
     ws._run_steps(message_forms.message_here(ws.saga, session))
 
 
+def _set_scene(ws) -> None:
+    """Set Scene: a Session begun by the host, as its storyguide, as for a
+    Message, with the ford (Magic 3) loaded into it."""
+    virtual_tabletop.set_on(True)
+    session = chronicle.under_way(ws.saga)
+    if session is None:  # opened again: already begun
+        session = Session("contract-vtt")
+        ws.saga.sessions.append(session)
+        chronicle.begin(ws.saga, session, by=viewing.HOST)
+    if not ws.saga.scenes:
+        ws.saga.scenes = [
+            Scene("ford", title="The ford", place_name="A ford", aura=3, realm="Magic")
+        ]
+        session.scenes = [SceneUse("u-ford", scene_id="ford")]
+    ws._run_steps(scene_verb_forms.set_here(ws.saga, session))
+
+
 def _show(ws, preset: bool) -> None:
     """A Show: a Session begun by the host, as its storyguide, as for a
     Message; opened at the Session, or on the chosen character's page."""
@@ -1970,6 +1988,7 @@ OPENERS: dict[str, Opener] = {
     "add player": Opener("saga_content", _core_add("section-players")),
     "add session": Opener("saga_content", _core_add("section-sessions")),
     "add scene": Opener("saga_content", _core_add("section-scenes")),
+    "add handout": Opener("saga_content", _core_add("section-handouts")),
     "edit scene use": Opener("saga_content", _edit_scene_use),
     "edit traditions offered": Opener("saga_content", lambda ws: ws._edit_traditions()),
     "add spell": Opener("saga_content", _core_add("section-spells")),
@@ -2570,6 +2589,7 @@ OPENERS: dict[str, Opener] = {
     "sheet roll": Opener("character", _sheet_roll, action="sheet_roll"),
     "send message": Opener("saga", _send_message, action="send_message"),
     "show": Opener("saga", lambda ws: _show(ws, False), action="show_at_session"),
+    "set scene": Opener("saga", _set_scene, action="set_scene"),
     "show to the table": Opener(
         "character", lambda ws: _show(ws, True), action="show_record"
     ),
