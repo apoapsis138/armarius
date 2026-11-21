@@ -61,6 +61,7 @@ from ars_magica_manager.forms import hook_stories as hook_story_forms
 from ars_magica_manager.forms import inhabitant as inhabitant_forms
 from ars_magica_manager.forms import land_shaping as land_forms
 from ars_magica_manager.forms import message as message_forms
+from ars_magica_manager.forms import scenes as scene_forms
 from ars_magica_manager.forms import season as season_forms
 from ars_magica_manager.forms import sheet_roll as sheet_roll_forms
 from ars_magica_manager.forms import show as show_forms
@@ -105,6 +106,8 @@ from ars_magica_manager.models import (
     ProjectWork,
     Saga,
     SagaSource,
+    Scene,
+    SceneUse,
     ScoredTrait,
     Session,
     Ship,
@@ -874,6 +877,19 @@ def _economics_row(which: str, key: str):
         await _core_edit(f"section-eco-{which}", f"eco-{which}-list", row)(ws)
 
     return opener
+
+
+def _edit_scene_use(ws) -> None:
+    """A Scene loaded into a Session (added in memory, saved only with the
+    form): its use's form, as e on the Session page's Scenes opens it."""
+    saga = ws.saga
+    session = next((s for s in saga.sessions if s.id == "contract-scenes"), None)
+    if session is None:  # opened again: already there
+        saga.scenes.append(Scene("contract-scene", title="The ford"))
+        session = Session("contract-scenes", real_date="2026-11-21")
+        session.scenes.append(SceneUse("contract-use", scene_id="contract-scene"))
+        saga.sessions.append(session)
+    ws._run_steps(scene_forms.use_form(saga, session, session.scenes[0]))
 
 
 def _core_add(section: str):
@@ -1953,6 +1969,8 @@ OPENERS: dict[str, Opener] = {
     "add house rule": Opener("saga_content", _core_add("section-house-rules")),
     "add player": Opener("saga_content", _core_add("section-players")),
     "add session": Opener("saga_content", _core_add("section-sessions")),
+    "add scene": Opener("saga_content", _core_add("section-scenes")),
+    "edit scene use": Opener("saga_content", _edit_scene_use),
     "edit traditions offered": Opener("saga_content", lambda ws: ws._edit_traditions()),
     "add spell": Opener("saga_content", _core_add("section-spells")),
     "edit spell": Opener("saga_content", _open_own_spell),

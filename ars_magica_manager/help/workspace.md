@@ -1772,21 +1772,74 @@ While the player you sit as has characters, the button is split. "Playing as" an
 
 **See also:** [Signing in](help:sign-in), [How to host a saga](help:guide-hosting), [The saga](help:saga)
 
+## The Scenes library
+<!-- help: tab-content-scenes -->
+
+The saga's **Scenes**, built once and loaded into as many Sessions as you like: one Covenant Scene for every evening of covenant business, not a new one each time. They're the storyguide's prep: players don't see them.
+
+<!-- tui -->
+They're in Saga Content's Scenes tab, with the chosen Scene in full under the list.
+<!-- /tui -->
+<!-- gui -->
+They're under the Sessions in the saga page's **Saga Management**. Choose one to read it in full beside the list.
+<!-- /gui -->
+
+**See also:** [Scenes](help:section-scenes), [A Session's Scenes](help:scenes)
+
+### Scenes
+<!-- help: section-scenes -->
+
+Each Scene of the library: its title, where it is, its aura, and who is usually there.
+
+**You type:** for each Scene:
+
+- its **Title**
+- its **Place**: a covenant, a Place, or one of a regio's levels. Choosing one fills in its **Aura** and **Realm** from the record (a regio's level gives its own), and you can change them, for a local effect. For somewhere that isn't a record, such as a passing glade, leave Place blank, type a **Place name**, and type its aura and realm.
+- its **Regulars**: the actors usually there, from the saga's characters, its Bestiary creatures and its lords, factions and threats
+- the open **Story** it plays, if any
+- a **Picture**: a map already in the saga's Atlas
+- what it has **To show**: a map, a person, a place, any record with a page
+- its **Notes**: your prep sheet, what's there and what to remember
+
+Deleting a Scene asks first, and takes it out of the planned Sessions it's loaded into. A Scene a Session has played can't be deleted: it stays, to read what happened there.
+
+**See also:** [A Session's Scenes](help:scenes), [A Session's page](help:session-page)
+
 # A Session's page
 <!-- help: session-page -->
 
-Each Session has a page of its own: its date, whether it's planned, under way or played, its game date, its storyguide, who's coming and who's Away, who plays whom, and its notes.
+Each Session has a page of its own: its date, whether it's planned, under way or played, its game date, its storyguide, who's coming and who's Away, who plays whom, its notes, and the Scenes loaded into it.
 
 <!-- tui -->
-Each Session is under **Sessions** in the tree, in the Sessions list's order. In Saga Content's Sessions tab, choose a Session and use More's **Open Session** (`m`, then `o`). On the page, `e` edits the Session, and More has Cast at a Glance and, with the Virtual Tabletop (Preview) on, Begin Session, End Session and its Chronicle. The notes have a tab of their own.
+Each Session is under **Sessions** in the tree, in the Sessions list's order. In Saga Content's Sessions tab, choose a Session and use More's **Open Session** (`m`, then `o`). On the page, `e` edits the Session, and More has Cast at a Glance and, with the Virtual Tabletop (Preview) on, Begin Session, End Session and its Chronicle. Its Scenes and its notes have tabs of their own.
 <!-- /tui -->
 <!-- gui -->
-On Saga Management's Sessions, choose a Session and click **Open**. The page has **Edit**, **Cast at a Glance** and **Print the Cast**, and, with the Virtual Tabletop (Preview) on, **Begin Session**, **End Session** and its **Chronicle**.
+On Saga Management's Sessions, choose a Session and click **Open**. The page has **Edit**, **Cast at a Glance** and **Print the Cast**, and, with the Virtual Tabletop (Preview) on, **Begin Session**, **End Session** and its **Chronicle**. Its Scenes are under its facts.
 <!-- /gui -->
 
 Players read a Session's page as they read the Sessions list, with nothing to change.
 
-**See also:** [Sessions](help:tab-content-sessions), [The Chronicle](help:chronicle)
+**See also:** [Sessions](help:tab-content-sessions), [A Session's Scenes](help:scenes), [The Chronicle](help:chronicle)
+
+## A Session's Scenes
+<!-- help: scenes -->
+
+The Scenes you mean to play this evening, in order, loaded from the [Scenes library](help:tab-content-scenes). Load them before you begin, or on the night when the players go somewhere you didn't expect.
+
+<!-- tui -->
+On the Session's page, in its Scenes tab: `a` loads a Scene, `e` changes the chosen one, `d` takes it out.
+<!-- /tui -->
+<!-- gui -->
+On the Session's page, under its facts: **Load a Scene**, **Edit Scene** and **Take Out**.
+<!-- /gui -->
+
+**Load a Scene** offers the library's Scenes, or **New Scene…** to make one, which joins the library too. A Scene loaded starts with tonight's cast and its regulars **Present**. The same Scene can be loaded into many Sessions, or twice into one.
+
+**You type:** for a Scene loaded, who is **Present** this time (tonight's cast ticked, and anyone else under **Also present**: grogs, creatures, your own characters), where it **Comes after** in the evening's order, which planned **Session** it belongs to (choose another to move it there), and this evening's **Notes** on it.
+
+Each loaded Scene is **Prepared**, **Playing** or **Ended**, and every Scene of a played Session counts as Ended. A Prepared one can be changed, moved or taken out after a confirmation; the Scene stays in the library. Moved to another Session, it goes last there. A Playing one can change who is present, but not move or be taken out. An Ended one keeps who was there, even someone since deleted, and only its notes change.
+
+**See also:** [The Scenes library](help:tab-content-scenes), [A Session's page](help:session-page)
 
 # A record's Secrets
 <!-- help: tab-secrets -->

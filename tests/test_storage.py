@@ -721,8 +721,11 @@ def _saga_with_every_record() -> Saga:  # noqa: PLR0915
         models.Session(
             "s1",
             castings=[models.Casting(player_id="p1", character_id=magus.id)],
+            # A Scene of the library loaded into it.
+            scenes=[models.SceneUse("u1", scene_id="sc1")],
         )
     )
+    saga.scenes.append(models.Scene("sc1", title="The ford"))
     # An ask for a teacher's season.
     saga.teach_requests.append(
         models.TeachRequest("t1", magus.id, magus.id, "ability:Latin", "Spring", 1220)

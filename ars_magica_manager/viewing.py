@@ -382,6 +382,12 @@ STORYGUIDE_ONLY: frozenset[str] = frozenset(
         # players to find among them.
         "section-armarium",
         "section-custodia",
+        # The Scenes library and a Session's Scenes (scenes.py): the
+        # storyguide's prep, its notes, who is there and what to show.
+        "tab-content-scenes",
+        "section-scenes",
+        "tab-session-scenes",
+        "section-session-scenes",
     }
 )
 

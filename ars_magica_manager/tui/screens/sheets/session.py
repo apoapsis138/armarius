@@ -1,21 +1,39 @@
 """A Session's own page in the terminal: its top panel names it and its
 state, with its facts (sheets/session.py). e edits it; More has Cast at a
 Glance and, with the Virtual Tabletop (Preview) on, Begin Session, End
-Session and its Chronicle. The Session's Scenes and the evening's account
-come under it."""
+Session and its Chronicle. Its Scenes tab lists the Scenes loaded into it
+(a loads one, e changes who is present, its order or its Session, d takes
+it out); its Notes tab, its notes."""
 
 from __future__ import annotations
 
 from textual.app import ComposeResult
 from textual.containers import Vertical, VerticalScroll
-from textual.widgets import Collapsible, TabbedContent
+from textual.widgets import Collapsible, Static, TabbedContent
 
+from .... import scenes, viewing
+from ....boon_hook_text import counted
 from ....markup import aligned, escape
 from ....models import Saga, Session
-from ....sections import SESSION_INFO_SECTION
+from ....sections import (
+    SESSION_INFO_SECTION,
+    SESSION_SCENES_SECTION,
+    SESSION_SCENES_TAB,
+)
 from ....sheets import session as session_sheet
-from ..widgets import PinnedCollapsible, TwoColumns, fact_markup
+from ..widgets import (
+    PinnedCollapsible,
+    SelectableList,
+    SheetSection,
+    TwoColumns,
+    fact_markup,
+)
 from .base import SheetView
+
+_SCENES_LIST = "session-scenes-list"
+_SCENES_INFO = "session-scenes-info"
+SCENES_TAB = SESSION_SCENES_TAB
+NOTES_TAB = "tab-session-notes"
 
 
 def _title(session: Session) -> str:
@@ -35,11 +53,16 @@ class SessionSheetView(SheetView):
     }
     """
 
-    INITIAL_TAB = "tab-session-notes"
+    INITIAL_TAB = SCENES_TAB
 
     def __init__(self, saga: Saga, session: Session) -> None:
         super().__init__(saga)
         self.session = session
+        #: The Scenes tab is the storyguide's prep (viewing.STORYGUIDE_ONLY):
+        #: a player's page opens on its notes.
+        self.scenes_shown = viewing.reads(part=SCENES_TAB)
+        if not self.scenes_shown:
+            self.INITIAL_TAB = NOTES_TAB
 
     def compose(self) -> ComposeResult:
         with (
@@ -60,7 +83,56 @@ class SessionSheetView(SheetView):
                 )
 
         with TabbedContent(initial=self.INITIAL_TAB):
-            yield self._tab("Notes", self.INITIAL_TAB, self._notes_tab)
+            if self.scenes_shown:
+                yield self._tab("Scenes", SCENES_TAB, self._scenes_tab)
+            yield self._tab("Notes", NOTES_TAB, self._notes_tab)
+
+    def _scenes_tab(self) -> ComposeResult:
+        """The Scenes loaded into it, in order, over the chosen one in full."""
+        saga, session = self.saga, self.session
+        with Vertical(classes="panel-body"):
+            with (
+                VerticalScroll(),
+                SheetSection(
+                    title=self._titled(
+                        SESSION_SCENES_SECTION,
+                        SESSION_SCENES_SECTION,
+                        lambda: counted("Scenes", len(session.scenes)),
+                    ),
+                    id=SESSION_SCENES_SECTION,
+                ),
+            ):
+                yield self._list(
+                    SESSION_SCENES_SECTION,
+                    lambda: (
+                        [
+                            (i, scenes.use_row(saga, session, u))
+                            for i, u in enumerate(session.scenes)
+                        ]
+                        or [(None, "[$label]None yet: a loads a Scene.[/]")]
+                    ),
+                    id=_SCENES_LIST,
+                )
+            yield self._panel(
+                SESSION_SCENES_SECTION,
+                lambda: self._use_text(self.section_row(SESSION_SCENES_SECTION)),
+                id=_SCENES_INFO,
+            )
+
+    def _use_text(self, row: int | None) -> str:
+        """The details panel for the use at `row` (None, or one since gone:
+        the panel's prompt)."""
+        uses = self.session.scenes
+        chosen = uses[row] if row is not None and row < len(uses) else None
+        return scenes.use_detail(self.saga, self.session, chosen)
+
+    def on_selectable_list_chosen(self, event: SelectableList.Chosen) -> None:
+        if event.selectable_list.id != _SCENES_LIST:
+            return
+        event.stop()
+        self.query_one(f"#{_SCENES_INFO}", Static).update(
+            self._use_text(event.data_index)
+        )
 
     def _notes_tab(self) -> ComposeResult:
         with VerticalScroll():

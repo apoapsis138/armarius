@@ -80,6 +80,8 @@ from .models import (
     ResearchAttempt,
     RouteStop,
     Saga,
+    Scene,
+    SceneUse,
     SeasonPlan,
     SeasonRecordLine,
     Session,
@@ -110,6 +112,24 @@ SIEGES = "sieges"
 POSSESSIONS = "possessions"
 #: A Picture, by file name in its folder (LinkField.folder).
 PICTURES = "pictures"
+#: The saga's Scenes library (scenes.py).
+SCENES = "scenes"
+#: What a Scene's actors may be, as "kind:id": who can rule a neighbour
+#: (references.RULER_KINDS, which sits a layer above; a test keeps the
+#: two the same).
+ACTORS: tuple[str, ...] = (CHARACTERS, NEIGHBOURS, CREATURES)
+#: What a Scene may show, as "kind:id": a record with a page
+#: (references.KINDS, kept the same by the same test), or a map.
+SHOWABLE: tuple[str, ...] = (
+    CHARACTERS,
+    COVENANTS,
+    LABORATORIES,
+    FAMILIARS,
+    TRIBUNALS,
+    NEIGHBOURS,
+    CREATURES,
+    MAPS_KIND,
+)
 
 #: What becomes of a field when the record it names is deleted.
 DROP, CLEAR, NAME, KEEP = "drop", "clear", "name", "keep"
@@ -502,6 +522,27 @@ LINKS: dict[type, tuple[LinkField, ...]] = {
         _f("away", PLAYERS, kept_while=_in_played_session),
         # The names as written, by Player: what a played Session reads.
         _f("names", PLAYERS, keys=True, kept_while=_in_played_session),
+    ),
+    Scene: (
+        _place(),
+        _f("covenant_id", COVENANTS),
+        _f("regulars", *ACTORS, prefixed=True),
+        _f("to_show", *SHOWABLE, prefixed=True),
+        _f("picture", PICTURES, on_delete=KEEP, folder=MAPS),
+    ),
+    SceneUse: (
+        # A use of a Scene since deleted goes with it (scenes.delete refuses
+        # one playing or played).
+        _f("scene_id", SCENES, on_delete=DROP, kept_while=_in_played_session),
+        # Who was there stays in a played Session, named as written.
+        _f("present", *ACTORS, prefixed=True, kept_while=_in_played_session),
+        _f(
+            "names",
+            *ACTORS,
+            prefixed=True,
+            keys=True,
+            kept_while=_in_played_session,
+        ),
     ),
     Casting: (
         _f("player_id", PLAYERS, on_delete=DROP, kept_while=_in_played_session),

@@ -19,6 +19,16 @@ PLAYERS_SECTION = "section-players"
 #: The Sessions list (a / e / d act on the evenings of play).
 SESSIONS_SECTION = "section-sessions"
 
+#: The saga's Scenes library (a / e / d act on its Scenes, scenes.py).
+SCENES_SECTION = "section-scenes"
+
+#: A Session page's Scenes: those loaded into it, in order (a loads one,
+#: e changes who is present, its order or its Session, d takes it out).
+SESSION_SCENES_SECTION = "section-session-scenes"
+#: The tabs that hold them: Saga Content's, and a Session page's.
+CONTENT_SCENES_TAB = "tab-content-scenes"
+SESSION_SCENES_TAB = "tab-session-scenes"
+
 #: A Session page's top panel: when, who storyguides, who comes, who plays
 #: whom (e edits the Session; sheets/session.py).
 SESSION_INFO_SECTION = "section-session-info"

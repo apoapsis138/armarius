@@ -385,6 +385,21 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Date": "14 November"},
         shown={"#section-sessions": "Sessions (1)"},
     ),
+    # A Scene of the library, at a place that isn't a record of the saga.
+    "add scene": Contract(
+        prefill={"Title": "", "Aura": "0"},
+        edits={"Title": "The ford", "Place name": "A glade", "Aura": "2"},
+        saved=lambda s: [(x.title, x.place_name, x.aura) for x in s.scenes],
+        expected=[("The ford", "A glade", 2)],
+        invalid=[{"Title": ""}, {"Aura": "two"}],
+    ),
+    # A Scene loaded into a Session: this evening's notes on it.
+    "edit scene use": Contract(
+        prefill={"Notes": ""},
+        edits={"Notes": "Wolves at dusk"},
+        saved=lambda s: [u.notes for x in s.sessions for u in x.scenes],
+        expected=["Wolves at dusk"],
+    ),
     "add spell": Contract(
         prefill={"Name": "", "Technique": Select.NULL, "Level": ""},
         edits={

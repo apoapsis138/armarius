@@ -13,10 +13,12 @@ from textual.widget import Widget
 from textual.widgets import Static, TabbedContent, TabPane
 
 from .... import saga_content as sc
+from .... import scenes, viewing
 from ....boon_hook_text import counted
 from ....forms import goods as goods_forms
 from ....forms import mystery_cults as cult_forms
 from ....forms import saga_content as scf
+from ....markup import escape
 from ....models import Saga, SagaSource, Spell
 from ....sections import (
     BOOKS_SECTION,
@@ -29,6 +31,7 @@ from ....sections import (
     HIDDEN_SECTION,
     HOUSE_RULES_SECTION,
     PLAYERS_SECTION,
+    SCENES_SECTION,
     SESSIONS_SECTION,
     SOURCES_SECTION,
     SPELL_SECTION,
@@ -49,8 +52,13 @@ TAB_SECTIONS: dict[str, str] = {
     "tab-content-spells": SPELL_SECTION,
     "tab-content-players": PLAYERS_SECTION,
     "tab-content-sessions": SESSIONS_SECTION,
+    "tab-content-scenes": SCENES_SECTION,
     "tab-content-cults": CULTS_SECTION,
 }
+
+#: The Scenes tab's list and its details panel.
+SCENES_LIST = "content-scenes-list"
+SCENES_INFO = "content-scenes-info"
 
 #: The Goods tab's list and its details panel.
 GOODS_LIST = "content-goods-list"
@@ -133,6 +141,9 @@ class SagaContentSheetView(SheetView):
                 "tab-content-sessions",
                 lambda: iter([SessionsView(self.saga)]),
             )
+            # The storyguide's prep (viewing.STORYGUIDE_ONLY).
+            if viewing.reads(part="tab-content-scenes"):
+                yield self._tab("Scenes", "tab-content-scenes", self._scenes_tab)
             if self.players:
                 yield self._tab(
                     "Players",
@@ -327,6 +338,47 @@ class SagaContentSheetView(SheetView):
                 id=GOODS_INFO,
             )
 
+    # -- Scenes --
+
+    def _scenes_tab(self) -> ComposeResult:
+        """The Scenes library, with the chosen Scene in full under it."""
+        saga = self.saga
+        with Vertical(classes="panel-body"):
+            with (
+                VerticalScroll(),
+                SheetSection(
+                    title=self._titled(
+                        SCENES_SECTION,
+                        SCENES_SECTION,
+                        lambda: counted("Scenes", len(saga.scenes)),
+                    ),
+                    id=SCENES_SECTION,
+                ),
+            ):
+                yield self._list(
+                    SCENES_SECTION,
+                    lambda: (
+                        [
+                            (i, escape(s.title or "(untitled)"))
+                            for i, s in enumerate(saga.scenes)
+                        ]
+                        or [(None, "[$label]None yet: a adds one.[/]")]
+                    ),
+                    id=SCENES_LIST,
+                )
+            yield self._panel(
+                SCENES_SECTION,
+                lambda: self._scene_text(self.section_row(SCENES_SECTION)),
+                id=SCENES_INFO,
+            )
+
+    def _scene_text(self, row: int | None) -> str:
+        """The details panel for the Scene at `row` (None, or one since
+        gone: the panel's prompt)."""
+        listed = self.saga.scenes
+        chosen = listed[row] if row is not None and row < len(listed) else None
+        return scenes.scene_detail(self.saga, chosen)
+
     # -- Mystery Cults --
 
     def chosen_cult(self) -> int | None:
@@ -451,6 +503,12 @@ class SagaContentSheetView(SheetView):
         list_id = event.selectable_list.id or ""
         if self._cult_chosen(list_id, event.data_index):
             event.stop()
+            return
+        if list_id == SCENES_LIST:
+            event.stop()
+            self.query_one(f"#{SCENES_INFO}", Static).update(
+                self._scene_text(event.data_index)
+            )
             return
         if list_id == GOODS_LIST:
             event.stop()

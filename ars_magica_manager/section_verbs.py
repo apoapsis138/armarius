@@ -57,6 +57,7 @@ from .forms import possession as possession_forms
 from .forms import power as power_forms
 from .forms import religion as religion_forms
 from .forms import saga_content as content_forms
+from .forms import scenes as scene_forms
 from .forms import season as season_forms
 from .forms import sessions as session_forms
 from .forms import spell as spell_forms
@@ -96,7 +97,9 @@ from .sections import (
     LAB_VF_SECTIONS,
     PLAYERS_SECTION,
     POWERS_SECTION,
+    SCENES_SECTION,
     SESSION_INFO_SECTION,
+    SESSION_SCENES_SECTION,
     SESSIONS_SECTION,
     SOURCES_SECTION,
     SPELL_SECTION,
@@ -275,6 +278,7 @@ def saga_ops(saga: Saga, record: Saga) -> dict[str, SectionOps]:
         HOUSE_RULES_SECTION: content_forms.house_rule_ops(saga),
         PLAYERS_SECTION: content_forms.player_ops(saga),
         SESSIONS_SECTION: session_forms.session_ops(saga),
+        SCENES_SECTION: scene_forms.library_ops(saga),
         **{
             store.section: store_forms.store_ops(
                 saga, store, lambda store=store: stores.shown(saga, store)
@@ -286,12 +290,13 @@ def saga_ops(saga: Saga, record: Saga) -> dict[str, SectionOps]:
 
 def session_ops(saga: Saga, session: Session) -> dict[str, SectionOps]:
     """A Session page's sections: its top panel's Edit is the Sessions
-    list's own form."""
+    list's own form; its Scenes load, change and take out Scenes."""
     return {
         SESSION_INFO_SECTION: SectionOps(
             edit=lambda _row: session_forms.session_form(saga, session),
             rows=lambda: [ss.when(session)],
-        )
+        ),
+        SESSION_SCENES_SECTION: scene_forms.use_ops(saga, session),
     }
 
 

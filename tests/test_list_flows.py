@@ -63,8 +63,11 @@ from ars_magica_manager.models import (
     ProjectWork,
     Saga,
     SagaSource,
+    Scene,
+    SceneUse,
     ScoredTrait,
     Secret,
+    Session,
     Siege,
     Stigma,
     TraditionEffect,
@@ -284,6 +287,7 @@ _SHEET_VIEW_ATTR = {
     "seasons": "_seasons_view",
     "armarium": "_store_view",
     "custodia": "_store_view",
+    "session": "_session_sheet_view",
 }
 
 
@@ -714,6 +718,93 @@ async def test_item_list_edit_and_delete_act_on_the_chosen_row(name):
 
         await _press(pilot, app, "d", ConfirmScreen)
         assert _confirm_message(app) == "Delete Renamed?"
+
+
+# -- Scenes: the library and a Session's --
+
+
+def _scenes_saga() -> Saga:
+    """_saga() with two Scenes in the library and a Session that has both
+    loaded."""
+    saga = _saga()
+    saga.scenes = [Scene("sc1", title="The ford [old]"), Scene("sc2", title="The hill")]
+    saga.sessions = [
+        Session(
+            "ses1",
+            real_date="2026-11-21",
+            scenes=[SceneUse("u1", scene_id="sc1"), SceneUse("u2", scene_id="sc2")],
+        )
+    ]
+    return saga
+
+
+SCENE_LISTS: dict[str, ListCase] = {
+    "scenes-library": ListCase(
+        ("saga_content",),
+        "section-scenes",
+        "content-scenes-list",
+        lambda s: s.scenes,
+    ),
+    "session-scenes": ListCase(
+        ("session", "ses1"),
+        "section-session-scenes",
+        "session-scenes-list",
+        lambda s: s.sessions[0].scenes,
+    ),
+}
+
+
+async def test_the_scenes_library_edits_and_deletes_the_chosen_scene():
+    """In one session: e opens the chosen Scene, d asks before deleting it,
+    and deleting it takes it out of the Session it was loaded into."""
+    case = SCENE_LISTS["scenes-library"]
+    storage.save_saga(_scenes_saga())
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        workspace, view = await _open(pilot, app, case)
+
+        await pilot.press("down")
+        await _press(pilot, app, "e", FieldsDialog)
+        dialog = app.screen
+        dialog.query_one("#fld-title", Input).value = "The high hill"
+        dialog.query_one("#btn-save").press()
+        assert await wait_until(pilot, lambda: _saved(case)[1].title == "The high hill")
+
+        await _choose_row(pilot, view, case, 0)
+        await _press(pilot, app, "d", ConfirmScreen)
+        assert _confirm_message(app).startswith("Delete the Scene The ford [old]?")
+        await pilot.press("y")
+        assert await wait_until(pilot, lambda: len(_saved(case)) == 1)
+        saved = storage.load_saga("test_saga")
+        assert [u.scene_id for u in saved.sessions[0].scenes] == ["sc2"]
+        assert app.screen is workspace
+
+
+async def test_a_sessions_scenes_edit_and_take_out_the_chosen_use():
+    """In one session on the Session page: e opens the chosen use's form,
+    d asks before taking it out, and the Scene stays in the library."""
+    case = SCENE_LISTS["session-scenes"]
+    storage.save_saga(_scenes_saga())
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        workspace, view = await _open(pilot, app, case)
+
+        await pilot.press("down")
+        await _press(pilot, app, "e", FieldsDialog)
+        dialog = app.screen
+        dialog.query_one("#fld-notes", TextArea).text = "Wolves at dusk"
+        dialog.query_one("#btn-save").press()
+        assert await wait_until(
+            pilot, lambda: _saved(case)[1].notes == "Wolves at dusk"
+        )
+
+        await _choose_row(pilot, view, case, 0)
+        await _press(pilot, app, "d", ConfirmScreen)
+        assert _confirm_message(app).startswith("Take The ford [old] out")
+        await pilot.press("y")
+        assert await wait_until(pilot, lambda: [u.id for u in _saved(case)] == ["u2"])
+        assert len(storage.load_saga("test_saga").scenes) == 2
+        assert app.screen is workspace
 
 
 # -- Saga Content's own lists --

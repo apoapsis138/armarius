@@ -74,9 +74,65 @@ class Casting:
 
 
 @dataclass
+class Scene:
+    """A Scene of the saga's library (scenes.py), reused across Sessions:
+    where it is, its aura, the actors usually there, the story it plays, a
+    map and what to show, and the storyguide's notes. Its place is a saga
+    Place and level, a covenant, or a name typed; its aura and realm start
+    as the place's and may be changed. Actors and what to show are
+    "kind:id" references (record_links)."""
+
+    id: str
+    title: str = ""
+    place_id: str | None = None
+    place_level: int = 0
+    covenant_id: str = ""
+    #: The place's name when it isn't a record of the saga.
+    place_name: str = ""
+    aura: int = 0
+    #: One of common.REALMS, or "" for none.
+    realm: str = ""
+    #: The actors usually there: "characters:<id>", "creatures:<id>",
+    #: "neighbours:<id>".
+    regulars: list[str] = field(default_factory=list)
+    #: The story it plays: an open Story Event's id (story_chapters.story_id).
+    story_id: str = ""
+    #: A map's picture already in the saga, by file name (paths.MAPS).
+    picture: str = ""
+    #: The records to show from it, as "kind:id" (a map, a neighbour...).
+    to_show: list[str] = field(default_factory=list)
+    notes: str = ""
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> Scene:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
+class SceneUse:
+    """A Scene loaded into a Session (scenes.py): which Scene, its state
+    (Prepared, Playing or Ended), the actors present this time and the
+    evening's notes on it."""
+
+    id: str
+    scene_id: str
+    state: str = "prepared"
+    present: list[str] = field(default_factory=list)
+    #: Each present actor's name as written, by "kind:id", so a played
+    #: Session still names those since deleted.
+    names: dict[str, str] = field(default_factory=dict)
+    notes: str = ""
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> SceneUse:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
 class Session:
     """One evening of play at the table (sessions.py): when it is or was,
-    its storyguide, who is coming and who is Away, and who played whom."""
+    its storyguide, who is coming and who is Away, who played whom, and
+    the Scenes loaded into it, in the order they are to be played."""
 
     id: str
     #: The real-world day, "YYYY-MM-DD", or "" when not set.
@@ -108,11 +164,14 @@ class Session:
     #: On reads what came after it.
     played_season: str = ""
     played_year: int | None = None
+    #: The Scenes loaded into it, in the order they are to be played.
+    scenes: list[SceneUse] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Session:
         d = dict(data)
         d["castings"] = [Casting.from_dict(c) for c in d.get("castings", [])]
+        d["scenes"] = [SceneUse.from_dict(s) for s in d.get("scenes", [])]
         return cls(**known_fields(cls, d))
 
 
@@ -187,9 +246,10 @@ def _rosters_from_older_saves(neighbours: list[Neighbour]) -> None:
 
 
 def _table_records(d: dict[str, Any]) -> None:
-    """The records of play at the table, built in place: the Sessions and
-    the asks to teach."""
+    """The records of play at the table, built in place: the Sessions, the
+    Scenes library and the asks to teach."""
     d["sessions"] = [Session.from_dict(x) for x in d.get("sessions", [])]
+    d["scenes"] = [Scene.from_dict(x) for x in d.get("scenes") or []]
     d["teach_requests"] = [
         TeachRequest.from_dict(x) for x in d.get("teach_requests", [])
     ]
@@ -327,6 +387,8 @@ class Saga:
     #: without.
     maps: list[AtlasMap] = field(default_factory=list)
     pins: list[Pin] = field(default_factory=list)
+    #: The library of Scenes, loaded into Sessions (scenes.py).
+    scenes: list[Scene] = field(default_factory=list)
 
     def covenant(self, covenant_id: str | None) -> Covenant | None:
         """The covenant with this id, if there is one."""

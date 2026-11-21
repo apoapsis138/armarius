@@ -19,7 +19,13 @@ from ....markup import escape
 from ....models import (
     Book,
 )
-from ....sections import ARMARIUM_SECTION, GOODS_SECTION, SESSION_INFO_SECTION
+from ....sections import (
+    ARMARIUM_SECTION,
+    GOODS_SECTION,
+    SCENES_SECTION,
+    SESSION_INFO_SECTION,
+    SESSION_SCENES_SECTION,
+)
 from ..fields import FieldsDialog
 from ..forms import (
     _book_fields,
@@ -493,6 +499,8 @@ class LibraryActions(WorkspaceBase):
             PLAYERS_SECTION: self._core_ops_of(PLAYERS_SECTION),
             SESSIONS_SECTION: self._core_ops_of(SESSIONS_SECTION),
             SESSION_INFO_SECTION: self._core_ops_of(SESSION_INFO_SECTION),
+            SCENES_SECTION: self._core_ops_of(SCENES_SECTION),
+            SESSION_SCENES_SECTION: self._core_ops_of(SESSION_SCENES_SECTION),
             BOOKS_SECTION: _SectionOps(edit=self._edit_books_in_play),
             TRADITIONS_SECTION: _SectionOps(edit=self._edit_traditions),
             SOURCES_SECTION: self._core_ops_of(SOURCES_SECTION),

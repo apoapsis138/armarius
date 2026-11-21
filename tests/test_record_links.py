@@ -630,6 +630,9 @@ NOT_RECORD_LINKS: set[tuple[str, str]] = {
     ("CovenantDiaryEntry", "boon_hook_id"),
     ("CovenantDiaryEntry", "threat_id"),
     ("CovenantDiaryEntry", "story_id"),
+    # A story is a Diary entry, not a record of the saga's lists; a Scene
+    # names its story the way a chapter does, resolved when shown.
+    ("Scene", "story_id"),
     ("Censure", "case_id"),
     ("Argument", "case_id"),
     ("Ruling", "case_id"),

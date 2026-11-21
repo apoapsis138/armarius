@@ -1,8 +1,8 @@
 """A Session's own page on the desktop: its title and state, its facts
 (sheets/session.py), and its buttons: Edit, Cast at a Glance, Print the
 Cast and, with the Virtual Tabletop (Preview) on, Begin Session, End
-Session and its Chronicle, each offered as the Sessions list offers it.
-The Session's Scenes and the evening's account come under these."""
+Session and its Chronicle, each offered as the Sessions list offers it;
+then the Scenes loaded into it (scenes_section.py)."""
 
 from __future__ import annotations
 
@@ -14,11 +14,12 @@ from .. import chronicle, section_verbs, viewing, virtual_tabletop
 from ..commands import Command
 from ..forms import sessions as session_forms
 from ..models import Saga, Session
-from ..sections import SESSION_INFO_SECTION
+from ..sections import SESSION_INFO_SECTION, SESSION_SCENES_SECTION
 from ..sheets import session as session_sheet
 from .conflicts import buttons
 from .figures import fact_grid
 from .pages import page_header
+from .scenes_section import session_scenes_section
 from .sessions_section import PRINT, print_cast
 from .themes import Palette
 from .widgets import scrolling_page
@@ -38,15 +39,15 @@ class SessionPage(QWidget):
         header = page_header(
             session_sheet.title(session), session_sheet.subtitle(session), p, "season"
         )
-        column.addWidget(
-            scrolling_page(
-                p,
-                header,
-                buttons(self._verbs(), p),
-                fact_grid(session_sheet.facts(saga, session), p, 2),
-            ),
-            1,
-        )
+        parts = [
+            header,
+            buttons(self._verbs(), p),
+            fact_grid(session_sheet.facts(saga, session), p, 2),
+        ]
+        # Its Scenes are the storyguide's prep (viewing.STORYGUIDE_ONLY).
+        if viewing.reads(part=SESSION_SCENES_SECTION):
+            parts.append(session_scenes_section(saga, session, p, run))
+        column.addWidget(scrolling_page(p, *parts), 1)
 
     def _verbs(self) -> list[tuple[str, str, Callable[[], None]]]:
         saga, session, run = self.saga, self.session, self.run

@@ -172,7 +172,7 @@
 
 ===== tab-content-cults
 
-  atalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Players
+  atalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -215,7 +215,7 @@
 
 ===== tab-content-spells
 
-  atalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Players
+   Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Players
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
     Search spell names and descriptions...                     Source: any      ▼
@@ -258,7 +258,7 @@
 
 ===== tab-content-sessions
 
-  atalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Players
+   Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Players
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -299,9 +299,52 @@
   ▌
 
 
+===== tab-content-scenes
+
+   Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Players
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Scenes (0)
+
+      None yet: a adds one.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ▌
+  ▌  Choose a Scene to see it; a adds one.
+  ▌
+
+
 ===== tab-content-players
 
-  atalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Players
+   Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Players
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
