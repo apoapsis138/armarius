@@ -22,6 +22,7 @@ from .. import (
     open_stories,
     record_links,
     references,
+    scene_aura,
     show_copy,
     shows,
     table_rules,
@@ -278,6 +279,18 @@ def open_show(saga: Saga, session: Session) -> Command:
     )
 
 
+def default_to(saga: Saga, session: Session) -> tuple[str, ...]:
+    """Whom a Show starts on while a Scene plays: the players of the
+    characters present there, tonight (none: the Table). It never limits
+    whom it may go to."""
+    present = scene_aura.present_ids(session, scene_aura.held(saga, session))
+    if not present:
+        return ()
+    storyguide = table_rules.storyguide_of(session, saga)
+    players = (table_rules.player_of(session, cid) for cid in sorted(present))
+    return tuple(dict.fromkeys(p for p in players if p and p != storyguide))
+
+
 def why_not_here(saga: Saga, session: Session) -> str | None:
     """Why whoever uses this copy can't Show at `session` now, or None."""
     return table_rules.why_not_lead(saga, session, chronicle.here(), ACT)
@@ -291,13 +304,14 @@ def show_here(
 ) -> Form | Refuse:
     """A Show by whoever uses this copy, at the Table it acts at, starting
     on `preset` and the Players `to` when a caller gives them (a Scene's
-    list of things to show, and the players of those present)."""
+    list of things to show); else, while a Scene plays, the players of
+    those present (default_to)."""
     problem = why_not_here(saga, session)
     if problem:
         return Refuse(TITLE, problem)
     who = chronicle.here()
     table = host_table.here(saga, session, who, show_copy.player_copy)
-    return show_form(saga, session, who, table, preset, to)
+    return show_form(saga, session, who, table, preset, to or default_to(saga, session))
 
 
 def show_record(saga: Saga, record: Any) -> Form | Refuse:

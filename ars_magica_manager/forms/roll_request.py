@@ -6,6 +6,10 @@ shared grog may be handed, for this request only, to a Player other than
 its Steward. Then each answer is one click on the player's card, and the
 outcome note one more entry.
 
+While a Scene plays, the characters present there start ticked (anyone
+offered can still be ticked), and a Supernatural Ability or hedge Art
+starts on the Scene's aura (scene_aura), kept from the players.
+
 Pattern: the core Form (a FieldsDialog builder), its apply making a Macro
 Command (chronicle.RollCall: a set of rolls sent out and gathered back)
 for the host to carry out."""
@@ -14,13 +18,14 @@ from __future__ import annotations
 
 from typing import Any
 
-from .. import catalog, chronicle
+from .. import catalog, chronicle, scene_aura
 from ..commands import Form, notes
 from ..form_spec import DialogField
 from ..markup import escape
 from ..models import Saga, Session
 from ..models.definitions import ROLL_CHARACTERISTICS
 from . import free_roll
+from .sheet_roll import aura_fields
 
 HELP_ID = "roll-requests"
 #: The prefix of each character's tick.
@@ -83,17 +88,25 @@ def call_of(saga: Saga, session: Session, values: dict[str, Any]) -> chronicle.R
         for_what=(values.get("for_what") or "").strip(),
         stress=values.get("die", free_roll.STRESS) == free_roll.STRESS,
         rollers={c: handed for c in characters if handed and _shared(saga, c)},
+        aura=values.get("aura") or 0,
+        aura_realm=values.get("aura_realm") or "",
+        in_regio=bool(values.get("aura_regio")),
     )
 
 
 def request_form(
     saga: Saga, session: Session, who: str, book: chronicle.Chronicle
 ) -> Form:
-    """A Roll request by the Session's storyguide `who`."""
+    """A Roll request by the Session's storyguide `who`: those present in
+    the Scene playing ticked, and its aura, to start with."""
+    present = scene_aura.present_ids(session, book)
+    here = scene_aura.aura_here(saga, session, who, book)
 
     def fields() -> list[DialogField]:
         ticks = [
-            DialogField(TICK + cid, escape(name), "check", True)
+            DialogField(
+                TICK + cid, escape(name), "check", present is None or cid in present
+            )
             for name, cid in offered(saga, session)
         ]
         return [
@@ -112,6 +125,7 @@ def request_form(
                 "",
                 options=ability_names(saga, session),
             ),
+            *aura_fields(saga, here),
             DialogField(
                 "die",
                 "Die",

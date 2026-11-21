@@ -10,7 +10,7 @@ from __future__ import annotations
 import random
 from typing import Any
 
-from .. import diaries, seasons, table_rolls
+from .. import diaries, scene_aura, seasons, table_rolls
 from ..commands import Form, notes
 from ..dice_text import die_text as dice_words
 from ..dice_text import simple as dice_simple
@@ -55,7 +55,7 @@ def _chosen(character: Character, values: dict[str, Any]):
 
 def fields(saga: Saga, character: Character) -> list[DialogField]:
     found = _rules(character)
-    aura, _ = realms.present_aura(saga, character)
+    aura, realm = scene_aura.aura_now(saga, character)
     castings: list[tuple[str, str]] = []
     for tradition, index, _key in found:
         for c in hc.castings(character, tradition, tradition.casting[index]):
@@ -93,8 +93,8 @@ def fields(saga: Saga, character: Character) -> list[DialogField]:
             "aura_realm",
             "Aura realm",
             "select",
-            realms.HERMETIC,
-            options=[(r, r) for r in realms.aura_realms(saga)],
+            realm,
+            options=[(r, r) for r in realms.aura_realms(saga, realm)],
         ),
         DialogField("vis", "Pawns of vis", "int", 0),
         DialogField(

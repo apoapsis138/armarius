@@ -256,7 +256,12 @@ def _request_of(body: Body) -> chronicle.RollRequest:
     characteristic = str(body.get("characteristic", ""))
     sheet = (
         chronicle.SheetRoll(
-            characteristic, str(body.get("ability", "")), body.get("specialty") is True
+            characteristic,
+            str(body.get("ability", "")),
+            body.get("specialty") is True,
+            aura=int(body.get("aura", 0)),
+            aura_realm=str(body.get("aura_realm", "")),
+            in_regio=body.get("aura_regio") is True,
         )
         if characteristic
         else None
@@ -480,6 +485,10 @@ def event_specs(
                 "characteristic": Field(str, max_length=16, required=False),
                 "ability": Field(str, max_length=120, required=False),
                 "specialty": Field(bool, required=False),
+                # The aura a supernatural Ability is rolled in (scene_aura).
+                "aura": Field(int, low=-99, high=99, required=False),
+                "aura_realm": Field(str, max_length=16, required=False),
+                "aura_regio": Field(bool, required=False),
             },
             roll,
         ),
