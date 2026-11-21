@@ -49,9 +49,9 @@ from typing import Any, Protocol
 from . import dice_text, paths, references, sessions, shapes, table_rules, viewing
 from .files import held_lock
 from .markup import escape
-from .models import Character, Saga, Session
+from .models import SUPERNATURAL_CATEGORIES, Character, Saga, Session
 from .models.definitions import ROLL_CHARACTERISTICS
-from .rules import creation_access, derived, dice, scores
+from .rules import creation_access, derived, dice, realms, scores
 
 # -- Audience --
 
@@ -454,6 +454,11 @@ class SheetRoll:
     characteristic: str
     ability: str = ""
     specialty: bool = False
+    #: The aura it is rolled in, for a supernatural Ability (scene_aura):
+    #: its score and realm ("" for none), and whether in a regio.
+    aura: int = 0
+    aura_realm: str = ""
+    in_regio: bool = False
 
 
 @dataclass(frozen=True)
@@ -527,6 +532,10 @@ def sheet_terms(saga: Saga, request: RollRequest) -> tuple[list[Term], int]:
                     f"{character.name} has no Specialty in {sheet.ability}."
                 )
             terms.append((f"Specialty ({specialty})", 1))
+        aura = _aura_term(sheet)
+        if aura is not None:
+            terms.append(aura[0])
+            extra += aura[1]
     elif sheet.specialty:
         raise ValueError("A Specialty belongs to an Ability.")
     wounds = derived.wound_penalty(character.wounds, character.virtues_flaws)
@@ -538,6 +547,29 @@ def sheet_terms(saga: Saga, request: RollRequest) -> tuple[list[Term], int]:
     if request.modifier:
         terms.append(("Modifier", request.modifier))
     return terms, extra
+
+
+def supernatural(ability: str) -> bool:
+    """Whether `ability` is a Supernatural Ability or a hedge Art, which an
+    aura touches (DE p. 411)."""
+    return bool(ability) and (
+        creation_access.ability_category(ability) in SUPERNATURAL_CATEGORIES
+    )
+
+
+def _aura_term(sheet: SheetRoll) -> tuple[Term, int] | None:
+    """The aura's term on a supernatural Ability, taken as Magic (most are,
+    DE p. 411), and the botch dice a foreign realm's aura adds: one a point
+    of the aura as it is, twice that in a regio (DE pp. 411, 422). None
+    for a mundane Ability, or no aura."""
+    if not sheet.aura_realm or not supernatural(sheet.ability):
+        return None
+    realm, score = sheet.aura_realm, sheet.aura
+    modifier = realms.aura_modifier(realms.HERMETIC, realm, score)
+    botch = realms.extra_botch_dice(
+        realms.HERMETIC, realm, score, in_regio=sheet.in_regio
+    )
+    return (f"Aura, {realm} {score}", modifier), botch
 
 
 def why_not_roll(
@@ -932,6 +964,11 @@ class RollCall:
     for_what: str = ""
     stress: bool = True
     rollers: dict[str, str] = field(default_factory=dict)
+    #: The aura each answer is rolled in, for a supernatural Ability: kept
+    #: at the host, never sent a seat (the storyguide may keep it).
+    aura: int = 0
+    aura_realm: str = ""
+    in_regio: bool = False
 
 
 def answerer(saga: Saga, session: Session, character_id: str) -> str:
@@ -1002,6 +1039,12 @@ def request_rolls(
         "for": call.for_what,
         "stress": call.stress,
     }
+    if call.aura_realm:
+        body["aura"] = {
+            "score": call.aura,
+            "realm": call.aura_realm,
+            "regio": call.in_regio,
+        }
     hidden = call.hide_ease and call.ease_factor is not None
 
     def ease(entry: Entry) -> Written | None:
@@ -1099,6 +1142,8 @@ def answer(
     request = _request(book, number)
     assert request is not None
     body = request.body
+    kept = body.get("aura")
+    aura: dict[str, Any] = kept if isinstance(kept, dict) else {}
     rolled = RollRequest(
         stress=bool(body.get("stress", True)),
         botch_dice=1 if body.get("stress", True) else 0,
@@ -1106,7 +1151,14 @@ def answer(
         for_what=str(body.get("for", "")),
         character_id=character_id,
         visibility=str(body["visibility"]),
-        sheet=SheetRoll(str(body["characteristic"]), str(body["ability"]), specialty),
+        sheet=SheetRoll(
+            str(body["characteristic"]),
+            str(body["ability"]),
+            specialty,
+            aura=int(aura.get("score", 0)),
+            aura_realm=str(aura.get("realm", "")),
+            in_regio=aura.get("regio") is True,
+        ),
     )
     sheet_terms(saga, rolled)  # a Specialty the character lacks says so
     roller = roller_of(request, character_id)
@@ -1656,8 +1708,9 @@ KINDS: dict[str, Kind] = {
             card=REQUEST_CARD,
             for_whom=_offered_to,
             # Each character's roller (a Player id) travels: a seat reads
-            # it to know whether it answers (Reader.may_answer).
-            held_back=(),
+            # it to know whether it answers (Reader.may_answer). The aura
+            # the answers are rolled in stays here (the storyguide's).
+            held_back=("aura",),
         ),
         Kind(
             REQUEST_EASE,

@@ -8,7 +8,7 @@ from __future__ import annotations
 import random
 from typing import Any
 
-from .. import table_rolls
+from .. import scene_aura, table_rolls
 from ..commands import Command, Form, Refuse, notes
 from ..form_spec import DialogField, pairs
 from ..markup import BULLET, escape
@@ -17,7 +17,6 @@ from ..rules import dice, penetration, realms
 from ..rules import goetic as gr
 from ..rules import hybrid_magic as hybrid
 from ..rules.infernalists import SACRIFICES
-from ..rules.realms import present_aura
 
 TITLE = "Ars Goetia"
 HELP_ID = "ars-goetia"
@@ -46,7 +45,7 @@ def _summons(character: Character):
 
 def goetic_fields(saga: Saga, character: Character) -> list[DialogField]:
     """What Ars Goetia asks."""
-    aura, aura_realm = present_aura(saga, character)
+    aura, aura_realm = scene_aura.aura_now(saga, character)
     areas = _area_lores(character)
     summons = _summons(character)
     return [
@@ -138,7 +137,7 @@ def goetic_fields(saga: Saga, character: Character) -> list[DialogField]:
             "Aura's realm",
             "select",
             aura_realm,
-            options=pairs(realms.REALMS),
+            options=pairs(realms.aura_realms(saga, aura_realm)),
         ),
     ]
 

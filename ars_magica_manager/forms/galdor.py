@@ -9,7 +9,7 @@ from __future__ import annotations
 import random
 from typing import Any
 
-from .. import diaries, dice_text, seasons, table_rolls, traditions
+from .. import diaries, dice_text, scene_aura, seasons, table_rolls, traditions
 from ..commands import Form, notes
 from ..form_spec import DialogField
 from ..markup import escape, plural
@@ -49,7 +49,7 @@ def _tradition() -> TraditionDef:
 
 
 def _aura_fields(saga: Saga, character: Character) -> list[DialogField]:
-    aura, realm = realms.present_aura(saga, character)
+    aura, realm = scene_aura.aura_now(saga, character)
     return [
         DialogField("aura", "Aura", "int", aura, hint="Where he sings."),
         DialogField(

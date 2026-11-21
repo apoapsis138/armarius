@@ -1557,7 +1557,7 @@ Preview: turn on Virtual Tabletop in Settings.
 
 While a Session is under way, its storyguide can **Show** the players something to look at: a character's, covenant's, laboratory's or familiar's record, or a picture already in the saga, such as a map or a portrait. Show it to the Table, which everyone at the Session sees, or to the Players you choose. Only the Session's storyguide shows, from the host's computer or a Remote seat.
 
-- **What, title, story, to whom.** Choose what to show; its name becomes the title, which you can change. Choose the open story it belongs to, if any (a story is listed once it has been taken up). Under **To**, no one chosen means the Table.
+- **What, title, story, to whom.** Choose what to show; its name becomes the title, which you can change. Choose the open story it belongs to, if any (a story is listed once it has been taken up). Under **To**, no one chosen means the Table; while a [Scene plays](help:scenes-play), it starts on the players of the characters present.
 - **A copy, as the players read it now.** A record is copied once, at the moment you Show it, as the players may read it: no Secret you haven't revealed, no private notes, and the name of any record they don't know of left out. A picture is copied as it is. The copy never changes, even if the record does later.
 - **Each one shown gets a Show** in the [Chronicle](help:chronicle), with its title, to open and read the copy. It never opens by itself.
 <!-- gui -->
@@ -1667,8 +1667,9 @@ Preview: turn on Virtual Tabletop in Settings.
 
 The storyguide's call for chosen characters to roll, answered with one click each. Click **Roll Request** at the foot of the [Chronicle pane](help:chronicle-pane):
 
-- **The characters**: each character cast tonight, and each shared grog whose Steward is coming, with a tick. All are ticked to start with.
+- **The characters**: each character cast tonight, and each shared grog whose Steward is coming, with a tick. All are ticked to start with, or, while a [Scene plays](help:scenes-play), those present in it. Anyone listed can still be ticked.
 - **Characteristic** and **Ability**: what to roll. The host adds each character's own scores, Specialty and penalties, as for a [roll from the sheet](help:sheet-roll). A character with no score in the Ability rolls at 0 with three more botch dice.
+- **Aura**, **Aura's realm** and **In a regio**, for a Supernatural Ability or hedge Art: the aura it's rolled in, taken as Magic (DE p. 411). They start on the playing Scene's aura. Each answer shows it as a term, so a player who sees their roll sees it too; players' computers are never sent it otherwise.
 - **Die** and **Ease Factor**: blank for none.
 - **Hide Ease Factor**: players see their totals; only you see the Ease Factor and who succeeded.
 - **For**: what it's for.
@@ -1692,7 +1693,8 @@ While a Session is under way, a character's **Abilities** and **Characteristics*
 - **Ability**: the character's own with their scores, or none for a Characteristic alone. Abilities the character has no score in are offered too, marked "no score": rolled at 0 with three more botch dice (DE p. 157). An Ability the book asterisks, such as Magic Theory, or any Supernatural one, can't be used without experience and isn't offered (DE p. 159).
 - **Specialty applies**: +1 when the roll falls within the Ability's Specialty (DE p. 157). The roll names the Specialty.
 - **Die**, **Ease Factor**, **For** and **Who sees it**: as a Free roll's. The storyguide's own rolls start as Blind.
-- **Anything else**: a bonus or penalty beyond the sheet, such as an aura or the storyguide's call.
+- **Aura**, **Aura's realm** and **In a regio**, for a Supernatural Ability or hedge Art only: the aura it's rolled in, taken as Magic, since most are Magical in origin (DE p. 411). It's a term of its own, "Aura, Faerie 2": +the aura in a Magic aura, +half in a Faerie one, −the aura in an Infernal one, −three times it in a Divine one. Another realm's aura adds a botch die a point of the aura, twice that in a regio (DE pp. 411, 422). While a [Scene plays](help:scenes-play) they start on its aura for a character present there, if you may know it: the storyguide always, a player when the table was told it (a player's copy doesn't know who is present, so then it's any character). Change them as you need. A mundane Ability takes no aura.
+- **Anything else**: a bonus or penalty beyond the sheet, such as the storyguide's call.
 
 The host adds the wound penalty and the Fatigue penalty itself, as the character's Virtues and Flaws change them: Enduring Constitution eases each by one (DE pp. 403-404). A character who is Incapacitated or Unconscious takes no action, and Roll says so (DE p. 404). After the roll, you may spend Confidence on it (see [The Chronicle](help:chronicle)).
 
@@ -1903,6 +1905,8 @@ While the Session is under way, its storyguide plays its Scenes one at a time, f
 - **End Session** ends the Scene playing. The Scenes never set stay Prepared on the Session, to move to another Session or take out.
 
 The players' copies of the saga don't hold the Scenes, their notes or an aura you keep: players learn of a Scene from its banner.
+
+**While a Scene plays,** its aura and realm are where the rolls an aura touches start, and the roller can change them: the casting forms that work out a Casting Score (hedge casting, Galdor, Goetic summoning, divination, spirits), for a character present in the Scene, and a [roll from the sheet](help:sheet-roll) or a Roll request on a Supernatural Ability or hedge Art. A player's forms start on it only when the table was told it. Who is present starts a Roll request's ticks and a [Show](help:chronicle-shows)'s **To**: the players of the characters present. It never limits who may roll or be shown.
 
 <!-- tui -->
 Choose the Session in the Sessions list and press `m` for More: **Set Scene** and **End Scene** are there for the Session's storyguide while it's under way. The banner is a line in its Chronicle.

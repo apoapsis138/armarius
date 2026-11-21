@@ -121,6 +121,10 @@ def banner(saga: Saga, use: SceneUse, scene: Scene, tell_aura: bool) -> dict[str
         body["picture"] = scene.picture
     if tell_aura:
         body["aura"] = scenes.aura_text(scene)
+        # As numbers too, for the rolls that take it (scene_aura.py).
+        body["aura_score"] = scene.aura
+        body["aura_realm"] = scene.realm
+        body["regio"] = bool(scene.place_id and scene.place_level)
     return body
 
 

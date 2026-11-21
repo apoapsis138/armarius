@@ -546,6 +546,10 @@ class RemoteClient:
             body["characteristic"] = request.sheet.characteristic
             body["ability"] = request.sheet.ability
             body["specialty"] = request.sheet.specialty
+            if request.sheet.aura_realm:
+                body["aura"] = request.sheet.aura
+                body["aura_realm"] = request.sheet.aura_realm
+                body["aura_regio"] = request.sheet.in_regio
         reply = await self.request("roll", body)
         number = reply.body.get("number")
         if reply.type == "rolled" and isinstance(number, int):
