@@ -9,6 +9,10 @@ The host adds the scores and the wound and Fatigue penalties itself
 An Ability with no score is offered too, unless the book says it needs
 experience (DE p. 157): rolled at 0 with three extra botch dice.
 
+A Supernatural Ability or hedge Art is rolled in an aura, taken as Magic
+(DE p. 411): the playing Scene's to start with, as whoever rolls may know
+it (scene_aura), which the roller can change.
+
 Where the roll goes: to the table as this copy acts at it
 (host_table.here): the Chronicle open here on the host's own copy, or the
 host, from a Remote seat.
@@ -21,13 +25,13 @@ from __future__ import annotations
 
 from typing import Any
 
-from .. import catalog, chronicle, host_table, table_rules
+from .. import catalog, chronicle, host_table, scene_aura, table_rules
 from ..commands import Form, Refuse, notes
 from ..form_spec import DialogField
 from ..markup import escape
 from ..models import Character, Saga
 from ..models.definitions import ROLL_CHARACTERISTICS
-from ..rules import creation_access, scores
+from ..rules import creation_access, realms, scores
 from . import free_roll
 
 HELP_ID = "sheet-roll"
@@ -100,6 +104,9 @@ def roll_form(
     specialties = ", ".join(
         f"{a.name}: {a.specialty}" for a in character.abilities if a.specialty
     )
+    here = scene_aura.for_character(
+        saga, session, who, scene_aura.book_of(session, book), character.id
+    )
 
     def fields() -> list[DialogField]:
         return [
@@ -149,9 +156,10 @@ def roll_form(
                 "Anything else",
                 "int",
                 0,
-                hint="Beyond the sheet: an aura, a tool, the storyguide's call. "
+                hint="Beyond the sheet: a tool, the storyguide's call. "
                 "The sheet's scores and penalties are added for you.",
             ),
+            *aura_fields(saga, here),
             DialogField("for_what", "For", "text", "", placeholder="Climb the wall"),
             DialogField(
                 "visibility",
@@ -176,6 +184,9 @@ def roll_form(
                 values.get("characteristic") or ROLL_CHARACTERISTICS[0],
                 values.get("ability") or "",
                 bool(values.get("specialty")),
+                aura=values.get("aura") or 0,
+                aura_realm=values.get("aura_realm") or "",
+                in_regio=bool(values.get("aura_regio")),
             ),
         )
 
@@ -194,6 +205,49 @@ def roll_form(
         save_label="Roll",
         help_id=HELP_ID,
     )
+
+
+def aura_fields(
+    saga: Saga, here: scene_aura.AuraHere | None, ability_key: str = "ability"
+) -> list[DialogField]:
+    """The aura a supernatural Ability is rolled in, shown while one is
+    chosen (in `ability_key`): the playing Scene's to start with."""
+
+    def shown(values: dict[str, Any]) -> bool:
+        return chronicle.supernatural(str(values.get(ability_key) or ""))
+
+    start_realm = here.realm if here is not None else ""
+
+    return [
+        DialogField(
+            "aura",
+            "Aura",
+            "int",
+            here.aura if here is not None else 0,
+            show_if=shown,
+            hint="The aura it is rolled in, taken as Magic: the Scene's to "
+            "start with. A foreign realm's adds a botch die a point.",
+        ),
+        DialogField(
+            "aura_realm",
+            "Aura's realm",
+            "select",
+            start_realm,
+            options=[
+                ("(no aura)", ""),
+                *((r, r) for r in realms.aura_realms(saga, start_realm)),
+            ],
+            show_if=shown,
+        ),
+        DialogField(
+            "aura_regio",
+            "In a regio",
+            "check",
+            here.in_regio if here is not None else False,
+            show_if=shown,
+            hint="Twice the botch dice in a regio of another realm.",
+        ),
+    ]
 
 
 def why_not_offered(saga: Saga, character: Character) -> str | None:

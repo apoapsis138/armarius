@@ -9,7 +9,7 @@ import random
 from collections.abc import Callable
 from typing import Any
 
-from .. import table_rolls
+from .. import scene_aura, table_rolls
 from ..arts import FORMS, TECHNIQUES
 from ..commands import Command, Form, Refuse, notes
 from ..form_spec import DialogField, pairs
@@ -19,7 +19,6 @@ from ..rules import dice, penetration, realms
 from ..rules import hybrid_magic as hybrid
 from ..rules import tmre_spirits as ts
 from ..rules.creation_virtues import tally
-from ..rules.realms import present_aura
 from ..rules.rounding import round_up
 
 TITLE = "Spirits and Names"
@@ -107,7 +106,7 @@ AURAL = (SPELL_SPIRIT, FORM_SPIRIT, THEURGIC_LAB, SYNTHEMATA, INTUIT, FASTING, F
 
 def spirits_fields(saga: Saga, character: Character) -> list[DialogField]:
     """What Spirits and Names asks."""
-    aura, aura_realm = present_aura(saga, character)
+    aura, aura_realm = scene_aura.aura_now(saga, character)
 
     def on(*keys: str) -> Callable[[dict[str, Any]], bool]:
         return _on(character, *keys)
@@ -309,7 +308,7 @@ def spirits_fields(saga: Saga, character: Character) -> list[DialogField]:
             "Aura's realm",
             "select",
             aura_realm,
-            options=pairs(realms.REALMS),
+            options=pairs(realms.aura_realms(saga, aura_realm)),
             show_if=on(*AURAL),
         ),
     ]

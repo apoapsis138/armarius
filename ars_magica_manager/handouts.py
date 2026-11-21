@@ -206,6 +206,39 @@ def listed(saga: Saga, story_id: str = "") -> list[Handout]:
     return [h for h in saga.handouts if h.story_id == story_id]
 
 
+#: Each saga's chosen Story ("": every story), by the saga's id, while the
+#: app runs. Pattern: Specification, as neighbour_filter's: kept here in
+#: the core, so the list, its title and the rows Edit and Delete act on
+#: always agree, whichever front-end's control chose it.
+_STORY: dict[str, str] = {}
+
+
+def current_story(saga: Saga) -> str:
+    """The Story the list is narrowed to; one since gone narrows nothing."""
+    chosen = _STORY.get(saga.id, "")
+    return chosen if chosen and scenes.story_name(saga, chosen) else ""
+
+
+def choose_story(saga: Saga, story_id: str) -> None:
+    if story_id:
+        _STORY[saga.id] = story_id
+    else:
+        _STORY.pop(saga.id, None)
+
+
+def shown(saga: Saga) -> list[Handout]:
+    """The Handouts the list shows: the chosen Story's, or every one."""
+    return listed(saga, current_story(saga))
+
+
+def title(saga: Saga) -> str:
+    """ "Handouts (3)", or "Handouts (1 of 3)" while narrowed."""
+    total = len(saga.handouts)
+    if not current_story(saga):
+        return f"Handouts ({total})"
+    return f"Handouts ({len(shown(saga))} of {total})"
+
+
 def story_filters(saga: Saga) -> list[tuple[str, str]]:
     """The Stories the Handouts belong to, as (name, id): what the list can
     be narrowed to."""

@@ -15,7 +15,7 @@ import random
 from collections.abc import Callable
 from typing import Any
 
-from .. import diaries, table_rolls
+from .. import diaries, scene_aura, table_rolls
 from ..commands import Command, Form, Refuse, notes
 from ..form_spec import DialogField
 from ..markup import BULLET, escape
@@ -144,7 +144,7 @@ def _fills_bonus(values: dict[str, Any]) -> dict[str, Any]:
 
 
 def divination_fields(saga: Saga, character: Character) -> list[DialogField]:
-    aura, realm = realms.present_aura(saga, character)
+    aura, realm = scene_aura.aura_now(saga, character)
     ceremonial = _is(td.CEREMONIAL)
     fields = [
         DialogField(
@@ -171,7 +171,7 @@ def divination_fields(saga: Saga, character: Character) -> list[DialogField]:
             "Aura's realm",
             "select",
             realm,
-            options=[(r, r) for r in realms.REALMS],
+            options=[(r, r) for r in realms.aura_realms(saga, realm)],
             show_if=_is(td.CASUAL, td.CEREMONIAL, td.DREAM_CALLING),
         ),
         DialogField("specialty", "Divination specialty applies", "check", False),

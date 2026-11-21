@@ -66,6 +66,7 @@ from ....actions import (
     NodeKind,
 )
 from ....forms import creation as creation_forms
+from ....forms import handouts as handout_forms
 from ....forms import menu as menu_forms
 from ....forms import menu_refresh, menu_steps, more
 from ....forms import neighbour as neighbour_forms
@@ -99,6 +100,7 @@ from ....sections import (
     CREATURE_INFO_SECTION,
     CUSTODIA_SECTION,
     FIGHTS_SECTION,
+    HANDOUTS_SECTION,
     NEIGHBOUR_INFO_SECTION,
     REGION_INFO_SECTION,
     SEASONS_INFO_SECTION,
@@ -1129,6 +1131,8 @@ class WorkspaceBase(Screen[None]):
             return "spells"
         if self._active_section() in self._NEIGHBOUR_GROUP_SECTIONS:
             return "neighbours"
+        if self._active_section() == HANDOUTS_SECTION:
+            return "handouts"
         return None
 
     def action_filter(self) -> None:
@@ -1137,6 +1141,8 @@ class WorkspaceBase(Screen[None]):
             self.action_filter_lab_texts()
         elif target == "neighbours":
             self._filter_neighbours()
+        elif target == "handouts":
+            self._filter_handouts()
         elif target == "spells":
             try:
                 self.query_one("#spell-search").focus()
@@ -1159,6 +1165,16 @@ class WorkspaceBase(Screen[None]):
                 self._region_sheet_view.refresh_all()
 
         run_steps(self.app, neighbour_forms.filter_form(self.saga), done)
+
+    def _filter_handouts(self) -> None:
+        """/ on the Handouts list: narrow it to one Story
+        (handouts.current_story), then redraw it and its title."""
+
+        def done(_end: object) -> None:
+            if self._saga_content_view is not None:
+                self._saga_content_view.refresh_all()
+
+        run_steps(self.app, handout_forms.filter_form(self.saga), done)
 
     def _key_labels(self) -> dict[str, str]:
         """Footer labels that depend on where focus is: what d deletes, and
