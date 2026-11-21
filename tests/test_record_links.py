@@ -6,7 +6,7 @@ import copy
 import importlib
 import pkgutil
 import re
-from dataclasses import fields, is_dataclass
+from dataclasses import asdict, fields, is_dataclass
 from typing import Any
 
 import pytest
@@ -17,6 +17,7 @@ from ars_magica_manager import (
     deletion,
     models,
     neighbours,
+    picture_files,
     players,
     record_links,
     sessions,
@@ -45,6 +46,8 @@ from ars_magica_manager.models import (
     Familiar,
     Favour,
     GuestStay,
+    Handout,
+    HandoutPicture,
     Inhabitant,
     Laboratory,
     LabTextAccess,
@@ -63,6 +66,7 @@ from ars_magica_manager.models import (
     TeachRequest,
     Tribunal,
 )
+from ars_magica_manager.paths import HANDOUTS, MAPS
 
 # -- an independent look: every place a record's id still appears --
 
@@ -358,6 +362,19 @@ def _everything() -> Saga:
                 names={"id-pl": "Pat"},
             ),
         ],
+        handouts=[
+            Handout(
+                id="id-hand",
+                title="A letter",
+                text="[heading] To the magus\n[picture 1]",
+                pictures=[
+                    HandoutPicture(MAPS, "ford.png"),
+                    HandoutPicture(HANDOUTS, "seal.png"),
+                ],
+                found_by_id="id-mag",
+                place_id="id-place",
+            )
+        ],
         pins=[
             Pin(map_id="id-map", kind="characters", record_id="id-mag", x=0.1, y=0.1),
             Pin(map_id="id-map", kind="neighbours", record_id="id-lord", x=0.2, y=0.2),
@@ -434,7 +451,9 @@ def test_deleting_a_magus_warns_in_three_groups() -> None:
     assert "1 charter seal" in goes and "1 map pin" in goes
     # Its captain and one of its crew: one ship, counted once.
     assert "1 ship's captain" in emptied and "crew" not in emptied
-    assert named == "Keeps the name: 1 neighbour's ruler, 1 book's author."
+    assert named == (
+        "Keeps the name: 1 neighbour's ruler, 1 book's author, 1 Handout's finder."
+    )
     # The device's maker is kept by Delete's own step, so isn't counted.
     assert "maker" not in " ".join(lines)
     # History (a played Session's casting, a season record) isn't counted:
@@ -519,6 +538,33 @@ def test_book_session_and_player_deletes_count_what_else_changes() -> None:
     assert question.endswith(
         "\nGoes: 1 casting in a Session."
         "\nEmptied: 1 character's Player, 1 Session's storyguide."
+    )
+
+
+def test_a_handout_keeps_its_finder_and_where_by_name() -> None:
+    saga = _everything()
+    deletion.delete_character(saga, _find(saga, "characters", "id-mag"))
+    neighbours.delete(saga, _find(saga, "neighbours", "id-place"))
+    handout = saga.handouts[0]
+    assert (handout.found_by_id, handout.found_by) == ("", "Aldo")
+    assert handout.place_id == ""
+    assert handout.place_name == _everything().neighbour("id-place").name
+
+
+def test_a_handouts_pictures_are_listed_by_their_own_folders() -> None:
+    saga = _everything()
+    found = record_links.pictures(saga)
+    assert (MAPS, "ford.png") in found and (HANDOUTS, "seal.png") in found
+    in_data = record_links.pictures_in_data(asdict(saga))
+    assert (MAPS, "ford.png") in in_data and (HANDOUTS, "seal.png") in in_data
+
+
+def test_a_handout_picture_in_a_folder_that_isnt_a_kind_is_never_listed() -> None:
+    saga = _everything()
+    saga.handouts[0].pictures.append(HandoutPicture("sagas", "x.png"))
+    assert all(folder != "sagas" for folder, _ in record_links.pictures(saga))
+    assert all(
+        folder != "sagas" for folder, _ in record_links.pictures_in_data(asdict(saga))
     )
 
 
@@ -749,13 +795,16 @@ def test_import_drops_or_names_what_has_no_copy_here() -> None:
 def test_pictures_are_the_picture_fields_of_the_links_list() -> None:
     saga = _everything()
     saga.characters[0].portrait = "aldo.png"
-    assert record_links.pictures(saga) == [
+    assert sorted(record_links.pictures(saga)) == [
+        ("handouts", "seal.png"),
+        ("maps", "ford.png"),
         ("maps", "rhine.png"),
         ("portraits", "aldo.png"),
-    ] or record_links.pictures(saga) == [
-        ("portraits", "aldo.png"),
-        ("maps", "rhine.png"),
     ]
+
+
+def test_the_picture_folders_are_the_picture_kinds() -> None:
+    assert set(record_links.PICTURE_FOLDERS) == set(picture_files.KINDS)
 
 
 # -- the list is complete --
@@ -786,6 +835,8 @@ NOT_RECORD_LINKS: set[tuple[str, str]] = {
     # A story is a Diary entry, not a record of the saga's lists; a Scene
     # names its story the way a chapter does, resolved when shown.
     ("Scene", "story_id"),
+    # A Handout names its story as a Scene does.
+    ("Handout", "story_id"),
     ("Censure", "case_id"),
     ("Argument", "case_id"),
     ("Ruling", "case_id"),

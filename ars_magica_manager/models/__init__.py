@@ -327,7 +327,13 @@ from .polemic import POLEMIC as POLEMIC
 from .polemic import TEXT_KINDS as TEXT_KINDS
 from .polemic import Argument as Argument
 from .polemic import PolemicText as PolemicText
+from .saga import PROCLAMATION as PROCLAMATION
+from .saga import SEALED_LETTER as SEALED_LETTER
+from .saga import STATIONERY as STATIONERY
+from .saga import VELLUM as VELLUM
 from .saga import Casting as Casting
+from .saga import Handout as Handout
+from .saga import HandoutPicture as HandoutPicture
 from .saga import Player as Player
 from .saga import Saga as Saga
 from .saga import SagaSource as SagaSource

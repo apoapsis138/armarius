@@ -215,7 +215,7 @@
 
 ===== tab-content-spells
 
-   Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Players
+  ods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Handouts  0
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
     Search spell names and descriptions...                     Source: any      ▼
@@ -258,7 +258,7 @@
 
 ===== tab-content-sessions
 
-   Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Players
+  use Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Handouts  0 Players
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -301,7 +301,7 @@
 
 ===== tab-content-scenes
 
-   Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Players
+  use Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Handouts  0 Players
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -342,9 +342,52 @@
   ▌
 
 
+===== tab-content-handouts
+
+  use Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Handouts  0 Players
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Handouts (0)
+
+      None yet: a writes one.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ▌
+  ▌  Choose a Handout to read it; a writes one.
+  ▌
+
+
 ===== tab-content-players
 
-   Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Players
+  use Rules  5 Mystery Cults  6 Spells  7 Sessions  8 Scenes  9 Handouts  0 Players
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔

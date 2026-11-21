@@ -1472,6 +1472,16 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-handouts": {
+      "active": "section-handouts",
+      "keys": {
+        "a": "FieldsDialog: Write a Handout",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-players": {
       "active": "section-players",
       "keys": {

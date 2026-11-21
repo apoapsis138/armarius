@@ -67,6 +67,8 @@ from .models import (
     Fight,
     FightSide,
     GuestStay,
+    Handout,
+    HandoutPicture,
     HermeticProject,
     Inhabitant,
     Laboratory,
@@ -91,7 +93,7 @@ from .models import (
     TeachRequest,
     Tribunal,
 )
-from .paths import MAPS, PORTRAITS
+from .paths import HANDOUTS, MAPS, PORTRAITS
 
 # -- the kinds of record, as the saga lists them --
 
@@ -113,6 +115,9 @@ SIEGES = "sieges"
 POSSESSIONS = "possessions"
 #: A Picture, by file name in its folder (LinkField.folder).
 PICTURES = "pictures"
+#: The folders a Picture may be in: picture_files.KINDS's, which sits a
+#: layer above (a test keeps the two the same).
+PICTURE_FOLDERS: tuple[str, ...] = (PORTRAITS, MAPS, HANDOUTS)
 #: The saga's Scenes library (scenes.py).
 SCENES = "scenes"
 #: What a Scene's actors may be, as "kind:id": who can rule a neighbour
@@ -192,7 +197,8 @@ class LinkField:
     - `clears_too`: siblings set back to their defaults when it is
       cleared (a place's level);
     - `kept_while`: KEEP instead while this says the entry is history;
-    - `folder`: for PICTURES, the folder the file is in;
+    - `folder`: for PICTURES, the folder the file is in; `folder_from`
+      instead, a sibling naming it (a Handout's picture);
     - `noun`, `nouns`: what a Delete's warning counts it as, one and
       many ("map pin", "map pins"; "laboratory's owner", "laboratories'
       owners")."""
@@ -212,6 +218,20 @@ class LinkField:
     clears_too: tuple[str, ...] = ()
     kept_while: Callable[[Any, tuple[Any, ...]], bool] | None = None
     folder: str = ""
+    folder_from: str = ""
+
+    def folder_of(self, entry: Mapping[str, Any] | Any) -> str:
+        """For PICTURES, the folder the file is in: the field's own, or its
+        entry's `folder_from` sibling's when that is a picture folder
+        (anything else is no folder, so nothing is read)."""
+        if not self.folder_from:
+            return self.folder
+        said = (
+            entry.get(self.folder_from)
+            if isinstance(entry, Mapping)
+            else getattr(entry, self.folder_from, "")
+        )
+        return said if isinstance(said, str) and said in PICTURE_FOLDERS else ""
 
     def kind_of(self, entry: Any, raw: str) -> str | None:
         """The kind of record the stored value `raw` names; None when the
@@ -734,6 +754,32 @@ LINKS: dict[type, tuple[LinkField, ...]] = {
         ),
         _f("picture", PICTURES, noun="Scene picture", on_delete=KEEP, folder=MAPS),
     ),
+    # -- a written Handout: who found it and where keep their names --
+    Handout: (
+        _f(
+            "found_by_id",
+            CHARACTERS,
+            noun=_of("Handout", "Handouts", "finder"),
+            on_delete=NAME,
+            name_into="found_by",
+        ),
+        _f(
+            "place_id",
+            NEIGHBOURS,
+            noun=_of("Handout", "Handouts", "place found"),
+            on_delete=NAME,
+            name_into="place_name",
+        ),
+    ),
+    HandoutPicture: (
+        _f(
+            "name",
+            PICTURES,
+            noun="Handout picture",
+            on_delete=KEEP,
+            folder_from="folder",
+        ),
+    ),
     SceneUse: (
         # A use of a Scene since deleted goes with it (scenes.delete refuses
         # one playing or played).
@@ -1160,8 +1206,9 @@ def pictures(root: Any) -> list[tuple[str, str]]:
     found: list[tuple[str, str]] = []
     for each in entries(root):
         for link in LINKS[type(each.entry)]:
-            if PICTURES in link.kinds:
-                found += [(link.folder, name) for name in link.ids(each.entry)]
+            folder = link.folder_of(each.entry)
+            if PICTURES in link.kinds and folder:
+                found += [(folder, name) for name in link.ids(each.entry)]
     return list(dict.fromkeys(found))
 
 
@@ -1180,8 +1227,9 @@ def _data_pictures(data: Any, cls: type, found: list[tuple[str, str]]) -> None:
         return
     for link in LINKS.get(cls, ()):
         value = data.get(link.name)
-        if PICTURES in link.kinds and isinstance(value, str) and value:
-            found.append((link.folder, value))
+        folder = link.folder_of(data)
+        if PICTURES in link.kinds and folder and isinstance(value, str) and value:
+            found.append((folder, value))
     for name, (inner, by_key) in _nested(cls).items():
         value = data.get(name)
         if isinstance(value, list):

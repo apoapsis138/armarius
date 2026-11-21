@@ -108,6 +108,56 @@ class Scene:
         return cls(**known_fields(cls, data))
 
 
+#: A written Handout's Stationery (ADR 0021): what each front-end draws
+#: its text on.
+VELLUM, SEALED_LETTER, PROCLAMATION = "vellum", "sealed letter", "proclamation"
+STATIONERY: tuple[str, ...] = (VELLUM, SEALED_LETTER, PROCLAMATION)
+
+
+@dataclass
+class HandoutPicture:
+    """One of a written Handout's pictures: a file in one of the picture
+    folders (picture_files.KINDS: a portrait, a map, or a handout's own
+    picture)."""
+
+    folder: str
+    name: str
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> HandoutPicture:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
+class Handout:
+    """A written Handout (handouts.py): a title, its Stationery, its text
+    in the app's markup with the handout tags (handout_markup.py), up to
+    four pictures, who found it and where, and the Story it belongs to.
+    The storyguide's alone until it is Shown. The finder and the place
+    are kept by name too, once their records are deleted (record_links)."""
+
+    id: str
+    title: str = ""
+    stationery: str = VELLUM
+    text: str = ""
+    pictures: list[HandoutPicture] = field(default_factory=list)
+    #: Who found it: a character's id, and their name once it is gone.
+    found_by_id: str = ""
+    found_by: str = ""
+    #: Where it was found: a Place's id, and its name once it is gone.
+    place_id: str = ""
+    place_name: str = ""
+    #: The Story it belongs to: an open Story Event's id
+    #: (story_chapters.story_id), resolved when shown, as a Scene's.
+    story_id: str = ""
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> Handout:
+        d = dict(data)
+        d["pictures"] = [HandoutPicture.from_dict(p) for p in d.get("pictures") or []]
+        return cls(**known_fields(cls, d))
+
+
 @dataclass
 class SceneUse:
     """A Scene loaded into a Session (scenes.py): which Scene, its state
@@ -250,6 +300,7 @@ def _table_records(d: dict[str, Any]) -> None:
     Scenes library and the asks to teach."""
     d["sessions"] = [Session.from_dict(x) for x in d.get("sessions", [])]
     d["scenes"] = [Scene.from_dict(x) for x in d.get("scenes") or []]
+    d["handouts"] = [Handout.from_dict(x) for x in d.get("handouts") or []]
     d["teach_requests"] = [
         TeachRequest.from_dict(x) for x in d.get("teach_requests", [])
     ]
@@ -389,6 +440,8 @@ class Saga:
     pins: list[Pin] = field(default_factory=list)
     #: The library of Scenes, loaded into Sessions (scenes.py).
     scenes: list[Scene] = field(default_factory=list)
+    #: The written Handouts (handouts.py), the storyguide's until Shown.
+    handouts: list[Handout] = field(default_factory=list)
 
     def covenant(self, covenant_id: str | None) -> Covenant | None:
         """The covenant with this id, if there is one."""

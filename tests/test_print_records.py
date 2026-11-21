@@ -2,19 +2,26 @@
 (print_records.py): their blocks, the copy each reader gets, and core
 tables set for paper, with no UI library."""
 
+import pytest
 from screen_helpers import _sample_saga_with_covenant
+from support import everything_saga
 
+from ars_magica_manager import markdown_sheet, viewing
 from ars_magica_manager import print_layout as pl
 from ars_magica_manager import print_records as pr
-from ars_magica_manager import viewing
 from ars_magica_manager.models import (
+    SKETCH,
+    Character,
+    Covenant,
     CovenantDiaryEntry,
     Familiar,
+    Link,
     Player,
+    Saga,
     Secret,
 )
 from ars_magica_manager.tables import Table as CoreTable
-from ars_magica_manager.viewing import STORYGUIDE_VIEWER, TABLE_VIEWER
+from ars_magica_manager.viewing import STORYGUIDE_VIEWER, TABLE_VIEWER, UNKNOWN
 
 
 def _headings(doc: pl.Document) -> list[str]:
@@ -72,6 +79,126 @@ def test_a_player_copy_of_a_covenant_holds_no_unrevealed_secret():
         STORYGUIDE_VIEWER,
     )
     assert "A demon sleeps under the cellar." in _texts(storyguide)
+
+
+def _hidden_names(saga: Saga, keep: tuple[str, ...] = ()) -> dict[str, str]:
+    """Mark every record of `saga` that can be unknown so (but those
+    `keep` names), renamed with a marked word; their names by id."""
+    hidden = {}
+    for record in (*saga.characters, *saga.covenants, *saga.neighbours):
+        if viewing.can_be_unknown(record) and record.id not in keep:
+            record.known = False
+            record.name = f"LEAK-{record.id}"
+            hidden[record.id] = record.name
+    return hidden
+
+
+def _printed(saga: Saga, copy: str, viewer: viewing.Viewer) -> dict[str, str]:
+    """Every printable record of `saga` the reader may read, as its copy
+    prints (Markdown and the blocks' own words), by the record's name."""
+    options = pl.PrintOptions(copy=copy)
+    found = {}
+    for kind, cls in pr.KINDS:
+        for record in (
+            *saga.characters,
+            *saga.covenants,
+            *saga.laboratories,
+            *saga.familiars,
+        ):
+            if isinstance(record, cls) and viewing.readable(viewer, record, saga):
+                doc = pr.document(saga, kind, record, options, viewer)
+                text = markdown_sheet.render(doc) + _texts(doc) + doc.subtitle
+                found[f"{kind} {record.name}"] = text
+    return found
+
+
+#: The sketch covenant the players know of, whose one magus they don't.
+KNOWN_SKETCH = "cov_known"
+
+
+def _played_by_pat(saga: Saga) -> None:
+    """Leandro and Alys are played. Alys lives at the sketch covenant the
+    players don't know of; Leandro at the troupe's Rhine covenant, his
+    sigil cast by Severinus and a would-be apprentice naming him parens,
+    both unknown. The troupe's covenant is that sketch covenant's vassal,
+    with a place they don't know of; Severinus lives at another sketch
+    covenant, which they do know of."""
+    leandro, alys = saga.characters[:2]
+    for character in (leandro, alys):
+        character.background.player = "Pat"
+        character.links.append(Link("covenants", "cov_sketch", "Home"))
+    alys.covenant_id = "cov_sketch"
+    rhine = saga.tribunal("rhine")
+    assert rhine is not None
+    rhine.package_data["rhine"]["sigil_held_by"] = {leandro.id: "mag_sketch"}
+    pupil = Character(id="pupil", name="Pupil", type="companion")
+    pupil.hermetic.parens = leandro.name
+    saga.characters.append(pupil)
+    keep = saga.covenants[0]
+    keep.liege_id = "cov_sketch"
+    keep.place_id = "drachenfels"
+    saga.covenants.append(
+        Covenant(
+            id=KNOWN_SKETCH,
+            saga_id="s",
+            name="Known",
+            tribunal_id="rhine",
+            detail=SKETCH,
+            known=True,
+        )
+    )
+    severinus = saga.character("mag_sketch")
+    assert severinus is not None
+    severinus.covenant_id = KNOWN_SKETCH
+
+
+@pytest.mark.parametrize("played", [False, True], ids=["npc-magus", "played"])
+def test_a_player_copy_never_names_a_record_the_players_dont_know(played: bool):
+    saga = everything_saga()
+    if played:
+        _played_by_pat(saga)
+    hidden = _hidden_names(saga, keep=(KNOWN_SKETCH,))
+    if played:  # every leak below is reached
+        assert "covenant Known" in _printed(saga, pl.PLAYER_COPY, TABLE_VIEWER)
+        storyguide = "".join(
+            _printed(saga, pl.STORYGUIDE_COPY, STORYGUIDE_VIEWER).values()
+        )
+        for seeded in ("Vassal of", "cast by LEAK-mag_sketch", "LEAK-pupil: a"):
+            assert seeded in storyguide
+
+    printed = _printed(saga, pl.PLAYER_COPY, TABLE_VIEWER)
+
+    leaks = [
+        f"{sheet}: {name}"
+        for sheet, text in printed.items()
+        for name in hidden.values()
+        if name in text and not sheet.endswith(name)
+    ]
+    assert not leaks, "\n".join(leaks)
+    assert any(UNKNOWN in text for text in printed.values())
+
+
+def test_a_storyguide_copy_still_names_them():
+    saga = everything_saga()
+    _played_by_pat(saga)
+    hidden = _hidden_names(saga)
+
+    printed = _printed(saga, pl.STORYGUIDE_COPY, STORYGUIDE_VIEWER)
+
+    assert hidden["cov_sketch"] in printed["character Alys"]
+    assert UNKNOWN not in "".join(printed.values())
+
+
+def test_a_player_copy_leaves_off_covenfolk_the_players_dont_know():
+    saga = everything_saga()
+    _hidden_names(saga)  # Leandro and Alys, the Keep's magus and companion
+
+    printed = _printed(saga, pl.PLAYER_COPY, TABLE_VIEWER)["covenant Keep"]
+    storyguide = _printed(saga, pl.STORYGUIDE_COPY, STORYGUIDE_VIEWER)
+
+    assert "LEAK-mag1" in storyguide["covenant Keep"]
+    covenfolk = printed[printed.index("Covenfolk") :]
+    assert UNKNOWN not in covenfolk.split("Laboratories")[0]
 
 
 def test_a_long_history_and_diary_print_whole():

@@ -70,6 +70,8 @@ EXPORTS = "exports"
 PORTRAITS = "portraits"
 #: The Atlas's map pictures (atlas.py).
 MAPS = "maps"
+#: A written Handout's own pictures (handouts.py).
+HANDOUTS = "handouts"
 #: Each Session's Chronicle, by saga (chronicle.py).
 CHRONICLES = "chronicles"
 #: Each Show's frozen copy, by saga (shows.py).

@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from .. import catalog
+from .. import catalog, viewing
 from .. import laboratories as labs
 from ..arts import FORMS, TECHNIQUES
 from ..markup import escape
@@ -37,9 +37,11 @@ def subtitle(saga: Saga, lab: Laboratory) -> str:
     """The line under the name: whose it is, where and when."""
     magus = owner(saga, lab)
     covenant = saga.covenant(lab.covenant_id)
-    parts = [f"The sanctum of {magus.name}" if magus else "No one's sanctum"]
+    parts = [
+        f"The sanctum of {viewing.name_of(magus)}" if magus else "No one's sanctum"
+    ]
     if covenant:
-        parts.append(covenant.name)
+        parts.append(viewing.name_of(covenant))
     if lab.location:
         parts.append(lab.location)
     parts.append(f"{saga.current_season} {saga.current_year}")

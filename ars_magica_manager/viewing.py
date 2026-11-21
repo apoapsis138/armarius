@@ -388,6 +388,10 @@ STORYGUIDE_ONLY: frozenset[str] = frozenset(
         "section-scenes",
         "tab-session-scenes",
         "section-session-scenes",
+        # The written Handouts (handouts.py): the storyguide's until one is
+        # Shown, when the player holds that Show's own copy.
+        "tab-content-handouts",
+        "section-handouts",
     }
 )
 
@@ -664,6 +668,20 @@ def shown[R](
         for r in records
         if readable(looking, r) or (keep and getattr(r, "id", None) == keep)
     ]
+
+
+#: What a page or copy writes where it names a record its reader doesn't
+#: know of.
+UNKNOWN = "(unknown)"
+
+
+def name_of(record: Any, viewer: Viewer | None = None) -> str:
+    """`record`'s name as the viewer (by default whoever is looking) may
+    read it: UNKNOWN for a record they don't know of. Every page and copy
+    that names another record asks this, so a hidden name is never
+    written."""
+    looking = viewer or _in_use
+    return record.name if readable(looking, record, _saga) else UNKNOWN
 
 
 def unknown_names(saga: Saga) -> set[str]:

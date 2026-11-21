@@ -46,6 +46,7 @@ from ars_magica_manager.models import (
     FightSide,
     GoodDef,
     GuestStay,
+    Handout,
     HermeticProject,
     IncomeSource,
     Inhabitant,
@@ -804,6 +805,45 @@ async def test_a_sessions_scenes_edit_and_take_out_the_chosen_use():
         await pilot.press("y")
         assert await wait_until(pilot, lambda: [u.id for u in _saved(case)] == ["u2"])
         assert len(storage.load_saga("test_saga").scenes) == 2
+        assert app.screen is workspace
+
+
+# -- written Handouts --
+
+
+async def test_the_handouts_list_edits_and_deletes_the_chosen_handout():
+    """In one session: e opens the chosen Handout, d asks before deleting
+    it."""
+    case = ListCase(
+        ("saga_content",),
+        "section-handouts",
+        "content-handouts-list",
+        lambda s: s.handouts,
+    )
+    saga = _saga()
+    saga.handouts = [
+        Handout("h1", title="A letter [old]"),
+        Handout("h2", title="A seal"),
+    ]
+    storage.save_saga(saga)
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        workspace, view = await _open(pilot, app, case)
+
+        await pilot.press("down")
+        await _press(pilot, app, "e", FieldsDialog)
+        dialog = app.screen
+        dialog.query_one("#fld-title", Input).value = "A sealed letter"
+        dialog.query_one("#btn-save").press()
+        assert await wait_until(
+            pilot, lambda: _saved(case)[1].title == "A sealed letter"
+        )
+
+        await _choose_row(pilot, view, case, 0)
+        await _press(pilot, app, "d", ConfirmScreen)
+        assert _confirm_message(app) == "Delete the Handout A letter [old]?"
+        await pilot.press("y")
+        assert await wait_until(pilot, lambda: len(_saved(case)) == 1)
         assert app.screen is workspace
 
 

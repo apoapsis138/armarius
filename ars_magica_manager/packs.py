@@ -36,7 +36,15 @@ from .commands import Form, Refuse, notes
 from .files import write_atomic
 from .form_spec import DialogField
 from .markup import escape, todo
-from .models import Character, Covenant, Creature, Neighbour, Saga, Tribunal
+from .models import (
+    Character,
+    Covenant,
+    Creature,
+    Handout,
+    Neighbour,
+    Saga,
+    Tribunal,
+)
 from .neighbours import kind_of
 from .rules import sites
 
@@ -114,6 +122,7 @@ def pack_data(
     *,
     with_characters: bool = True,
     with_calendar: bool = True,
+    with_handouts: bool = True,
     characters_besides: list[Character] | None = None,
     creatures_besides: list[Creature] | None = None,
 ) -> dict[str, Any]:
@@ -123,7 +132,8 @@ def pack_data(
     with the places they sit in. `with_characters` adds the covenants'
     characters and laboratories and each Tribunal's officers;
     `with_calendar` the calendar entries of the covenants and the saga's
-    own; `characters_besides` adds characters who belong to no covenant
+    own; `with_handouts` the written Handouts of what it takes (handouts_of);
+    `characters_besides` adds characters who belong to no covenant
     taken (a wandering magus), and `creatures_besides` creatures found
     nowhere it takes (a book's bestiary)."""
     taken, round_them = contents(saga, tribunals, covenants)
@@ -155,6 +165,7 @@ def pack_data(
         c.tribunal_id for c in taken if c.tribunal_id
     }
     held = [n for n in saga.neighbours if n.id in wanted]
+    written = handouts_of(saga, taken, characters, held) if with_handouts else []
     return transfer.bundle_data(
         saga,
         PACK,
@@ -169,7 +180,29 @@ def pack_data(
             *(found := creatures_round(saga, taken, held)),
             *(c for c in creatures_besides or [] if c not in found),
         ],
+        handouts=written,
     )
+
+
+def handouts_of(
+    saga: Saga,
+    covenants: list[Covenant],
+    characters: list[Character],
+    neighbours: list[Neighbour],
+) -> list[Handout]:
+    """The written Handouts a pack takes: those found by a character it
+    takes, found at a place it takes, or of a story in a covenant it
+    takes."""
+    people = {c.id for c in characters}
+    places_taken = {n.id for n in neighbours}
+    stories = {e.id for c in covenants for e in c.diary if e.id}
+    return [
+        h
+        for h in saga.handouts
+        if (h.found_by_id and h.found_by_id in people)
+        or (h.place_id and h.place_id in places_taken)
+        or (h.story_id and h.story_id in stories)
+    ]
 
 
 def creatures_round(
@@ -220,6 +253,7 @@ def summary(data: dict[str, Any], tribunals: bool = True) -> str:
         ),
         (len(held.get("creatures") or []), "creature", "creatures"),
         (len(held.get("calendar") or []), "calendar entry", "calendar entries"),
+        (len(held.get("handouts") or []), "written Handout", "written Handouts"),
     )
     return ", ".join(f"{n} {one if n == 1 else many}" for n, one, many in counts if n)
 
@@ -296,6 +330,14 @@ def pack_fields(saga: Saga, folder: Path) -> list[DialogField]:
             "check",
             True,
             hint="The covenants' calendar entries, and the saga's own.",
+        ),
+        DialogField(
+            "handouts",
+            "With the written Handouts",
+            "check",
+            True,
+            hint="Those found by its characters or at its places, and those of "
+            "its covenants' stories.",
         ),
     ]
     for index, tribunal in enumerate(saga.tribunals):
@@ -381,6 +423,7 @@ def _data(saga: Saga, values: dict[str, Any]) -> dict[str, Any]:
         neighbours,
         with_characters=bool(values.get("characters")),
         with_calendar=bool(values.get("calendar")),
+        with_handouts=bool(values.get("handouts")),
     )
     introduction = (values.get("introduction") or "").strip()
     return {**data, transfer.INTRODUCTION: introduction} if introduction else data
