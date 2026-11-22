@@ -15,6 +15,7 @@ from typing import Any
 from .. import book_kinds, catalog, sourcebooks
 from .. import book_value as bv
 from .. import books as bk
+from .. import library_holding as lh
 from .. import spells as spl
 from ..arts import ARTS, FORMS, TECHNIQUES
 from ..commands import (
@@ -921,11 +922,12 @@ def _bonus_words(level: int) -> str:
     return f"+{level}" if level else "none"
 
 
-def research_walkthrough(saga: Saga, covenant: Covenant) -> Command:
+def research_walkthrough(saga: Saga, covenant: Covenant, start: str = "") -> Command:
     """Set up the library's research bonuses a subject at a time: each
     step shows the books on the subject that back its bonus, the level
     and pictorial works to choose, and the bonuses chosen so far. Nothing
-    changes until the last step is saved."""
+    changes until the last step is saved. `start`, a subject, comes first
+    (the Library by subject's chosen row)."""
     subjects = bv.library_subjects(saga, covenant)
     if not subjects:
         return Refuse(
@@ -934,6 +936,9 @@ def research_walkthrough(saga: Saga, covenant: Covenant) -> Command:
             "books its magi keep don't count toward research.",
         )
     order = list(subjects)
+    if start in order:
+        order.remove(start)
+        order.insert(0, start)
     options = [(label, str(level)) for level, label in bv.RESEARCH_LEVELS]
     chosen: dict[str, tuple[int, bool]] = {
         subject: (
@@ -1035,9 +1040,12 @@ def book_form(
     default_type: str = "",
     *,
     spell_picker: Callable[[Any], Any] | None = None,
+    like: Book | None = None,
 ) -> Form:
     """Add (`book` None) or edit a book; a new one is kept by
-    `default_owner` (books.owner_value) unless the form says otherwise."""
+    `default_owner` (books.owner_value) unless the form says otherwise,
+    and starts with `like`'s fields when given (a prototype, such as
+    library_holding.prototype: a summa on the chosen subject)."""
 
     def apply(values: dict[str, Any]) -> None:
         target = book
@@ -1048,11 +1056,25 @@ def book_form(
     return Form(
         book_title(book),
         lambda: book_fields(
-            saga, book, default_owner, default_type, spell_picker=spell_picker
+            saga, book or like, default_owner, default_type, spell_picker=spell_picker
         ),
         apply,
         validate=bk.form_problem,
         live=lambda values: book_live(values, saga, book),
+    )
+
+
+def subject_book_form(
+    saga: Saga, covenant: Covenant, holding: lh.Holding | None
+) -> Form:
+    """Add from the Library by subject: a book in the covenant's library
+    that starts as a summa on the chosen subject (library_holding.prototype),
+    or as any book with none chosen."""
+    return book_form(
+        saga,
+        None,
+        bk.owner_value("covenant", covenant.id),
+        like=lh.prototype(holding) if holding is not None else None,
     )
 
 

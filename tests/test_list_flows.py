@@ -9,11 +9,12 @@ from typing import Any
 
 import pytest
 from support import build_all_tabs, menu, wait_until
-from textual.widgets import Checkbox, Input, Select, TabPane, TextArea, Tree
+from textual.widgets import Checkbox, Input, Select, Static, TabPane, TextArea, Tree
 
 from ars_magica_manager import (
     battles,
     handouts,
+    library_holding,
     place_events,
     sieges,
     storage,
@@ -86,7 +87,7 @@ from ars_magica_manager.models import (
 from ars_magica_manager.models.hermetic_projects import ProjectStage
 from ars_magica_manager.models.menagerie import Beast, Breeding
 from ars_magica_manager.models.stops import CovenantStop
-from ars_magica_manager.sections import SECRETS_SECTION
+from ars_magica_manager.sections import LIBRARY_SUBJECTS_SECTION, SECRETS_SECTION
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import (
     ConfirmScreen,
@@ -1096,6 +1097,41 @@ async def test_secrets_edit_reveal_and_delete_act_on_the_chosen_row():
         await pilot.press("y")
         assert await wait_until(pilot, lambda: len(_saved(case)) == 1)
         assert [c.title for c in _saved(case)] == ["Spring"]
+
+
+# -- A covenant's Library by subject --
+
+
+async def test_the_library_by_subject_shows_a_subject_and_adds_a_summa_on_it():
+    """Choosing a subject shows it in the details panel; a there starts a
+    book as a summa on the chosen subject."""
+    saga = _saga()
+    saga.books += [
+        Book("lv", "Lamp", "Art Summa", art="Vim", level=10, quality=10,
+             owner_kind="covenant", owner_id="cov1"),
+        Book("ll", "Grammar", "Ability Summa", ability="Latin", level=4,
+             quality=9, owner_kind="covenant", owner_id="cov1"),
+    ]  # fmt: skip
+    storage.save_saga(saga)
+    library_holding.remember_library_view(library_holding.SUBJECTS)
+    case = ListCase(
+        ("covenant", "cov1"),
+        LIBRARY_SUBJECTS_SECTION,
+        f"{LIBRARY_SUBJECTS_SECTION}-list",
+        lambda s: s.books,
+    )
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        workspace, view = await _open(pilot, app, case)
+        await _choose_row(pilot, view, case, 1)  # Latin, after the Art Vim
+        panel = view.query_one(".books-panel", Static)
+        assert await wait_until(pilot, lambda: "Grammar" in str(panel.render()))
+        await _press(pilot, app, "a", FieldsDialog)
+        dialog = app.screen
+        assert dialog.query_one("#fld-type", Select).value == "Ability Summa"
+        assert dialog.query_one("#fld-ability").value == "Latin"
+        await pilot.press("escape")
+        assert await wait_until(pilot, lambda: app.screen is workspace)
 
 
 # -- A covenant's guests --

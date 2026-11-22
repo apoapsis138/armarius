@@ -83,6 +83,7 @@ from .widgets import (
     card_grid,
     chapter_title,
     chip_row,
+    clear_layout,
     display_name,
     edit_button,
     filter_choice,
@@ -657,16 +658,6 @@ def _heading_with(
     return row
 
 
-def _clear(holder: QVBoxLayout) -> None:
-    """Take every widget out of `holder`, to be drawn again."""
-    while holder.count():
-        item = holder.takeAt(0)
-        old = item.widget() if item is not None else None
-        if old is not None:
-            old.setParent(None)
-            old.deleteLater()
-
-
 def _view_chips(saga: Saga, p: Palette, then: Callable[[], None]) -> QWidget:
     """By kind or by place: the two ways into the Region."""
 
@@ -765,7 +756,7 @@ def region_chapter(
     def fill() -> None:
         if bar is not None:
             bar.setParent(None)
-        _clear(holder)
+        clear_layout(holder)
         holder.addWidget(_view_chips(saga, p, fill))
         if region_sheet.view(saga) == region_sheet.BY_PLACE:
             holder.addWidget(_by_place(saga, p, opened))

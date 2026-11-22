@@ -40,8 +40,8 @@ from .models import (
     Saga,
     Spell,
 )
+from .rules import activities, study, tme_books
 from .rules import hybrid_magic as hybrid
-from .rules import study
 from .rules.library import (
     POOL_LEVELS,
     POOL_POINTS,
@@ -749,6 +749,86 @@ def detail_text(saga: Saga, book: Book | None) -> str:
     if book.description.strip():
         lines += ["", "[b]Description:[/]", markdown_text(book.description.strip())]
     return "\n".join(lines)
+
+
+def subject_detail_text(saga: Saga, holding: library_holding.Holding) -> str:
+    """The details panel for one subject of the Library by subject (markup):
+    its Holding and what a season studying it gives (with the Large Library
+    rule, Transforming Mythic Europe p. 105; else its best summa), its
+    research bonus and what makes it up, its books with what each does,
+    and a season's reading for each magus and companion."""
+    name = escape(holding.name)
+    lines: list[str] = []
+    if holding.large_library:
+        lines.append(f"[b]Holding:[/] {escape(holding.figures())}")
+        level, quality = holding.level, holding.quality
+        if level is not None and quality is not None:
+            below, _ = tme_books.holding_study(level - 1, level, quality)
+            at, seasons = tme_books.holding_study(level, level, quality)
+            lines += [
+                f"  Below {name} {level}: {below} xp a season",
+                f"  At {name} {level} or more: {at} xp a season, for {seasons} seasons",
+            ]
+    elif holding.best is not None:
+        best = holding.best
+        lines.append(
+            f"[b]Best summa:[/] {escape(best.name)}, Level {best.level}, "
+            f"Quality {best.quality}"
+        )
+    else:
+        lines.append("[b]Best summa:[/] none")
+    lines.append(f"[b]Research:[/] {escape(holding.research or 'none')}")
+    lines += _research_parts(saga, holding)
+    lines += ["", "[b]Its books:[/]"]
+    for book in holding.books:
+        figures = (
+            f"L{book.level} Q{book.quality}"
+            if book.type in SUMMA_TYPES
+            else f"Q{book.quality}"
+        )
+        role = library_holding.list_role(saga, holding, book)
+        lines.append(
+            " · ".join([escape(book.name), figures, *([escape(role)] if role else [])])
+        )
+    lines += _holding_readings(saga, holding)
+    return "\n".join(lines)
+
+
+def _research_parts(saga: Saga, holding: library_holding.Holding) -> list[str]:
+    """What the library's own research bonus on the subject is made of
+    (book_value.library_parts)."""
+    if not holding.research_level:
+        return []
+    found = book_value.library_parts(saga, holding.covenant, holding.name)
+    parts = [
+        *([f"the level set +{found.chosen}"] if found.chosen else []),
+        *(["pictorial works +1"] if found.pictorial else []),
+        *([f"research aids +{found.aids}"] if found.aids else []),
+    ]
+    if found.chosen + found.pictorial + found.aids > found.total:
+        parts.append(f"at most +{book_value.RESEARCH_MOST}")
+    return [f"  {', '.join(parts)}"] if parts else []
+
+
+def _holding_readings(saga: Saga, holding: library_holding.Holding) -> list[str]:
+    """A season's reading for each magus and companion: from the whole
+    Holding with the Large Library rule, else from the best summa."""
+    best, level, quality = holding.best, holding.level, holding.quality
+    if best is None or level is None or quality is None:
+        return []
+    if not holding.large_library:
+        return _study_lines(saga, best)
+    readings: list[str] = []
+    for reader in readers(saga, best):
+        if not activities.may_study(reader, holding.subject):
+            continue
+        score = activities.score(reader, holding.subject)
+        gained, seasons = tme_books.holding_study(score, level, quality)
+        text = f"{escape(reader.name)} ({escape(holding.name)} {score}): {gained} xp"
+        if seasons is not None:
+            text += f", for {seasons} seasons"
+        readings.append(text)
+    return ["", "[b]A season's reading:[/]", *readings] if readings else []
 
 
 def _value_lines(book: Book) -> list[str]:

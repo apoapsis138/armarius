@@ -48,6 +48,7 @@ from .sections import (
     HIDDEN_SECTION,
     HOUSE_RULES_SECTION,
     LAB_VF_SECTIONS,
+    LIBRARY_SUBJECTS_SECTION,
     NEIGHBOUR_INFO_SECTION,
     PLAYERS_SECTION,
     SCENES_SECTION,
@@ -188,6 +189,8 @@ def _section_verbs() -> dict[str, frozenset[str]]:
         verbs[section] = (
             frozenset({"add"}) if section == "section-lib-summary" else _ALL3
         )
+    # The Library by subject lists subjects, not books: only Add.
+    verbs[LIBRARY_SUBJECTS_SECTION] = frozenset({"add"})
     for kind in INHABITANT_KINDS:
         # Only Magi and Companions can be departed, and so restored.
         verbs[f"section-inh-{kind}"] = (

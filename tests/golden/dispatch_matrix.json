@@ -492,6 +492,16 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-lib-subjects": {
+      "active": "section-lib-subjects",
+      "keys": {
+        "a": "FieldsDialog: Add a Book",
+        "e": "(disabled)",
+        "d": "(disabled)",
+        "m": "CsvFilePickerScreen: Import books into Keep's library",
+        "slash": "(disabled)"
+      }
+    },
     "TabPane#tab-cov-diary": {
       "active": "tab-cov-diary",
       "keys": {

@@ -31,6 +31,7 @@ from textual.widgets import (
 
 from ars_magica_manager import storage, stores
 from ars_magica_manager.models import Book, Covenant, Saga
+from ars_magica_manager.sections import LIBRARY_SUBJECTS_SECTION
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import (
     ConfirmScreen,
@@ -657,11 +658,14 @@ async def test_library_summary_is_read_only_and_the_list_reaches_the_panel():
         assert "Lab Texts:" in right
         assert "Build Points" not in right
 
-        # The list runs down to the details panel, two rows above it (the
-        # section's bottom padding and the panel's margin).
+        # The list runs down to the By subject section (closed) and that to
+        # the details panel, two rows above it (the section's bottom padding
+        # and the panel's margin).
         section = view.query_one("#section-lib-books", Collapsible)
+        subjects = view.query_one(f"#{LIBRARY_SUBJECTS_SECTION}", Collapsible)
         panel = app.screen._book_view().query_one(DetailsPanel)
-        assert panel.region.y - section.region.bottom == 1
+        assert subjects.region.y == section.region.bottom
+        assert panel.region.y - subjects.region.bottom == 1
         assert view.query_one("#section-lib-books-list").region.height > 10
 
         # Nothing to edit or remove on the Summary; adding a book still works.

@@ -415,9 +415,14 @@ def library_study(score: int, library: LibraryScore) -> tuple[int, int | None]:
     seasons it can go on giving that once the student's score reaches the
     library's Level; None while below it). Below its Level, Quality + 3;
     at or above it, its Quality, for Quality more seasons."""
-    if score < library.level:
-        return library.quality + 3, None
-    return library.quality, library.quality
+    return holding_study(score, library.level, library.quality)
+
+
+def holding_study(score: int, level: int, quality: int) -> tuple[int, int | None]:
+    """library_study from a holding's `level` and `quality` alone."""
+    if score < level:
+        return quality + 3, None
+    return quality, quality
 
 
 # -- technological savings ----------------------------------------------------
