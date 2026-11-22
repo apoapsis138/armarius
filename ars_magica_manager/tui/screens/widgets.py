@@ -160,6 +160,10 @@ class SplitFooter(Footer):
         #: count these).
         self.rebuilds = 0
 
+    def on_mount(self) -> None:
+        super().on_mount()
+        self.app.screen_change_signal.subscribe(self, self._screen_changed)
+
     def hold(self) -> None:
         """Wait to rebuild until release(): for a change made in several
         steps, such as a tab switch (the old tab hides, losing focus, then a
@@ -201,8 +205,17 @@ class SplitFooter(Footer):
 
     def _rebuild_after_refresh(self) -> None:
         if self.is_attached and not self._rebuild_pending:
-            self._rebuild_pending = True
-            self.call_after_refresh(self._rebuild_if_changed)
+            self._rebuild_pending = self.call_after_refresh(self._rebuild_if_changed)
+
+    def _screen_changed(self, screen: Screen) -> None:
+        """Ask again for a rebuild still pending when this Footer's screen
+        comes back on top. call_after_refresh runs its callback on the
+        screen on top when the Footer handles it, and a screen closed
+        before it next idles (a creation worksheet closed at once) drops
+        it: _rebuild_pending would stay set and the keys never rebuild."""
+        if screen is self.screen and self._rebuild_pending:
+            self._rebuild_pending = False
+            self._rebuild_after_refresh()
 
     async def _rebuild_if_changed(self) -> None:
         self._rebuild_pending = False
