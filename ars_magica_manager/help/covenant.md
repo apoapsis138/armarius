@@ -2127,11 +2127,25 @@ as tall as its level. Click a book to see its figures and its Owner in
 the inspector, whether the covenant, a laboratory, or a character.
 <!-- /gui -->
 
-With the Large Library rule on in the saga's settings, a summa's or
-tractatus's details also give the library's Level and Quality in its
-subject. They're worked out from every summa and tractatus the covenant
-holds on it, as Read's "the whole library" uses them (Transforming Mythic
-Europe p. 105). A book added here belongs to the covenant.
+A summa's or tractatus's details end with a block on the covenant's
+library in its subject, headed with both, as "Dammërstein's Vim
+library". Its **Research** line is the library's research bonus there
+(see Summary). A book a magus keeps, or keeps in a laboratory, says
+instead that it isn't in the shared library.
+
+**The Holding.** With the Large Library rule on in the saga's settings,
+the block also gives the library's **Holding** in the subject: one Level
+and Quality for all its books on it, as Read's "the whole library" uses
+them (Transforming Mythic Europe, Rules for a Large Library, p. 105). The
+best summa (highest Level + Quality) sets it. Every other summa whose
+Level + Quality is within 3 of the Holding's adds a point of experience
+to its Level, and every tractatus whose Quality is within 3 of the
+Holding's adds one to its Quality, both rising as an Art's score does.
+A book further off, or a copy of one already there, adds nothing. The
+line says which this book is: the best summa (and how many of the others
+add to it), adds to its Level or Quality, or adds nothing and why. A
+subject with no summa has no Holding. A book added here belongs to the
+covenant.
 <!-- tui -->
 Space or Ctrl+click marks several books. With books marked, `d` deletes
 them all and `e` changes only their owner. More's **Import** reads books

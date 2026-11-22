@@ -18,6 +18,7 @@ from . import (
     book_value,
     casting_text,
     catalog,
+    library_holding,
     record_links,
     storage,
     viewing,
@@ -39,9 +40,8 @@ from .models import (
     Saga,
     Spell,
 )
-from .rules import activities, study, tme_books
 from .rules import hybrid_magic as hybrid
-from .rules import options as rule_options
+from .rules import study
 from .rules.library import (
     POOL_LEVELS,
     POOL_POINTS,
@@ -53,7 +53,6 @@ from .rules.library import (
     can_read,
     codex_of,
     cost,
-    covenant_of,
     effective_quality,
     extended_quality,
     has_quality,
@@ -686,32 +685,6 @@ def summary_texts(
     return left, right
 
 
-def _large_library_lines(saga: Saga, book: Book) -> list[str]:
-    """With the Large Library rule, a covenant's summa or tractatus shows
-    its library's Level and Quality in the book's subject (Transforming
-    Mythic Europe p. 105)."""
-    if book.owner_kind != "covenant" or not rule_options.is_on(
-        saga, rule_options.LARGE_LIBRARY
-    ):
-        return []
-    subject_key = activities.book_subject(book)
-    if subject_key is None:
-        return []
-    shelf = [
-        b
-        for b in books_owned_by(saga, "covenant", book.owner_id or "")
-        if activities.book_subject(b) == subject_key
-    ]
-    figures = tme_books.library_score(shelf)
-    if figures is None:
-        return []
-    return [
-        f"[b]The library on it:[/] Level {figures.level}, Quality "
-        f"{figures.quality} ({figures.summae} summa(e), {figures.tractatus} "
-        "tractatus; Transforming Mythic Europe p. 105)"
-    ]
-
-
 def detail_text(saga: Saga, book: Book | None) -> str:
     """The details panel (markup): every field of the book in the sheet's
     order -- Name; then Type, Art/Ability/Spell, Level, Quality down the left
@@ -753,7 +726,7 @@ def detail_text(saga: Saga, book: Book | None) -> str:
     if kind:
         lines.append(f"[b]Kind:[/] {escape(kind)}")
     lines += [f"{lm}{' ' * (width - lw)}{rm}" for (lm, lw), (rm, _) in zip(left, right)]
-    lines += _large_library_lines(saga, book)
+    lines += library_holding.book_lines(saga, book)
     if priced(saga, book):
         # Build Points matter only while its covenant is being created;
         # in play they're on the covenant's Build tab.
@@ -772,7 +745,6 @@ def detail_text(saga: Saga, book: Book | None) -> str:
     lines += [problem(escape(w)) for w in craft_warnings(saga, book)]
     lines += _value_lines(book)
     lines += _tablet_lines(saga, book)
-    lines += _research_lines(saga, book)
     lines += _study_lines(saga, book)
     if book.description.strip():
         lines += ["", "[b]Description:[/]", markdown_text(book.description.strip())]
@@ -807,18 +779,6 @@ def _tablet_lines(saga: Saga, book: Book) -> list[str]:
     return ["", "[b]Casting from it:[/]"] + [
         casting_text.tablet_casting_line(saga, magus, spell) for magus in magi
     ]
-
-
-def _research_lines(saga: Saga, book: Book) -> list[str]:
-    """The details panel's research on the book's subject in the covenant
-    library it is kept in, when it has a bonus or an encyclopedia."""
-
-    covenant = saga.covenant(covenant_of(saga, book))
-    subject = book_value.subject_of(book)
-    if covenant is None or not subject:
-        return []
-    text = book_value.subject_research_text(saga, covenant, subject)
-    return [f"[b]Research ({escape(subject)}):[/] {escape(text)}"] if text else []
 
 
 def _study_lines(saga: Saga, book: Book) -> list[str]:
