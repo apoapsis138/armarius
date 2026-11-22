@@ -28,6 +28,7 @@ from .audit import AuditLog, audit_path
 from .changes import SeatChanges
 from .devices import DeviceBook, devices_path
 from .events import event_specs, poller
+from .handing import handout_specs
 from .host import RemoteHost
 from .identity import KeyStore, NoKeychainError, load_or_create
 from .invites import InviteBook, book_path
@@ -119,6 +120,7 @@ def build(
                 *switch_specs(saga_id, log),
                 *event_specs(saga_id),
                 *show_specs(saga_id),
+                *handout_specs(saga_id),
                 *scene_specs(saga_id),
             ],
         ),

@@ -1594,6 +1594,8 @@ Every [Show](help:chronicle-shows) leaves a **Handout** with each Player shown: 
 - **Only your own.** A player reads their own Handouts and no one else's; the storyguide may read any Player's.
 - **At a Remote seat,** the list and each copy come from the host, which keeps every Session's Chronicle.
 
+**Arrange them your way.** Choose a Handout in your own list to **Open** it, **Rename** it (your title, which only you see; blank puts back the one it was shown under), **Pin** it (pinned ones come first) or **Move to folder** (folders are one level deep, and a folder no Handout is in goes away). Handouts in no folder come first, then each folder in turn. Filter the list by folder, Session, kind (record or picture) or Story, and type in its search to find a Handout by title; **Search their words**, at the top of the list, finds the Handouts whose copies hold the words you give (the host looks through them, at a Remote seat too). A folder can't be called "(no folder)". Your arrangement is yours alone: no other player, nor the storyguide, sees it, and a storyguide reading your Handouts sees them as shown.
+
 <!-- tui -->
 A player opens theirs from the page of any character they play: press `m` for More and choose **Handouts**. The storyguide opens a Player's from Saga Content's Players: choose the Player, press `m` and choose **Handouts**. A record's copy is shown as text, and a picture is named.
 <!-- /tui -->

@@ -19,7 +19,7 @@ import random
 from dataclasses import dataclass
 from typing import Protocol
 
-from . import chronicle, handout_list, references, shows
+from . import chronicle, handout_arrangement, handout_list, references, shows
 
 
 @dataclass(frozen=True)
@@ -81,6 +81,21 @@ class Table(Protocol):
     def handouts(self, player_id: str) -> list[handout_list.Kept] | str:
         """Player `player_id`'s Handouts, as this person may read them (their
         own; any Player's for a storyguide), or why not."""
+        ...
+
+    def search_handouts(self, player_id: str, words: str) -> set[str] | str:
+        """The keys of Player `player_id`'s Handouts whose copies hold
+        `words`, searched where the copies are kept, or why not."""
+        ...
+
+    def arrangement(self, player_id: str) -> handout_arrangement.Arrangement | str:
+        """Player `player_id`'s own arrangement of their Handouts, for them
+        alone, or why not."""
+        ...
+
+    def arrange(self, player_id: str, call: handout_arrangement.Arrange) -> str | None:
+        """Carry out `call` on Player `player_id`'s arrangement (theirs
+        alone): None once it is kept, else why not."""
         ...
 
     def open_handout(self, copy: handout_list.Copy) -> shows.Shown | str:

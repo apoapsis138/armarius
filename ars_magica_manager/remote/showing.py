@@ -12,9 +12,8 @@ sends it only while the seat's Player sees the Show's entry, and refuses
 any other id as if there were none. A shown picture comes by the picture
 request (records.py), in the Show folder, on the same terms.
 
-A seat asks for a Player's Handouts with `handouts`: its own Player's, or
-any Player's from a storyguide's seat, worked out by the host from every
-Session's Chronicle (handout_list.py), since a seat holds only tonight's.
+A Player's Handouts, and their arrangement, travel by handing.py's
+messages; a Handout's copy comes by `show_copy`, as a Show's does.
 
 A storyguide's seat withdraws a Show with `withdraw_show`, by its entry's
 number; from then on no seat but the Session's storyguide's is sent its
@@ -25,14 +24,12 @@ copy is the record's printed sheet (show_copy.py)."""
 
 from __future__ import annotations
 
-import json
 import re
 import time
 from collections.abc import Callable
 
 from .. import (
     chronicle,
-    handout_list,
     models,
     references,
     show_copy,
@@ -152,24 +149,6 @@ def show_specs(
             raise Refused from None
         return in_parts("show_copy", blob, {"show": show_id})
 
-    def handouts(session: Session, body: Body) -> Reply:
-        """A Player's Handouts, worked out here from the Chronicles: the
-        seat's own Player's, or any Player's for a storyguide's seat."""
-        player_id = str(body["player"])
-        if not opens.allow(session.device_id or session.player_id):
-            return Reply(
-                "show_refused", {"why": "Too many lists asked for: wait a minute."}
-            )
-        try:
-            saga = storage.load_saga(saga_id)
-        except OSError, ValueError:
-            raise Refused from None
-        if not handout_list.readable(saga, player_id, session.player_id):
-            return Reply("show_refused", {"why": handout_list.NOT_YOURS})
-        found = handout_list.to_data(handout_list.of_player(saga, player_id))
-        blob = json.dumps(found, ensure_ascii=False).encode()
-        return in_parts("handouts", blob, {"player": player_id})
-
     return [
         MessageSpec(
             "show",
@@ -190,9 +169,6 @@ def show_specs(
             show,
         ),
         MessageSpec("show_copy", {"show": Field(str, max_length=SHOW_ID_MAX)}, copy),
-        MessageSpec(
-            "handouts", {"player": Field(str, max_length=SHOW_ID_MAX)}, handouts
-        ),
         MessageSpec(
             "withdraw_show",
             {"number": Field(int, low=1, high=2**31 - 1)},

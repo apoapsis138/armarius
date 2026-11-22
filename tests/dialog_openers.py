@@ -22,11 +22,16 @@ from ars_magica_manager import (
     giving,
     grog_templates,
     guest_stays,
+    handout_arrangement,
+    handout_list,
     meeting,
     melee_events,
     menagerie,
     neighbour_filter,
+    references,
     section_verbs,
+    show_copy,
+    shows,
     siege_actions,
     staged_projects,
     storage,
@@ -52,6 +57,7 @@ from ars_magica_manager.forms import (
     grog_story,
     lab_item,
     menu_steps,
+    player_handouts,
     ship_build,
     whereabouts,
     wizards_war,
@@ -101,6 +107,7 @@ from ars_magica_manager.models import (
     Marriage,
     MysteryCult,
     Neighbour,
+    Player,
     PolemicText,
     Possession,
     Progress,
@@ -1148,6 +1155,41 @@ def _show(ws, preset: bool) -> None:
         ws._run_steps(show_forms.show_record(ws.saga, ws.selected_character))
     else:
         ws._run_steps(show_forms.show_here(ws.saga, session))
+
+
+#: The Player whose Handout the arranging contracts rename and file.
+HANDOUT_PLAYER = "contract-pat"
+HANDOUT_TITLE = "Contract handout"
+
+
+def _arrange_handout(ws, step: str) -> None:
+    """One of Pat's Handouts arranged (Rename, or Move to folder): Pat is
+    shown the first character at a Session the host begins, and arranges
+    it as themselves."""
+    virtual_tabletop.set_on(True)
+    saga = ws.saga
+    if not any(p.id == HANDOUT_PLAYER for p in saga.players):
+        saga.players.append(Player(HANDOUT_PLAYER, "Pat"))
+    session = chronicle.under_way(saga)
+    if session is None:  # opened again: already begun and shown
+        session = Session("contract-vtt")
+        saga.sessions.append(session)
+        book = chronicle.begin(saga, session, by=viewing.HOST)
+        record = saga.characters[0]
+        call = chronicle.ShowCall(
+            HANDOUT_TITLE,
+            references.Ref("characters", record.id, record.name),
+            to=(HANDOUT_PLAYER,),
+        )
+        shows.show(
+            book, saga, session, call, by=viewing.HOST, copier=show_copy.player_copy
+        )
+    reads = player_handouts.HostReads(saga, HANDOUT_PLAYER)
+    found = handout_list.of_player(saga, HANDOUT_PLAYER)
+    kept = handout_arrangement.load(saga.id, HANDOUT_PLAYER)
+    [shown] = handout_arrangement.arranged(found, kept)
+    chooser = player_handouts.arranging(reads, HANDOUT_PLAYER, shown.kept)
+    ws._run_steps(chooser.apply(step))  # type: ignore[union-attr]
 
 
 async def _open_staged(ws, kind: str, open_form) -> None:
@@ -2588,6 +2630,12 @@ OPENERS: dict[str, Opener] = {
     ),
     "sheet roll": Opener("character", _sheet_roll, action="sheet_roll"),
     "send message": Opener("saga", _send_message, action="send_message"),
+    "rename a handout": Opener(
+        "saga", lambda ws: _arrange_handout(ws, player_handouts.RENAME)
+    ),
+    "move a handout to a folder": Opener(
+        "saga", lambda ws: _arrange_handout(ws, player_handouts.MOVE)
+    ),
     "show": Opener("saga", lambda ws: _show(ws, False), action="show_at_session"),
     "set scene": Opener("saga", _set_scene, action="set_scene"),
     "show to the table": Opener(

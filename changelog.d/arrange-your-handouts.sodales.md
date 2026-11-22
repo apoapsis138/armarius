@@ -1,0 +1,1 @@
+**Arrange your Handouts.** In the Virtual Tabletop preview, give a Handout your own title, pin it to the top, or file it in a folder. Filter your Handouts by folder, Session, kind or Story, and search their titles and words. Your arrangement is yours alone: no one else sees it.

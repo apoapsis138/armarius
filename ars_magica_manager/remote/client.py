@@ -24,6 +24,7 @@ import aiohttp
 from .. import (
     __version__,
     chronicle,
+    handout_arrangement,
     handout_list,
     picture_files,
     players,
@@ -623,6 +624,53 @@ class RemoteClient:
             return handout_list.from_data(found)
         except ValueError, RecursionError:
             raise UnreadableReply from None
+
+    async def handout_arrangement(
+        self, player_id: str
+    ) -> handout_arrangement.Arrangement:
+        """This seat's Player's own arrangement of their Handouts, kept by
+        the host. ShowRefused when it isn't sent (another Player's)."""
+        head = await self.request("handout_arrangement", {"player": player_id})
+        if head.type == "show_refused":
+            raise ShowRefused(str(head.body.get("why", ""))[:200])
+        if head.type != "handout_arrangement":
+            raise UnreadableReply
+        try:
+            found = json.loads(await self._parts(head, handout_arrangement.FILE_CAP))
+            return handout_arrangement.from_data(found)
+        except ValueError, RecursionError:
+            raise UnreadableReply from None
+
+    async def search_handouts(self, player_id: str, words: str) -> set[str]:
+        """The keys of Player `player_id`'s Handouts whose copies hold every
+        one of `words`, searched by the host. ShowRefused when not sent."""
+        reply = await self.request(
+            "search_handouts", {"player": player_id, "words": words[:200]}
+        )
+        if reply.type == "show_refused":
+            raise ShowRefused(str(reply.body.get("why", ""))[:200])
+        keys = reply.body.get("keys")
+        if reply.type != "handouts_found" or not isinstance(keys, str):
+            raise UnreadableReply
+        return {key for key in keys.split("\n") if key}
+
+    async def arrange_handouts(
+        self, player_id: str, call: handout_arrangement.Arrange
+    ) -> None:
+        """Ask the host to carry out `call` on this seat's Player's own
+        arrangement. ShowRefused with the host's reason."""
+        body: Body = {"player": player_id, "key": call.key}
+        if call.title is not None:
+            body["title"] = call.title
+        if call.pinned is not None:
+            body["pinned"] = call.pinned
+        if call.folder is not None:
+            body["folder"] = call.folder
+        reply = await self.request("arrange_handouts", body)
+        if reply.type == "show_refused":
+            raise ShowRefused(str(reply.body.get("why", ""))[:200])
+        if reply.type != "arranged":
+            raise UnreadableReply
 
     async def withdraw(self, number: int) -> int:
         """Ask the host to withdraw Show `number`: the number of the entry

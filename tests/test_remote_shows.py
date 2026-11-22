@@ -14,6 +14,7 @@ from test_remote_events import PASSCODE, Table, _gather
 
 from ars_magica_manager import (
     chronicle,
+    handout_arrangement,
     paths,
     references,
     show_copy,
@@ -21,6 +22,7 @@ from ars_magica_manager import (
     storage,
     viewing,
 )
+from ars_magica_manager.handout_arrangement import Arrange
 from ars_magica_manager.models import AtlasMap, Secret
 from ars_magica_manager.remote import showing
 from ars_magica_manager.remote.client import ShowRefused
@@ -135,6 +137,41 @@ async def test_a_seat_fetches_its_own_handouts_and_no_other_players(
 
     assert [k.title for k in mine] == ["Aelfric"]
     assert theirs == []
+
+
+async def test_a_seat_arranges_its_own_handouts_and_no_one_elses(
+    table: Table,
+) -> None:
+    anna_id = table.id_of("Anna")
+    _host_show(
+        table,
+        chronicle.ShowCall(
+            "Aelfric", references.Ref("characters", "aelfric", ""), to=(anna_id,)
+        ),
+    )
+    key = "characters:aelfric"
+    anna, bea = await table.seat("Anna"), await table.seat("Bea")
+    try:
+        await anna.arrange_handouts(anna_id, Arrange(key, title="Mine", pinned=True))
+        kept = await anna.handout_arrangement(anna_id)
+        with pytest.raises(ShowRefused, match="Only you"):
+            await bea.arrange_handouts(anna_id, Arrange(key, title="Hers"))
+        with pytest.raises(ShowRefused, match="Only you"):
+            await bea.handout_arrangement(anna_id)
+        with pytest.raises(ShowRefused, match="isn't in your list"):
+            await anna.arrange_handouts(anna_id, Arrange("nothing:here", pinned=True))
+        found = await anna.search_handouts(anna_id, "aelfric")
+        with pytest.raises(ShowRefused):
+            await bea.search_handouts(anna_id, "aelfric")
+    finally:
+        await anna.close()
+        await bea.close()
+
+    [place] = kept.places
+    assert (place.key, place.title, place.pinned) == (key, "Mine", True)
+    assert found == {key}
+    on_file = handout_arrangement.load(table.saga.id, anna_id)
+    assert on_file.places[0].title == "Mine"
 
 
 async def test_a_shown_picture_is_fetched_only_by_a_seat_that_sees_its_show(
