@@ -12,6 +12,10 @@ sends it only while the seat's Player sees the Show's entry, and refuses
 any other id as if there were none. A shown picture comes by the picture
 request (records.py), in the Show folder, on the same terms.
 
+A storyguide's seat withdraws a Show with `withdraw_show`, by its entry's
+number; from then on no seat but the Session's storyguide's is sent its
+copy or picture (shows.seen).
+
 This module sits a layer above the rest of the listener's messages: the
 copy is the record's printed sheet (show_copy.py)."""
 
@@ -81,10 +85,23 @@ def _show(
     )
 
 
+def _withdraw(
+    book: chronicle.Chronicle,
+    saga: Saga,
+    under_way: models.Session,
+    by: str,
+    body: Body,
+) -> chronicle.Entry:
+    number = body["number"]
+    if isinstance(number, bool) or not isinstance(number, int):
+        raise ValueError("There is no such Show.")
+    return shows.withdraw(book, saga, under_way, number, by=by)
+
+
 def show_specs(
     saga_id: str, clock: Callable[[], float] = time.monotonic
 ) -> list[MessageSpec]:
-    """`show` and `show_copy`, for a signed-in seat."""
+    """`show`, `show_copy` and `withdraw_show`, for a signed-in seat."""
     show = table_verb(
         saga_id,
         RateLimiter(SHOWS_PER_MINUTE, 60.0, clock),
@@ -93,6 +110,16 @@ def show_specs(
         too_many="Too many Shows: wait a minute.",
         unsaved="The Show couldn't be saved.",
         act=_show,
+    )
+
+    withdraw = table_verb(
+        saga_id,
+        RateLimiter(SHOWS_PER_MINUTE, 60.0, clock),
+        refused="show_refused",
+        done="withdrawn",
+        too_many="Too many Shows withdrawn: wait a minute.",
+        unsaved="The Show couldn't be withdrawn just now.",
+        act=_withdraw,
     )
 
     opens = RateLimiter(OPENS_PER_MINUTE, 60.0, clock)
@@ -132,4 +159,9 @@ def show_specs(
             show,
         ),
         MessageSpec("show_copy", {"show": Field(str, max_length=SHOW_ID_MAX)}, copy),
+        MessageSpec(
+            "withdraw_show",
+            {"number": Field(int, low=1, high=2**31 - 1)},
+            withdraw,
+        ),
     ]

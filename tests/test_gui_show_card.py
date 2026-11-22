@@ -13,12 +13,16 @@ pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from PySide6.QtGui import QImage
-from PySide6.QtWidgets import QApplication, QToolButton
+from PySide6.QtWidgets import QApplication, QLabel, QToolButton
 from test_shows import _begun, _hilda_ref, _show
 
 from ars_magica_manager import chronicle, commands, references, shows, viewing
 from ars_magica_manager.gui import pictures
-from ars_magica_manager.gui.chronicle_pane import ChroniclePane, ShownPicture
+from ars_magica_manager.gui.chronicle_pane import (
+    ChroniclePane,
+    ShownCopy,
+    ShownPicture,
+)
 from ars_magica_manager.gui.themes import SCRIPTORUM
 
 HOST = viewing.HOST
@@ -58,11 +62,103 @@ def test_a_show_card_opens_its_copy_and_never_by_itself() -> None:
     assert ran == []  # told, never popped open
     assert _marks(pane) == ["open-show", "open-live"]
     _click(pane, "open-show")
-    [copy] = ran
-    assert isinstance(copy, commands.Form)
-    assert "SHOWN-SECRET" in str(copy.fields()[0].value)
+    copy = pane.shown_copy
+    assert isinstance(copy, ShownCopy)
+    assert copy.windowTitle() == "Hilda"
+    assert "SHOWN-SECRET" in copy.text.toPlainText()
+    copy.close()
     _click(pane, "open-live")
     assert opened == [_hilda_ref()]
+
+
+@pytest.mark.usefixtures("app")
+def test_a_withdrawn_show_reads_withdrawn_and_its_open_copy_closes() -> None:
+    saga, session, book = _begun()
+    pane = ChroniclePane(SCRIPTORUM, lambda _c: None)
+    pane.attach(saga, session, book, "ana")
+    shown = _show(
+        book, saga, session, chronicle.ShowCall("Hilda", _hilda_ref(), to=("ana",))
+    )
+    _click(pane, "open-show")
+    copy = pane.shown_copy
+    assert isinstance(copy, ShownCopy) and copy.isVisible()
+
+    shows.withdraw(book, saga, session, shown.number, by=HOST)
+
+    assert not copy.isVisible()
+    show = next(
+        c for c in pane.card_list() if c.line.startswith("The storyguide shows")
+    )
+    marks = [b.objectName() for b in show.findChildren(QToolButton)]
+    assert "open-show" not in marks and "open-live" not in marks
+    note = show.findChild(QLabel, "show-withdrawn")
+    assert isinstance(note, QLabel) and note.text() == "Withdrawn"
+    assert pane.lines()[-1] == "The storyguide withdraws: Hilda"
+
+
+@pytest.mark.usefixtures("app")
+def test_the_storyguide_still_opens_a_withdrawn_show_from_its_card() -> None:
+    saga, session, book = _begun()
+    pane = ChroniclePane(SCRIPTORUM, lambda _c: None)
+    pane.attach(saga, session, book, HOST)
+    shown = _show(book, saga, session, chronicle.ShowCall("Hilda", _hilda_ref()))
+    shows.withdraw(book, saga, session, shown.number, by=HOST)
+
+    show = next(
+        c for c in pane.card_list() if c.line.startswith("The storyguide shows")
+    )
+    marks = [b.objectName() for b in show.findChildren(QToolButton)]
+    assert "open-show" in marks and "withdraw-show" not in marks
+    assert show.findChild(QLabel, "show-withdrawn") is not None
+
+
+@pytest.mark.usefixtures("app")
+def test_a_redraw_works_out_the_withdrawn_shows_once(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    saga, session, book = _begun()
+    pane = ChroniclePane(SCRIPTORUM, lambda _c: None)
+    pane.attach(saga, session, book, "ana")
+    for title in ("One", "Two", "Three"):
+        _show(book, saga, session, chronicle.ShowCall(title, _hilda_ref()))
+    asked: list[int] = []
+    real = shows.withdrawn
+
+    def counted(found: chronicle.HasEntries) -> set[int]:
+        asked.append(1)
+        return real(found)
+
+    monkeypatch.setattr(shows, "withdrawn", counted)
+    pane._redraw_cards()  # pyright: ignore[reportPrivateUsage]
+
+    assert len(asked) == 1
+
+
+@pytest.mark.usefixtures("app")
+def test_a_copy_shows_markup_in_it_as_words_never_as_html() -> None:
+    shown = shows.Shown("Hilda", '<span style="font-size:72pt">big</span> words')
+    window = ShownCopy(shown)
+    words = window.text.toPlainText()
+    window.close()
+    assert '<span style="font-size:72pt">big</span>' in words
+
+
+@pytest.mark.usefixtures("app")
+def test_the_storyguide_withdraws_from_the_card() -> None:
+    saga, session, book = _begun()
+    ran: list[commands.Command] = []
+    pane = ChroniclePane(SCRIPTORUM, ran.append)
+    pane.attach(saga, session, book, HOST)
+    _show(book, saga, session, chronicle.ShowCall("Hilda", _hilda_ref()))
+
+    assert "withdraw-show" in _marks(pane)
+    _click(pane, "withdraw-show")
+    [asked] = ran
+    assert isinstance(asked, commands.Confirm) and asked.yes_label == "Withdraw"
+
+    reader = ChroniclePane(SCRIPTORUM, lambda _c: None)
+    reader.attach(saga, session, book, "ana")
+    assert "withdraw-show" not in _marks(reader)
 
 
 @pytest.mark.usefixtures("app")

@@ -219,6 +219,71 @@ def test_open_a_show_lists_those_the_reader_sees_and_opens_the_copy(
     assert "KEPT-SECRET" not in str(field.value)
 
 
+def test_withdraw_chooses_a_show_still_out_then_asks_first() -> None:
+    saga, session, book = _begun()
+    one = _show(book, saga, session, chronicle.ShowCall("One", _hilda_ref()))
+    two = _show(book, saga, session, chronicle.ShowCall("Two", _hilda_ref()))
+    shows.withdraw(book, saga, session, one.number, by=HOST)
+    table = FakeTable(held=book)
+
+    chooser = show_forms.withdraw_from(saga, session, HOST, table)
+
+    assert isinstance(chooser, commands.Choose)
+    [left] = chooser.choices()
+    assert (left.label, left.value) == ("Two", two.number)
+    asked = chooser.apply(left.value)
+    assert isinstance(asked, commands.Confirm) and asked.yes_label == "Withdraw"
+    assert table.withdrawn == []
+    asked.apply()
+    assert table.withdrawn == [two.number]
+
+
+def test_a_player_is_not_offered_withdraw(monkeypatch: pytest.MonkeyPatch) -> None:
+    saga, session, _book = _begun()
+    monkeypatch.setattr(chronicle, "here", lambda: "ana")
+    assert isinstance(show_forms.withdraw_here(saga, session), commands.Refuse)
+
+
+def test_open_a_show_leaves_out_those_withdrawn(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    saga, session, book = _begun()
+    gone = _show(book, saga, session, chronicle.ShowCall("Gone", _hilda_ref()))
+    _show(book, saga, session, chronicle.ShowCall("Kept", _hilda_ref()))
+    shows.withdraw(book, saga, session, gone.number, by=HOST)
+    monkeypatch.setattr(chronicle, "here", lambda: "ana")
+
+    chooser = show_forms.open_show(saga, session)
+
+    assert isinstance(chooser, commands.Choose)
+    assert [c.label for c in chooser.choices()] == ["Kept"]
+
+
+def test_the_storyguide_still_opens_a_withdrawn_show_marked_so() -> None:
+    saga, session, book = _begun()
+    gone = _show(book, saga, session, chronicle.ShowCall("Gone", _hilda_ref()))
+    shows.withdraw(book, saga, session, gone.number, by=HOST)
+
+    chooser = show_forms.open_show(saga, session)  # the host's own copy
+
+    assert isinstance(chooser, commands.Choose)
+    assert [c.label for c in chooser.choices()] == ["Gone (withdrawn)"]
+
+
+def test_open_a_show_says_none_is_still_out_once_all_are_withdrawn(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    saga, session, book = _begun()
+    gone = _show(book, saga, session, chronicle.ShowCall("Gone", _hilda_ref()))
+    shows.withdraw(book, saga, session, gone.number, by=HOST)
+    monkeypatch.setattr(chronicle, "here", lambda: "ana")
+
+    chooser = show_forms.open_show(saga, session)
+
+    assert isinstance(chooser, commands.Choose)
+    assert chooser.empty == "No Show of this Session is still out."
+
+
 def test_a_seat_opens_no_show_of_a_session_it_doesnt_hold() -> None:
     """A Remote seat holds only the Session its host feeds it: a past
     Session chosen in Sessions lists none of tonight's Shows."""

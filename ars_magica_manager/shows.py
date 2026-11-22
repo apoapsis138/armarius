@@ -70,6 +70,10 @@ NOT_A_SECRET = (
     "changed, tick them again."
 )
 NOT_YOURS = "Only the record's own storyguide sends its Secrets."
+#: Why a withdrawn Show's copy isn't opened.
+WITHDRAWN_NOTE = "This Show was withdrawn."
+#: Why a Show isn't opened while the Chronicle can't be read to check it.
+UNREAD_NOTE = "This Show can't be opened just now: try again in a moment."
 
 
 def secret_mark(secret: Secret) -> str:
@@ -340,6 +344,47 @@ def _show(
     return book.add(chronicle.SHOW, by, audience, body)
 
 
+# -- withdrawing --
+
+
+def withdrawn(book: chronicle.HasEntries) -> set[int]:
+    """The Shows of `book` withdrawn, by their entries' numbers; a
+    withdrawal that names no number (a damaged line) is passed over."""
+    found = set()
+    for entry in book.entries:
+        number = entry.body.get("withdraws")
+        if entry.kind == chronicle.WITHDRAWN and type(number) is int:
+            found.add(number)
+    return found
+
+
+def withdraw(
+    book: chronicle.Chronicle, saga: Saga, session: Session, number: int, *, by: str
+) -> chronicle.Entry:
+    """Withdraw Show `number`: an entry, seen by whoever saw the Show, that
+    marks it withdrawn; its copy is opened by no Player from then on. Only
+    the Session's storyguide, while it is Under way (table_rules)."""
+    problem = table_rules.why_not_lead(saga, session, by, "withdraws a Show")
+    if problem:
+        raise ValueError(problem)
+    shown = next((e for e in book.entries if e.number == number), None)
+    if shown is None or shown.kind != chronicle.SHOW:
+        raise ValueError("There is no such Show.")
+    already = "That Show is already withdrawn."
+    if number in withdrawn(book):
+        raise ValueError(already)
+    body = {"withdraws": number, "title": str(shown.body.get("title", ""))}
+    # Asked again once caught up under the file's lock: another copy (the
+    # host's window, its listener for a seat) may have withdrawn it since.
+    return book.add(
+        chronicle.WITHDRAWN,
+        by,
+        shown.audience,
+        body,
+        guard=lambda: already if number in withdrawn(book) else None,
+    )
+
+
 # -- opening --
 
 
@@ -401,8 +446,9 @@ def opened(saga_id: str, entry: chronicle.Entry) -> Shown:
 # -- who may open one --
 
 
-def _shows(saga: Saga) -> Iterator[tuple[Session, chronicle.Entry]]:
-    """Every Show in the saga's Chronicles, each with its Session, read
+def _shows(saga: Saga) -> Iterator[tuple[Session, chronicle.Entry, bool]]:
+    """Every Show in the saga's Chronicles, each with its Session and
+    whether it was withdrawn, read
     from the files as they stand: the Session under way's first, where
     tonight's Shows are, then the others, newest first, each read only if
     the ones before didn't hold what was sought. A Chronicle that can't be
@@ -417,18 +463,23 @@ def _shows(saga: Saga) -> Iterator[tuple[Session, chronicle.Entry]]:
             book.refresh()
         except OSError, ValueError:
             continue
+        gone = withdrawn(book)
         for entry in book.entries:
             if entry.kind == chronicle.SHOW:
-                yield session, entry
+                yield session, entry, entry.number in gone
 
 
 def seen(saga: Saga, show_id: str, who: str) -> chronicle.Entry | None:
-    """Show `show_id`'s entry, when `who` sees it; else None."""
+    """Show `show_id`'s entry, when `who` sees it and may open it still
+    (a withdrawn Show only its Session's storyguide); else None."""
     if not shapes.is_plain_id(show_id):
         return None
-    for session, entry in _shows(saga):
-        if entry.body.get("show") == show_id:
-            return entry if chronicle.sees(entry, who, session, saga) else None
+    for session, entry, gone in _shows(saga):
+        if entry.body.get("show") != show_id:
+            continue
+        if gone and who != table_rules.storyguide_of(session, saga):
+            return None
+        return entry if chronicle.sees(entry, who, session, saga) else None
     return None
 
 

@@ -81,6 +81,38 @@ async def test_a_seat_opens_a_show_it_sees_and_no_other(table: Table) -> None:
     assert kept["title"] == "Aelfric" and "Aelfric" in kept["text"]
 
 
+async def test_no_seat_can_fetch_a_withdrawn_show(table: Table) -> None:
+    """Bea runs the Session from her seat and withdraws the Show she gave
+    Anna: Anna's seat is refused its copy and picture from then on."""
+    bea_id, anna_id = table.id_of("Bea"), table.id_of("Anna")
+    table.saga.sessions[0].storyguide_id = bea_id
+    storage.save_saga(table.saga)
+    call = chronicle.ShowCall("The Rhine", picture=("maps", "rhine.png"), to=(anna_id,))
+    anna, bea = await table.seat("Anna"), await table.seat("Bea")
+    try:
+        number = await bea.show(call)
+        book = chronicle.read(table.saga, table.saga.sessions[0])
+        book.refresh()
+        entry = next(e for e in book.entries if e.number == number)
+        show_id, name = str(entry.body["show"]), str(entry.body["picture"])
+        assert (await anna.show_copy(show_id))["title"] == "The Rhine"
+        with pytest.raises(ShowRefused, match="storyguide"):
+            await anna.withdraw(number)
+        await bea.withdraw(number)
+        with pytest.raises(ShowRefused):
+            await anna.show_copy(show_id)
+        assert await anna.picture(shows.FOLDER, name) is None
+    finally:
+        await anna.close()
+        await bea.close()
+
+    book.refresh()
+    assert (book.entries[-1].kind, book.entries[-1].author) == (
+        chronicle.WITHDRAWN,
+        bea_id,
+    )
+
+
 async def test_a_shown_picture_is_fetched_only_by_a_seat_that_sees_its_show(
     table: Table,
 ) -> None:

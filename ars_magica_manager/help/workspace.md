@@ -1566,14 +1566,18 @@ While a Session is under way, its storyguide can **Show** the players something 
 - A Show to you pulses the collapsed [Chronicle pane](help:chronicle-pane); a Show to the Table only adds to its count. **Open the live record** sits beside **Open** on its card when you may read the record as it is now.
 <!-- /gui -->
 - **At a Remote seat,** the copy and its picture are fetched from the host only while your seat holds the Show: a Show that isn't yours never reaches your computer.
+- **Withdraw** takes a Show back, after asking: a line in the Chronicle, seen by whoever saw the Show, says so, and its card reads Withdrawn. No player can open its copy again, from the host or a Remote seat; the Session's storyguide still can, to look back at it. Only the Session's storyguide withdraws, while it is under way.
+<!-- gui -->
+- A withdrawn Show's copy or picture that a player has open on the desktop closes.
+<!-- /gui -->
 
 The copies are kept on the host's computer, in a folder beside the saga, never written into the saga, so an Export or a Content pack can't carry them.
 
 <!-- tui -->
-To Show, choose the Session under way in the Sessions list, press `m` for More and choose **Show**; on a record's page, More offers **Show to the Table**. To read a Show, choose the Session and choose **Open a Show** in More: a record's copy is shown as text, and a picture is named (open it on the desktop to see it).
+To Show, choose the Session under way in the Sessions list, press `m` for More and choose **Show**; on a record's page, More offers **Show to the Table**. To read a Show, choose the Session and choose **Open a Show** in More: a record's copy is shown as text, and a picture is named (open it on the desktop to see it). To withdraw one, choose **Withdraw a Show** there.
 <!-- /tui -->
 <!-- gui -->
-To Show, choose **Show to the Table** in a record's Manage chapter, or choose the Session under way in Sessions and click **Show**. Click **Open** on a Show card to read its copy; a picture opens in a window of its own.
+To Show, choose **Show to the Table** in a record's Manage chapter, or choose the Session under way in Sessions and click **Show**. Click **Open** on a Show card to read its copy, in a window of its own, as a picture opens. The storyguide's card has **Withdraw** beside Open.
 <!-- /gui -->
 
 **See also:** [The Chronicle](help:chronicle), [Messages and Whispers](help:chronicle-messages)

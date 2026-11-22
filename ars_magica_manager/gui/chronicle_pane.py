@@ -33,6 +33,7 @@ from PySide6.QtGui import (
     QPen,
     QPixmap,
     QPolygonF,
+    QTextDocument,
 )
 from PySide6.QtWidgets import (
     QAbstractButton,
@@ -44,6 +45,7 @@ from PySide6.QtWidgets import (
     QPushButton,
     QScrollArea,
     QSizePolicy,
+    QTextBrowser,
     QToolButton,
     QVBoxLayout,
     QWidget,
@@ -461,12 +463,16 @@ def show_card(
     entry: chronicle.Entry,
     line: str,
     p: Palette,
-    open_copy: Callable[[], None],
+    open_copy: Callable[[], None] | None,
     open_live: Callable[[], None] | None,
+    withdraw: Callable[[], None] | None = None,
+    *,
+    withdrawn: bool = False,
 ) -> Card:
     """A Show: its title, to whom (chosen Players), and Open for the copy
-    as it was shown; "Open the live record" when the reader may read the
-    record now. It never opens by itself."""
+    as it was shown (none for a player once it is `withdrawn`); "Open the
+    live record" when the reader may read the record now; Withdraw for the
+    Session's storyguide while it is out. It never opens by itself."""
     body = entry.body
     card = Card(line, p)
     said = "The storyguide shows"
@@ -482,13 +488,29 @@ def show_card(
     )
     title.setObjectName("show-title")
     card.column.addWidget(title)
+    if withdrawn:
+        gone = text("Withdrawn", p["label"], serif(10.5, italic=True))
+        gone.setObjectName("show-withdrawn")
+        card.column.addWidget(gone)
+    if open_copy is None:
+        return card
     row = QHBoxLayout()
     row.setSpacing(10)
     opens = margin_mark(
         "open-show", "Open", "Open it as it was shown", p, p["foreground"]
     )
-    opens.clicked.connect(lambda _checked=False: open_copy())
+    opens.clicked.connect(lambda _checked=False, act=open_copy: act())
     row.addWidget(opens)
+    if withdraw is not None:
+        takes = margin_mark(
+            "withdraw-show",
+            "Withdraw",
+            "Withdraw the Show: its copy can't be opened again",
+            p,
+            p["foreground"],
+        )
+        takes.clicked.connect(lambda _checked=False: withdraw())
+        row.addWidget(takes)
     if open_live is not None:
         live = margin_mark(
             "open-live",
@@ -574,6 +596,32 @@ class ShownPicture(QDialog):
         else:
             self.picture.setText("This picture can't be drawn.")
         column.addWidget(self.picture)
+
+
+#: The size a shown record's copy opens at, in pixels.
+COPY_SIZE = (640, 720)
+
+
+class ShownCopy(QDialog):
+    """A shown record's copy, as it was shown: its sheet, read-only, in a
+    window of its own, which the pane closes if the Show is withdrawn."""
+
+    def __init__(self, shown: shows.Shown, parent: QWidget | None = None) -> None:
+        super().__init__(parent)
+        self.setObjectName("shown-copy")
+        self.setWindowTitle(shown.title)
+        self.resize(*COPY_SIZE)
+        column = QVBoxLayout(self)
+        self.text = QTextBrowser()
+        self.text.setObjectName("copy")
+        self.text.setOpenLinks(False)
+        # Markdown only: any HTML in a record's words is never drawn as such.
+        self.text.document().setMarkdown(
+            shown.text,
+            QTextDocument.MarkdownFeature.MarkdownDialectGitHub
+            | QTextDocument.MarkdownFeature.MarkdownNoHTML,
+        )
+        column.addWidget(self.text)
 
 
 #: One character of a Roll request, as its card shows it: the name,
@@ -899,6 +947,11 @@ class ChroniclePane(QWidget):
         self.pulses = 0
         #: The shown picture open last, kept while its window is.
         self.shown_picture: ShownPicture | None = None
+        #: The shown record's copy open last, kept while its window is.
+        self.shown_copy: ShownCopy | None = None
+        #: The Show whose copy or picture is open, by its entry's number:
+        #: closed if that Show is withdrawn.
+        self.open_show_number: int | None = None
         outer = QHBoxLayout(self)
         outer.setContentsMargins(0, 4, 4, 4)
         outer.setSpacing(0)
@@ -1057,9 +1110,12 @@ class ChroniclePane(QWidget):
         if book is None or session is None:
             return
         spec = chronicle.kind_of(entry)
+        if entry.kind == chronicle.WITHDRAWN:
+            self._close_withdrawn(int(entry.body.get("withdraws", 0)))
         if spec is not None and spec.amends(entry):
             # It changes cards already drawn (a Strike, a Roll request's
-            # answer or outcome, Confidence spent): all drawn again.
+            # answer or outcome, Confidence spent, a Show withdrawn): all
+            # drawn again.
             self._redraw_cards()
             if self._reads(entry):
                 if spec.sounds:
@@ -1069,7 +1125,8 @@ class ChroniclePane(QWidget):
             return
         if not self._reads(entry):
             return
-        self._card(entry, chronicle.voided(book))
+        # A Show just made is out; the cards it could amend aren't redrawn.
+        self._card(entry, chronicle.voided(book), set())
         if entry.kind in (chronicle.SCENE_SET, chronicle.SCENE_ENDED, chronicle.END):
             self._draw_now()
         if spec is not None and spec.sounds:
@@ -1109,10 +1166,10 @@ class ChroniclePane(QWidget):
         if book is None or session is None:
             return
         self._clear_cards()
-        struck = chronicle.voided(book)
+        struck, gone = chronicle.voided(book), shows.withdrawn(book)
         for entry in book.entries:
             if self._reads(entry):
-                self._card(entry, struck)
+                self._card(entry, struck, gone)
         self._draw_now()
 
     def now_playing(self) -> scene_verbs.NowPlaying | None:
@@ -1214,7 +1271,11 @@ class ChroniclePane(QWidget):
         player = table_rules.player_of(session, character_id)
         return next((p.name for p in saga.players if p.id == player), "")
 
-    def _card(self, entry: chronicle.Entry, struck: dict[int, str]) -> None:
+    def _card(
+        self, entry: chronicle.Entry, struck: dict[int, str], gone: set[int]
+    ) -> None:
+        """Draw `entry`'s card; `struck` (the rolls struck) and `gone` (the
+        Shows withdrawn) are worked out once for all the cards drawn."""
         spec = chronicle.kind_of(entry)
         shown = spec.card if spec is not None else chronicle.NOTE
         if shown == chronicle.NO_CARD:
@@ -1237,17 +1298,22 @@ class ChroniclePane(QWidget):
             self.cards.insertWidget(self.cards.count() - 1, card)
             return
         if shown == chronicle.SHOW_CARD:
+            out = number not in gone
+            # The Session's storyguide may still open a Show withdrawn.
+            leads = self._leads()
             live = (
                 show_forms.live_record(self.saga, entry, self.who)
-                if self.saga is not None
+                if self.saga is not None and out
                 else None
             )
             card = show_card(
                 entry,
                 line,
                 self.p,
-                lambda: self.open_show(entry),
+                (lambda: self.open_show(entry)) if out or leads else None,
                 (lambda: self.open_record(live)) if live is not None else None,
+                (lambda: self.withdraw_show(entry)) if out and leads else None,
+                withdrawn=not out,
             )
             self.cards.insertWidget(self.cards.count() - 1, card)
             return
@@ -1326,6 +1392,14 @@ class ChroniclePane(QWidget):
     def _runs_the_session(self) -> bool:
         reader = self._reader()
         return reader is not None and reader.runs_the_session
+
+    def _leads(self) -> bool:
+        """Whether whoever sits here is the Session's storyguide, while it
+        is Under way: Withdraw is theirs, from the host or a Remote seat."""
+        saga, session = self.saga, self.session
+        if saga is None or session is None:
+            return False
+        return table_rules.why_not_lead(saga, session, self.who, "withdraws") is None
 
     def _strikes(self) -> bool:
         """Strike is the host's: its computer keeps the Chronicle."""
@@ -1451,11 +1525,30 @@ class ChroniclePane(QWidget):
         found = table.open_show(entry)
         if isinstance(found, str):
             self.run(Refuse(show_forms.TITLE, escape(found)))
-        elif found.picture is not None:
+            return
+        self.open_show_number = entry.number
+        if found.picture is not None:
             self.shown_picture = ShownPicture(found, self)
             self.shown_picture.open()
         else:
-            self.run(show_forms.copy_form(found))
+            self.shown_copy = ShownCopy(found, self)
+            self.shown_copy.open()
+
+    def withdraw_show(self, entry: chronicle.Entry) -> None:
+        """Withdraw Show `entry`, after asking: at the host's Chronicle, or
+        asked of the host from a Remote seat."""
+        table = self.table
+        if table is not None:
+            self.run(show_forms.withdraw_one(table, entry))
+
+    def _close_withdrawn(self, number: int) -> None:
+        """Close the copy or picture of Show `number`, just withdrawn."""
+        if self.open_show_number != number:
+            return
+        for window in (self.shown_copy, self.shown_picture):
+            if window is not None:
+                window.close()
+        self.open_show_number = None
 
     def open_scene_picture(self, entry: chronicle.Entry) -> None:
         """Open a Scene banner's map: from this computer's maps, or fetched
