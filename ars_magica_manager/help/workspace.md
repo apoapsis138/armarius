@@ -1580,7 +1580,28 @@ To Show, choose the Session under way in the Sessions list, press `m` for More a
 To Show, choose **Show to the Table** in a record's Manage chapter, or choose the Session under way in Sessions and click **Show**. Click **Open** on a Show card to read its copy, in a window of its own, as a picture opens. The storyguide's card has **Withdraw** beside Open.
 <!-- /gui -->
 
-**See also:** [The Chronicle](help:chronicle), [Messages and Whispers](help:chronicle-messages)
+**See also:** [The Chronicle](help:chronicle), [Messages and Whispers](help:chronicle-messages), [Handouts](help:handouts)
+
+### Handouts
+<!-- help: handouts -->
+
+Preview: turn on Virtual Tabletop in Settings.
+
+Every [Show](help:chronicle-shows) leaves a **Handout** with each Player shown: chosen Players, or, for a Show to the Table, every Player at that Session. A player's Handouts gather what was shown to them in every Session, newest first, so a letter or a map from last month is still at hand.
+
+- **Shown again,** the same record or picture keeps one Handout, with a dated copy for each time; choose which to open. Each copy is the record as it stood when shown.
+- **Withdrawn,** a Show leaves every list.
+- **Only your own.** A player reads their own Handouts and no one else's; the storyguide may read any Player's.
+- **At a Remote seat,** the list and each copy come from the host, which keeps every Session's Chronicle.
+
+<!-- tui -->
+A player opens theirs from the page of any character they play: press `m` for More and choose **Handouts**. The storyguide opens a Player's from Saga Content's Players: choose the Player, press `m` and choose **Handouts**. A record's copy is shown as text, and a picture is named.
+<!-- /tui -->
+<!-- gui -->
+A player opens theirs with **Open Handouts**, at the top of the Diary chapter of any character they play. The storyguide opens a Player's from Saga Management's Players: choose the Player, then **Handouts** in More.
+<!-- /gui -->
+
+**See also:** [Show](help:chronicle-shows), [The Chronicle](help:chronicle)
 
 ### How a roll shows its dice
 <!-- help: dice-line -->

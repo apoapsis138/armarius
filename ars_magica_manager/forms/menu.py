@@ -155,6 +155,8 @@ MANAGE: dict[str, str] = {
     "or a message: the same copy and sheet as Print to PDF.",
     "show_record": "Show it to the Table or chosen Players at the Session "
     "under way: each gets a copy as the players read it now, kept as it is.",
+    "my_handouts": "Read what has been Shown to you, in every Session, newest "
+    "first: each Handout's copy as it was shown.",
     "update_record": "Read an export of it over it, for example after working "
     "on it elsewhere: shows what would change first, and keeps its place in "
     "this saga.",

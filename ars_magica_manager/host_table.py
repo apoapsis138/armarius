@@ -11,6 +11,7 @@ from collections.abc import Callable
 from . import (
     at_table,
     chronicle,
+    handout_list,
     references,
     scene_play,
     shows,
@@ -121,6 +122,14 @@ class HostTable:
             return shows.opened(self.saga.id, entry)
         except ValueError as problem:
             return str(problem)
+
+    def handouts(self, player_id: str) -> list[handout_list.Kept] | str:
+        if not handout_list.readable(self.saga, player_id, self.who):
+            return handout_list.NOT_YOURS
+        return handout_list.of_player(self.saga, player_id)
+
+    def open_handout(self, copy: handout_list.Copy) -> shows.Shown | str:
+        return handout_list.open_copy(self.saga, copy, self.who)
 
     def withdraw(self, number: int) -> str | None:
         return self._write(

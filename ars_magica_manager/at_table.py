@@ -19,7 +19,7 @@ import random
 from dataclasses import dataclass
 from typing import Protocol
 
-from . import chronicle, references, shows
+from . import chronicle, handout_list, references, shows
 
 
 @dataclass(frozen=True)
@@ -76,6 +76,16 @@ class Table(Protocol):
 
     def withdraw(self, number: int) -> str | None:
         """Withdraw Show `number` (the Session's storyguide's alone)."""
+        ...
+
+    def handouts(self, player_id: str) -> list[handout_list.Kept] | str:
+        """Player `player_id`'s Handouts, as this person may read them (their
+        own; any Player's for a storyguide), or why not."""
+        ...
+
+    def open_handout(self, copy: handout_list.Copy) -> shows.Shown | str:
+        """A Handout's copy, from any Session, as this person may open it
+        (a Show they saw, not withdrawn), or why not."""
         ...
 
     def set_scene(self, call: chronicle.SceneCall) -> str | None: ...

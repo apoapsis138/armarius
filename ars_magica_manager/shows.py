@@ -335,6 +335,8 @@ def _show(
         "title": title,
         "ref": ref,
         "picture": kept.get("picture", ""),
+        # The saga picture shown, so Handouts gather its Shows as one.
+        "source": list(call.picture) if call.record is None and call.picture else [],
         "to": to,
         "to_names": [chronicle.name_at(saga, session, t) for t in to],
         "story": story.name if story is not None else "",
@@ -446,7 +448,7 @@ def opened(saga_id: str, entry: chronicle.Entry) -> Shown:
 # -- who may open one --
 
 
-def _shows(saga: Saga) -> Iterator[tuple[Session, chronicle.Entry, bool]]:
+def every_show(saga: Saga) -> Iterator[tuple[Session, chronicle.Entry, bool]]:
     """Every Show in the saga's Chronicles, each with its Session and
     whether it was withdrawn, read
     from the files as they stand: the Session under way's first, where
@@ -474,7 +476,7 @@ def seen(saga: Saga, show_id: str, who: str) -> chronicle.Entry | None:
     (a withdrawn Show only its Session's storyguide); else None."""
     if not shapes.is_plain_id(show_id):
         return None
-    for session, entry, gone in _shows(saga):
+    for session, entry, gone in every_show(saga):
         if entry.body.get("show") != show_id:
             continue
         if gone and who != table_rules.storyguide_of(session, saga):

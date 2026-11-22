@@ -113,6 +113,30 @@ async def test_no_seat_can_fetch_a_withdrawn_show(table: Table) -> None:
     )
 
 
+async def test_a_seat_fetches_its_own_handouts_and_no_other_players(
+    table: Table,
+) -> None:
+    anna_id, bea_id = table.id_of("Anna"), table.id_of("Bea")
+    _host_show(
+        table,
+        chronicle.ShowCall(
+            "Aelfric", references.Ref("characters", "aelfric", ""), to=(anna_id,)
+        ),
+    )
+    anna, bea = await table.seat("Anna"), await table.seat("Bea")
+    try:
+        mine = await anna.handouts(anna_id)
+        with pytest.raises(ShowRefused):
+            await bea.handouts(anna_id)
+        theirs = await bea.handouts(bea_id)
+    finally:
+        await anna.close()
+        await bea.close()
+
+    assert [k.title for k in mine] == ["Aelfric"]
+    assert theirs == []
+
+
 async def test_a_shown_picture_is_fetched_only_by_a_seat_that_sees_its_show(
     table: Table,
 ) -> None:

@@ -19,7 +19,7 @@ import secrets
 from collections.abc import Callable, Coroutine
 from typing import Any
 
-from .. import chronicle, players, references, shows, table_rolls
+from .. import chronicle, handout_list, players, references, shows, table_rolls
 from ..models import Saga
 from ..saga_store import NotSaved
 from ..undo_season import Undo
@@ -360,6 +360,21 @@ class SeatSession:
             return "The host can't be reached just now."
         return None
 
+    def handouts(self, player_id: str) -> list[handout_list.Kept] | str:
+        """Player `player_id`'s Handouts, from the host, which works them
+        out from every Session's Chronicle; else why not."""
+        try:
+            return self._loop.run(
+                self._own(lambda c: c.handouts(player_id)), timeout=OPEN_WAIT
+            )
+        except ShowRefused as refused:
+            return refused.why
+        except NeedsPasscode, NoCredential:
+            return "Sign in again to read your Handouts."
+        # UnreadableReply is a ChannelError.
+        except ChannelError, SignInError, ConnectionError, TimeoutError:
+            return "The host can't be reached just now."
+
     def set_scene(self, call: chronicle.SceneCall) -> str | None:
         """Ask the host to set the Scene `call` names; None once its banner
         is in the Chronicle, else the host's reason (as `roll`)."""
@@ -385,9 +400,16 @@ class SeatSession:
     def open_show(self, entry: chronicle.Entry) -> shows.Shown | str:
         """Show `entry`'s copy, from the host (its picture too), which sends
         it only while this seat's Player sees the Show; else why not."""
-        show_id = str(entry.body.get("show", ""))
-        name = str(entry.body.get("picture", ""))
+        return self._fetch_copy(
+            str(entry.body.get("show", "")), str(entry.body.get("picture", ""))
+        )
 
+    def open_handout(self, copy: handout_list.Copy) -> shows.Shown | str:
+        """A Handout's copy, from any Session, fetched from the host on the
+        same terms as a Show's (open_show)."""
+        return self._fetch_copy(copy.show_id, copy.picture)
+
+    def _fetch_copy(self, show_id: str, name: str) -> shows.Shown | str:
         async def fetch(client: RemoteClient) -> shows.Shown:
             kept = await client.show_copy(show_id)
             picture = await client.picture(shows.FOLDER, name) if name else None
@@ -567,6 +589,12 @@ class SeatTable:
 
     def withdraw(self, number: int) -> str | None:
         return self.seat.withdraw(number)
+
+    def handouts(self, player_id: str) -> list[handout_list.Kept] | str:
+        return self.seat.handouts(player_id)
+
+    def open_handout(self, copy: handout_list.Copy) -> shows.Shown | str:
+        return self.seat.open_handout(copy)
 
     def set_scene(self, call: chronicle.SceneCall) -> str | None:
         return self.seat.set_scene(call)
