@@ -11,6 +11,7 @@ import pytest
 
 from ars_magica_manager import (
     chronicle,
+    host_table,
     paths,
     references,
     show_copy,
@@ -392,6 +393,104 @@ def test_a_damaged_chronicle_hides_only_its_own_shows() -> None:
     path.write_text("not json\n{}\n", encoding="utf-8")
 
     assert shows.seen(saga, str(entry.body["show"]), "ana") == entry
+
+
+# -- withdrawing --
+
+
+def test_the_storyguide_withdraws_a_show_and_no_player_can_open_it_again() -> None:
+    saga, session, book = _begun()
+    shown = _show(
+        book, saga, session, chronicle.ShowCall("Hilda", _hilda_ref(), to=("ana",))
+    )
+    show_id = str(shown.body["show"])
+
+    entry = shows.withdraw(book, saga, session, shown.number, by=HOST)
+
+    assert entry.kind == chronicle.WITHDRAWN
+    assert entry.audience == shown.audience  # seen by whoever saw the Show
+    assert entry.body == {"withdraws": shown.number, "title": "Hilda"}
+    assert chronicle.line(entry, {}) == "The storyguide withdraws: Hilda"
+    assert chronicle.for_whom(entry, session, saga) == frozenset()
+    assert shows.withdrawn(book) == {shown.number}
+    assert shows.seen(saga, show_id, "ana") is None
+    assert shows.seen(saga, show_id, HOST) == shown  # the storyguide keeps it
+
+
+def test_only_the_sessions_storyguide_withdraws_and_only_a_show_once() -> None:
+    saga, session, book = _begun()
+    shown = _show(book, saga, session, chronicle.ShowCall("Hilda", _hilda_ref()))
+
+    with pytest.raises(ValueError, match="Only the Session's storyguide withdraws"):
+        shows.withdraw(book, saga, session, shown.number, by="ana")
+    with pytest.raises(ValueError, match="There is no such Show"):
+        shows.withdraw(book, saga, session, 1, by=HOST)  # the Session's begin
+    shows.withdraw(book, saga, session, shown.number, by=HOST)
+    with pytest.raises(ValueError, match="already withdrawn"):
+        shows.withdraw(book, saga, session, shown.number, by=HOST)
+
+
+def test_a_show_withdrawn_meanwhile_by_another_copy_isnt_withdrawn_twice() -> None:
+    """Two copies of the Chronicle (the host's window and its listener for
+    a seat) each read before the other wrote: the second is refused once
+    it catches up, under the file's lock."""
+    saga, session, book = _begun()
+    shown = _show(book, saga, session, chronicle.ShowCall("Hilda", _hilda_ref()))
+    other = chronicle.Chronicle(book.path, [])
+    other.refresh()
+
+    shows.withdraw(book, saga, session, shown.number, by=HOST)
+    with pytest.raises(ValueError, match="already withdrawn"):
+        shows.withdraw(other, saga, session, shown.number, by=HOST)
+
+    book.refresh()
+    assert [e.kind for e in book.entries].count(chronicle.WITHDRAWN) == 1
+
+
+def test_a_damaged_withdrawal_is_passed_over() -> None:
+    _saga, _session, book = _begun()
+    book.add(chronicle.WITHDRAWN, HOST, chronicle.table(), {"title": "Hilda"})
+    book.add(
+        chronicle.WITHDRAWN, HOST, chronicle.table(), {"withdraws": "x", "title": "H"}
+    )
+    assert shows.withdrawn(book) == set()
+
+
+def test_a_withdrawals_title_keeps_the_character_rule() -> None:
+    assert chronicle.TYPED[chronicle.WITHDRAWN] == ("title",)
+    _saga, _session, book = _begun()
+    with pytest.raises(ValueError):
+        book.add(
+            chronicle.WITHDRAWN,
+            HOST,
+            chronicle.table(),
+            {"withdraws": 2, "title": "Bad\x07title"},
+        )
+
+
+def test_a_player_opens_nothing_when_the_chronicle_cant_be_read(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    saga, session, book = _begun()
+    shown = _show(book, saga, session, chronicle.ShowCall("Hilda", _hilda_ref()))
+    shows.withdraw(book, saga, session, shown.number, by=HOST)
+    monkeypatch.setattr(host_table.HostTable, "held", lambda _self: None)
+
+    found = host_table.HostTable(saga, session, "ana").open_show(shown)
+
+    assert found == shows.UNREAD_NOTE
+
+
+def test_the_host_table_opens_no_withdrawn_show_for_a_player() -> None:
+    saga, session, book = _begun()
+    shown = _show(book, saga, session, chronicle.ShowCall("Hilda", _hilda_ref()))
+    shows.withdraw(book, saga, session, shown.number, by=HOST)
+
+    ana = host_table.HostTable(saga, session, "ana")
+    assert ana.open_show(shown) == shows.WITHDRAWN_NOTE
+    assert ana.withdraw(shown.number) is not None  # nor withdraws one
+    host = host_table.HostTable(saga, session, HOST)
+    assert isinstance(host.open_show(shown), shows.Shown)
 
 
 def test_a_copy_that_cant_be_made_says_so_and_leaves_no_file() -> None:

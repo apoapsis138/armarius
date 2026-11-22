@@ -29,7 +29,16 @@ from .. import (
     viewing,
 )
 from ..at_table import Table
-from ..commands import Choice, Choose, Command, Form, Picked, Refuse, notes
+from ..commands import (
+    Choice,
+    Choose,
+    Command,
+    Confirm,
+    Form,
+    Picked,
+    Refuse,
+    notes,
+)
 from ..form_spec import DialogField, ListEditor
 from ..markup import escape
 from ..models import Saga, Session
@@ -360,9 +369,29 @@ def live_record(saga: Saga, entry: chronicle.Entry, who: str) -> references.Ref 
 def shown_entries(
     saga: Saga, session: Session, who: str, book: chronicle.HasEntries
 ) -> list[chronicle.Entry]:
-    """The Shows of `book` that `who` reads, newest first."""
+    """The Shows of `book` that `who` reads and may open, newest first:
+    those withdrawn only for the Session's storyguide."""
     reader = chronicle.Reader(book, who, session, saga)
-    return [e for e in reversed(reader.entries()) if e.kind == chronicle.SHOW]
+    gone = (
+        set()
+        if who == table_rules.storyguide_of(session, saga)
+        else shows.withdrawn(book)
+    )
+    return [
+        e
+        for e in reversed(reader.entries())
+        if e.kind == chronicle.SHOW and e.number not in gone
+    ]
+
+
+#: What a list of Shows says when none of this Session's is out.
+STILL_OUT_NONE = "No Show of this Session is still out."
+
+
+def _titled(entry: chronicle.Entry, gone: set[int]) -> str:
+    """A Show as a list names it: its title, and whether it was withdrawn."""
+    title = str(entry.body.get("title", ""))
+    return f"{title} (withdrawn)" if entry.number in gone else title
 
 
 def open_one(table: Table, entry: chronicle.Entry) -> Command:
@@ -392,12 +421,71 @@ def open_show(saga: Saga, session: Session) -> Command:
     """Open a Show of `session`: choose one of those whoever uses this copy
     reads, then read its copy (the terminal's way to the Show cards)."""
     table, found = shows_held(saga, session, chronicle.here())
+    book = table.held()
+    gone = shows.withdrawn(book) if book is not None else set()
     return Choose(
         "Open a Show",
-        lambda: [Choice(escape(str(e.body.get("title", ""))), e.number) for e in found],
+        lambda: [Choice(escape(_titled(e, gone)), e.number) for e in found],
         lambda number: open_one(table, next(e for e in found if e.number == number)),
-        empty="Nothing has been shown at this Session.",
+        empty=STILL_OUT_NONE,
     )
+
+
+WITHDRAW_TITLE = "Withdraw a Show"
+
+
+def withdraw_one(table: Table, entry: chronicle.Entry) -> Confirm:
+    """Withdraw Show `entry`, after asking, at the Table this copy acts at."""
+    title = escape(str(entry.body.get("title", "")))
+
+    def apply() -> list[str]:
+        refused = table.withdraw(entry.number)
+        return notes(refused) if refused else []
+
+    return Confirm(
+        f"Withdraw {title}? Its card says it was withdrawn, and no player can "
+        "open its copy again; a copy open now closes.",
+        apply,
+        yes_label="Withdraw",
+        title=WITHDRAW_TITLE,
+    )
+
+
+def still_out(
+    saga: Saga, session: Session, who: str, book: chronicle.HasEntries | None
+) -> list[chronicle.Entry]:
+    """The Shows of `book` that `who` reads, not withdrawn, newest first."""
+    if book is None:
+        return []
+    gone = shows.withdrawn(book)
+    return [e for e in shown_entries(saga, session, who, book) if e.number not in gone]
+
+
+def withdraw_from(saga: Saga, session: Session, who: str, table: Table) -> Choose:
+    """Withdraw a Show of `session` still out: choose it, then confirm."""
+    found = still_out(saga, session, who, table.held())
+    return Choose(
+        WITHDRAW_TITLE,
+        lambda: [Choice(escape(str(e.body.get("title", ""))), e.number) for e in found],
+        lambda number: withdraw_one(
+            table, next(e for e in found if e.number == number)
+        ),
+        empty=STILL_OUT_NONE,
+    )
+
+
+def why_not_withdraw_here(saga: Saga, session: Session) -> str | None:
+    """Why whoever uses this copy can't Withdraw a Show at `session` now."""
+    return table_rules.why_not_lead(saga, session, chronicle.here(), "withdraws a Show")
+
+
+def withdraw_here(saga: Saga, session: Session) -> Command:
+    """Withdraw a Show, by whoever uses this copy, at the Table it acts at."""
+    problem = why_not_withdraw_here(saga, session)
+    if problem:
+        return Refuse(WITHDRAW_TITLE, problem)
+    who = chronicle.here()
+    return withdraw_from(saga, session, who, host_table.here(saga, session, who))
 
 
 def default_to(saga: Saga, session: Session) -> tuple[str, ...]:

@@ -40,6 +40,7 @@ from .rules import (
     sets_scene,
     shows_at_session,
     stops_hosting,
+    withdraws_show,
 )
 
 #: This area's actions, in the order More lists them.
@@ -140,6 +141,17 @@ ENTRIES: tuple[MoreAction, ...] = (
         section="section-sessions",
         on_page=False,
         in_section=ends_scene,
+    ),
+    # Withdraw a Show still out (forms/show.py).
+    MoreAction(
+        "withdraw_show",
+        "x",
+        "Withdraw a Show",
+        step=lambda page: on_session(page, show_forms.withdraw_here),
+        refresh=calculator(),
+        section="section-sessions",
+        on_page=False,
+        in_section=withdraws_show,
     ),
     # A Show's copy, as the Chronicle's Show cards open it.
     MoreAction(

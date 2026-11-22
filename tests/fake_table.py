@@ -28,6 +28,11 @@ class FakeTable:
         self.opened: list[int] = []
         self.scenes_set: list[chronicle.SceneCall] = []
         self.scenes_ended = 0
+        self.withdrawn: list[int] = []
+
+    def withdraw(self, number: int) -> str | None:
+        self.withdrawn.append(number)
+        return self.refuse
 
     def roll(self, request: chronicle.RollRequest) -> str | None:
         self.rolled.append(request)

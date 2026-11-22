@@ -8,7 +8,15 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from . import at_table, chronicle, references, scene_play, shows, table_rolls
+from . import (
+    at_table,
+    chronicle,
+    references,
+    scene_play,
+    shows,
+    table_rolls,
+    table_rules,
+)
 from .at_table import FormRoll, Opening, Table
 from .models import Saga, Session
 
@@ -102,10 +110,25 @@ class HostTable:
     def open_show(self, entry: chronicle.Entry) -> shows.Shown | str:
         if not chronicle.sees(entry, self.who, self.session, self.saga):
             return "This Show isn't for you."
+        if self.who != table_rules.storyguide_of(self.session, self.saga):
+            # A player opens it only once the Chronicle says it is still out.
+            book = self.held()
+            if book is None:
+                return shows.UNREAD_NOTE
+            if entry.number in shows.withdrawn(book):
+                return shows.WITHDRAWN_NOTE
         try:
             return shows.opened(self.saga.id, entry)
         except ValueError as problem:
             return str(problem)
+
+    def withdraw(self, number: int) -> str | None:
+        return self._write(
+            lambda book: shows.withdraw(
+                book, self.saga, self.session, number, by=self.who
+            ),
+            "The Show couldn't be withdrawn just now.",
+        )
 
     def set_scene(self, call: chronicle.SceneCall) -> str | None:
         return self._write(

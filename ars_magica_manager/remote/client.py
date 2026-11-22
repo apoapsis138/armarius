@@ -606,6 +606,17 @@ class RemoteClient:
             raise ShowRefused(str(reply.body.get("why", "")))
         raise UnreadableReply
 
+    async def withdraw(self, number: int) -> int:
+        """Ask the host to withdraw Show `number`: the number of the entry
+        that says so. ShowRefused with the host's reason."""
+        reply = await self.request("withdraw_show", {"number": number})
+        written = reply.body.get("number")
+        if reply.type == "withdrawn" and isinstance(written, int):
+            return written
+        if reply.type == "show_refused":
+            raise ShowRefused(str(reply.body.get("why", "")))
+        raise UnreadableReply
+
     async def set_scene(self, call: chronicle.SceneCall) -> int:
         """Ask the host to set the Scene `call` names (the banner written
         there): the number of its Chronicle entry. SceneRefused with the

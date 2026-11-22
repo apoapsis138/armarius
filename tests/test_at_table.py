@@ -156,6 +156,34 @@ async def test_only_the_sessions_storyguide_sets_a_scene_at_the_host_or_a_seat(
     ]
 
 
+@pytest.mark.parametrize("where", ["host", "seat"])
+async def test_only_the_sessions_storyguide_withdraws_a_show_at_the_host_or_a_seat(
+    hosted: Table, where: str
+) -> None:
+    """Anna isn't the Session's storyguide: Withdraw is refused her the
+    same way at either adapter; the storyguide's is in the Chronicle."""
+    session = hosted.saga.sessions[0]
+    host = host_table.HostTable(
+        hosted.saga, session, viewing.HOST, show_copy.player_copy
+    )
+    call = chronicle.ShowCall("Aelfric", references.Ref("characters", "aelfric", ""))
+    assert host.show(call) is None
+    book = chronicle.read(hosted.saga, session)
+    book.refresh()
+    number = book.entries[-1].number
+    table, seat = await _table(hosted, where)
+    try:
+        refused = await asyncio.to_thread(table.withdraw, number)
+    finally:
+        if seat is not None:
+            await asyncio.to_thread(seat.close)
+    assert refused == "Only the Session's storyguide withdraws a Show."
+
+    assert host.withdraw(number) is None
+    book.refresh()
+    assert book.entries[-1].kind == chronicle.WITHDRAWN
+
+
 def test_a_host_table_given_no_copier_makes_no_show() -> None:
     hosted = Table()
     session = hosted.saga.sessions[0]

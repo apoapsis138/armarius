@@ -198,12 +198,15 @@ class Chronicle:
         audience: Audience,
         body: dict[str, Any],
         then: Callable[[Entry], Written | None] | None = None,
+        guard: Callable[[], str | None] | None = None,
     ) -> Entry:
         """Write a new entry at the end, flushed to the file before it
         counts: under the file's lock, after what another process wrote
         since, numbered from the file. `then` gives an entry that belongs
         with it (a Blind roll's line for its player), written in the same
-        hold of the lock, so the two are on file before anyone is told."""
+        hold of the lock, so the two are on file before anyone is told.
+        `guard`, asked once caught up under the lock, says why the entry
+        may no longer be written (another copy did it first), or None."""
         problem = typed_problem(kind, body)
         if problem:
             raise ValueError(problem)
@@ -213,6 +216,10 @@ class Chronicle:
             if self.closed:
                 self._tell(caught_up)
                 raise ValueError("This Session has ended: its Chronicle is closed.")
+            stale = guard() if guard is not None else None
+            if stale:
+                self._tell(caught_up)
+                raise ValueError(stale)
             entry = self._write(kind, author, audience, body)
             written = [entry]
             follows = then(entry) if then is not None else None
@@ -1436,6 +1443,10 @@ def show_line(body: dict[str, Any]) -> str:
     return f"{line} (to {', '.join(names)})" if names else line
 
 
+#: A Show taken back (shows.withdraw): its copy is opened no more.
+WITHDRAWN = "withdrawn"
+
+
 # -- Scenes --
 
 SCENE_SET = "scene set"
@@ -1755,6 +1766,17 @@ KINDS: dict[str, Kind] = {
             for_whom=_whispered_to,
             # As a Whisper's: the Players shown by name only (ADR 0031).
             held_back=("to",),
+        ),
+        # A Show taken back: a note seen by whoever saw the Show, whose
+        # card it changes to read withdrawn; for no one, as a Strike is.
+        Kind(
+            WITHDRAWN,
+            lambda body: f"The storyguide withdraws: {body['title']}",
+            # The Show's title, typed when it was shown, copied here.
+            typed=("title",),
+            amends=_always,
+            for_whom=_no_one,
+            held_back=(),
         ),
         # A Scene's banner and its end: words from the saga, and the place
         # as the players know it (scene_play.py); for the Table, so no one.

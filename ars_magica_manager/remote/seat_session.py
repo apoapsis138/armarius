@@ -348,6 +348,18 @@ class SeatSession:
             return "The host can't be reached just now."
         return None
 
+    def withdraw(self, number: int) -> str | None:
+        """Ask the host to withdraw Show `number` (as `show`)."""
+        try:
+            self._loop.run(self._own(lambda c: c.withdraw(number)), timeout=ROLL_WAIT)
+        except ShowRefused as refused:
+            return refused.why
+        except NeedsPasscode, NoCredential:
+            return "Sign in again to withdraw a Show."
+        except ChannelError, SignInError, ConnectionError, TimeoutError:
+            return "The host can't be reached just now."
+        return None
+
     def set_scene(self, call: chronicle.SceneCall) -> str | None:
         """Ask the host to set the Scene `call` names; None once its banner
         is in the Chronicle, else the host's reason (as `roll`)."""
@@ -552,6 +564,9 @@ class SeatTable:
 
     def open_show(self, entry: chronicle.Entry) -> shows.Shown | str:
         return self.seat.open_show(entry)
+
+    def withdraw(self, number: int) -> str | None:
+        return self.seat.withdraw(number)
 
     def set_scene(self, call: chronicle.SceneCall) -> str | None:
         return self.seat.set_scene(call)

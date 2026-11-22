@@ -31,7 +31,8 @@ from .. import __version__
 #: would roll them itself, which ADR 0018 forbids). 4: a seat sends
 #: Messages and Whispers (`say`), which an older host would refuse, and
 #: is told which entries are for it (`for_you`, ADR 0031); a storyguide's
-#: seat Shows (`show`, with the Secrets it ticked), sets and ends a Scene
+#: seat Shows (`show`, with the Secrets it ticked) and withdraws a Show
+#: (`withdraw_show`), sets and ends a Scene
 #: (`set_scene`, `end_scene`), and any seat fetches a Show's copy
 #: (`show_copy`) and picture (in the Show folder). It rises at
 #: most once between releases: 2 to 4 have never shipped.

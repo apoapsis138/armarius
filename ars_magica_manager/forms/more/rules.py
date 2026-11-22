@@ -945,6 +945,17 @@ def opens_show(facts: ActionFacts, section: str) -> bool:
     return bool(show.shows_held(facts.saga, session, chronicle.here())[1])
 
 
+def withdraws_show(facts: ActionFacts, section: str) -> bool:
+    """Withdraw a Show, on the Session Under way, for its storyguide, while
+    a Show of it is still out."""
+    session = _chosen_session(facts, section)
+    if session is None or show.why_not_withdraw_here(facts.saga, session):
+        return False
+    who = chronicle.here()
+    table = show.host_table.here(facts.saga, session, who)
+    return bool(show.still_out(facts.saga, session, who, table.held()))
+
+
 def shows_record(facts: ActionFacts) -> bool:
     """Show, on the page of a record that may be shown, for the storyguide
     of the Session Under way."""
