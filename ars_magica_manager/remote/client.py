@@ -24,6 +24,7 @@ import aiohttp
 from .. import (
     __version__,
     chronicle,
+    handout_list,
     picture_files,
     players,
     references,
@@ -605,6 +606,23 @@ class RemoteClient:
         if reply.type == "show_refused":
             raise ShowRefused(str(reply.body.get("why", "")))
         raise UnreadableReply
+
+    async def handouts(self, player_id: str) -> list[handout_list.Kept]:
+        """Player `player_id`'s Handouts, worked out by the host from every
+        Session's Chronicle: sent only for this seat's own Player, or any
+        Player's to a storyguide. ShowRefused when they aren't sent."""
+        head = await self.request("handouts", {"player": player_id})
+        if head.type == "refused":
+            raise ShowRefused("Those Handouts can't be read just now.")
+        if head.type == "show_refused":
+            raise ShowRefused(str(head.body.get("why", ""))[:200])
+        if head.type != "handouts":
+            raise UnreadableReply
+        try:
+            found = json.loads(await self._parts(head, handout_list.LIST_CAP))
+            return handout_list.from_data(found)
+        except ValueError, RecursionError:
+            raise UnreadableReply from None
 
     async def withdraw(self, number: int) -> int:
         """Ask the host to withdraw Show `number`: the number of the entry

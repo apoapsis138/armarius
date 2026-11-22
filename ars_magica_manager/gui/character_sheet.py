@@ -87,7 +87,7 @@ from ..forms import criamon as criamon_forms
 from ..forms import device as device_forms
 from ..forms import go_to as go_to_forms
 from ..forms import menu as menu_forms
-from ..forms import menu_steps
+from ..forms import menu_steps, player_handouts
 from ..forms import notes_goals as goal_forms
 from ..forms import power as power_forms
 from ..forms import religion as religion_forms
@@ -1962,8 +1962,26 @@ class CharacterSheet(QWidget):
             entries.choose(index)
             self.inspect("Diary", "", labs.diary_info_text(diary, index))
 
+        # A player's Handouts, from any character they play (VTT preview).
+        handouts = (
+            [
+                section(
+                    "Handouts",
+                    p,
+                    TextBlock(
+                        "[dim]What has been Shown to you, in every Session.[/]", p
+                    ),
+                    edits={
+                        "Open Handouts": lambda: self.run(player_handouts.mine(saga, c))
+                    },
+                )
+            ]
+            if player_handouts.offered_on(saga, c)
+            else []
+        )
         return scrolling_page(
             p,
+            *handouts,
             section("Seasons", p, legend(p), self.calendar),
             section(
                 f"Diary ({len(diary)})",

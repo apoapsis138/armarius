@@ -6,9 +6,9 @@ from functools import partial
 
 from ... import storyguides
 from ...sections import DIARY_SECTION, NEIGHBOUR_INFO_SECTION, STAGES_SECTION
+from .. import player_handouts, take_up
 from .. import reveal as reveal_forms
 from .. import show as show_forms
-from .. import take_up
 from ..menu_refresh import INFO_SECTIONS, Refresh, calculator, changes
 from ..menu_steps import (
     arms_command,
@@ -107,6 +107,18 @@ ENTRIES: tuple[MoreAction, ...] = (
         # Also reveal changes the record, as Reveal does.
         refresh=changes(*INFO_SECTIONS, tree=True),
         on_record=shows_record,
+    ),
+    # The Handouts of whoever plays this character (forms/player_handouts).
+    MoreAction(
+        "my_handouts",
+        "u",
+        "Handouts",
+        step=lambda page: player_handouts.mine(page.saga, page.record_to_delete()),
+        refresh=calculator(),
+        on_record=lambda facts: (
+            facts.on_record()
+            and player_handouts.offered_on(facts.saga, facts.record_to_delete())
+        ),
     ),
     # Which interests' deeds a character's sheet offers (deeds).
     MoreAction(

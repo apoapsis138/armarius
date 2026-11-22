@@ -12,18 +12,30 @@ import pytest
 pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
+from gui_steps import answering, section_buttons
 from PySide6.QtGui import QImage
 from PySide6.QtWidgets import QApplication, QLabel, QToolButton
 from test_shows import _begun, _hilda_ref, _show
 
-from ars_magica_manager import chronicle, commands, references, shows, viewing
+from ars_magica_manager import (
+    chronicle,
+    commands,
+    references,
+    shows,
+    storage,
+    viewing,
+    virtual_tabletop,
+)
 from ars_magica_manager.gui import pictures
+from ars_magica_manager.gui.character_sheet import CharacterSheet
 from ars_magica_manager.gui.chronicle_pane import (
     ChroniclePane,
     ShownCopy,
     ShownPicture,
 )
+from ars_magica_manager.gui.forms import ChooseDialog
 from ars_magica_manager.gui.themes import SCRIPTORUM
+from ars_magica_manager.gui.window import MainWindow
 
 HOST = viewing.HOST
 
@@ -171,6 +183,37 @@ def test_no_live_record_for_one_the_player_may_not_read_now() -> None:
     _show(book, saga, session, chronicle.ShowCall("Hilda", _hilda_ref()))
 
     assert _marks(pane) == ["open-show"]
+
+
+@pytest.mark.usefixtures("app")
+def test_a_character_a_player_plays_has_a_handouts_card_on_its_diary(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    virtual_tabletop.set_on(True)
+    saga, session, book = _begun()
+    aelfric = saga.characters[0]
+    aelfric.background.player_ids = ["ana"]
+    _show(book, saga, session, chronicle.ShowCall("Hilda", _hilda_ref()))
+    storage.save_saga(saga)
+    monkeypatch.setattr(chronicle, "here", lambda: "ana")
+    window = MainWindow(saga_ids=[saga.id])
+    window.load(saga)
+    window.show_character(aelfric.id)
+    page = window.page()
+    assert isinstance(page, CharacterSheet)
+    page.open_chapter("Diary")
+
+    asked = answering(window, None)
+    section_buttons(page, "Handouts")["Open Handouts"].click()
+
+    [chooser] = asked
+    assert isinstance(chooser, ChooseDialog)
+    window.show_character(saga.characters[1].id)  # Brigit, Ben's
+    other = window.page()
+    assert isinstance(other, CharacterSheet)
+    other.open_chapter("Diary")
+    with pytest.raises(AssertionError, match="Handouts"):
+        section_buttons(other, "Handouts")
 
 
 @pytest.mark.usefixtures("app")

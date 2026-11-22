@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from ... import merges, storage, undo_season
 from ...actions import NodeKind
-from ...sections import SESSION_SCENES_SECTION, SESSIONS_SECTION
-from .. import downtime, scene_verbs
+from ...sections import PLAYERS_SECTION, SESSION_SCENES_SECTION, SESSIONS_SECTION
+from .. import downtime, player_handouts, scene_verbs
 from .. import hosting as hosting_forms
 from .. import message as message_forms
 from .. import reveal as reveal_forms
@@ -36,6 +36,7 @@ from .rules import (
     opens_session,
     opens_show,
     reads_chronicle,
+    reads_player_handouts,
     sends_message,
     sets_scene,
     shows_at_session,
@@ -141,6 +142,17 @@ ENTRIES: tuple[MoreAction, ...] = (
         section="section-sessions",
         on_page=False,
         in_section=ends_scene,
+    ),
+    # What a Player has been Shown, from their row in Players.
+    MoreAction(
+        "player_handouts",
+        "u",
+        "Handouts",
+        step=lambda page: player_handouts.of_player(page.saga, page.row),
+        refresh=calculator(),
+        section=PLAYERS_SECTION,
+        on_page=False,
+        in_section=reads_player_handouts,
     ),
     # Withdraw a Show still out (forms/show.py).
     MoreAction(

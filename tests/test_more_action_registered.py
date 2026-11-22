@@ -206,6 +206,10 @@ NO_CONTRACT: dict[str, str] = {
     "with nothing to change (test_show_forms.py drives it).",
     "withdraw_show": "A list of the Session's Shows, then a yes-or-no question "
     "with nothing to fill (test_show_forms.py drives it).",
+    "my_handouts": "It only reads: a list of Handouts, then one's copy with "
+    "nothing to change (test_handout_list.py drives it).",
+    "player_handouts": "It only reads: a Player's Handouts, then one's copy "
+    "with nothing to change (test_handout_list.py drives it).",
     "open_session": "opens the Session's page, not a dialog "
     "(test_session_page.py, test_tui_session_page.py)",
 }

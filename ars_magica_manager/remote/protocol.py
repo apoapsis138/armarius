@@ -34,7 +34,8 @@ from .. import __version__
 #: seat Shows (`show`, with the Secrets it ticked) and withdraws a Show
 #: (`withdraw_show`), sets and ends a Scene
 #: (`set_scene`, `end_scene`), and any seat fetches a Show's copy
-#: (`show_copy`) and picture (in the Show folder). It rises at
+#: (`show_copy`) and picture (in the Show folder) and a Player's Handouts
+#: (`handouts`). It rises at
 #: most once between releases: 2 to 4 have never shipped.
 PROTOCOL_VERSION = 4
 #: What a seat speaking an older protocol is told, instead of a welcome.

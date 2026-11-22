@@ -97,6 +97,7 @@ from ...sections import (
     LIBRARY_SECTIONS,
     NOTES_SECTION,
     ORDERS_SECTION,
+    PLAYERS_SECTION,
     SECRETS_SECTION,
     SESSIONS_SECTION,
     STAGED_SECTION,
@@ -943,6 +944,15 @@ def opens_show(facts: ActionFacts, section: str) -> bool:
     if session is None or not chronicle.has_chronicle(facts.saga, session):
         return False
     return bool(show.shows_held(facts.saga, session, chronicle.here())[1])
+
+
+def reads_player_handouts(facts: ActionFacts, section: str) -> bool:
+    """Handouts, on a Player's row in Players, while the Virtual Tabletop
+    (Preview) is on (Players is the storyguide's alone)."""
+    row = facts.chosen_row(section) if section == PLAYERS_SECTION else None
+    return (
+        virtual_tabletop.on() and row is not None and 0 <= row < len(facts.saga.players)
+    )
 
 
 def withdraws_show(facts: ActionFacts, section: str) -> bool:

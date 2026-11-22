@@ -6,7 +6,13 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from ars_magica_manager import chronicle, references, shows, table_rolls
+from ars_magica_manager import (
+    chronicle,
+    handout_list,
+    references,
+    shows,
+    table_rolls,
+)
 
 
 class FakeTable:
@@ -29,6 +35,13 @@ class FakeTable:
         self.scenes_set: list[chronicle.SceneCall] = []
         self.scenes_ended = 0
         self.withdrawn: list[int] = []
+
+    def handouts(self, player_id: str) -> list[handout_list.Kept] | str:
+        del player_id
+        return self.refuse or []
+
+    def open_handout(self, copy: handout_list.Copy) -> shows.Shown | str:
+        return self.refuse or shows.Shown(copy.title, "Copy.")
 
     def withdraw(self, number: int) -> str | None:
         self.withdrawn.append(number)
