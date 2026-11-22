@@ -131,11 +131,18 @@ def subject_of(book: Book) -> str:
     return library.subject(book)
 
 
+def shared_library(saga: Saga, covenant: Covenant) -> list[Book]:
+    """The books the covenant itself owns: the library its members may read
+    (DE p. 381) and whose holdings set its research bonus (Covenants p. 98).
+    Books its magi keep, or keep in their laboratories, are not in it."""
+    return library.books_owned_by(saga, "covenant", covenant.id)
+
+
 def library_subjects(saga: Saga, covenant: Covenant) -> dict[str, list[Book]]:
-    """Each subject the covenant's library has a summa or tractatus on, with
-    those books, in order of first appearance."""
+    """Each subject the covenant's shared library has a summa or tractatus
+    on, with those books, in order of first appearance."""
     found: dict[str, list[Book]] = {}
-    for book in library.books_in_covenant(saga, covenant):
+    for book in shared_library(saga, covenant):
         subject = subject_of(book)
         if subject:
             found.setdefault(subject, []).append(book)
@@ -151,10 +158,10 @@ class EncyclopediaBonus:
 def encyclopedias(
     saga: Saga, covenant: Covenant, subject: str
 ) -> list[EncyclopediaBonus]:
-    """The encyclopedias in the covenant's library that aid research on
-    `subject`, each with its bonus, best first."""
+    """The encyclopedias in the covenant's shared library that aid research
+    on `subject`, each with its bonus (its tractatus there), best first."""
     counts: dict[str, int] = {}
-    for book in library.books_in_covenant(saga, covenant):
+    for book in shared_library(saga, covenant):
         codex = library.codex_of(saga, book)
         if (
             codex is not None
@@ -215,13 +222,15 @@ def research_level(
     pictorial works or not: one more for them; one more for a long expert
     correspondence (a level up, Covenants p. 90) or a realia collection (up
     to +1, p. 102) in the library, each kind once, and both only when the
-    troupe's house rule lets them stack (the book doesn't say); at most +5."""
+    troupe's house rule lets them stack (the book doesn't say); at most +5.
+    Nothing when the shared library holds no book on `subject`: the bonus
+    comes from its holdings (p. 98), so a level set on books a magus keeps
+    counts for nothing."""
+    held = library_subjects(saga, covenant).get(subject, [])
+    if not held:
+        return 0
     level = chosen + (1 if pictorial else 0)
-    kinds = {
-        book.opus
-        for book in library_subjects(saga, covenant).get(subject, [])
-        if book.opus in book_kinds.OPUS_TYPES
-    }
+    kinds = {book.opus for book in held if book.opus in book_kinds.OPUS_TYPES}
     aids = sum(book_kinds.OPUS_TYPES[k].research_level for k in kinds)
     if not options.is_on(saga, options.RESEARCH_AIDS_STACK):
         aids = min(aids, 1)

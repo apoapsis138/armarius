@@ -321,6 +321,13 @@ Every book at a covenant: those it owns and those owned by its laboratories
 and characters. It is a view, not a record of its own.
 _Avoid_: Book collection
 
+**Shared library**:
+The books a covenant itself owns, which all its members may read. Its
+research bonus and its holding of a subject come from these alone; a book
+a magus keeps, or keeps in a laboratory, is in the Library but not in the
+shared library.
+_Avoid_: Covenant library (ambiguous with Library)
+
 **Armarium**:
 Every book in the saga in one list, whoever holds it, unassigned books
 included; the storyguide's place to make books for the players to find. A
