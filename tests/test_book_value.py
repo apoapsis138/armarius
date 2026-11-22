@@ -112,7 +112,7 @@ def test_research_in_the_summary_and_the_details_panel():
         "library +2 · Natural Histories +3"
     )
     physics = saga.books[-1]
-    assert "Research (Philosophiae):[/] library +2 · Natural Histories +3" in (
+    assert "  [b]Research:[/] library +2 · Natural Histories +3" in (
         bk.detail_text(saga, physics)
     )
 

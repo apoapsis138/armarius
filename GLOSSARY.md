@@ -328,6 +328,13 @@ a magus keeps, or keeps in a laboratory, is in the Library but not in the
 shared library.
 _Avoid_: Covenant library (ambiguous with Library)
 
+**Holding**:
+The shared library's Level and Quality in one subject, its books read as
+one: under the Large Library rule, its best summa raised by the other
+books near it; without the rule, its best summa's own. A subject with no
+summa has none. (Transforming Mythic Europe p. 105)
+_Avoid_: Library score, the library on it
+
 **Armarium**:
 Every book in the saga in one list, whoever holds it, unassigned books
 included; the storyguide's place to make books for the players to find. A

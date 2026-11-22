@@ -155,6 +155,28 @@ def test_far_weaker_books_add_nothing():
     )
 
 
+def test_each_book_s_role_in_the_large_library():
+    """TME p. 105: the best summa sets the base; another summa within 3 of
+    the library's Level + Quality adds to Level, a tractatus within 3 of
+    its Quality to Quality; a book further off, or a copy, adds nothing."""
+    best = Book("best", "Best", "Art Summa", art="Vim", level=14, quality=11)
+    near = Book("near", "Near", "Art Summa", art="Vim", level=12, quality=11)
+    weak = Book("weak", "Weak", "Art Summa", art="Vim", level=6, quality=6)
+    good = Book("good", "Good", "Tractatus", art="Vim", quality=8)
+    poor = Book("poor", "Poor", "Tractatus", art="Vim", quality=6)
+    copy = Book("copy", "Copy", "Tractatus", art="Vim", quality=8, copy_of="good")
+    library = tb.library_score([best, near, weak, good, poor, copy])
+    assert library is not None
+    assert library.roles == {
+        "best": tb.ROLE_BEST,  # 14 + 11 = 25
+        "near": tb.ROLE_LEVEL,  # 23, within 3 of 25
+        "weak": tb.ROLE_FAR,  # 12
+        "good": tb.ROLE_QUALITY,  # 8, within 3 of 11
+        "poor": tb.ROLE_FAR,  # 6, 5 below 11
+        "copy": tb.ROLE_COPY,
+    }
+
+
 # -- the season --------------------------------------------------------------
 
 

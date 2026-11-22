@@ -71,7 +71,7 @@ Technological savings (TME pp. 120-121; Covenants pp. 66-69):
 
 from __future__ import annotations
 
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 
 from ..models import (
     BREAD_SHARES,
@@ -332,16 +332,27 @@ def art_xp(score: int) -> int:
     return score * (score + 1) // 2
 
 
+#: What a book does for a large library's holding of its subject (`roles`).
+ROLE_BEST = "best"  # the best summa: the base
+ROLE_LEVEL = "level"  # a summa adding a point of experience to Level
+ROLE_QUALITY = "quality"  # a tractatus adding one to Quality
+ROLE_FAR = "far"  # adds nothing: more than 3 from the library's figures
+ROLE_COPY = "copy"  # adds nothing: a copy of a book already counted
+
+
 @dataclass(frozen=True)
 class LibraryScore:
     """A large library's figures in one subject: its Level and Quality,
-    from its best summa (`best`, a book id) and the books that count."""
+    from its best summa (`best`, a book id) and the books that count
+    (`summae` and `tractatus`, the best one left out, as the book writes
+    it), with each book's role by its id."""
 
     level: int
     quality: int
     best: str
     summae: int
     tractatus: int
+    roles: dict[str, str] = field(default_factory=dict, compare=False)
 
 
 def library_score(books: list[Book]) -> LibraryScore | None:
@@ -353,15 +364,19 @@ def library_score(books: list[Book]) -> LibraryScore | None:
     as Arts. A copy of a book already counted adds nothing."""
     seen: set[str] = set()
     unique: list[Book] = []
+    roles: dict[str, str] = {}
     for book in books:
         original = book.copy_of or book.id
         if original not in seen:
             seen.add(original)
             unique.append(book)
+        else:
+            roles[book.id] = ROLE_COPY
     summae = [b for b in unique if b.type in ("Art Summa", "Ability Summa")]
     if not summae:
         return None
     best = max(summae, key=lambda b: ((b.level or 0) + (b.quality or 0), b.quality))
+    roles[best.id] = ROLE_BEST
     level_xp = art_xp(best.level or 0)
     quality_xp = art_xp(best.quality or 0)
     counted_summae = counted_tractatus = 0
@@ -371,14 +386,18 @@ def library_score(books: list[Book]) -> LibraryScore | None:
     )
     for book in others:
         library = art_score(level_xp) + art_score(quality_xp)
-        if abs((book.level or 0) + (book.quality or 0) - library) <= 3:
+        near = abs((book.level or 0) + (book.quality or 0) - library) <= 3
+        roles[book.id] = ROLE_LEVEL if near else ROLE_FAR
+        if near:
             level_xp += 1
             counted_summae += 1
     tractatus = sorted(
         (b for b in unique if b.type == "Tractatus"), key=lambda b: -(b.quality or 0)
     )
     for book in tractatus:
-        if abs((book.quality or 0) - art_score(quality_xp)) <= 3:
+        near = abs((book.quality or 0) - art_score(quality_xp)) <= 3
+        roles[book.id] = ROLE_QUALITY if near else ROLE_FAR
+        if near:
             quality_xp += 1
             counted_tractatus += 1
     return LibraryScore(
@@ -387,6 +406,7 @@ def library_score(books: list[Book]) -> LibraryScore | None:
         best.id,
         counted_summae,
         counted_tractatus,
+        roles,
     )
 
 
