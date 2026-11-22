@@ -114,7 +114,8 @@ ENTRIES: tuple[MoreAction, ...] = (
         "w",
         "Show",
         step=lambda page: on_session(page, show_forms.show_here),
-        refresh=calculator(),
+        # Also reveal changes the record shown, as Reveal does.
+        refresh=changes(tree=True),
         section="section-sessions",
         on_page=False,
         in_section=shows_at_session,

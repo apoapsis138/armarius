@@ -21,9 +21,11 @@ from ars_magica_manager import (
     storage,
     viewing,
 )
-from ars_magica_manager.models import AtlasMap
+from ars_magica_manager.models import AtlasMap, Secret
+from ars_magica_manager.remote import showing
 from ars_magica_manager.remote.client import ShowRefused
 from ars_magica_manager.remote.host import PATH
+from ars_magica_manager.remote.protocol import Body
 from ars_magica_manager.remote.seat_session import SeatSession
 from ars_magica_manager.remote.showing import OPENS_PER_MINUTE
 
@@ -146,6 +148,46 @@ async def test_a_storyguides_seat_shows_through_the_host(table: Table) -> None:
     entry = next(e for e in book.entries if e.number == number)
     assert (entry.kind, entry.author) == (chronicle.SHOW, bea_id)
     assert shows.opened(table.saga.id, entry).picture == PICTURE
+
+
+async def test_a_storyguides_seat_sends_the_secrets_it_ticked(table: Table) -> None:
+    """Bea, a storyguide, runs the Session from her seat and Shows Aelfric
+    with his second Secret, revealing him as she does."""
+    bea_id = table.id_of("Bea")
+    next(p for p in table.saga.players if p.id == bea_id).role = viewing.STORYGUIDE
+    table.saga.sessions[0].storyguide_id = bea_id
+    aelfric = table.saga.character("aelfric")
+    assert aelfric is not None
+    aelfric.secrets = [Secret("Kept", "KEPT-SECRET"), Secret("Other", "OTHER-SECRET")]
+    storage.save_saga(table.saga)
+    other = (1, shows.secret_mark(aelfric.secrets[1]))
+    call = chronicle.ShowCall(
+        "Aelfric",
+        references.Ref("characters", "aelfric", ""),
+        secrets=(other,),
+        reveal=True,
+    )
+    bea = await table.seat("Bea")
+    try:
+        number = await bea.show(call)
+    finally:
+        await bea.close()
+
+    book = chronicle.read(table.saga, table.saga.sessions[0])
+    book.refresh()
+    entry = next(e for e in book.entries if e.number == number)
+    text = shows.opened(table.saga.id, entry).text
+    assert "OTHER-SECRET" in text and "KEPT-SECRET" not in text
+
+
+def test_a_seats_show_carries_its_ticks_and_reveal_and_refuses_a_bad_tick() -> None:
+    body: Body = {"title": "T", "kind": "characters", "id": "a", "reveal": True}
+    body["secrets"] = "1:ab\n3:cd"
+    call = showing.call_of(body)
+    assert call.secrets == ((1, "ab"), (3, "cd")) and call.reveal
+    for bad in ("1", "-1:ab", "x:ab", "1:ab\n\n2", "1:"):
+        with pytest.raises(ValueError, match=shows.NOT_A_SECRET):
+            showing.call_of({"title": "T", "kind": "characters", "secrets": bad})
 
 
 async def test_a_seat_table_opens_the_copy_of_a_show_it_holds(table: Table) -> None:

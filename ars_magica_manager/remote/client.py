@@ -590,6 +590,10 @@ class RemoteClient:
             "to": "\n".join(call.to),
             "story_id": call.story_id,
         }
+        if call.secrets:
+            body["secrets"] = "\n".join(f"{row}:{mark}" for row, mark in call.secrets)
+        if call.reveal:
+            body["reveal"] = True
         if call.record is not None:
             body |= {"kind": call.record.kind, "id": call.record.id}
         elif call.picture is not None:

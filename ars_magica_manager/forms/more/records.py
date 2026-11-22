@@ -104,7 +104,8 @@ ENTRIES: tuple[MoreAction, ...] = (
         "h",
         "Show to the Table",
         step=lambda page: show_forms.show_record(page.saga, page.record_to_delete()),
-        refresh=calculator(),
+        # Also reveal changes the record, as Reveal does.
+        refresh=changes(*INFO_SECTIONS, tree=True),
         on_record=shows_record,
     ),
     # Which interests' deeds a character's sheet offers (deeds).

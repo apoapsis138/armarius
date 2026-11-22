@@ -2,7 +2,8 @@
 
 A storyguide's seat Shows with `show`: what to show (a record by kind and
 id, or a picture already in the saga by folder and name), its title, the
-Players shown (none: the Table) and an open story. The host makes the one
+Players shown (none: the Table), an open story and the record's Secrets
+ticked to go with it, by their place. The host makes the one
 copy itself, through the Player view, and writes the entry as that seat's
 Player; the who-may rule is the host's (table_rules.why_not_lead).
 
@@ -16,6 +17,7 @@ copy is the record's printed sheet (show_copy.py)."""
 
 from __future__ import annotations
 
+import re
 import time
 from collections.abc import Callable
 
@@ -35,8 +37,25 @@ OPENS_PER_MINUTE = 30
 SHOW_ID_MAX = 64
 
 
-def _call_of(body: Body) -> chronicle.ShowCall:
-    """The Show a seat's `show` asks for (its fields already checked)."""
+#: A ticked Secret as a seat sends it: its place, a colon, its mark.
+_TICK = re.compile(r"(\d{1,4}):([0-9a-f]{1,64})")
+
+
+def _ticks(sent: str) -> tuple[tuple[int, str], ...]:
+    """The Secrets a seat ticked, one a line; ValueError (refused) for any
+    line not a tick."""
+    found = []
+    for line in sent.split("\n") if sent else []:
+        tick = _TICK.fullmatch(line)
+        if tick is None:
+            raise ValueError(shows.NOT_A_SECRET)
+        found.append((int(tick[1]), tick[2]))
+    return tuple(found)
+
+
+def call_of(body: Body) -> chronicle.ShowCall:
+    """The Show a seat's `show` asks for (its fields already checked);
+    ValueError for ticked Secrets it can't read."""
     kind, record_id = str(body.get("kind", "")), str(body.get("id", ""))
     folder, name = str(body.get("folder", "")), str(body.get("name", ""))
     return chronicle.ShowCall(
@@ -45,6 +64,8 @@ def _call_of(body: Body) -> chronicle.ShowCall:
         picture=(folder, name) if folder else None,
         to=tuple(t for t in str(body.get("to", "")).split("\n") if t),
         story_id=str(body.get("story_id", "")),
+        secrets=_ticks(str(body.get("secrets", ""))),
+        reveal=body.get("reveal") is True,
     )
 
 
@@ -56,7 +77,7 @@ def _show(
     body: Body,
 ) -> chronicle.Entry:
     return shows.show(
-        book, saga, under_way, _call_of(body), by=by, copier=show_copy.player_copy
+        book, saga, under_way, call_of(body), by=by, copier=show_copy.player_copy
     )
 
 
@@ -102,6 +123,11 @@ def show_specs(
                 "name": Field(str, max_length=PICTURE_NAME_MAX, required=False),
                 "to": Field(str, max_length=2_000, required=False),
                 "story_id": Field(str, max_length=SHOW_ID_MAX, required=False),
+                # The Secrets ticked, one a line: "place:mark".
+                "secrets": Field(str, max_length=2_000, required=False),
+                # Whether the Show also reveals the record (its copy is
+                # made as the players will know it).
+                "reveal": Field(bool, required=False),
             },
             show,
         ),

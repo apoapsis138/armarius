@@ -33,6 +33,8 @@ from ..commands import Choice, Choose, Command, Form, Picked, Refuse, notes
 from ..form_spec import DialogField, ListEditor
 from ..markup import escape
 from ..models import Saga, Session
+from . import reveal
+from . import secrets as secret_titles
 
 HELP_ID = "chronicle-shows"
 TITLE = "Show"
@@ -58,6 +60,116 @@ def _picture_key(picture: tuple[str, str]) -> str:
 
 #: What a Show may start on: a record, or a picture as (folder, file name).
 Showable = references.Ref | tuple[str, str]
+
+
+#: The key of the "Also reveal" tick.
+ALSO_REVEAL = "also_reveal"
+#: The key of the Secrets to show: a list of (place, mark), each a Secret
+#: not yet revealed (shows.secret_mark).
+SECRETS = "secrets"
+SECRETS_TITLE = "Secrets to show"
+#: A tick's key in the Secrets chooser, before the Secret's place.
+_TICK = "tick_"
+
+Tick = tuple[int, str]
+
+
+def _sendable(saga: Saga, what: str, who: str) -> tuple[Any, list[int]]:
+    """The record `what` names and the places of its Secrets not yet
+    revealed that `who` may send (none for another storyguide's record)."""
+    record, _picture, _name = _chosen(saga, what)
+    found = references.find(saga, record.kind, record.id) if record else None
+    if found is None or not shows.sends_secrets(saga, found, who):
+        return found, []
+    return found, shows.unrevealed(found)
+
+
+def secrets_chooser(
+    saga: Saga, who: str, current: Any, values: dict[str, Any]
+) -> Form | Refuse:
+    """The chosen record's Secrets not yet revealed, ticked on a list:
+    those ticked go with the Show. Each is kept by its place and a mark
+    of its words, so a list changed since is refused, not misread."""
+    record, rows = _sendable(saga, str(values.get("what") or ""), who)
+    if not rows:
+        return Refuse(SECRETS_TITLE, "No Secret of it is yours to show.")
+    ticked = {row for row, _mark in current or []}
+
+    def fields() -> list[DialogField]:
+        return [
+            DialogField(
+                f"{_TICK}{row}",
+                secret_titles.title_of(record.secrets[row]),
+                "check",
+                row in ticked,
+            )
+            for row in rows
+        ]
+
+    def picked(chosen: dict[str, Any]) -> Picked:
+        return Picked(
+            [
+                (row, shows.secret_mark(record.secrets[row]))
+                for row in rows
+                if chosen.get(f"{_TICK}{row}") is True
+            ]
+        )
+
+    return Form(SECRETS_TITLE, fields, picked, save_label="Done", help_id=HELP_ID)
+
+
+def _secret_fields(saga: Saga, who: str) -> list[DialogField]:
+    """The Secrets to show, offered while a record with Secrets `who` may
+    send is chosen, then Also reveal, while any record is."""
+
+    def ticked(chosen: Any) -> str:
+        count = len(chosen or [])
+        if not count:
+            return "None: the copy holds only those revealed"
+        return f"{count} ticked" if count > 1 else "1 ticked"
+
+    return [
+        DialogField(
+            SECRETS,
+            SECRETS_TITLE,
+            "picker",
+            [],
+            show_if=lambda values: bool(
+                _sendable(saga, str(values.get("what") or ""), who)[1]
+            ),
+            display=ticked,
+            choose=lambda current, values: secrets_chooser(saga, who, current, values),
+            choose_with_values=True,
+            hint="Its Secrets not yet revealed: those you tick go with the copy.",
+        ),
+        DialogField(
+            ALSO_REVEAL,
+            "Also reveal",
+            "check",
+            False,
+            show_if=lambda values: str(values.get("what") or "").startswith(_RECORD),
+            hint="The players come to know of the record, and the ticked Secrets "
+            "are revealed this season, each with its line in the Diary, as "
+            "Reveal does. Unticked, nothing changes for the troupe.",
+        ),
+    ]
+
+
+def _ticks(value: Any) -> tuple[Tick, ...]:
+    """The Secrets to show, from the picker's value."""
+    return tuple((int(row), str(mark)) for row, mark in value or [])
+
+
+def _also_reveal(saga: Saga, ref: references.Ref, rows: tuple[int, ...]) -> None:
+    """Reveal's own steps: the record known, with its Diary line, and its
+    Secrets at `rows` revealed this season, each with its line."""
+    record = references.find(saga, ref.kind, ref.id)
+    if record is None:
+        return
+    if viewing.can_be_unknown(record):
+        reveal.set_known(saga, record, True)
+    for row in rows:
+        reveal.set_revealed(saga, record, record.secrets[row], True)
 
 
 def _key_of(preset: Showable | None) -> str:
@@ -140,7 +252,8 @@ def show_form(
         )
 
     def named(values: dict[str, Any]) -> dict[str, Any]:
-        return {"title": _chosen(saga, str(values.get("what") or ""))[2]}
+        """Something else chosen: its name, and no Secret ticked."""
+        return {"title": _chosen(saga, str(values.get("what") or ""))[2], SECRETS: []}
 
     def fields() -> list[DialogField]:
         return [
@@ -181,6 +294,7 @@ def show_form(
                 items=ListEditor(person, choose_person, "Show to"),
                 hint="No one chosen: the Table. The storyguide sees every Show.",
             ),
+            *_secret_fields(saga, who),
         ]
 
     def call(values: dict[str, Any]) -> chronicle.ShowCall:
@@ -191,14 +305,21 @@ def show_form(
             picture=picture,
             to=tuple(str(t) for t in values.get("to") or []),
             story_id=str(values.get("story") or ""),
+            secrets=_ticks(values.get(SECRETS)) if record is not None else (),
+            reveal=record is not None and values.get(ALSO_REVEAL) is True,
         )
 
     def validate(values: dict[str, Any]) -> str | None:
         return shows.why_not_ask(saga, session, call(values), who)
 
     def apply(values: dict[str, Any]) -> list[str]:
-        refused = table.show(call(values))
-        return notes(refused) if refused else []
+        asked = call(values)
+        refused = table.show(asked)
+        if refused:
+            return notes(refused)
+        if asked.reveal and asked.record is not None:
+            _also_reveal(saga, asked.record, tuple(row for row, _ in asked.secrets))
+        return []
 
     return Form(
         TITLE, fields, apply, validate=validate, save_label="Show", help_id=HELP_ID

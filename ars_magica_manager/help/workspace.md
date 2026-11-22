@@ -1558,7 +1558,9 @@ Preview: turn on Virtual Tabletop in Settings.
 While a Session is under way, its storyguide can **Show** the players something to look at: a character's, covenant's, laboratory's or familiar's record, or a picture already in the saga, such as a map or a portrait. Show it to the Table, which everyone at the Session sees, or to the Players you choose. Only the Session's storyguide shows, from the host's computer or a Remote seat.
 
 - **What, title, story, to whom.** Choose what to show; its name becomes the title, which you can change. Choose the open story it belongs to, if any (a story is listed once it has been taken up). Under **To**, no one chosen means the Table; while a [Scene plays](help:scenes-play), it starts on the players of the characters present.
-- **A copy, as the players read it now.** A record is copied once, at the moment you Show it, as the players may read it: no Secret you haven't revealed, no private notes, and the name of any record they don't know of left out. A picture is copied as it is. The copy never changes, even if the record does later.
+- **A copy, as the players read it now.** A record is copied once, at the moment you Show it, as the players may read it: no Secret you haven't revealed, no private notes, and "(unknown)" for any record they don't know of. A picture is copied as it is. The copy never changes, even if the record does later.
+- **Secrets to show.** For a record whose Secrets are yours to tell (among several storyguides, one you run), **Secrets to show** lists those not yet revealed, each with a tick: the ones you tick go into the copy too, as if revealed. That is all they do: in the saga they stay unrevealed. If a ticked Secret is changed or moved before you Show, you're asked to tick it again, so the players never get one you didn't choose.
+- **Also reveal** makes the Show a reveal too, as [Reveal](help:section-secrets) does: the players come to know of the record, and the ticked Secrets are revealed this season, each with its dated line in the troupe covenants' Diary. The copy is made as they will know it. Unticked, nothing changes for the troupe but the copy.
 - **Each one shown gets a Show** in the [Chronicle](help:chronicle), with its title, to open and read the copy. It never opens by itself.
 <!-- gui -->
 - A Show to you pulses the collapsed [Chronicle pane](help:chronicle-pane); a Show to the Table only adds to its count. **Open the live record** sits beside **Open** on its card when you may read the record as it is now.
@@ -1960,6 +1962,7 @@ The list of the record's secrets, each with its title, or its first words if it 
 
 - **Reveal** marks it revealed this season and writes a dated line in each troupe covenant's Diary, "Revealed: the record: the secret". The players see it in Known from then on. On a record the players don't know of yet, it shows once the record is revealed too. **Hide Again** takes it back, and its Diary line.
 - **Split by Paragraph** shows the parts first, then makes one secret of each paragraph, each revealed as the whole was. The first keeps the title.
+- While a Session is under way, a [Show](help:chronicle-shows) of the record can carry the Secrets you tick, and its **Also reveal** reveals them (and the record) as Reveal does.
 
 **You type:** a **Title**, a few words and optional, and the **Secret** itself, as many paragraphs as you like. It supports **bold** and *italic*.
 
