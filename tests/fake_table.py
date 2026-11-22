@@ -8,6 +8,7 @@ from collections.abc import Callable
 
 from ars_magica_manager import (
     chronicle,
+    handout_arrangement,
     handout_list,
     references,
     shows,
@@ -35,6 +36,7 @@ class FakeTable:
         self.scenes_set: list[chronicle.SceneCall] = []
         self.scenes_ended = 0
         self.withdrawn: list[int] = []
+        self.arranged: list[handout_arrangement.Arrange] = []
 
     def handouts(self, player_id: str) -> list[handout_list.Kept] | str:
         del player_id
@@ -42,6 +44,19 @@ class FakeTable:
 
     def open_handout(self, copy: handout_list.Copy) -> shows.Shown | str:
         return self.refuse or shows.Shown(copy.title, "Copy.")
+
+    def search_handouts(self, player_id: str, words: str) -> set[str] | str:
+        del player_id, words
+        return self.refuse or set()
+
+    def arrangement(self, player_id: str) -> handout_arrangement.Arrangement | str:
+        del player_id
+        return self.refuse or handout_arrangement.Arrangement()
+
+    def arrange(self, player_id: str, call: handout_arrangement.Arrange) -> str | None:
+        del player_id
+        self.arranged.append(call)
+        return self.refuse
 
     def withdraw(self, number: int) -> str | None:
         self.withdrawn.append(number)

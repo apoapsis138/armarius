@@ -144,9 +144,12 @@ def test_a_player_opens_their_handouts_from_a_character_they_play(
     assert not player_handouts.offered_on(saga, saga.characters[1])  # Ben's
     listed = player_handouts.mine(saga, saga.characters[0])
     assert isinstance(listed, commands.Choose)
-    [only] = listed.choices()
+    search, only = listed.choices()
+    assert search.value == player_handouts.SEARCH
     assert only.label.startswith("Hilda again (shown 2 times")
-    copies = listed.apply(only.value)
+    what = listed.apply(only.value)  # the player's own: Open or arrange it
+    assert isinstance(what, commands.Choose)
+    copies = what.apply(player_handouts.OPEN)
     assert isinstance(copies, commands.Choose)
     assert [c.label.split(": ")[1] for c in copies.choices()] == [
         "Hilda again",

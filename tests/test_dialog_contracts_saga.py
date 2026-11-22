@@ -10,9 +10,10 @@ from dialog_contract_support import (
     last_chronicle_entry,
     run_contract,
 )
+from dialog_openers import HANDOUT_PLAYER, HANDOUT_TITLE
 from textual.widgets import Select
 
-from ars_magica_manager import armies, catalog
+from ars_magica_manager import armies, catalog, handout_arrangement
 from ars_magica_manager import house_rules as hr
 from ars_magica_manager import players as pl
 
@@ -29,6 +30,22 @@ CONTRACTS: dict[str, Contract] = {
         invalid=[{"Message": ""}, {"Message": "Huzzah " + chr(0x1F389)}],
         # The dialog's title is "Message" too.
         aliases={"Message": "fld-words"},
+    ),
+    "rename a handout": Contract(
+        prefill={"Title": HANDOUT_TITLE},
+        edits={"Title": "Pat's own"},
+        saved=lambda s: [
+            p.title for p in handout_arrangement.load(s.id, HANDOUT_PLAYER).places
+        ],
+        expected=["Pat's own"],
+        invalid=[{"Title": "x" * 201}, {"Title": "Huzzah " + chr(0x1F389)}],
+    ),
+    "move a handout to a folder": Contract(
+        prefill={"Folder": "", "Or a new folder": ""},
+        edits={"Or a new folder": "Letters"},
+        saved=lambda s: handout_arrangement.load(s.id, HANDOUT_PLAYER).folders,
+        expected=["Letters"],
+        invalid=[{"Or a new folder": "y" * 81}],
     ),
     "show": Contract(
         prefill={"Title": ""},

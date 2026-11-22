@@ -35,7 +35,9 @@ from .. import __version__
 #: (`withdraw_show`), sets and ends a Scene
 #: (`set_scene`, `end_scene`), and any seat fetches a Show's copy
 #: (`show_copy`) and picture (in the Show folder) and a Player's Handouts
-#: (`handouts`). It rises at
+#: (`handouts`, `search_handouts`), and a Player reads and changes their
+#: own arrangement of them (`handout_arrangement`, `arrange_handouts`).
+#: It rises at
 #: most once between releases: 2 to 4 have never shipped.
 PROTOCOL_VERSION = 4
 #: What a seat speaking an older protocol is told, instead of a welcome.

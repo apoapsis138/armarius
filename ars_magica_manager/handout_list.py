@@ -20,7 +20,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass, field
 from typing import Any
 
-from . import chronicle, shapes, shows, viewing
+from . import chronicle, sessions, shapes, shows, viewing
 from .models import Saga, Session
 
 #: What a Handout holds: a copy of a record, or a picture.
@@ -38,6 +38,11 @@ class Copy:
     session_id: str
     number: int
     picture: str = ""
+    #: The Story chapter it was shown under, by name ("": none).
+    story: str = ""
+    #: Its Session as the list names it, by its place among the saga's
+    #: (session_label): a seat holds only tonight's Session to ask.
+    session: str = ""
 
 
 @dataclass
@@ -86,8 +91,50 @@ def _shown_to(saga: Saga, session: Session, entry: chronicle.Entry, who: str) ->
     return entry.audience.to == chronicle.CHOSEN and who in entry.audience.players
 
 
+def session_label(saga: Saga, session: Session) -> str:
+    """How a Handout's list names `session`: its place among the saga's
+    Sessions and its title, so two on one day, or both undated, differ."""
+    place = next((i for i, s in enumerate(saga.sessions) if s is session), -1)
+    return f"{place + 1}. {sessions.title(session)}"
+
+
+#: The words of each copy, by saga and Show id, read once: a copy is never
+#: changed once made.
+_WORDS: dict[tuple[str, str], str] = {}
+
+
+def _words(saga_id: str, show_id: str) -> str:
+    """Show `show_id`'s copy's words, lower-cased ("" for a picture, or a
+    copy that can't be read)."""
+    found = _WORDS.get((saga_id, show_id))
+    if found is None:
+        try:
+            found = shows.from_copy(shows.read_copy(saga_id, show_id)).text.lower()
+        except ValueError:
+            found = ""
+        _WORDS[saga_id, show_id] = found
+    return found
+
+
+def matching(saga: Saga, who: str, words: str) -> set[str]:
+    """The keys of Player `who`'s Handouts whose copies hold every one of
+    `words` (a search over what was shown; titles are searched where the
+    list is drawn). Each copy is read once and kept."""
+    wanted = words.lower().split()
+    if not wanted:
+        return set()
+    return {
+        kept.key
+        for kept in of_player(saga, who)
+        if any(
+            all(w in _words(saga.id, c.show_id) for w in wanted) for c in kept.copies
+        )
+    }
+
+
 def of_player(saga: Saga, who: str) -> list[Kept]:
-    """Player `who`'s Handouts, newest first."""
+    """Player `who`'s Handouts, newest first. Only the Chronicles are read,
+    never a copy's file."""
     found: dict[str, Kept] = {}
     for session, entry, gone in shows.every_show(saga):
         if gone or not _shown_to(saga, session, entry, who):
@@ -102,6 +149,8 @@ def of_player(saga: Saga, who: str) -> list[Kept]:
                 session.id,
                 entry.number,
                 str(entry.body.get("picture", "")),
+                str(entry.body.get("story", "")),
+                session_label(saga, session),
             )
         )
     for kept in found.values():

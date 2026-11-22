@@ -19,7 +19,15 @@ import secrets
 from collections.abc import Callable, Coroutine
 from typing import Any
 
-from .. import chronicle, handout_list, players, references, shows, table_rolls
+from .. import (
+    chronicle,
+    handout_arrangement,
+    handout_list,
+    players,
+    references,
+    shows,
+    table_rolls,
+)
 from ..models import Saga
 from ..saga_store import NotSaved
 from ..undo_season import Undo
@@ -409,6 +417,49 @@ class SeatSession:
         same terms as a Show's (open_show)."""
         return self._fetch_copy(copy.show_id, copy.picture)
 
+    def search_handouts(self, player_id: str, words: str) -> set[str] | str:
+        """Which of a Player's Handouts hold `words`, searched by the host."""
+        try:
+            return self._loop.run(
+                self._own(lambda c: c.search_handouts(player_id, words)),
+                timeout=OPEN_WAIT,
+            )
+        except ShowRefused as refused:
+            return refused.why
+        except NeedsPasscode, NoCredential:
+            return "Sign in again to search your Handouts."
+        except ChannelError, SignInError, ConnectionError, TimeoutError:
+            return "The host can't be reached just now."
+
+    def arrangement(self, player_id: str) -> handout_arrangement.Arrangement | str:
+        """This seat's Player's own arrangement, from the host."""
+        try:
+            return self._loop.run(
+                self._own(lambda c: c.handout_arrangement(player_id)),
+                timeout=OPEN_WAIT,
+            )
+        except ShowRefused as refused:
+            return refused.why
+        except NeedsPasscode, NoCredential:
+            return "Sign in again to read your Handouts."
+        except ChannelError, SignInError, ConnectionError, TimeoutError:
+            return "The host can't be reached just now."
+
+    def arrange(self, player_id: str, call: handout_arrangement.Arrange) -> str | None:
+        """Ask the host to change this seat's Player's own arrangement."""
+        try:
+            self._loop.run(
+                self._own(lambda c: c.arrange_handouts(player_id, call)),
+                timeout=ROLL_WAIT,
+            )
+        except ShowRefused as refused:
+            return refused.why
+        except NeedsPasscode, NoCredential:
+            return "Sign in again to arrange your Handouts."
+        except ChannelError, SignInError, ConnectionError, TimeoutError:
+            return "The host can't be reached just now."
+        return None
+
     def _fetch_copy(self, show_id: str, name: str) -> shows.Shown | str:
         async def fetch(client: RemoteClient) -> shows.Shown:
             kept = await client.show_copy(show_id)
@@ -595,6 +646,15 @@ class SeatTable:
 
     def open_handout(self, copy: handout_list.Copy) -> shows.Shown | str:
         return self.seat.open_handout(copy)
+
+    def arrangement(self, player_id: str) -> handout_arrangement.Arrangement | str:
+        return self.seat.arrangement(player_id)
+
+    def search_handouts(self, player_id: str, words: str) -> set[str] | str:
+        return self.seat.search_handouts(player_id, words)
+
+    def arrange(self, player_id: str, call: handout_arrangement.Arrange) -> str | None:
+        return self.seat.arrange(player_id, call)
 
     def set_scene(self, call: chronicle.SceneCall) -> str | None:
         return self.seat.set_scene(call)

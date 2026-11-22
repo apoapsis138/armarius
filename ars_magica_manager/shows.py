@@ -390,7 +390,7 @@ def withdraw(
 # -- opening --
 
 
-def _read_copy(saga_id: str, show_id: str) -> dict[str, Any]:
+def read_copy(saga_id: str, show_id: str) -> dict[str, Any]:
     """The copy kept for Show `show_id`; ValueError when it can't be read."""
     if not shapes.is_plain_id(show_id):
         raise ValueError("No such Show.")
@@ -408,7 +408,7 @@ def _read_copy(saga_id: str, show_id: str) -> dict[str, Any]:
 
 def copy_text(saga_id: str, show_id: str) -> bytes:
     """Show `show_id`'s copy as its file keeps it, to send a seat."""
-    return json.dumps(_read_copy(saga_id, show_id), ensure_ascii=False).encode()
+    return json.dumps(read_copy(saga_id, show_id), ensure_ascii=False).encode()
 
 
 def from_copy(data: dict[str, Any], picture: bytes | None = None) -> Shown:
@@ -437,7 +437,7 @@ def picture_bytes(saga_id: str, name: str) -> bytes | None:
 def opened(saga_id: str, entry: chronicle.Entry) -> Shown:
     """Show `entry`'s copy, read from the host's own folder; ValueError
     when it can't be."""
-    found = _read_copy(saga_id, str(entry.body.get("show", "")))
+    found = read_copy(saga_id, str(entry.body.get("show", "")))
     name = str(found.get("picture", ""))
     picture = picture_bytes(saga_id, name) if name else None
     if name and picture is None:

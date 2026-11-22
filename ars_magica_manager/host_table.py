@@ -11,6 +11,7 @@ from collections.abc import Callable
 from . import (
     at_table,
     chronicle,
+    handout_arrangement,
     handout_list,
     references,
     scene_play,
@@ -130,6 +131,17 @@ class HostTable:
 
     def open_handout(self, copy: handout_list.Copy) -> shows.Shown | str:
         return handout_list.open_copy(self.saga, copy, self.who)
+
+    def search_handouts(self, player_id: str, words: str) -> set[str] | str:
+        if not handout_list.readable(self.saga, player_id, self.who):
+            return handout_list.NOT_YOURS
+        return handout_list.matching(self.saga, player_id, words)
+
+    def arrangement(self, player_id: str) -> handout_arrangement.Arrangement | str:
+        return handout_arrangement.arrangement_of(self.saga.id, player_id, self.who)
+
+    def arrange(self, player_id: str, call: handout_arrangement.Arrange) -> str | None:
+        return handout_arrangement.arrange(self.saga, player_id, call, by=self.who)
 
     def withdraw(self, number: int) -> str | None:
         return self._write(
