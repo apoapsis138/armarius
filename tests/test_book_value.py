@@ -188,3 +188,51 @@ def test_pictorial_works_and_expert_correspondence_raise_research():
     assert bv.library_level(saga, covenant, "Philosophiae") == 4
     covenant.library_research["Philosophiae"] = 5
     assert bv.library_level(saga, covenant, "Philosophiae") == 5  # at most +5
+
+
+def test_research_counts_only_the_shared_library():
+    """A library's research bonus comes from its holdings (Covenants p. 98):
+    the books the covenant owns, which its members may read (DE p. 381).
+    A book a magus keeps adds no subject, encyclopedia tractatus or aid."""
+    from ars_magica_manager.models import Character
+
+    saga = _library()
+    covenant = saga.covenants[0]
+    saga.characters.append(
+        Character(id="ana", name="Ana", type="magus", covenant_id="cov")
+    )
+    saga.books += [
+        Book(id="k1", name="Ana's Grammar", type="Ability Summa",
+             ability="Latin", level=4, quality=8,
+             owner_kind="character", owner_id="ana"),
+        Book(id="k2", name="Ana's Pliny", type="Tractatus", subject_kind="Ability",
+             ability="Philosophiae", quality=6, codex_id="pliny",
+             owner_kind="character", owner_id="ana"),
+        Book(id="k3", name="Ana's Letters", type="Tractatus", subject_kind="Ability",
+             ability="Philosophiae", quality=6, opus="Expert correspondence",
+             owner_kind="character", owner_id="ana"),
+    ]  # fmt: skip
+    assert list(bv.library_subjects(saga, covenant)) == ["Philosophiae", "Medicine"]
+    assert [b.id for b in bv.library_subjects(saga, covenant)["Philosophiae"]] == [
+        "t0", "t1", "t2", "t4", "summa"
+    ]  # fmt: skip
+    assert bv.encyclopedias(saga, covenant, "Philosophiae") == [
+        bv.EncyclopediaBonus("Natural Histories", 3)
+    ]
+    assert bv.library_level(saga, covenant, "Philosophiae") == 2  # no +1 aid
+    assert bv.research_count(saga, covenant) == "2 subjects"
+
+
+def test_a_bonus_the_shared_library_does_not_back_counts_for_nothing():
+    """The bonus comes from the library's holdings (Covenants p. 98): a
+    level set on a subject only a magus's books cover gives nothing."""
+    saga = _library()
+    covenant = saga.covenants[0]
+    covenant.library_research["Latin"] = 3
+    covenant.pictorial_works = ["Latin"]
+    saga.books.append(
+        Book(id="k1", name="Ana's Grammar", type="Ability Summa", ability="Latin",
+             level=4, quality=8, owner_kind="character", owner_id="ana")
+    )  # fmt: skip
+    assert bv.library_level(saga, covenant, "Latin") == 0
+    assert bv.subject_research_text(saga, covenant, "Latin") == ""

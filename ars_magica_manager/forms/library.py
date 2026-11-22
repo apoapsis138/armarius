@@ -930,7 +930,8 @@ def research_walkthrough(saga: Saga, covenant: Covenant) -> Command:
     if not subjects:
         return Refuse(
             "Set Up Research Library",
-            "The library has no summa or tractatus yet: add books first.",
+            "The covenant's shared library has no summa or tractatus yet: "
+            "books its magi keep don't count toward research.",
         )
     order = list(subjects)
     options = [(label, str(level)) for level, label in bv.RESEARCH_LEVELS]

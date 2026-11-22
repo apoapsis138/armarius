@@ -2106,6 +2106,12 @@ like a library of its own, +1 for each of its tractatus on the subject
 (Art & Academe, Encyclopedias). It's worked out and shown beside the
 library's bonus, and a magus uses whichever is better.
 
+Research counts only the **shared library**: the books the covenant
+itself owns, which all its members may read. A book a magus keeps, or
+keeps in a laboratory, is listed here but adds no subject, no
+encyclopedia tractatus and no research aid. A bonus set on a subject the
+shared library has no book on counts for nothing.
+
 ### Books
 <!-- help: section-lib-books -->
 
