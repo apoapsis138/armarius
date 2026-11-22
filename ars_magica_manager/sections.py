@@ -48,10 +48,14 @@ TRADITIONS_SECTION = "section-traditions"
 #: The Goods catalog and the saga's own goods (Goods tab; forms/goods.py).
 GOODS_SECTION = "section-content-goods"
 
+#: The covenant Library's By subject list (library_holding): only Add, which
+#: starts a summa on the chosen subject.
+LIBRARY_SUBJECTS_SECTION = "section-lib-subjects"
+
 #: The covenant Library tab's sections, where More's Import puts books into the
 #: covenant's library.
 LIBRARY_SECTIONS: frozenset[str] = frozenset(
-    {"section-lib-summary", "section-lib-books"}
+    {"section-lib-summary", LIBRARY_SUBJECTS_SECTION, "section-lib-books"}
 )
 
 #: The Enchanted Devices section of each sheet, and the kind of

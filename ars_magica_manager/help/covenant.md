@@ -2112,6 +2112,47 @@ keeps in a laboratory, is listed here but adds no subject, no
 encyclopedia tractatus and no research aid. A bonus set on a subject the
 shared library has no book on counts for nothing.
 
+### By subject
+<!-- help: section-lib-subjects -->
+
+The library read a subject at a time: one row for each Art, Ability or
+spell Mastery that a summa or tractatus at the covenant is on, Arts in
+Hermetic order (Techniques, then Forms), then Abilities, then Mastery.
+<!-- tui -->
+It's a section under Books, open when the desktop Library was last shown
+by subject.
+<!-- /tui -->
+<!-- gui -->
+**Show: Shelves · By subject** under the Library's title switches
+between the shelves and this list, and the Library opens on the one you
+chose last, in every saga.
+<!-- /gui -->
+
+Each row gives the subject's **Holding** (its Level and Quality, see
+Books), its best summa, how many summae and tractatus the shared library
+has on it (and any its magi keep), and its research bonus. A subject with
+no summa has no Holding and is greyed: a gap to fill. Without the Large
+Library rule, the Holding is just the best summa's Level and Quality.
+
+Choose a row to see the subject in the
+<!-- tui -->
+details panel:
+<!-- /tui -->
+<!-- gui -->
+inspector:
+<!-- /gui -->
+the Holding and what a season studying it gives, the research bonus and
+what makes it up, every book on it with what it does for the Holding,
+and what a season's reading would give each magus and companion.
+
+<!-- tui -->
+`a` here adds a book that starts as a summa on the chosen subject.
+<!-- /tui -->
+<!-- gui -->
+**Add** starts a book as a summa on the chosen subject, and **Set Up
+Research Library** opens on it.
+<!-- /gui -->
+
 ### Books
 <!-- help: section-lib-books -->
 

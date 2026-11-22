@@ -1119,6 +1119,12 @@ def library_figures(
     return tme_books.library_score(library_books(saga, character, subject))
 
 
+def may_study(character: Character, subject: str) -> bool:
+    """Whether `character` may study `subject` at all: only the Gifted (a
+    magus) study the Arts."""
+    return not (_split(subject)[0] == "art" and character.type != "magus")
+
+
 def _library_problems(
     saga: Saga, character: Character, plan: SeasonPlan, subject: str
 ) -> list[str]:
@@ -1132,7 +1138,7 @@ def _library_problems(
             f"The covenant's library has no summa on {_split(subject)[1]}: a "
             "subject without one has no Level to study."
         ]
-    if _split(subject)[0] == "art" and character.type != "magus":
+    if not may_study(character, subject):
         return ["Only the Gifted study the Arts."]
     return []
 
@@ -1168,7 +1174,7 @@ def _reading_problems(saga: Saga, character: Character, plan: SeasonPlan) -> lis
     if subject is None or book.quality is None:
         return [f"{book.name} isn't a summa or tractatus with a Quality."]
     found: list[str] = []
-    if _split(subject)[0] == "art" and character.type != "magus":
+    if not may_study(character, subject):
         found.append("Only the Gifted study the Arts.")
     if book.type == "Tractatus" and book_seasons.written_by(book, character):
         found.append(

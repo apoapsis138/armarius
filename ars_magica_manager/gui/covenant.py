@@ -53,6 +53,7 @@ from .. import covenant_build as cov_build
 from .. import covenant_diary as cov_diary
 from .. import covenfolk_ledger as ledger
 from .. import inhabitants as inh
+from .. import library_holding as lh
 from .. import possessions as pos
 from .. import saga_overview as ov
 from ..actions import NodeKind
@@ -152,6 +153,8 @@ from .widgets import (
     badge,
     changing_button,
     chapter_title,
+    chip_row,
+    clear_layout,
     display_name,
     edit_button,
     offer_rows,
@@ -1258,6 +1261,98 @@ class CovenantPage(QWidget):
         ).chapter(covenant_history.TAB)
 
     def _library(self, covenant: Covenant) -> QWidget:
+        """The Library, in the view last chosen (library_holding.library_view):
+        the books on their shelves, or the Library by subject."""
+        holder = QWidget()
+        column = QVBoxLayout(holder)
+        column.setContentsMargins(0, 0, 0, 0)
+        column.setSpacing(12)
+
+        def fill() -> None:
+            clear_layout(column)
+            shown = lh.library_view()
+            switch = self._library_switch(shown, fill)
+            parts = (
+                self._by_subject(covenant, switch)
+                if shown == lh.SUBJECTS
+                else self._shelves(covenant, switch)
+            )
+            for part in parts:
+                column.addWidget(part)
+
+        fill()
+        return scrolling_page(self.p, holder)
+
+    def _library_switch(self, shown: str, then: Callable[[], None]) -> QWidget:
+        """Show: Shelves or By subject, the one shown lit."""
+
+        def show(view: str) -> Callable[[], None]:
+            def flip() -> None:
+                lh.remember_library_view(view)
+                then()
+
+            return flip
+
+        return chip_row(
+            "Show",
+            [
+                ("Shelves", shown == lh.SHELVES, show(lh.SHELVES)),
+                ("By subject", shown == lh.SUBJECTS, show(lh.SUBJECTS)),
+            ],
+            self.p,
+        )
+
+    def _by_subject(self, covenant: Covenant, switch: QWidget) -> list[QWidget]:
+        """The Library by subject, `switch` under its title: a row per
+        subject (its Holding, best summa, books and research bonus);
+        choosing one shows it in the inspector. Add starts a summa on the
+        chosen subject; Set Up Research Library opens on it."""
+        p, saga = self.p, self.saga
+        found = lh.holdings(saga, covenant)
+        chosen: list[lh.Holding] = []
+
+        def choose(index: int) -> None:
+            holding = found[index]
+            chosen[:] = [holding]
+            symbol = artwork.art_symbol(holding.name) if holding.kind == "art" else None
+            self.inspect(
+                holding.name,
+                f"{covenant.name}'s library",
+                bk.subject_detail_text(saga, holding),
+                symbol,
+            )
+
+        def add() -> None:
+            self.run(
+                library_forms.subject_book_form(
+                    saga, covenant, chosen[0] if chosen else None
+                )
+            )
+
+        def research() -> None:
+            start = chosen[0].name if chosen else ""
+            self.run(library_forms.research_walkthrough(saga, covenant, start))
+
+        buttons = [
+            changing_button("Add", p, add, "add"),
+            changing_button("Set Up Research Library", p, research, "library"),
+        ]
+        body: QWidget = (
+            table_view(lh.subjects_table(found), p, choose)
+            if found
+            else _none("No summae or tractatus yet.", p)
+        )
+        return [
+            section(
+                f"Library ({len(library.books_in_covenant(saga, covenant))})",
+                p,
+                buttons=buttons,
+            ),
+            switch,
+            body,
+        ]
+
+    def _shelves(self, covenant: Covenant, switch: QWidget) -> list[QWidget]:
         """The books on their shelves, a summa as tall as its level."""
         p, saga = self.p, self.saga
         books = library.books_in_covenant(saga, covenant)
@@ -1317,7 +1412,8 @@ class CovenantPage(QWidget):
                     ),
                     *(self.placer.buttons("Library") if self.placer else []),
                 ],
-            )
+            ),
+            switch,
         ]
         for title, spines in cvs.shelves(saga, covenant):
             case = shelf(spines, p, show)
@@ -1334,7 +1430,7 @@ class CovenantPage(QWidget):
                 chapter_title(f"{title} ({len(spines)})", p),
                 offer_rows(case, saga_index.BOOKS, choose_book),
             ]
-        return scrolling_page(p, *parts)
+        return parts
 
     def _seasons(self) -> QWidget:
         p, saga = self.p, self.saga

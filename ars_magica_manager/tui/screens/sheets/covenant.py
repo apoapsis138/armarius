@@ -23,6 +23,7 @@ from .... import (
     deeds,
     guest_stays,
     hermetic_projects,
+    library_holding,
     manors,
     mobile_covenants,
     seasons,
@@ -613,6 +614,7 @@ class CovenantSheetView(KindTabsView):
             section_id="section-lib-books",
             summary=True,
             research=lambda: book_value.research_count(self.saga, self.covenant),
+            subjects=lambda: library_holding.holdings(self.saga, self.covenant),
         )
 
     def _diary_tab(self) -> ComposeResult:

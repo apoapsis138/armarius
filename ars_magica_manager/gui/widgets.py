@@ -162,6 +162,16 @@ def chip_row(
     return row
 
 
+def clear_layout(holder: QLayout) -> None:
+    """Take every widget out of `holder`, to be drawn again."""
+    while holder.count():
+        item = holder.takeAt(0)
+        old = item.widget() if item is not None else None
+        if old is not None:
+            old.setParent(None)
+            old.deleteLater()
+
+
 class FlowLayout(QLayout):
     """Items left to right, starting a new row when the next one won't
     fit the width: a row of seals that wraps instead of widening the page.

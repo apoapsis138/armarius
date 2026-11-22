@@ -11,6 +11,7 @@ from textual.css.query import NoMatches
 
 from .... import books as bk
 from .... import lab_texts as lt
+from .... import library_holding as lh
 from .... import saga_content as sc
 from ....form_spec import DialogField
 from ....forms import goods as goods_forms
@@ -24,6 +25,7 @@ from ....sections import (
     ARMARIUM_SECTION,
     GOODS_SECTION,
     HANDOUTS_SECTION,
+    LIBRARY_SUBJECTS_SECTION,
     SCENES_SECTION,
     SESSION_INFO_SECTION,
     SESSION_SCENES_SECTION,
@@ -371,12 +373,21 @@ class LibraryActions(WorkspaceBase):
             self._save()
             self._books_changed()
 
-        # The Lab Texts list adds Lab Texts.
-        default_type = "Lab Text" if self._active_section() == LAB_TEXTS_SECTION else ""
+        # The Lab Texts list adds Lab Texts; the Library by subject, a summa
+        # on the chosen subject.
+        active = self._active_section()
+        default_type = "Lab Text" if active == LAB_TEXTS_SECTION else ""
+        like: Book | None = None
+        view = self._book_view()
+        if book is None and active == LIBRARY_SUBJECTS_SECTION and view is not None:
+            holding = view.selected_subject()
+            like = lh.prototype(holding) if holding is not None else None
         self.app.push_screen(
             FieldsDialog(
                 title,
-                _book_fields(saga, book, self._default_book_owner(), default_type),
+                _book_fields(
+                    saga, book or like, self._default_book_owner(), default_type
+                ),
                 validate=bk.form_problem,
                 live=lambda values: _book_live(values, saga, book),
             ),
@@ -514,4 +525,5 @@ class LibraryActions(WorkspaceBase):
                 self._remove_book if listed else None,
                 self._edit_book if listed else None,
             )
+        ops[LIBRARY_SUBJECTS_SECTION] = _SectionOps(lambda: self._book_form(None))
         return ops

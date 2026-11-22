@@ -20,11 +20,12 @@ from PySide6.QtWidgets import (
     QLabel,
     QPushButton,
     QScrollArea,
+    QTableView,
 )
 from screen_helpers import _sample_saga_with_covenant
 
 from ars_magica_manager import familiars as fam
-from ars_magica_manager import settings, storage
+from ars_magica_manager import library_holding, settings, storage
 from ars_magica_manager.form_spec import DialogField
 from ars_magica_manager.gui import choices, pictures, sounds
 from ars_magica_manager.gui.character_sheet import CharacterSheet
@@ -617,6 +618,30 @@ def test_the_library_stands_the_books_on_shelves(app):
     ]
     spines[0].clicked()
     assert page.inspector.title.text() == "On the Theory of Magic"
+
+
+def test_the_library_by_subject_is_a_click_away_and_remembered(app):
+    page = _covenant_page(_sample_saga_with_covenant())
+    library = _chapter(page, "Library")
+    chip = next(
+        b for b in library.findChildren(QPushButton) if b.text() == "By subject"
+    )
+    chip.click()
+    assert library_holding.library_view() == library_holding.SUBJECTS
+    assert not library.findChildren(BookSpine)
+    table = library.findChild(QTableView)
+    assert table is not None
+    model = table.model()
+    assert [model.index(r, 0).data() for r in range(model.rowCount())] == [
+        "Abilities",
+        "Magic Theory",
+    ]
+    table.selectRow(1)
+    assert page.inspector.title.text() == "Magic Theory"
+    assert "Best summa" in plain(page.inspector.body.text())
+    # A new page opens on the view last chosen.
+    again = _chapter(_covenant_page(_sample_saga_with_covenant()), "Library")
+    assert again.findChild(QTableView) is not None
 
 
 def test_a_narrower_bookcase_moves_books_down_a_shelf(app):

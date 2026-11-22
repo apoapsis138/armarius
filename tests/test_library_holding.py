@@ -5,7 +5,9 @@ does in it, and the Research bonus (Covenants p. 98)."""
 from __future__ import annotations
 
 from ars_magica_manager import books as bk
-from ars_magica_manager.models import Book, Character, Covenant, Saga
+from ars_magica_manager import library_holding as lh
+from ars_magica_manager.forms import library as library_forms
+from ars_magica_manager.models import ArtScore, Book, Character, Covenant, Saga
 from ars_magica_manager.rules import options as rule_options
 
 
@@ -135,3 +137,124 @@ def test_no_citation_on_the_book():
     text = bk.detail_text(_vim_library(), _vim_library().books[0])
     assert "Transforming Mythic Europe" not in text
     assert "The library on it" not in text
+
+
+# -- the Library by subject ---------------------------------------------------
+
+
+def _mixed_library() -> Saga:
+    """Vim (scored), Creo (tractatus only), Latin (an Ability summa) and a
+    book Corvinus keeps on Magic Theory, which the shared library lacks."""
+    saga = _vim_library()
+    saga.books += [
+        Book("cr", "Creo Notes", "Tractatus", subject_kind="Art", art="Creo",
+             quality=7, owner_kind="covenant", owner_id="cov"),
+        Book("la", "Grammar", "Ability Summa", ability="Latin", level=4,
+             quality=9, owner_kind="covenant", owner_id="cov"),
+        Book("mt", "Corvinus's Theory", "Ability Summa", ability="Magic Theory",
+             level=3, quality=8, owner_kind="character", owner_id="ana"),
+    ]  # fmt: skip
+    return saga
+
+
+def test_the_subjects_in_hermetic_order_then_abilities():
+    saga = _mixed_library()
+    found = lh.holdings(saga, saga.covenants[0])
+    assert [h.name for h in found] == ["Creo", "Vim", "Latin", "Magic Theory"]
+
+
+def test_the_subjects_table():
+    saga = _mixed_library()
+    found = lh.holdings(saga, saga.covenants[0])
+    table = lh.subjects_table(found)
+    assert table.columns == ["Subject", "Holding", "Best summa", "Books", "Research"]
+    assert table.rows == [
+        ["Arts", "", "", "", ""],
+        ["[dim]Creo[/]", "[dim]—[/]", "[dim]no summa[/]", "[dim]1 tractatus[/]",
+         "[dim]—[/]"],
+        ["Vim", "L14 Q11", "On the Bounds of Power", "1 summa · 4 tractatus", "+1"],
+        ["Abilities", "", "", "", ""],
+        ["Latin", "L4 Q9", "Grammar", "1 summa", "—"],
+        # Only a book Corvinus keeps: no Holding in the shared library.
+        ["[dim]Magic Theory[/]", "[dim]—[/]", "[dim]no summa[/]",
+         "[dim]1 kept by its magi[/]", "[dim]—[/]"],
+    ]  # fmt: skip
+    assert table.keys == [None, 0, 1, None, 2, 3]
+
+
+def test_the_terminal_rows():
+    saga = _mixed_library()
+    found = lh.holdings(saga, saga.covenants[0])
+    assert lh.subject_header().split() == ["Subject", "Holding", "Best", "summa",
+                                           "Books", "Research"]  # fmt: skip
+    vim = lh.subject_label(found[1])
+    assert vim.startswith("Vim") and "L14 Q11" in vim and vim.endswith("+1")
+    assert lh.subject_label(found[0]).startswith("[dim]Creo")
+
+
+def test_the_subject_inspector_with_the_large_library():
+    saga = _vim_library()
+    saga.books.append(
+        Book("k", "Corvinus's Notes", "Tractatus", subject_kind="Art", art="Vim",
+             quality=9, owner_kind="character", owner_id="ana")
+    )  # fmt: skip
+    saga.characters[0].arts = {"vim": ArtScore(xp=15)}  # Vim 5
+    holding = lh.holdings(saga, saga.covenants[0])[0]
+    lines = bk.subject_detail_text(saga, holding).splitlines()
+    # TME p. 105: below its Level, Quality + 3; at it, its Quality for
+    # Quality more seasons.
+    assert lines[:3] == [
+        "[b]Holding:[/] Level 14, Quality 11",
+        "  Below Vim 14: 14 xp a season",
+        "  At Vim 14 or more: 11 xp a season, for 11 seasons",
+    ]
+    assert "[b]Research:[/] library +1" in lines
+    books = lines[lines.index("[b]Its books:[/]") + 1 :]
+    assert books[:6] == [
+        "On the Bounds of Power · L14 Q11 · the best summa: sets the Holding",
+        "Tract 1 · Q8 · adds to its Quality",
+        "Tract 2 · Q8 · adds to its Quality",
+        "Tract 3 · Q6 · adds nothing: more than 3 from the Holding",
+        "Tract 4 · Q6 · adds nothing: more than 3 from the Holding",
+        "Corvinus's Notes · Q9 · kept by Corvinus: not in the shared library",
+    ]
+    assert "Corvinus (Vim 5): 14 xp" in lines
+    # Only a magus studies an Art.
+    saga.characters.append(
+        Character(id="co", name="Odo", type="companion", covenant_id="cov")
+    )
+    assert "Odo" not in bk.subject_detail_text(saga, holding)
+
+
+def test_the_subject_inspector_without_the_rule():
+    saga = _vim_library(large_library=False)
+    holding = lh.holdings(saga, saga.covenants[0])[0]
+    text = bk.subject_detail_text(saga, holding)
+    assert (
+        text.splitlines()[0]
+        == "[b]Best summa:[/] On the Bounds of Power, Level 14, Quality 11"
+    )
+    assert "Below Vim" not in text
+    assert "Tract 1 · Q8\n" in text + "\n"  # no roles without the rule
+
+
+def test_add_from_a_subject_starts_a_summa_on_it():
+    saga = _mixed_library()
+    latin = lh.holdings(saga, saga.covenants[0])[2]
+    form = library_forms.book_form(saga, None, "covenant:cov", like=lh.prototype(latin))
+    values = {f.key: f.value for f in form.fields()}
+    assert (values["type"], values["ability"]) == ("Ability Summa", "Latin")
+    assert form.title == "Add a Book"
+
+
+def test_research_setup_opens_on_the_chosen_subject():
+    saga = _mixed_library()
+    saga.covenants[0].library_research = {}
+    form = library_forms.research_walkthrough(saga, saga.covenants[0], "Latin")
+    assert form.title.endswith(": Latin")
+
+
+def test_the_library_view_is_remembered():
+    assert lh.library_view() == lh.SHELVES
+    lh.remember_library_view(lh.SUBJECTS)
+    assert lh.library_view() == lh.SUBJECTS

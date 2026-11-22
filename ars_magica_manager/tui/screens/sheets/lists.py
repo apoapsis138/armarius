@@ -20,6 +20,7 @@ from textual.widgets import (
 from .... import books as bk
 from .... import house_rules as hr
 from .... import lab_texts as lt
+from .... import library_holding as lh
 from .... import players as pl
 from .... import sessions as ss
 from .... import spells as spl
@@ -39,6 +40,7 @@ from ....sections import (
     SESSIONS_SECTION,
     SPELL_SECTION,
 )
+from ....sections import LIBRARY_SUBJECTS_SECTION as SUBJECTS_SECTION
 from ..widgets import (
     DETAILS_PANEL_MAX_HEIGHT,
     DETAILS_PANEL_MIN_HEIGHT,
@@ -123,12 +125,22 @@ class BookListView(Vertical):
         docked: bool = True,
         group: str | None = None,
         research: Callable[[], str] | None = None,
+        subjects: Callable[[], list[lh.Holding]] | None = None,
     ) -> None:
         """`research`: the Summary's Research count (plain text, "" for
-        none), for a covenant's library."""
+        none), for a covenant's library; `subjects`: its Library by subject
+        (library_holding.holdings), listed in a By subject section, worked
+        out only while that section is open."""
         super().__init__(classes="docked" if docked else "")
         self.group = group
         self._research = research
+        self._subjects_source = subjects
+        #: The Library's view (library_holding.library_view): which of Books
+        #: and By subject is open, read once here.
+        self._view = lh.library_view() if subjects else lh.SHELVES
+        self._subjects: list[lh.Holding] = (
+            subjects() if subjects and self._view == lh.SUBJECTS else []
+        )
         self.saga = saga
         self._books_source = books
         self.section_id = section_id
@@ -174,9 +186,28 @@ class BookListView(Vertical):
         self._subject_cols = cols
         try:
             self.query_one(".books-header", Static).update(self._header())
-            self.query_one(SelectableList).relabel([label for _, label in self._rows()])
+            self._list().relabel([label for _, label in self._rows()])
         except NoMatches:
             return
+
+    def _list(self) -> SelectableList:
+        """The books' own list (a covenant's Library also lists subjects)."""
+        return self.query_one(f"#{self.section_id}-list", SelectableList)
+
+    def _subject_rows(self) -> list[tuple[int | None, str]]:
+        return [(i, lh.subject_label(h)) for i, h in enumerate(self._subjects)]
+
+    def selected_subject(self) -> lh.Holding | None:
+        """The subject chosen in the By subject list, if any."""
+        try:
+            index = self.query_one(
+                f"#{SUBJECTS_SECTION}-list", SelectableList
+            ).selected_data_index
+        except NoMatches:
+            return None
+        if index is None or index >= len(self._subjects):
+            return None
+        return self._subjects[index]
 
     def _fit_panel(self) -> None:
         """On a short screen the details panel gives up rows (its text
@@ -200,8 +231,12 @@ class BookListView(Vertical):
         panel.styles.max_height = cap
 
     def _book_list(self) -> ComposeResult:
+        # Closed while a covenant's Library shows its subjects instead.
         with SheetSection(
-            title=self._title(), id=self.section_id, classes="books-section"
+            title=self._title(),
+            id=self.section_id,
+            classes="books-section",
+            collapsed=self._view == lh.SUBJECTS,
         ):
             yield TableHeader(self._header(), classes="books-header")
             yield SelectableList(
@@ -222,6 +257,19 @@ class BookListView(Vertical):
                     yield Static(left, id="lib-summary-left")
                     yield Static(right, id="lib-summary-right")
             yield from self._book_list()
+            if self._subjects_source is not None:
+                # Under Books, which it takes turns with: one open at a time,
+                # as last shown (library_holding.library_view).
+                with SheetSection(
+                    title="By subject",
+                    id=SUBJECTS_SECTION,
+                    classes="books-section",
+                    collapsed=self._view != lh.SUBJECTS,
+                ):
+                    yield TableHeader(lh.subject_header(), classes="subjects-header")
+                    yield SelectableList(
+                        self._subject_rows(), id=f"{SUBJECTS_SECTION}-list"
+                    )
         yield DetailsPanel(bk.detail_text(self.saga, None), text_classes="books-panel")
 
     @property
@@ -232,10 +280,33 @@ class BookListView(Vertical):
     def checked_books(self) -> list[Book]:
         """The books marked (Space / Ctrl+click) for acting on together."""
         try:
-            indexes = self.query_one(SelectableList).checked_data_indexes
+            indexes = self._list().checked_data_indexes
         except NoMatches:
             return []
         return [self._books[i] for i in indexes if i < len(self._books)]
+
+    def on_collapsible_expanded(self, event: Collapsible.Expanded) -> None:
+        """Books and By subject take turns: opening one closes the other,
+        and the Library opens on it next time, as on the desktop."""
+        if self._subjects_source is None:
+            return
+        opened = event.collapsible.id
+        if opened not in (SUBJECTS_SECTION, self.section_id):
+            return
+        other = self.section_id if opened == SUBJECTS_SECTION else SUBJECTS_SECTION
+        self.query_one(f"#{other}", Collapsible).collapsed = True
+        self._view = lh.SUBJECTS if opened == SUBJECTS_SECTION else lh.SHELVES
+        lh.remember_library_view(self._view)
+        if self._view == lh.SUBJECTS:
+            self._refresh_subjects()
+
+    def _refresh_subjects(self) -> None:
+        """Work out the subjects again and list them."""
+        assert self._subjects_source is not None
+        self._subjects = self._subjects_source()
+        self.query_one(f"#{SUBJECTS_SECTION}-list", SelectableList).set_rows(
+            self._subject_rows()
+        )
 
     def on_selectable_list_checked(self, event: SelectableList.Checked) -> None:
         event.stop()
@@ -243,7 +314,7 @@ class BookListView(Vertical):
         section.title = self._title(len(self.checked_books()))
 
     def selected_book(self) -> Book | None:
-        index = self.query_one(SelectableList).selected_data_index
+        index = self._list().selected_data_index
         return (
             self._books[index]
             if index is not None and index < len(self._books)
@@ -254,6 +325,13 @@ class BookListView(Vertical):
         if not self.docked:
             return  # the sheet shows it
         event.stop()
+        if event.selectable_list.id == f"{SUBJECTS_SECTION}-list":
+            holding = self.selected_subject()
+            if holding is not None:
+                self.query_one(".books-panel", Static).update(
+                    bk.subject_detail_text(self.saga, holding)
+                )
+            return
         book = (
             self._books[event.data_index]
             if event.data_index < len(self._books)
@@ -273,7 +351,9 @@ class BookListView(Vertical):
                 left, right = self._summary()
                 self.query_one("#lib-summary-left", Static).update(left)
                 self.query_one("#lib-summary-right", Static).update(right)
-            rows = self.query_one(SelectableList)
+            if self._subjects_source is not None and self._view == lh.SUBJECTS:
+                self._refresh_subjects()  # worked out again only while shown
+            rows = self._list()
             rows.set_rows(self._rows())
             if chosen is not None and any(b is chosen for b in self._books):
                 # Posts Chosen, which refreshes the panel.

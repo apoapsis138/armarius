@@ -230,22 +230,58 @@ def research_level(
     Nothing when the shared library holds no book on `subject`: the bonus
     comes from its holdings (p. 98), so a level set on books a magus keeps
     counts for nothing."""
+    return research_parts(saga, covenant, subject, chosen, pictorial).total
+
+
+@dataclass(frozen=True)
+class ResearchParts:
+    """What a library's research bonus on a subject is made of: the level
+    the troupe set, its pictorial works and its research aids (expert
+    correspondence, realia); `total` is their sum, at most +5."""
+
+    chosen: int
+    pictorial: int
+    aids: int
+
+    @property
+    def total(self) -> int:
+        return min(RESEARCH_MOST, self.chosen + self.pictorial + self.aids)
+
+
+def research_parts(
+    saga: Saga, covenant: Covenant, subject: str, chosen: int, pictorial: bool
+) -> ResearchParts:
+    """research_level's parts (see it); all nothing when the shared library
+    holds no book on `subject`."""
     held = library_subjects(saga, covenant).get(subject, [])
     if not held:
-        return 0
-    level = chosen + (1 if pictorial else 0)
+        return ResearchParts(0, 0, 0)
     kinds = {book.opus for book in held if book.opus in book_kinds.OPUS_TYPES}
     aids = sum(book_kinds.OPUS_TYPES[k].research_level for k in kinds)
     if not options.is_on(saga, options.RESEARCH_AIDS_STACK):
         aids = min(aids, 1)
-    return min(RESEARCH_MOST, level + aids)
+    return ResearchParts(chosen, 1 if pictorial else 0, aids)
 
 
-def subject_research_text(saga: Saga, covenant: Covenant, subject: str) -> str:
+def library_parts(saga: Saga, covenant: Covenant, subject: str) -> ResearchParts:
+    """library_level's parts: from the level the troupe set."""
+    return research_parts(
+        saga,
+        covenant,
+        subject,
+        covenant.library_research.get(subject, 0),
+        subject in covenant.pictorial_works,
+    )
+
+
+def subject_research_text(
+    saga: Saga, covenant: Covenant, subject: str, level: int | None = None
+) -> str:
     """Research on `subject` in the covenant's library (plain text), e.g.
     "library +2 · Natural Histories +8"; "" when it has neither a bonus nor
-    an encyclopedia."""
-    level = library_level(saga, covenant, subject)
+    an encyclopedia. `level`: library_level's, when already worked out."""
+    if level is None:
+        level = library_level(saga, covenant, subject)
     parts = [f"library +{level}"] if level else []
     parts += [f"{e.name} +{e.bonus}" for e in encyclopedias(saga, covenant, subject)]
     return " · ".join(parts)
