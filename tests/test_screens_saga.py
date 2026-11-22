@@ -10,12 +10,13 @@ from screen_helpers import (
     _plain,
     _saga_with_empty_covenant,
     _sample_saga_with_covenant,
+    _save_dialog,
     _select,
     _select_character,
     _select_covenant,
 )
-from support import click_when_shown, close_worksheet, menu
-from textual.widgets import Button, Collapsible, Input, ListView, Select, Static, Tree
+from support import click_when_shown, close_worksheet, menu, wait_until
+from textual.widgets import Collapsible, Input, ListView, Select, Static, Tree
 
 from ars_magica_manager import settings, storage
 from ars_magica_manager.models import Saga
@@ -223,17 +224,27 @@ async def test_edit_saga_saves_name_storyguide_and_description():
         dialog.query_one("#fld-name", Input).value = "Dammerstein [Solo]"
         dialog.query_one("#fld-storyguide", Input).value = "Robin"
         dialog.query_one("#fld-description", Input).value = "A one-magus saga."
-        dialog.query_one("#btn-save", Button).press()
-        await pilot.pause()
+        await _save_dialog(pilot, app)
         assert isinstance(app.screen, WorkspaceScreen)
+        workspace = app.screen
 
+        def saga_page() -> str:
+            # Saving redraws the saga page from a worker, which a pause
+            # doesn't wait for; between its remove and mount the pane is empty.
+            pane = workspace.query_one("#detail-pane")
+            return "\n".join(str(text.render()) for text in pane.query(Static))
+
+        # The saga page is shown again with the new name.
+        assert await wait_until(pilot, lambda: "Dammerstein [Solo]" in saga_page()), (
+            f"the saga page never showed the new name: {saga_page()!r}"
+        )
+        # The worker goes on to rebuild the tree: check what it leaves.
+        await app.workers.wait_for_complete()
+        await pilot.pause()
         # Header and tree pick up the rename, brackets escaped.
-        assert app.screen.sub_title.startswith(r"Dammerstein \[Solo]")
-        tree = app.screen.query_one("#nav-tree", Tree)
+        assert workspace.sub_title.startswith(r"Dammerstein \[Solo]")
+        tree = workspace.query_one("#nav-tree", Tree)
         assert str(tree.root.label) == "Dammerstein [Solo]"  # brackets survive, literal
-        # The saga detail panel too (re-shown after saving).
-        panel = app.screen.query_one("#detail-pane").query_one(Static)
-        assert "Dammerstein [Solo]" in str(panel.render())
 
     saga = storage.load_saga("test_saga")
     assert (saga.name, saga.storyguide, saga.description) == (
