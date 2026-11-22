@@ -1,8 +1,9 @@
 """What a book is worth and what a library is good for -- no UI in here.
 
-- A summa's or tractatus's category of value (Covenants, Chapter Seven:
-  Library, "Hermetic Books: Definition of Categories of Value") and a guide
-  to its price ("Prices for Books"). The book only gives bands around
+- A summa's or tractatus's category of value ("Hermetic Books: Definition
+  of Categories of Value", Definitive Edition p. 381, as in Covenants,
+  Chapter Seven: Library) and a guide to its price ("Prices for Books",
+  DE p. 382). The book only gives bands around
   typical figures; the boundaries between them are this app's reading.
 - A library's research bonus per subject ("Use: Research"): a level the
   troupe sets for the covenant from the book's descriptions, and each
@@ -23,7 +24,10 @@ from .rules import library, options
 from .rules.creation_access import ability_category
 from .rules.rounding import round_up
 
-SOURCE = "Covenants, Chapter Seven: Library, pp. 84-102"
+SOURCE = (
+    "Definitive Edition, Hermetic Books: Categories of Value and Prices for "
+    "Books, pp. 381-382; Covenants, Chapter Seven: Library, pp. 84-102"
+)
 #: The book research values come from.
 SOURCE_BOOK = "Covenants"
 ENCYCLOPEDIA_SOURCE = "Art & Academe, Chapter Three: Philosophiae, Encyclopedias, p. 26"
