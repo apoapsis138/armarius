@@ -35,7 +35,7 @@ from PySide6.QtGui import (
 from PySide6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
 
 from .. import arms as heraldic
-from .. import conflicts, fights, medallions, section_verbs, sieges
+from .. import conflicts, fights, medallions, seat, section_verbs, sieges
 from ..commands import Command
 from ..models import FATIGUE_LEVELS, WALLS, Fight, Saga, Siege
 from ..rules import fight as fight_rules
@@ -191,7 +191,16 @@ def _arms_of(saga: Saga, covenant_id: str, fallback: heraldic.Arms) -> heraldic.
     return (heraldic.arms_of(covenant) if covenant else None) or fallback
 
 
-def buttons(rows: list[tuple[str, str, Callable[[], None]]], p: Palette) -> QWidget:
+ButtonRows = list[tuple[str, str, Callable[[], None]]]
+
+
+def _offered(rows: ButtonRows) -> ButtonRows:
+    """`rows`, or none for a seat that may not change the saga
+    (seat.read_only): each plays or changes the fight or siege."""
+    return [] if seat.read_only() else rows
+
+
+def buttons(rows: ButtonRows, p: Palette) -> QWidget:
     """A row of the app's own quiet buttons."""
     box = QWidget()
     line = QHBoxLayout(box)
@@ -699,40 +708,59 @@ class FightBody(QWidget):
 class FightPage(QWidget):
     """A fight's page: the drawn leaf and the buttons that play it."""
 
-    def __init__(self, saga: Saga, fight: Fight, p: Palette, run: Run) -> None:
+    def __init__(
+        self,
+        saga: Saga,
+        fight: Fight,
+        p: Palette,
+        run: Run,
+        run_and_leave: Run,
+    ) -> None:
+        """`run_and_leave` runs Delete's steps and, once the fight is
+        gone, shows the page it was listed on."""
         super().__init__()
         self.saga, self.fight, self.p, self.run = saga, fight, p, run
+        self.run_and_leave = run_and_leave
         column = QVBoxLayout(self)
         column.setContentsMargins(18, 12, 12, 8)
         column.setSpacing(8)
         self.header = FightHeader(saga, fight, p)
         self.body = FightBody(saga, fight, p)
         self.buttons = buttons(
-            [
-                ("Next Blow", "combat", lambda: self.act("next_blow")),
-                ("Next Round", "combat", lambda: self.act("next_round")),
-                ("Restart", "update", lambda: self.act("restart_fight")),
-                ("Combat Options", "combat", lambda: self.act("fight_options")),
-                *(
-                    [
-                        ("Morale", "combat", lambda: self.act("group_morale")),
-                        ("Rally", "troupe", lambda: self.act("rally_group")),
-                    ]
-                    if rule_options.is_on(saga, rule_options.MORALE_DISCIPLINE)
-                    else []
-                ),
-            ],
+            _offered(
+                [
+                    ("Next Blow", "combat", lambda: self.act("next_blow")),
+                    ("Next Round", "combat", lambda: self.act("next_round")),
+                    ("Restart", "update", lambda: self.act("restart_fight")),
+                    ("Combat Options", "combat", lambda: self.act("fight_options")),
+                    *(
+                        [
+                            ("Morale", "combat", lambda: self.act("group_morale")),
+                            ("Rally", "troupe", lambda: self.act("rally_group")),
+                        ]
+                        if rule_options.is_on(saga, rule_options.MORALE_DISCIPLINE)
+                        else []
+                    ),
+                ]
+            ),
             p,
         )
         self.setup = buttons(
-            [
-                ("Add Combatant", "add", lambda: self.act("add_combatant")),
-                ("Edit Combatant", "edit", lambda: self.act("edit_combatant")),
-                ("Remove Combatant", "delete", lambda: self.act("remove_combatant")),
-                ("Form a Group", "troupe", lambda: self.act("form_group")),
-                ("Break up a Group", "players", lambda: self.act("break_group")),
-                ("Edit Fight", "edit", self.edit),
-            ],
+            _offered(
+                [
+                    ("Add Combatant", "add", lambda: self.act("add_combatant")),
+                    ("Edit Combatant", "edit", lambda: self.act("edit_combatant")),
+                    (
+                        "Remove Combatant",
+                        "delete",
+                        lambda: self.act("remove_combatant"),
+                    ),
+                    ("Form a Group", "troupe", lambda: self.act("form_group")),
+                    ("Break up a Group", "players", lambda: self.act("break_group")),
+                    ("Edit Fight", "edit", self.edit),
+                    ("Delete Fight", "delete", self.delete),
+                ]
+            ),
             p,
         )
         column.addWidget(
@@ -749,6 +777,11 @@ class FightPage(QWidget):
         edit = section_verbs.ops_of(self.saga, self.saga)[FIGHTS_SECTION].edit
         if edit is not None:
             self.run(edit(self.row()))
+
+    def delete(self) -> None:
+        remove = section_verbs.ops_of(self.saga, self.saga)[FIGHTS_SECTION].remove
+        if remove is not None:
+            self.run_and_leave(remove(self.row()))
 
 
 # -- the siege --
@@ -1423,20 +1456,37 @@ class SiegeBody(QWidget):
 class SiegePage(QWidget):
     """A siege's page: the drawn leaf and the buttons that play it."""
 
-    def __init__(self, saga: Saga, siege: Siege, p: Palette, run: Run) -> None:
+    def __init__(
+        self,
+        saga: Saga,
+        siege: Siege,
+        p: Palette,
+        run: Run,
+        run_and_leave: Run,
+    ) -> None:
+        """`run_and_leave` runs Delete's steps and, once the siege is
+        gone, shows the page it was listed on."""
         super().__init__()
         self.saga, self.siege, self.p, self.run = saga, siege, p, run
+        self.run_and_leave = run_and_leave
         column = QVBoxLayout(self)
         column.setContentsMargins(18, 12, 12, 8)
         column.setSpacing(8)
         self.header = SiegeHeader(saga, siege, p)
         self.body = SiegeBody(saga, siege, p)
         self.buttons = buttons(
-            [
-                ("Next Siege Event", "combat", lambda: self.act("next_siege_event")),
-                ("Siege Actions", "update", lambda: self.act("siege_actions")),
-                ("Edit Siege", "edit", self.edit),
-            ],
+            _offered(
+                [
+                    (
+                        "Next Siege Event",
+                        "combat",
+                        lambda: self.act("next_siege_event"),
+                    ),
+                    ("Siege Actions", "update", lambda: self.act("siege_actions")),
+                    ("Edit Siege", "edit", self.edit),
+                    ("Delete Siege", "delete", self.delete),
+                ]
+            ),
             p,
         )
         column.addWidget(scrolling_page(p, self.header, self.buttons, self.body), 1)
@@ -1451,3 +1501,8 @@ class SiegePage(QWidget):
         edit = section_verbs.ops_of(self.saga, self.saga)[SIEGES_SECTION].edit
         if edit is not None:
             self.run(edit(self.row()))
+
+    def delete(self) -> None:
+        remove = section_verbs.ops_of(self.saga, self.saga)[SIEGES_SECTION].remove
+        if remove is not None:
+            self.run_and_leave(remove(self.row()))
