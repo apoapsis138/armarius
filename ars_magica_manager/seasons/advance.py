@@ -4,7 +4,7 @@ them, a grog's year, the year's aging, and the season's record."""
 from __future__ import annotations
 
 import random
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Collection, Sequence
 from dataclasses import dataclass, field
 
 from .. import catalog, dice_text, manors
@@ -593,10 +593,12 @@ def finish_season(
     rng: random.Random,
     backup: Callable[[Saga], object] | None = None,
     lost: Sequence[SeasonPlan] = (),
+    gathered: Collection[str] = (),
 ) -> Advanced:
     """Play out the season, once its questions are answered (`secured`: was
-    each lapsed contested resource secured; the Discovery moves already
-    taken), in the rules' order (from the workspace's Advance
+    each lapsed contested resource secured; `gathered`: the vis sources
+    still waiting that the covenfolk gather now, by id; the Discovery moves
+    already taken), in the rules' order (from the workspace's Advance
     Time): `backup` the saga; apply each plan; in
     Winter, the year's end -- grogs, business, then aging; the covenants'
     season (harvests, resources); the season record; at a new year, each
@@ -625,7 +627,7 @@ def finish_season(
     year_end += season_stirpes(saga, rng)
     year_end += season_aging(saga, rng)
     year_end += season_healing(saga, rng)
-    year_end += covenant_season(saga, secured)
+    year_end += covenant_season(saga, secured, gathered)
     year_end += manors.season_losses(saga)
     year_end += temporary_virtues_end(saga)
     record.lines += year_end

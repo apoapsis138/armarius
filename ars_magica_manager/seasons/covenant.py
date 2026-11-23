@@ -3,7 +3,7 @@ vis and income, and the covenant's Seasons tab."""
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Collection
 
 from .. import vis_harvest
 from ..covenants import contested_now, settle_resource
@@ -103,15 +103,33 @@ def available(resource: Possession | IncomeSource, year: int) -> bool:
     return not contested_now(resource, year)
 
 
-def covenant_season(saga: Saga, secured: dict[str, bool]) -> list[SeasonRecordLine]:
+def waiting_sources(
+    saga: Saga, secured: dict[str, bool]
+) -> list[tuple[Covenant, Possession]]:
+    """With Harvest Vis by Hand on, the vis sources still waiting to be
+    gathered as the season is advanced, with their covenants: those that
+    could be harvested now (vis_harvest), a lapsed one counting as settled
+    when `secured` says it was secured this season."""
+    return [
+        (covenant, source)
+        for covenant in filter(takes_part_in_play, saga.covenants)
+        for source in _vis_sources(covenant)
+        if vis_harvest.harvestable(saga, source, settling=secured.get(source.id, False))
+    ]
+
+
+def covenant_season(
+    saga: Saga, secured: dict[str, bool], gathered: Collection[str] = ()
+) -> list[SeasonRecordLine]:
     """What the season does for each covenant: its vis sources
     harvested into its vis stores, and in Winter, Dwindling Resources shrink
     by a tenth. A contested resource gives nothing until it is addressed:
     `secured` answers "Was it secured this season?" for each lapsed one
     (yes: secured for five years), and a year that ends with it unaddressed
     is written in the covenant Diary. With Harvest Vis by Hand on, a source
-    is gathered by hand during its season (vis_harvest), counted here, and
-    one still waiting is lost for the year. Returns record lines."""
+    is gathered by hand during its season (vis_harvest), counted here; one
+    still waiting is gathered by the covenfolk now if `gathered` names it
+    (by id), and otherwise lost for the year. Returns record lines."""
     season, year = saga.current_season, saga.current_year
     lines: list[SeasonRecordLine] = []
     for covenant in filter(takes_part_in_play, saga.covenants):
@@ -138,6 +156,10 @@ def covenant_season(saga: Saga, secured: dict[str, bool]) -> list[SeasonRecordLi
                         category="Covenant Season",
                     )
                 )
+                continue
+            if saga.harvest_vis_by_hand and source.id in gathered:
+                vis_harvest.harvest(saga, covenant, source, source.pawns)
+                harvested.append(f"{source.pawns} {source.art}")
                 continue
             if saga.harvest_vis_by_hand:
                 covenant.diary.append(

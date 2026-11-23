@@ -128,8 +128,9 @@ def saga_fields(saga: Saga | None) -> list[DialogField]:
                 "check",
                 saga.harvest_vis_by_hand,
                 hint="Each vis source is gathered with More's Harvest in its "
-                "season; one left waiting when the season is advanced is lost "
-                "for the year. Off: advancing fills the vis stores by itself.",
+                "season; advancing lists those still waiting, for the covenfolk "
+                "to gather or to be lost for the year. Off: advancing fills the "
+                "vis stores by itself.",
             )
         )
         fields += [

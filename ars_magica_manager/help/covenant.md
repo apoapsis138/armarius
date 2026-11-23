@@ -1308,8 +1308,9 @@ press `m` for More and choose **Harvest**.
 The form is described in [Harvest a vis source](help:harvest-vis).
 Harvest is greyed out, saying why, in another season, once the source
 has been harvested this year, and while it is contested and unsettled.
-A source still waiting when its season is advanced is lost for the
-year, and the Diary says it wasn't harvested.
+A source still waiting when its season is advanced is listed then,
+for the covenfolk to gather or to be lost for the year (see [Vis sources
+waiting](help:advance-vis-waiting)).
 
 A source's **Place** is where it's gathered: a Place of the Region, or
 one of its regio levels. The place then lists it under
