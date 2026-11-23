@@ -414,7 +414,12 @@ def test_an_entry_too_large_to_send_whole_goes_as_one_the_seat_cant_show() -> No
     )
 
 
-async def test_a_seat_rolls_from_the_sheet_with_the_hosts_scores(table: Table) -> None:
+async def test_a_seat_rolls_from_the_sheet_with_the_hosts_scores(
+    table: Table, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # The host rolls its own dice; a stress die can botch (about 1 in 130
+    # here), and Confidence can't be spent on a botch. Its die shows 5.
+    monkeypatch.setattr(chronicle.secrets, "SystemRandom", lambda: Faces(5))
     aelfric = table.saga.characters[0]
     aelfric.characteristics = Characteristics(dexterity=2)
     aelfric.abilities = [Ability("Athletics", xp=30, specialty="climbing")]
