@@ -1,0 +1,1 @@
+**What a player can change on the desktop.** A player opening a creature's page no longer crashes. A player no longer sees Edit and Characteristics on another player's familiar, or Begin Project and Choose the Sources on a covenant they may not change.

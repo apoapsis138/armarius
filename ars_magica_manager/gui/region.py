@@ -21,6 +21,7 @@ from .. import (
     menagerie,
     neighbours,
     place_events,
+    seat,
     section_verbs,
     staged_projects,
     tombs,
@@ -250,14 +251,15 @@ class NeighbourPage(QWidget):
 def _gloss(
     heading: str, words: str, p: Palette, edits: dict[str, Callable[[], None]]
 ) -> QWidget:
-    """A check boxed as a gloss, with its Edit at its foot."""
+    """A check boxed as a gloss, with its Edit at its foot (none for a
+    seat that may not change the record)."""
     panel = InspectorFrame(heading, p)
     box = QVBoxLayout(panel)
     box.setContentsMargins(InspectorFrame.MARGIN, 44, 20, 16)
     block = TextBlock(words, p)
     block.setFont(serif(13))
     box.addWidget(block)
-    if edits:
+    if edits and not seat.read_only():
         row = QHBoxLayout()
         row.addStretch(1)
         for label, on_click in edits.items():

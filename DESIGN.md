@@ -81,6 +81,14 @@ When the steps finish, `run` saves the saga and redraws the page.
   `Placer` turns each into a button, and the page asks for the buttons of
   a spot with `placer.placed_buttons(spot)`. Section verbs (Add, Edit,
   Delete) come from `actions.SECTION_VERBS` and each sheet's `_section_ops`.
+- **Who a button is hidden from.** For a seat that may not change a record
+  (`seat.may_change`), `section_verbs.ops_of` already returns its sections'
+  ops with no Add, Edit or Delete, so a button drawn from the ops needs no
+  check of its own. Every other button that plays or changes the record
+  (Next Blow, Battle Event) asks `seat.read_only()` where its page builds
+  it, never in a row helper other pages share: a player still reads Cast
+  at a Glance or a Chronicle. `tests/test_gui_seat_pages.py` opens each
+  kind of page in a player's seat.
 - **How a page reaches the window.** A page is built with hooks (for
   the saga page, `gui/pages.py`'s `SagaHooks`: `run`, `open_*`, `placer`);
   the window wires them in its page builders (`MainWindow._saga_page` and

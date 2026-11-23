@@ -14,7 +14,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import ahead, deeds, hermetic_projects, section_verbs
+from .. import ahead, deeds, hermetic_projects, seat, section_verbs
 from ..commands import Act
 from ..forms import ahead as ahead_forms
 from ..forms import hunting as hunting_forms
@@ -165,7 +165,7 @@ def undertakings_section(
     works out a journey, and hunts and seeks along the road."""
     notes = deeds.UNDERTAKING_NOTES
     rows: list[tuple[QWidget, str]] = []
-    if covenant is not None:
+    if covenant is not None and not seat.read_only():
         rows.append(
             (
                 edit_button(

@@ -123,10 +123,18 @@ class CreaturePage(QWidget):
     def chapters(self) -> list[str]:
         return self.codex.chapters()
 
-    def _edit(self, section_id: str) -> Callable[[], None]:
+    def _edit(self, section_id: str) -> Callable[[], None] | None:
+        """The section's Edit, or None for a seat that may not change the
+        creature (section_verbs.ops_of gives it no verbs)."""
         edit = self.ops[section_id].edit
-        assert edit is not None
+        if edit is None:
+            return None
         return lambda: self.run(edit(0))
+
+    def _edits(self, section_id: str) -> dict[str, Callable[[], None]]:
+        """The section's Edit button, or none (_edit)."""
+        edit = self._edit(section_id)
+        return {} if edit is None else {"Edit": edit}
 
     def _header(self) -> QWidget:
         p, c = self.p, self.creature
@@ -142,7 +150,9 @@ class CreaturePage(QWidget):
             ("Edit", CREATURE_INFO_SECTION),
             ("Characteristics", CREATURE_CHARACTERISTICS_SECTION),
         ):
-            buttons.addWidget(edit_button(words, p, self._edit(section_id)))
+            edit = self._edit(section_id)
+            if edit is not None:
+                buttons.addWidget(edit_button(words, p, edit))
         buttons.addStretch(1)
         row.addLayout(buttons)
         return box
@@ -209,7 +219,7 @@ class CreaturePage(QWidget):
                 "Characteristics",
                 p,
                 fact_grid(crs.combat_facts(c), p, 2),
-                edits={"Edit": self._edit(CREATURE_CHARACTERISTICS_SECTION)},
+                edits=self._edits(CREATURE_CHARACTERISTICS_SECTION),
             ),
             section(
                 f"Virtues, Flaws and Qualities ({len(c.virtues_flaws)})",
@@ -270,7 +280,7 @@ class CreaturePage(QWidget):
                     else _none(crs.fatigue_levels_text(c).capitalize() + ".", p)
                 ),
                 fact_grid(crs.combat_facts(c)[1:], p, 2),
-                edits={"Edit": self._edit(CREATURE_HEALTH_SECTION)},
+                edits=self._edits(CREATURE_HEALTH_SECTION),
             ),
         )
 
@@ -321,7 +331,7 @@ class CreaturePage(QWidget):
                 "Description",
                 p,
                 *(parts or [_none("Nothing written yet.", p)]),
-                edits={"Edit": self._edit(CREATURE_DESCRIPTION_SECTION)},
+                edits=self._edits(CREATURE_DESCRIPTION_SECTION),
             ),
             *relations(self.saga, c, p, self.run, links=False),
             table_section(
