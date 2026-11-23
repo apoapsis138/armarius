@@ -1057,8 +1057,15 @@
         {
           "name": "Brawl",
           "category": "General",
-          "xp": 10,
+          "xp": 5,
           "specialty": "dodging",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Swim",
+          "category": "General",
+          "xp": 5,
+          "specialty": "rivers",
           "xp_table": "ability"
         },
         {
@@ -1677,9 +1684,16 @@
         {
           "step": "later_life",
           "target": "Brawl",
-          "xp": 10,
+          "xp": 5,
           "note": "",
-          "applied": 10
+          "applied": 5
+        },
+        {
+          "step": "later_life",
+          "target": "Swim",
+          "xp": 5,
+          "note": "",
+          "applied": 5
         },
         {
           "step": "later_life",
