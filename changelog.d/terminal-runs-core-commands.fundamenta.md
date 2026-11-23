@@ -1,1 +1,0 @@
-**The terminal and the desktop act alike.** New records, exports, Set Up Research Library, Found a Covenant Here and about thirty other actions now run the same steps in both. In the terminal, a new covenant gets its Tribunal and package fields, and Set Up Research Library walks through the subjects one at a time.

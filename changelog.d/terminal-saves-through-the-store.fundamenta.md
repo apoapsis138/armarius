@@ -1,1 +1,0 @@
-**Saves that can't be written are said, not a crash.** In the terminal, a change the saga's checks refuse (in the library, or when the date moves) now says it wasn't saved and keeps your copy, as everywhere else. When another copy moves the season, the terminal says so too.

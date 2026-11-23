@@ -1,1 +1,0 @@
-**The Library by subject.** The Library can list its books a subject at a time: each Art and Ability with its Holding, best summa, books and research bonus, greyed where there's no summa. Choosing one shows what studying it gives, what each book adds, and each magus's season of reading. The desktop remembers which view you chose.

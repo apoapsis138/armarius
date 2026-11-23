@@ -1,1 +1,0 @@
-**Research counts the shared library only.** A covenant's research bonus, its encyclopedias and its research aids now come only from the books the covenant itself owns. A book a magus keeps, or keeps in a laboratory, still shows in the Library but no longer adds a research subject, an encyclopedia tractatus or a research aid.

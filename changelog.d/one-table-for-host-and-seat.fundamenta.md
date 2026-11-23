@@ -1,1 +1,0 @@
-**One way to act at the table.** Rolls, Confidence, answers to a Roll request, Messages and form rolls now go through one interface, whether made on the host's computer or from a Remote seat, and the host handles a seat's requests in one place. Nothing changes in how they work; tests check both sides give the same answers.

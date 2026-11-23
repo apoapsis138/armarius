@@ -1,1 +1,0 @@
-**Security:** Supplements that add to a Tribunal pack, and Mystery Cult files, are now checked as they're read, like every other file coming in. One of the wrong shape is refused, naming what is wrong, before any of it is applied. A saga that couldn't be opened again is never saved: its file stays as it was.

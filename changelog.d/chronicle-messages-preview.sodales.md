@@ -1,1 +1,0 @@
-**Preview (off by default): Messages and Whispers.** While a Session is under way, anyone at it can send the table a Message, or Whisper to people they choose, from the Chronicle pane or the terminal. The storyguide sees every Whisper, a record named can be linked for those who may open it, and nothing sent can be taken back.

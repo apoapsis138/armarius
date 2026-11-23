@@ -1,1 +1,0 @@
-**Your pane pulses on the host's word.** At a Remote seat, the collapsed Chronicle pulses for an entry because the host says it's for you, not because your copy guesses, so a seat and the host's computer always agree. A Roll request offered to your character now pulses it too.

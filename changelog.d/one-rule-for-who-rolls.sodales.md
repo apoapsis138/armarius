@@ -1,1 +1,0 @@
-**One rule for who rolls.** Every roll at the table now keeps to the same rule: a player rolls only for the characters they play tonight, only the storyguide rolls Blind, and a character who can't act rolls nothing, Table roll forms included. A storyguide's Free roll now starts at Blind, as their other rolls do.

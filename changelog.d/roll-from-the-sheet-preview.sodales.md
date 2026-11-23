@@ -1,1 +1,0 @@
-**Preview (off by default): rolling from the sheet.** While a Session is under way, a character's Abilities and Characteristics offer Roll: the host adds the scores, a Specialty and the wound and Fatigue penalties, and shows how. Spend Confidence after a roll, and the storyguide Strikes a roll rather than cancelling it.

@@ -1,1 +1,0 @@
-**No Fatigue means no Fatigue penalty.** A creature with the No Fatigue Quality now takes no Fatigue penalty on its totals, as Realms of Power: Magic says, and the Ability catalog now knows which Abilities can't be used without experience.

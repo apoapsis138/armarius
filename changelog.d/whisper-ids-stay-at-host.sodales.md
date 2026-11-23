@@ -1,1 +1,0 @@
-**Less travels with a Whisper.** A Whisper sent to Remote seats now carries only its recipients' names, which its card shows, never their Player ids. Your computer holds no more about who a Whisper is to than you can read on it. The host keeps the whole record, as before.

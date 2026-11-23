@@ -1,1 +1,0 @@
-**Show what they found, and reveal it.** In the Virtual Tabletop preview, the Show form lists the record's Secrets not yet revealed: the ones you tick go into the players' copy. Tick **Also reveal** to make the record known and reveal those Secrets this season, each with its Diary line, as Reveal does. Unticked, only the copy carries them.

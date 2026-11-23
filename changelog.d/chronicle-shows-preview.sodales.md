@@ -1,1 +1,0 @@
-**Preview (off by default): Show.** While a Session is under way, its storyguide can Show a record or a saga picture to the Table or chosen Players, from the host or a Remote seat. Each gets a Show card that opens a copy made as the players read it then, which never changes.

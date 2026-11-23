@@ -1,1 +1,0 @@
-**Set and end a Scene.** While a Session is under way, its storyguide sets a Scene from the host or a Remote seat: everyone gets a banner with its title, its place as they know it and its map, and the aura only if you tell them. Now playing tops the Chronicle pane. Players' copies no longer hold the Scenes.

@@ -1,1 +1,0 @@
-**Reporting a bug.** New issues on GitHub open as a Bug report or a Feature request form. A bug report asks only what happened, the steps and the version, with one Anything else box for where it runs, error text or a rules page; security problems go to a private report, and questions and ideas to Discussions.

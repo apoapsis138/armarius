@@ -1,1 +1,0 @@
-**Every Delete says what else it changes.** Deleting a character, Familiar, laboratory, covenant, creature, neighbour, Tribunal, book, Session or Player now ends its confirmation with counts of what goes, what is emptied and what keeps the name, such as "Goes: 1 charter seal, 2 map pins". It shows no names, and leaves history out.

@@ -1,1 +1,0 @@
-**Security:** Ids in files coming in must be plain names (lowercase letters, digits, `_` and `-`). A saga file whose ids aren't plain is refused when it's opened, so a file can no longer name a saga or portrait outside its folder. An import gives a record with an odd id a fresh one, with its links kept.
