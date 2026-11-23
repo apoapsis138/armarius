@@ -116,9 +116,10 @@ def season_cards(saga: Saga) -> list[SettingCard]:
             "On: each vis source has Harvest, live in its own season once a "
             "year, which asks who gathered it (a character of the covenant, or "
             "the covenfolk), the pawns and what happened, then fills the vis "
-            "stores and writes the covenant Diary. A source still waiting when "
-            "the season is advanced is lost for the year (Covenants pp. 35, "
-            "72, 137).\n\nOff: advancing the season puts each source's pawns "
+            "stores and writes the covenant Diary. Advancing the season lists "
+            "each source still waiting: the covenfolk gather those ticked, and "
+            "the rest are lost for the year (Covenants pp. 35, 72, 137).\n\n"
+            "Off: advancing the season puts each source's pawns "
             "into the stores by itself.",
             on=saga.harvest_vis_by_hand,
         ),

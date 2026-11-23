@@ -418,6 +418,7 @@ After you choose Advance, the app may ask:
 - For the player characters with nothing planned, and any plan that can't be carried out, what to do with the season (see [Unplanned seasons](help:advance-unplanned)).
 - In Winter, if a covenant is in deficit, whether to advance anyway. **Advance anyway** rolls the year over. **No**, or Escape, leaves the date alone so the books can be balanced first.
 - Which contested vis or income sources whose security has lapsed were secured this season, one tick each. A ticked one is secure for five years. One left unticked gives nothing until it is.
+- With Harvest vis by hand on, which vis sources nobody has harvested this season the covenfolk gather now (see [Vis sources waiting](help:advance-vis-waiting)).
 - For each experiment whose Extraordinary Results need the storyguide's word, what they are (see [Experiment Results](help:advance-experiment-results)). That may be which of two rolls stands, what each side or modified effect is, what a Discovery teaches, what a special result becomes, or whether to take a Discovery the risk can reach.
 - For a magus finishing a recreation of a flawed spell, whether to retire the flawed one (see [Retire Flawed Spells](help:advance-retire-flawed)).
 - For a magus setting up a new laboratory, whether they'd like to finish it next season (see [A new laboratory](help:advance-new-lab)).
@@ -443,10 +444,22 @@ It's only on the host's own copy. A storyguide at a Remote seat advances season 
 
 - Any question Advance Season would ask (see [Questions along the way](help:advance-season-questions)) stops the run at its season for your answer. The run goes on after it.
 - Each Winter's World Turns review is the exception. It's rolled in its year and kept, and every one is asked at the end, oldest first, each dated its own Winter.
+- So are the [vis sources waiting](help:advance-vis-waiting) with Harvest vis by hand on: the covenfolk gather every one, with its usual yield.
 - A player character whose plans have run out stops the run with their Plan Season form. The run goes on once it's saved.
 - Anyone else with nothing planned takes the saga's default, and the end says who.
 - The end also says, for each player character, what changed over the whole run.
 - Cancelling a question stops the run there. The seasons already played stay played.
+
+### Vis sources waiting
+<!-- help: advance-vis-waiting -->
+
+With **Harvest vis by hand** on in the saga's settings, advancing the season lists each vis source of the season that nobody has [harvested](help:harvest-vis) yet, named with its covenant and its usual yield, one tick each. A contested source ticked as secured this season is listed too.
+
+- **Ticked**: the covenfolk gather it now, with its usual yield. The vis goes into the stores and the covenant's Diary names the covenfolk as harvester.
+- **Unticked**: it is lost for the year, and the covenant's Diary says it wasn't harvested.
+- **Cancel** leaves the date as it is, so you can go back and harvest a source by hand first.
+
+Nothing is asked when no source is waiting. A [downtime run](help:downtime-run) doesn't stop to ask: the covenfolk gather every waiting source.
 
 ### A new laboratory
 <!-- help: advance-new-lab -->
@@ -542,7 +555,7 @@ When Winter is advanced, the year ends:
 - Each covenant's surplus is added to its Wealth.
 - Transitions of maturation (Apprentices pp. 14-15). Each character turning 8, 15 or 21 next year gets a line and a Diary entry. In the first season of that year their Virtues and Flaws may be exchanged, Minor for Minor and Major for Major. Child ones must be exchanged by 21, and Inherited ones have manifested.
 
-Every season, each covenant's vis sources for that season are harvested into its vis stores and written in its Diary. With **Harvest vis by hand** on in the saga's settings, they aren't: each is gathered with [Harvest](help:harvest-vis) during its season and counted in the season's results, and one nobody gathered is lost for the year, which its covenant's Diary says. Every wounded character makes the season's [Recovery rolls](help:recovery-roll), written in their Diary, with bruises first leaving their residual wounds. Everyone's Fatigue is rested away.
+Every season, each covenant's vis sources for that season are harvested into its vis stores and written in its Diary. With **Harvest vis by hand** on in the saga's settings, they aren't: each is gathered with [Harvest](help:harvest-vis) during its season and counted in the season's results, and one nobody gathered is gathered by the covenfolk if ticked under [Vis sources waiting](help:advance-vis-waiting), or else lost for the year, which its covenant's Diary says. Every wounded character makes the season's [Recovery rolls](help:recovery-roll), written in their Diary, with bruises first leaving their residual wounds. Everyone's Fatigue is rested away.
 
 ### Afterwards
 <!-- help: advance-season-after -->

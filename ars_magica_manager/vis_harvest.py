@@ -39,8 +39,8 @@ HARVESTED = "Vis harvested: "
 #: A check of the rule: whether it holds, and why not when it doesn't.
 Check = tuple[Callable[[Saga, Possession], bool], Callable[[Saga, Possession], str]]
 
-#: "Could be harvested now", in the order its reasons are given.
-HARVESTABLE_NOW: tuple[Check, ...] = (
+#: Whether the source is one to gather by hand this season, once a year.
+DUE: tuple[Check, ...] = (
     (
         lambda saga, _source: saga.harvest_vis_by_hand,
         lambda _saga, _source: (
@@ -62,25 +62,32 @@ HARVESTABLE_NOW: tuple[Check, ...] = (
         lambda saga, source: source.harvested_year != saga.current_year,
         lambda saga, _source: f"Already harvested in {saga.current_year}.",
     ),
-    (
-        lambda saga, source: not contested_now(source, saga.current_year),
-        lambda _saga, _source: "Contested and unsettled: Settle it first.",
-    ),
 )
 
+#: A contested source gives nothing until it is settled (DE p. 181).
+SETTLED: Check = (
+    lambda saga, source: not contested_now(source, saga.current_year),
+    lambda _saga, _source: "Contested and unsettled: Settle it first.",
+)
 
-def refusal(saga: Saga, source: Possession) -> str:
+#: "Could be harvested now", in the order its reasons are given.
+HARVESTABLE_NOW: tuple[Check, ...] = (*DUE, SETTLED)
+
+
+def refusal(saga: Saga, source: Possession, *, settling: bool = False) -> str:
     """Why `source` can't be harvested by hand now ("" when it can): the
-    reason of the first check of HARVESTABLE_NOW it fails."""
-    for holds, reason in HARVESTABLE_NOW:
+    reason of the first check of HARVESTABLE_NOW it fails. `settling`: it
+    is being secured this season (Advance Season's Contested Resources),
+    so being contested doesn't count."""
+    for holds, reason in DUE if settling else HARVESTABLE_NOW:
         if not holds(saga, source):
             return reason(saga, source)
     return ""
 
 
-def harvestable(saga: Saga, source: Possession) -> bool:
+def harvestable(saga: Saga, source: Possession, *, settling: bool = False) -> bool:
     """Whether `source` could be harvested by hand now."""
-    return refusal(saga, source) == ""
+    return refusal(saga, source, settling=settling) == ""
 
 
 def add_vis(covenant: Covenant, source: Possession, pawns: int) -> None:

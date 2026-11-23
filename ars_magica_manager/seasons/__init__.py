@@ -34,6 +34,7 @@ from .covenant import season_info_text as season_info_text
 from .covenant import season_rows as season_rows
 from .covenant import season_table as season_table
 from .covenant import season_title as season_title
+from .covenant import waiting_sources as waiting_sources
 from .experiment_results import bonus_spell_limit as bonus_spell_limit
 from .experiment_results import experiments_to_settle as experiments_to_settle
 from .experiment_results import flawed_to_retire as flawed_to_retire

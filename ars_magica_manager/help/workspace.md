@@ -415,7 +415,7 @@ A familiar is bound on its magus or in their laboratory.
 <!-- gui -->
 - **Keep season records**: when on, each season applied is kept on the Seasons page. When off, only the characters' Diaries keep them.
 <!-- /gui -->
-- **Harvest vis by hand**: off by default. When on, advancing the season no longer fills the vis stores by itself: each vis source is gathered with **Harvest** in its own season (see [Harvest a vis source](help:harvest-vis)), and one still waiting when the season is advanced is lost for the year.
+- **Harvest vis by hand**: off by default. When on, advancing the season no longer fills the vis stores by itself: each vis source is gathered with **Harvest** in its own season (see [Harvest a vis source](help:harvest-vis)), and advancing lists those still waiting, for the covenfolk to gather or to be lost for the year (see [Vis sources waiting](help:advance-vis-waiting)).
 
 ### Saga Settings
 <!-- help: saga-settings; gui -->

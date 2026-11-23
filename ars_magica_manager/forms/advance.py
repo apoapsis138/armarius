@@ -439,14 +439,14 @@ def _secured(
     this season (a tick each), then the season played out."""
     lapsed = seasons.lapsed_resources(saga)
     if not lapsed:
-        return _discoveries(saga, {}, lost, backup, rng)
+        return _waiting(saga, {}, lost, backup, rng)
 
     def apply(values: dict[str, Any]):
         answers = {
             resource_id: bool(values.get(f"secured_{index}"))
             for index, (resource_id, _label) in enumerate(lapsed)
         }
-        return _discoveries(saga, answers, lost, backup, rng)
+        return _waiting(saga, answers, lost, backup, rng)
 
     return Form(
         "Contested Resources",
@@ -471,9 +471,78 @@ def _secured(
     )
 
 
-def _discoveries(
+@dataclass(frozen=True)
+class CovenantAnswers:
+    """What Advance Season asked about the covenants: whether each lapsed
+    contested resource was secured this season (by id), and which vis
+    sources still waiting the covenfolk gather now (by id)."""
+
+    secured: dict[str, bool]
+    gathered: frozenset[str] = frozenset()
+
+
+#: The help page of the waiting vis sources' step.
+WAITING_HELP = "advance-vis-waiting"
+
+
+def _waiting(
     saga: Saga,
     secured: dict[str, bool],
+    lost: tuple[SeasonPlan, ...],
+    backup: Backup,
+    rng: Callable[[], random.Random],
+):
+    """With Harvest Vis by Hand on, each vis source still waiting to be
+    gathered (a tick each: ticked, the covenfolk gather it now; unticked,
+    it is lost for the year), then the season played out. A downtime run
+    ticks them all itself, so a run of seasons doesn't stop to ask."""
+    waiting = seasons.waiting_sources(saga, secured)
+    every = frozenset(source.id for _covenant, source in waiting)
+    if not waiting or isinstance(rng, Deferring):
+        return _discoveries(saga, CovenantAnswers(secured, every), lost, backup, rng)
+
+    def apply(values: dict[str, Any]):
+        gathered = frozenset(
+            source.id
+            for index, (_covenant, source) in enumerate(waiting)
+            if values.get(f"gather_{index}")
+        )
+        answers = CovenantAnswers(secured, gathered)
+        return _discoveries(saga, answers, lost, backup, rng)
+
+    return Form(
+        "Vis Sources Waiting",
+        lambda: [
+            DialogField(
+                "_why",
+                "",
+                "info",
+                "Nobody has harvested these vis sources this season. Tick each "
+                "the covenfolk gather now, with its usual yield; one left "
+                "unticked is lost for the year. Cancel to harvest them by hand "
+                "first.",
+            ),
+            *(
+                DialogField(
+                    f"gather_{index}",
+                    f"{escape(covenant.name)}'s "
+                    f"{escape(source.name or 'vis source')}: "
+                    f"{source.pawns} {escape(source.art)}",
+                    "check",
+                    False,
+                )
+                for index, (covenant, source) in enumerate(waiting)
+            ),
+        ],
+        apply,
+        save_label="Continue",
+        help_id=WAITING_HELP,
+    )
+
+
+def _discoveries(
+    saga: Saga,
+    answers: CovenantAnswers,
     lost: tuple[SeasonPlan, ...],
     backup: Backup,
     rng: Callable[[], random.Random],
@@ -489,7 +558,7 @@ def _discoveries(
         saga,
         worked,
         lambda: _retire_flawed(
-            saga, worked, lambda: _new_labs(saga, worked, secured, lost, backup, rng)
+            saga, worked, lambda: _new_labs(saga, worked, answers, lost, backup, rng)
         ),
         rng,
     )
@@ -556,7 +625,7 @@ def new_lab_seasons(saga: Saga, worked: list[Any]) -> list[Outcome]:
 def _new_labs(
     saga: Saga,
     worked: list[Any],
-    secured: dict[str, bool],
+    answers: CovenantAnswers,
     lost: tuple[SeasonPlan, ...],
     backup: Backup,
     rng: Callable[[], random.Random],
@@ -566,13 +635,13 @@ def _new_labs(
     then the season played out."""
     found = new_lab_seasons(saga, worked)
     if not found:
-        return _world_turns(saga, worked, secured, (), lost, backup, rng)
+        return _world_turns(saga, worked, answers, (), lost, backup, rng)
 
     def apply(values: dict[str, Any]):
         finish = tuple(
             o for index, o in enumerate(found) if values.get(f"finish_{index}")
         )
-        return _world_turns(saga, worked, secured, finish, lost, backup, rng)
+        return _world_turns(saga, worked, answers, finish, lost, backup, rng)
 
     fields: list[DialogField] = []
     for index, outcome in enumerate(found):
@@ -609,7 +678,7 @@ def _new_labs(
 def _world_turns(
     saga: Saga,
     worked: list[Any],
-    secured: dict[str, bool],
+    answers: CovenantAnswers,
     finish: tuple[Outcome, ...],
     lost: tuple[SeasonPlan, ...],
     backup: Backup,
@@ -627,7 +696,7 @@ def _world_turns(
             lambda: mobile_covenants.season_step(
                 saga,
                 lambda moves: _finish(
-                    saga, worked, secured, finish, lost, backup, rng, moves
+                    saga, worked, answers, finish, lost, backup, rng, moves
                 ),
             ),
         )
@@ -647,7 +716,7 @@ def _world_turns(
 def _finish(
     saga: Saga,
     worked: list[Any],
-    secured: dict[str, bool],
+    answers: CovenantAnswers,
     finish: tuple[Outcome, ...],
     lost: tuple[SeasonPlan, ...],
     backup: Backup,
@@ -664,7 +733,15 @@ def _finish(
     ]
     played = [c for c in saga.characters if defaults.is_player_character(c)]
     kept = what_changed.keep_all(saga, played)
-    done = seasons.finish_season(saga, worked, secured, rng(), backup=backup, lost=lost)
+    done = seasons.finish_season(
+        saga,
+        worked,
+        answers.secured,
+        rng(),
+        backup=backup,
+        lost=lost,
+        gathered=answers.gathered,
+    )
     changed = tuple(
         (c.name, tuple(lines))
         for c in played
