@@ -16,7 +16,14 @@ from screen_helpers import (
     _select_laboratory,
     _wait_for_screen,
 )
-from support import build_all_tabs, choose, click_when_shown, strip_markup, wait_until
+from support import (
+    build_all_tabs,
+    choose,
+    click_when_shown,
+    new_screen,
+    strip_markup,
+    wait_until,
+)
 from textual.widgets import (
     Button,
     Collapsible,
@@ -487,7 +494,7 @@ async def test_add_a_feature_with_a_new_feature_virtue_then_remove_it():
             "new:labvf_lesser_feature"
         )
         await _save_form(pilot, app, feature_type="labfeat_altar")
-        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        await new_screen(pilot, ConfirmScreen)
         assert "Free Virtues 0 → -1" in str(
             app.screen.query_one("#confirm-message", Static).render()
         )
@@ -509,7 +516,7 @@ async def test_add_a_feature_with_a_new_feature_virtue_then_remove_it():
 
         await _choose_lab_row(pilot, view, "lab-features-list", 0)
         await pilot.press("d")
-        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        await new_screen(pilot, ConfirmScreen)
         assert "Lesser Feature Virtue stays" in str(
             app.screen.query_one("#confirm-message", Static).render()
         )
@@ -534,7 +541,7 @@ async def test_cancelling_the_second_step_adds_no_feature_virtue():
         await pilot.press("a")
         await wait_until(pilot, lambda: _is_form(app.screen, "Add a Feature"))
         await _save_form(pilot, app, feature_type="custom")
-        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        await new_screen(pilot, ConfirmScreen)
         await pilot.press("y")
         await _wait_for_field(pilot, app, "fld-point0")
         await pilot.press("escape")
@@ -617,7 +624,7 @@ async def test_deleting_a_feature_virtue_or_focus_flaw_takes_its_feature_or_focu
         # The Focus Flaw: the Cauldron stays, without its Focus points.
         await _choose_lab_row(pilot, view, "lab-vf-flaws-list", 1)
         await pilot.press("d")
-        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        await new_screen(pilot, ConfirmScreen)
         assert "Cauldron stops being the Focus" in str(
             app.screen.query_one("#confirm-message", Static).render()
         )
@@ -632,7 +639,7 @@ async def test_deleting_a_feature_virtue_or_focus_flaw_takes_its_feature_or_focu
         view.query_one("#lab-vf-virtues-list").focus()  # d acts on the focused list
         await pilot.pause()
         await pilot.press("d")
-        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        await new_screen(pilot, ConfirmScreen)
         assert "Its Feature, Cauldron, goes too" in str(
             app.screen.query_one("#confirm-message", Static).render()
         )
@@ -876,7 +883,7 @@ async def test_the_diary_edit_and_delete_show_brackets_in_an_entry_name():
         await pilot.press("escape")
         await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
         await pilot.press("d")
-        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        await new_screen(pilot, ConfirmScreen)
         message = str(app.screen.query_one("#confirm-message", Static).render())
         assert "Studied [Ignem] notes" in message, message
         await pilot.press("escape")
