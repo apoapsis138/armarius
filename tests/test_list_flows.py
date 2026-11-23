@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from typing import Any
 
 import pytest
-from support import build_all_tabs, menu, wait_until
+from support import build_all_tabs, menu, new_screen, wait_until
 from textual.widgets import Checkbox, Input, Select, Static, TabPane, TextArea, Tree
 
 from ars_magica_manager import (
@@ -359,20 +359,7 @@ async def _choose_row(pilot, view, case: ListCase, data_index: int) -> None:
 async def _press(pilot, app, key: str, screen_type: type) -> None:
     before = app.screen
     await pilot.press(key)
-    # A new screen of that type, and mounted: it is app.screen before its
-    # widgets are, when a query of one (#confirm-message) finds nothing; and
-    # a dialog just answered may still be on top, closing.
-    assert await wait_until(
-        pilot,
-        lambda: (
-            app.screen is not before
-            and isinstance(app.screen, screen_type)
-            and app.screen.is_mounted
-        ),
-    ), (
-        f"{key!r} opened {type(app.screen).__name__} "
-        f"(mounted={app.screen.is_mounted}), not a new {screen_type.__name__}"
-    )
+    await new_screen(pilot, screen_type, after=before)
 
 
 async def _save_trait(pilot, app, name: str | None, score: int) -> None:
