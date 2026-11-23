@@ -1,1 +1,0 @@
-**Take a Show back.** In the Virtual Tabletop preview, the Session's storyguide can Withdraw a Show, from its card or from More on the Session. Its card then reads Withdrawn, no player can open its copy again, and a copy open now closes. On the desktop a Show's copy opens in a window of its own, as a picture does.

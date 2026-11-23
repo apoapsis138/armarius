@@ -1,1 +1,0 @@
-**A book's library, in one block.** A summa's or tractatus's details end with its covenant's library in that subject: the research bonus and, with the Large Library rule, the Holding (its Level and Quality) and what this book adds to it, or why it adds nothing. A book a magus keeps says it isn't in the shared library.

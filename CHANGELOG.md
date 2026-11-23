@@ -139,6 +139,97 @@ change in it.
 
 <!-- towncrier release notes start -->
 
+## 4.15.0 — 2026-11-22
+
+### Computus
+
+- **No Fatigue means no Fatigue penalty.** A creature with the No Fatigue Quality now takes no Fatigue penalty on its totals, as Realms of Power: Magic says, and the Ability catalog now knows which Abilities can't be used without experience.
+
+### Book of Hours
+
+- **Harvest vis by hand.** A new saga setting, off by default, stops vis sources filling the stores by themselves. In its season, each source has Harvest: say who went, the pawns and what happened, and the Diary keeps it. A source left ungathered is lost for the year. The terminal can now settle a contested vis source too.
+- **A book's library, in one block.** A summa's or tractatus's details end with its covenant's library in that subject: the research bonus and, with the Large Library rule, the Holding (its Level and Quality) and what this book adds to it, or why it adds nothing. A book a magus keeps says it isn't in the shared library.
+- **The Library by subject.** The Library can list its books a subject at a time: each Art and Ability with its Holding, best summa, books and research bonus, greyed where there's no summa. Choosing one shows what studying it gives, what each book adds, and each magus's season of reading. The desktop remembers which view you chose.
+- **Research counts the shared library only.** A covenant's research bonus, its encyclopedias and its research aids now come only from the books the covenant itself owns. A book a magus keeps, or keeps in a laboratory, still shows in the Library but no longer adds a research subject, an encyclopedia tractatus or a research aid.
+- **Vis sources waiting.** With Harvest vis by hand on, advancing the season lists each vis source nobody has gathered yet. Tick the ones the covenfolk gather now; the rest are lost for the year, and Cancel leaves the date so you can harvest by hand first. A downtime run gathers them all itself.
+
+### Scriptorum
+
+- **Closing a window while it fills in.** Closing a picker, Help or the creation worksheet while it is still filling in no longer crashes.
+- **The key bar keeps up after a window closes.** In the terminal version, closing a window quickly, such as a new record's creation worksheet or a dialog, could leave the bar of keys at the bottom stuck on the wrong keys until you reopened the saga. It now always follows where you are.
+
+### Glossa
+
+- **Reporting a bug.** New issues on GitHub open as a Bug report or a Feature request form. A bug report asks only what happened, the steps and the version, with one Anything else box for where it runs, error text or a rules page; security problems go to a private report, and questions and ideas to Discussions.
+- **The README lists every feature.** Its table now has Self-hosting, Printing and exports, Your data and upkeep, and App updates, each feature headed by its plain name as What's New is, and it says where to find the version you have.
+- **How to report a bug.** Help has a new guide, How to report a bug, under Getting help on the website: where the version and `crash.log` are, and why to attach an Export of the records involved rather than the whole saga file, since issues are public.
+- **Where the version shows.** The README and the security policy now say where the version really shows: the desktop app's title page, the terminal app's title bar, and Help's About page.
+
+### Fundamenta
+
+- **The changelog from fragments.** Each change now adds a short note of its own, and a release gathers them into this page. What's New shows released versions only, without an Unreleased section.
+- **Form checks cover the Chronicle.** The checks that drive every form now count a Session's Chronicle as well as the saga, so a form that rolls must write nothing when cancelled or refused; rolling from the sheet is checked this way.
+- **The Chronicle pane keeps its own wiring.** What feeds the desktop's Chronicle pane (the host's file watched for a seat's rolls, a seat's entries from its host, a damaged Chronicle said once) now lives beside the pane rather than in the main window, and is tested on its own. Nothing changes in how it works.
+- **Flaky tests in CI.** The checks on GitHub run a failed test once more on its own; one that passes then is flagged as a flaky test on the pull request instead of failing it.
+- **Every Delete says what else it changes.** Deleting a character, Familiar, laboratory, covenant, creature, neighbour, Tribunal, book, Session or Player now ends its confirmation with counts of what goes, what is emptied and what keeps the name, such as "Goes: 1 charter seal, 2 map pins". It shows no names, and leaves history out.
+- **Deleting a record leaves nothing pointing at it.** Whatever named a deleted record lets it go: charter seals, ships' crews, links, map pins, season plans, a faction's roster and the rest. Favours, a neighbour's ruler, a marriage, a device's maker and a book's author keep its name, and played Sessions keep who was there.
+- **Each kind of Chronicle entry is described once.** Its line, its typed words, whether it can be struck and how the pane draws it live in one place. On the desktop, a Roll request's answer or outcome that comes while the pane is collapsed now counts on its strip like any new entry.
+- **Flaky tests fail the checks.** The checks rerun a failed test alone, by its exact name, even one with spaces; a test that fails and then passes alone now fails the checks too, and is listed to be fixed.
+- **Form checks catch a form that saves on opening.** The checks that drive every form again confirm that merely opening one changes nothing in the saga.
+- **Security:** Ids in files coming in must be plain names (lowercase letters, digits, `_` and `-`). A saga file whose ids aren't plain is refused when it's opened, so a file can no longer name a saga or portrait outside its folder. An import gives a record with an odd id a fresh one, with its links kept.
+- **Security:** Supplements that add to a Tribunal pack, and Mystery Cult files, are now checked as they're read, like every other file coming in. One of the wrong shape is refused, naming what is wrong, before any of it is applied. A saga that couldn't be opened again is never saved: its file stays as it was.
+- **Security:** Files coming in are read within limits. A saga file, export, content pack or Mystery Cult file over 50 MB, or nested too deeply, is refused with a message instead of filling the memory or stopping the app, and so is a zip that would unpack past that. A picture over its limit in an export is left out.
+- **Lab work, family by family.** Enchanting, familiar work, building a laboratory, taming and decoding Lab Texts are each worked out and applied by one entry of their own, and unfinished work is carried into next season in one place. Nothing a season of lab work does changes.
+- **Steadier line endings.** The repository now says its files keep Unix line endings on every computer (Windows scripts keep their own), so a change no longer shows up as a different file on another machine.
+- **Every More action in one place.** Each action the More and New menus offer is now written down once, with where it appears, when it's offered and what it does first, and the menus and pages of both front-ends read it from there.
+- **One answer to what's on show.** The desktop and the terminal now work out the record you have open the same way, so its name, what More offers on it and who else has it open can't disagree between them.
+- **One reading of the Chronicle.** Which entries you read, which call a collapsed pane, whether you may answer a Roll request and how an answer shows are now worked out in one place, the same on the host's computer and at a Remote seat, and tested to agree. Nothing changes in how it looks.
+- **One way to act at the table.** Rolls, Confidence, answers to a Roll request, Messages and form rolls now go through one interface, whether made on the host's computer or from a Remote seat, and the host handles a seat's requests in one place. Nothing changes in how they work; tests check both sides give the same answers.
+- **One command to prepare a release.** `tools/release.py` checks that `main` is ready, gathers the changelog's entries into the new version, sets the version and runs the release's tests, then says what to commit, push and tag. Releases come weekly, on Sunday.
+- **The terminal and the desktop act alike.** New records, exports, Set Up Research Library, Found a Covenant Here and about thirty other actions now run the same steps in both. In the terminal, a new covenant gets its Tribunal and package fields, and Set Up Research Library walks through the subjects one at a time.
+- **Saves that can't be written are said, not a crash.** In the terminal, a change the saga's checks refuse (in the library, or when the date moves) now says it wasn't saved and keeps your copy, as everywhere else. When another copy moves the season, the terminal says so too.
+- **Test runs take turns.** When several copies of the code are being checked on one computer, each run's tests wait for the one before to finish instead of competing for the processor, which made them stop at their time limit or fail at random.
+- **One main branch.** Development now happens on `main` alone: changes go straight into it through pull requests, each release is a version tag, and the help website is rebuilt only when a version is released, so it always matches the latest release. A change to the docs alone gets a quicker set of checks.
+
+### Sodales
+
+- **Arrange your Handouts.** In the Virtual Tabletop preview, give a Handout your own title, pin it to the top, or file it in a folder. Filter your Handouts by folder, Session, kind or Story, and search their titles and words. Your arrangement is yours alone: no one else sees it.
+- **Preview (off by default): Messages and Whispers.** While a Session is under way, anyone at it can send the table a Message, or Whisper to people they choose, from the Chronicle pane or the terminal. The storyguide sees every Whisper, a record named can be linked for those who may open it, and nothing sent can be taken back.
+- **Preview (off by default): the Chronicle at Remote seats.** With Virtual Tabletop (Preview) on at the host, each seat is sent the Chronicle of the Session under way, only what its player may see, and rolls through the host. A seat on an older version is asked to update. A Blind roll for your character pulses your collapsed pane.
+- **Preview (off by default): Show.** While a Session is under way, its storyguide can Show a record or a saga picture to the Table or chosen Players, from the host or a Remote seat. Each gets a Show card that opens a copy made as the players read it then, which never changes.
+- **Every roll shows its dice.** Every roll the app makes now shows its dice in one wording: a stress die's doublings worked out and its botch dice, a typed die marked as typed. Rolling forms, Advance Season, aging and Twilight, fights, Certamen and sieges all use it, contested rolls show both sides, and the Chronicle shares it.
+- **Handouts you keep.** In the Virtual Tabletop preview, every Show leaves a Handout with each Player shown, kept across Sessions, newest first; showing the same thing again adds a dated copy. Players open theirs from any character they play, and the storyguide reads any Player's from Players. A withdrawn Show leaves every list.
+- **One rule for who rolls.** Every roll at the table now keeps to the same rule: a player rolls only for the characters they play tonight, only the storyguide rolls Blind, and a character who can't act rolls nothing, Table roll forms included. A storyguide's Free roll now starts at Blind, as their other rolls do.
+- **Scenes.** Build Scenes once and reuse them: a place whose aura fills in, the actors usually there, a story, a map and what to show. Load them into a Session's page in order, before you begin or on the night, each time with its own list of who is present. A Prepared Scene can move to another Session.
+- **Preview (off by default): rolling from the sheet.** While a Session is under way, a character's Abilities and Characteristics offer Roll: the host adds the scores, a Specialty and the wound and Fatigue penalties, and shows how. Spend Confidence after a roll, and the storyguide Strikes a roll rather than cancelling it.
+- **Preview (off by default): Roll requests.** The storyguide calls for chosen characters to roll, Blind by default and with an Ease Factor they may keep to themselves. Each player answers with one click, rolled at the host from their sheet, and the answers gather on the request's card with room for what came of it.
+- **The Scene's aura and who is present.** While a Scene plays, its aura starts casting forms, and Roll from the sheet or a Roll request on a Supernatural Ability, with a foreign realm's botch dice. Players' forms use it only if you told them. Those present start a Roll request's ticks and a Show's recipients.
+- **Your pane pulses on the host's word.** At a Remote seat, the collapsed Chronicle pulses for an entry because the host says it's for you, not because your copy guesses, so a seat and the host's computer always agree. A Roll request offered to your character now pulses it too.
+- **Preview (off by default): a Session's Chronicle.** With Virtual Tabletop (Preview) on in Settings, a storyguide can Begin and End a Session. Its Chronicle records every roll with each die face, Public, Private or Blind, and is kept beside the saga and in its backups, to read from the Session's row.
+- **A page for each Session.** Open a Session from the Sessions list to see it on a page of its own: when it is, whether it's planned, under way or played, its storyguide, who's coming and who plays whom, with Edit, Cast at a Glance and, with the Virtual Tabletop on, Begin Session, End Session and its Chronicle.
+- **Set and end a Scene.** While a Session is under way, its storyguide sets a Scene from the host or a Remote seat: everyone gets a banner with its title, its place as they know it and its map, and the aura only if you tell them. Now playing tops the Chronicle pane. Players' copies no longer hold the Scenes.
+- **Show what they found, and reveal it.** In the Virtual Tabletop preview, the Show form lists the record's Secrets not yet revealed: the ones you tick go into the players' copy. Tick **Also reveal** to make the record known and reveal those Secrets this season, each with its Diary line, as Reveal does. Unticked, only the copy carries them.
+- **SSH players' copies end cleanly.** The host keeps track of each player's copy of the app reached over SSH. When it shuts down, it ends each one and waits for it to stop, instead of leaving them to stop on their own after it has gone.
+- **Preview (off by default): Table rolls.** While a Session is under way, the rolling forms a scene calls for, from a Personality Trait roll to Cast a Power and faerie bargains, roll on the host and post every die and their result to the Chronicle. You choose who sees each, and a Remote seat draws its dice from the host.
+- **Less travels with a Whisper.** A Whisper sent to Remote seats now carries only its recipients' names, which its card shows, never their Player ids. Your computer holds no more about who a Whisper is to than you can read on it. The host keeps the whole record, as before.
+- **Take a Show back.** In the Virtual Tabletop preview, the Session's storyguide can Withdraw a Show, from its card or from More on the Session. Its card then reads Withdrawn, no player can open its copy again, and a copy open now closes. On the desktop a Show's copy opens in a window of its own, as a picture does.
+- **Written Handouts.** Write letters, proclamations and pages ahead of play, in Saga Content's Handouts: a title, a Stationery, text with headings, centred lines, an illuminated initial, a flourish and up to four pictures, who found it, where and its story. The list narrows to one story. They're yours until shown and travel in a saga's export and a Content Pack.
+- **Large maps reach the troupe.** A map's picture may now be up to 25 MB in an export and on the troupe's Remote seats, so a hand-drawn regional map is no longer left out as missing. Portraits keep their 5 MB limit.
+
+### Illuminatio
+
+- **Preview (off by default): the Chronicle pane.** With Virtual Tabletop (Preview) on, the desktop docks a Session's Chronicle on the right while it's under way: a card per roll with each die face as a tile, a Free Roll, and a strip it collapses to that counts what came and pulses once for a Blind result.
+- **Deleting fights and sieges.** On the desktop, each fight and siege card on Conflicts now has Edit and Delete, as battle cards do, and a fight's or siege's own page has Delete beside Edit. A player's seat sees Conflicts without the buttons that play or change them.
+- **What a player can change on the desktop.** A player opening a creature's page no longer crashes. A player no longer sees Edit and Characteristics on another player's familiar, or Begin Project and Choose the Sources on a covenant they may not change.
+
+### Castellum
+
+- **Seeing it in UGOS's Docker app.** The self-hosting guide's UGREEN NAS steps say how to add a saga started from the command line to the Docker app's Projects, so you can start, stop and watch it there, and why it never shows as Updatable.
+
+### Folia
+
+- **A Player copy keeps unknown records' names to itself.** Print to PDF and Export as Markdown on a Player copy no longer name a record the players don't know of, such as a character's covenant, a familiar's master or a laboratory's owner: the sheet reads "(unknown)" instead. Player view's pages do the same; the Storyguide copy still names them.
+
 ## 4.14.0 — 2026-11-15
 
 ### Folia

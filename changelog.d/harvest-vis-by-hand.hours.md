@@ -1,1 +1,0 @@
-**Harvest vis by hand.** A new saga setting, off by default, stops vis sources filling the stores by themselves. In its season, each source has Harvest: say who went, the pawns and what happened, and the Diary keeps it. A source left ungathered is lost for the year. The terminal can now settle a contested vis source too.

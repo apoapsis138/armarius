@@ -1,1 +1,0 @@
-**Large maps reach the troupe.** A map's picture may now be up to 25 MB in an export and on the troupe's Remote seats, so a hand-drawn regional map is no longer left out as missing. Portraits keep their 5 MB limit.

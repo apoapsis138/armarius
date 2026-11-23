@@ -1,1 +1,0 @@
-**Vis sources waiting.** With Harvest vis by hand on, advancing the season lists each vis source nobody has gathered yet. Tick the ones the covenfolk gather now; the rest are lost for the year, and Cancel leaves the date so you can harvest by hand first. A downtime run gathers them all itself.

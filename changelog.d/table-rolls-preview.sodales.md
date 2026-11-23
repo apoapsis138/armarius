@@ -1,1 +1,0 @@
-**Preview (off by default): Table rolls.** While a Session is under way, the rolling forms a scene calls for, from a Personality Trait roll to Cast a Power and faerie bargains, roll on the host and post every die and their result to the Chronicle. You choose who sees each, and a Remote seat draws its dice from the host.

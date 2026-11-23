@@ -1,1 +1,0 @@
-**Deleting fights and sieges.** On the desktop, each fight and siege card on Conflicts now has Edit and Delete, as battle cards do, and a fight's or siege's own page has Delete beside Edit. A player's seat sees Conflicts without the buttons that play or change them.

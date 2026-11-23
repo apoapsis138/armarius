@@ -1,1 +1,0 @@
-**The Scene's aura and who is present.** While a Scene plays, its aura starts casting forms, and Roll from the sheet or a Roll request on a Supernatural Ability, with a foreign realm's botch dice. Players' forms use it only if you told them. Those present start a Roll request's ticks and a Show's recipients.

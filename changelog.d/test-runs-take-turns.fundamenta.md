@@ -1,1 +1,0 @@
-**Test runs take turns.** When several copies of the code are being checked on one computer, each run's tests wait for the one before to finish instead of competing for the processor, which made them stop at their time limit or fail at random.

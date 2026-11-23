@@ -1,1 +1,0 @@
-**Handouts you keep.** In the Virtual Tabletop preview, every Show leaves a Handout with each Player shown, kept across Sessions, newest first; showing the same thing again adds a dated copy. Players open theirs from any character they play, and the storyguide reads any Player's from Players. A withdrawn Show leaves every list.

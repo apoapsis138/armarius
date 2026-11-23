@@ -1,1 +1,0 @@
-**Scenes.** Build Scenes once and reuse them: a place whose aura fills in, the actors usually there, a story, a map and what to show. Load them into a Session's page in order, before you begin or on the night, each time with its own list of who is present. A Prepared Scene can move to another Session.

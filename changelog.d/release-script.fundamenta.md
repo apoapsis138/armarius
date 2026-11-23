@@ -1,1 +1,0 @@
-**One command to prepare a release.** `tools/release.py` checks that `main` is ready, gathers the changelog's entries into the new version, sets the version and runs the release's tests, then says what to commit, push and tag. Releases come weekly, on Sunday.

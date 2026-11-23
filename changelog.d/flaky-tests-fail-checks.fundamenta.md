@@ -1,1 +1,0 @@
-**Flaky tests fail the checks.** The checks rerun a failed test alone, by its exact name, even one with spaces; a test that fails and then passes alone now fails the checks too, and is listed to be fixed.

@@ -1,1 +1,0 @@
-**A page for each Session.** Open a Session from the Sessions list to see it on a page of its own: when it is, whether it's planned, under way or played, its storyguide, who's coming and who plays whom, with Edit, Cast at a Glance and, with the Virtual Tabletop on, Begin Session, End Session and its Chronicle.

@@ -1,1 +1,0 @@
-**A Player copy keeps unknown records' names to itself.** Print to PDF and Export as Markdown on a Player copy no longer name a record the players don't know of, such as a character's covenant, a familiar's master or a laboratory's owner: the sheet reads "(unknown)" instead. Player view's pages do the same; the Storyguide copy still names them.
