@@ -53,6 +53,7 @@ from .widgets import (
     Symbol,
     badge,
     cells_table,
+    changing_button,
     display_name,
     edit_button,
     mix,
@@ -172,7 +173,7 @@ class FamiliarPage(QWidget):
             ("Edit", self.edits["Familiar"]),
             ("Characteristics", self.edits["Characteristics"]),
         ):
-            button = edit_button(words, p, lambda form=form: self.run(form))
+            button = changing_button(words, p, lambda form=form: self.run(form))
             button.setToolTip(form.title)
             buttons.addWidget(button)
         buttons.addStretch(1)
