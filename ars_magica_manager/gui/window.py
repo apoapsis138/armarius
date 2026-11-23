@@ -164,7 +164,7 @@ from .manage import Moded, RecordControls
 from .markup_html import plain
 from .medallions import SeasonHeadpiece
 from .menus import Placer
-from .pages import JoinedShelf, SagaPage, SagaShelf
+from .pages import CONFLICTS_CHAPTER, JoinedShelf, SagaPage, SagaShelf
 from .players_section import players_section
 from .region import NeighbourPage
 from .saga_content import SagaContentPage
@@ -1337,6 +1337,18 @@ class MainWindow(QMainWindow):
     def open_siege(self, siege_id: str) -> None:
         self.go([*self._up_to(SAGA), Place(SIEGE, siege_id)])
 
+    def _run_to_conflicts(self, command: Command) -> None:
+        """Run `command` (Delete on a fight's or siege's own page), then
+        show the saga's page at its Conflicts chapter, where the record was
+        listed."""
+
+        def back() -> None:
+            trail = self._up_to(SAGA)
+            self._chapters[trail[-1]] = CONFLICTS_CHAPTER
+            self.go(trail)
+
+        self.run(command, back)
+
     def open_session(self, session_id: str) -> None:
         self.go([*self._up_to(SAGA), Place(SESSION, session_id)])
 
@@ -2007,12 +2019,12 @@ class MainWindow(QMainWindow):
             fight = next((f for f in saga.fights if f.id == place.id), None)
             if fight is None:
                 return QLabel("No fight chosen.")
-            return FightPage(saga, fight, p, self.run)
+            return FightPage(saga, fight, p, self.run, self._run_to_conflicts)
         if place.kind == SIEGE:
             siege = next((s for s in saga.sieges if s.id == place.id), None)
             if siege is None:
                 return QLabel("No siege chosen.")
-            return SiegePage(saga, siege, p, self.run)
+            return SiegePage(saga, siege, p, self.run, self._run_to_conflicts)
         if place.kind == SESSION:
             session = sessions.find(saga, place.id)
             if session is None:

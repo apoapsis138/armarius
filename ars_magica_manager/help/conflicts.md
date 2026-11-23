@@ -22,10 +22,13 @@ and `d` deletes it. More (`m`) holds what plays them.
 <!-- /tui -->
 <!-- gui -->
 On the saga's page, the Conflicts chapter lists the battles, the fights
-and the sieges. A battle is acted on from its card. A fight or siege opens
-its own page, drawn as a manuscript leaf. A fight's shows its order of
-blows and the two sides under their arms. A siege's shows its castle's
-plan, the season medallions and both armies.
+and the sieges as cards, each list with its Add. Every card has Edit and
+Delete. A battle is played from its card. Clicking a fight or siege opens
+its own page, drawn as a manuscript leaf, with the buttons that play it,
+Edit and Delete. A fight's shows its order of blows and the two sides under
+their arms. A siege's shows its castle's plan, the season medallions and
+both armies. Deleting from its page takes you back to Conflicts. A player
+sees the cards and pages without these buttons.
 <!-- /gui -->
 
 **See also:** [How to run a fight](help:guide-fights), [How to run a siege](help:guide-sieges)
@@ -62,9 +65,11 @@ how it ended. The panel below shows the chosen fight in full:
 - the chronicle
 
 <!-- tui -->
-More on a fight: **Add Combatant**, **Edit Combatant**, **Remove
-Combatant**, **Form a Group**, **Break up a Group**, **Next Blow**,
-**Next Round** and **Restart the Fight**.
+More on a fight: **Combat Options**, **Next Blow**, **Next Round**,
+**Add Combatant**, **Edit Combatant**, **Remove Combatant**, **Form a
+Group**, **Break up a Group** and **Restart the Fight**. With Morale and
+Discipline on, also **Discipline or Morale** and **Rally a Group** (see
+[Discipline, Morale and rallying](help:group-morale)).
 <!-- /tui -->
 
 ### Sieges
@@ -80,7 +85,8 @@ panel below shows the chosen siege in full:
 - the chronicle
 
 <!-- tui -->
-More on a siege: **Next Siege Event**.
+More on a siege: **Next Siege Event** and **Siege Actions** (see
+[Siege Actions](help:siege-actions)).
 <!-- /tui -->
 
 # A fight

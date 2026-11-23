@@ -12,10 +12,20 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from PySide6.QtWidgets import QApplication, QLabel, QPushButton
 
-from ars_magica_manager import players, seat, storage, viewing
+from ars_magica_manager import (
+    battles,
+    fights,
+    players,
+    seat,
+    sieges,
+    storage,
+    viewing,
+)
+from ars_magica_manager.commands import Form
 from ars_magica_manager.gui import pictures
+from ars_magica_manager.gui.pages import CONFLICTS_CHAPTER
 from ars_magica_manager.gui.widgets import ClickableCard, NewCard
-from ars_magica_manager.gui.window import MainWindow
+from ars_magica_manager.gui.window import SAGA, MainWindow
 from ars_magica_manager.models import Character, Covenant, Player, Saga
 
 
@@ -193,6 +203,43 @@ def test_a_player_has_no_advance_season(app):
     window.sit_as(None)
     window.show_character("pc1")
     assert window.season_panel is not None
+
+
+def _with_conflicts(saga: Saga) -> Saga:
+    """`saga` with a battle, a fight and a siege, each from its list's Add."""
+    for ops in (battles.ops(saga), fights.ops(saga), sieges.ops(saga)):
+        assert ops.add is not None
+        form = ops.add()
+        assert isinstance(form, Form)
+        values = {f.key: f.value for f in form.fields() if f.kind != "info"}
+        form.apply({**values, "name": "The Clash"})
+    return saga
+
+
+def _buttons(window: MainWindow) -> set[str]:
+    """The words of every button shown on the page on show."""
+    return {
+        b.text().strip()
+        for b in window.page().findChildren(QPushButton)  # type: ignore[union-attr]
+        if b.text().strip() and not b.isHidden()
+    }
+
+
+def test_a_player_can_change_nothing_on_conflicts(app: QApplication) -> None:
+    saga = _with_conflicts(_saga())
+    window = _window(saga)
+    window.page().codex.open_chapter(CONFLICTS_CHAPTER)  # type: ignore[union-attr]
+    assert {"Add", "Edit", "Delete", "Battle Event"} <= _buttons(window)
+    window.open_fight(saga.fights[0].id)
+    assert {"Next Blow", "Delete Fight"} <= _buttons(window)
+    window.sit_as(saga.players[0])  # Ana
+    window.go(window._up_to(SAGA))
+    window.page().codex.open_chapter(CONFLICTS_CHAPTER)  # type: ignore[union-attr]
+    assert _buttons(window) & {"Add", "Edit", "Delete", "Battle Event"} == set()
+    window.open_fight(saga.fights[0].id)
+    assert _buttons(window) == set()
+    window.open_siege(saga.sieges[0].id)
+    assert _buttons(window) == set()
 
 
 def test_closing_the_saga_empties_the_seat(app):

@@ -12,7 +12,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from PySide6.QtWidgets import QApplication, QLabel, QPushButton
 
-from ars_magica_manager import commands, storage, virtual_tabletop
+from ars_magica_manager import commands, players, seat, storage, virtual_tabletop
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.session_page import SessionPage
 from ars_magica_manager.gui.sessions_section import sessions_section
@@ -86,6 +86,22 @@ def test_the_window_shows_a_sessions_page_with_its_facts() -> None:
     assert "Ana as Aelfric" in words
     assert {"Edit", "Cast at a Glance", "Print the Cast"} <= set(_buttons(page))
     assert not {"Begin Session", "End Session", "Chronicle"} & set(_buttons(page))
+
+
+@pytest.mark.usefixtures("app")
+def test_a_player_still_reads_the_cast_at_a_glance() -> None:
+    window = _window()
+    saga = window.saga
+    assert saga is not None
+    saga.players[0].role = players.PLAYER
+    window.sit_as(saga.players[0])
+    try:
+        window.open_session("s1")
+        shown = {b for b, w in _buttons(window.page()).items() if not w.isHidden()}
+        assert "Cast at a Glance" in shown
+        assert "Edit" not in shown
+    finally:
+        seat.sign_out()
 
 
 @pytest.mark.usefixtures("app")

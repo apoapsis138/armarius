@@ -17,13 +17,13 @@ from PySide6.QtWidgets import QApplication, QLabel, QPushButton
 from support import everything_saga
 
 from ars_magica_manager import battles, conflicts, fights, medallions, sieges, storage
-from ars_magica_manager.commands import Form
+from ars_magica_manager.commands import CANCELLED, Form
 from ars_magica_manager.gui import medallions as drawn
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.conflicts import FightPage, SiegeBody, SiegePage
 from ars_magica_manager.gui.themes import PALETTES
 from ars_magica_manager.gui.widgets import ClickableCard
-from ars_magica_manager.gui.window import MainWindow
+from ars_magica_manager.gui.window import SAGA, MainWindow
 from ars_magica_manager.models import SEASONS, Saga, Siege, SiegeEvent
 
 
@@ -217,6 +217,76 @@ def test_a_battle_card_plays_edits_and_deletes(app, monkeypatch):
     assert [type(c).__name__ for c in ran[-2:]] == ["Form", "Confirm"]
 
 
+def _conflicts_card(window: MainWindow, name: str) -> ClickableCard:
+    """The card named `name` on the saga page's Conflicts chapter."""
+    window.go(window._up_to(SAGA))
+    page = window.page()
+    assert page is not None
+    page.codex.open_chapter("Conflicts")  # type: ignore[attr-defined]
+    [card] = [c for c in page.findChildren(ClickableCard) if name in _words(c)]
+    return card
+
+
+def _answering(monkeypatch: pytest.MonkeyPatch, answer: object) -> list:
+    """Answer every step with `answer`, keeping the questions asked."""
+    asked: list = []
+
+    def reply(_window: MainWindow, question: object) -> object:
+        asked.append(question)
+        return answer
+
+    monkeypatch.setattr(MainWindow, "_answer", reply)
+    return asked
+
+
+@pytest.mark.parametrize(
+    ("name", "edit_title", "kept"),
+    [
+        ("The Fray at Testford", "Edit a Fight", "Wounds it dealt stay"),
+        ("The Siege of Testburg", "Edit a Siege", "Delete the siege"),
+    ],
+)
+def test_a_fight_or_siege_card_edits_and_deletes(
+    app: QApplication,
+    monkeypatch: pytest.MonkeyPatch,
+    name: str,
+    edit_title: str,
+    kept: str,
+) -> None:
+    window, saga = _window()
+    asked = _answering(monkeypatch, CANCELLED)
+    _button(_conflicts_card(window, name), "Edit").click()
+    assert [q.title for q in asked] == [edit_title]
+    _button(_conflicts_card(window, name), "Delete").click()
+    assert kept in asked[-1].question
+    assert name in [r.name for r in [*saga.fights, *saga.sieges]], "Cancel keeps it"
+    _answering(monkeypatch, True)
+    _button(_conflicts_card(window, name), "Delete").click()
+    assert name not in [r.name for r in [*saga.fights, *saga.sieges]]
+
+
+@pytest.mark.parametrize("kind", ["fight", "siege"])
+def test_delete_on_a_fight_or_siege_page_goes_back_to_conflicts(
+    app: QApplication, monkeypatch: pytest.MonkeyPatch, kind: str
+) -> None:
+    window, saga = _window()
+    window.go(window._up_to(SAGA))  # left at its first chapter, not Conflicts
+    records = saga.fights if kind == "fight" else saga.sieges
+    record_id = records[0].id
+    opened = window.open_fight if kind == "fight" else window.open_siege
+    delete = "Delete Fight" if kind == "fight" else "Delete Siege"
+    _answering(monkeypatch, CANCELLED)
+    opened(record_id)
+    _button(window.page(), delete).click()
+    assert record_id in [r.id for r in records], "Cancel keeps it"
+    assert isinstance(window.page(), FightPage if kind == "fight" else SiegePage)
+    _answering(monkeypatch, True)
+    _button(window.page(), delete).click()
+    assert record_id not in [r.id for r in records]
+    codex = window.page().codex  # type: ignore[union-attr]
+    assert codex.chapters()[codex.rail.currentRow()] == "Conflicts"
+
+
 def test_a_siege_between_lords_names_and_flies_their_arms(app):
     from ars_magica_manager.gui.region import NeighbourPage
 
@@ -227,7 +297,9 @@ def test_a_siege_between_lords_names_and_flies_their_arms(app):
     siege.castle, siege.besieger, siege.holder = "", "", ""
     siege.besieger_id = gottfried.id
     assert sieges.besieger_name(saga, siege) == gottfried.name
-    page = SiegePage(saga, siege, PALETTES[0], lambda _command: None)
+    page = SiegePage(
+        saga, siege, PALETTES[0], lambda _command: None, lambda _command: None
+    )
     page.grab()  # the shields and the names paint from the linked lord
     fief = NeighbourPage(saga, gottfried, PALETTES[0])
     titles = [label.text() for label in fief.findChildren(QLabel)]

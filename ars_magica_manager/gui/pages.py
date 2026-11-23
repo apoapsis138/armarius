@@ -36,6 +36,7 @@ from .. import (
     open_stories,
     picture_files,
     players,
+    seat,
     section_verbs,
     sessions,
     sieges,
@@ -96,6 +97,8 @@ Open = Callable[[str], None]
 
 #: Saga Settings' chapter id: the storyguide's alone (viewing.STORYGUIDE_ONLY).
 SAGA_SETTINGS = "saga-settings"
+#: The saga page's chapter of battles, fights and sieges.
+CONFLICTS_CHAPTER = "Conflicts"
 
 
 def _ignore(_id: str) -> None:
@@ -892,51 +895,90 @@ def battle_card(
         # A fleet battle: its ships, whose count sets the Weight of Numbers.
         facts.insert(2, Fact("Ships", battles.ships_text(saga, entry)))
     card.column.addWidget(fact_grid(facts, p, 1))
-    line = QHBoxLayout()
-    line.setSpacing(6)
-    line.addWidget(
-        edit_button(
-            "Battle Event",
-            p,
-            lambda: run(conflicts.command(saga, "conflict_battle_event", index)),
-            "combat",
-        )
+    plays = (
+        []
+        if seat.read_only()
+        else [
+            edit_button(
+                "Battle Event",
+                p,
+                lambda: run(conflicts.command(saga, "conflict_battle_event", index)),
+                "combat",
+            ),
+            edit_button(
+                "Muster and Aftermath",
+                p,
+                lambda: run(conflicts.command(saga, "battle_muster", index)),
+                "players",
+            ),
+        ]
     )
-    line.addWidget(
-        edit_button(
-            "Muster and Aftermath",
-            p,
-            lambda: run(conflicts.command(saga, "battle_muster", index)),
-            "players",
-        )
-    )
-    if ops.edit is not None:
-        edit = ops.edit
-        line.addWidget(edit_button("Edit", p, lambda: run(edit(index))))
-    if ops.remove is not None:
-        remove = ops.remove
-        line.addWidget(edit_button("Delete", p, lambda: run(remove(index)), "delete"))
-    line.addStretch(1)
-    card.column.addLayout(line)
+    _verb_line(card, plays + card_verbs(ops, index, run, p))
     return card
 
 
-def fight_card(saga: Saga, index: int, p: Palette, open_fight: Open) -> ClickableCard:
+def card_verbs(
+    ops: SectionOps, index: int, run: Callable[[Command], None], p: Palette
+) -> list[QPushButton]:
+    """Edit and Delete for the card of row `index`, from its list's `ops`
+    in the core's table (section_verbs.ops_of), so a card offers what the
+    terminal's list does. For a seat that may not change the saga the
+    table's ops have no verbs, so the card has none."""
+    buttons: list[QPushButton] = []
+    if ops.edit is not None:
+        edit = ops.edit
+        buttons.append(edit_button("Edit", p, lambda: run(edit(index))))
+    if ops.remove is not None:
+        remove = ops.remove
+        buttons.append(edit_button("Delete", p, lambda: run(remove(index)), "delete"))
+    return buttons
+
+
+def _verb_line(card: Card, buttons: list[QPushButton]) -> None:
+    """`buttons` along the foot of `card`, from the left (a battle's,
+    a fight's and a siege's alike)."""
+    if not buttons:
+        return
+    line = QHBoxLayout()
+    line.setSpacing(6)
+    for button in buttons:
+        line.addWidget(button)
+    line.addStretch(1)
+    card.column.addLayout(line)
+
+
+def fight_card(
+    saga: Saga,
+    index: int,
+    p: Palette,
+    open_fight: Open,
+    run: Callable[[Command], None],
+    ops: SectionOps,
+) -> ClickableCard:
     """A fight as a card that opens its page: when and where, its sides,
-    who still stands and how it goes."""
+    who still stands and how it goes, with Edit and Delete from `ops`."""
     fight = saga.fights[index]
     row = fights.grid(saga).rows[index]
     card = ClickableCard(p, pad=16)
     card_title(card, fight.name, row[4], p, symbol_label(artwork.icon("combat"), p))
     facts = [Fact("When", row[1]), Fact("Sides", row[2]), Fact("Standing", row[3])]
     card.column.addWidget(fact_grid(facts, p, 1))
+    _verb_line(card, card_verbs(ops, index, run, p))
     card.clicked = lambda: open_fight(fight.id)
     return card
 
 
-def siege_card(saga: Saga, index: int, p: Palette, open_siege: Open) -> ClickableCard:
+def siege_card(
+    saga: Saga,
+    index: int,
+    p: Palette,
+    open_siege: Open,
+    run: Callable[[Command], None],
+    ops: SectionOps,
+) -> ClickableCard:
     """A siege as a card that opens its page: the castle, the besieger,
-    the castle's figures and how long it has run."""
+    the castle's figures and how long it has run, with Edit and Delete
+    from `ops`."""
     siege = saga.sieges[index]
     row = sieges.grid(saga).rows[index]
     card = ClickableCard(p, pad=16)
@@ -949,6 +991,7 @@ def siege_card(saga: Saga, index: int, p: Palette, open_siege: Open) -> Clickabl
         Fact("Supplies", row[5]),
     ]
     card.column.addWidget(fact_grid(facts, p, 2))
+    _verb_line(card, card_verbs(ops, index, run, p))
     card.clicked = lambda: open_siege(siege.id)
     return card
 
@@ -964,7 +1007,7 @@ def conflicts_chapter(
     as cards, each list with its Add."""
     ops = section_verbs.ops_of(saga, saga)
     parts: list[QWidget] = [
-        chapter_title("Conflicts", p),
+        chapter_title(CONFLICTS_CHAPTER, p),
         fact_grid(conflicts.header_facts(saga), p, 5),
     ]
     for title, section, cards in (
@@ -979,12 +1022,18 @@ def conflicts_chapter(
         (
             fights.title(saga),
             FIGHTS_SECTION,
-            [fight_card(saga, i, p, open_fight) for i in range(len(saga.fights))],
+            [
+                fight_card(saga, i, p, open_fight, run, ops[FIGHTS_SECTION])
+                for i in range(len(saga.fights))
+            ],
         ),
         (
             sieges.title(saga),
             SIEGES_SECTION,
-            [siege_card(saga, i, p, open_siege) for i in range(len(saga.sieges))],
+            [
+                siege_card(saga, i, p, open_siege, run, ops[SIEGES_SECTION])
+                for i in range(len(saga.sieges))
+            ],
         ),
     ):
         add = ops[section].add
@@ -1359,7 +1408,7 @@ class SagaPage(QWidget):
             lambda: self._compendium(open_store, open_creature, open_content),
         )
         self.codex.add(
-            "Conflicts",
+            CONFLICTS_CHAPTER,
             "combat",
             lambda: conflicts_chapter(saga, p, run, open_fight, open_siege),
         )
