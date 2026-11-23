@@ -7,6 +7,8 @@ import time
 
 import pytest
 from support import everything_saga, screen_lines, wait_until
+from textual.pilot import Pilot
+from textual.screen import Screen
 from textual.widgets import Button, Checkbox, OptionList, Static
 
 from ars_magica_manager import settings, storage, updates
@@ -43,36 +45,47 @@ def _app() -> ArsMagicaManagerApp:
     return app
 
 
+async def _on(pilot: Pilot, app: ArsMagicaManagerApp, kind: type[Screen]) -> None:
+    """Wait for a screen of `kind` on top, mounted: a screen is app.screen
+    a beat before its widgets are."""
+    assert await wait_until(
+        pilot, lambda: isinstance(app.screen, kind) and app.screen.is_mounted
+    ), f"{kind.__name__} never came up (on top: {type(app.screen).__name__})"
+
+
+async def _shown(pilot: Pilot, app: ArsMagicaManagerApp, text: str) -> None:
+    """Wait for `text` on the screen as drawn, which lags what was asked."""
+
+    def drawn() -> str:
+        return "\n".join(screen_lines(app))
+
+    assert await wait_until(pilot, lambda: text in drawn()), drawn()
+
+
+def _ids(listed: OptionList) -> list[str | None]:
+    return [listed.get_option_at_index(i).id for i in range(listed.option_count)]
+
+
 @pytest.mark.usefixtures("found")
 async def test_the_title_page_lists_update_last_and_it_opens_the_update_screen() -> (
     None
 ):
     app = _app()
     async with app.run_test(size=(120, 45)) as pilot:
-        assert await wait_until(pilot, lambda: isinstance(app.screen, TitleScreen))
+        await _on(pilot, app, TitleScreen)
         listed = app.screen.query_one(OptionList)
-        assert await wait_until(
-            pilot,
-            lambda: listed.get_option_at_index(listed.option_count - 1).id == UPDATE,
-        )
-        assert "Armarius 99.0.0 is available" in "\n".join(screen_lines(app))
+        assert await wait_until(pilot, lambda: _ids(listed)[-1:] == [UPDATE])
+        await _shown(pilot, app, "Armarius 99.0.0 is available")
         listed.highlighted = listed.option_count - 1
         await pilot.press("enter")
-        assert await wait_until(pilot, lambda: isinstance(app.screen, UpdateScreen))
-        assert await wait_until(
-            pilot,
-            lambda: (
-                "! Armarius 99.0.0 is available (2026-12-01)"
-                in "\n".join(screen_lines(app))
-            ),
-        )
-        text = "\n".join(screen_lines(app))
-        assert "My sheet. [bold]stays[/] text." in text  # plain, not markup
+        await _on(pilot, app, UpdateScreen)
+        await _shown(pilot, app, "! Armarius 99.0.0 is available (2026-12-01)")
+        await _shown(pilot, app, "My sheet. [bold]stays[/] text.")  # plain, not markup
         app.screen.query_one("#update-whats-new", Button).press()
-        assert await wait_until(pilot, lambda: isinstance(app.screen, NotesScreen))
-        assert "### Pagina" in "\n".join(screen_lines(app))
+        await _on(pilot, app, NotesScreen)
+        await _shown(pilot, app, "### Pagina")
         await pilot.press("escape")
-        assert await wait_until(pilot, lambda: isinstance(app.screen, UpdateScreen))
+        await _on(pilot, app, UpdateScreen)
         app.screen.query_one("#update-skip", Button).press()
         assert await wait_until(
             pilot, lambda: settings.load_settings().get(updates.SKIPPED) == "99.0.0"
@@ -81,24 +94,18 @@ async def test_the_title_page_lists_update_last_and_it_opens_the_update_screen()
             app.screen.query_one("#update-headline", Static).render()
         )
         await pilot.press("escape")
-        assert await wait_until(pilot, lambda: isinstance(app.screen, TitleScreen))
-        assert await wait_until(
-            pilot,
-            lambda: all(
-                listed.get_option_at_index(i).id != UPDATE
-                for i in range(listed.option_count)
-            ),
-        )
+        await _on(pilot, app, TitleScreen)
+        assert await wait_until(pilot, lambda: UPDATE not in _ids(listed))
 
 
 async def test_no_update_row_without_a_notice() -> None:
     app = _app()
     app.update_copy = updates.Quiet()
     async with app.run_test(size=(120, 45)) as pilot:
-        assert await wait_until(pilot, lambda: isinstance(app.screen, TitleScreen))
+        await _on(pilot, app, TitleScreen)
         listed = app.screen.query_one(OptionList)
-        ids = [listed.get_option_at_index(i).id for i in range(listed.option_count)]
-        assert UPDATE not in ids
+        assert await wait_until(pilot, lambda: listed.option_count > 0)
+        assert UPDATE not in _ids(listed)
 
 
 @pytest.mark.usefixtures("found")
@@ -121,10 +128,10 @@ async def test_a_saga_shows_the_short_line_once() -> None:
     app.show_title = False
     async with app.run_test(size=(140, 60)) as pilot:
         await pilot.press("enter")
-        assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        await _on(pilot, app, WorkspaceScreen)
         line = app.screen.query_one(UpdateLine)
         assert await wait_until(pilot, lambda: line.display)
-        assert "Armarius 99.0.0 is available" in "\n".join(screen_lines(app))
+        await _shown(pilot, app, "Armarius 99.0.0 is available")
         # Once a sitting: another saga's line (here, a second one) stays
         # hidden.
         again = UpdateLine()
