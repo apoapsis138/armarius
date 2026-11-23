@@ -19,7 +19,7 @@ from screen_helpers import (
     _show_tab,
     _wait_for_screen,
 )
-from support import build_all_tabs, choose, menu, wait_until
+from support import build_all_tabs, choose, menu, new_screen, wait_until
 from textual.widgets import (
     Button,
     Collapsible,
@@ -462,21 +462,21 @@ async def test_file_picker_browses_folders_and_rejects_other_files(tmp_path):
         await _open_workspace(pilot)
         await menu(pilot, app, "m", "Import")
         await choose(pilot, app, "Books")
-        await wait_until(pilot, lambda: isinstance(app.screen, CsvFilePickerScreen))
-        picker = app.screen
-        for button in picker.query(Button):  # fits a small terminal
-            assert button.region.height > 0 and button.region.bottom <= 45, button.id
+        picker = await new_screen(pilot, CsvFilePickerScreen)
+        buttons = list(picker.query(Button))
+        # Mounted is not yet laid out: wait for every button to have a place.
+        assert await wait_until(pilot, lambda: all(b.region.height for b in buttons))
+        for button in buttons:  # fits a small terminal
+            assert button.region.bottom <= 45, button.id
 
         box = picker.query_one("#picker-path", Input)
+        tree = picker.query_one("#picker-tree", DirectoryTree)
         box.value = str(tmp_path / "sub")
         box.focus()
         await pilot.press("enter")
-        await pilot.pause()
-        tree = picker.query_one("#picker-tree", DirectoryTree)
-        assert Path(tree.path) == tmp_path / "sub"
+        assert await wait_until(pilot, lambda: Path(tree.path) == tmp_path / "sub")
         picker.query_one("#btn-picker-up", Button).press()
-        await pilot.pause()
-        assert Path(tree.path) == tmp_path
+        assert await wait_until(pilot, lambda: Path(tree.path) == tmp_path)
         assert box.value == str(tmp_path)
         # Only folders and .csv files are listed.
         assert picker.query_one(_CsvDirectoryTree).filter_paths(
@@ -486,12 +486,12 @@ async def test_file_picker_browses_folders_and_rejects_other_files(tmp_path):
         box.value = str(tmp_path / "notes.txt")
         box.focus()
         await pilot.press("enter")
-        await pilot.pause()
-        error = str(picker.query_one("#picker-error", Static).render())
-        assert error == "notes.txt isn't a .csv file."
+        error = picker.query_one("#picker-error", Static)
+        assert await wait_until(
+            pilot, lambda: str(error.render()) == "notes.txt isn't a .csv file."
+        ), str(error.render())
         await pilot.press("escape")
-        await pilot.pause()
-        assert isinstance(app.screen, WorkspaceScreen)
+        assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
 
 
 async def _mark_books(pilot, app, rows: list[int]) -> None:
