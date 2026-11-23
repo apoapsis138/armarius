@@ -42,6 +42,8 @@ ORDER: tuple[str, ...] = (
     "create_creature",
     "restore",
     "improve",
+    "harvest_vis",
+    "settle_vis_source",
     "instill_effect",
     "use_charge",
     "use_effect",

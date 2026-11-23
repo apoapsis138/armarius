@@ -1290,6 +1290,26 @@ An unsettled source shows as contested income does in the Treasury: a
 red **!**, its Pawns struck through beside a 0, and its Standing.
 **Settle** records the story that secures it for five years.
 <!-- /gui -->
+<!-- tui -->
+An unsettled source shows as contested income does in the Treasury.
+Choose it, press `m` for More and choose **Settle** to record the story
+that secures it for five years.
+<!-- /tui -->
+
+With **Harvest vis by hand** on in the saga's settings, someone has to
+go and gather each source's vis: advancing the season no longer does it.
+In the source's own season, once a year, choose it and
+<!-- gui -->
+click **Harvest** beside Settle.
+<!-- /gui -->
+<!-- tui -->
+press `m` for More and choose **Harvest**.
+<!-- /tui -->
+The form is described in [Harvest a vis source](help:harvest-vis).
+Harvest is greyed out, saying why, in another season, once the source
+has been harvested this year, and while it is contested and unsettled.
+A source still waiting when its season is advanced is lost for the
+year, and the Diary says it wasn't harvested.
 
 A source's **Place** is where it's gathered: a Place of the Region, or
 one of its regio levels. The place then lists it under
@@ -1315,6 +1335,29 @@ the book's ranges (Realms of Power: Magic p. 124):
 - a spell-like one: 5 + 2 a magnitude.
 
 A stock of such vis costs a fifth of that for every 5 pawns.
+
+### Harvest a vis source
+<!-- help: harvest-vis -->
+
+Gathering a vis source's yield by hand, with **Harvest vis by hand** on
+in the saga's settings. Harvesting the sources is a covenant's most basic
+obligation on its members, though it may be handed to the covenfolk
+(Covenants p. 35). Once a source is found, gathering it needs no story
+(Covenants p. 72), so a harvest costs nobody a season.
+
+- **Harvester**: who went, one of the covenant's magi, companions and
+  grogs, or **The covenfolk**, the choice when nobody named went.
+- **Pawns**: the source's usual yield, filled in. Change it for a poor or
+  rich year: the source's own yield stays as it is. It can't be fewer
+  than 0.
+- **What happened**: anything worth remembering, kept in the Diary.
+
+**Harvest** puts the pawns into the matching Raw Vis Stores, as the
+season's own harvest does, and writes one entry in the covenant's Diary
+naming the harvester and the pawns. The source can't be harvested again
+until next year. The season's results count it with the season's other
+harvests. To take a harvest back, use Undo Last Season: deleting its
+Diary entry leaves the stores as they are.
 
 ### Raw Vis Stores
 <!-- help: section-pos-vis_store -->

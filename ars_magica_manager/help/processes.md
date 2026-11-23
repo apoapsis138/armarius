@@ -542,7 +542,7 @@ When Winter is advanced, the year ends:
 - Each covenant's surplus is added to its Wealth.
 - Transitions of maturation (Apprentices pp. 14-15). Each character turning 8, 15 or 21 next year gets a line and a Diary entry. In the first season of that year their Virtues and Flaws may be exchanged, Minor for Minor and Major for Major. Child ones must be exchanged by 21, and Inherited ones have manifested.
 
-Every season, each covenant's vis sources for that season are harvested into its vis stores and written in its Diary. Every wounded character makes the season's [Recovery rolls](help:recovery-roll), written in their Diary, with bruises first leaving their residual wounds. Everyone's Fatigue is rested away.
+Every season, each covenant's vis sources for that season are harvested into its vis stores and written in its Diary. With **Harvest vis by hand** on in the saga's settings, they aren't: each is gathered with [Harvest](help:harvest-vis) during its season and counted in the season's results, and one nobody gathered is lost for the year, which its covenant's Diary says. Every wounded character makes the season's [Recovery rolls](help:recovery-roll), written in their Diary, with bruises first leaving their residual wounds. Everyone's Fatigue is rested away.
 
 ### Afterwards
 <!-- help: advance-season-after -->

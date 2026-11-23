@@ -46,6 +46,7 @@ from .. import (
     town_charter,
     viewing,
     vis,
+    vis_harvest,
     world,
 )
 from .. import books as bk
@@ -1025,6 +1026,25 @@ class CovenantPage(QWidget):
             lambda row: row < len(sources) and sources[row].contested,
         )
 
+    def _harvest_verb(
+        self, covenant: Covenant, sources: Sequence[Possession]
+    ) -> RowVerb:
+        """Harvest: the vis source at the chosen row, greyed with the reason
+        while it can't be harvested now (vis_harvest)."""
+        saga = self.saga
+
+        def can(row: int) -> bool | str:
+            if row >= len(sources):
+                return False
+            return vis_harvest.refusal(saga, sources[row]) or True
+
+        return (
+            "Harvest",
+            "vis",
+            lambda row: covenant_forms.harvest_form(saga, covenant, sources[row]),
+            can,
+        )
+
     def _possessions(self, covenant: Covenant) -> QWidget:
         saga = self.saga
 
@@ -1035,7 +1055,10 @@ class CovenantPage(QWidget):
                     for e in pos.entries_for_kind(saga, covenant, kind)
                     if e.record is not None
                 ]
-                return [self._settle_verb(covenant, sources)]
+                verbs = [self._settle_verb(covenant, sources)]
+                if saga.harvest_vis_by_hand:
+                    verbs.append(self._harvest_verb(covenant, sources))
+                return verbs
             if kind == "vis_store":
                 return [
                     give_verb(saga, giving.VIS, covenant, lambda: vis.held(covenant))
