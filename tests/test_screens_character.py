@@ -127,21 +127,27 @@ async def test_hermetic_magic_arts_and_spells_share_one_details_panel():
         spells = view.query_one("#known-spells-list", SelectableList)
         info = view.query_one("#hermetic-info", Static)
 
-        techniques.highlighted = 0  # Creo
-        await pilot.pause()
-        assert "Creo (Cr)" in str(info.render())
+        def shows(name: str) -> bool:
+            # The panel follows the list's Chosen message, a hop after the
+            # row changes: poll for it rather than one pause.
+            return name in str(info.render())
+
+        techniques.highlighted = 1  # Intellego (Creo is chosen on opening)
+        assert await wait_until(pilot, lambda: shows("Intellego (In)")), str(
+            info.render()
+        )
         assert forms.selected_data_index is None
         assert spells.selected_data_index is None
 
         forms.highlighted = 5  # Ignem
-        await pilot.pause()
-        assert "Ignem (Ig)" in str(info.render())
+        assert await wait_until(pilot, lambda: shows("Ignem (Ig)")), str(info.render())
         assert techniques.selected_data_index is None
         assert spells.selected_data_index is None
 
         spells.highlighted = 0  # Ball of Abysmal Flame
-        await pilot.pause()
-        assert "Ball of Abysmal Flame" in str(info.render())
+        assert await wait_until(pilot, lambda: shows("Ball of Abysmal Flame")), str(
+            info.render()
+        )
         assert techniques.selected_data_index is None
         assert forms.selected_data_index is None
 
