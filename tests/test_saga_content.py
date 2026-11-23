@@ -3,8 +3,10 @@ and single entries it hides from its pickers."""
 
 from dataclasses import asdict
 
+from screen_helpers import _show_tab
 from support import picker_rows, wait_until
 from textual.widgets import Collapsible, Input, Tree
+from textual.widgets.tree import TreeNode
 
 from ars_magica_manager import catalog, sourcebooks, storage
 from ars_magica_manager import house_rules as hr
@@ -176,10 +178,22 @@ async def test_a_hidden_catalog_leaves_only_the_sagas_own_in_its_picker():
 
 async def _open_content(pilot, app) -> WorkspaceScreen:
     await pilot.press("enter")
-    assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+    # The workspace is app.screen before it is mounted; then its tree is
+    # filled, so the Saga Content node is waited for too.
+    assert await wait_until(
+        pilot,
+        lambda: isinstance(app.screen, WorkspaceScreen) and app.screen.is_mounted,
+    )
     workspace = app.screen
     tree = workspace.query_one("#nav-tree", Tree)
-    node = next(n for n in tree.root.children if n.data == ("saga_content",))
+
+    def content_node() -> TreeNode | None:
+        return next(
+            (n for n in tree.root.children if n.data == ("saga_content",)), None
+        )
+
+    node = await wait_until(pilot, content_node)
+    assert node is not None, "no Saga Content in the tree"
     tree.select_node(node)
     assert await wait_until(pilot, lambda: workspace._saga_content_view)
     assert await wait_until(
@@ -240,18 +254,26 @@ async def test_an_entry_is_hidden_from_the_catalogs_tab_and_offered_again():
     async with app.run_test(size=(140, 60)) as pilot:
         workspace = await _open_content(pilot, app)
         view = workspace._saga_content_view
-        await pilot.press("2")
+        await _show_tab(pilot, app, "tab-content-catalogs")  # built on first visit
         hidden_list = view.query_one("#content-hidden-list", SelectableList)
         hidden_list.focus()
         assert await wait_until(
             pilot, lambda: workspace._active_section() == "section-hidden-entries"
         )
         await pilot.press("a")
-        assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
+        # A new screen is app.screen before its widgets are mounted.
+        assert await wait_until(
+            pilot,
+            lambda: isinstance(app.screen, FieldsDialog) and app.screen.is_mounted,
+        )
         app.screen.query_one("#fld-catalog").value = "abilities"
         app.screen.query_one("#btn-save").press()
         assert await wait_until(
-            pilot, lambda: isinstance(app.screen, CatalogEntryPickerScreen)
+            pilot,
+            lambda: (
+                isinstance(app.screen, CatalogEntryPickerScreen)
+                and app.screen.is_mounted
+            ),
         )
         picker = app.screen
         athletics = next(
@@ -274,7 +296,10 @@ async def test_an_entry_is_hidden_from_the_catalogs_tab_and_offered_again():
         hidden_list.focus()
         await pilot.pause()
         await pilot.press("d")
-        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        assert await wait_until(
+            pilot,
+            lambda: isinstance(app.screen, ConfirmScreen) and app.screen.is_mounted,
+        )
         message = str(app.screen.query_one("#confirm-message").render())
         assert message == "Offer Athletics again?"
         await pilot.press("y")
@@ -294,7 +319,9 @@ async def test_the_spells_tab_lists_only_spells_in_play():
     async with app.run_test(size=(140, 60)) as pilot:
         workspace = await _open_content(pilot, app)
         view = workspace._saga_content_view
-        await pilot.press("6")
+        # The Spells tab is built on its first visit: wait for the switch to
+        # finish (its list focused) before reaching into it.
+        await _show_tab(pilot, app, "tab-content-spells")
         section = view.query_one("#section-spells", Collapsible)
         assert await wait_until(
             pilot, lambda: section.title == f"Spells ({core} of {every})"
