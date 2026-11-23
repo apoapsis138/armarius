@@ -58,6 +58,30 @@ def test_a_switch_flips_a_rule_and_a_saga_flag():
     assert saga.keep_season_records is not kept
 
 
+def test_harvest_vis_by_hand_is_a_seasons_switch_beside_keep_season_records():
+    saga = _saga()
+    keys = [c.key for c in sss.season_cards(saga)]
+    assert keys.index("harvest_vis_by_hand") == keys.index("keep_season_records") + 1
+    card = next(c for c in sss.season_cards(saga) if c.key == "harvest_vis_by_hand")
+    assert card.title == "Harvest Vis by Hand" and not card.on and not card.choice
+    ssf.toggle_setting(saga, "harvest_vis_by_hand").apply()
+    assert saga.harvest_vis_by_hand
+    on = next(c for c in sss.season_cards(saga) if c.key == "harvest_vis_by_hand")
+    assert on.on
+
+
+def test_the_terminals_edit_saga_sets_harvest_vis_by_hand():
+    from ars_magica_manager.forms import creation
+
+    saga = _saga()
+    form = creation.edit_saga_form(saga)
+    field = next(f for f in form.fields() if f.key == "harvest_vis_by_hand")
+    assert field.kind == "check" and field.value is False
+    values = {f.key: f.value for f in form.fields()}
+    form.apply({**values, "harvest_vis_by_hand": True})
+    assert saga.harvest_vis_by_hand
+
+
 def test_a_chip_shows_the_value_and_its_form_sets_it():
     saga = _saga()
     form = ssf.choice_form(saga, "unplanned_grogs")

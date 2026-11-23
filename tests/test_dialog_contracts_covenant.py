@@ -742,6 +742,30 @@ CONTRACTS: dict[str, Contract] = {
         expected=1224,
         invalid={"Settled in (year)": "soon"},
     ),
+    "settle a vis source": Contract(
+        prefill={"What settled it": ""},
+        edits={"Settled in (year)": "1220", "What settled it": "The faeries agreed"},
+        saved=lambda s: next(
+            p.secured_until for p in covenant(s).possessions if p.id == "harvest_well"
+        ),
+        expected=1224,
+        invalid={"Settled in (year)": "soon"},
+    ),
+    "harvest vis": Contract(
+        # Harvester's value: "" is the covenfolk.
+        prefill={"Harvester": "", "Pawns": "4", "What happened": ""},
+        edits={"Pawns": "3", "What happened": "A wolf watched them."},
+        saved=lambda s: (
+            next(
+                p.harvested_year
+                for p in covenant(s).possessions
+                if p.id == "harvest_well"
+            ),
+            covenant(s).diary[-1].vis_pawns,
+        ),
+        expected=(1220, 3),
+        invalid={"Pawns": "-1"},
+    ),
     "add a purchase": Contract(
         prefill={"What": ""},
         edits={"What": "A warhorse", "Pounds": "16"},

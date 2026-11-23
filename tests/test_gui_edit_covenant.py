@@ -27,7 +27,7 @@ from ars_magica_manager.gui.markup_html import plain
 from ars_magica_manager.gui.style.frame import SCREEN_SHARE
 from ars_magica_manager.gui.widgets import ClickableCard
 from ars_magica_manager.gui.window import MainWindow
-from ars_magica_manager.models import CovenantDiaryEntry, IncomeSource
+from ars_magica_manager.models import CovenantDiaryEntry, IncomeSource, Possession
 
 
 @pytest.fixture(scope="module")
@@ -230,6 +230,52 @@ def test_improve_acts_on_the_source_of_income_chosen(app):
     asked = answering(window, {"effect": "Status Quo"}, True)
     controls["Improve"].click()
     assert asked[0].windowTitle() == "Improve Tolls"
+
+
+def _with_sources(by_hand: bool):
+    saga = _sample_saga_with_covenant()
+    saga.harvest_vis_by_hand = by_hand
+    season = saga.current_season
+    saga.covenants[0].possessions += [
+        Possession("well", "vis_source", "Well", art="Corpus", pawns=4, season=season),
+        Possession(
+            "pond",
+            "vis_source",
+            "Pond",
+            art="Aquam",
+            pawns=2,
+            season=season,
+            harvested_year=saga.current_year,
+        ),
+    ]
+    return saga
+
+
+def test_harvest_is_hidden_while_the_saga_gathers_vis_by_itself(app):
+    page = _page(_window(_with_sources(False)))
+    page.codex.open_chapter("Inventory")
+    assert "Harvest" not in section_buttons(page, "Vis Sources")
+
+
+def test_harvest_sits_beside_settle_and_says_why_it_is_greyed(app):
+    window = _window(_with_sources(True))
+    page = _page(window)
+    page.codex.open_chapter("Inventory")
+    controls = section_buttons(page, "Vis Sources")
+    assert list(controls)[-1] == "Harvest"
+    table = page.tables["vis_source"]
+    rows = [table.model().index(r, 0).data() for r in range(table.model().rowCount())]
+    table.setCurrentIndex(table.model().index(rows.index("Pond"), 0))
+    assert not controls["Harvest"].isEnabled()
+    assert "Already harvested" in controls["Harvest"].toolTip()
+    table.setCurrentIndex(table.model().index(rows.index("Well"), 0))
+    assert controls["Harvest"].isEnabled()
+    asked = answering(window, {"pawns": 3})
+    controls["Harvest"].click()
+    assert asked[0].windowTitle() == "Harvest Well"
+    saved = _saved(window)
+    assert next(p for p in saved.possessions if p.id == "well").harvested_year
+    assert saved.diary[-1].name == "Vis harvested: Well"
 
 
 def test_add_on_the_magi_takes_in_a_magus_of_the_saga(app):

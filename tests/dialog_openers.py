@@ -848,6 +848,41 @@ def _settle_contested(ws) -> None:
     ws._run_steps(cov_forms.settle_form(ws.saga, covenant, source))
 
 
+def _vis_source(ws, **fields) -> Possession:
+    """A vis source of the covenant harvested this season (added in memory,
+    saved only with the form)."""
+    covenant = ws.selected_covenant
+    # Reopened after Cancel, the dialog finds the source it added then.
+    for kept in covenant.possessions:
+        if kept.id == "harvest_well":
+            return kept
+    source = Possession(
+        "harvest_well",
+        "vis_source",
+        name="Healing Well",
+        art="Corpus",
+        pawns=4,
+        season=ws.saga.current_season,
+        **fields,
+    )
+    covenant.possessions.append(source)
+    return source
+
+
+def _harvest_vis(ws) -> None:
+    """More's Harvest on a vis source in its season, with Harvest Vis by
+    Hand on."""
+    ws.saga.harvest_vis_by_hand = True
+    source = _vis_source(ws)
+    ws._run_steps(cov_forms.harvest_form(ws.saga, ws.selected_covenant, source))
+
+
+def _settle_vis_source(ws) -> None:
+    """More's Settle on a contested vis source."""
+    source = _vis_source(ws, contested=True)
+    ws._run_steps(cov_forms.settle_form(ws.saga, ws.selected_covenant, source))
+
+
 def _covenfolk_line(ws):
     """A turb line of 3, as the covenfolk forms act on."""
     covenant = ws.selected_covenant
@@ -1986,6 +2021,10 @@ OPENERS: dict[str, Opener] = {
     "edit tithes": Opener("covenant", _economics_row("expenditure", "tithes")),
     "edit sundry": Opener("covenant", _economics_row("expenditure", "sundry")),
     "settle a contested resource": Opener("covenant", _settle_contested),
+    "settle a vis source": Opener(
+        "covenant", _settle_vis_source, action="settle_vis_source"
+    ),
+    "harvest vis": Opener("covenant", _harvest_vis, action="harvest_vis"),
     "add a purchase": Opener("covenant", _add_purchase),
     "recruit to a covenfolk line": Opener("covenant", _recruit),
     "depart from a covenfolk line": Opener("covenant", _depart),

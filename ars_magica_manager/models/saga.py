@@ -359,6 +359,9 @@ class Saga:
     season_plans: list[SeasonPlan] = field(default_factory=list)
     #: Whether a record of each applied season is kept.
     keep_season_records: bool = True
+    #: Whether each vis source is gathered by hand (vis_harvest), not
+    #: put into the stores by the season's play.
+    harvest_vis_by_hand: bool = False
     #: What a character with nothing planned does when the season is
     #: advanced, by kind (seasons.defaults: "exposure" or "nothing"), and
     #: whether Advance Season names the non-player characters among them.

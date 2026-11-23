@@ -12,15 +12,25 @@ from __future__ import annotations
 
 from typing import Any
 
-from .. import boon_hook_text, catalog, mobile_covenants, places, sourcebooks, vassals
+from .. import (
+    boon_hook_text,
+    catalog,
+    mobile_covenants,
+    places,
+    sourcebooks,
+    vassals,
+    vis_harvest,
+)
 from .. import covenants as cov_rules
 from .. import economics as eco
 from .. import goods as gd
 from ..commands import (
     Choice,
     Choose,
+    Command,
     Confirm,
     Form,
+    Refuse,
     SectionOps,
     delete,
     names,
@@ -53,6 +63,7 @@ from ..models import (
     new_instance_id,
 )
 from ..rules import realms, sites, tme_books
+from ..seasons.covenant import SEASON_KINDS, covenant_people
 from .possession import contested_fields
 from .tribunal import package_fields, save_package_fields, tribunal_field
 from .virtue import param_choices, param_fields, params_from
@@ -571,6 +582,72 @@ def settle_form(
             f": one story secures it for {cov_rules.SECURED_YEARS} years (DE p. 181)."
         ),
         save_label="Settle",
+    )
+
+
+#: The Harvest form's help page.
+HARVEST_HELP = "harvest-vis"
+
+
+def harvesters(saga: Saga, covenant: Covenant) -> list[tuple[str, str]]:
+    """Who may be named as harvester: the covenfolk ("" as its value), then
+    the covenant's magi, companions and grogs."""
+    people = [
+        (escape(c.name), c.id)
+        for kind, _title in SEASON_KINDS
+        for c in covenant_people(saga, covenant, kind)
+    ]
+    return [(vis_harvest.COVENFOLK, ""), *people]
+
+
+def harvest_form(saga: Saga, covenant: Covenant, source: Possession) -> Command:
+    """Harvest a vis source by hand: who went, how many pawns this year (its
+    usual yield, unless the year was poor or rich) and what happened. Refused,
+    with the reason, when it can't be harvested now (vis_harvest)."""
+    name = source.name or f"{source.art} vis source"
+    why = vis_harvest.refusal(saga, source)
+    if why:
+        return Refuse(f"Harvest {escape(name)}", escape(why))
+
+    def apply(values: dict[str, Any]) -> list[str]:
+        person = saga.character(values["harvester"]) if values["harvester"] else None
+        entry = vis_harvest.harvest(
+            saga,
+            covenant,
+            source,
+            values["pawns"],
+            person.name if person is not None else vis_harvest.COVENFOLK,
+            values["note"],
+        )
+        return notes(escape(entry.details))
+
+    return Form(
+        f"Harvest {escape(name)}",
+        lambda: [
+            DialogField(
+                "harvester",
+                "Harvester",
+                "select",
+                "",
+                options=harvesters(saga, covenant),
+                hint="Who went to gather it (Covenants p. 35).",
+            ),
+            DialogField(
+                "pawns",
+                "Pawns",
+                "int",
+                source.pawns,
+                hint=f"Its usual yield is {source.pawns} pawn(s) of {source.art}: "
+                "change it for this year's harvest only.",
+            ),
+            DialogField("note", "What happened", "text", ""),
+        ],
+        apply,
+        validate=lambda values: (
+            "Pawns can't be fewer than 0." if (values.get("pawns") or 0) < 0 else None
+        ),
+        save_label="Harvest",
+        help_id=HARVEST_HELP,
     )
 
 

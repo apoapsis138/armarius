@@ -33,8 +33,10 @@ Run = Callable[[Command], None]
 
 #: A further button acting on the chosen row: its words, its icon's
 #: concept, its first step (for the row) and whether it can act on the
-#: row (Instill an Effect only on a device with room for one).
-RowVerb = tuple[str, str, Callable[[int], Command], Callable[[int], bool]]
+#: row (Instill an Effect only on a device with room for one). That last
+#: may give a reason instead of False: the row is one the verb is for, but
+#: not now, so the button stays in sight, greyed, saying why.
+RowVerb = tuple[str, str, Callable[[int], Command], Callable[[int], bool | str]]
 
 
 def follower(run: Run) -> Callable[[Ref], None]:
@@ -115,7 +117,7 @@ def verb_buttons(
     if ops.add is not None:
         start = ops.add
         buttons.append(edit_button(add, p, lambda: run(start()), "add"))
-    per_row: list[tuple[QPushButton, Callable[[int], bool]]] = []
+    per_row: list[tuple[QPushButton, Callable[[int], bool | str]]] = []
     verbs: list[RowVerb] = [
         (words, concept, step, lambda _row: True)
         for words, concept, step in (
@@ -148,12 +150,16 @@ def verb_buttons(
                 continue
             if button.isHidden() and button.parentWidget() is not None:
                 button.show()
+            can = allowed(row) if row is not None else False
             if row is None:
                 button.setEnabled(False)
                 button.setToolTip("Choose a row first.")
-            elif not allowed(row):
+            elif not can:
                 button.setEnabled(False)
                 button.setToolTip(f"Not for {rows[row]}.")
+            elif isinstance(can, str):
+                button.setEnabled(False)
+                button.setToolTip(can)
             else:
                 button.setEnabled(True)
                 button.setToolTip(f"{verb} {rows[row]}")
