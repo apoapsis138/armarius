@@ -5,6 +5,7 @@ from ars_magica_manager.models import as_secrets
 import re
 
 from textual.content import Content
+from textual.screen import Screen
 from textual.widget import Widget
 from textual.widgets import OptionList
 
@@ -167,6 +168,27 @@ async def settled(pilot, workspace) -> None:
             f"focused={workspace.focused!r} current={workspace.is_current} "
             f"footer_idle={footer is None or footer.idle}"
         )
+
+
+async def new_screen[S: Screen](pilot, kind: type[S], after: object = None) -> S:
+    """The screen of `kind` on top, once it is mounted, and not `after`.
+
+    A pushed screen is app.screen a beat before its widgets are mounted, so
+    a query_one of one of them can find nothing; and a dialog just answered
+    can still be on top while it closes. Pass that one as `after`."""
+    app = pilot.app
+    assert await wait_until(
+        pilot,
+        lambda: (
+            app.screen is not after
+            and isinstance(app.screen, kind)
+            and app.screen.is_mounted
+        ),
+    ), (
+        f"no new {kind.__name__} came up (on top: {type(app.screen).__name__}, "
+        f"mounted={app.screen.is_mounted})"
+    )
+    return app.screen
 
 
 async def shown[W: Widget](pilot, selector: str, kind: type[W] = Widget) -> W:

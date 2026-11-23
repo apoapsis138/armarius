@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import asdict
 
 import pytest
-from support import everything_saga, settled, wait_until
+from support import everything_saga, new_screen, settled, wait_until
 from textual.widgets import Button, Checkbox, Input, ListView, Static, Tree
 
 from ars_magica_manager import players as pl
@@ -106,8 +106,7 @@ async def _open_first_saga(pilot, app) -> None:
 
 
 async def _sign_in(pilot, app, name: str, passcode: str) -> FieldsDialog:
-    assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
-    dialog = app.screen
+    dialog = await new_screen(pilot, FieldsDialog)
     dialog.query_one("#fld-name", Input).value = name
     dialog.query_one("#fld-passcode", Input).value = passcode
     dialog.query_one("#btn-save", Button).press()
@@ -179,9 +178,7 @@ async def test_a_short_passcode_asks_for_a_new_one(in_a_browser):
         # Signed in: asked for a new passcode first, and may put it off once.
         await _open_first_saga(pilot, app)
         first = await _sign_in(pilot, app, "Ana", "rosemary")
-        assert await wait_until(pilot, lambda: app.screen is not first)
-        asked = app.screen
-        assert isinstance(asked, FieldsDialog)
+        asked = await new_screen(pilot, FieldsDialog, after=first)
         assert asked.query_one("#btn-cancel", Button).label.plain == "Not Now"
         asked.query_one("#btn-cancel", Button).press()
         assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
@@ -205,9 +202,7 @@ async def test_a_short_passcode_asks_for_a_new_one(in_a_browser):
     async with app.run_test(size=(120, 45)) as pilot:
         await _open_first_saga(pilot, app)
         first = await _sign_in(pilot, app, "Ana", "thyme")
-        assert await wait_until(pilot, lambda: app.screen is not first)
-        asked = app.screen
-        assert isinstance(asked, FieldsDialog)
+        asked = await new_screen(pilot, FieldsDialog, after=first)
         asked.query_one("#fld-new", Input).value = ROSEMARY
         asked.query_one("#fld-again", Input).value = "not the same"
         asked.query_one("#btn-save", Button).press()
