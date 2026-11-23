@@ -1,5 +1,8 @@
 """Shared widgets: SelectableList, inline emphasis, and catalog types in the picker."""
 
+from typing import ClassVar
+
+from footer_guard import check_footer_current
 from screen_helpers import (
     _is_form,
     _lab_identity_text,
@@ -11,7 +14,9 @@ from screen_helpers import (
     _wait_for_picker_ready,
 )
 from support import picker_labels, wait_until
-from textual.app import App
+from textual.app import App, ComposeResult
+from textual.binding import Binding
+from textual.screen import ModalScreen, Screen
 from textual.widgets import Button, Input, Static
 
 from ars_magica_manager import storage
@@ -22,6 +27,7 @@ from ars_magica_manager.tui.screens import (
     FieldsDialog,
     SelectableList,
 )
+from ars_magica_manager.tui.screens.widgets import SplitFooter
 
 
 class _ListHarness(App):
@@ -66,6 +72,55 @@ async def test_selectable_list_uses_data_indexes_and_a_single_marker():
         assert widget.selected_data_index is None
         assert not any("●" in p for p in prompts())
         assert app.chosen == [3, 7, 9]  # clearing posts nothing
+
+
+class _KeysUnder(Screen[None]):
+    """A screen with a Footer whose key x shows once `ready` is set."""
+
+    BINDINGS: ClassVar = [Binding("x", "thing", "Thing")]
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.ready = False
+
+    def compose(self) -> ComposeResult:
+        yield Static("under")
+        yield SplitFooter()
+
+    def check_action(self, action: str, parameters: tuple[object, ...]) -> bool | None:
+        return self.ready if action == "thing" else True
+
+
+class _ClosedBeforeIdle(ModalScreen[None]):
+    """A dialog closed before it next idles, as a creation worksheet closed
+    at once is: Textual drops what was queued on it to run after its next
+    refresh, which is where a Footer's call_after_refresh lands while the
+    dialog is on top."""
+
+    def _invoke_later(self, callback: object, sender: object) -> None:
+        pass
+
+
+class _FooterHarness(App[None]):
+    def on_mount(self) -> None:
+        self.push_screen(_KeysUnder())
+
+
+async def test_footer_keys_follow_a_change_made_under_a_dialog_closed_at_once():
+    app = _FooterHarness()
+    async with app.run_test() as pilot:
+        await pilot.pause()
+        under = app.screen
+        assert isinstance(under, _KeysUnder)
+        footer = under.query_one(SplitFooter)
+        await app.push_screen(_ClosedBeforeIdle())
+        under.ready = True
+        under.refresh_bindings()
+        await pilot.pause()
+        app.pop_screen()
+        assert await wait_until(pilot, lambda: footer.idle), "the Footer never rebuilt"
+        await pilot.pause()
+        check_footer_current(app, "closing the dialog")
 
 
 async def test_selectable_list_set_rows_replaces_everything_and_handles_empty():

@@ -1,0 +1,1 @@
+**The key bar keeps up after a window closes.** In the terminal version, closing a window quickly, such as a new record's creation worksheet or a dialog, could leave the bar of keys at the bottom stuck on the wrong keys until you reopened the saga. It now always follows where you are.
