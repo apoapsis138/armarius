@@ -5,6 +5,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
+from .. import vis_harvest
 from ..covenants import contested_now, settle_resource
 from ..grids import Grid
 from ..markup import escape
@@ -17,10 +18,8 @@ from ..models import (
     Possession,
     Saga,
     SeasonRecordLine,
-    new_instance_id,
 )
 from ..rules import activities as rules
-from ..rules import vis_kinds
 from ..rules.covenfolk import character_kind
 from ..rules.rounding import round_away_from_zero, round_down
 from ..tables import Table
@@ -97,37 +96,6 @@ def lapsed_resources(saga: Saga) -> list[tuple[str, str]]:
     return found
 
 
-def _add_vis(covenant: Covenant, source: Possession) -> None:
-    """The source's harvest into the covenant's first store of its Art and
-    kind of vis (and Infernal mark), or a new one."""
-    art, pawns = source.art, source.pawns
-    store = next(
-        (
-            p
-            for p in covenant.possessions
-            if p.kind == "vis_store"
-            and p.art.lower() == art.lower()
-            and vis_kinds.same_kind(p, source)
-        ),
-        None,
-    )
-    if store is None:
-        special = bool(source.vis_kind)
-        store = Possession(
-            id=f"vis_{new_instance_id()}",
-            kind="vis_store",
-            name=(source.name or f"{art} vis") if special else f"{art} vis",
-            art=art,
-            pawns=pawns,
-            location_kind="covenant",
-            location_id=covenant.id,
-            physical_form=source.physical_form if special else "",
-        )
-        covenant.possessions.append(vis_kinds.copy_kind(source, store))
-    else:
-        store.pawns += pawns
-
-
 def available(resource: Possession | IncomeSource, year: int) -> bool:
     """Whether a vis or income source gives anything this year: not contested,
     or secured through it: an unaddressed contested resource isn't
@@ -141,7 +109,9 @@ def covenant_season(saga: Saga, secured: dict[str, bool]) -> list[SeasonRecordLi
     by a tenth. A contested resource gives nothing until it is addressed:
     `secured` answers "Was it secured this season?" for each lapsed one
     (yes: secured for five years), and a year that ends with it unaddressed
-    is written in the covenant Diary. Returns record lines."""
+    is written in the covenant Diary. With Harvest Vis by Hand on, a source
+    is gathered by hand during its season (vis_harvest), counted here, and
+    one still waiting is lost for the year. Returns record lines."""
     season, year = saga.current_season, saga.current_year
     lines: list[SeasonRecordLine] = []
     for covenant in filter(takes_part_in_play, saga.covenants):
@@ -149,10 +119,15 @@ def covenant_season(saga: Saga, secured: dict[str, bool]) -> list[SeasonRecordLi
         for resource in resources:
             if secured.get(resource.id):
                 settle_resource(resource, year)
-        harvested: list[str] = []
+        harvested = [
+            f"{entry.vis_pawns} {entry.vis_art}"
+            for entry in vis_harvest.harvested_this_season(saga, covenant)
+        ]
         for source in _vis_sources(covenant):
             if source.season != season or not source.art or source.pawns <= 0:
                 continue
+            if source.harvested_year == year:
+                continue  # gathered by hand this season, and counted above
             if not available(source, year):
                 covenant.diary.append(
                     CovenantDiaryEntry(
@@ -164,7 +139,19 @@ def covenant_season(saga: Saga, secured: dict[str, bool]) -> list[SeasonRecordLi
                     )
                 )
                 continue
-            _add_vis(covenant, source)
+            if saga.harvest_vis_by_hand:
+                covenant.diary.append(
+                    CovenantDiaryEntry(
+                        year,
+                        season,
+                        f"{source.name or 'A vis source'} not harvested",
+                        "Nobody gathered it this season: its vis is lost for the year.",
+                        category="Covenant Season",
+                    )
+                )
+                continue
+            vis_harvest.add_vis(covenant, source, source.pawns)
+            source.harvested_year = year
             harvested.append(f"{source.pawns} {source.art}")
             covenant.diary.append(
                 CovenantDiaryEntry(

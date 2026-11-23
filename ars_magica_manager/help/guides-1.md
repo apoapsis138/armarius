@@ -283,7 +283,7 @@ The [Inventory](help:tab-cov-possessions) chapter holds what the covenant owns. 
 2. **Record property and arms.** [Properties and Land](help:section-pos-property) and [Items](help:section-pos-item) are a record only. [Weapons](help:section-pos-weapon) and [Armor](help:section-pos-armor) can be chosen from the catalogue, and feed the Weapons cost in the Treasury.
 <!-- /gui -->
 3. **Set each sanctum's Usage.** Every laboratory of the covenant is listed under [Sanctums](help:section-pos-sanctum) automatically. Set only its Usage here.
-4. **Add the vis sources.** Add each on [Vis Sources](help:section-pos-vis_source) with its Art, Season and pawns, and mark it Contested or Dwindling if it is. In its season each year, the harvest goes into the Raw Vis Stores and the Diary.
+4. **Add the vis sources.** Add each on [Vis Sources](help:section-pos-vis_source) with its Art, Season and pawns, and mark it Contested or Dwindling if it is. In its season each year, the harvest goes into the Raw Vis Stores and the Diary. With Harvest vis by hand on in the saga's settings, gather each in its season with [Harvest](help:harvest-vis) instead.
 <!-- gui -->
 5. **Settle a contested source.** An unsettled vis source shows a red **!** and gives nothing until a story settles it. Then click it and **Settle**.
 <!-- /gui -->
@@ -394,7 +394,7 @@ The [Diary](help:tab-cov-diary) chapter is the covenant's own record of what hap
 2. **Follow a Story Event.** A Story Event also has a Status, Open or Resolved, and a year to revisit it. Link it to a Hook to count the stories told against it.
 3. **Change Loyalty.** Only the Loyalty points change the sheet, through Actions and events on the Loyalty block.
 
-The app adds its own entries for vis harvests, vis moved in or out, and contested resources that went unsecured.
+The app adds its own entries for vis harvests (by hand too, naming who gathered it), vis moved in or out, contested resources that went unsecured, and, with Harvest vis by hand on, sources nobody gathered in their season.
 
 ### Telling the covenant's history
 <!-- help: guide-covenant-history -->

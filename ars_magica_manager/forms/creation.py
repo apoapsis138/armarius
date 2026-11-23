@@ -121,6 +121,17 @@ def saga_fields(saga: Saga | None) -> list[DialogField]:
                 hint="A record of each season as it is applied, listed under Seasons in the tree. Off: only the Diaries keep them.",
             )
         )
+        fields.append(
+            DialogField(
+                "harvest_vis_by_hand",
+                "Harvest vis by hand",
+                "check",
+                saga.harvest_vis_by_hand,
+                hint="Each vis source is gathered with More's Harvest in its "
+                "season; one left waiting when the season is advanced is lost "
+                "for the year. Off: advancing fills the vis stores by itself.",
+            )
+        )
         fields += [
             DialogField(
                 setting,

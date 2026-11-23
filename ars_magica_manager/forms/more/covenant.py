@@ -2,19 +2,23 @@
 
 from __future__ import annotations
 
-from ... import mobile_covenants, sourcebooks
-from ...actions import NodeKind
-from ...commands import Refuse
+from collections.abc import Callable
+
+from ... import mobile_covenants, possessions, sourcebooks
+from ...actions import ActionFacts, NodeKind
+from ...commands import Command, Refuse
+from ...models import Covenant, Possession
 from ...models.hermetic_projects import BURNING_CITY, INTANGIBLE_ASSASSIN, LIVING_CORPSE
 from ...rules import agents as agent_rules
 from ...sections import AGENTS_SECTION, WHEREABOUTS_SECTION
 from .. import agents as agent_forms
+from .. import covenant as cov_forms
 from .. import hook_stories as hook_story_forms
 from .. import land_shaping as land_forms
 from .. import ship_build as ship_build_forms
 from ..menu_refresh import changes
 from ..menu_steps import covenant, improve, needs, on_agent, research_bonuses
-from ..page import INCOME_SECTION
+from ..page import INCOME_SECTION, Page
 from .entry import MoreAction
 from .rules import (
     acts_on_agent,
@@ -32,8 +36,89 @@ from .rules import (
     staged,
 )
 
+#: The covenant's Vis Sources list, whose chosen source Harvest and Settle
+#: act on.
+VIS_SOURCES = "section-pos-vis_source"
+
+
+def _vis_source(facts: ActionFacts) -> Possession | None:
+    """The vis source chosen in the Vis Sources list, if any."""
+    covenant, row = facts.selected_covenant, facts.chosen_row(VIS_SOURCES)
+    if covenant is None or row is None:
+        return None
+    sources = [
+        e.record
+        for e in possessions.entries_for_kind(facts.saga, covenant, "vis_source")
+        if e.record is not None
+    ]
+    return sources[row] if 0 <= row < len(sources) else None
+
+
+def _on_vis_source(
+    offered: Callable[[ActionFacts, Possession], bool],
+) -> Callable[[ActionFacts, str], bool]:
+    """Offered on the Vis Sources list, while `offered` says so of the
+    chosen source."""
+
+    def rule(facts: ActionFacts, section: str) -> bool:
+        if section != VIS_SOURCES:
+            return False
+        source = _vis_source(facts)
+        return source is not None and offered(facts, source)
+
+    return rule
+
+
+def _on_chosen_source(
+    title: str, build: Callable[[Page, Covenant, Possession], Command]
+) -> Callable[[Page], Command]:
+    def step(page: Page) -> Command:
+        source = _vis_source(page)
+        if page.covenant is None or source is None:
+            return Refuse(title, "Choose a vis source first.")
+        return build(page, page.covenant, source)
+
+    return step
+
+
 #: This area's actions, in the order More lists them.
 ENTRIES: tuple[MoreAction, ...] = (
+    # A vis source's harvest by hand, in its season (vis_harvest): offered
+    # on any source while the saga gathers by hand, and refused with the
+    # reason on one that can't be harvested now, as the desktop's greyed
+    # button says it.
+    MoreAction(
+        "harvest_vis",
+        "h",
+        "Harvest",
+        step=_on_chosen_source(
+            "Harvest",
+            lambda page, covenant, source: cov_forms.harvest_form(
+                page.saga, covenant, source
+            ),
+        ),
+        refresh=changes(VIS_SOURCES, "section-pos-vis_store", "tab-cov-diary"),
+        on_page=False,
+        in_section=_on_vis_source(
+            lambda facts, _source: facts.saga.harvest_vis_by_hand
+        ),
+    ),
+    # Settle: the story that secures a contested vis source for five years
+    # (DE p. 181); the desktop's row button beside it.
+    MoreAction(
+        "settle_vis_source",
+        "s",
+        "Settle",
+        step=_on_chosen_source(
+            "Settle",
+            lambda page, covenant, source: cov_forms.settle_form(
+                page.saga, covenant, source
+            ),
+        ),
+        refresh=changes(VIS_SOURCES, "tab-cov-diary"),
+        on_page=False,
+        in_section=_on_vis_source(lambda _facts, source: source.contested),
+    ),
     MoreAction(
         "improve",
         "i",

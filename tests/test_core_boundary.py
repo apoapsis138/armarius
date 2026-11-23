@@ -182,6 +182,8 @@ LAYERS: tuple[tuple[str, frozenset[str]], ...] = (
                 "covenants",
                 "dice_text",
                 "vis",
+                # Harvesting a vis source, and whether it can be now.
+                "vis_harvest",
                 "what_changed",
             }
         ),

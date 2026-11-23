@@ -904,6 +904,16 @@ spent when used; it is counted in pawns. (DE pp. 6, 212)
 A place, creature or thing that yields vis again every year, unlike a
 one-off find. (DE pp. 180, 527)
 
+**Harvest**:
+Gathering a vis source's yield in its season, once a year: by the
+season's play, or by hand with Harvest vis by hand on. (Covenants pp. 35,
+137)
+_Avoid_: Collection, gathering run
+
+**Harvester**:
+Who gathered a hand harvest: one of the covenant's magi, companions or
+grogs, or the covenfolk.
+
 **Aura**:
 The strength, from 1 to 10, of one realm's influence over a place, which
 modifies supernatural acts there; a place without one is mundane.
