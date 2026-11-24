@@ -1,0 +1,1 @@
+**Fixed: a parens teaching his own apprentice no longer pays the Gift's penalty.** A magus with Parma Magica, at any score, extends it over his apprentice, so a season he teaches or trains them loses nothing to his Gift. The season's working shows the waived line and cites the rule (DE p. 270; Apprentices p. 43).
