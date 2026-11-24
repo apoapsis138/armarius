@@ -27,7 +27,7 @@ from dataclasses import dataclass, field
 from functools import cache
 from typing import Any
 
-from .. import catalog, sourcebooks
+from .. import sourcebooks
 from ..arts import ART_ABBREVIATIONS, ART_LOOKUP, ARTS, FORMS, TECHNIQUES
 from ..models import FULL, Character, Spell
 from ..packs import INFERRED
@@ -42,7 +42,7 @@ from ..rules.creation_magus import (
     POINTS_A_YEAR,
 )
 from ..rules.xp import ability_xp, art_xp
-from .builder import Builder, StatBlock, _catalog_spells, _virtue_flaw
+from .builder import Builder, StatBlock, _catalog_spells, _virtue_flaw, house_virtue
 
 #: The Characteristics in the order a profile's leanings are filled from.
 CHARACTERISTICS: tuple[str, ...] = (
@@ -189,6 +189,8 @@ TRIBUNALS = {
 #: The language a book's magi learn their Art in, where it is not Latin.
 HERMETIC_LANGUAGES = {"TSE": "Classical Greek"}
 LATIN = "Dead Language: Latin"
+#: An un-Gifted member of House Mercere's Social Status (DE p. 105).
+REDCAP = "Redcap"
 #: How a Living Language's Ability name begins.
 LIVING = "Living Language: "
 RHINE_LORE = "Area Lore: Rhine Tribunal"
@@ -216,7 +218,9 @@ class Profile:
     a Dead Language by its name ("Latin"), or a Living Language as the
     whole Ability ("Living Language: Arabic", for a magus taught the Art
     in the tongue they speak);
-    `gifted` is False for an un-Gifted Redcap."""
+    `gifted` is False for an un-Gifted Redcap; `sworn` is False for a
+    Hermetic-trained wizard who never swore the Oath, so holds no
+    Hermetic Magus (DE p. 85)."""
 
     strong: str = "int sta"
     weak: str = ""
@@ -227,6 +231,7 @@ class Profile:
     native: str = "High German"
     hermetic: str = ""
     gifted: bool = True
+    sworn: bool = True
     reputations: Mapping[str, int] = field(default_factory=dict)
     shares: tuple[float, float, float] = SHARES
 
@@ -320,28 +325,36 @@ def virtues(
 ) -> list[Any]:
     """The Gift, the rank, the House Virtue when the profile leaves it
     out, the profile's own, and Affinities and Puissances on the top Arts
-    and Abilities for any points the Flaws leave unspent."""
-    house = catalog.load_house_catalog_by_id().get(character.hermetic.house or "")
+    and Abilities for any points the Flaws leave unspent. An un-Gifted
+    Redcap takes the Redcap Status in place of The Gift and a rank (DE pp.
+    46, 105)."""
     entries: list[Any] = []
     if profile.gifted:
         entries.append("The Gift")
-    entries.append(rank(character.summary, age, source))
+        if profile.sworn:
+            entries.append(rank(character.summary, age, source))
+    elif REDCAP not in profile.virtues:
+        entries.append(REDCAP)
     entries.extend(profile.virtues)
-    by_id = _virtue_defs()
-    if house and house.virtues and profile.gifted:
-        held = {_key(e) for e in entries}
-        options = [
-            (by_id[o["vf_id"]].name, {k: str(v) for k, v in o["params"].items()})
-            for o in house.virtues
-        ]
-        if not any(_key(o) in held for o in options):
-            entries.insert(2, options[0])
+    free = (
+        house_virtue(
+            character.hermetic.house or "",
+            entries,
+            best_ability=top_abilities[0].lower(),
+        )
+        if profile.gifted
+        else None
+    )
+    if free is not None:
+        entries.insert(2, free)
     balance = _balance(character, entries)
     if balance < 0:
         raise ValueError(f"{character.name}'s Virtues outweigh the Flaws")
+    # Only the Gifted may take an Art's Virtues (DE p. 64).
+    arts = top_arts if profile.gifted else ()
     fillers = [
-        *(("Affinity with {art}", "art", a.lower()) for a in top_arts),
-        *(("Puissant {art}", "art", a.lower()) for a in top_arts),
+        *(("Affinity with {art}", "art", a.lower()) for a in arts),
+        *(("Puissant {art}", "art", a.lower()) for a in arts),
         *(("Affinity with {ability}", "ability", a.lower()) for a in top_abilities),
         *(("Puissant {ability}", "ability", a.lower()) for a in top_abilities),
     ]
@@ -356,19 +369,9 @@ def virtues(
     return entries
 
 
-def _key(entry: Any) -> tuple[str, tuple[tuple[str, str], ...]]:
-    name, params = (entry, {}) if isinstance(entry, str) else entry
-    return name, tuple(sorted((k, str(v).lower()) for k, v in params.items()))
-
-
-@cache
-def _virtue_defs() -> dict[str, Any]:
-    return {v.id: v for v in catalog.load_virtue_flaw_catalog()}
-
-
 def _balance(character: Character, entries: Sequence[Any]) -> int:
     """The Virtue points the Flaws still allow (negative: too many)."""
-    probe = Character(id="probe", name="probe", type="magus")
+    probe = Character(id="probe", name="probe", type=character.type)
     probe.hermetic.house = character.hermetic.house
     probe.virtues_flaws = [_virtue_flaw(e) for e in entries]
     found = creation_virtues.tally(probe)
@@ -397,9 +400,13 @@ def apply(b: Builder, character: Character, profile: Profile) -> None:
     """Stat a magus the book only sketches: keep the sketch on the
     Builder (a pack lets the user import it instead), fill the stats from
     the profile, and say on the sheet that they are inferred. An age the
-    book leaves out is the one assumed, and the sheet says so too."""
+    book leaves out is the one assumed, and the sheet says so too. An
+    un-Gifted Redcap is a companion of House Mercere, not a magus (DE p.
+    46)."""
     if character.type != "magus" or character.detail == FULL:
         return
+    if not profile.gifted:
+        character.type = "companion"
     b.sketches[character.id] = deepcopy(character)
     block, age = stat_block(character, profile, b.year, b.source)
     assumed = character.background.year_born is None

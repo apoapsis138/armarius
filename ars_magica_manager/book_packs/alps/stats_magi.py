@@ -839,7 +839,7 @@ def stats(alps: Alps) -> None:
         character = alps.magi.get(key)
         if character is None:
             continue
-        stat, age = convert(key, block, area=AREA)
+        stat, age = convert(key, block, area=AREA, house=character.hermetic.house or "")
         b.stats(character, stat)
         character.background.year_born = b.year - age
         _own_spells(character)
@@ -900,7 +900,8 @@ CYMENA: StatBlock = {
         ("Artes Liberales", 4, "concise letters"),
         ("Great Weapon", 3, "alpenstock"),
         ("Dead Language: Latin", 5, "with magi"),
-        ("Living Language: High German", 4, "peasants"),
+        # Her best Speak, raised from 4 to a native language's 5 (DE p. 48).
+        ("Living Language: High German", 5, "peasants"),
         ("Living Language: Langue d'Oc", 3, "peasants"),
         ("Living Language: Italian", 3, "peasants"),
         ("Living Language: Romansch", 2, "peasants"),
@@ -918,7 +919,8 @@ CYMENA: StatBlock = {
         "baseline, not the old 3. Her Redcap, Indenture and Whitlams Virtues "
         "fold into the Definitive Edition's Redcap (DE p. 105), which gives "
         "Well-Traveled; Climb is Athletics, Disguise and Guile are Guile, "
-        "Storytelling is Living Language, Scribe Latin is Artes Liberales.\n"
+        "Storytelling is Living Language, Scribe Latin is Artes Liberales; "
+        "her native High German is raised from 4 to 5.\n"
         "Her devices: a warm copper triangle pin (CrIg 6, constant) that also "
         "gives her Eyes of the Cat once a day (MuCo(An) 10); a golden "
         "lickstone, a small plate that clings to the palate and hides itself, "

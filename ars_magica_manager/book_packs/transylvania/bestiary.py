@@ -124,7 +124,8 @@ def _dragons(transylvania: Transylvania) -> None:
                 vf_great("Stamina"),
                 "Lesser Infernal Power",
                 "Tough",
-                "Greedy",
+                # Among the Major Flaws (Against the Dark p. 105).
+                "Greedy (Major)",
                 "Horrifying Appearance",
                 (
                     "Demonic Weakness",
@@ -1238,7 +1239,8 @@ def _elsewhere(transylvania: Transylvania) -> None:
                 "Long-Winded",
                 "Sharp Ears",
                 "Clumsy",
-                "Reckless",
+                # Minor: the book offers him as a grog (Against the Dark p. 131).
+                "Reckless (Minor)",
                 "Domesticated",
                 "Keen Sense of Smell",
                 "Pack/Herd Leader",

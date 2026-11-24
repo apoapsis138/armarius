@@ -32253,7 +32253,7 @@
     {
       "id": "boris_of_novgorod",
       "name": "Boris of Novgorod",
-      "type": "magus",
+      "type": "companion",
       "covenant_id": "oculus_septentrionalis",
       "characteristics": {
         "intelligence": 1,
@@ -32360,14 +32360,6 @@
         }
       ],
       "virtues_flaws": [
-        {
-          "vf_id": "vf_journeyman_rhine_tribunal",
-          "params": {},
-          "id": "",
-          "temporary": false,
-          "ends_year": null,
-          "ends_season": ""
-        },
         {
           "vf_id": "vf_redcap",
           "params": {},
@@ -33796,7 +33788,7 @@
     {
       "id": "horst",
       "name": "Horst",
-      "type": "magus",
+      "type": "companion",
       "covenant_id": "fengheld",
       "characteristics": {
         "intelligence": 3,
@@ -33903,14 +33895,6 @@
         }
       ],
       "virtues_flaws": [
-        {
-          "vf_id": "vf_master_rhine_tribunal",
-          "params": {},
-          "id": "",
-          "temporary": false,
-          "ends_year": null,
-          "ends_season": ""
-        },
         {
           "vf_id": "vf_redcap",
           "params": {},
@@ -43302,6 +43286,16 @@
         {
           "vf_id": "vf_journeyman_rhine_tribunal",
           "params": {},
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_puissant_ability",
+          "params": {
+            "ability": "artes liberales"
+          },
           "id": "",
           "temporary": false,
           "ends_year": null,

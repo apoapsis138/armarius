@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.84.0",
+  "app_version": "4.15.0",
   "kind": "pack",
   "name": "Between Sand and Sea",
   "from_saga": "Between Sand and Sea",
@@ -58,7 +58,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "mythic_africa",
@@ -120,7 +121,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "mauritania_al_maghrib_al_aqsa",
@@ -145,7 +147,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "ifriqiyeh",
@@ -170,7 +173,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "badja",
@@ -195,7 +199,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_grand_erg",
@@ -220,7 +225,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "erg_chech_and_el_djouf",
@@ -245,7 +251,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_tademait_plateau",
@@ -270,7 +277,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_libyan_desert",
@@ -295,7 +303,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_tibesti_mountains",
@@ -320,7 +329,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_torrid_zone",
@@ -358,7 +368,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "almohad_caliph",
@@ -384,12 +395,13 @@
             "kind": "places",
             "target_id": "the_banu_sulaym",
             "note": "Nomads of Cyrenaica and Tripolitania, which the Ayyubids control (p. 19)",
-            "id": "4238bccb15a7"
+            "id": "0624675c19ac"
           }
         ],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "ayyubid_sultan_of_egypt",
@@ -415,12 +427,13 @@
             "kind": "places",
             "target_id": "mythic_africa",
             "note": "Holds Cyrenaica and Tripolitania",
-            "id": "24389d8d29bc"
+            "id": "374e20b0ece0"
           }
         ],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "ayyubid_rulers_of_cyrenaica",
@@ -444,7 +457,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_rustamids",
@@ -470,7 +484,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_banu_midrar",
@@ -496,7 +511,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_idrisids",
@@ -522,7 +538,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_barghawata_confederation",
@@ -548,7 +565,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_aghlabids",
@@ -574,7 +592,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_fatimids",
@@ -600,7 +619,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_zirids",
@@ -626,7 +646,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_hammadids",
@@ -652,7 +673,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_almoravids",
@@ -678,7 +700,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_berbers_imazighen",
@@ -723,7 +746,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_netherworld",
@@ -755,7 +779,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_masmuda",
@@ -781,7 +806,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_sanhaja",
@@ -807,7 +833,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_zenata",
@@ -833,7 +860,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_marinids",
@@ -859,7 +887,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_banu_zayan",
@@ -885,7 +914,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_hafsids",
@@ -911,7 +941,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_barghwata",
@@ -937,7 +968,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_ghomara",
@@ -963,7 +995,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_doukkala",
@@ -989,7 +1022,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_hintata",
@@ -1015,7 +1049,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_kutama",
@@ -1041,7 +1076,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_gazzula",
@@ -1067,7 +1103,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_lamta",
@@ -1093,7 +1130,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_massufa",
@@ -1119,7 +1157,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_lamtuna",
@@ -1145,7 +1184,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_banu_warith",
@@ -1171,7 +1211,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_gudala",
@@ -1197,7 +1238,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_banu_hilal",
@@ -1223,7 +1265,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_maqil",
@@ -1249,7 +1292,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_banu_sulaym",
@@ -1275,7 +1319,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_maghrebi_arabs",
@@ -1301,7 +1346,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_dhimmis",
@@ -1327,7 +1373,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_tuareg",
@@ -1366,7 +1413,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "kel_ajjer",
@@ -1392,7 +1440,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "kel_ahaggar",
@@ -1418,7 +1467,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "kel_ayr",
@@ -1444,7 +1494,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "kel_owey",
@@ -1470,7 +1521,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "kel_ifoghas",
@@ -1496,7 +1548,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "kel_ataram",
@@ -1529,7 +1582,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "kel_denneg",
@@ -1562,7 +1616,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "kel_geres",
@@ -1595,7 +1650,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "kel_ulli",
@@ -1621,7 +1677,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_banu_khalida",
@@ -1678,7 +1735,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_unholy_trinity",
@@ -1729,7 +1787,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_twelve_cities",
@@ -1767,7 +1826,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "aelroth",
@@ -1790,7 +1850,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "balaguer",
@@ -1813,7 +1874,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "chernubles",
@@ -1836,7 +1898,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "corsalis",
@@ -1859,7 +1922,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "escremiz",
@@ -1882,7 +1946,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "estorgans",
@@ -1905,7 +1970,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "estramariz",
@@ -1928,7 +1994,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "falsaron",
@@ -1951,7 +2018,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "malprimis",
@@ -1981,7 +2049,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "margariz",
@@ -2004,7 +2073,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "moraine",
@@ -2027,7 +2097,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "turgis",
@@ -2050,7 +2121,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_kahina_s_legacy",
@@ -2075,7 +2147,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "muting_the_muezzin",
@@ -2100,7 +2173,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "seizing_the_sahir_s_bounty",
@@ -2125,7 +2199,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "hunting_the_hunted",
@@ -2150,7 +2225,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "waging_war",
@@ -2175,7 +2251,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "lost_sodales",
@@ -2200,7 +2277,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_lonely_lighthouse",
@@ -2225,7 +2303,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "mysterious_sources",
@@ -2250,7 +2329,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "seekers_of_lost_magics",
@@ -2275,7 +2355,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_golden_idol_of_gurzil",
@@ -2300,7 +2381,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_chameleon",
@@ -2325,7 +2407,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_christians_of_the_desert",
@@ -2350,7 +2433,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_deep_tuareg",
@@ -2375,7 +2459,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "indigo_dye",
@@ -2400,7 +2485,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "a_lost_treasure_returns",
@@ -2425,7 +2511,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "slave_revolt",
@@ -2450,7 +2537,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "invasion",
@@ -2475,7 +2563,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_fourth_estate",
@@ -2500,7 +2589,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "twice_won_gold",
@@ -2525,7 +2615,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_maghreb",
@@ -2557,7 +2648,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "mauretania_tingitana",
@@ -2582,7 +2674,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "lixus",
@@ -2608,7 +2701,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "iulia_valentia_banasa",
@@ -2634,7 +2728,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "ceuta",
@@ -2657,7 +2752,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "mlila",
@@ -2680,7 +2776,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "mauretania_caesariensis",
@@ -2705,7 +2802,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "numidia",
@@ -2730,7 +2828,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_western_coast",
@@ -2755,7 +2854,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "anfa",
@@ -2780,12 +2880,13 @@
             "kind": "places",
             "target_id": "the_harbour_of_anfa",
             "note": "Its harbour",
-            "id": "e0aeef9ca662"
+            "id": "2da838980f7d"
           }
         ],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "asfi",
@@ -2810,12 +2911,13 @@
             "kind": "places",
             "target_id": "the_harbour_of_asfi",
             "note": "Its harbour",
-            "id": "21e288994aea"
+            "id": "dbfe1c014ebc"
           }
         ],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "island_of_mogador",
@@ -2856,7 +2958,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "essaouira",
@@ -2879,7 +2982,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "rabat",
@@ -2902,7 +3006,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_hassan_tower",
@@ -2927,7 +3032,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "chellah",
@@ -2971,7 +3077,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "sale",
@@ -2994,7 +3101,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "pithecousa_the_island_of_monkeys",
@@ -3059,7 +3167,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_court_of_the_king_of_monkeys",
@@ -3098,7 +3207,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_rif",
@@ -3136,7 +3246,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "tangier",
@@ -3161,12 +3272,13 @@
             "kind": "places",
             "target_id": "the_harbour_of_tangier",
             "note": "Its harbour",
-            "id": "1a570d465fdf"
+            "id": "b847cf7794e4"
           }
         ],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "tumulus_of_antaeus",
@@ -3191,7 +3303,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "cave_of_heracles",
@@ -3216,7 +3329,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "walili",
@@ -3241,7 +3355,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "ab_muammad_abd_al_wahid_bin_yusef",
@@ -3265,7 +3380,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "yusef_ibn_ali",
@@ -3289,7 +3405,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "abdul_wahid",
@@ -3313,7 +3430,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "abu_zayd_bin_yujjan",
@@ -3337,7 +3455,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "abu_zakariya",
@@ -3361,7 +3480,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_tell",
@@ -3386,7 +3506,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "marrakesh",
@@ -3416,7 +3537,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_sons_of_sasan",
@@ -3442,7 +3564,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "fes",
@@ -3465,7 +3588,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "al_kairouine_madrasa",
@@ -3486,7 +3610,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "tunis",
@@ -3511,12 +3636,13 @@
             "kind": "places",
             "target_id": "the_harbour_of_tunis",
             "note": "Its harbour",
-            "id": "cf2a38f6dea1"
+            "id": "1e50df6874e1"
           }
         ],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "tripoli",
@@ -3541,12 +3667,13 @@
             "kind": "places",
             "target_id": "the_harbour_of_tripoli",
             "note": "Its harbour",
-            "id": "00dae6f67a14"
+            "id": "6aa2b5fad79a"
           }
         ],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "mahdia",
@@ -3571,12 +3698,13 @@
             "kind": "places",
             "target_id": "the_harbour_of_mahdia",
             "note": "Its harbour",
-            "id": "fb91e55ae3a6"
+            "id": "e3236df0ad14"
           }
         ],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "sfax",
@@ -3601,12 +3729,13 @@
             "kind": "places",
             "target_id": "the_harbour_of_sfax",
             "note": "Its harbour",
-            "id": "06bafdbf7c74"
+            "id": "74972727a50c"
           }
         ],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "sharshal",
@@ -3631,12 +3760,13 @@
             "kind": "places",
             "target_id": "the_harbour_of_sharshal",
             "note": "Its harbour",
-            "id": "bf3f535f481d"
+            "id": "57e9b5e3961f"
           }
         ],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "en_nassria",
@@ -3661,12 +3791,13 @@
             "kind": "places",
             "target_id": "the_harbour_of_en_nassria",
             "note": "Its harbour",
-            "id": "e2d135e54063"
+            "id": "3d57463f3134"
           }
         ],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "algiers",
@@ -3689,7 +3820,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "qusantina",
@@ -3712,7 +3844,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "soussa",
@@ -3735,7 +3868,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "bouna",
@@ -3758,7 +3892,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "tbessa",
@@ -3781,7 +3916,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "tlemcen",
@@ -3804,7 +3940,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "tahert",
@@ -3827,7 +3964,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "kairouan",
@@ -3857,7 +3995,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "djemila",
@@ -3883,7 +4022,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "tifesh",
@@ -3909,7 +4049,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "tiddis",
@@ -3935,7 +4076,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "hippo_regius",
@@ -3961,7 +4103,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "lambaesis",
@@ -3987,7 +4130,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "tamagudi",
@@ -4013,7 +4157,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "basilica_of_st_augustine",
@@ -4039,7 +4184,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_catacombs_of_soussa",
@@ -4071,7 +4217,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "mouth_of_the_bagradas",
@@ -4103,7 +4250,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "wadi_of_the_molting_beetles",
@@ -4141,7 +4289,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "djerba",
@@ -4185,7 +4334,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "girba",
@@ -4208,7 +4358,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "midoun",
@@ -4231,7 +4382,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "el_kantara",
@@ -4254,7 +4406,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "ajim",
@@ -4277,7 +4430,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "hara_seghira",
@@ -4300,7 +4454,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_ghriba_synagogue",
@@ -4325,7 +4480,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "malta",
@@ -4350,7 +4506,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "mdina",
@@ -4373,7 +4530,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "ir_rabat",
@@ -4396,7 +4554,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "cathedral_of_mdina",
@@ -4421,7 +4580,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "catacombs_of_ir_rabat",
@@ -4446,7 +4606,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "ghar_dalam",
@@ -4487,7 +4648,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "caves_of_comino",
@@ -4512,7 +4674,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "gozo",
@@ -4537,7 +4700,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "ggantija",
@@ -4562,7 +4726,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "cyrenaica",
@@ -4618,7 +4783,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "barce",
@@ -4641,7 +4807,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "sidi_rafaa",
@@ -4666,12 +4833,13 @@
             "kind": "places",
             "target_id": "the_harbour_of_sidi_rafaa",
             "note": "Its harbour",
-            "id": "4a80d692e36f"
+            "id": "60ee0e2b75c5"
           }
         ],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "apollonia",
@@ -4698,7 +4866,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_pharos_of_apollonia",
@@ -4731,7 +4900,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_ruins_of_cyrene",
@@ -4757,7 +4927,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "sacred_spring_of_kura",
@@ -4816,7 +4987,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "myrtoessa_the_hill_of_myrtles",
@@ -4841,7 +5013,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "leptis_magna",
@@ -4868,7 +5041,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "temple_of_serapis",
@@ -4893,7 +5067,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_jebel_akhdar",
@@ -4918,7 +5093,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_altars_of_the_philaeni",
@@ -4977,7 +5153,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "siwa",
@@ -5002,7 +5179,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_grand_plateau",
@@ -5027,7 +5205,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "sijilmasa",
@@ -5050,7 +5229,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_atlas_mountains",
@@ -5075,7 +5255,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_merchant_house",
@@ -5100,7 +5281,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "robbing_the_ifranj",
@@ -5125,7 +5307,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "making_it_personal",
@@ -5150,7 +5333,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "mercenary_pirates",
@@ -5175,7 +5359,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "imperial_legacies",
@@ -5207,7 +5392,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "a_pirate_crown",
@@ -5232,7 +5418,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "punic_ghosts_and_roman_ruins",
@@ -5257,7 +5444,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "tabula_non_rasa",
@@ -5282,7 +5470,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_roads_of_rome",
@@ -5307,7 +5496,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_takers_of_taxes",
@@ -5332,7 +5522,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "a_claim_to_the_throne",
@@ -5357,7 +5548,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_pavilion_with_three_items",
@@ -5401,7 +5593,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_monkey_s_fist",
@@ -5439,7 +5632,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "a_familiar_ape",
@@ -5464,7 +5658,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "false_embassy",
@@ -5502,7 +5697,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_descent_of_man",
@@ -5527,7 +5723,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "a_new_ruler",
@@ -5552,7 +5749,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "aiding_a_governor",
@@ -5577,7 +5775,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "invited_in",
@@ -5602,7 +5801,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "revenge_against_the_order",
@@ -5627,7 +5827,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "rebellious_governor",
@@ -5683,7 +5884,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_serpent_of_bagradas_river",
@@ -5708,7 +5910,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "lost_virgilian_magics",
@@ -5733,7 +5936,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "to_claim_a_wife",
@@ -5758,7 +5962,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "cyclopskin_handiwork",
@@ -5783,7 +5988,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_remains_of_the_day",
@@ -5821,7 +6027,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "an_acquired_menagerie",
@@ -5846,7 +6053,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_rogue_vassal",
@@ -5878,7 +6086,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "when_shallots_will_simply_not_suffice",
@@ -5903,7 +6112,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "end_of_the_line",
@@ -5928,7 +6138,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "uninvited_guest",
@@ -5953,7 +6164,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "lost_legacy",
@@ -5978,7 +6190,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_great_desert",
@@ -6064,7 +6277,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_great_desert_regio_network",
@@ -6111,7 +6325,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_ibadi_of_the_desert",
@@ -6137,7 +6352,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_fezzan",
@@ -6162,7 +6378,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_haruj",
@@ -6187,7 +6404,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "waw_an_namus",
@@ -6212,7 +6430,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "al_hamada_al_hamra",
@@ -6237,7 +6456,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_libyan_sand_sea",
@@ -6262,7 +6482,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "al_kufra",
@@ -6287,7 +6508,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_field_of_glass",
@@ -6319,7 +6541,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_mosque_of_atiq",
@@ -6344,7 +6567,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "awdjila",
@@ -6367,7 +6591,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_djofra_oasis",
@@ -6392,7 +6617,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "sokna",
@@ -6415,7 +6641,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "hon",
@@ -6438,7 +6665,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "waddan",
@@ -6461,7 +6689,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "murzuq",
@@ -6484,7 +6713,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "ramlat_dawada",
@@ -6509,7 +6739,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_changing_lake",
@@ -6541,7 +6772,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "ubari",
@@ -6566,7 +6798,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "sebha",
@@ -6591,7 +6824,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_cemetery_of_hatya",
@@ -6616,7 +6850,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_forest_of_the_jobar",
@@ -6654,7 +6889,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "garama",
@@ -6679,7 +6915,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_garamantians",
@@ -6724,7 +6961,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "zinchecra",
@@ -6768,7 +7006,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "sarir_tibesti",
@@ -6793,7 +7032,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_foggaras_of_the_fezzan",
@@ -6818,7 +7058,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_forgotten_foggara",
@@ -6850,7 +7091,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_central_great_desert",
@@ -6875,7 +7117,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_iter_praeter_caput_saxi",
@@ -6911,12 +7154,13 @@
             "kind": "places",
             "target_id": "the_central_great_desert",
             "note": "Passes by the Central Great Desert",
-            "id": "d8174c101c30"
+            "id": "7f5882d06fb1"
           }
         ],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "agisymba",
@@ -6941,7 +7185,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "djanet",
@@ -6964,7 +7209,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_arches_of_djanet",
@@ -6989,7 +7235,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "ain_al_faras",
@@ -7014,7 +7261,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "ghadames",
@@ -7037,7 +7285,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_ghardaia_oasis",
@@ -7062,7 +7311,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_mosque_of_da_a",
@@ -7087,7 +7337,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "ghardaia",
@@ -7110,7 +7361,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "melika",
@@ -7133,7 +7385,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "beni_isguen",
@@ -7156,7 +7409,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "bou_noura",
@@ -7179,7 +7433,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "el_atteuf",
@@ -7202,7 +7457,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "ghat",
@@ -7225,7 +7481,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "wargala",
@@ -7248,7 +7505,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_redoubts_of_the_tuareg",
@@ -7273,7 +7531,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_ahaggar",
@@ -7317,7 +7576,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "tamanghest",
@@ -7340,7 +7600,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "abalessa",
@@ -7365,7 +7626,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_tassili_n_ajjer",
@@ -7390,7 +7652,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "wadi_amazar",
@@ -7422,7 +7685,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_a_r",
@@ -7447,7 +7711,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "idoukal_n_tagh_s",
@@ -7481,7 +7746,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_adagh",
@@ -7513,7 +7779,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_kel_asouf",
@@ -7539,7 +7806,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_tanezrouft",
@@ -7564,7 +7832,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_mosques_of_iwalatan",
@@ -7589,7 +7858,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "iwalatan",
@@ -7619,7 +7889,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "tasarahla",
@@ -7644,7 +7915,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_salt_pits_of_taghaza",
@@ -7669,7 +7941,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "taghaza",
@@ -7699,7 +7972,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "tuwat",
@@ -7724,7 +7998,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "buda",
@@ -7747,7 +8022,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "reggane",
@@ -7770,7 +8046,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_t_n_r",
@@ -7795,7 +8072,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "aouderas",
@@ -7818,7 +8096,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "bilma",
@@ -7841,7 +8120,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "fachi",
@@ -7866,7 +8146,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "fada",
@@ -7889,7 +8170,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "takedda",
@@ -7912,7 +8194,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "timia",
@@ -7935,7 +8218,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_erg_of_bilma",
@@ -7960,7 +8244,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_kaouar",
@@ -7985,7 +8270,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "djaba",
@@ -8010,7 +8296,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_iwalatan_road",
@@ -8035,7 +8322,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_taghaza_trail",
@@ -8060,7 +8348,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_ghadames_road",
@@ -8085,7 +8374,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_garamantian_road",
@@ -8110,7 +8400,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_bilma_trail",
@@ -8135,7 +8426,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "tamdoult",
@@ -8160,7 +8452,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "aoudaghost",
@@ -8185,7 +8478,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "zaouila",
@@ -8210,7 +8504,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_desert_caravans",
@@ -8240,7 +8535,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_bilad_es_sudan",
@@ -8278,7 +8574,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_sorcerer_king_of_sosso",
@@ -8302,7 +8599,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_silent_traders",
@@ -8332,7 +8630,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_two_great_spirits_the_red_and_the_black",
@@ -8391,7 +8690,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_kingdom_of_the_ghouls",
@@ -8429,7 +8729,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_punishment_of_god",
@@ -8467,7 +8768,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_crack_between_the_worlds",
@@ -8511,7 +8813,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_western_nile",
@@ -8558,7 +8861,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_black_city",
@@ -8583,7 +8887,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_king_in_mourning",
@@ -8629,7 +8934,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_city_of_the_silent_princess",
@@ -8654,7 +8960,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_silent_princess",
@@ -8692,7 +8999,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "zerzura",
@@ -8730,7 +9038,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_long_voyage",
@@ -8755,7 +9064,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "making_the_nile_fit_for_transport_and_trade",
@@ -8780,7 +9090,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_city_in_the_atlas",
@@ -8805,7 +9116,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_tin_lamp",
@@ -8837,7 +9149,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_modern_garamantes",
@@ -8862,7 +9175,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "prester_john_on_the_river",
@@ -8887,7 +9201,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_kingdom_of_the_perfect_aphrodisiac",
@@ -8912,7 +9227,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_root_of_the_two_hundred_wives",
@@ -8937,7 +9253,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_kingdom_of_the_choosing_dragon",
@@ -8962,7 +9279,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "shaving_the_dragon",
@@ -9000,7 +9318,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_vexillation_of_the_fata_morgana",
@@ -9046,7 +9365,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "a_covenant_in_agisymba",
@@ -9071,7 +9391,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "an_atakor_covenant",
@@ -9096,7 +9417,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "wages_of_sin",
@@ -9128,7 +9450,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "breaking_the_bonds",
@@ -9160,7 +9483,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "where_does_all_that_salt_go",
@@ -9204,7 +9528,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_mines_of_despair",
@@ -9248,7 +9573,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_stolen_prize",
@@ -9273,7 +9599,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "men_of_war",
@@ -9305,7 +9632,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "lost",
@@ -9351,7 +9679,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "and_found",
@@ -9410,7 +9739,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_archetypical_road",
@@ -9435,7 +9765,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_time_lost",
@@ -9460,7 +9791,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "fantastic_slaves",
@@ -9485,7 +9817,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_bitter_fruit",
@@ -9521,7 +9854,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "kaf_ajnoun",
@@ -9555,7 +9889,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_council_of_winds",
@@ -9581,7 +9916,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_cult_of_the_sun_and_moon",
@@ -9607,7 +9943,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_imhergi_and_ngagef",
@@ -9634,7 +9971,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_cult_of_the_dead",
@@ -9660,7 +9998,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_tomb_of_juba_ii",
@@ -9685,7 +10024,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_royal_tombs_south_of_tahert",
@@ -9710,7 +10050,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_tomb_of_tin_hinan",
@@ -9752,7 +10093,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_brides_of_ayyur",
@@ -9779,7 +10121,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_tuareg_settuten",
@@ -9806,7 +10149,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_daughters_of_four_fathers",
@@ -9832,7 +10176,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_inducers",
@@ -9858,7 +10203,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_potteresses",
@@ -9884,7 +10230,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_leather_workers",
@@ -9910,7 +10257,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_rippers",
@@ -9936,7 +10284,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_geomancers",
@@ -9962,7 +10311,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_inenden",
@@ -9989,7 +10339,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_blue_men_of_the_desert",
@@ -10015,7 +10366,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_desiccated_men",
@@ -10041,7 +10393,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_folk_witch_bouda",
@@ -10068,7 +10421,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_jnun_of_africa",
@@ -10094,7 +10448,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_afarta",
@@ -10120,7 +10475,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_seventh_depth",
@@ -10145,7 +10501,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_baharia",
@@ -10171,7 +10528,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_awlad_al_hut",
@@ -10197,7 +10555,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_siadna",
@@ -10223,7 +10582,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "al_maghrebi",
@@ -10246,7 +10606,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_amadagh",
@@ -10271,7 +10632,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_lowhush",
@@ -10297,7 +10659,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_murabitin",
@@ -10324,7 +10687,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_sufis_of_the_maghreb",
@@ -10350,7 +10714,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_ruins_of_carthage",
@@ -10400,7 +10765,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_priesthood_of_carthage",
@@ -10445,7 +10811,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_broken_gift",
@@ -10470,7 +10837,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "sun_versus_moon",
@@ -10495,7 +10863,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "forewarned_is_forearmed",
@@ -10520,7 +10889,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "predators_and_prey_alike",
@@ -10545,7 +10915,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "dream_a_dream_of_days_past",
@@ -10570,7 +10941,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "a_lost_key",
@@ -10608,7 +10980,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "undiscovered_heritage",
@@ -10640,7 +11013,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "health_and_long_life",
@@ -10665,7 +11039,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "wages_of_carthage",
@@ -10728,7 +11103,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "to_resurrect_the_brazen_tophet",
@@ -10753,7 +11129,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_harbour_of_anfa",
@@ -10779,7 +11156,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_harbour_of_asfi",
@@ -10805,7 +11183,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_harbour_of_tangier",
@@ -10831,7 +11210,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_harbour_of_mahdia",
@@ -10857,7 +11237,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_harbour_of_sfax",
@@ -10883,7 +11264,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_harbour_of_tunis",
@@ -10909,7 +11291,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_harbour_of_tripoli",
@@ -10935,7 +11318,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_harbour_of_sharshal",
@@ -10961,7 +11345,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_harbour_of_en_nassria",
@@ -10987,7 +11372,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_harbour_of_sidi_rafaa",
@@ -11013,7 +11399,8 @@
         "links": [],
         "arms": {},
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       }
     ],
     "characters": [
@@ -11051,7 +11438,9 @@
         "assigned_lab_id": null,
         "background": {
           "player": "",
-          "player_id": null,
+          "player_ids": [],
+          "everyone_plays": false,
+          "steward_id": "",
           "setting": "",
           "size": 0,
           "confidence_score": 0,
@@ -11141,6 +11530,8 @@
         "summae_read": [],
         "lab_text_access": {},
         "breakthroughs": [],
+        "private_notes": "",
+        "goals": [],
         "grog_year": null,
         "animal": null,
         "labor_points": 0,
@@ -11179,6 +11570,7 @@
         "summary": "The caliph's sahir vizier, on whose advice the friars were beheaded in the first weeks of 1220. Princess Sancha of Alenquer hints at a great reward for proof of his death.",
         "secrets": [],
         "known": true,
+        "storyguide_id": "",
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -11242,7 +11634,9 @@
         "assigned_lab_id": null,
         "background": {
           "player": "",
-          "player_id": null,
+          "player_ids": [],
+          "everyone_plays": false,
+          "steward_id": "",
           "setting": "",
           "size": 0,
           "confidence_score": 0,
@@ -11332,6 +11726,8 @@
         "summae_read": [],
         "lab_text_access": {},
         "breakthroughs": [],
+        "private_notes": "",
+        "goals": [],
         "grog_year": null,
         "animal": null,
         "labor_points": 0,
@@ -11370,6 +11766,7 @@
         "summary": "A Portuguese princess who befriended St. Francis's friars on their way to Morocco and saw their deaths in a vision at prayer. She offers a reward for their remains.",
         "secrets": [],
         "known": true,
+        "storyguide_id": "",
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -11694,7 +12091,9 @@
         "assigned_lab_id": null,
         "background": {
           "player": "",
-          "player_id": null,
+          "player_ids": [],
+          "everyone_plays": false,
+          "steward_id": "",
           "setting": "",
           "size": 0,
           "confidence_score": 2,
@@ -11826,6 +12225,8 @@
         "summae_read": [],
         "lab_text_access": {},
         "breakthroughs": [],
+        "private_notes": "",
+        "goals": [],
         "grog_year": null,
         "animal": null,
         "labor_points": 0,
@@ -11864,6 +12265,7 @@
         "summary": "A Targui amajegh, a noble of the Ahaggar who leads raiders on camels, known locally as merciless, with a veil worn so long that his skin has gone indigo.",
         "secrets": [],
         "known": true,
+        "storyguide_id": "",
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -12148,7 +12550,9 @@
         "assigned_lab_id": null,
         "background": {
           "player": "",
-          "player_id": null,
+          "player_ids": [],
+          "everyone_plays": false,
+          "steward_id": "",
           "setting": "",
           "size": 0,
           "confidence_score": 1,
@@ -12280,6 +12684,8 @@
         "summae_read": [],
         "lab_text_access": {},
         "breakthroughs": [],
+        "private_notes": "",
+        "goals": [],
         "grog_year": null,
         "animal": null,
         "labor_points": 0,
@@ -12337,6 +12743,7 @@
           }
         ],
         "known": true,
+        "storyguide_id": "",
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -12402,7 +12809,9 @@
         "assigned_lab_id": null,
         "background": {
           "player": "",
-          "player_id": null,
+          "player_ids": [],
+          "everyone_plays": false,
+          "steward_id": "",
           "setting": "",
           "size": 0,
           "confidence_score": 0,
@@ -12492,6 +12901,8 @@
         "summae_read": [],
         "lab_text_access": {},
         "breakthroughs": [],
+        "private_notes": "",
+        "goals": [],
         "grog_year": null,
         "animal": null,
         "labor_points": 0,
@@ -12530,6 +12941,7 @@
         "summary": "A Sufi mystic of 67, beloved of Asfi's elders, with a ribat in the town and the beginnings of the Magiriyyun order. If history holds he has 14 years to live, teaching ascetics and writing the Bidayat al Mourid, on Tassawuf and on Sufi saints such as his teacher Abu Madyan.",
         "secrets": [],
         "known": true,
+        "storyguide_id": "",
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -12593,7 +13005,9 @@
         "assigned_lab_id": null,
         "background": {
           "player": "",
-          "player_id": null,
+          "player_ids": [],
+          "everyone_plays": false,
+          "steward_id": "",
           "setting": "",
           "size": 0,
           "confidence_score": 0,
@@ -12683,6 +13097,8 @@
         "summae_read": [],
         "lab_text_access": {},
         "breakthroughs": [],
+        "private_notes": "",
+        "goals": [],
         "grog_year": null,
         "animal": null,
         "labor_points": 0,
@@ -12721,6 +13137,7 @@
         "summary": "A pious sorcerer who lives in Comino's caves and has a magic cloak that lets him fly, on which he sometimes goes to Malta for long stays.",
         "secrets": [],
         "known": true,
+        "storyguide_id": "",
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -12784,7 +13201,9 @@
         "assigned_lab_id": null,
         "background": {
           "player": "",
-          "player_id": null,
+          "player_ids": [],
+          "everyone_plays": false,
+          "steward_id": "",
           "setting": "",
           "size": 0,
           "confidence_score": 0,
@@ -12874,6 +13293,8 @@
         "summae_read": [],
         "lab_text_access": {},
         "breakthroughs": [],
+        "private_notes": "",
+        "goals": [],
         "grog_year": null,
         "animal": null,
         "labor_points": 0,
@@ -12912,6 +13333,7 @@
         "summary": "Youngest daughter of the headman of the village by Cyrene, the only person who knows the nymph Kura still lives. She stumbled into the regio last spring and now visits often.",
         "secrets": [],
         "known": true,
+        "storyguide_id": "",
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -13237,7 +13659,9 @@
         "assigned_lab_id": null,
         "background": {
           "player": "",
-          "player_id": null,
+          "player_ids": [],
+          "everyone_plays": false,
+          "steward_id": "",
           "setting": "",
           "size": 0,
           "confidence_score": 1,
@@ -13369,6 +13793,8 @@
         "summae_read": [],
         "lab_text_access": {},
         "breakthroughs": [],
+        "private_notes": "",
+        "goals": [],
         "grog_year": null,
         "animal": null,
         "labor_points": 0,
@@ -13420,6 +13846,7 @@
           }
         ],
         "known": true,
+        "storyguide_id": "",
         "links": [],
         "attitudes": [],
         "favours": [],
@@ -13520,7 +13947,7 @@
             "ends_season": ""
           },
           {
-            "vf_id": "vf_essential_virtue_major",
+            "vf_id": "vf_essential_virtue",
             "params": {
               "trait": "Presence"
             },
@@ -13578,7 +14005,7 @@
             "ends_season": ""
           },
           {
-            "vf_id": "vf_essential_flaw_major",
+            "vf_id": "vf_essential_flaw",
             "params": {
               "trait": "Perception"
             },
@@ -13688,7 +14115,7 @@
             "attack": 9,
             "defense": 7,
             "damage": -3,
-            "id": "068bc1edcb65"
+            "id": "762b314822eb"
           },
           {
             "name": "Evasion",
@@ -13696,7 +14123,7 @@
             "attack": null,
             "defense": 7,
             "damage": null,
-            "id": "9d32514f83be"
+            "id": "7705a7dc2995"
           }
         ],
         "soak": 1,
@@ -13769,7 +14196,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes on a minor natural ability or mundane Quality of an animal he sees, such as a frog's swimming, a cat's night vision, horns, spines or a bear's pelt, but no major change like wings. One at a time; a second replaces the first. It lasts indefinitely, but he loses a Might point each sunrise and sunset while he keeps it, regained in three hours or less in a Magic aura. MuAn 25 (Base 4, +2 Sun, +1 Part, +1 Constant effect, +1 can change ability possessed); Personal Power (25 levels, -2 Might cost).",
-            "id": "527aea281154"
+            "id": "eb3fb0403f5e"
           },
           {
             "name": "Mimic the Man",
@@ -13783,7 +14210,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Copies any sound exactly, even human speech, without understanding it. MuIm 3 (Base 1, +1 Conc, +1 Complexity); Personal Power (3 levels, -1 Might cost, +1 Init).",
-            "id": "323580824a90"
+            "id": "a68eb4ccd521"
           }
         ],
         "vis": [
@@ -13791,7 +14218,7 @@
             "pawns": 2,
             "art": "Muto",
             "where": "one pawn in each hand",
-            "id": "6c05d891300a"
+            "id": "bdb6eef1322b"
           }
         ],
         "equipment": "",
@@ -13805,7 +14232,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "muqadam_the_barbary_lion_of_virtue",
@@ -14238,7 +14666,7 @@
             "attack": 17,
             "defense": 13,
             "damage": 12,
-            "id": "f97c74001d50"
+            "id": "faab4bb7df48"
           },
           {
             "name": "Bite",
@@ -14246,7 +14674,7 @@
             "attack": 15,
             "defense": 10,
             "damage": 11,
-            "id": "808566871b57"
+            "id": "c0651d4c4c30"
           }
         ],
         "soak": 10,
@@ -14438,7 +14866,7 @@
             "penetration_bonus": 15,
             "quality": "",
             "description": "With a moment's concentration he learns the physical state of any Beast of Virtue whose token he holds. InAn 35 (Base 3, +4 Arc, +4 Boundary); Ritual Power x2. Might spent so is recovered only by resting in a Magic aura of 4 or higher.",
-            "id": "63444fdd97aa"
+            "id": "f945bbb94b44"
           },
           {
             "name": "Routing Bellow",
@@ -14452,7 +14880,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A roar that makes men and beasts who hear it flee in fear. ReAn(Me) 30 (Base 5, +1 Diam, +3 Sound, +1 Mentem requisite); Greater Power (30 levels, -3 Might cost, +5xp Penetration).",
-            "id": "a77546aeabe8"
+            "id": "f1a10b22aaaa"
           },
           {
             "name": "Circle of Beast Warding",
@@ -14466,7 +14894,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A ring traced in the earth that no mundane beast of Size +4 or less may cross; he thinks it unsporting for hunting. ReAn 20 (Base 2, +1 Touch, +2 Ring, +3 Size); Lesser Power (20 levels, +5xp Penetration).",
-            "id": "53d49d02ce48"
+            "id": "e18b65f96ee5"
           },
           {
             "name": "Cowing Snarl",
@@ -14480,7 +14908,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A man or beast of his size or less, caught by his gaze, kneels in fear. ReAn 25 (Base 4, +1 Eye, +1 Diam, +2 Size, +1 Mentem requisite); Lesser Power (25 levels), Improved Powers x3 (-5 Might cost, +10 Initiative).",
-            "id": "e9b8c284d7a3"
+            "id": "f9a5e92a605a"
           },
           {
             "name": "Trackless Step",
@@ -14494,7 +14922,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "His sweeping tail erases his tracks as he walks. ReTe 10 (Base 4, +1 Touch, +1 Conc); Lesser Power (10 levels, +15xp Concentration).",
-            "id": "334699daf063"
+            "id": "578d1432a44f"
           },
           {
             "name": "Hunter's Pounce",
@@ -14508,7 +14936,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Leaps up to 50 paces. ReAn 25 (Base 15, +2 Size); Personal Power (25 levels).",
-            "id": "703c197b2893"
+            "id": "6c2c234b7716"
           },
           {
             "name": "Sleep with Eyes Open",
@@ -14522,7 +14950,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "He sleeps with open eyes and is hard to surprise. ReAn 20 (Base 4, +2 Sun, +2 Size); Personal Power (20 levels, -1 Might cost).",
-            "id": "9cb1bda657ce"
+            "id": "7f01a10011ab"
           }
         ],
         "vis": [
@@ -14530,7 +14958,7 @@
             "pawns": 8,
             "art": "Animal",
             "where": "in his mane",
-            "id": "0ff9ccf2c8a2"
+            "id": "98d89ba40827"
           }
         ],
         "equipment": "",
@@ -14544,7 +14972,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "azru_the_atlas_bear_of_virtue",
@@ -14993,7 +15422,7 @@
             "attack": 17,
             "defense": 13,
             "damage": 13,
-            "id": "8da71dcb0155"
+            "id": "0879526f09c4"
           },
           {
             "name": "Teeth",
@@ -15001,7 +15430,7 @@
             "attack": 12,
             "defense": 10,
             "damage": 7,
-            "id": "b891175be089"
+            "id": "195a7afe9d39"
           },
           {
             "name": "Grapple",
@@ -15009,7 +15438,7 @@
             "attack": 11,
             "defense": 9,
             "damage": null,
-            "id": "790cb7f03393"
+            "id": "7cd139edbf6a"
           }
         ],
         "soak": 13,
@@ -15145,7 +15574,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A roar that freezes men and beasts who hear it, trembling with fear. ReAn(Me) 30 (Base 5, +1 Diam, +3 Sound, +1 Mentem requisite); Greater Power (30 levels, -3 Might cost, +5xp Penetration).",
-            "id": "8880f27ab9c9"
+            "id": "3d6481e5833b"
           },
           {
             "name": "Thunderous Swipe",
@@ -15159,7 +15588,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A blow that throws anything up to his own size 5 paces; Dex against Ease Factor 12 to stay standing. Thrown straight up or into something hard, the target takes falling damage (+1 per 2 feet, +7 at most). It may join a claw attack. ReAn 25 (Base 10, +1 Touch, +1 Size, +1 Corpus requisite); Lesser Power (25 levels), Improved Powers (-5 Might cost).",
-            "id": "4f9822455896"
+            "id": "90c5376199cd"
           }
         ],
         "vis": [
@@ -15167,7 +15596,7 @@
             "pawns": 5,
             "art": "Animal",
             "where": "in his claws",
-            "id": "fcc58662b8dd"
+            "id": "0aed6f8a8d11"
           }
         ],
         "equipment": "",
@@ -15181,7 +15610,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "imghrawn_scion_of_antaeus",
@@ -15311,7 +15741,7 @@
             "ends_season": ""
           },
           {
-            "vf_id": "vf_overconfident_major",
+            "vf_id": "vf_overconfident",
             "params": {},
             "id": "",
             "temporary": false,
@@ -15545,7 +15975,7 @@
             "attack": null,
             "defense": 1,
             "damage": null,
-            "id": "923d88005a78"
+            "id": "c16ef387eeac"
           },
           {
             "name": "Fist",
@@ -15553,7 +15983,7 @@
             "attack": 8,
             "defense": 8,
             "damage": 16,
-            "id": "b09c8f04b83e"
+            "id": "b665807c79d4"
           },
           {
             "name": "Kick",
@@ -15561,7 +15991,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 13,
-            "id": "fd1c9db1c17c"
+            "id": "bb62e203e7d0"
           },
           {
             "name": "Cudgel",
@@ -15569,7 +15999,7 @@
             "attack": 12,
             "defense": 9,
             "damage": 17,
-            "id": "23aac5b3db70"
+            "id": "f0c78e1f7626"
           },
           {
             "name": "Thrown Stone",
@@ -15577,7 +16007,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 15,
-            "id": "3db6062acaca"
+            "id": "160820ff9d4c"
           }
         ],
         "soak": 16,
@@ -15678,7 +16108,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "He looks and sounds like a Size 0 man. MuIm 25 (Base 2, +4 size, +2 Sun, +1 Moving Image); Improved Powers: -3 Might cost.",
-            "id": "4acc96e4b805"
+            "id": "5f849d295e98"
           },
           {
             "name": "Friend of the Desert",
@@ -15692,7 +16122,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "He ignores heat and fire damage of +15 or less. ReIg (Base 4, +2 for +15 or less, +2 Sun, +1 size; the book gives no total); Improved Powers: -2 Might cost; Slow Power.",
-            "id": "2362dc6d31d2"
+            "id": "b5137e319b65"
           }
         ],
         "vis": [
@@ -15700,7 +16130,7 @@
             "pawns": 4,
             "art": "Ignem",
             "where": "in his heart",
-            "id": "a1709b45f2b0"
+            "id": "cd8c05bd24b9"
           }
         ],
         "equipment": "Acacia wood cudgel, sack of salt, gold, trinkets",
@@ -15714,7 +16144,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "garamantian_walking_dead",
@@ -15809,7 +16240,7 @@
             "attack": 7,
             "defense": 4,
             "damage": 5,
-            "id": "f23c1b5bf727"
+            "id": "3a1639f6def6"
           },
           {
             "name": "Grapple",
@@ -15817,7 +16248,7 @@
             "attack": 3,
             "defense": 6,
             "damage": null,
-            "id": "3de1e986af7b"
+            "id": "8a524711cf66"
           }
         ],
         "soak": 11,
@@ -15862,7 +16293,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "amur_the_pale_fox_of_virtue",
@@ -16095,7 +16527,7 @@
             "attack": null,
             "defense": 5,
             "damage": null,
-            "id": "148386946c7f"
+            "id": "e64066bff680"
           },
           {
             "name": "Bite",
@@ -16103,7 +16535,7 @@
             "attack": 11,
             "defense": 7,
             "damage": 8,
-            "id": "616c6f67cf90"
+            "id": "61eddfe38a1f"
           }
         ],
         "soak": 3,
@@ -16211,7 +16643,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its gaze fills a victim with the wish to chase it until sunrise or sunset. ReMe 15 (Base 4, +1 Eye, +2 Sun): Lesser Power (15 levels, -2 Might cost).",
-            "id": "32ae2ca5f7af"
+            "id": "1e03dea90f95"
           },
           {
             "name": "Gone to Ground",
@@ -16225,7 +16657,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Teleports to a place within 500 paces to which it has an Arcane Connection. ReAn 20 (Base 20): Personal Power (20 levels, -1 Might cost). Not while observed.",
-            "id": "e111c9f84b80"
+            "id": "1b3798f0e8fc"
           },
           {
             "name": "Unsporting Stalker",
@@ -16239,7 +16671,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Blends into the terrain, +3 to vision-based Stealth checks. MuIm 3 (Base 1, +1 Diam, +1 moving images): Personal Power (5 levels, -1 Might cost, +15xp Concentration). The book prints Duration Conc but prices +1 Diam.",
-            "id": "9f49b81ebeb0"
+            "id": "c3d6bc5008ea"
           }
         ],
         "vis": [
@@ -16247,7 +16679,7 @@
             "pawns": 3,
             "art": "Animal",
             "where": "in its tail",
-            "id": "e29191093736"
+            "id": "88830c06cbdc"
           }
         ],
         "equipment": "",
@@ -16261,7 +16693,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "axudad_the_deathstalker_scorpion_of_virtue",
@@ -16462,7 +16895,7 @@
             "attack": 9,
             "defense": 10,
             "damage": 0,
-            "id": "6aa9c0d4463d"
+            "id": "bcfb233497d3"
           },
           {
             "name": "Grapple",
@@ -16470,7 +16903,7 @@
             "attack": 9,
             "defense": 0,
             "damage": null,
-            "id": "b4562e3b23c0"
+            "id": "de8aa9426ef5"
           },
           {
             "name": "Sting",
@@ -16478,7 +16911,7 @@
             "attack": 9,
             "defense": 2,
             "damage": -3,
-            "id": "f7f66360dcf0"
+            "id": "80be5e8b613e"
           }
         ],
         "soak": 4,
@@ -16593,7 +17026,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "If its Attack Advantage beats the victim's armor Protection (not Soak), the victim suffers an exceptionally debilitating poison (Stamina roll against Ease Factor 6, Incapacitating), wounded or not.",
-            "id": "1826bd10506c"
+            "id": "f957ac6eed99"
           },
           {
             "name": "Drive Berserk",
@@ -16607,7 +17040,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its touch drives the target to attack everything nearby for a Diameter. CrMe 10 (Base 4, +1 Touch, +1 Diameter): Lesser Power (10 levels, -1 Might cost, 5xp Concentration, +5xp Penetration).",
-            "id": "386fe615c16b"
+            "id": "5b195f9bf4c7"
           },
           {
             "name": "Lie in Wait",
@@ -16621,7 +17054,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Sitting still, it looks like a plain rock or small dune. MuIm 10 (Base 5, +1 Conc): Personal Power (10 levels, -1 Might cost, +10xp Concentration).",
-            "id": "802e247cd4b5"
+            "id": "b05ddf46c2da"
           }
         ],
         "vis": [
@@ -16629,7 +17062,7 @@
             "pawns": 2,
             "art": "Mentem",
             "where": "in its stinger",
-            "id": "bc5dffd165f9"
+            "id": "d26372c14fcf"
           }
         ],
         "equipment": "",
@@ -16643,7 +17076,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "demon_of_thirst_and_despair",
@@ -16709,7 +17143,7 @@
             "attack": 16,
             "defense": 14,
             "damage": 13,
-            "id": "38803e10a443"
+            "id": "b52150368dfd"
           }
         ],
         "soak": 7,
@@ -16754,7 +17188,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes a material form in one round, most often a wave of grinding stones, and may discorporate almost at once. Its rocky body can hide trails and landmarks.",
-            "id": "ba9acf13b110"
+            "id": "6299eeb2fa5f"
           },
           {
             "name": "Elemental Control of Water",
@@ -16768,7 +17202,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable cost: any Creo, Muto or Rego Aquam effect at 1 Might a magnitude, minor effects of level no higher than its Might. It taunts those dying of thirst.",
-            "id": "5f1684871f75"
+            "id": "433c5c0c67e2"
           },
           {
             "name": "Envisioning",
@@ -16782,7 +17216,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Subtly alters dreams to make them more ominous and depressing.",
-            "id": "d5c5d1ea8867"
+            "id": "87605f93fbff"
           },
           {
             "name": "Obsession",
@@ -16796,7 +17230,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "When a human commits a venial sin and it spends Might, then at the next crisis of worthiness the storyguide rolls a simple die +3 and the player a simple die + a suitable Personality Trait - adjustments for harsh surroundings. If the demon's total is higher, the character gains Doubt +1; acting on it puts him in a state of sin, and the demon then coagulates and kills him.",
-            "id": "c2a199cda608"
+            "id": "04c566d1f806"
           }
         ],
         "vis": [
@@ -16804,7 +17238,7 @@
             "pawns": 2,
             "art": "Perdo",
             "where": "tainted, in its body",
-            "id": "726af2ffcaa5"
+            "id": "a2877a925d42"
           }
         ],
         "equipment": "",
@@ -16818,7 +17252,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "aisha_qandisha",
@@ -16994,7 +17429,7 @@
             "attack": 11,
             "defense": 12,
             "damage": 2,
-            "id": "e2fe418a5440"
+            "id": "969d0d8cd86d"
           }
         ],
         "soak": -1,
@@ -17060,7 +17495,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "+3 on all rolls to impress others. Base 3, +1 Touch, +2 Sun.",
-            "id": "5a74b2b114b9"
+            "id": "6fa5d115ee48"
           },
           {
             "name": "Grant Major Flaw (Wildness)",
@@ -17074,7 +17509,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Ritual, no Hermetic equivalent. Her lover grows helpless before all faeries, and suffers a different random Minor Personality Flaw each scene, stilled briefly by ecstatic experience such as dance, music or wandering dry riverbeds in hope of meeting faeries again.",
-            "id": "3d70276830eb"
+            "id": "2b4be821ecaf"
           },
           {
             "name": "Grant Minor Flaw (Impotence)",
@@ -17088,7 +17523,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Ritual, no Hermetic equivalent. Her lover cannot have sex with others.",
-            "id": "ffb9e329c19a"
+            "id": "d367ec76b369"
           },
           {
             "name": "Guide",
@@ -17102,7 +17537,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Leads a character into danger like the Common Sense Virtue, but serving her ends. ReMe Base 5, +2 Voice, +1 Conc, +2 Group.",
-            "id": "b7874bb4c3db"
+            "id": "22cd0b8f929b"
           },
           {
             "name": "Hound",
@@ -17116,7 +17551,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Tells her the direction and distance of her human quarry. InCo Base 3, +4 Arc, +1 Conc.",
-            "id": "138e097e6dda"
+            "id": "c295233f55fd"
           },
           {
             "name": "Invisibility",
@@ -17130,7 +17565,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A personal Veil of Invisibility (ArM5 p. 146). Base 4, +2 Sun, +1 moving image. The book prints '1 point, Init 0, Mentem' before these figures.",
-            "id": "7038be0cb975"
+            "id": "dfef6684cb65"
           },
           {
             "name": "Pine Away",
@@ -17144,7 +17579,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A major disease, Ease Factor 15, causing a Light Wound, treatable with Faerie Lore or Medicine; the victim loses the will and the vitality to live. Base 30 (5 + 25 virulence), +2 Voice.",
-            "id": "cdc35947615e"
+            "id": "99c731517041"
           },
           {
             "name": "Silent Motion",
@@ -17158,7 +17593,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Constant: she moves without a sound. Base 3, +2 Sun, +1 constant. The book prints '1 point, Init 0, Mentem' before '1 point, constant, Imaginem'.",
-            "id": "5b62f9784875"
+            "id": "9e59ad0cee69"
           },
           {
             "name": "Steal Judgment",
@@ -17172,7 +17607,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "The target believes almost any lie she tells; an Intelligence roll against Ease Factor 6 resists, easier for truly incredible lies. Base 4, +1 Eye, +2 Sun. The book prints '1 point, Init 0, Mentem' before these figures.",
-            "id": "8ac453c101f5"
+            "id": "c96636ee324a"
           }
         ],
         "vis": [
@@ -17180,7 +17615,7 @@
             "pawns": 9,
             "art": "",
             "where": "bones of a goat",
-            "id": "1663bbc99dbd"
+            "id": "e5644397580e"
           }
         ],
         "equipment": "Any trappings of a woman of wealth and dubious virtue.",
@@ -17194,7 +17629,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "sirocco_the_howling_thirst_of_the_maghreb",
@@ -17557,7 +17993,7 @@
             "attack": null,
             "defense": 9,
             "damage": null,
-            "id": "d0ab3eb183ff"
+            "id": "e236636d54f3"
           },
           {
             "name": "Falchion",
@@ -17565,7 +18001,7 @@
             "attack": 12,
             "defense": 9,
             "damage": 5,
-            "id": "24d9282a8b1d"
+            "id": "8901e725e9bf"
           },
           {
             "name": "Fist",
@@ -17573,7 +18009,7 @@
             "attack": 8,
             "defense": 8,
             "damage": 2,
-            "id": "45e3605e1529"
+            "id": "a293abdf2c35"
           }
         ],
         "soak": 2,
@@ -17779,7 +18215,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Constant effect. With a few moments' concentration he learns anything that happens within the bounds of the Great Desert.",
-            "id": "36ead4b70312"
+            "id": "387b33926636"
           },
           {
             "name": "Donning the Corporeal Veil",
@@ -17793,7 +18229,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes on a material form (Cr(Re)Co).",
-            "id": "6526dc4a3942"
+            "id": "f6642ab1ddd1"
           },
           {
             "name": "Eidolon",
@@ -17807,7 +18243,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "An illusory form material beings can see and hear. It moves and speaks as he directs and lasts until he has no use for it.",
-            "id": "112be363ebe9"
+            "id": "58bd21be1d9d"
           },
           {
             "name": "Master of Sandstorms",
@@ -17821,7 +18257,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to 7 points, a point a magnitude: any non-ritual Creo, Muto or Rego Auram effect up to 7th magnitude, with Terram or Ignem prerequisites as he likes.",
-            "id": "979d2741a4b9"
+            "id": "53dddd14d290"
           },
           {
             "name": "Master of Thirst",
@@ -17835,7 +18271,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Draws most of the water out of any object (PeAq(Co)).",
-            "id": "c1683fe813c5"
+            "id": "87ebb68c93a0"
           }
         ],
         "vis": [
@@ -17843,7 +18279,7 @@
             "pawns": 7,
             "art": "Auram",
             "where": "in the dust on his clothes or in his cyclone",
-            "id": "a94b024729da"
+            "id": "e6c56101bb5c"
           }
         ],
         "equipment": "",
@@ -17857,7 +18293,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "tin_hinan_the_shade",
@@ -18228,7 +18665,7 @@
             "attack": 0,
             "defense": -3,
             "damage": -2,
-            "id": "101854964065"
+            "id": "558e2cd10801"
           }
         ],
         "soak": 2,
@@ -18392,7 +18829,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes on a material form (Lesser Power, -5 Might cost).",
-            "id": "85799f5f9bf6"
+            "id": "f245219d4926"
           },
           {
             "name": "Focus Power (Divination)",
@@ -18406,7 +18843,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to 7 points: Intellego Corpus, Imaginem or Vim effects up to 7th magnitude. Its Initiative is the magnitude - 3.",
-            "id": "089b033e6e6b"
+            "id": "ad769206977d"
           },
           {
             "name": "Focus Power (Destruction)",
@@ -18420,7 +18857,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to 7 points: Perdo Animal, Corpus or Terram effects up to 7th magnitude. Its Initiative is the magnitude - 3.",
-            "id": "af0a78f805a9"
+            "id": "2b8c662fba1e"
           },
           {
             "name": "Invisibility",
@@ -18434,7 +18871,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "She, or someone she touches, turns invisible at will, though Second Sight still sees her. The effect is PeIm 15; the book also says the Lesser Power's 25 levels.",
-            "id": "99fd77e719a1"
+            "id": "66b06111f152"
           },
           {
             "name": "Ritual Focus Power (Healing)",
@@ -18448,7 +18885,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to 7 points: Creo Corpus ritual effects up to 7th magnitude, paid for with any fitting vis she holds. Its Initiative is (2 x magnitude) - 3.",
-            "id": "8b2dd7176250"
+            "id": "e61d710d4457"
           }
         ],
         "vis": [
@@ -18456,7 +18893,7 @@
             "pawns": 7,
             "art": "Mentem",
             "where": "in her bracelets",
-            "id": "9207772ca41a"
+            "id": "9a73e48e0bbf"
           }
         ],
         "equipment": "",
@@ -18470,7 +18907,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "toaten_ant_folk",
@@ -18550,7 +18988,7 @@
             "ends_season": ""
           },
           {
-            "vf_id": "vf_weakness_major",
+            "vf_id": "vf_weakness",
             "params": {},
             "id": "",
             "temporary": false,
@@ -18679,7 +19117,7 @@
             "attack": null,
             "defense": 5,
             "damage": null,
-            "id": "e3da7c21b7b5"
+            "id": "5e6061f11057"
           },
           {
             "name": "Fist",
@@ -18687,7 +19125,7 @@
             "attack": 3,
             "defense": 6,
             "damage": 1,
-            "id": "f8e913fc9e22"
+            "id": "ada1df4cb549"
           },
           {
             "name": "Sling",
@@ -18695,7 +19133,7 @@
             "attack": 6,
             "defense": 0,
             "damage": 5,
-            "id": "4122234eb641"
+            "id": "1d3232d7611d"
           }
         ],
         "soak": 2,
@@ -18775,7 +19213,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "With a touch, a tunnel a pace deep. Used over and over to build warrens, and to loosen stones for the great burial mounds (PeTe; 2 mastery points on Might cost, 1 on Initiative).",
-            "id": "8d7f61158947"
+            "id": "abc659c605e8"
           }
         ],
         "vis": [
@@ -18783,7 +19221,7 @@
             "pawns": 1,
             "art": "Terram",
             "where": "in its hands",
-            "id": "824254db6ca0"
+            "id": "09f1e11e7ace"
           }
         ],
         "equipment": "Any small thing that caught its interest, a camel-hide loincloth, and a sling wound round the waist or worn as a sash with a stone ready.",
@@ -18797,7 +19235,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "teryel",
@@ -18871,7 +19310,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "aicha_bouteliss",
@@ -18945,7 +19385,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "loundja",
@@ -19019,7 +19460,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "waghzen",
@@ -19093,7 +19535,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "sfar_lahwa",
@@ -19167,7 +19610,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "ajdhoun_alkubur",
@@ -19241,7 +19685,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "moumoush_aderghal",
@@ -19315,7 +19760,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "hataf_larrais",
@@ -19389,7 +19835,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "talafsa",
@@ -19463,7 +19910,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "ba_al_ammon_lord_of_carthage",
@@ -19646,7 +20094,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 4,
-            "id": "aa25f1cfbf34"
+            "id": "bb17d6c442fc"
           },
           {
             "name": "Great Sword",
@@ -19654,7 +20102,7 @@
             "attack": 21,
             "defense": 17,
             "damage": 13,
-            "id": "af36ceddd106"
+            "id": "fa0f73b3a3c3"
           }
         ],
         "soak": 4,
@@ -19776,7 +20224,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Once in a body, he shifts to any human form, even with animal parts such as curling ram's horns, and dissolves them at will. A natural change: Magic Resistance does not stop physical attacks.",
-            "id": "02ad1ced4316"
+            "id": "0a45a1e6958d"
           },
           {
             "name": "Know the Places of Men",
@@ -19790,7 +20238,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to 10 points, a point a magnitude: Intellego Corpus or Imaginem effects up to 10th magnitude.",
-            "id": "8c37e9d92e47"
+            "id": "5655f94fb463"
           },
           {
             "name": "Master of Flame",
@@ -19804,7 +20252,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to 10 points, a point a magnitude: Ignem effects up to 10th magnitude.",
-            "id": "70513395d536"
+            "id": "b030473d089d"
           },
           {
             "name": "Summon the Herd of Destruction",
@@ -19818,7 +20266,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A ritual power (ReMe 15, +4 Arc, +3 Moon, +2 Group): 10 ghostly war elephants who obey him, or one he names, for Moon Duration. They understand only Punic.",
-            "id": "a2f67681c607"
+            "id": "a7738d30689d"
           },
           {
             "name": "Coagulation",
@@ -19832,7 +20280,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes a material form, which he may dissolve at will.",
-            "id": "d18fdb468324"
+            "id": "decd2b950c02"
           },
           {
             "name": "Envisioning",
@@ -19846,7 +20294,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "1 point to appear in a sleeper's dreams, 5 for a waking dream. So he often spoke to his worshippers.",
-            "id": "ac2ab8894245"
+            "id": "1f341a52f636"
           },
           {
             "name": "His Master's Voice",
@@ -19860,7 +20308,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable: summons demons or corrupt beasts to him, 1 point for each point of their Infernal Might, so rarely used. He has no control over what comes.",
-            "id": "4b8f4be55575"
+            "id": "0e98eb71555b"
           },
           {
             "name": "Obsession",
@@ -19874,7 +20322,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "1 to 3 points: imposes the Obsession Traits of Greed, Merciless Ambition and Pride (Realms of Power: The Infernal pp. 31-32).",
-            "id": "ffb3af2a1d6f"
+            "id": "116bfbb8cf8d"
           },
           {
             "name": "Possession",
@@ -19888,7 +20336,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable: as Realms of Power: The Infernal. Might moved into a Possession Pool stays there until the possession ends. The more Might, the more he can do and the weaker the Penetration. Each portion is an independent copy of his mind using any Power its pool can pay for. He may give the host Magic Resistance equal to the Pool, or hide within and pass wards. Forcing the host, or using its powers, draws on the pool (1 point a magnitude or Ability point, or the Might the victim spent; a questionable act must beat the host's Trait on stress die + Might spent). The possession ends at pool 0. Vim spells drain the pool but must Penetrate his full Might.",
-            "id": "068a4a9b3db8"
+            "id": "1c6da7745d60"
           },
           {
             "name": "Shroud the Stench of the Pit",
@@ -19902,7 +20350,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable: conceals the Infernal nature of a power or aura as Magical or Faerie, or as wholly mundane, even from Sense Holiness and Unholiness, for as long as what it masks. It costs the masked Power's cost, or its magnitude if it costs no Might.",
-            "id": "2f4616544c12"
+            "id": "9601ec209fc6"
           },
           {
             "name": "Wealth of Nations",
@@ -19916,7 +20364,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Summons riches of intrinsic value up to 50 pounds of gold from somewhere else, a royal treasury or the purse of the man beside you, chosen to corrupt most.",
-            "id": "700fe8422b05"
+            "id": "b741139e6a83"
           }
         ],
         "vis": [
@@ -19924,13 +20372,13 @@
             "pawns": 10,
             "art": "Vim",
             "where": "in his curling horns",
-            "id": "a427071590bb"
+            "id": "50eab3173289"
           },
           {
             "pawns": 20,
             "art": "Vim",
             "where": "vis infesta, carried on long stays abroad",
-            "id": "ecb448e08f8e"
+            "id": "8f3d38ba02e9"
           }
         ],
         "equipment": "",
@@ -19957,7 +20405,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_great_hunger",
@@ -20031,7 +20480,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_hope",
@@ -20105,7 +20555,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_jealous_wife",
@@ -20181,7 +20632,7 @@
             "attack": 3,
             "defense": 1,
             "damage": 0,
-            "id": "5a5ef84d89f7"
+            "id": "5f8d471fcc00"
           }
         ],
         "soak": 0,
@@ -20226,7 +20677,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "For 1 or more points, if it penetrates, the victim is possessed and under her direct control. Using the host's magic costs 1 Might per magnitude; a questionable act against the host's nature needs a stress die + Might spent over the host's Personality Trait roll (see Entrancement, ArM5 p. 65, for modifiers), and both costs apply together. Under her direct control the host has her Magic Resistance and is stopped by wards against her; acting freely, the host has neither. The costs follow Realms of Power: Magic, not Hermetic magic.",
-            "id": "40c24f394e2f"
+            "id": "3b57aeb2fbf5"
           }
         ],
         "vis": [
@@ -20234,7 +20685,7 @@
             "pawns": 3,
             "art": "Mentem",
             "where": "in the fingernails of the possession victim",
-            "id": "c8eefd6a9d7b"
+            "id": "f72b03661a34"
           }
         ],
         "equipment": "Someone else's body and all her goods.",
@@ -20248,7 +20699,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_chergui",
@@ -20322,7 +20774,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_gregale",
@@ -20396,7 +20849,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_haboob",
@@ -20470,7 +20924,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_harmattan",
@@ -20544,7 +20999,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_khamsin",
@@ -20618,7 +21074,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_simoon",
@@ -20692,7 +21149,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "magical_bouda",
@@ -20795,7 +21253,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its Initiative is Qik + 3. Any voice of man or creature, in any language it knows, in any shape (MuIm).",
-            "id": "07b271130335"
+            "id": "03a229e1a9a8"
           },
           {
             "name": "Trembling Fear of the Predator's Gaze",
@@ -20809,7 +21267,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its Initiative is Qik - 2. While it holds his eye the target cannot run or dodge, though he can use his hands or call out; he loses his Quickness from Defense and takes -3 (ReCo).",
-            "id": "65be301bc222"
+            "id": "a3fab7a3e4a5"
           },
           {
             "name": "Rending Fangs",
@@ -20823,7 +21281,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A common power. Its Initiative is Qik - 3. Its bite destroys leather, bone, wood, cloth, stone or metal it can get its teeth round. With an attack it takes a point of Protection off armour, or instead of one it breaks a weapon or shield if it beats Defense by 3 or more, doing no damage; not together with Ripping Jaws (PeTe(An, He)).",
-            "id": "2271e5e2227c"
+            "id": "03a76ff87a1c"
           },
           {
             "name": "Ripping Jaws",
@@ -20837,7 +21295,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A common power. Its Initiative is Qik - 2. The victim takes -3 to all recovery rolls until fully healed, for any wound; Incapacitating Wounds leave scars that never fade (PeCo).",
-            "id": "ef4321e204a6"
+            "id": "5895b5b0d2b1"
           },
           {
             "name": "The Beast Between",
@@ -20851,7 +21309,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A common power. 3 points or Fatigue; Initiative Qik - 2. A hyena's head, claws, fur and tail on a man's upright frame, human mental Characteristics and a hyena's physical ones, usable hands, Protection +2. Bite of the hybrid form: Init 0, Attack +3, Defense +1, Damage +4. Ended early by changing shape (MuCo, free Animal requisite).",
-            "id": "27bc6cc315b7"
+            "id": "199ccbf05b3a"
           }
         ],
         "vis": [],
@@ -20866,7 +21324,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "faerie_bouda_werehyena",
@@ -20946,7 +21405,7 @@
             "ends_season": ""
           },
           {
-            "vf_id": "vf_increased_faerie_might_major",
+            "vf_id": "vf_increased_faerie_might",
             "params": {},
             "id": "",
             "temporary": false,
@@ -20954,7 +21413,7 @@
             "ends_season": ""
           },
           {
-            "vf_id": "vf_increased_faerie_might_major",
+            "vf_id": "vf_increased_faerie_might",
             "params": {},
             "id": "",
             "temporary": false,
@@ -21116,7 +21575,7 @@
             "attack": 7,
             "defense": 5,
             "damage": 9,
-            "id": "aa98a67001f0"
+            "id": "c2feec54dd86"
           },
           {
             "name": "Bite",
@@ -21124,7 +21583,7 @@
             "attack": 9,
             "defense": 7,
             "damage": 8,
-            "id": "0960ca2f9b2f"
+            "id": "79b498d02eb7"
           }
         ],
         "soak": 3,
@@ -21218,7 +21677,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Or Crafter's Healing, below. 1 point a magnitude, Initiative variable: any non-Ritual Creo, Muto, Rego or Perdo Terram spell, within its motif as a blacksmith.",
-            "id": "4518545d9cf7"
+            "id": "2ed18e2e0bad"
           },
           {
             "name": "Crafter's Healing",
@@ -21232,7 +21691,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "In place of Blacksmithing, as the Major Supernatural Virtue (City & Guild p. 71).",
-            "id": "f7d0cf2635e1"
+            "id": "3cfbec50e65f"
           },
           {
             "name": "Looked at Thrice",
@@ -21246,7 +21705,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As Trembling Fear of the Predator's Gaze.",
-            "id": "b4cb66109324"
+            "id": "15c8c3d62249"
           },
           {
             "name": "The Shadow Stays the Hound",
@@ -21260,7 +21719,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Paralyzes a dog the werehyena's shadow falls on (Base 5, +2 Sight, +1 Conc).",
-            "id": "ef382d454761"
+            "id": "253c7b154562"
           },
           {
             "name": "Transform into Human",
@@ -21274,7 +21733,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Human form for Duration: Sun, and only at sunrise (Personal, MuAn(Co)).",
-            "id": "11284065fa65"
+            "id": "83b03785e589"
           }
         ],
         "vis": [
@@ -21282,7 +21741,7 @@
             "pawns": 3,
             "art": "Terram",
             "where": "in its tools",
-            "id": "b0137c3b87b4"
+            "id": "7c9ffdf4fd9d"
           }
         ],
         "equipment": "Blacksmith tools, apron.",
@@ -21296,7 +21755,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "anthropophagus_man_eater",
@@ -21438,7 +21898,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "astomus_mouthless",
@@ -21577,7 +22038,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A constant effect, no cost. Any sound, speech, song or music comes from the head, no louder than a human could make; only suppressing the power silences it (CrIm).",
-            "id": "5f15f16c6823"
+            "id": "40570c3ce5ee"
           }
         ],
         "vis": [],
@@ -21592,7 +22053,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "blemmya",
@@ -21715,7 +22177,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "cynocephalus_dog_head",
@@ -21834,7 +22297,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "maritimus",
@@ -21971,7 +22435,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A constant effect, no cost. He makes out detail at any distance as if a foot away, and judges distance to an inch or so at several miles (InIm, Personal Power x2).",
-            "id": "58de05f80821"
+            "id": "068aa733efef"
           }
         ],
         "vis": [],
@@ -21986,7 +22450,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "panotius_all_ear",
@@ -22121,7 +22586,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its Initiative is Qik - 2. A short-term Fatigue level for flight as fast as a running horse. Every minute a Stamina + Concentration roll against 6 or another Fatigue level; none when Dazed. Athletics steers (ReCo).",
-            "id": "e3d5737cdbdb"
+            "id": "e1abfe709f3b"
           }
         ],
         "vis": [],
@@ -22136,7 +22601,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "tripithamus",
@@ -22293,7 +22759,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A constant effect, no cost. The eyes shine like a lantern for five paces, without hurting sight; only closing them or a Confidence point shuts it off (CrIg; printed Greater Power, 10 levels, -2 cost).",
-            "id": "2da37b9bd553"
+            "id": "26c73e69d847"
           },
           {
             "name": "The Sun's Breath",
@@ -22307,7 +22773,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its Initiative is Qik - 1. Heats a thing no bigger than her head: metal glows red, water boils, the flammable ignites. It cools normally (CrIg).",
-            "id": "b7c500755896"
+            "id": "5dc44ba9bf5d"
           },
           {
             "name": "The Sun's Shout",
@@ -22321,7 +22787,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its Initiative is Qik + 1. Spits a dart of fire for +5 damage if it Penetrates (CrIg).",
-            "id": "aab1588e0555"
+            "id": "de92033fca7b"
           }
         ],
         "vis": [],
@@ -22336,7 +22802,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "troglodyte_hole_creeper",
@@ -22479,7 +22946,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A constant effect, no cost. Moves freely in complete darkness, as the Hermetic spell (ArM5 p. 127; InAu).",
-            "id": "3e2f6c7f1b69"
+            "id": "c9f5b73c840f"
           }
         ],
         "vis": [],
@@ -22494,7 +22961,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "amyctyra",
@@ -22568,7 +23036,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "androgynus_man_woman",
@@ -22642,7 +23111,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "artibatira",
@@ -22716,7 +23186,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "erythropodes_red_feet",
@@ -22790,7 +23261,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "gorillae",
@@ -22864,7 +23336,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "hippopod_horse_foot",
@@ -22938,7 +23411,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "monoculus_one_eye",
@@ -23012,7 +23486,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "ghola_african",
@@ -23086,7 +23561,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "ghul_of_the_siwah_necropoli",
@@ -23160,7 +23636,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "shayatin_the_devils",
@@ -23234,7 +23711,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "leriah_the_jnun_of_the_air",
@@ -23308,7 +23786,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "sidi_moussa",
@@ -23382,7 +23861,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "the_sultan_al_hut",
@@ -23456,7 +23936,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "tanit",
@@ -23537,7 +24018,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "dagon",
@@ -23618,7 +24100,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "eshmun",
@@ -23699,7 +24182,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "sydyk",
@@ -23780,7 +24264,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "melkart",
@@ -23861,7 +24346,8 @@
             "revealed_season": ""
           }
         ],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "camel_dromedary_camelus",
@@ -23943,7 +24429,7 @@
             "attack": 4,
             "defense": 2,
             "damage": 2,
-            "id": "ca0c2d9c4a30"
+            "id": "b84587c0713f"
           }
         ],
         "soak": 3,
@@ -24009,7 +24495,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "camel_of_virtue",
@@ -24234,7 +24721,7 @@
             "attack": 8,
             "defense": 3,
             "damage": 5,
-            "id": "5dcda4dfa90f"
+            "id": "f5478d2b3e74"
           }
         ],
         "soak": 2,
@@ -24314,7 +24801,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Turns it into dromedary or Bactrian form and back, changing its Characteristics and non-magical Qualities to suit (MuAn; Base 5, +2 Sun).",
-            "id": "5803dc58aa4e"
+            "id": "a7420d87c8f8"
           },
           {
             "name": "Keep the Simoon at Bay",
@@ -24328,7 +24815,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Shields the camel, its herd and any riders from the simoon, the scorching wind and sandstorm of the deep desert (ReAu).",
-            "id": "f676aee2b2a4"
+            "id": "42e78dab42d0"
           },
           {
             "name": "Scent the Distant Waters of the Oasis",
@@ -24342,7 +24829,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Finds any natural water on the path it is travelling, by simple Perception rolls against 6, once a day on long journeys; invoked again if the water is more than half a day off (InAq; Base 2, +2 Road, +2 Smell, +2 Sun).",
-            "id": "64544f11b380"
+            "id": "203580c3ecaa"
           },
           {
             "name": "Subtle Taste of Poison and Purity",
@@ -24356,7 +24843,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As the spell (ArM5 p. 122); poison does not harm it, a Magical Animal, so it tastes fouled water safely (InAq).",
-            "id": "c9f5a5985ad8"
+            "id": "10960c997592"
           }
         ],
         "vis": [],
@@ -24371,7 +24858,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "dog_painted_lycaon",
@@ -24548,7 +25036,7 @@
             "attack": null,
             "defense": 7,
             "damage": null,
-            "id": "0a002827d756"
+            "id": "d8acf3f3416f"
           },
           {
             "name": "Bite",
@@ -24556,7 +25044,7 @@
             "attack": 12,
             "defense": 9,
             "damage": 1,
-            "id": "44cbc4363159"
+            "id": "fc32af7e90bb"
           }
         ],
         "soak": 2,
@@ -24629,7 +25117,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "fox",
@@ -24754,7 +25243,7 @@
             "attack": null,
             "defense": 8,
             "damage": null,
-            "id": "8f14e8cc737d"
+            "id": "a9ffd2f94b6f"
           },
           {
             "name": "Bite",
@@ -24762,7 +25251,7 @@
             "attack": 9,
             "defense": 10,
             "damage": -5,
-            "id": "711c1ea324f0"
+            "id": "734ab37e6d79"
           }
         ],
         "soak": -1,
@@ -24842,7 +25331,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "goat_capra",
@@ -24983,7 +25473,7 @@
             "attack": 11,
             "defense": 6,
             "damage": 2,
-            "id": "8e90431d8a04"
+            "id": "57ccafb95476"
           },
           {
             "name": "Hooves",
@@ -24991,7 +25481,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 1,
-            "id": "0de07f3e2783"
+            "id": "7ed927a1f9ee"
           }
         ],
         "soak": 1,
@@ -25057,7 +25547,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "hyena_yena",
@@ -25234,7 +25725,7 @@
             "attack": 9,
             "defense": 7,
             "damage": 5,
-            "id": "1ff1c426db37"
+            "id": "ff4e8ffd23ae"
           },
           {
             "name": "Dodge",
@@ -25242,7 +25733,7 @@
             "attack": null,
             "defense": 5,
             "damage": null,
-            "id": "1124108a8280"
+            "id": "2fef756d697c"
           }
         ],
         "soak": 3,
@@ -25322,7 +25813,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "crocotta_hyena_of_virtue",
@@ -25396,7 +25888,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "jackal_thos",
@@ -25529,7 +26022,7 @@
             "attack": null,
             "defense": 6,
             "damage": null,
-            "id": "2b29be556e43"
+            "id": "afd5a9953500"
           },
           {
             "name": "Bite",
@@ -25537,7 +26030,7 @@
             "attack": 10,
             "defense": 8,
             "damage": -2,
-            "id": "3a168ac22ed2"
+            "id": "efb3d2413e20"
           }
         ],
         "soak": 2,
@@ -25610,7 +26103,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "set_animal",
@@ -25684,7 +26178,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "lizard_waral_varanus",
@@ -25867,7 +26362,7 @@
             "attack": 11,
             "defense": 6,
             "damage": 9,
-            "id": "787a07eeec02"
+            "id": "9603ee35bce5"
           },
           {
             "name": "Grapple",
@@ -25875,7 +26370,7 @@
             "attack": 7,
             "defense": 4,
             "damage": null,
-            "id": "82641d439cf9"
+            "id": "a259bb86b889"
           }
         ],
         "soak": 8,
@@ -25941,7 +26436,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "If its Attack Advantage beats the victim's armour Protection (not Soak), he suffers an exceptionally debilitating poison, Stamina against 12 or Incapacitating, whether or not the bite wounds. Boots do not stop it, and it serves well on a victim held in its locking bite.",
-            "id": "5b255a8bdb64"
+            "id": "2916c05351b9"
           }
         ],
         "vis": [],
@@ -25956,7 +26451,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "ostrich_struthio",
@@ -26099,7 +26595,7 @@
             "attack": null,
             "defense": 8,
             "damage": null,
-            "id": "8e76c03fa6f4"
+            "id": "f745c6782360"
           },
           {
             "name": "Kick (as hoof)",
@@ -26107,7 +26603,7 @@
             "attack": 8,
             "defense": 7,
             "damage": 3,
-            "id": "f3b6d2500d81"
+            "id": "74779e6309a7"
           }
         ],
         "soak": 3,
@@ -26173,7 +26669,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "scorpion_monstrous_scorpio",
@@ -26306,7 +26803,7 @@
             "attack": 10,
             "defense": 14,
             "damage": -6,
-            "id": "df70c19b446d"
+            "id": "3b21698f74f8"
           },
           {
             "name": "Grapple",
@@ -26314,7 +26811,7 @@
             "attack": 7,
             "defense": 11,
             "damage": null,
-            "id": "1efd67c6f375"
+            "id": "16994689dffd"
           },
           {
             "name": "Sting",
@@ -26322,7 +26819,7 @@
             "attack": 10,
             "defense": 6,
             "damage": -9,
-            "id": "fcca8cf75770"
+            "id": "445752199f93"
           }
         ],
         "soak": 4,
@@ -26402,7 +26899,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "If its Attack Advantage beats the victim's armour Protection (not Soak), he suffers an exceptionally debilitating poison, Stamina against 6 or Incapacitating, whether or not the sting wounds. High leather boots and other simple measures hinder it.",
-            "id": "322d1fa33ca9"
+            "id": "9d061f376f6d"
           }
         ],
         "vis": [],
@@ -26417,7 +26914,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "unicorn_eastern_monoceros",
@@ -26489,7 +26987,7 @@
             "ends_season": ""
           },
           {
-            "vf_id": "vf_oversensitive_major",
+            "vf_id": "vf_oversensitive",
             "params": {},
             "id": "",
             "temporary": false,
@@ -26497,7 +26995,7 @@
             "ends_season": ""
           },
           {
-            "vf_id": "vf_weakness_major",
+            "vf_id": "vf_weakness",
             "params": {},
             "id": "",
             "temporary": false,
@@ -26623,7 +27121,7 @@
             "attack": 11,
             "defense": 9,
             "damage": 11,
-            "id": "a3a86bfb5739"
+            "id": "d1f7793106b1"
           },
           {
             "name": "Trample",
@@ -26631,7 +27129,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 9,
-            "id": "6e905ce86db9"
+            "id": "7513cedca86c"
           }
         ],
         "soak": 11,
@@ -26697,7 +27195,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A natural power. It spends a Fatigue level to charge over flat ground with its horn, adding its Combat Ability to its Attack roll; anything smaller it strikes is knocked prone (Lords of Men p. 123).",
-            "id": "c5732d727c8e"
+            "id": "cddb7fa68a10"
           }
         ],
         "vis": [],
@@ -26712,7 +27210,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "vulture_egyptian_vultor",
@@ -26857,7 +27356,7 @@
             "attack": 6,
             "defense": 10,
             "damage": -4,
-            "id": "a01d2aacd7eb"
+            "id": "de9cafddcdd5"
           },
           {
             "name": "Beak",
@@ -26865,7 +27364,7 @@
             "attack": 6,
             "defense": 7,
             "damage": -3,
-            "id": "5de6ca9efeac"
+            "id": "580afe100bdf"
           },
           {
             "name": "Stone (dropped)",
@@ -26873,7 +27372,7 @@
             "attack": -1,
             "defense": 0,
             "damage": null,
-            "id": "e7946aecce96"
+            "id": "411a68d80470"
           },
           {
             "name": "Stone (bludgeon)",
@@ -26881,7 +27380,7 @@
             "attack": 0,
             "defense": 6,
             "damage": -2,
-            "id": "320651197e9e"
+            "id": "2c629cd52de1"
           }
         ],
         "soak": 3,
@@ -26954,7 +27453,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       },
       {
         "id": "vulture_of_virtue",
@@ -27028,7 +27528,8 @@
         "attitudes": [],
         "favours": [],
         "secrets": [],
-        "known": true
+        "known": true,
+        "storyguide_id": ""
       }
     ],
     "enchanted_devices": [],
@@ -27041,6 +27542,7 @@
     "traditions_off": [],
     "season_plans": [],
     "keep_season_records": true,
+    "harvest_vis_by_hand": false,
     "unplanned_magi": "exposure",
     "unplanned_companions": "exposure",
     "unplanned_grogs": "exposure",
@@ -27065,11 +27567,16 @@
     "custom_abilities": [],
     "custom_cults": [],
     "players": [],
+    "story_flaw_years": 3,
+    "teach_requests": [],
+    "sessions": [],
     "app_version": "",
     "saved_by": "",
     "marriages": [],
     "maps": [],
-    "pins": []
+    "pins": [],
+    "scenes": [],
+    "handouts": []
   },
   "key": "africa",
   "book": "BS&S",

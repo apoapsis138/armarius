@@ -1499,7 +1499,7 @@ PROFILES: dict[str, Profile] = {
         },
         virtues=[
             vf_art("Affinity with {art}", "aquam"),
-            "Hatred",
+            "Hatred (Major)",
         ],
         native=CROATIAN,
     ),

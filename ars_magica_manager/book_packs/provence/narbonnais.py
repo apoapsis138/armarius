@@ -2166,7 +2166,7 @@ PROFILES: dict[str, Profile] = {
             "Athletics": 2,
             "Area Lore: Iberia": 1,
         },
-        virtues=["Warrior", "Tough", "Reckless"],
+        virtues=["Warrior", "Tough", "Reckless (Major)"],
         native="French",
     ),
     "jean_marie": P(
@@ -2194,7 +2194,7 @@ PROFILES: dict[str, Profile] = {
         virtues=[
             vf_art("Affinity with {art}", "mentem"),
             "Dark Secret",
-            "Reckless",
+            "Reckless (Major)",
         ],
         native="Romanian",
     ),

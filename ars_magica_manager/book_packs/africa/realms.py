@@ -1240,7 +1240,8 @@ def _bouda(b: Builder) -> None:
                 "Faerie Speech",
                 "Greater Power",
                 "Improved Characteristics",
-                *_times("Increased Faerie Might", 2),
+                # Minor, +5 each to Might 15 (RoP:F p. 47).
+                *_times("Increased Faerie Might (Minor)", 2),
                 "Keen Vision",
                 "Narrowly Cognizant",
                 "Passes for Human",
@@ -2015,7 +2016,7 @@ def _lowhush(b: Builder) -> None:
                 "Warrior",
                 "Magical Monster",
                 ANCHORED,
-                "Weakness",
+                "Weakness (Minor)",
                 _strength("Improved {characteristic}"),
                 "No Fatigue",
                 *_times(vf_great("Strength"), 2),
@@ -2391,7 +2392,8 @@ def _carthage(b: Builder) -> None:
             "virtues_flaws": [
                 ("Greater Immunity", {"hazard": "Flame and Heat"}),
                 "Improved Characteristics",
-                "Overconfident",
+                # The book prints no tier; kept Major as the pack had it.
+                "Overconfident (Major)",
                 "Vis Mastery",
             ],
             "abilities": [
@@ -3287,8 +3289,8 @@ def _beasts(b: Builder) -> None:
                 "Improved Characteristics",
                 vf_puissant("Brawl"),
                 "Tough",
-                "Oversensitive",
-                "Weakness",
+                "Oversensitive (Minor)",
+                "Weakness (Minor)",
                 "Aggressive",
                 "Defensive Fighter",
                 "Extra Natural Weapons",

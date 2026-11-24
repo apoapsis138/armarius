@@ -11,10 +11,15 @@ The readings every Fourth Edition pack shares:
   character is built from, and these are printed, not built.
 - Characteristics and Arts as printed; no rebalancing.
 - Virtues and Flaws at the catalog's tier under their Fifth Edition
-  names (a Personality Flaw with both tiers in the catalog is Major at
-  -2 or worse, Minor at -1; a Story Flaw is Major, DE p. 537); those with no Fifth Edition counterpart dropped, and
+  names (one the catalog has at both tiers is Major at -2 or worse, or
+  at +3 and up, Minor at -1, +1 or +2; a Story Flaw is Major, DE p.
+  537); those with no Fifth Edition counterpart dropped, and
   Quaesitor, an office of House Guernicus rather than a Virtue (DE pp.
   67-68), dropped with the office noted.
+- What Fifth Edition creation gives everyone, which Fourth Edition had
+  no rule for (`_essentials`): the native language at 5 (DE p. 48), a
+  Social Status (DE p. 63) where the pack gives the block one, and a
+  magus's free House Virtue (DE p. 46).
 - Abilities kept at their scores and renamed. A 4e total is a fifth of
   the 5e total for the same score, so the experience of a removed Ability
   goes, at 5e cost, to its replacement (DE p. 538), with no cap on what
@@ -54,9 +59,20 @@ from ..rules.xp import (
     art_xp,
     score_from_xp,
 )
-from .builder import StatBlock, _catalog_spells, _spell_key, paragraphs
+from .builder import (
+    StatBlock,
+    _catalog_spells,
+    _spell_key,
+    _virtues_by_name,
+    house_virtue,
+    paragraphs,
+)
 from .builder import _ability as block_ability
 
+#: How a Living Language's Ability name begins.
+LIVING = "Living Language: "
+#: The native language's score after childhood (DE p. 48).
+NATIVE_SCORE = 5
 #: The Definitive Edition's Confidence: (Score, Points) for an important
 #: character, and with Self-Confident (DE pp. 29, 107).
 CONFIDENCE = (1, 3)
@@ -95,6 +111,11 @@ class Fourth:
     #: The Mastery Score of every spell, where the book says all are
     #: mastered.
     mastery: int = 0
+    #: The character's native tongue, where the block's best Speak is not
+    #: it or it prints none (DE p. 48 gives it at 5).
+    native: str = ""
+    #: The Social Status a block that prints none takes (DE p. 63).
+    status: str = ""
 
 
 # -- the conversion tables --
@@ -208,6 +229,17 @@ TWO_TIERS = {
     "Proud",
     "True Love",
 }
+
+
+def _two_tiered(name: str) -> bool:
+    """Whether the catalog has `name` as both a Major and a Minor, so the
+    printed points must say which."""
+    return _virtues_by_name().get(_spell_key(name)) == ""
+
+
+#: The printed points from which a Virtue the catalog has at both tiers
+#: is the Major: +1 and +2 are Minor.
+MAJOR_VIRTUE = 3
 #: Flaws with both tiers that are Story Flaws, so Major (DE p. 537).
 STORY_FLAWS = {"True Love"}
 #: How many copies a printed entry becomes (ArM4's -4 Feeble Communication
@@ -593,8 +625,8 @@ def _virtues(block: Fourth) -> tuple[list[Any], list[str]]:
         new = RENAMED.get(name, name)
         if new == "Deficient Form" and detail in TECHNIQUE_NAMES:
             new = "Deficient Technique"
-        if new in TWO_TIERS:
-            major = points <= -2 or new in STORY_FLAWS
+        if new in TWO_TIERS or _two_tiered(new):
+            major = points <= -2 or points >= MAJOR_VIRTUE or new in STORY_FLAWS
             new = f"{new} ({'Major' if major else 'Minor'})"
         key = PARAMETER.get(RENAMED.get(name, name)) or PARAMETER.get(new)
         if new == "Deficient Technique":
@@ -615,6 +647,48 @@ def _virtues(block: Fourth) -> tuple[list[Any], list[str]]:
     return entries, said
 
 
+def _essentials(
+    block: Fourth,
+    house: str,
+    virtues: list[Any],
+    abilities: list[tuple[str, int, str]],
+    spare: dict[str, int],
+) -> list[str]:
+    """Brings a converted block up to what Fifth Edition creation gives
+    everyone, which Fourth Edition had no rule for, and says what it
+    added: the native language at 5 (DE p. 48), the best printed Speak
+    (the first printed on a tie) unless the block names another; a Social
+    Status (DE p. 63) where the block gives one; and a magus's free House
+    Virtue (DE p. 46), the option whose Art or Ability is highest."""
+    said: list[str] = []
+    native = block.native or _tongue(block)
+    if native:
+        name = f"{LIVING}{native}"
+        at = next((i for i, (n, _, _) in enumerate(abilities) if n == name), None)
+        if at is None:
+            abilities.append((name, NATIVE_SCORE, ""))
+            said.append(f"Native Language {native} added at {NATIVE_SCORE}")
+        elif abilities[at][1] < NATIVE_SCORE:
+            _, score, specialty = abilities[at]
+            abilities[at] = (name, NATIVE_SCORE, specialty)
+            spare.pop(name, None)
+            said.append(
+                f"Native Language {native} raised from {score} to {NATIVE_SCORE}"
+            )
+    if block.status:
+        virtues.insert(2, block.status)
+        said.append(f"Social Status {block.status} added")
+    scores = dict(block.arts) | {n: s for n, s, _ in abilities}
+    free = house_virtue(house, virtues, scores=scores) if house else None
+    if free is not None:
+        virtues.insert(2, free)
+        name, params = (free, {}) if isinstance(free, str) else free
+        for key, value in params.items():
+            name = name.replace(f"{{{key}}}", value.title())
+        said.append(f"House Virtue {name} added")
+    return said
+
+
 def _affinity_art(name: str, specialty: str, block: Fourth) -> str:
     """The Art a printed Affinity Ability served, or "" for any other."""
     if name == "Magic Affinity":
@@ -629,7 +703,8 @@ def _affinity_art(name: str, specialty: str, block: Fourth) -> str:
 
 
 def _tongue(block: Fourth) -> str:
-    """The block's best living language, as a Fifth Edition Ability."""
+    """The block's best living language (the first printed on a tie), or
+    "" when it prints none."""
     spoken = [
         (score, name.removeprefix("Speak "))
         for name, score, _ in block.abilities
@@ -637,7 +712,8 @@ def _tongue(block: Fourth) -> str:
         and name != "Speak Latin"
         and name not in MAGICAL_LANGUAGES
     ]
-    return f"Living Language: {max(spoken)[1]}"
+    best = max((score for score, _ in spoken), default=None)
+    return next((tongue for score, tongue in spoken if score == best), "")
 
 
 def _abilities(
@@ -679,7 +755,7 @@ def _abilities(
         elif name == "Legend Lore":
             new, spec = f"Area Lore: {area}", "legends"
         elif name in STORYTELLING:
-            new = _tongue(block)
+            new = f"{LIVING}{_tongue(block)}"
         else:
             new = ABILITIES.get(name, name)
             one_skill = name in SAME_SKILL or name in same_skill
@@ -746,15 +822,18 @@ def convert(
     second_swaps: Mapping[tuple[str, str], str] | None = None,
     *,
     area: str,
+    house: str = "",
 ) -> tuple[StatBlock, int]:
     """A Fourth Edition block as a Definitive Edition StatBlock, with its
     age; the biography lists what changed. `second_swaps` are a pack's
     swaps made otherwise for one magus, by (key, printed spell); `area`
-    is the pack's Area Lore, which takes the block's Legend Lore."""
+    is the pack's Area Lore, which takes the block's Legend Lore; `house`
+    the magus's House, whose free Virtue the block takes if it lacks it."""
     virtues, said_virtues = _virtues(block)
     abilities, spare, art_points, said_abilities = _abilities(block, area)
     held = {v if isinstance(v, str) else v[0] for v in virtues}
     virtues += sorted({n for n, _, _ in abilities} & VIRTUE_ABILITIES - held)
+    said_virtues += _essentials(block, house, virtues, abilities, spare)
     arts, spare_art = _with_art_points(block.arts, art_points)
     spells, said_spells = _spells(key, block, second_swaps or {})
     warping = block.twilight // 3

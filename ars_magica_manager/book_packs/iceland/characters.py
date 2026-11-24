@@ -390,6 +390,10 @@ def _scots(b: Builder) -> None:
             abilities=[("Craft Toys", 5, "safe ones")],
             arts={},
             spells=[],
+            # The block prints no language or Social Status: a foundling of
+            # De Panne, she speaks Flemish, and married into a merchant house.
+            native="Flemish",
+            status="Merchant",
             traits={"Devoted to Family": 3, "Insecure": 2},
             notes=paragraphs(
                 "Her looks owe seven years to a longevity potion from her husband "
@@ -517,6 +521,10 @@ def _scots(b: Builder) -> None:
             abilities=[],
             arts={},
             spells=[],
+            # The block prints no language or Social Status: a miller's
+            # daughter of De Panne, married into a merchant house.
+            native="Flemish",
+            status="Merchant",
             traits={"World of Her Own": 3, "Brave": -2, "Judgmental": 2},
             reputations={"Gossip (De Panne ladies)": 2},
             notes="No Confidence is printed.",
@@ -636,7 +644,8 @@ def _victor(b: Builder) -> None:
         notes="The book prints no Arts, Abilities, Virtues or Flaws: his powers, "
         "with his Magic Might of 50, are his block (p. 135).",
     )
-    b.stats(victor, _sheet("victor", block, hermetic=True), source="LFI")
+    # The book prints his powers but no Abilities, Arts, Virtues or Flaws.
+    b.stats(victor, _sheet("victor", block, hermetic=True), source="LFI", partial=True)
 
 
 def _liam(b: Builder) -> None:
@@ -1438,6 +1447,8 @@ def _thord(b: Builder) -> None:
             ],
             arts={},
             spells=[],
+            # The block's Storgodi +4, a Social Status the catalog has now.
+            status="Storgodi",
             traits={"Calculating": 2, "Ambitious": 3, "Conciliatory": 2},
             reputations={"Fair (thingmen)": 2, "Ambitious (Icelanders)": 3},
             notes=paragraphs(
@@ -1452,7 +1463,6 @@ def _thord(b: Builder) -> None:
                     "+14 (Half Chain Mail)",
                 ),
                 f"Fatigue {FATIGUE}; Body {BODY}.",
-                "Storgodi +4 has no catalog entry and is kept here.",
             ),
         ),
         summary="A storgodi and the eldest legitimate son of Hvamm-Sturla and "

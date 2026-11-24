@@ -73,7 +73,7 @@ CARLES: StatBlock = {
         "Self-Confident",
         ("True Friend", {"detail": "Ojo"}),
         "Warrior",
-        ("Driven", {"detail": "found his own Tribunal"}),
+        ("Driven (Major)", {"detail": "found his own Tribunal"}),
         "Magic Addiction",
         "Infamous",
         ("True Friend", {"detail": "Hilde"}),
@@ -564,7 +564,7 @@ OTTO: StatBlock = {
         "Well-Traveled",
         "Diabolic Past",
         "Arthritis",
-        ("Weakness", {"detail": "adventure"}),
+        ("Weakness (Minor)", {"detail": "adventure"}),
     ],
     "traits": {"Steadfast": 3, "Cynical": 2, "Compassionate": 1},
     "abilities": [
@@ -763,7 +763,8 @@ BULLCALF: StatBlock = {
         "Large",
         "Missing Ear",
         "Uncontrollable Strength",
-        "Wrathful",
+        # A grog's Flaws are Minor (DE p. 63; Through the Aegis p. 20).
+        "Wrathful (Minor)",
     ],
     "traits": {"Brave": 3, "Angry": 1, "Dim": 1},
     "abilities": [
@@ -873,7 +874,7 @@ FANG: StatBlock = {
         "Warrior",
         ("Careless with {ability}", {"ability": "Great Weapon"}),
         ("Social Handicap", {"detail": "unpleasant odor"}),
-        ("Weakness", {"detail": "drinking"}),
+        ("Weakness (Minor)", {"detail": "drinking"}),
     ],
     "traits": {"Brave": 3, "Loyal": 2, "Subtle": -2},
     "abilities": [
@@ -915,7 +916,7 @@ NED: StatBlock = {
         "Warrior",
         "No Sense of Direction",
         "Weak Characteristics",
-        ("Weakness", {"detail": "talking back to magi"}),
+        ("Weakness (Minor)", {"detail": "talking back to magi"}),
     ],
     "traits": {"Loyal": 3, "Cheeky": 2, "Brave": 1},
     "abilities": [

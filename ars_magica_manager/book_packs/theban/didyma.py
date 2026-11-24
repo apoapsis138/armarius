@@ -1900,9 +1900,9 @@ def stats(theban: Theban) -> None:
     for key, _name, _kind, _age, block, _summary, _hidden in (*MAGI, *PEOPLE):
         b.stats(theban.magi[key], block, source=SOURCE)
     b.stats(_FOUND["aoede"], AOEDE, source=SOURCE)
-    b.stats(_FOUND["basil"], BASIL, source=SOURCE)
-    b.stats(_FOUND["abbas"], ABBAS, source=SOURCE)
-    b.stats(_FOUND["cleon"], CLEON, source=SOURCE)
+    # Specialists the book prints only their Build Point Abilities for.
+    for key, block in (("basil", BASIL), ("abbas", ABBAS), ("cleon", CLEON)):
+        b.stats(_FOUND[key], block, source=SOURCE, partial=True)
 
 
 def _overwrites(theban: Theban) -> None:
@@ -4123,7 +4123,8 @@ def _creatures(b: Builder, covenant: Covenant, places: dict[str, Neighbour]) -> 
         block={
             "characteristics": characteristics(2, 2, -1, 1, 4, 2, 1, -2),
             "virtues_flaws": [
-                "Increased Faerie Might",
+                # The book's Major Virtue, alone before the Minors (TtA p. 89).
+                "Increased Faerie Might (Major)",
                 "Faerie Sight",
                 "Faerie Speech",
                 ("Lesser Power", {"power": "Hound"}),
@@ -4134,7 +4135,8 @@ def _creatures(b: Builder, covenant: Covenant, places: dict[str, Neighbour]) -> 
                 "Narrowly Cognizant",
                 "Monstrous Appearance",
                 ("Sovereign Ward", {"ward": "one who solves her riddle"}),
-                "Wrathful",
+                # Among the Minor Flaws, after the Major Narrowly Cognizant.
+                "Wrathful (Minor)",
                 "Visions",
                 "Accomplished Flyer",
                 "Aggressive",
