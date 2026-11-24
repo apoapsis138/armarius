@@ -711,6 +711,20 @@ CONTRACTS: dict[str, Contract] = {
         expected=[("practice", ["ability:Latin"], "Reading aloud")],
         invalid={"Months lost": "-"},
     ),
+    # Leandro has no Hermetic Arts: Opening Alys's gives her all fifteen
+    # Deficiencies, said before the season is planned (DE p. 270).
+    "plan an opening": Contract(
+        prefill={"Activity": None, "Months lost": "0", "Notes": ""},
+        edits={"Activity": "open_arts", "Student": "comp1"},
+        saved=lambda s: [(p.activity, p.subject_id) for p in s.season_plans],
+        expected=[("open_arts", "comp1")],
+        invalid={"Activity": "open_arts", "Student": Select.NULL},
+        live={
+            "#fields-live": "Leandro's Arts under 5 give Alys 15 Deficiencies, "
+            "normally a Low Crime (DE p. 270): a Deficient Technique (Major) in "
+            "each of Creo 0"
+        },
+    ),
     "plan an initiation": Contract(
         prefill={"Activity": None, "Months lost": "0", "Notes": ""},
         edits=INITIATION,

@@ -651,6 +651,7 @@ def _plan_text(
     names = spell_names(saga, character)
     lines += [f"  {escape(_gain_line(g, names))}" for g in worked.gains]
     lines += [f"  {escape(n)}" for n in worked.notes]
+    lines += [f"  {todo(escape(c))}" for c in worked.cautions]
     lines += [f"  {escape(t)}" for t in effect_lines(worked, (rules.LabEffect,))]
     if plan.lab_id:
         lab = saga.laboratory(plan.lab_id)
@@ -693,6 +694,7 @@ def live_text(saga: Saga, character: Character, plan: SeasonPlan) -> str:
     lines = [escape(line) for line in effect_lines(worked)]
     lines += [escape(_gain_line(g, names)) for g in worked.gains]
     lines += [escape(n) for n in worked.notes]
+    lines += [todo(escape(c)) for c in worked.cautions]
     if worked.pending_roll:
         lines.append("[dim]The die is rolled when the season is applied.[/]")
     note = working_seasons_note(character, plan)

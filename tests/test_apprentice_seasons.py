@@ -2,6 +2,7 @@
 Virtues."""
 
 from ars_magica_manager import seasons
+from ars_magica_manager.markup import escape, todo
 from ars_magica_manager.models import (
     Ability,
     ArtScore,
@@ -12,6 +13,7 @@ from ars_magica_manager.models import (
     SeasonPlan,
     VirtueFlawInstance,
 )
+from ars_magica_manager.rules import activities as rules
 from ars_magica_manager.rules import apprentice_seasons as aps
 from ars_magica_manager.rules import lab
 from ars_magica_manager.rules.xp import ability_xp, art_xp
@@ -47,6 +49,105 @@ def test_opening_the_arts_gives_arts_at_0_and_deficiencies():
     assert len(deficient) == 13 and {"form": "Ignem"} not in deficient
     teaching = next(a for a in saga.character("m").abilities if a.name == "Teaching")
     assert teaching.xp == ability_xp(3) + 2  # Exposure
+
+
+#: Tiberius's Arts in _saga, with Rego 4 and Muto 5 added: what an
+#: Opening warns of beforehand (DE p. 270, p. 125).
+_CAUTION = (
+    "Tiberius's Arts under 5 give Wolf 12 Deficiencies, normally a Low Crime "
+    "(DE p. 270): a Deficient Technique (Major) in each of Intellego 0, Perdo 0, "
+    "Rego 4; a Deficient Form (Minor) in each of Animal 0, Aquam 0, Auram 0, "
+    "Corpus 0, Herbam 0, Imaginem 0, Mentem 0, Terram 0, Vim 0."
+)
+
+
+def _under_five(saga):
+    saga.character("m").arts.update(
+        rego=ArtScore(xp=art_xp(4)), muto=ArtScore(xp=art_xp(5))
+    )
+
+
+def test_an_opening_warns_of_each_deficiency_before_it_is_played():
+    saga = _saga()
+    _under_five(saga)
+    plan = _plan(aps.OPEN_ARTS, subject_id="c")
+    worked = rules.outcome(saga.character("m"), plan, saga)
+    assert worked.cautions == [_CAUTION]
+
+
+def test_one_deficiency_is_named_alone():
+    saga = _saga()
+    magus = saga.character("m")
+    magus.arts = {
+        a.lower(): ArtScore(xp=art_xp(5)) for a in (*aps.TECHNIQUES, *aps.FORMS)
+    }
+    magus.arts["vim"] = ArtScore(xp=art_xp(3))
+    worked = rules.outcome(magus, _plan(aps.OPEN_ARTS, subject_id="c"), saga)
+    assert worked.cautions == [
+        "Tiberius's Arts under 5 give Wolf 1 Deficiency, normally a Low Crime "
+        "(DE p. 270): a Deficient Form (Minor) in Vim 3."
+    ]
+
+
+def test_a_deficiency_the_apprentice_has_already_is_not_given_again():
+    saga = _saga()
+    magus = saga.character("m")
+    magus.arts = {
+        a.lower(): ArtScore(xp=art_xp(5)) for a in (*aps.TECHNIQUES, *aps.FORMS)
+    }
+    magus.arts["vim"] = ArtScore(xp=art_xp(3))
+    magus.arts["rego"] = ArtScore(xp=art_xp(2))
+    child = saga.character("c")
+    child.virtues_flaws.append(
+        VirtueFlawInstance("vf_deficient_form", params={"form": "vim"})
+    )
+    plan = _plan(aps.OPEN_ARTS, subject_id="c")
+    worked = rules.outcome(magus, plan, saga)
+    assert worked.cautions == [
+        "Tiberius's Arts under 5 give Wolf 1 Deficiency, normally a Low Crime "
+        "(DE p. 270): a Deficient Technique (Major) in Rego 2."
+    ]
+    seasons.set_plan(saga, plan)
+    _run(saga)
+    assert [vf.params for vf in child.virtues_flaws if "deficient" in vf.vf_id] == [
+        {"form": "vim"},
+        {"technique": "Rego"},
+    ]
+
+
+def test_a_master_with_every_art_at_5_gives_no_caution():
+    saga = _saga()
+    magus = saga.character("m")
+    magus.arts = {
+        a.lower(): ArtScore(xp=art_xp(5)) for a in (*aps.TECHNIQUES, *aps.FORMS)
+    }
+    worked = rules.outcome(magus, _plan(aps.OPEN_ARTS, subject_id="c"), saga)
+    assert worked.ok and worked.cautions == []
+
+
+def test_the_caution_shows_in_warning_colour_where_the_plan_is_seen():
+    saga = _saga()
+    _under_five(saga)
+    magus = saga.character("m")
+    saga.current_season, saga.current_year = "Spring", 1220
+    plan = _plan(aps.OPEN_ARTS, subject_id="c")
+    warned = todo(escape(_CAUTION))
+    assert warned in seasons.live_text(saga, magus, plan)
+    seasons.set_plan(saga, plan)
+    assert warned in seasons.plan_text(saga, magus)
+    assert warned in seasons.advance_summary(saga)
+
+
+def test_the_diary_names_the_deficiencies_given():
+    saga = _saga()
+    _under_five(saga)
+    _, work = aps.work(saga, saga.character("m"), _plan(aps.OPEN_ARTS, subject_id="c"))
+    told = aps.open_arts(saga.character("c"), work, saga.character("m"))
+    assert (
+        "Wolf gains 12 Deficiencies: a Deficient Technique (Major) in each of "
+        "Intellego, Perdo, Rego; a Deficient Form (Minor) in each of Animal, "
+        "Aquam, Auram, Corpus, Herbam, Imaginem, Mentem, Terram, Vim."
+    ) in told
 
 
 def test_only_a_gifted_child_can_be_opened():

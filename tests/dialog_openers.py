@@ -1022,6 +1022,14 @@ def _open_plan_season(ws) -> None:
     ws._run_steps(ops.add() if ops.add is not None else ops.edit(0))
 
 
+def _open_plan_opening(ws) -> None:
+    """Plan Season for Leandro, once Alys has The Gift, so he may open
+    her Arts."""
+    alys = ws.saga.character("comp1")
+    alys.virtues_flaws.append(VirtueFlawInstance("vf_the_gift"))
+    _open_plan_season(ws)
+
+
 async def _pick_virtue_flaw(ws, section: str, vf_id: str) -> None:
     """Add to a Virtues or Flaws list and choose the entry `vf_id`, which
     asks for something."""
@@ -1956,6 +1964,7 @@ OPENERS: dict[str, Opener] = {
     # Seasons
     "plan a season": Opener("character", _open_plan_season),
     "plan an initiation": Opener("character", _open_plan_season),
+    "plan an opening": Opener("character", _open_plan_opening),
     "add character diary entry": Opener(
         "character",
         lambda ws: ws._run_steps(_core_step(ws, "tab-diary", "add")),

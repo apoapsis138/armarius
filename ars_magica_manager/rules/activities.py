@@ -1530,6 +1530,9 @@ class Outcome:
     problems: list[str] = field(default_factory=list)
     #: How the Source Quality is (or was) worked out, rolls, botches.
     notes: list[str] = field(default_factory=list)
+    #: What the season will do that the player should weigh before
+    #: playing it (an Opening's Deficiencies), shown as a warning.
+    cautions: list[str] = field(default_factory=list)
     #: What the season does to the saga besides experience, in the order
     #: the handler worked it out (seasons/advance applies them in
     #: EFFECT_ORDER).
@@ -2211,6 +2214,11 @@ def _apprentice_outcome(
     if work is not None:
         result.effects.append(ApprenticeEffect(work))
         result.notes += work.notes
+        student = saga.character(plan.subject_id)
+        if student is not None and (
+            caution := apprentice_seasons.deficiency_caution(character, student, work)
+        ):
+            result.cautions.append(caution)
         if plan.activity == apprentice_seasons.TEACH_VIRTUE:
             result.notes.append(
                 f"Source Quality {work.quality} against {work.target}: "
