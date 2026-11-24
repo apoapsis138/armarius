@@ -2,7 +2,7 @@
 
 import random
 
-from ars_magica_manager import seasons
+from ars_magica_manager import catalog, seasons
 from ars_magica_manager.forms import season as season_forms
 from ars_magica_manager.models import (
     Ability,
@@ -17,7 +17,7 @@ from ars_magica_manager.models import (
     Spell,
     VirtueFlawInstance,
 )
-from ars_magica_manager.rules import activities, lab_seasons
+from ars_magica_manager.rules import activities, lab_seasons, lab_stats
 from ars_magica_manager.rules import laboratory_seasons as ls
 from ars_magica_manager.rules.xp import ability_xp, art_xp
 
@@ -315,12 +315,92 @@ def test_who_can_assist():
         "Choose the magus to assist."
     ]
     plan = SeasonPlan("h", 1220, "Spring", ls.ASSIST, teacher_id="m")
+    seasons.set_plan(saga, _plan(lab_seasons.INVENT, spell_id="bolt"))
+    assert ls.assist_problems(saga, helper, plan) == []
+    assert ls.can_assist(helper) and not ls.serves(helper)
+    # Without The Gift or Magic Theory he may still help, as a servant
+    # (Apprentices p. 34).
     helper.virtues_flaws = []
-    assert ls.assist_problems(saga, helper, plan) == [
-        "Marcus needs The Gift to help in a laboratory."
-    ]
+    assert ls.assist_problems(saga, helper, plan) == []
+    assert ls.serves(helper)
     helper.virtues_flaws = [VirtueFlawInstance("vf_the_gift")]
     helper.abilities = []
-    assert ls.assist_problems(saga, helper, plan) == [
-        "Marcus needs Magic Theory to help in a laboratory."
-    ]
+    assert ls.assist_problems(saga, helper, plan) == []
+    assert ls.serves(helper)
+
+
+def _servant_saga() -> Saga:
+    """Tiberius inventing, his apprentice Kaspar (The Gift, no Magic Theory)
+    planned to assist."""
+    saga = _saga()
+    child = saga.character("h")
+    child.name = "Kaspar"
+    child.abilities = []
+    saga.spells.append(Spell("calm", "Calm", "Rego", "Mentem", level=5))
+    return saga
+
+
+def test_a_child_without_magic_theory_serves_instead_of_assisting():
+    saga = _servant_saga()
+    magus = saga.character("m")
+    seasons.set_plan(saga, _plan(lab_seasons.INVENT, spell_id="bolt"))
+    seasons.set_plan(saga, SeasonPlan("h", 1220, "Spring", ls.ASSIST, teacher_id="m"))
+    plan = _plan(lab_seasons.INVENT, spell_id="bolt")
+    assert ls.assistants(saga, magus, plan) == []
+    assert [c.name for c in ls.servants(saga, magus, plan)] == ["Kaspar"]
+    # No Intelligence + Magic Theory: CrIg 5 + 5 + 2 + 5 = 17 alone.
+    _, work = lab_seasons.work(saga, magus, plan)
+    assert int(work.lab_total.total) == 17
+    assert not any("Kaspar" in line.label for line in work.lab_total.lines)
+
+
+def test_a_servant_adds_safety_aesthetics_and_a_mentem_specialization():
+    saga = _servant_saga()
+    magus = saga.character("m")
+    by_id = catalog.load_lab_virtue_flaw_catalog_by_id()
+    plan = _plan(lab_seasons.INVENT, spell_id="calm")
+    seasons.set_plan(saga, plan)
+    alone = lab_seasons.laboratory(saga, magus, plan)
+    _, before = lab_seasons.work(saga, magus, plan)
+    seasons.set_plan(saga, SeasonPlan("h", 1220, "Spring", ls.ASSIST, teacher_id="m"))
+    served = lab_seasons.laboratory(saga, magus, plan)
+    # Covenants p. 116: + Intelligence / 2 (rounded up) Safety, +1
+    # Aesthetics, +1 Mentem Specialization.
+    assert lab_stats.lab_safety(served, by_id, saga) == (
+        lab_stats.lab_safety(alone, by_id, saga) + 1
+    )
+    assert (
+        lab_stats.lab_characteristic_total(served, by_id, "aesthetics", saga)[3]
+        == lab_stats.lab_characteristic_total(alone, by_id, "aesthetics", saga)[3] + 1
+    )
+    _, after = lab_seasons.work(saga, magus, plan)
+    assert int(after.lab_total.total) == int(before.lab_total.total) + 1
+    # Only for the season: the laboratory itself is unchanged.
+    assert saga.laboratory("lab").virtues_flaws == []
+
+
+def test_a_servant_with_negative_intelligence_lowers_safety():
+    saga = _servant_saga()
+    magus = saga.character("m")
+    saga.character("h").characteristics.intelligence = -3
+    by_id = catalog.load_lab_virtue_flaw_catalog_by_id()
+    plan = _plan(lab_seasons.INVENT, spell_id="bolt")
+    seasons.set_plan(saga, plan)
+    alone = lab_stats.lab_safety(lab_seasons.laboratory(saga, magus, plan), by_id, saga)
+    seasons.set_plan(saga, SeasonPlan("h", 1220, "Spring", ls.ASSIST, teacher_id="m"))
+    served = lab_seasons.laboratory(saga, magus, plan)
+    # -3 / 2 = -1.5, rounded up to -1.
+    assert lab_stats.lab_safety(served, by_id, saga) == alone - 1
+
+
+def test_a_servant_gains_magic_theory_exposure_and_a_note():
+    saga = _servant_saga()
+    seasons.set_plan(saga, _plan(lab_seasons.INVENT, spell_id="bolt"))
+    seasons.set_plan(saga, SeasonPlan("h", 1220, "Spring", ls.ASSIST, teacher_id="m"))
+    child = saga.character("h")
+    outcomes = seasons.resolve(saga)
+    served = next(o for o in outcomes if o.character_id == "h")
+    assert any("as a servant" in note for note in served.notes)
+    seasons.apply(saga, outcomes)
+    mt = next(a for a in child.abilities if a.name == "Magic Theory")
+    assert mt.xp == 2

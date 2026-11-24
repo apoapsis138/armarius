@@ -1233,9 +1233,18 @@ Results](help:advance-experiment-results) step, and kept with the creation
 ### Assistants
 <!-- help: invent-spell-assistants -->
 
-**Assistant** names a helper, anyone else with The Gift and Magic Theory.
+**Assistant** names a helper, anyone else with The Gift and Magic Theory,
+or one of the magus's own apprentices without them, marked "(servant)".
 Scheduling plans their season as Assist in a laboratory with this magus,
 for each season the work is planned.
+
+- A servant adds nothing to the Lab Total from Intelligence and Magic
+  Theory. Instead, for that season, the laboratory counts a Servant
+  Virtue: half the servant's Intelligence (rounded up) in Safety, +1
+  Aesthetics and +1 to a Mentem Specialization (Apprentices p. 34,
+  Covenants p. 116). A child with negative Intelligence lowers Safety.
+- A servant isn't counted against Leadership, and doesn't learn to read
+  the Lab Texts written that season. They gain Exposure in Magic Theory.
 
 - The Lab Total then includes their Intelligence and Magic Theory, for as
   many helpers as the magus's Leadership allows, at least one.
