@@ -562,9 +562,49 @@
         },
         "vim": {
           "xp": 15
+        },
+        "intellego": {
+          "xp": 15
+        },
+        "muto": {
+          "xp": 15
+        },
+        "perdo": {
+          "xp": 15
+        },
+        "rego": {
+          "xp": 15
+        },
+        "animal": {
+          "xp": 15
+        },
+        "aquam": {
+          "xp": 15
+        },
+        "auram": {
+          "xp": 15
+        },
+        "herbam": {
+          "xp": 15
+        },
+        "imaginem": {
+          "xp": 15
+        },
+        "mentem": {
+          "xp": 15
+        },
+        "terram": {
+          "xp": 15
         }
       },
       "abilities": [
+        {
+          "name": "Living Language: German",
+          "category": "General",
+          "xp": 75,
+          "specialty": null,
+          "xp_table": "ability"
+        },
         {
           "name": "Magic Theory",
           "category": "Academic",
@@ -602,6 +642,32 @@
         }
       ],
       "virtues_flaws": [
+        {
+          "vf_id": "vf_the_gift",
+          "params": {},
+          "id": "char1-hv0",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_hermetic_magus",
+          "params": {},
+          "id": "char1-hv1",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_puissant_ability",
+          "params": {
+            "ability": "intrigue"
+          },
+          "id": "char1-hv2",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
         {
           "vf_id": "vf_affinity_with_art",
           "params": {
@@ -710,7 +776,7 @@
       "reputations": [],
       "raw_vis": {},
       "hermetic": {
-        "house": null,
+        "house": "house_bonisagus",
         "domus_magna": "",
         "primus": "",
         "parens": "",
@@ -1931,6 +1997,13 @@
       },
       "abilities": [
         {
+          "name": "Living Language: German",
+          "category": "General",
+          "xp": 75,
+          "specialty": null,
+          "xp_table": "ability"
+        },
+        {
           "name": "Mystery Cult Lore: Verditius",
           "category": "Arcane",
           "xp": 50,
@@ -2213,6 +2286,13 @@
         }
       },
       "abilities": [
+        {
+          "name": "Living Language: German",
+          "category": "General",
+          "xp": 75,
+          "specialty": null,
+          "xp_table": "ability"
+        },
         {
           "name": "Mystery Cult Lore: Verditius",
           "category": "Arcane",
@@ -3112,7 +3192,7 @@
       "name": "Oaken Wand of the Fiery Lance",
       "type": "Invested Device",
       "description": "",
-      "talisman": false,
+      "talisman": true,
       "holder_kind": "laboratory",
       "holder_id": "lab_adelheid",
       "maker_id": "adelheid_of_flambeau",
