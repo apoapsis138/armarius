@@ -81,6 +81,52 @@ def test_parma_and_familiarity_keep_the_gift_from_bothering():
     assert [(line.label, line.amount) for line in lines] == [("The Gift (Oda)", -3)]
 
 
+def _apprentice(parens: Character, cid: str = "kaspar") -> Character:
+    """A Gifted apprentice (not yet a magus, so no Parma of his own) who
+    names `parens` as his parens."""
+    student = _grog(cid, covenant="elsewhere", kind="companion")
+    student.virtues_flaws.append(VirtueFlawInstance(min(study.catalog.GIFT_IDS)))
+    student.hermetic.parens = parens.name
+    return student
+
+
+def test_a_parens_parma_covers_his_apprentice_at_any_score():
+    # The Parma negates the Gift's penalty to teaching, so a parens teaches
+    # his apprentice without it (Apprentices p. 43); a Parma of 0 still
+    # deadens the Gift when extended (DE p. 270).
+    for xp in (0, ability_xp(2)):
+        leandro = _magus("leandro")
+        leandro.abilities.append(Ability("Parma Magica", xp=xp))
+        kaspar = _apprentice(leandro)
+        assert study.gift_bothers(leandro, kaspar) == 0
+        lines = study.gift_lines(leandro, kaspar)
+        assert [(line.label, line.amount) for line in lines] == [
+            ("The Gift (Leandro): parens's Parma Magica extended", 0)
+        ]
+
+
+def test_a_parens_teaching_season_has_no_gift_penalty():
+    leandro = _parma(_magus("leandro"))
+    kaspar = _apprentice(leandro)
+    worked = _trained(_training_saga(leandro, kaspar), kaspar, leandro)
+    assert worked.gains[0].result.xp == 8  # Latin 5 + 3, nothing off
+
+
+def test_the_gift_still_bothers_without_the_parens_parma_or_the_link():
+    # A parens with no Parma Magica can't extend it.
+    leandro = _magus("leandro")
+    assert study.gift_bothers(leandro, _apprentice(leandro)) == 3
+    # Another magus's apprentice isn't under this teacher's Parma.
+    oda = _parma(_magus("oda"))
+    assert study.gift_bothers(oda, _apprentice(_magus("leandro"))) == 3
+    # A filius who has become a magus is no longer an apprentice.
+    filius = _apprentice(oda)
+    filius.type = "magus"
+    assert study.gift_bothers(oda, filius) == 3
+    # The student's own Parma still blocks it, whoever teaches.
+    assert study.gift_bothers(leandro, _parma(_apprentice(leandro))) == 0
+
+
 def _training_saga(master: Character, student: Character) -> Saga:
     master.abilities.append(Ability("Latin", xp=ability_xp(5)))
     return Saga(

@@ -19,7 +19,9 @@ Gentle Gift) off the Source Quality of a season being taught or trained,
 whichever side is Gifted, when the other side is bothered by it: not when
 the other has a Parma Magica, nor when the other is an unGifted
 covenant-mate of a magus of the home covenant, whom covenfolk grow used to
-(DE p. 186). Where both sides' Gifts bother the other, the larger counts.
+(DE p. 186), nor when the other is the Gifted one's apprentice under his
+Parma Magica, at any score (DE p. 270; Apprentices p. 43). Where both
+sides' Gifts bother the other, the larger counts.
 
 No screen uses training_quality() yet: it is a rule for a screen still to
 come, and only the tests call it.
@@ -99,6 +101,10 @@ GIFT_SOURCE = (
     "Ars Magica Definitive Edition, Chapter Seven: Hermetic Magic, The Gift, "
     "pp. 204-205; Parma Magica, p. 169; Familiarity, p. 186"
 )
+PARMA_EXTENDED_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Training Your "
+    "Apprentice, p. 270; Apprentices, Study, Teachers, p. 43"
+)
 GENTLE_GIFT = "vf_gentle_gift"
 BLATANT_GIFT = "vf_blatant_gift"
 PARMA_MAGICA = "Parma Magica"
@@ -122,13 +128,35 @@ def has_parma(character: Character) -> bool:
     return ability_score(character, PARMA_MAGICA)[0] > 0
 
 
+def parma_extended(magus: Character, other: Character) -> bool:
+    """Whether `other` is the magus's apprentice under his Parma Magica: a
+    parens extends it over his apprentice during training (the Order
+    requires it), and at any score, even 0, it deadens the Gift (DE p. 270),
+    so he teaches his apprentice without the Gift's penalty (Apprentices
+    p. 43). The apprentice is one not yet a magus who names him as parens."""
+    return (
+        other.type != "magus"
+        and other.id != magus.id
+        and other.hermetic.parens.strip().casefold() == magus.name.strip().casefold()
+        and any(a.name == PARMA_MAGICA for a in magus.abilities)
+    )
+
+
 def gift_bothers(gifted_one: Character, other: Character) -> int:
     """What `gifted_one`'s Gift costs a season with `other`: none if the
-    other has a Parma Magica (DE p. 169) or is an unGifted covenant-mate
-    of a magus (covenfolk grow used to their own magi, DE p. 186). A
+    other has a Parma Magica (DE p. 169), shares one Parma with him as
+    parens and apprentice (`parma_extended`, either way round), or is an
+    unGifted covenant-mate of
+    a magus (covenfolk grow used to their own magi, DE p. 186). A
     protected Gifted character's Gift still bothers the unprotected."""
     penalty = gift_social_penalty(gifted_one)
-    if not penalty or other.id == gifted_one.id or has_parma(other):
+    if (
+        not penalty
+        or other.id == gifted_one.id
+        or has_parma(other)
+        or parma_extended(gifted_one, other)
+        or parma_extended(other, gifted_one)
+    ):
         return 0
     familiar = (
         gifted_one.type == "magus"
@@ -142,11 +170,26 @@ def gift_bothers(gifted_one: Character, other: Character) -> int:
 def gift_lines(teacher: Character, student: Character) -> list[Line]:
     """The Gift's lines on a season being taught or trained, as Source
     Quality adjustments: each side's Gift that bothers the other, so two
-    unprotected Gifted characters both pay (DE pp. 169, 204)."""
+    unprotected Gifted characters both pay (DE pp. 169, 204). A parens's
+    Gift kept off his apprentice by his Parma shows as a line of 0, so the
+    working says why nothing was taken."""
     lines: list[Line] = []
     for whose, other in ((teacher, student), (student, teacher)):
         amount = gift_bothers(whose, other)
-        if amount:
+        if (
+            not amount
+            and gift_social_penalty(whose)
+            and not has_parma(other)
+            and parma_extended(whose, other)
+        ):
+            lines.append(
+                Line(
+                    f"The Gift ({whose.name}): parens's Parma Magica extended",
+                    amount=0,
+                    source=PARMA_EXTENDED_SOURCE,
+                )
+            )
+        elif amount:
             gift = "Blatant Gift" if amount == 6 else "The Gift"
             lines.append(
                 Line(f"{gift} ({whose.name})", amount=-amount, source=GIFT_SOURCE)
