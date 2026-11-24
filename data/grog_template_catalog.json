@@ -2204,6 +2204,7 @@
         {
          "name": "Brawl",
          "score": 3,
+         "xp": 15,
          "specialty": "Fist"
         },
         {
@@ -2234,11 +2235,6 @@
          "name": "Organization Lore: {covenant}",
          "score": 1,
          "specialty": "names"
-        },
-        {
-         "name": "Single Weapon",
-         "score": 2,
-         "specialty": "Hammer"
         },
         {
          "name": "Stealth",
@@ -2315,7 +2311,8 @@
         },
         {
          "name": "Brawl",
-         "score": 4,
+         "score": 5,
+         "xp": 5,
          "specialty": "Fist"
         },
         {
@@ -2363,11 +2360,6 @@
          "specialty": "names"
         },
         {
-         "name": "Single Weapon",
-         "score": 3,
-         "specialty": "hammer"
-        },
-        {
          "name": "Stealth",
          "score": 1,
          "specialty": "sneak"
@@ -2405,7 +2397,8 @@
         },
         {
          "name": "Brawl",
-         "score": 4,
+         "score": 5,
+         "xp": 25,
          "specialty": "Fist"
         },
         {
@@ -2456,11 +2449,6 @@
          "name": "Organization Lore: {covenant}",
          "score": 4,
          "specialty": "names"
-        },
-        {
-         "name": "Single Weapon",
-         "score": 4,
-         "specialty": "hammer"
         },
         {
          "name": "Stealth",
@@ -2537,7 +2525,9 @@
    "ages": [],
    "packages": "Covenfolk, Craftsman, Local, Trader, Trainer (early xp can go to the Realm Lores)",
    "notes": "An apprentice starts about 15, is a journeyman by 30 and a master by 45. Custos for a journeyman opens Finesse and Latin. Carefree is common.",
-   "fixes": []
+   "fixes": [
+    "The book gives him Single Weapon (hammer) 2, 3 and 4, but none of his Virtues opens Martial Abilities (Custos opens only one group, and he needs it for Finesse); its xp goes to Brawl instead, which is 3, 5 and 5. He can learn Single Weapon in play."
+   ]
   },
   {
    "id": "gt_ex_prostitute",

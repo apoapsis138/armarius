@@ -10,6 +10,7 @@ from ars_magica_manager.forms import creation as creation_forms
 from ars_magica_manager.forms import grog_templates as grog_forms
 from ars_magica_manager.models import Saga, VirtueFlawInstance
 from ars_magica_manager.rules import creation_access as access
+from ars_magica_manager.rules import creation_later
 from ars_magica_manager.rules import creation_xp as cx
 from ars_magica_manager.rules.xp import ability_xp, score_from_xp
 
@@ -111,6 +112,35 @@ def test_using_a_template_gives_the_books_scores_on_the_worksheet(template, vi, 
     }
     assert template.name in grog.description.biography
     assert any(t.name.startswith("Loyal") for t in grog.personality_traits)
+
+
+CRAFTSMAN = [(t, vi, ai) for t, vi, ai in CASES if t.id == "gt_craftsman"]
+
+
+@pytest.mark.parametrize(
+    ("template", "vi", "ai"),
+    CRAFTSMAN,
+    ids=[f"{t.id}-{vi}-{ai}" for t, vi, ai in CRAFTSMAN],
+)
+def test_the_craftsman_buys_only_abilities_he_may_learn(template, vi, ai):
+    """No Virtue in the Craftsman's own sets opens Martial Abilities
+    (DE p. 158; Custos opens one group, DE p. 75, and Finesse needs it
+    for Arcane), so his list holds none and the worksheet's check passes."""
+    assert not any(
+        access.ability_category(row["name"]) == access.MARTIAL
+        for row in gt.variants(template)[vi].ages[ai]["abilities"]
+    )
+    saga = Saga(id="s", name="S", current_year=1220)
+    grog = creation.add_character(saga, "Ulla", "grog", None)
+    choices = _book_choices(template, vi, ai)
+    names = {blank: f"The {blank.title()}" for blank in gt.blanks(template, choices)}
+    gt.apply(saga, grog, template, choices, names)
+    wrong = [
+        check
+        for check in creation_later.later_life_checks(saga, grog)
+        if check.label == "Only Abilities the character may learn"
+    ]
+    assert not wrong, wrong
 
 
 def test_xp_goes_on_step_by_step():
