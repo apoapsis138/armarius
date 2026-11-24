@@ -1,0 +1,1 @@
+**A Gifted child's one Supernatural Ability passes the worksheet.** A Gifted companion who spends Later Life or Tradition Training xp on one Supernatural Ability, without the Virtue for it, is no longer told it's an Ability they may not learn. The check that The Gift allows only one still warns when there are two.

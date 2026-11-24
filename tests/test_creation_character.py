@@ -483,6 +483,28 @@ def test_later_life_buys_only_what_the_character_may_learn():
     assert found["Warrior xp only on what it names"] == ("warn", "Brawl")
 
 
+def test_a_gifted_child_buys_one_supernatural_ability_without_its_virtue():
+    # Apprentices p. 13; DE p. 64: the one-only check is the single limit.
+    from ars_magica_manager import creation
+    from ars_magica_manager.models import CreationXp
+
+    kaspar = _character("companion", 1211, "vf_the_gift")  # nine in 1220
+    creation.spend_creation_xp(kaspar, CreationXp("later_life", "Second Sight", 5))
+    found = _vf(kaspar, "later_life")
+    assert "Only Abilities the character may learn" not in found
+    assert found["The Gift allows one Supernatural Ability without its Virtue"] == (
+        "pass",
+        "1",
+    )
+    creation.spend_creation_xp(kaspar, CreationXp("later_life", "Premonitions", 5))
+    found = _vf(kaspar, "later_life")
+    assert "Only Abilities the character may learn" not in found
+    assert found["The Gift allows one Supernatural Ability without its Virtue"] == (
+        "warn",
+        "2",
+    )
+
+
 def test_a_magus_gets_academic_abilities_only_from_apprenticeship():
     from ars_magica_manager.rules import creation_access as access
 
