@@ -145,6 +145,8 @@ register(
         hint="Exposure (2 xp), as other lab work, in Magic Theory.",
         who=MAGI,
         group=groups.MYSTERIES,
+        # "A season in the laboratory" (TMRE pp. 42-43).
+        in_lab=True,
     ),
     _reinvent,
     _problems,
