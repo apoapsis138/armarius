@@ -188,6 +188,25 @@ def test_lab_work_naming_an_assistant_plans_their_assist():
     assert added == []
 
 
+def test_an_untrained_apprentice_is_offered_as_a_servant():
+    saga, magus, _helper = _with_helper()
+    child = Character(id="k", name="Kaspar", type="companion", covenant_id="cov")
+    child.hermetic.parens = magus.name
+    stranger = Character(id="x", name="Odo", type="companion", covenant_id="cov")
+    saga.characters += [child, stranger]
+    form = lab_plan_forms.LabPlanForm(
+        saga, magus, saga.laboratories[0], "Spring", 1220, None,
+        activity="invent",
+    )  # fmt: skip
+    offered = form.helpers()
+    assert ("Kaspar (servant)", "k") in offered
+    assert all(ident != "x" for _, ident in offered)
+    seasons.plan_lab_work(saga, _lab_plan("bolt", assistant_ids=["k"]))
+    assist = seasons.plan_for(saga, child)
+    assert assist is not None and assist.activity == ls.ASSIST
+    assert rules.outcome(child, assist, saga).ok
+
+
 def test_clearing_an_assist_leaves_the_lab_work():
     saga, magus, helper = _with_helper()
     seasons.plan_lab_work(saga, _lab_plan("bolt", assistant_ids=["h"]))

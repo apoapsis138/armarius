@@ -163,7 +163,12 @@ DIFFICULT_LONGEVITY_SOURCE = (
 
 
 def laboratory(saga: Saga, magus: Character, plan: SeasonPlan) -> Laboratory | None:
-    return saga.laboratory(plan.lab_id) if plan.lab_id else None
+    """The plan's laboratory as it is that season: with the Servant Virtue
+    of each servant helping in it (laboratory_seasons.with_servants)."""
+    lab_ = saga.laboratory(plan.lab_id) if plan.lab_id else None
+    if lab_ is None:
+        return None
+    return laboratory_seasons.with_servants(saga, magus, plan, lab_)
 
 
 def the_spell(saga: Saga, plan: SeasonPlan) -> Spell | None:

@@ -18,12 +18,19 @@ assisting in someone else's (planned on the assistant's sheet).
   left without an owner).
 - Assisting: a season helping the magus whose lab work it is adds
   Intelligence + Magic Theory to his Lab Total (up to his Leadership in
-  helpers) and gives the assistant Exposure in Magic Theory.
+  helpers) and gives the assistant Exposure in Magic Theory (DE pp. 264-265,
+  376).
+- Serving: a helper without The Gift and Magic Theory, such as a child
+  apprentice before his training, serves instead (Apprentices p. 34): the
+  lab counts the Servant Virtue for that season, read with his Intelligence
+  (Covenants p. 116). He gains the same Exposure.
 """
 
 from __future__ import annotations
 
+import math
 import random
+from dataclasses import replace
 
 from .. import catalog
 from ..models import (
@@ -60,6 +67,11 @@ NEW = "new_lab"
 REFINE = "refine_lab"
 TAKE_OVER = "take_over_lab"
 ASSIST = "assist_lab"
+SERVANT = "labvf_servant"
+SERVANT_SOURCE = (
+    "Apprentices, Chapter Four: Pueritia, p. 34; Covenants, Chapter Nine: "
+    "Laboratories, Servant, p. 116"
+)
 MOVE = "move_lab"
 ACTIVITIES: tuple[str, ...] = (BUILD, REFINE, TAKE_OVER, MOVE)
 #: Seasons that roll the Highly Organized / Hidden Defect die (moving: only
@@ -323,8 +335,9 @@ def _move_by_spell(
     ]
 
 
-def assistants(saga: Saga, magus: Character, plan: SeasonPlan) -> list[Character]:
-    """Those planned to assist `magus` this season."""
+def helpers(saga: Saga, magus: Character, plan: SeasonPlan) -> list[Character]:
+    """Everyone planned to help `magus` this season: assistants and
+    servants alike, all of them in the laboratory."""
     found = []
     for other in saga.season_plans:
         if (
@@ -336,6 +349,17 @@ def assistants(saga: Saga, magus: Character, plan: SeasonPlan) -> list[Character
             if helper is not None:
                 found.append(helper)
     return found
+
+
+def assistants(saga: Saga, magus: Character, plan: SeasonPlan) -> list[Character]:
+    """Those helping `magus` this season who add Intelligence + Magic
+    Theory to his Lab Total."""
+    return [c for c in helpers(saga, magus, plan) if can_assist(c)]
+
+
+def servants(saga: Saga, magus: Character, plan: SeasonPlan) -> list[Character]:
+    """Those helping `magus` this season as servants (`serves`)."""
+    return [c for c in helpers(saga, magus, plan) if serves(c)]
 
 
 def _gifted(character: Character) -> bool:
@@ -350,14 +374,49 @@ def can_assist(character: Character) -> bool:
     return _gifted(character) and magic_theory(character) >= 1
 
 
+def serves(character: Character) -> bool:
+    """Whether `character` helps in a laboratory only as a servant: without
+    The Gift and Magic Theory, as a child apprentice before his training
+    (Apprentices p. 34)."""
+    return not can_assist(character)
+
+
+def servant_safety(servant: Character) -> int:
+    """The Safety a servant adds: Intelligence / 2, rounded up, as the lab
+    reads the Servant Virtue (effects.resolve_amount)."""
+    return math.ceil(servant.characteristics.intelligence / 2)
+
+
+def servant_instance(servant: Character) -> VirtueFlawInstance:
+    """The lab's Servant Virtue for a season `servant` helps in it, read
+    with their Intelligence: + Intelligence / 2 (rounded up) Safety, +1
+    Aesthetics, +1 Mentem Specialization (Covenants p. 116)."""
+    return VirtueFlawInstance(
+        SERVANT,
+        params={"intelligence": str(servant.characteristics.intelligence)},
+        id=f"servant-{servant.id}",
+    )
+
+
+def with_servants(
+    saga: Saga, magus: Character, plan: SeasonPlan, lab_: Laboratory
+) -> Laboratory:
+    """`lab_` as it is for the season of `plan`: with each servant helping
+    `magus` as one more Servant Virtue. The laboratory itself is
+    unchanged."""
+    found = servants(saga, magus, plan)
+    if not found:
+        return lab_
+    return replace(
+        lab_,
+        virtues_flaws=[*lab_.virtues_flaws, *(servant_instance(c) for c in found)],
+    )
+
+
 def assist_problems(saga: Saga, character: Character, plan: SeasonPlan) -> list[str]:
     lead = saga.character(plan.teacher_id)
     if lead is None or lead is character:
         return ["Choose the magus to assist."]
-    if not _gifted(character):
-        return [f"{character.name} needs The Gift to help in a laboratory."]
-    if magic_theory(character) < 1:
-        return [f"{character.name} needs Magic Theory to help in a laboratory."]
     theirs = next(
         (
             p

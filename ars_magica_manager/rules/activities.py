@@ -659,7 +659,8 @@ ACTIVITIES: dict[str, Activity] = {
             laboratory_seasons.ASSIST,
             "Assist in a laboratory",
             "Helping a magus with his lab work: + Intelligence + Magic Theory "
-            "to his Lab Total; Exposure in Magic Theory.",
+            "to his Lab Total, or without The Gift and Magic Theory as a "
+            "servant (+ Safety, Aesthetics, Mentem); Exposure in Magic Theory.",
             laboratory_seasons.ASSIST_SOURCE,
             group=groups.ORDER,
         ),
@@ -1648,7 +1649,7 @@ def _experiment(
     if work is None:
         return
     aura, safety = lab_rules.botch_conditions(
-        saga, character, saga.laboratory(plan.lab_id)
+        saga, character, lab_seasons.laboratory(saga, character, plan)
     )
     art, _ = lab_seasons.made_arts(work, plan)
     goal = experiment.find_goal(character, plan.research) if plan.research else None
@@ -1691,7 +1692,7 @@ def _lab_hazards(
     to the experiment's chart, or standing alone (`lab_only`) for the
     storyguide's Experiment results step."""
     work = result.lab_work
-    lab = saga.laboratory(result.plan.lab_id)
+    lab = lab_seasons.laboratory(saga, character, result.plan)
     if work is None or lab is None:
         return
     by_id = catalog.load_lab_virtue_flaw_catalog_by_id()
@@ -2357,6 +2358,16 @@ def _assist_outcome(
     rng: random.Random | None,
     result: Outcome,
 ) -> None:
+    if laboratory_seasons.serves(character):
+        lead = saga.character(plan.teacher_id)
+        whose = f"{lead.name}'s" if lead is not None else "the"
+        safety = laboratory_seasons.servant_safety(character)
+        result.notes.append(
+            f"{character.name} helps in {whose} laboratory as a servant, "
+            f"without The Gift and Magic Theory: {safety:+d} Safety, +1 "
+            "Aesthetics, +1 Mentem Specialization "
+            f"({laboratory_seasons.SERVANT_SOURCE})."
+        )
     result.gains.append(_exposure(character, "Magic Theory", year=plan.year))
 
 

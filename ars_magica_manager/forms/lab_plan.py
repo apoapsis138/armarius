@@ -54,6 +54,7 @@ from ..rules import breakthroughs_moh as moh
 from ..rules import enchant_seasons as es
 from ..rules import (
     enchantment,
+    house_virtue,
     lab_seasons,
     lab_virtues,
     library,
@@ -1145,7 +1146,9 @@ class LabPlanForm:
                 placeholder="(none)",
                 show_if=_chosen,
                 hint="Their season is planned as Assist in a laboratory with "
-                "it: + their Intelligence and Magic Theory.",
+                "it: + their Intelligence and Magic Theory. An apprentice "
+                "without The Gift and Magic Theory serves instead: + Safety, "
+                "Aesthetics and a Mentem Specialization.",
             ),
             DialogField(
                 "details",
@@ -1159,20 +1162,25 @@ class LabPlanForm:
     # -- the choices --------------------------------------------------------
 
     def helpers(self) -> list[tuple[str, str]]:
-        """Who could assist: anyone else with The Gift and Magic Theory."""
-        return [
-            (escape(c.name), c.id)
-            for c in viewing.shown(self.saga.characters)
-            if c is not self.magus and ls.can_assist(c)
-        ]
+        """Who could help: anyone else with The Gift and Magic Theory, and
+        the magus's own apprentices without them, as servants."""
+        found: list[tuple[str, str]] = []
+        for c in viewing.shown(self.saga.characters):
+            if c is self.magus:
+                continue
+            if ls.can_assist(c):
+                found.append((escape(c.name), c.id))
+            elif house_virtue.parens_of(self.saga, c) is self.magus:
+                found.append((f"{escape(c.name)} (servant)", c.id))
+        return found
 
     def assistant_of(self, plan: SeasonPlan | None) -> str | None:
-        """The assistant named on the plan, or one already assisting."""
+        """The helper named on the plan, or one already helping."""
         if plan is None:
             return None
         if plan.assistant_ids:
             return plan.assistant_ids[0]
-        helpers = ls.assistants(self.saga, self.magus, plan)
+        helpers = ls.helpers(self.saga, self.magus, plan)
         return helpers[0].id if helpers else None
 
     def vis_places(self) -> list[tuple[str, str]]:
@@ -1875,7 +1883,9 @@ class LabPlanForm:
         goal = next((g for g in magus.breakthroughs if g.name == plan.research), None)
         if goal is None:
             return ""
-        aura, safety = botch_conditions(saga, magus, saga.laboratory(plan.lab_id))
+        aura, safety = botch_conditions(
+            saga, magus, lab_seasons.laboratory(saga, magus, plan)
+        )
 
         def pct(chance: float) -> str:
             return (

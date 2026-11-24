@@ -1103,7 +1103,7 @@ def _disaster(
     """A botch's Warping for everyone in the lab, the lab Flaw it gives, and
     the wounds of a bad one; the Diary lines for the wounds."""
     lines: list[str] = []
-    everyone = [magus, *ls.assistants(saga, magus, plan)]
+    everyone = [magus, *ls.helpers(saga, magus, plan)]
     if chart.zeroes:
         aura, _ = lab_rules.lab_aura(saga, lab)
         for person in everyone:
