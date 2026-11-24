@@ -1369,19 +1369,27 @@ class Builder:
         return link
 
     def stats(
-        self, character: Character, block: StatBlock, *, source: str = ""
+        self,
+        character: Character,
+        block: StatBlock,
+        *,
+        source: str = "",
+        partial: bool = False,
     ) -> Character:
         """Fill `character` from a stat block the book prints, in the
         book's notation (scores, not xp), and make it a full character.
         `source` is the abbreviation of the book that prints the block,
         when it is not the pack's own: its printing of a spell is taken
-        first, and a spell it adds cites it.
+        first, and a spell it adds cites it. `partial` is a block the book
+        prints only part of (a covenant specialist's Build Point Abilities,
+        a block with no Abilities or no Virtues and Flaws): the record
+        keeps what it prints and stays a sketch, as it is no full build.
         A Virtue or Flaw given by name is matched to the catalog; a spell
         the catalog lacks becomes one of the character's own, at the
         level and Arts the book gives; whatever has no place on the sheet
         (equipment, Twilight Scars, a familiar) goes to its biography."""
         c = character
-        c.detail = FULL
+        c.detail = SKETCH if partial else FULL
         c.characteristics = replace(
             c.characteristics, **block.get("characteristics", {})
         )
@@ -1597,19 +1605,35 @@ def _catalog_spells() -> dict[str, list[Spell]]:
 @cache
 def _virtues_by_name() -> dict[str, str]:
     """Each Virtue and Flaw by its name, and by its name and tier
-    ("Ambitious (Minor)"), for the names the catalog has at both tiers."""
+    ("Ambitious (Minor)"), for the names the catalog has at both tiers.
+    A bare name the catalog has at both tiers maps to "", which
+    _virtue_flaw refuses. A creature's Quality or Inferiority sharing a
+    Virtue's name ("Sharp Ears") is what a bare name means."""
     entries = catalog.load_virtue_flaw_catalog()
     by_tier = {_spell_key(f"{v.name} ({v.tier})"): v.id for v in entries}
-    return by_tier | {_spell_key(v.name): v.id for v in entries}
+    by_name = {_spell_key(v.name): v.id for v in entries}
+    tiers: dict[str, set[str]] = {}
+    for v in entries:
+        if v.side in ("Virtue", "Flaw") and v.tier in ("Minor", "Major"):
+            tiers.setdefault(_spell_key(v.name), set()).add(v.tier)
+    two_tiers = {key: "" for key, held in tiers.items() if len(held) > 1}
+    return by_tier | by_name | two_tiers
 
 
 def _virtue_flaw(entry: str | tuple[str, dict[str, str]]) -> VirtueFlawInstance:
     """A Virtue or Flaw the book names, as the catalog's own; a name the
-    catalog lacks fails the build, so a typo can't slip into a pack."""
+    catalog lacks fails the build, so a typo can't slip into a pack, and
+    so does a name the catalog has at both tiers given without one
+    ("Wrathful"), so a Minor Flaw can't come in as the Major."""
     name, params = (entry, {}) if isinstance(entry, str) else entry
     vf_id = _virtues_by_name().get(_spell_key(name))
     if vf_id is None:
         raise KeyError(f"No Virtue or Flaw named {name!r} in the catalog")
+    if not vf_id:
+        raise KeyError(
+            f"{name!r} is in the catalog at both tiers: write "
+            f"{name} (Major) or {name} (Minor), as the book prints it"
+        )
     return VirtueFlawInstance(vf_id, params=dict(params))
 
 
@@ -1617,3 +1641,57 @@ def _virtue_flaw(entry: str | tuple[str, dict[str, str]]) -> VirtueFlawInstance:
 #: Bestiary's catalog of the book's creatures).
 ability_from_block = _ability
 virtue_flaw_from_block = _virtue_flaw
+
+#: A Virtue or Flaw as a stat block names it: its name, or its name and
+#: parameters.
+Entry = str | tuple[str, dict[str, str]]
+
+
+def house_virtue(
+    house_id: str,
+    entries: Sequence[Entry],
+    *,
+    scores: dict[str, int] | None = None,
+    best_ability: str = "",
+) -> Entry | None:
+    """The free Virtue a magus's House gives at creation (DE p. 46), when
+    `entries` lack it: the House's option whose Art or Ability is highest
+    in `scores` (the first on a tie), or, for Jerbiton's Minor Virtue of
+    scholarship, art or dealing with people, Puissant in `best_ability`
+    (one HoH: Societates p. 55 names) when no Minor Virtue is held. None
+    when the Virtue is held, or the House gives none to check (Ex
+    Miscellanea's come with the tradition)."""
+    house = catalog.load_house_catalog_by_id().get(house_id)
+    if house is None:
+        return None
+    by_id = catalog.load_virtue_flaw_catalog_by_id()
+    held = [_virtue_flaw(e) for e in entries]
+    if house.virtues:
+        for option in house.virtues:
+            wanted = {k: str(v).lower() for k, v in option["params"].items()}
+            if any(
+                vf.vf_id == option["vf_id"]
+                and all(
+                    str(vf.params.get(k, "")).lower() == v for k, v in wanted.items()
+                )
+                for vf in held
+            ):
+                return None
+        known = {k.lower(): v for k, v in (scores or {}).items()}
+
+        def score(option: dict[str, Any]) -> int:
+            params = option["params"]
+            target = str(params.get("art") or params.get("ability") or "").lower()
+            return known.get(target, 0)
+
+        best = max(house.virtues, key=score)
+        return by_id[best["vf_id"]].name, {k: str(v) for k, v in best["params"].items()}
+    if house.free == "minor_virtue" and best_ability:
+        minor = any(
+            by_id[vf.vf_id].side == "Virtue" and by_id[vf.vf_id].tier == "Minor"
+            for vf in held
+            if vf.vf_id in by_id
+        )
+        if not minor:
+            return "Puissant {ability}", {"ability": best_ability}
+    return None

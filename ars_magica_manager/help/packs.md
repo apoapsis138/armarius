@@ -109,6 +109,7 @@ The Rhine pack follows the book wherever this page doesn't say otherwise. Its fo
 
 - **Generated stats.** The 60 magi the book describes without a stat block have stats built by the creation rules, following what the book says they're good at. Each sheet says so, and you can import them as the book's [sketches](help:guide-book-packs) instead. The two peregrinatores of Chapter 3 have the book's own blocks: Tabanus, aged 38 and Gauntleted at 23, and Felicia, aged 24.
 - **Assumed ages.** Where the book gives none, ages come from rank and history: Gudrun Tigurina 70, Xavier 60, Indulius 65, Günther Lupus 55, Rudolph 45, Clemens 65, Marguerite 40, Wilhelm Weiss 60, Garrinchus 27, Hassan El-Megrayhi 80, Odorpes 60 and Caprea 50. Each sheet says the age is assumed.
+- **What every magus has.** A generated Jerbiton with no Minor Virtue takes Puissant in their best Ability as the House's free Virtue (Theoderich of Augsburg). The un-Gifted Redcaps Boris of Novgorod and Horst are companions with the Redcap Status, not Hermetic Magus (DE p. 105). Ioannes Acer's printed block has no Faerie Magic, House Merinita's Virtue, and keeps it so (p. 106).
 - **Hedge factions and traditions.** The Witches of the Harz are played as folk witches, the two Volkhvy factions as Volkhvy, and the hedge wizards of the forest paths from the Forest Paths record. The priesthoods of Woden and Hertha have no tradition record.
 
 # Assumptions made for The Lion and the Lily: The Normandy Tribunal
@@ -177,6 +178,7 @@ The Normandy pack follows the book wherever this page doesn't say otherwise, inc
 
 - **Generated stats.** A magus with no stat block in the book has Characteristics, Arts, Abilities and spells built by the creation rules, guided by the book's write-up. Iasper, Rotgiers, Anacrôn, Hervé and Baudouin have the book's blocks. So does Barnabé, the cursor of Chapter 3, a grog the book gives no covenant, so place him at yours. You can import them as [sketches](help:guide-book-packs) instead.
 - **Assumed ages.** Where the book gives none, ages come from rank: Andru 90, Constantina 30, Languidus 45, Marcus of Paris 40, Henri 40, Norlanus 90, Gulo 37, Helios 38, Iacula 40, Philip 45, Renaud 33, Myrina 40 and Porphyrion 160. Each sheet says the age is assumed.
+- **Redcaps and grogs.** The un-Gifted Redcaps, Hervé among them, are companions with the Redcap Status, not Hermetic Magus (DE p. 105). Hervé's printed block keeps its Virtues, which run past his Flaws (p. 110). Barnabé's "Standard Grog" is the Covenfolk Status (DE p. 47).
 - **Hedge factions and traditions.** The Priory of St. Nerius and the Donatores Requietis Aeternae name their tradition records.
 
 # Assumptions made for Faith & Flame: The Provençal Tribunal
@@ -272,6 +274,7 @@ The Provence pack follows the book wherever this page doesn't say otherwise. Its
 
 - **Generated stats.** Only Dama and Rebecca have printed stat blocks. The other 59 named magi have stats built by the creation rules from what the book says of them, and each sheet says they're not an official write-up. You can import them as [sketches](help:guide-book-packs) instead.
 - **Ages.** Where the book gives a true and an apparent age, the pack uses the true one. Where it gives none, one is assumed from standing. Beatrice of Guernicus is 45, young for her office, Tres 60, and Oxioun 120, as leader of Aedes Mercurii in 1207. Eight have nothing in the book to judge an age by, so they take the default of 50: Bubulcus, Elornis One-Leg, Calais filius Septentrio, Aloysius Porphyri, Jorin, Aucassin of Tytalus, Romualdus and Fraxinus of Portus Termini. Each sheet says which.
+- **What every magus has.** The un-Gifted Redcaps are companions with the Redcap Status, not Hermetic Magus (DE p. 105). A generated Jerbiton with no Minor Virtue takes Puissant in their best Ability as the House's free Virtue (Antoinette). Dama's printed block has no Hermetic Magus or other Social Status, and keeps it so (p. 70). Rebecca, a folk witch of Ex Miscellanea, has Folk Witch Magic Theory in place of Magic Theory (p. 65).
 - **Hedge factions and traditions.** The Sorginak Covens and the Hermetic Sorginak name their tradition records. The Masques of the Coenobium have none.
 
 # Assumptions made for The Sundered Eagle: The Theban Tribunal
@@ -353,6 +356,7 @@ The Theban pack follows the book wherever this page doesn't say otherwise. Every
 
 - **Generated stats.** A magus with no printed stat block has Characteristics, Arts and Abilities that fit their House and role, and the Biography says so. You can import them as [sketches](help:guide-book-packs) instead.
 - **Assumed ages.** Where the book gives none, ages come from standing and story, and the Biography says the age is assumed. Leontius, Proximios, Catella, Ionnia, Syagricus and Ziper keep the book's apparent ages.
+- **What every magus has.** A Theban magus casts in Classical Greek, not Latin (p. 29). The un-Gifted Redcaps are companions with the Redcap Status, not Hermetic Magus (DE p. 105). Proximios's hero's blood (p. 114) is Heroes' Birthright, since Mythic Blood is a Hermetic Virtue an un-Gifted Redcap can't take. A generated Jerbiton with no Minor Virtue takes Puissant in their best Ability as the House's free Virtue (Evantia).
   - Theorus 150, Passara 120 and Megethia 110.
   - Polydegmon, Hydatius, Formosos and Evantia 90.
   - Kristophoros 80, Pythia 70 and Zacharias 60.
@@ -473,6 +477,7 @@ The Transylvania pack follows the book wherever this page doesn't say otherwise.
 
 - **Generated stats.** Among the magi only Monica Ierne has a printed stat block (Ch. 2), and Thietmar and Tibor are entered as printed (Ch. 9). The other 41 named magi have stats built from the book's description, with the core rules' experience for their age. Each sheet says they're not an official write-up. You can import them as [sketches](help:guide-book-packs) instead.
 - **Assumed ages**, where the book gives none. Each sheet says the age is assumed.
+- **Printed blocks kept as printed.** Monica Ierne's has no Hermetic Magus or other Social Status (Ch. 2), and Tibor's Virtues run one point past his Flaws (Ch. 9).
   - Saturnino 80, as "his age is unknown" (Ch. 4).
   - Merit 70, "an older Tremere" (Ch. 5).
   - Isaac of Merinita 40, who looks forty but has spent years in Faerie (Ch. 2).
@@ -645,6 +650,7 @@ The Hibernia pack follows the book wherever this page doesn't say otherwise. Its
 
 - **Generated stats.** Only Indrechtach has a printed stat block (Ch. 6). The other 49 named magi and Redcaps have stats built from the book's description, with the core rules' experience for their age. Their Virtues and Flaws are read from their paragraphs, such as Pollices's Gentle Gift, Gráinne's Waster of Vis and the Leth Moga Redcaps' Close Family Ties. Each sheet says they're not an official write-up. You can import them as [sketches](help:guide-book-packs) instead.
 - **Assumed ages**, where the book gives none. Each sheet says the age is assumed.
+- **What every magus has.** The un-Gifted Redcaps are companions with the Redcap Status, not Hermetic Magus (DE p. 105). A generated Jerbiton with no Minor Virtue takes Puissant in their best Ability as the House's free Virtue (Pollices). Indrechtach's magic is Holy Magic, so his printed block has no Magic Theory (Ch. 6).
   - Meadhbh 120 and Faolán 35 (Ch. 5).
   - Dyfrgi 75, of the founders' generation (Ch. 6).
   - Ruaidrí Mór 95, Áine Dhubh and Ercc Cam 75, Coscrach Cam 65, Rónán 70 and Áine 40 (Ch. 8).
@@ -697,6 +703,8 @@ The Levant pack is built from *Blood and Sand* and its free web companion *Secre
 
 ### Judgement calls
 <!-- help: pack-assumptions-levant-judgement -->
+
+- **The printed magi brought up to Fifth Edition creation.** Fourth Edition had no House Virtue and no native language at 5. Felix takes Guernicus's Hermetic Prestige (DE p. 46). Guillaume de Bourne takes Flambeau's Puissant Ignem, his better Art. Rufus de Clary takes Tytalus's Self-Confident, so his Confidence is 3 with his Tytalus apprenticeship. Each printed magus's best Speak is their native language, raised to 5 (DE p. 48), and on a tie it's the first the book prints. That's Italian for Amber, Arabic for Felix, English for Esther, French for Guillaume and Rufus, and Scots Gaelic for Spiral. Wardat, a sahira of Ex Miscellanea, has no Parma Magica or Magic Theory, as the book prints her (p. 67).
 
 - **The Tribunal.** It meets every seven years at Domus Pacis, next in 1221. The book gives no season, so it meets in Summer. Tau is the Praeco by the 1207 ruling that the office goes to the eldest magus who can be reached, although Urbs Rubra's notes make Wraith the elder. The book gives no reason, and the pack invents none. The totals are the book's 15 covenants and 59 magi, so the roster counts the covenants and magi it doesn't name.
 - **The Treaty of Baghdad and the 1221 vote.** Renewal is a motion on the docket. The Embassy, Domus Pacis and Aedes Veritatis bring it against Foothold, Para Belli and the True Cross, so each party's magi lean their own way. **When the renewal passes**, give its ruling a term ending at the meeting of 1228, the last before the Treaty lapses in 1233. The app then puts it back on the docket. The docket's other case is Foothold's charge that 'Umar killed a Crusader magus with no witness. The book's other quarrels, which nobody has brought, are stories.
@@ -765,7 +773,7 @@ The Levant pack is built from *Blood and Sand* and its free web companion *Secre
 ### For every magus
 <!-- help: pack-assumptions-levant-shared -->
 
-- **Generated stats.** The 30 other named magi, Tau, Aurora and Scipio among them, have stats built from the book's description with the core rules' experience for their age. They're built at the book's age, as the printed magi are, and each sheet says they're not an official write-up. Venti Rosa's four Redcaps without the Gift are generated without it. Arash, who swore the Treaty of Barcelona and not the Oath, has no House. You can import them as [sketches](help:guide-book-packs) instead.
+- **Generated stats.** The 30 other named magi, Tau, Aurora and Scipio among them, have stats built from the book's description with the core rules' experience for their age. They're built at the book's age, as the printed magi are, and each sheet says they're not an official write-up. Venti Rosa's four Redcaps without the Gift are generated without it, as companions with the Redcap Status rather than Hermetic Magus (DE p. 105). Arash, who swore the Treaty of Barcelona and not the Oath, has no House and no Hermetic Magus. A generated Jerbiton with no Minor Virtue takes Puissant in their best Ability as the House's free Virtue. You can import them as [sketches](help:guide-book-packs) instead.
 - **Shared records.** Some follow *The Cradle and the Crescent*'s account, and the Sultan of Rum and the Emperor of Trebizond the Theban pack's. That page lists them under [Shared with other packs](help:pack-assumptions-cradle-shared). Importing another pack that shares them updates them and never doubles them. The Levant pack adds only its own records beside them.
 - **Hedge factions and traditions.** The Order of Suleiman and its two families, the Nizaris and the Syrian Nizaris, and the Karaites name their tradition records. The jinn, the Islamic Tradition, the Bedouin, the Turcomans, the Druze and the other faiths have none.
 
@@ -803,6 +811,9 @@ The Greater Alps pack is built from *Sanctuary of Ice*, a Fourth Edition book, s
 
 ### Judgement calls
 <!-- help: pack-assumptions-alps-judgement -->
+
+- **The printed magi brought up to Fifth Edition creation.** Fourth Edition had no House Virtue and no native language at 5. Ragoneda takes Tytalus's Self-Confident (DE p. 46), so her Confidence is 3 with her Tytalus apprenticeship. Each printed magus's best Speak is their native language, raised to 5 (DE p. 48), and on a tie it's the first the book prints. That's Irish for Kentigern, Norman French for Ragoneda, Greek for Andru, and High German for Cymena. Cymena's printed Virtues stay above her Flaws.
+- **Generated Jerbitons** with no Minor Virtue take Puissant in their best Ability as the House's free Virtue: Constance, Angela, Sourdine, Sirocco, Grazia, Kalliope and Bronwyn.
 
 - **The customs** are the Greater Alps package of their own, sharing nothing with the Theban package. They add a Chairs column on the roster, set on each covenant's form, and Ostracism on the Tribunal's sheet. An ostracism lasts twenty-one years and needs one sherd in four.
 - **Rulings.** The book's undated customs are undated rulings: chairs and vagrancy, the yearly pawn, vis treaties, no new covenants, ostracism, amaranth, the Code's protected churches, flagrant spending, Pilate's ghost, the Bavarian Common and Tarragon Vale's estates. Three are dated from *The Wizard's Grimoire*. Snadstrich's sanctum is 1165, and Andru's pardon and Syrestis's fine are 1194.
@@ -937,6 +948,7 @@ The Stonehenge pack is built from *Heirs to Merlin*, a Fourth Edition book that 
 <!-- help: pack-assumptions-stonehenge-shared -->
 
 - **Generated stats.** Every magus has stats built from the book's description with the core rules' experience for their age, and each sheet says they're not an official write-up. A Virtue the book names but pays for with no Flaw (Schola Pythagoranis's Gentle Gift) is left off the sheet and kept in the summary. You can import them as [sketches](help:guide-book-packs) instead.
+- **Generated Jerbitons** with no Minor Virtue take Puissant in their best Ability as the House's free Virtue (DE p. 46): Stephen Eruditus, Edward of Milton, Astrolabe, Lumen, Edward the White and Julia.
 
 # Assumptions made for The Dragon and the Bear: The Novgorod Tribunal
 <!-- help: pack-assumptions-novgorod -->
@@ -1015,6 +1027,7 @@ The Novgorod pack is built from *The Dragon and the Bear*, a Fourth Edition book
   - **Malincka's four aura spells**, **Echo of the Firebird** and **Form of the Avenging Beast** are the magi's own at their printed levels. The book leaves open whether aura-making can truly work.
 - **Rehamchi's Volkhv magic.** His Disciplines, Pagan Conviction and his god Khors's bonuses are written in his biography as the book prints them, not converted.
 - **Longevity.** The printed modifiers are carried across, and Yannes's has failed.
+- **Brought up to Fifth Edition creation.** Fourth Edition had no House Virtue and no native language at 5. Andrei takes Guernicus's Hermetic Prestige, Malincka Bonisagus's Puissant Magic Theory (her better of it and Intrigue), and Yannes Criamon's The Enigma (DE p. 46). Each one's best Speak is their native language, raised to 5 (DE p. 48), and on a tie it's the first the book prints: Hungarian for Malincka, Russian for Nastassia. Malincka's Higher Purpose, printed at +1, is the Minor.
 - **Creatures** are converted as the [Alps pack's](help:pack-assumptions-alps-conversion) are, Might first, and each record's notes give what the book printed.
 - **Faerie powers.** Each Faerie Power becomes a *Realms of Power: Faerie* power, and its Might cost and Initiative follow that book's table (RoP:F pp. 54-61). The faeries have no Confidence.
   - Bless and Curse become Grant (Minor Virtue) and Grant (Minor or Major Flaw).
@@ -1030,7 +1043,9 @@ The Novgorod pack is built from *The Dragon and the Bear*, a Fourth Edition book
 ### For every magus
 <!-- help: pack-assumptions-novgorod-shared -->
 
-- **Generated stats.** The other named magi have stats built from the book's description with the core rules' experience for their age. Each sheet says they're not an official write-up. You can import them as [sketches](help:guide-book-packs) instead. A Virtue the book names but pays for with no Flaw is left off the generated sheet and kept in the summary: Georgi's Gentle Gift, Barchek's Redcap Virtue, and the Popovich twins' shared proximity Virtue and Flaw.
+- **Generated stats.** The other named magi have stats built from the book's description with the core rules' experience for their age. Each sheet says they're not an official write-up. You can import them as [sketches](help:guide-book-packs) instead. A Virtue the book names but pays for with no Flaw is left off the generated sheet and kept in the summary: Georgi's Gentle Gift and the Popovich twins' shared proximity Virtue and Flaw.
+- **Barchek Ocowski**, the un-Gifted Redcap, is a companion of House Mercere with the Redcap Status (DE p. 105). The book names no Flaw to pay for it, so the pack gives him Wanderlust, for his long routes west.
+- **Generated Jerbitons** with no Minor Virtue take Puissant in their best Ability as the House's free Virtue (Georgi).
 
 # Assumptions made for The Cradle and the Crescent
 <!-- help: pack-assumptions-cradle -->
@@ -1133,6 +1148,11 @@ Wherever the two books differ, it takes Through the Aegis's version.
 
 Lore follows Through the Aegis, then the Tribunal book, then the Definitive Edition. Mechanics follow the Definitive Edition.
 
+- **Specialists.** The book prints only the Build Point Abilities of Jardin's John the Gardener, Bohella and Sicart and Didyma's Basil, Abbas and Cleon, so they're sketches, keeping what it prints.
+- **Grogs' Flaws are Minor.** Bullcalf's Wrathful and Fang's and Thrice-Dead Ned's Weakness are the Minor Flaws, as a grog takes no Major ones (DE p. 63).
+- **Ahenobarbus's House Virtue** is Tremere's Minor Magical Focus (certamen).
+- **Printed blocks kept as printed.** Matilda Page's has no Parma Magica (p. 16), and Aoede, an apprentice, has none yet (p. 74). The Virtues and Flaws of Bran (p. 111), Erich (p. 142), Magarethe and Marcel (p. 84) run past their limits, Magarethe's and Marcel's with Flaws from Warping.
+
 # Assumptions made for Magi of Hermes
 <!-- help: pack-assumptions-magi_of_hermes -->
 
@@ -1143,10 +1163,14 @@ The pack follows the book. Every printed block is here, at the ages it gives. Th
 
 The pack follows the book. It has no Tribunal, because its stories can be set anywhere. Where the book leaves a location open, the record leaves it blank, with the book's guidance in its notes. The five legends' stories come in dormant, to begin when you want them. Treasures, books and vis are described in the record of the place or person holding them, because a book in the app needs a covenant to own it. A name the book doesn't give, such as the Field of Copper Urchins or the Heirs of Cupressa, is the pack's own. Where the book contradicts itself, the record says so and gives both.
 
+Reyes de Barbastro's printed Virtues run two points past his Flaws, and are kept as printed (p. 24).
+
 # Assumptions made for Lands of the Nile
 <!-- help: pack-assumptions-nile -->
 
 The pack holds no Tribunal, as these lands lie outside the Order. The book reflects what the thirteenth century believed about Egypt, and says so. Its monuments, its tomb traps and its account of Islam are the setting's, not history. Its three covenant sites, Siwa Oasis, Ikhmindi and Adulis, are places, because a pact keeps covenants out of Africa until 1225. The book's example curses, wards, talismans and traps are working Tomb records on four places of examples. Projectiles, pits and puzzles, whose cost varies or which the troupe plays out, stay as words, and so do heka and the animated models, which the app has no rule for (pp. 50-54). The Fifth Crusade follows this book's account in this pack. Where the book contradicts itself, the record says so and gives both.
+
+Artanyeszame's and Ababdah's printed blocks are kept as printed, though their Virtues and Flaws run past a Mythic Companion's limits (pp. 91, 95).
 
 <!-- tui -->
 The tombs of Cleopatra and Arrakkamani have real Tomb tabs.
@@ -1163,6 +1187,8 @@ The book's example curses, wards, talismans and traps are records on four places
 The pack holds no Tribunal, as Africa lies outside the Order. It covers the Atlantic to Siwa. The book says plainly that this is Africa as thirteenth-century people imagined it, not history, and its peoples and faiths are the setting's. A figure the book misprints is noted where it's used. The Painted Dog's Strength of -3 is worked out from its Bite, because the printed figure is unreadable. Where the book contradicts itself, the record says so and gives both.
 
 The Tomb of Tin Hinan is marked a tomb of a major monarch, as her aura of 5 fits, though the book gives no kind. It prints no curse, ward or trap for it. The other Berber and Garamantian tombs stay as words, as the book gives nothing to build them from.
+
+Aljilani's and Jurfaret's printed blocks keep their Virtues and Flaws, though Flaws from Warping take them past a companion's limits (pp. 33, 38).
 
 # Assumptions made for Land of Fire and Ice
 <!-- help: pack-assumptions-iceland -->
@@ -1182,6 +1208,10 @@ Galdor and trollskap are working rules. Hedge Magic Revised Edition has spoken o
 - A rank is its own Social Status, as a godi has no serfs or men-at-arms.
 - Tiers are read from the printed points. +1 and +2 are Minor, and +3 and up Major.
 - A galdraman's apprenticeship is the 160 xp their printed scores cost.
+- Each person's best printed language is their native one, raised to 5 (DE p. 48). Eleanor and Mari print none, so theirs is Flemish, as women of De Panne, and Brighde's and Donncadh's is French, their best.
+- The blocks print no Social Status for Eleanor, Mari and Brighde, so theirs is Merchant, their family's. Thord's printed Storgodi is that Social Status.
+- Blund and Una print no Abilities, Virtues or Flaws, and Victor no Abilities, Arts, Virtues or Flaws, so they're sketches, keeping what the book prints.
+- The printed blocks of Iain, Lord Peter, Brighde, Donncadh, Mari, Einar and Thord keep their Virtues and Flaws, though Fifth Edition's limits would balance them differently.
 
 See [how to play a galdraman](help:guide-galdor).
 
@@ -1193,3 +1223,5 @@ Where the two books or one book's pages disagree, the record says so and gives b
 The pack holds no Tribunal, as the book's opponents can be set in any saga. Each one's plots and hidden nature are in secrets, and their stories come in dormant. Where a spell differs from the Definitive Edition, it's the Definitive Edition's, and the record notes the book's figure. Where the book gives a person or thing no name, or its name gives the plot away, the record has a plain name instead. A person printed in two versions, as Hannelore and the Friar or Monk are, is a choice on the import form. Where the book contradicts itself, the record says so and gives both.
 
 The people with printed stats are also templates on New Character, named **Antagonist -**, in any saga with the book in play.
+
+The printed blocks are kept as printed where they miss what Fifth Edition creation gives. Edwin Locke's prints no native language (p. 16). Bishop Orris's (p. 51), Baron Giraud's (p. 25) and Hannelore's (p. 81) Virtues and Flaws run past a companion's limits.

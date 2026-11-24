@@ -199,8 +199,8 @@ LEXORA: StatBlock = {
         "Subtle Magic",
         "Unbound Tongue",
         "Wilderness Sense",
-        "Pagan",
-        "Proud",
+        "Pagan (Major)",
+        "Proud (Major)",
         ("Weak Magic Resistance", {"detail": "when in human form"}),
         "Weak Enchanter",
     ],
@@ -337,8 +337,8 @@ XENOPHANES: StatBlock = {
         "Skilled Parens",
         "Subtle Magic",
         ("True Friend", {"detail": "Hypatia"}),
-        "Overconfident",
-        "Pious",
+        "Overconfident (Major)",
+        "Pious (Major)",
         "Short-Ranged Magic",
         "Disjointed Magic",
         "Nocturnal",
@@ -598,13 +598,15 @@ AHENOBARBUS: StatBlock = {
         ("Deft Form", {"form": "Mentem"}),
         "Improved Characteristics",
         "Inventive Genius",
-        ("Minor Magical Focus (House)", {"focus": "certamen"}),
+        # The House Virtue (Tremere's), not the astrological Minor Magical
+        # Focus (House) of The Mysteries.
+        ("Minor Magical Focus", {"focus": "certamen"}),
         vf_art("Puissant {art}", "Mentem"),
         vf_puissant("Leadership"),
         vf_art("Puissant {art}", "Rego"),
         "Unaging",
         ("True Friend", {"detail": "Nec"}),
-        "Ambitious",
+        "Ambitious (Major)",
         "Feud",
         "Loose Magic",
         "Proud (Minor)",
@@ -813,7 +815,7 @@ SERENA: StatBlock = {
         ("Social Contacts", {"group": "French knights"}),
         "Strong-Willed",
         "Temporal Influence",
-        "Ambitious",
+        "Ambitious (Major)",
         "Difficult Underlings",
         "Covenant Upbringing",
         "Envious (Minor)",
@@ -948,6 +950,10 @@ SICART: StatBlock = {
     "notes": "The book prints only these and his Communication. Worth 11 "
     "Build Points to the covenant.",
 }
+
+#: The specialists the book prints only their Build Point Abilities for,
+#: so they stay sketches.
+SPECIALISTS = frozenset({"john", "bohella", "sicart"})
 
 #: key, name, House, age, block, summary, secrets.
 MAGI = (
@@ -1821,7 +1827,9 @@ def finish(provence: Provence) -> None:
 def stats(provence: Provence) -> None:
     b = provence.b
     for key, _name, _kind, _age, block, _summary, _secrets in (*MAGI, *PEOPLE):
-        character = b.stats(provence.magi[key], block, source=SOURCE)
+        character = b.stats(
+            provence.magi[key], block, source=SOURCE, partial=key in SPECIALISTS
+        )
         past = block.get("past_xp", {})
         for ability in character.abilities:
             ability.xp += past.get(ability.name, 0)
@@ -2918,7 +2926,7 @@ def _familiars(b: Builder, people: dict[str, Character]) -> None:
                 ("True Friend", {"detail": "Ahenobarbus"}),
                 "Unaffected by The Gift",
                 "Black Sheep",
-                "Proud",
+                "Proud (Major)",
                 ("Careless with {ability}", {"ability": "Stealth"}),
                 "Gigantic",
                 "Greater Power",

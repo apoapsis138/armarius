@@ -980,7 +980,9 @@ def stats(levant: Levant) -> None:
         character = levant.magi.get(key)
         if character is None:
             continue
-        stat, age = convert(key, block, SECOND_SWAPS, area=AREA)
+        stat, age = convert(
+            key, block, SECOND_SWAPS, area=AREA, house=character.hermetic.house or ""
+        )
         b.stats(character, stat, source=source)
         character.background.year_born = b.year - age
         _own_spells(character)

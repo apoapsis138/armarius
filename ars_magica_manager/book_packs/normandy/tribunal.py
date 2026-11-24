@@ -1062,6 +1062,9 @@ def stats(normandy: Normandy) -> None:
             "decrepitude": (0, 0),
             "apparent_age": 25,
             "virtues_flaws": [
+                # The book's "Standard Grog": a grog's usual Covenfolk
+                # Status (DE p. 47).
+                "Covenfolk",
                 "Enduring Constitution",
                 "Improved Characteristics",
                 ("Puissant {ability}", {"ability": "athletics"}),

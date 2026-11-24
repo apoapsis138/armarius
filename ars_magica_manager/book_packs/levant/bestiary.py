@@ -376,7 +376,8 @@ def _jinn(levant: Levant) -> None:
             "characteristics": characteristics(0, 0, -2, -3, 5, 4, 5, 4),
             "virtues_flaws": [
                 "Lightning Reflexes",
-                "Weakness",
+                # Printed at -1: Minor (DE p. 537).
+                "Weakness (Minor)",
                 ("Ways of the {land}", {"land": "Desert"}),
                 "Magical Air",
             ],

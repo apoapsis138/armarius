@@ -829,7 +829,7 @@ def stats(records: Records) -> None:
                     above=above,
                 ),
             )
-        stat, age = convert(key, block, area=AREA)
+        stat, age = convert(key, block, area=AREA, house=character.hermetic.house or "")
         b.stats(character, stat)
         character.background.year_born = b.year - age
         _own_spells(character)
@@ -1058,6 +1058,10 @@ PROFILES: dict[str, Profile] = {
             "Guile": (3, "passing as a peasant"),
             "Dead Language: Latin": 4,
         },
+        # The Redcap Status is a Major Virtue a companion balances (DE p.
+        # 105); the book prints no Flaws, and his long routes west suit
+        # Wanderlust.
+        virtues=["Redcap", "Wanderlust"],
         age=40,
         native=POLISH,
     ),

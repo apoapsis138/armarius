@@ -2046,7 +2046,10 @@ PROFILES: dict[str, Profile] = {
             "Dead Language: Classical Greek": 4,
             "Ride": 2,
         },
-        virtues=["Redcap", "Mythic Blood", "Dark Secret", "Driven (Major)"],
+        # His hero's blood (The Sundered Eagle p. 114) as Heroes'
+        # Birthright: Mythic Blood is a Hermetic Virtue, which an un-Gifted
+        # Redcap may not take (DE p. 45).
+        virtues=["Redcap", "Heroes' Birthright", "Dark Secret", "Driven (Major)"],
         reputations={"Able politician (Hermetic)": 4},
     ),
     "catella": P(

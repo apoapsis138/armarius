@@ -127,8 +127,10 @@ def _mundane(
     summary: str,
     secrets: Secrets,
 ) -> Character:
-    """A mundane the book gives a block: converted, without the Gift and
-    the Hermetic Virtue the conversion gives a magus."""
+    """A mundane the book gives a part block: converted, without the Gift
+    and the Hermetic Virtue the conversion gives a magus. The book prints
+    their Characteristics and traits but no Abilities, Virtues or Flaws,
+    so they stay sketches, not full characters."""
     stat, age = convert(name, block, area=AREA)
     stat["virtues_flaws"] = []
     person = b.magus(
@@ -140,7 +142,7 @@ def _mundane(
         summary=summary,
         secrets=secrets,
     )
-    return b.stats(person, stat)
+    return b.stats(person, stat, partial=True)
 
 
 # -- Chapter 11 --

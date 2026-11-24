@@ -611,6 +611,8 @@ def _cunfin_magi(normandy: Normandy, b: Builder, cunfin: Covenant) -> None:
         covenant=cunfin,
         house=MERCERE,
         age=35,
+        # An un-Gifted Redcap is a companion of House Mercere (DE p. 46).
+        type="companion",
         traits={"Driven": 3, "Jealous": 2},
         summary=paragraphs(
             "Hervé le Brun, a Redcap of the Founder's blood and son of "

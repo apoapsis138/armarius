@@ -680,6 +680,8 @@ def _characters(b: Builder, de_panne: Neighbour) -> None:
             spells=(),
             traits={"Mischievous": 3, "Curious": 3},
             reputations={"Spoilt (wives of De Panne's merchants)": 1},
+            # The block prints no Social Status: her family's.
+            status="Merchant",
             size=-2,
             notes=(
                 "Fully grown she will have Str -1, Dex -1, Qik 0 and Size 0. "

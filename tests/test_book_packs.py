@@ -5,20 +5,33 @@ in play."""
 from __future__ import annotations
 
 import json
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from typing import Any
 
 from ars_magica_manager import book_packs, catalog, packs, sourcebooks, transfer
 from ars_magica_manager.book_packs import builder, overlays
+from ars_magica_manager.book_packs.generated import HERMETIC_LANGUAGES, LIVING
 from ars_magica_manager.forms import creation as creation_forms
 from ars_magica_manager.models import Character, Saga
 from ars_magica_manager.models.common import split_secrets
 from ars_magica_manager.rules import creation_access as access
+from ars_magica_manager.rules import creation_virtues
+from ars_magica_manager.rules.creation_character import (
+    HERMETIC_MAGUS,
+    STANDS_FOR,
+    THE_GIFT,
+)
+from ars_magica_manager.rules.xp import ABILITY_FACTOR, score_from_xp
 from ars_magica_manager.tribunal_packages import normandy as normandy_package
 from ars_magica_manager.tribunal_packages import rhine as rhine_package
 
 RHINE = book_packs.PACKS["rhine"]
 NORMANDY = book_packs.PACKS["normandy"]
+#: The native language's score after childhood (DE p. 48).
+NATIVE_SCORE = 5
+#: The Dead Languages a magus may cast in: Latin, or the Theban
+#: Tribunal's Classical Greek.
+HERMETIC_TONGUES = {"Latin", *HERMETIC_LANGUAGES.values()}
 
 
 def _texts(value) -> list[str]:
@@ -318,6 +331,274 @@ def test_a_stat_block_names_only_catalog_virtues():
 
     with pytest.raises(KeyError):
         builder._virtue_flaw("No Such Virtue")
+
+
+def test_a_stat_block_names_the_tier_of_a_two_tier_flaw():
+    """A bare "Wrathful" could be either tier, so the build refuses it."""
+    import pytest
+
+    with pytest.raises(KeyError, match="both tiers"):
+        builder._virtue_flaw("Wrathful")
+    assert builder._virtue_flaw("Wrathful (Minor)").vf_id == "vf_wrathful"
+    # A creature's Quality sharing a Virtue's name is still what it means.
+    assert builder._virtue_flaw("Sharp Ears").vf_id == "vf_sharp_ears_quality"
+
+
+def test_a_magus_takes_the_house_virtue_whose_art_is_best():
+    """Flambeau's free Virtue is Puissant Perdo or Ignem (DE p. 46): the
+    better Art's; none when one is held; Jerbiton's is Puissant in the best
+    Ability when no Minor Virtue is held."""
+    ignem = builder.house_virtue(
+        "house_flambeau", ["The Gift"], scores={"Perdo": 5, "Ignem": 9}
+    )
+    assert ignem == ("Puissant {art}", {"art": "ignem"})
+    held = ["The Gift", ("Puissant {art}", {"art": "perdo"})]
+    assert builder.house_virtue("house_flambeau", held) is None
+    assert builder.house_virtue(
+        "house_jerbiton", ["The Gift"], best_ability="etiquette"
+    ) == ("Puissant {ability}", {"ability": "etiquette"})
+    assert (
+        builder.house_virtue("house_jerbiton", ["Clear Thinker"], best_ability="x")
+        is None
+    )
+    assert builder.house_virtue("house_ex_miscellanea", ["The Gift"]) is None
+
+
+def test_a_fourth_edition_magus_is_brought_up_to_fifth_edition():
+    """Fourth Edition had no House Virtue or native language rule: the
+    conversion adds the House's Virtue and raises the best tongue to 5."""
+    from ars_magica_manager.book_packs.fourth import Fourth, convert
+
+    block = Fourth(
+        age=40,
+        apparent=None,
+        characteristics={},
+        confidence=1,
+        twilight=0,
+        decrepitude=0,
+        virtues=[],
+        abilities=[("Speak Irish", 4, "peasants"), ("Speak German", 4, "")],
+        arts={"Creo": 3, "Muto": 8},
+        spells=[],
+        traits={},
+    )
+    stat, _ = convert("m", block, area="Somewhere", house="house_mercere")
+    assert ("Puissant {art}", {"art": "muto"}) in stat["virtues_flaws"]
+    assert ("Living Language: Irish", 5, "peasants") in stat["abilities"]
+    assert "Native Language Irish raised from 4 to 5" in stat["notes"]
+    companion, _ = convert(
+        "c", replace(block, native="Flemish", status="Merchant"), area="Somewhere"
+    )
+    assert ("Living Language: Flemish", 5, "") in companion["abilities"]
+    assert companion["virtues_flaws"][2] == "Merchant"
+
+
+def test_an_ungifted_redcap_is_a_companion_not_a_magus():
+    """An un-Gifted Redcap takes the Redcap Status, not Hermetic Magus, and
+    is a companion of House Mercere (DE pp. 46, 105)."""
+    from ars_magica_manager.book_packs.generated import Profile, apply
+
+    b, tribunal = _a_builder()
+    covenant = b.covenant("Here", tribunal=tribunal, founded=1200, summary="")
+    redcap = b.magus(
+        "Runner", covenant=covenant, house="house_mercere", age=30, summary=""
+    )
+    apply(
+        b,
+        redcap,
+        Profile(
+            gifted=False, virtues=["Dutybound", "Covenant Upbringing", "Proud (Minor)"]
+        ),
+    )
+    ids = {v.vf_id for v in redcap.virtues_flaws}
+    assert redcap.type == "companion" and redcap.detail == "Full"
+    assert "vf_redcap" in ids and "vf_hermetic_magus" not in ids
+    assert "vf_the_gift" not in ids and "vf_affinity_with_art" not in ids
+
+
+LIMITS = "a companion's Virtue and Flaw limits"
+MYTHIC_LIMITS = "a mythic companion's Virtue and Flaw limits"
+GROG_LIMITS = "a grog's Virtue and Flaw limits"
+#: Full characters a pack may leave short of an essential, and why: the
+#: book's printed stat block omits it or runs past the creation limits
+#: (its numbers are kept, and the pack's Assumptions page says so), or
+#: the essential doesn't apply. Keyed by (pack, name), each the
+#: essentials it may lack.
+_ESSENTIALS_EXCUSED: dict[tuple[str, str], tuple[set[str], str]] = {
+    # Printed past the creation limits: Flaws from Warping, Virtues from
+    # play, or a block the book says is still to balance.
+    ("africa", "Aljilani ag Ibrahim"): ({LIMITS}, "BS&S p. 33, Warping Flaws"),
+    ("africa", "Jurfaret"): ({LIMITS}, "BS&S p. 38, Warping Flaw"),
+    ("alps", "Cymena"): ({LIMITS}, "SoI p. 76, a Fourth Edition block"),
+    ("antagonists", "Bishop Orris"): ({LIMITS}, "Ant p. 51"),
+    ("antagonists", "Edwin Locke"): (
+        {MYTHIC_LIMITS, "a native language at 5"},
+        "Ant p. 16: no native tongue printed; Puissant (Theurgical) Controlling",
+    ),
+    ("antagonists", "Baron Giraud Le Cornu"): ({LIMITS}, "Ant p. 25"),
+    ("antagonists", "Hannelore"): ({LIMITS}, "Ant p. 81, a diabolist"),
+    ("iceland", "Iain the Scot"): ({LIMITS}, "LFI p. 133, a Fourth Edition block"),
+    ("iceland", "Lord Peter"): ({LIMITS}, "LFI p. 83, a Fourth Edition block"),
+    ("iceland", "Brighde Scot"): ({LIMITS}, "LFI p. 84, a child of five"),
+    ("iceland", "Donncadh Scot"): ({LIMITS}, "LFI p. 134, a Fourth Edition block"),
+    ("iceland", "Mari, Donncadh's wife"): ({LIMITS}, "LFI p. 134, Fourth Edition"),
+    ("iceland", "Einar Gamlisson"): ({LIMITS}, "LFI pp. 139-140, a galdraman"),
+    ("iceland", "Thord Sturluson"): ({LIMITS}, "LFI p. 141, Storgodi printed"),
+    ("legends_of_hermes", "Reyes de Barbastro"): ({LIMITS}, "LoH p. 24"),
+    ("nile", "Artanyeszame"): ({MYTHIC_LIMITS}, "LotN p. 91, an Undying One"),
+    ("nile", "Ababdah"): ({MYTHIC_LIMITS}, "LotN p. 95, a Blemmya"),
+    ("normandy", "Hervé filius Évrard"): ({LIMITS}, "L&L p. 110"),
+    ("transylvania", "Tibor of Borša"): ({LIMITS}, "AtD p. 137"),
+    ("through_the_aegis", "Bran in Gai Móir"): ({LIMITS}, "TtA p. 111"),
+    ("through_the_aegis", "Erich the Spy"): ({LIMITS}, "TtA p. 142"),
+    ("through_the_aegis", "Magarethe"): (
+        {GROG_LIMITS},
+        "TtA p. 84, a custos printed with Blind and Warping Flaws",
+    ),
+    ("through_the_aegis", "Marcel the Mercenary"): (
+        {GROG_LIMITS},
+        "TtA p. 84, Warping Flaws",
+    ),
+    # Printed without an essential.
+    ("provence", "Dama of Merinita"): (
+        {"Hermetic Magus", "a Social Status"},
+        "F&F p. 70 prints no Hermetic Magus",
+    ),
+    ("transylvania", "Monica Ierne"): (
+        {"Hermetic Magus", "a Social Status"},
+        "AtD p. 30 prints no Hermetic Magus",
+    ),
+    ("rhine", "Ioannes Acer"): (
+        {"the House Virtue"},
+        "GotF p. 106 prints no Faerie Magic",
+    ),
+    ("through_the_aegis", "Matilda Page"): (
+        {"Parma Magica"},
+        "TtA p. 16 prints no Parma Magica",
+    ),
+    # Where the essential doesn't apply: an Ex Miscellanea tradition with
+    # magic of its own, an apprentice, a wizard who refused the Oath.
+    ("hibernia", "Indrechtach"): ({"Magic Theory"}, "TCI p. 66, Holy Magic"),
+    ("levant", "Wardat al-Quds"): (
+        {"Magic Theory", "Parma Magica"},
+        "B&S p. 67, a sahira of Ex Miscellanea",
+    ),
+    ("provence", "Rebecca"): ({"Magic Theory"}, "F&F p. 65, a folk witch"),
+    ("through_the_aegis", "Aoede"): (
+        {"Hermetic Magus", "Parma Magica"},
+        "TtA p. 74, an apprentice",
+    ),
+    ("levant", "Arash"): (
+        {"Hermetic Magus", "a House"},
+        "B&S: he refused the Oath of Hermes",
+    ),
+}
+
+
+def _shipped_characters() -> list[tuple[str, Character]]:
+    """Every character in the shipped packs, with the pack's key (a
+    supplement's under its own key)."""
+    found = []
+    for key, pack in book_packs.PACKS.items():
+        data = transfer.read(book_packs.path_of(pack))
+        found += [
+            (key, Character.from_dict(dict(c))) for c in data["saga"]["characters"]
+        ]
+    for key, overlay in overlays.OVERLAYS.items():
+        data = transfer.read(overlays.path_of(overlay))
+        found += [
+            (key, Character.from_dict(dict(c)))
+            for section in data[packs.OVERLAY]
+            for c in section["pack"]["saga"].get("characters") or []
+        ]
+    return found
+
+
+def _missing_essentials(character: Character) -> set[str]:
+    """What a full character lacks of what creation gives everyone, and
+    every magus, and of its type's Virtue and Flaw limits: DE pp. 44-50,
+    63; a Rhine rank stands for Hermetic Magus (GotF p. 20), and a Theban
+    magus casts in Classical Greek (The Sundered Eagle p. 29)."""
+    missing: set[str] = set()
+    ids = {vf.vf_id for vf in character.virtues_flaws}
+    names = {a.name: score_from_xp(a.xp, ABILITY_FACTOR) for a in character.abilities}
+    if not any(n.startswith(LIVING) and s >= NATIVE_SCORE for n, s in names.items()):
+        missing.add("a native language at 5")
+    t = creation_virtues.tally(character)
+    if not t.social_statuses:
+        missing.add("a Social Status")
+    magus_status = {HERMETIC_MAGUS, *STANDS_FOR[HERMETIC_MAGUS]}
+    if character.type == "magus":
+        if not character.hermetic.house:
+            missing.add("a House")
+        elif creation_virtues.house_benefit(character).missing and (
+            character.hermetic.house != "house_ex_miscellanea"
+        ):
+            missing.add("the House Virtue")
+        if THE_GIFT not in ids:
+            missing.add("The Gift")
+        if not ids & magus_status:
+            missing.add("Hermetic Magus")
+        for ability in ("Parma Magica", "Magic Theory"):
+            if not names.get(ability):
+                missing.add(ability)
+        if not any(names.get(f"Dead Language: {lang}") for lang in HERMETIC_TONGUES):
+            missing.add("Latin")
+        return missing
+    if ids & magus_status:
+        missing.add("no Hermetic Magus (not a magus)")
+    if character.type not in ("companion", "mythic companion", "grog"):
+        return missing
+    fewest, most = creation_virtues.virtue_allowance(character, t.flaw_points)
+    if character.type == "grog":
+        within = (
+            t.flaw_points <= creation_virtues.GROG_MAX_FLAW_POINTS
+            and not t.major_virtues + t.major_flaws
+            and t.virtue_points <= most
+            and THE_GIFT not in ids
+        )
+    else:
+        within = (
+            t.flaw_points <= creation_virtues.MAX_FLAW_POINTS
+            and t.minor_flaws <= creation_virtues.MAX_MINOR_FLAWS
+            and t.virtue_points <= most
+        )
+    if not within or (t.hermetic and THE_GIFT not in ids):
+        missing.add(f"a {character.type}'s Virtue and Flaw limits")
+    del fewest
+    return missing
+
+
+def test_every_full_pack_character_has_what_creation_gives():
+    """Each full character in a shipped pack has a native language at 5 and
+    a Social Status; a magus a House and its Virtue, The Gift, Hermetic
+    Magus, Parma Magica, Magic Theory and the Order's language; a
+    companion or grog keeps within its Virtue and Flaw limits. A sketch is
+    no full build, so it is left out."""
+    found = []
+    for key, character in _shipped_characters():
+        if character.detail != "Full":
+            continue
+        missing = _missing_essentials(character)
+        excused, _why = _ESSENTIALS_EXCUSED.get((key, character.name), (set(), ""))
+        if missing - excused:
+            found.append(
+                f"{key}: {character.name}: {', '.join(sorted(missing - excused))}"
+            )
+    assert not found, "\n".join(["Full characters short of an essential:", *found])
+
+
+def test_every_excused_character_still_needs_its_excuse():
+    """An excuse is dropped once its character no longer needs it."""
+    held = {(key, c.name): c for key, c in _shipped_characters()}
+    stale = [
+        f"{key}: {name}"
+        for (key, name), (excused, _why) in _ESSENTIALS_EXCUSED.items()
+        if (key, name) not in held
+        or held[key, name].detail != "Full"
+        or not _missing_essentials(held[key, name]) & excused
+    ]
+    assert not stale, stale
 
 
 def _a_builder() -> tuple[builder.Builder, object]:
@@ -998,7 +1279,10 @@ def test_the_levant_pack_converts_its_printed_magi():
         3,
     )
     rufus = next(c for c in saga.characters if c.name == "Rufus de Clary")
-    assert rufus.background.confidence_score == 2
+    # Tytalus's free Self-Confident (DE p. 46) gives 2, +1 for the
+    # apprenticeship.
+    assert "vf_self_confident" in {v.vf_id for v in rufus.virtues_flaws}
+    assert rufus.background.confidence_score == 3
     # A spell the catalog lacks stays his own, at its printed level.
     own = {s.name: s.level for s in umar.invented_spells}
     assert own["The Wrath of Allah"] and own["Breaking the Perpetual Drought"] == 30
@@ -1237,10 +1521,11 @@ def test_the_alps_pack_converts_its_printed_magi_by_the_de_readings():
     saga = ALPS.build()
     by_name = {c.name: c for c in saga.characters}
     ragoneda, kentigern = by_name["Ragoneda"], by_name["Kentigern"]
-    # Printed ages, Twilight / 3 as Warping, the DE Confidence (+1 Tytalus).
+    # Printed ages, Twilight / 3 as Warping, the DE Confidence: Tytalus's
+    # free Self-Confident (DE p. 46) and +1 for the apprenticeship.
     assert saga.current_year - (ragoneda.background.year_born or 0) == 56
     assert ragoneda.aging.warping_score == 2 and kentigern.aging.warping_score == 3
-    assert ragoneda.background.confidence_score == 2
+    assert ragoneda.background.confidence_score == 3
     assert kentigern.background.confidence_score == 1
     held = {v.vf_id for v in ragoneda.virtues_flaws}
     assert {"vf_public_vis_source", "vf_deficient_form"} <= held

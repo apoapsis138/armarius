@@ -502,6 +502,8 @@ PROFILES: dict[str, Profile] = {
         virtues=["Outsider (Major)"],
         age=33,
         native="Persian",
+        # He refused the Oath, so is no Hermetic Magus.
+        sworn=False,
     ),
 }
 

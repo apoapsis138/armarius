@@ -243,7 +243,7 @@ PROFILES: dict[str, Profile] = {
             "Survival": 1,
         },
         virtues=[
-            "Faerie Sympathy",
+            "Faerie Sympathy (Major)",
             vf_art("Affinity with {art}", "imaginem"),
             "Magical Air",
             "Wrathful (Minor)",
@@ -651,7 +651,12 @@ PROFILES: dict[str, Profile] = {
         weak="com",
         arts={"He": 4, "An": 2, "Me": 2, "Im": 2},
         abilities={"Faerie Lore": (3, "dryads"), "Survival": 1},
-        virtues=["Faerie Sympathy", "Faerie Upbringing", "Magical Air", "Gullible"],
+        virtues=[
+            "Faerie Sympathy (Major)",
+            "Faerie Upbringing",
+            "Magical Air",
+            "Gullible",
+        ],
     ),
     "rudolph": P(
         age=45,
@@ -892,7 +897,7 @@ PROFILES: dict[str, Profile] = {
             "Magic Lore": 2,
         },
         virtues=[
-            "Faerie Sympathy",
+            "Faerie Sympathy (Major)",
             "Mastered Spells",
             "Secretive",
             "Fear",
