@@ -194,7 +194,8 @@ what the books print: never invent lists or figures to fill a gap.
   status to require in branch protection.
 - A pull request that changes only docs (README.md, CONTRIBUTING.md,
   SECURITY.md, `docs/` outside `docs/screenshots/`,
-  `.github/ISSUE_TEMPLATE/`, and changelog fragments, `changelog.d/*.md`)
+  `.github/ISSUE_TEMPLATE/`, changelog fragments, `changelog.d/*.md`, and
+  the walkthroughs PDF, `data/tutorials/*.pdf`; not the tutorial saves)
   gets lighter checks: formatting, lint and
   pyright as usual, and the fast tier (`-m "not ui"`) once per system in
   place of the sharded suite. NOTICE.md and the screenshots are left out
