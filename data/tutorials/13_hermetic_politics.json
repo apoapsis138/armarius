@@ -61494,9 +61494,51 @@
           "xp": 30,
           "specialty": null,
           "xp_table": "ability"
+        },
+        {
+          "name": "Magic Theory",
+          "category": "Arcane",
+          "xp": 30,
+          "specialty": "Rego",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Dead Language: Latin",
+          "category": "Academic",
+          "xp": 50,
+          "specialty": "Hermetic usage",
+          "xp_table": "ability"
         }
       ],
-      "virtues_flaws": [],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_the_gift",
+          "params": {},
+          "id": "rudolf-fix0",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_hermetic_magus",
+          "params": {},
+          "id": "rudolf-fix1",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_minor_magical_focus",
+          "params": {
+            "focus": "certamen",
+            "arts": ""
+          },
+          "id": "rudolf-fix2",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        }
+      ],
       "traditions": [],
       "sihr_realm": "",
       "tradition_effects": [],
