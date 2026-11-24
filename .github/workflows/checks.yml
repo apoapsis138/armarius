@@ -9,7 +9,9 @@
 # job) runs the fast tier instead of the full suite (`-m "not ui"`, once per
 # system); lint, format and types still run. Pushes to main and runs by
 # hand always run the full suite. Changelog fragments (changelog.d/*.md)
-# count as docs: the fast tier checks them. NOTICE.md and docs/screenshots/
+# count as docs: the fast tier checks them, and so does the walkthroughs
+# PDF (data/tutorials/*.pdf; the tutorial saves beside it are data, and run
+# the full suite). NOTICE.md and docs/screenshots/
 # are left off the list on purpose: tests read NOTICE.md, and the help
 # site copies the screenshots.
 #
@@ -57,7 +59,7 @@ jobs:
               while IFS= read -r f; do
                 case "$f" in
                   docs/screenshots/*) docs_only=false ;;
-                  README.md | CONTRIBUTING.md | SECURITY.md | docs/* | .github/ISSUE_TEMPLATE/* | changelog.d/*.md) ;;
+                  README.md | CONTRIBUTING.md | SECURITY.md | docs/* | .github/ISSUE_TEMPLATE/* | changelog.d/*.md | data/tutorials/*.pdf) ;;
                   *) docs_only=false ;;
                 esac
               done <<< "$files"
