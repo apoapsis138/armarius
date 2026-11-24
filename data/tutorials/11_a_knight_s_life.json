@@ -860,9 +860,49 @@
         },
         "vim": {
           "xp": 15
+        },
+        "intellego": {
+          "xp": 15
+        },
+        "muto": {
+          "xp": 15
+        },
+        "perdo": {
+          "xp": 15
+        },
+        "rego": {
+          "xp": 15
+        },
+        "animal": {
+          "xp": 15
+        },
+        "aquam": {
+          "xp": 15
+        },
+        "auram": {
+          "xp": 15
+        },
+        "herbam": {
+          "xp": 15
+        },
+        "imaginem": {
+          "xp": 15
+        },
+        "mentem": {
+          "xp": 15
+        },
+        "terram": {
+          "xp": 15
         }
       },
       "abilities": [
+        {
+          "name": "Living Language: German",
+          "category": "General",
+          "xp": 75,
+          "specialty": null,
+          "xp_table": "ability"
+        },
         {
           "name": "Magic Theory",
           "category": "Academic",
@@ -900,6 +940,32 @@
         }
       ],
       "virtues_flaws": [
+        {
+          "vf_id": "vf_the_gift",
+          "params": {},
+          "id": "char1-hv0",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_hermetic_magus",
+          "params": {},
+          "id": "char1-hv1",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_puissant_ability",
+          "params": {
+            "ability": "intrigue"
+          },
+          "id": "char1-hv2",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
         {
           "vf_id": "vf_affinity_with_art",
           "params": {
@@ -1008,7 +1074,7 @@
       "reputations": [],
       "raw_vis": {},
       "hermetic": {
-        "house": null,
+        "house": "house_bonisagus",
         "domus_magna": "",
         "primus": "",
         "parens": "",
@@ -2068,15 +2134,22 @@
       "characteristics": {
         "intelligence": 1,
         "perception": 0,
-        "strength": 0,
-        "stamina": 0,
+        "strength": 1,
+        "stamina": 1,
         "presence": 2,
         "communication": 1,
-        "dexterity": 0,
+        "dexterity": 1,
         "quickness": 0
       },
       "arts": {},
       "abilities": [
+        {
+          "name": "Living Language: German",
+          "category": "General",
+          "xp": 75,
+          "specialty": null,
+          "xp_table": "ability"
+        },
         {
           "name": "Leadership",
           "category": "General",
@@ -2104,6 +2177,13 @@
           "xp": 50,
           "specialty": null,
           "xp_table": "ability"
+        },
+        {
+          "name": "Ride",
+          "category": "General",
+          "xp": 30,
+          "specialty": "jousting",
+          "xp_table": "ability"
         }
       ],
       "virtues_flaws": [],
@@ -2118,7 +2198,58 @@
       "tradition_pools": {},
       "spells_known": [],
       "invented_spells": [],
-      "inventory": [],
+      "inventory": [
+        {
+          "id": "aimery_lance",
+          "kind": "weapon",
+          "name": "Lance",
+          "lab_id": null,
+          "description": "",
+          "location": "",
+          "location_kind": "",
+          "location_id": null,
+          "quantity": 1,
+          "dimensions": "",
+          "inhabitants": "",
+          "owner": "",
+          "quality": null,
+          "upkeep": null,
+          "build_points": null,
+          "usage": "Standard (2 Seasons)",
+          "gear_type": "",
+          "gear_quality": "Standard",
+          "gear_id": "weapon_lance",
+          "load": 0,
+          "weapon_init": 2,
+          "weapon_attack": 4,
+          "weapon_defense": 0,
+          "weapon_damage": 5,
+          "armor_protection": 0,
+          "armor_slot": "",
+          "make": "",
+          "make_bonus": 0,
+          "carried": true,
+          "assists": "",
+          "assistance": "",
+          "art": "",
+          "pawns": 0,
+          "season": "",
+          "physical_form": "",
+          "infernal": false,
+          "vis_kind": "",
+          "paired_art": "",
+          "virtue_thing": "",
+          "effect_level": null,
+          "contested": false,
+          "secured_until": null,
+          "dwindling": false,
+          "dwindling_from": null,
+          "dwindled_years": 0,
+          "place_id": null,
+          "place_level": 0,
+          "ship": null
+        }
+      ],
       "silver": 3,
       "assigned_lab_id": null,
       "background": {
@@ -2845,7 +2976,7 @@
       "name": "Oaken Wand of the Fiery Lance",
       "type": "Invested Device",
       "description": "",
-      "talisman": false,
+      "talisman": true,
       "holder_kind": "laboratory",
       "holder_id": "lab_adelheid",
       "maker_id": "adelheid_of_flambeau",
