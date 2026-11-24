@@ -552,6 +552,7 @@ def advance_summary(saga: Saga) -> str:
             for c in missing
         )
         lines.append(todo(f"Nothing planned for: {who}. Each is asked about next."))
+    lines += [todo(escape(c)) for outcome in ready for c in outcome.cautions]
     for outcome in worked:
         if not outcome.ok:
             character = saga.character(outcome.character_id)

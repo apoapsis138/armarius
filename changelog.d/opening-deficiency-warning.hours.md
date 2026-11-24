@@ -1,0 +1,1 @@
+**Deficiencies warned of before an Opening.** Planning to open an apprentice's Arts now names, in warning colour, every Art where the master's score is under 5 and the Deficiency it will give, with the master's score. The sheet's This Season and the Advance Time question say the same, and the Diary lists them once the season is played.

@@ -100,6 +100,25 @@ def gifted(character: Character) -> bool:
     )
 
 
+#: The Deficiency Flaws, Technique and Form.
+_DEFICIENCY_IDS = frozenset({"vf_deficient_technique", "vf_deficient_form"})
+
+
+def master_score(magus: Character, art: str) -> int:
+    """The master's score in `art` at the Opening (0 without it)."""
+    return (magus.arts.get(art.lower()) or ArtScore()).level
+
+
+def _deficient_arts(character: Character) -> set[str]:
+    """The Arts (lower case) `character` already has a Deficiency in."""
+    return {
+        str(value).lower()
+        for vf in character.virtues_flaws
+        if vf.vf_id in _DEFICIENCY_IDS
+        for value in vf.params.values()
+    }
+
+
 def _hermetic(character: Character) -> tuple[int, int]:
     """(Minor, Major) Hermetic Virtues `character` has."""
     by_id = {e.id: e for e in catalog.load_virtue_flaw_catalog()}
@@ -128,10 +147,13 @@ def work(
     if plan.activity == OPEN_ARTS:
         if any(student.arts.get(a.lower()) is not None for a in (*TECHNIQUES, *FORMS)):
             return [f"{student.name}'s Arts are already open."], None
+        # A Flaw is gained once: an Art the apprentice is already
+        # Deficient in gives nothing more.
+        had = _deficient_arts(student)
         deficient = [
             art
             for art in (*TECHNIQUES, *FORMS)
-            if (magus.arts.get(art.lower()) or ArtScore()).level < DEFICIENT_AT
+            if master_score(magus, art) < DEFICIENT_AT and art.lower() not in had
         ]
         result = ApprenticeWork(deficiencies=deficient)
         found = _supernatural(saga, magus, student, plan, result)
@@ -328,6 +350,46 @@ def teachable_virtues(
     return found
 
 
+def _deficiency_list(arts: list[str], scores: dict[str, int] | None = None) -> str:
+    """The Deficiencies `arts` give, one Flaw for each Art: Techniques (a
+    Major Flaw) then Forms (a Minor one) (DE p. 125), each Art with the
+    master's score when `scores` are given."""
+
+    def named(art: str) -> str:
+        return f"{art} {scores[art]}" if scores is not None else art
+
+    parts: list[str] = []
+    for flaw, kind in (
+        ("Deficient Technique (Major)", TECHNIQUES),
+        ("Deficient Form (Minor)", FORMS),
+    ):
+        these = [named(a) for a in arts if a in kind]
+        if these:
+            each = "in each of" if len(these) > 1 else "in"
+            parts.append(f"a {flaw} {each} {', '.join(these)}")
+    return "; ".join(parts)
+
+
+def _deficiencies(count: int) -> str:
+    return f"{count} Deficienc{'y' if count == 1 else 'ies'}"
+
+
+def deficiency_caution(
+    magus: Character, student: Character, work_: ApprenticeWork
+) -> str:
+    """What an Opening warns of before it's played: each Art the master
+    has under 5 and the Deficiency it gives the apprentice, normally a
+    Low Crime (DE p. 270); "" when there are none."""
+    if not work_.deficiencies:
+        return ""
+    scores = {art: master_score(magus, art) for art in work_.deficiencies}
+    return (
+        f"{magus.name}'s Arts under {DEFICIENT_AT} give {student.name} "
+        f"{_deficiencies(len(work_.deficiencies))}, normally a Low Crime "
+        f"(DE p. 270): {_deficiency_list(work_.deficiencies, scores)}."
+    )
+
+
 #: The Social Status an apprentice has from the season his Arts are
 #: opened (Apprentices p. 9; DE p. 270).
 APPRENTICE = "vf_apprentice"
@@ -368,6 +430,11 @@ def open_arts(
         vf_id = "vf_deficient_technique" if art in TECHNIQUES else "vf_deficient_form"
         key = "technique" if art in TECHNIQUES else "form"
         student.virtues_flaws.append(VirtueFlawInstance(vf_id, params={key: art}))
+    if work_.deficiencies:
+        told.append(
+            f"{student.name} gains {_deficiencies(len(work_.deficiencies))}: "
+            f"{_deficiency_list(work_.deficiencies)}."
+        )
     return told
 
 
