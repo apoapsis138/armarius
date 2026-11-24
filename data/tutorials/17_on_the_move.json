@@ -2037,6 +2037,13 @@
           "xp": 5,
           "specialty": null,
           "xp_table": "ability"
+        },
+        {
+          "name": "Parma Magica",
+          "category": "Arcane",
+          "xp": 30,
+          "specialty": "Mentem",
+          "xp_table": "ability"
         }
       ],
       "virtues_flaws": [
@@ -2326,6 +2333,13 @@
           "category": "Academic",
           "xp": 5,
           "specialty": null,
+          "xp_table": "ability"
+        },
+        {
+          "name": "Parma Magica",
+          "category": "Arcane",
+          "xp": 5,
+          "specialty": "Corpus",
           "xp_table": "ability"
         }
       ],
@@ -2887,6 +2901,14 @@
           "temporary": false,
           "ends_year": null,
           "ends_season": ""
+        },
+        {
+          "vf_id": "vf_self_confident",
+          "params": {},
+          "id": "wolfram-fix0",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
         }
       ],
       "traditions": [],
@@ -3146,6 +3168,16 @@
           "temporary": false,
           "ends_year": null,
           "ends_season": ""
+        },
+        {
+          "vf_id": "vf_puissant_art",
+          "params": {
+            "art": "muto"
+          },
+          "id": "bruno-fix0",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
         }
       ],
       "traditions": [],
@@ -3402,6 +3434,16 @@
           "vf_id": "vf_hermetic_magus",
           "params": {},
           "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_puissant_ability",
+          "params": {
+            "ability": "magic theory"
+          },
+          "id": "rosamund-fix0",
           "temporary": false,
           "ends_year": null,
           "ends_season": ""

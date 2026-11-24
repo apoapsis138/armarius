@@ -2023,6 +2023,13 @@
           "xp": 5,
           "specialty": null,
           "xp_table": "ability"
+        },
+        {
+          "name": "Parma Magica",
+          "category": "Arcane",
+          "xp": 30,
+          "specialty": "Mentem",
+          "xp_table": "ability"
         }
       ],
       "virtues_flaws": [
@@ -2304,6 +2311,13 @@
           "category": "Academic",
           "xp": 5,
           "specialty": null,
+          "xp_table": "ability"
+        },
+        {
+          "name": "Parma Magica",
+          "category": "Arcane",
+          "xp": 5,
+          "specialty": "Corpus",
           "xp_table": "ability"
         }
       ],
