@@ -124,7 +124,10 @@ def targets(character: Character) -> list[str]:
 def allowed(character: Character, target: str) -> bool:
     t = tradition(character)
     return t is not None and (
-        target in t.training.minimums or access.may_learn(character, target)
+        target in t.training.minimums
+        or access.may_learn(character, target)
+        # The Gift's one Supernatural Ability; Later Life checks the one.
+        or access.gift_opens(character, target)
     )
 
 

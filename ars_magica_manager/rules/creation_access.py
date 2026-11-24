@@ -521,6 +521,15 @@ def gifted_non_magus(character: Character) -> bool:
     return character.type != "magus" and THE_GIFT in _ids(character)
 
 
+def gift_opens(character: Character, name: str) -> bool:
+    """Whether The Gift alone lets the character buy Ability `name`: any
+    Supernatural Ability for a Gifted non-magus (DE p. 64; Apprentices p.
+    13). That only one may be taken is a separate check."""
+    return gifted_non_magus(character) and ability_category(name) in (
+        SUPERNATURAL_CATEGORIES
+    )
+
+
 def learnable_abilities(
     character: Character, *, apprenticed: bool = False
 ) -> list[str]:
@@ -529,11 +538,10 @@ def learnable_abilities(
     types = opened_types(character, apprenticed=apprenticed)
     granted = granted_supernatural(character) | tradition_opened(character)
     named = opened_by_virtues(character)
-    gifted = gifted_non_magus(character)
     names = set()
     for entry in catalog.load_ability_catalog():
         if entry.category in SUPERNATURAL_CATEGORIES:
-            ok = entry.name in granted or gifted
+            ok = entry.name in granted or gift_opens(character, entry.name)
         else:
             ok = entry.name in named or entry.category in types
             ok = ok or (entry.name == PENETRATION and bool(granted))

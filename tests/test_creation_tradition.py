@@ -65,6 +65,14 @@ def test_spending_the_apprenticeship_and_the_rune_cap():
     assert checks["Apprenticeship xp: 290"] == "pass"
 
 
+def test_a_gifted_member_trains_one_supernatural_ability_without_its_virtue():
+    saga = _saga("trad_vitkir")
+    vitki = _member("trad_vitkir", "vf_the_gift", "vf_vitki")
+    assert "Second Sight" in ct.targets(vitki)
+    creation.spend_creation_xp(vitki, CreationXp("training", "Second Sight", 5))
+    assert "Only the tradition's Arts and open Abilities" not in _checks(saga, vitki)
+
+
 def test_an_ungifted_vitki_is_told_to_take_the_gift():
     saga = _saga("trad_vitkir")
     found = rules.checks(saga, _member("trad_vitkir", "vf_vitki"))

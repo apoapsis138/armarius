@@ -176,6 +176,8 @@ def _learnable_checks(saga: Saga, character: Character) -> list[Check]:
             x.target
             for x in entries(character, "later_life")
             if not access.may_learn(character, x.target)
+            # The Gift's one Supernatural Ability is limited by the check below.
+            and not access.gift_opens(character, x.target)
             # A child may learn his parent's vocation (Apprentices p. 14).
             and not childhood.vocational(saga, character, x.target)
         }
