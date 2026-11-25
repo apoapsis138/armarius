@@ -1610,7 +1610,16 @@ A player opens theirs from the page of any character they play: press `m` for Mo
 <!-- /tui -->
 <!-- gui -->
 A player opens theirs with **Open Handouts**, at the top of the Diary chapter of any character they play. The storyguide opens a Player's from Saga Management's Players: choose the Player, then **Handouts** in More.
+
+**Print one.** Any Handout you open, from this list or from a Show card in the Chronicle, has **Save as PDF...** beside Close. Choose the paper (US Letter or A4, kept for next time), then where to save it, and print the PDF or keep it.
+
+- **A written Handout** prints on its Stationery: vellum in its ruled frame, a sealed letter with its creases, or a proclamation in its gilt frame, its title set as the Stationery sets it, its initial illuminated and its pictures in place. A long one runs on to more pages, a paragraph moving to the next page whole unless it is longer than a page, and a sealed one carries its seal on its last page.
+- **A record's copy** prints on the printed sheet's page, as it was shown.
+- **A picture** prints under its title, as large as fits the page.
 <!-- /gui -->
+<!-- tui -->
+Printing a Handout is the desktop's: open it there to save it as a PDF.
+<!-- /tui -->
 
 **See also:** [Show](help:chronicle-shows), [The Chronicle](help:chronicle)
 

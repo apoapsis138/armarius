@@ -87,6 +87,10 @@ class Form:
     #: terminal under its Stationery's name) in place of the fields, and
     #: closing it answers with no values.
     reading: Reading | None = None
+    #: When set, a front-end that prints offers Save as PDF beside Close:
+    #: this builds the print_layout.Document to print (a Handout's copy;
+    #: print_handouts). The terminal doesn't print.
+    printed: Callable[[], Any] | None = None
 
 
 @dataclass(frozen=True)

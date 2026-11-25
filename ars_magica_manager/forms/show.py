@@ -22,6 +22,7 @@ from .. import (
     handouts,
     host_table,
     open_stories,
+    print_handouts,
     record_links,
     references,
     scene_aura,
@@ -411,6 +412,7 @@ def copy_form(shown: shows.Shown) -> Form:
         save_label="Close",
         help_id=HELP_ID,
         reading=reading,
+        printed=lambda: print_handouts.document(shown),
     )
 
 

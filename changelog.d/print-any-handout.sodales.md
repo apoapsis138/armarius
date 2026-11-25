@@ -1,0 +1,1 @@
+**Print any Handout.** In the Virtual Tabletop preview, any Handout you open on the desktop, from your Handouts or a Show card, has Save as PDF. A written Handout prints on its Stationery, sealed on its last page; a record's copy on the printed sheet's page; a picture under its title. Choose US Letter or A4, then where.

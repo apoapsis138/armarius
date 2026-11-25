@@ -70,11 +70,15 @@ from ..commands import (
     passes,
 )
 from ..form_spec import DialogField, FieldError, ListEditor
+from ..forms import printing
 from ..handout_layout import Preview
+from ..markup import escape
 from ..paths import APP_NAME
+from ..shows import WITHDRAWN_NOTE
 from . import shields, sounds
 from .handout_copy import copy_window
 from .handout_page import preview_window
+from .handout_print import print_handout
 from .markup_html import plain, to_html
 from .style import snapping
 from .style.families import DIALOG
@@ -1193,7 +1197,10 @@ def step_dialog(
     if isinstance(step, ChooseFile):
         return file_dialog(step, parent)
     if isinstance(step, Form) and step.reading is not None:
-        return copy_window(step.reading, parent)
+        window = copy_window(step.reading, parent)
+        if step.printed is not None:
+            offer_pdf(window, window.buttons_row, step.printed, p, ask)
+        return window
     if isinstance(step, Form) and step.cards is not None:
         return CardsDialog(
             step.title,
@@ -1207,7 +1214,7 @@ def step_dialog(
             ask=ask,
         )
     if isinstance(step, Form):
-        return FieldsDialog(
+        dialog = FieldsDialog(
             step.title,
             step.fields(),
             p,
@@ -1221,6 +1228,9 @@ def step_dialog(
             cancel_label=step.cancel_label,
             preview=step.preview,
         )
+        if step.printed is not None:
+            offer_pdf(dialog, dialog.buttons_row, step.printed, p, ask)
+        return dialog
     if isinstance(step, Choose):
         choices = step.choices()
         if not choices and step.others is None:
@@ -1299,6 +1309,53 @@ def file_dialog(step: ChooseFile, parent: QWidget | None) -> QFileDialog:
         dialog.setFileMode(QFileDialog.FileMode.ExistingFile)
         dialog.setAcceptMode(QFileDialog.AcceptMode.AcceptOpen)
     return dialog
+
+
+class _Withdrawn(Exception):
+    """The Show being saved was withdrawn while its paper or file was
+    asked: nothing is written."""
+
+
+def offer_pdf(
+    dialog: QDialog,
+    row: QHBoxLayout,
+    printed: Callable[[], Any],
+    p: Palette,
+    ask: Ask | None = None,
+    *,
+    still: Callable[[], bool] = lambda: True,
+) -> QPushButton:
+    """A Save as PDF button at the front of `row`, under a Handout's copy:
+    it saves the pages `printed` builds (print_handouts.document) after
+    asking the paper and where (printing.handout_pdf_form), then says
+    where they went; nothing, once `still` says the copy isn't held (its
+    Show withdrawn meanwhile)."""
+    asks: Ask = ask or (lambda shown: shown.exec())
+    button = QPushButton("Save as PDF...")
+    button.setObjectName("save-pdf")
+    button.setToolTip("Save it as a PDF, to print or keep.")
+
+    def draw(doc: Any, options: Any, path: Path) -> int:
+        if not still():
+            raise _Withdrawn
+        return print_handout(doc, path, options)
+
+    def save() -> None:
+        doc = printed()
+        steps = printing.handout_pdf_form(
+            doc.title, lambda options, path: draw(doc, options, path)
+        )
+        try:
+            done, end = run_steps(steps, p, dialog, asks)
+        except _Withdrawn:
+            done, end = True, [WITHDRAWN_NOTE]
+        if done and isinstance(end, list) and end:
+            words = escape("\n".join(str(line) for line in end))
+            asks(NoticeDialog("Save as PDF", words, p, dialog))
+
+    button.clicked.connect(lambda _checked=False: save())
+    row.insertWidget(0, button)
+    return button
 
 
 def run_steps(
