@@ -3161,7 +3161,7 @@
         "dexterity": 1,
         "quickness": 6
       },
-      "base_soak": 2,
+      "base_soak": -2,
       "magic_resistance": 0,
       "wounds": {
         "light": 0,
