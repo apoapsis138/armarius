@@ -14,6 +14,7 @@ from typing import Any, ClassVar
 from textual.app import App, ComposeResult
 from textual.binding import Binding, BindingType
 from textual.containers import Horizontal
+from textual.screen import Screen
 from textual.widgets import Input, Select, Static
 
 from ... import hosting
@@ -38,6 +39,7 @@ from ...commands import (
 from ...markup import escape
 from ..heraldry import beside
 from .fields import FieldsDialog
+from .handout_reading import HandoutReading
 from .pickers import CsvFilePickerScreen, SearchablePickerScreen
 from .prompts import ConfirmScreen, terminal_fields
 
@@ -245,6 +247,7 @@ def _show(app: App[Any], step: Question, answer: Callable[[object], None]) -> No
             inspector=form.inspector,
             save_label=form.save_label,
             cancel_label=form.cancel_label,
+            preview=_reading(form),
         )
         dialog.help_id = form.help_id or None
         app.push_screen(dialog, handle_values)
@@ -285,6 +288,15 @@ def _show(app: App[Any], step: Question, answer: Callable[[object], None]) -> No
             ConfirmScreen(step.question, yes_label=step.yes_label, yes_variant=variant),
             handle_confirmed,
         )
+
+
+def _reading(form: Form) -> Callable[[dict[str, Any]], Screen[None]] | None:
+    """The screen a form's Preview opens: what the values make, read as
+    the terminal shows a Handout (its text under its Stationery's name)."""
+    preview = form.preview
+    if preview is None:
+        return None
+    return lambda values: HandoutReading(preview(values).laid)
 
 
 def _with_picture(form: Form) -> Callable[[dict[str, Any]], str] | None:

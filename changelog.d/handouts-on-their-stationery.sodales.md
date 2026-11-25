@@ -1,0 +1,1 @@
+**Handouts drawn on their Stationery.** The Handout form's Preview shows a written Handout as players will get it, unsaved. The desktop draws it on its Stationery: ruled vellum, a folded letter under a wax seal, or a proclamation in a gilt frame, with its illuminated initial, flourishes and pictures. The terminal reads it under its Stationery's name.

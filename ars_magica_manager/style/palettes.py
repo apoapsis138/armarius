@@ -1011,6 +1011,11 @@ DRAWN = {
     "steel": "#8C939B",
     "river": "#6E8FB0",
     "river-light": "#A9C1D6",
+    # A written Handout's Stationery over the laid paper (gui/handout_page.py):
+    # a vellum's warm skin, a letter's fresh paper, a proclamation's parchment.
+    "vellum": "#E8D6A8",
+    "letter-paper": "#FBF6E9",
+    "proclamation": "#D9BF86",
 }
 
 #: Each season's pigments in each set of medallions, by set.

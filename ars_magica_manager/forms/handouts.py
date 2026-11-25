@@ -3,7 +3,8 @@
 Add, Edit and Delete a written Handout. Its form asks for a title, a
 Stationery, its text (the app's markup with the six handout tags), up to
 four pictures (one already in the saga, or a new file copied into the
-handouts folder), who found it, where, and the Story it belongs to.
+handouts folder), who found it, where, and the Story it belongs to. Its
+Preview lays what it holds on its Stationery (handout_layout), unsaved.
 
 Pattern: one core Form, with the list's verbs one commands.SectionOps
 registered in section_verbs."""
@@ -26,6 +27,7 @@ from ..commands import (
     confirm_delete,
 )
 from ..form_spec import DialogField, ListEditor
+from ..handout_layout import Preview
 from ..markup import escape
 from ..models import STATIONERY, VELLUM, Handout, Saga
 from ..picture_files import SUFFIXES
@@ -91,10 +93,13 @@ def handout_fields(saga: Saga, existing: Handout | None) -> list[DialogField]:
             "area",
             existing.text if existing else "",
             rows=12,
-            hint="**bold** and *italic* as anywhere. Start a line with "
-            "[heading], [centre], [right] or [initial] (a paragraph opening on "
-            "an illuminated initial), or put [flourish] or [picture 1] alone "
-            f"on a line. At most {handouts.MOST_TEXT:,} characters.",
+            # Escaped: the tags are words to read here, not markup.
+            hint=escape(
+                "**bold** and *italic* as anywhere. Start a line with "
+                "[heading], [centre], [right] or [initial] (a paragraph opening "
+                "on an illuminated initial), or put [flourish] or [picture 1] "
+                f"alone on a line. At most {handouts.MOST_TEXT:,} characters."
+            ),
         ),
         DialogField(
             "pictures",
@@ -109,9 +114,11 @@ def handout_fields(saga: Saga, existing: Handout | None) -> list[DialogField]:
                 lambda _current: _choose_picture(saga),
                 "Pictures",
             ),
-            hint=f"Up to {handouts.MOST_PICTURES}: a map or portrait already in "
-            "the saga, or a new picture, copied into the handouts folder. "
-            "[picture 1] places the first.",
+            hint=escape(
+                f"Up to {handouts.MOST_PICTURES}: a map or portrait already in "
+                "the saga, or a new picture, copied into the handouts folder. "
+                "[picture 1] places the first."
+            ),
         ),
         DialogField(
             "found_by",
@@ -183,6 +190,18 @@ def handout_form(saga: Saga, existing: Handout | None) -> Form:
         lambda values: _store(saga, existing, values),
         validate=_validate,
         help_id=HANDOUTS_HELP,
+        preview=lambda values: _preview(saga, values),
+    )
+
+
+def _preview(saga: Saga, values: dict[str, Any]) -> Preview:
+    """The Handout as the form holds it, laid on its Stationery."""
+    return handouts.preview(
+        saga,
+        values.get("title") or "",
+        values.get("stationery") or VELLUM,
+        values.get("text") or "",
+        list(values.get("pictures") or []),
     )
 
 

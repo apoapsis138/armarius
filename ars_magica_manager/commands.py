@@ -28,6 +28,7 @@ from typing import Any
 
 from . import record_links
 from .form_spec import DialogField
+from .handout_layout import Preview
 from .markup import escape
 from .models import Saga
 
@@ -77,6 +78,10 @@ class Form:
     #: values it gives `apply` are the fields' all the same.
     cards: Callable[[], list[FormCard]] | None = None
     cards_lead: str = ""
+    #: When set, a Preview button beside the form's own shows what the
+    #: values as they stand will look like, drawn by each front-end its
+    #: own way, without saving: a written Handout on its Stationery.
+    preview: Callable[[dict[str, Any]], Preview] | None = None
 
 
 @dataclass(frozen=True)
