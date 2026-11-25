@@ -596,7 +596,9 @@ class RemoteClient:
             body["secrets"] = "\n".join(f"{row}:{mark}" for row, mark in call.secrets)
         if call.reveal:
             body["reveal"] = True
-        if call.record is not None:
+        if call.handout:
+            body["handout"] = call.handout
+        elif call.record is not None:
             body |= {"kind": call.record.kind, "id": call.record.id}
         elif call.picture is not None:
             body |= {"folder": call.picture[0], "name": call.picture[1]}

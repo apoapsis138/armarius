@@ -1420,12 +1420,12 @@ SHOW = "show"
 @dataclass(frozen=True)
 class ShowCall:
     """A Show, as data (the glossary's): its title, what is shown (a
-    record, or a picture already in the saga as its folder and file name),
-    the Players shown (none: the Table), the open story it belongs to, by
-    id, if any, the record's Secrets not yet revealed that go with it, each
-    by its place among them and a mark of its words (shows.secret_mark),
-    and whether the Show also reveals the record. The host builds the one
-    frozen copy (shows.py)."""
+    record, a picture already in the saga as its folder and file name, or
+    a written Handout by its id), the Players shown (none: the Table), the
+    open story it belongs to, by id, if any, the record's Secrets not yet
+    revealed that go with it, each by its place among them and a mark of
+    its words (shows.secret_mark), and whether the Show also reveals the
+    record. The host builds the one frozen copy (shows.py)."""
 
     title: str
     record: references.Ref | None = None
@@ -1434,6 +1434,7 @@ class ShowCall:
     story_id: str = ""
     secrets: tuple[tuple[int, str], ...] = ()
     reveal: bool = False
+    handout: str = ""
 
 
 def show_line(body: dict[str, Any]) -> str:

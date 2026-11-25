@@ -72,6 +72,31 @@ ROLL_WAIT = 8.0
 #: The longest opening a Show's copy may hold the window: a map may be
 #: large, but a lost host must not freeze the seat for long.
 OPEN_WAIT = 12.0
+#: The longest a written Handout copy's pictures may add to opening it,
+#: all of them together: one not here by then is drawn as a placeholder.
+HANDOUT_PICTURES_WAIT = 12.0
+
+
+async def handout_pictures(
+    client: RemoteClient,
+    names: list[str],
+    wait: float = HANDOUT_PICTURES_WAIT,
+) -> tuple[bytes | None, ...]:
+    """A written Handout copy's pictures (by their names in the Show
+    folder; "" for none), fetched by the picture request on `client`, the
+    connection the copy came on, within one `wait` for them all. One the
+    host refuses, or that isn't here by then, is None (a placeholder); if
+    the connection fails, so are the rest, and the copy still opens."""
+    found: list[bytes | None] = [None] * len(names)
+    try:
+        async with asyncio.timeout(wait):
+            for place, name in enumerate(names):
+                if name:
+                    found[place] = await client.picture(shows.FOLDER, name)
+    # UnreadableReply is a ChannelError.
+    except TimeoutError, ChannelError, ConnectionError:
+        pass
+    return tuple(found)
 
 
 class SeatSession:
@@ -466,10 +491,13 @@ class SeatSession:
             picture = await client.picture(shows.FOLDER, name) if name else None
             if name and picture is None:
                 raise ShowRefused("This Show's picture can't be fetched.")
-            return shows.from_copy(kept, picture)
+            pictures = await handout_pictures(client, shows.copy_pictures(kept))
+            return shows.from_copy(kept, picture, pictures)
 
         try:
-            return self._loop.run(self._own(fetch), timeout=OPEN_WAIT)
+            return self._loop.run(
+                self._own(fetch), timeout=OPEN_WAIT + HANDOUT_PICTURES_WAIT
+            )
         except ShowRefused as refused:
             return refused.why
         except NeedsPasscode, NoCredential:

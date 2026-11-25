@@ -123,7 +123,11 @@ FILTERS = ("Folder", "Session", "Kind", "Story")
 OPEN, RENAME, PIN, MOVE = "open", "rename", "pin", "move"
 #: The list's first entry: search the words of the copies, on the host.
 SEARCH = "@search"
-_KINDS = {handout_list.RECORD: "Record", handout_list.PICTURE: "Picture"}
+_KINDS = {
+    handout_list.RECORD: "Record",
+    handout_list.PICTURE: "Picture",
+    handout_list.WRITTEN: "Written",
+}
 
 
 def _label(title: str, kept: handout_list.Kept) -> str:

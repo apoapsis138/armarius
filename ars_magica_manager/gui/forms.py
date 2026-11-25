@@ -73,6 +73,7 @@ from ..form_spec import DialogField, FieldError, ListEditor
 from ..handout_layout import Preview
 from ..paths import APP_NAME
 from . import shields, sounds
+from .handout_copy import copy_window
 from .handout_page import preview_window
 from .markup_html import plain, to_html
 from .style import snapping
@@ -1191,6 +1192,8 @@ def step_dialog(
     """The dialog that asks `step` (None: a list with nothing in it)."""
     if isinstance(step, ChooseFile):
         return file_dialog(step, parent)
+    if isinstance(step, Form) and step.reading is not None:
+        return copy_window(step.reading, parent)
     if isinstance(step, Form) and step.cards is not None:
         return CardsDialog(
             step.title,
@@ -1243,6 +1246,8 @@ def step_dialog(
 def reply(step: Step, dialog: QDialog) -> Any:
     """What an (accepted) dialog holds, as commands.steps wants the answer:
     the form's values, the chosen value, the file's path, or True."""
+    if isinstance(step, Form) and step.reading is not None:
+        return {}  # a copy to read: closing it answers with no values
     if isinstance(step, Form):
         assert isinstance(dialog, FieldsDialog | CardsDialog)
         return dialog.values

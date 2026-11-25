@@ -4,7 +4,12 @@ from __future__ import annotations
 
 from ... import merges, storage, undo_season
 from ...actions import NodeKind
-from ...sections import PLAYERS_SECTION, SESSION_SCENES_SECTION, SESSIONS_SECTION
+from ...sections import (
+    HANDOUTS_SECTION,
+    PLAYERS_SECTION,
+    SESSION_SCENES_SECTION,
+    SESSIONS_SECTION,
+)
 from .. import downtime, player_handouts, scene_verbs
 from .. import hosting as hosting_forms
 from .. import message as message_forms
@@ -40,6 +45,7 @@ from .rules import (
     sends_message,
     sets_scene,
     shows_at_session,
+    shows_handout,
     stops_hosting,
     withdraws_show,
 )
@@ -121,6 +127,21 @@ ENTRIES: tuple[MoreAction, ...] = (
         section="section-sessions",
         on_page=False,
         in_section=shows_at_session,
+    ),
+    # Show a written Handout, from the Handouts list in Saga content: its
+    # row's own button on the desktop (forms/show.py).
+    MoreAction(
+        "show_handout",
+        "w",
+        "Show",
+        step=lambda page: show_forms.show_handout(
+            page.saga, page.chosen_row(HANDOUTS_SECTION)
+        ),
+        # The form can show a record instead, and Also reveal changes it.
+        refresh=changes(tree=True),
+        section=HANDOUTS_SECTION,
+        on_page=False,
+        in_section=shows_handout,
     ),
     # Set and end a Scene loaded into the Session (forms/scene_verbs.py).
     MoreAction(

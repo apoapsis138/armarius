@@ -32,6 +32,7 @@ from .. import (
     section_verbs,
     traditions,
     viewing,
+    virtual_tabletop,
 )
 from .. import house_rules as hr
 from .. import saga_content as sc
@@ -39,6 +40,7 @@ from .. import spells as spl
 from ..arts import FORMS, TECHNIQUES
 from ..forms import goods as goods_forms
 from ..forms import saga_content as scf
+from ..forms import show as show_forms
 from ..models import Saga, Spell
 from ..sections import (
     CONTENT_HANDOUTS_TAB,
@@ -546,6 +548,16 @@ class SagaContentPage(QWidget):
             if saga.handouts
             else "None yet: Add writes one to show the players."
         )
+        # Show (the More registry's show_handout), offered by the same core
+        # rule the terminal's More asks (show_forms.offers_handout).
+        more = [
+            (
+                "Show",
+                "lab_text",
+                lambda row: show_forms.show_handout(saga, row),
+                lambda row: show_forms.offers_handout(saga, row),
+            )
+        ]
         holder.addWidget(
             section(
                 handouts.title(saga),
@@ -557,6 +569,7 @@ class SagaContentPage(QWidget):
                     self.run,
                     p,
                     nouns=("Write a Handout", "Edit", "Delete"),
+                    more=more if virtual_tabletop.on() else (),
                     part=HANDOUTS_SECTION,
                 ),
                 part=HANDOUTS_SECTION,

@@ -100,6 +100,7 @@ from ars_magica_manager.models import (
     CultScript,
     DeepCover,
     GuestStay,
+    Handout,
     HermeticProject,
     IncomeSource,
     Inhabitant,
@@ -1199,6 +1200,30 @@ def _show(ws, preset: bool) -> None:
         ws._run_steps(show_forms.show_record(ws.saga, ws.selected_character))
     else:
         ws._run_steps(show_forms.show_here(ws.saga, session))
+
+
+#: The written Handout the Show a handout contract shows.
+SHOWN_HANDOUT = "contract-handout"
+
+
+def _show_handout(ws) -> None:
+    """More's Show on the Handouts list: a Session begun by the host, as
+    for Show, and a written Handout to choose, the list's first row."""
+    virtual_tabletop.set_on(True)
+    if chronicle.under_way(ws.saga) is None:  # opened again: already begun
+        session = Session("contract-vtt-handout")
+        ws.saga.sessions.append(session)
+        chronicle.begin(ws.saga, session, by=viewing.HOST)
+    if not any(h.id == SHOWN_HANDOUT for h in ws.saga.handouts):
+        ws.saga.handouts.insert(
+            0,
+            Handout(
+                SHOWN_HANDOUT,
+                "A letter found",
+                text="[heading] To the Covenant\n[initial] Greetings.",
+            ),
+        )
+    ws._run_steps(show_forms.show_handout(ws.saga, 0))
 
 
 #: The Player whose Handout the arranging contracts rename and file.
@@ -2700,6 +2725,7 @@ OPENERS: dict[str, Opener] = {
     ),
     "show": Opener("saga", lambda ws: _show(ws, False), action="show_at_session"),
     "set scene": Opener("saga", _set_scene, action="set_scene"),
+    "show a handout": Opener("saga", _show_handout, action="show_handout"),
     "show to the table": Opener(
         "character", lambda ws: _show(ws, True), action="show_record"
     ),

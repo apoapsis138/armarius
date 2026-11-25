@@ -28,7 +28,7 @@ from typing import Any
 
 from . import record_links
 from .form_spec import DialogField
-from .handout_layout import Preview
+from .handout_layout import Preview, Reading
 from .markup import escape
 from .models import Saga
 
@@ -82,6 +82,11 @@ class Form:
     #: values as they stand will look like, drawn by each front-end its
     #: own way, without saving: a written Handout on its Stationery.
     preview: Callable[[dict[str, Any]], Preview] | None = None
+    #: When set, the form only reads: each front-end draws this shown
+    #: written Handout its own way (the desktop on its Stationery, the
+    #: terminal under its Stationery's name) in place of the fields, and
+    #: closing it answers with no values.
+    reading: Reading | None = None
 
 
 @dataclass(frozen=True)

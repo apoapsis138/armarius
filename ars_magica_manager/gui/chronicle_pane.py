@@ -73,7 +73,7 @@ from ..models import Saga, Session
 from ..picture_files import PictureSource
 from ..rules import dice as dice_rules
 from ..style import fonts
-from . import motion, pictures, sounds
+from . import handout_copy, motion, pictures, sounds
 from .figures import linked_value
 from .style import gilding
 from .style.ornaments import ShortRule
@@ -604,7 +604,8 @@ COPY_SIZE = (640, 720)
 
 class ShownCopy(QDialog):
     """A shown record's copy, as it was shown: its sheet, read-only, in a
-    window of its own, which the pane closes if the Show is withdrawn."""
+    window of its own, which the pane closes if the Show is withdrawn. (A
+    written Handout's copy opens on its Stationery: handout_copy.)"""
 
     def __init__(self, shown: shows.Shown, parent: QWidget | None = None) -> None:
         super().__init__(parent)
@@ -948,7 +949,8 @@ class ChroniclePane(QWidget):
         #: The shown picture open last, kept while its window is.
         self.shown_picture: ShownPicture | None = None
         #: The shown record's copy open last, kept while its window is.
-        self.shown_copy: ShownCopy | None = None
+        #: A record's copy, or a written Handout's on its Stationery.
+        self.shown_copy: QDialog | None = None
         #: The Show whose copy or picture is open, by its entry's number:
         #: closed if that Show is withdrawn.
         self.open_show_number: int | None = None
@@ -1527,12 +1529,19 @@ class ChroniclePane(QWidget):
             self.run(Refuse(show_forms.TITLE, escape(found)))
             return
         self.open_show_number = entry.number
+        reading = show_forms.copy_form(found).reading
         if found.picture is not None:
             self.shown_picture = ShownPicture(found, self)
             self.shown_picture.open()
+        elif reading is not None:
+            # A written Handout: on its Stationery, as its Preview draws it.
+            window = handout_copy.copy_window(reading, self)
+            self.shown_copy = window
+            window.open()
         else:
-            self.shown_copy = ShownCopy(found, self)
-            self.shown_copy.open()
+            copy = ShownCopy(found, self)
+            self.shown_copy = copy
+            copy.open()
 
     def withdraw_show(self, entry: chronicle.Entry) -> None:
         """Withdraw Show `entry`, after asking: at the host's Chronicle, or

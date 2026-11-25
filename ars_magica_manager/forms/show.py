@@ -18,6 +18,8 @@ from typing import Any
 from .. import (
     at_table,
     chronicle,
+    handout_layout,
+    handouts,
     host_table,
     open_stories,
     record_links,
@@ -27,6 +29,7 @@ from .. import (
     shows,
     table_rules,
     viewing,
+    virtual_tabletop,
 )
 from ..at_table import Table
 from ..commands import (
@@ -41,7 +44,7 @@ from ..commands import (
 )
 from ..form_spec import DialogField, ListEditor
 from ..markup import escape
-from ..models import Saga, Session
+from ..models import Handout, Saga, Session
 from . import reveal
 from . import secrets as secret_titles
 
@@ -56,7 +59,9 @@ _KIND_NAMES = {
     for cls, kind in references.KINDS.items()
     if cls in shows.SHOWABLE
 }
-_RECORD, _PICTURE = "record", "picture"
+_RECORD, _PICTURE, _HANDOUT = "record", "picture", "handout"
+#: What a written Handout with no title is called, and its Show's title.
+UNTITLED = "(untitled)"
 
 
 def _record_key(ref: references.Ref) -> str:
@@ -67,8 +72,13 @@ def _picture_key(picture: tuple[str, str]) -> str:
     return f"{_PICTURE}:{picture[0]}:{picture[1]}"
 
 
-#: What a Show may start on: a record, or a picture as (folder, file name).
-Showable = references.Ref | tuple[str, str]
+def _handout_key(handout: Handout) -> str:
+    return f"{_HANDOUT}:{handout.id}"
+
+
+#: What a Show may start on: a record, a picture as (folder, file name), or
+#: a written Handout.
+Showable = references.Ref | tuple[str, str] | Handout
 
 
 #: The key of the "Also reveal" tick.
@@ -186,16 +196,22 @@ def _key_of(preset: Showable | None) -> str:
         return ""
     if isinstance(preset, references.Ref):
         return _record_key(preset)
+    if isinstance(preset, Handout):
+        return _handout_key(preset)
     return _picture_key(preset)
 
 
 def what_options(saga: Saga) -> list[tuple[str, str]]:
-    """What may be shown: each record by name and kind, then each picture
-    already in the saga: on the host's computer, those whose file it has;
-    at a Remote seat, which holds no files, each the saga names."""
+    """What may be shown: each record by name and kind, then each written
+    Handout, then each picture already in the saga: on the host's
+    computer, those whose file it has; at a Remote seat, which holds no
+    files, each the saga names."""
     records = [
         (f"{r.name} ({_KIND_NAMES[r.kind]})", _record_key(r))
         for r in shows.records(saga)
+    ]
+    written = [
+        (f"Handout: {h.title or UNTITLED}", _handout_key(h)) for h in saga.handouts
     ]
     named = (
         record_links.pictures(saga)
@@ -205,7 +221,7 @@ def what_options(saga: Saga) -> list[tuple[str, str]]:
     pictures = [
         (f"Picture: {shows.picture_label(saga, p)}", _picture_key(p)) for p in named
     ]
-    return records + pictures
+    return records + written + pictures
 
 
 def story_options(saga: Saga) -> list[tuple[str, str]]:
@@ -229,7 +245,39 @@ def _chosen(
     if kind == _PICTURE:
         folder, _, name = rest.partition(":")
         return None, (folder, name), shows.picture_label(saga, (folder, name))
+    written = _handout_of(saga, key)
+    if written is not None:
+        return None, None, written.title or UNTITLED
     return None, None, ""
+
+
+def _missing_pictures(saga: Saga, handout_id: str) -> str:
+    """The warning a Show of written Handout `handout_id` gives when some
+    of its pictures will be blank boxes in every copy (not on this
+    computer, or too large), naming them; "" when none will. A Remote
+    seat holds no picture files, so only the host's computer checks."""
+    found = handouts.find(saga, handout_id) if handout_id else None
+    if found is None or at_table.seat() is not None:
+        return ""
+    named = [
+        f"{number} ({escape(handouts.picture_name(saga, found.pictures[number - 1]))})"
+        for number in shows.missing_pictures(saga, handout_id)
+    ]
+    if not named:
+        return ""
+    if len(named) == 1:
+        which = f"Picture {named[0]} isn't on this computer or is"
+    else:
+        which = f"Pictures {', '.join(named)} aren't on this computer or are"
+    return (
+        f"Shown, but {which} too large to show: each copy has a blank box in its place."
+    )
+
+
+def _handout_of(saga: Saga, key: str) -> Handout | None:
+    """The written Handout `key` names, if it does."""
+    kind, _, handout_id = key.partition(":")
+    return handouts.find(saga, handout_id) if kind == _HANDOUT else None
 
 
 def show_form(
@@ -274,7 +322,8 @@ def show_form(
                 options=[("(choose)", ""), *what_options(saga)],
                 fills=named,
                 hint="A record's copy is as the players read it now, kept as it "
-                "is; a picture is copied as it is.",
+                "is; a written Handout is copied as it stands, and a picture as "
+                "it is.",
             ),
             DialogField(
                 "title",
@@ -307,7 +356,9 @@ def show_form(
         ]
 
     def call(values: dict[str, Any]) -> chronicle.ShowCall:
-        record, picture, _name = _chosen(saga, str(values.get("what") or ""))
+        what = str(values.get("what") or "")
+        record, picture, _name = _chosen(saga, what)
+        written = _handout_of(saga, what)
         return chronicle.ShowCall(
             str(values.get("title") or "").strip(),
             record=record,
@@ -316,6 +367,7 @@ def show_form(
             story_id=str(values.get("story") or ""),
             secrets=_ticks(values.get(SECRETS)) if record is not None else (),
             reveal=record is not None and values.get(ALSO_REVEAL) is True,
+            handout=written.id if written is not None else "",
         )
 
     def validate(values: dict[str, Any]) -> str | None:
@@ -323,12 +375,13 @@ def show_form(
 
     def apply(values: dict[str, Any]) -> list[str]:
         asked = call(values)
+        missing = _missing_pictures(saga, asked.handout)
         refused = table.show(asked)
         if refused:
             return notes(refused)
         if asked.reveal and asked.record is not None:
             _also_reveal(saga, asked.record, tuple(row for row, _ in asked.secrets))
-        return []
+        return notes(missing) if missing else []
 
     return Form(
         TITLE, fields, apply, validate=validate, save_label="Show", help_id=HELP_ID
@@ -336,10 +389,19 @@ def show_form(
 
 
 def copy_form(shown: shows.Shown) -> Form:
-    """A Show's copy to read: the record's sheet as it was shown, or, for a
-    picture, its name (the desktop draws the picture itself)."""
+    """A Show's copy to read: the record's sheet as it was shown; for a
+    picture, its name (the desktop draws the picture itself); for a
+    written Handout, its Reading (laid out only through the tag parser),
+    which each front-end draws in place of the fields, its text under its
+    Stationery's name (handouts.copy_markup) kept as the field's words."""
+    reading = None
     if shown.picture is not None:
         words = f"A picture: {escape(shown.title)}. Open it on the desktop to see it."
+    elif shown.written:
+        words = handouts.copy_markup(shown.stationery, shown.text, len(shown.pictures))
+        reading = handout_layout.reading(
+            shown.title, shown.stationery, shown.text, shown.pictures
+        )
     else:
         words = escape(shown.text)
     return Form(
@@ -348,6 +410,7 @@ def copy_form(shown: shows.Shown) -> Form:
         lambda _values: None,
         save_label="Close",
         help_id=HELP_ID,
+        reading=reading,
     )
 
 
@@ -529,3 +592,32 @@ def show_record(saga: Saga, record: Any) -> Form | Refuse:
     if session is None:
         return Refuse(TITLE, "No Session is under way.")
     return show_here(saga, session, references.ref(record))
+
+
+def why_not_handout(saga: Saga, row: int | None) -> str | None:
+    """Why whoever uses this copy can't Show the written Handout at `row`
+    of the Handouts list (as narrowed now), or None."""
+    listed = handouts.shown(saga)
+    if row is None or not 0 <= row < len(listed):
+        return "Choose a Handout first."
+    session = chronicle.under_way(saga)
+    if session is None:
+        return "No Session is under way."
+    return why_not_here(saga, session)
+
+
+def offers_handout(saga: Saga, row: int | None) -> bool:
+    """Whether Show is offered on the Handouts list's row `row`: the
+    Virtual Tabletop (Preview) on, and nothing in the way
+    (why_not_handout). The one rule both front-ends ask."""
+    return virtual_tabletop.on() and why_not_handout(saga, row) is None
+
+
+def show_handout(saga: Saga, row: int | None) -> Form | Refuse:
+    """Show, from the Handouts list (Saga content): the written Handout at
+    `row`, at the Session Under way."""
+    problem = why_not_handout(saga, row)
+    session = chronicle.under_way(saga)
+    if problem or row is None or session is None:
+        return Refuse(TITLE, escape(problem or "No Session is under way."))
+    return show_here(saga, session, handouts.shown(saga)[row])

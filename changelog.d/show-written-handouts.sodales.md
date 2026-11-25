@@ -1,0 +1,1 @@
+**Show a written Handout.** In the Virtual Tabletop preview, choose a Handout in Saga Content's Handouts and Show it to the Table or chosen Players. Each Show freezes a copy, so fixing a typo later changes nothing players hold. They keep it in their Handouts, drawn on its Stationery on the desktop, and the kind filter offers Written.
