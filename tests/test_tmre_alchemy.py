@@ -426,6 +426,22 @@ def test_reinventing_the_lesser_elixir_adds_its_level_to_aging_rolls():
     assert "Elixir Level 2" in alchemy.ritual_performed(magus, magus)
 
 
+def test_reinventing_the_lesser_elixir_keeps_a_digestion_going():
+    # TMRE pp. 42-43: the reinvention is a season in the laboratory, so a
+    # digestion runs beside it (p. 41) rather than being spoilt.
+    saga = _alchemist()
+    magus = saga.characters[0]
+    magus.virtues_flaws.append(_vf(alchemy.PHILOSOPHIC_MAJOR))
+    _settle(saga)
+    plan = _reinvent(saga, title="bloodstone", book_level=4)
+    assert digestion_apply.days_out(plan) == 0
+    seasons.set_plan(saga, plan)
+    done = _advance(saga)
+    assert not any("Spoiled" in line.result for line in done.record.lines)
+    assert saga.laboratories[0].raw_vis == {"vim": 2}  # CrVi 20 / 10
+    assert magus.alchemy is not None and magus.alchemy.elixir_level == 2
+
+
 def test_the_lesser_elixir_needs_a_ritual_its_text_and_the_vis():
     saga = _alchemist()
     magus = saga.characters[0]

@@ -1312,7 +1312,8 @@ While it digests:
   shown as "Tending the digestion" in its Lab Total. No other lab work is
   possible past twenty.
 - They can't extract vis any other way, or work in another laboratory.
-- Reading or studying vis beside it is fine. A month lost to distractions,
+- Reading or studying vis beside it is fine, and so is reinventing the
+  Lesser Elixir, which is lab work (pp. 42-43). A month lost to distractions,
   a season out of the laboratory such as an adventure or travel, or
   experimenting spoils it. It's then abandoned and gives nothing.
 
@@ -3385,7 +3386,11 @@ challenger picks the Technique and the challenged the Form.
 Each side has a plan for the whole duel:
 
 - the Art they attack with: the Technique, the Form, or whichever is
-  better for them
+  better for them. Each round the app works out, for each Art, their
+  Attack with it (with the vis they'd spend) less the rival's Defense with
+  the other Art (with the vis the rival would spend). They attack with the
+  Art that comes out higher, the Technique on a tie, and defend with the
+  other. Only the attack counts, not how well they'd defend.
 - the pawns of vis of the Art used they spend a round, on attack and on
   defense. Each pawn is +2, at most their score in it.
 - when they concede: at -1, -3 or -5 of Fatigue, or never.
