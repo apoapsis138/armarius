@@ -10,10 +10,12 @@ terminal's More menu and the desktop's buttons run the same code.
 
 from __future__ import annotations
 
+import copy
 import random
+from collections.abc import Callable
 from typing import Any
 
-from . import diaries
+from . import diaries, viewing
 from .arts import FORMS, TECHNIQUES
 from .commands import (
     Act,
@@ -26,6 +28,7 @@ from .commands import (
     SectionOps,
     notes,
 )
+from .entered_dice import EnteringDice, NeedDie
 from .form_spec import DialogField, pairs
 from .grids import Grid
 from .markup import escape
@@ -46,6 +49,7 @@ from .rules import (
     casting_virtues,
     combat_groups,
     magic_combat,
+    options,
     penetration,
 )
 from .rules import fight as rules
@@ -1501,20 +1505,29 @@ def next_blow(
         return Refuse("Next Blow", "Both sides need combatants first (Add Combatant).")
     dice = rng or random.Random()
 
-    def apply(values: dict[str, Any]) -> list[str]:
-        recorded = RecordingDice(dice)
-        played = rules.play(
+    def strike(blow: rules.Blow, source: random.Random, entered: bool) -> list[str]:
+        recorded = RecordingDice(source)
+        played = rules.play(saga, fight, blow, recorded)
+        # The chronicle's entry holds the same list of lines, which keeping
+        # the dice adds to: copied first, so the dice line is said once.
+        lines = list(played.lines)
+        said = _keep_dice(fight, played, _marked(recorded.said, entered))
+        return notes(played.text, *lines, *record_ending(saga, fight), *said)
+
+    def apply(values: dict[str, Any]) -> Any:
+        blow = blow_of(values)
+        if values.get("dice") != ENTER:
+            return strike(blow, dice, False)
+        return _entered(
             saga,
             fight,
-            blow_of(values),
-            recorded,
+            lambda s, f, r: rules.play(s, f, blow, r),
+            lambda source: strike(blow, source, True),
         )
-        said = _keep_dice(fight, played, recorded.said)
-        return notes(played.text, *played.lines, *record_ending(saga, fight), *said)
 
     return Form(
         f"Next Blow: {escape(fight.name)}",
-        lambda: blow_fields(saga, fight),
+        lambda: [*blow_fields(saga, fight), *_dice_fields(saga)],
         apply,
         live=lambda v: blow_live(saga, fight, v),
         save_label="Strike",
@@ -1533,22 +1546,123 @@ def next_round(
         return first
     dice = rng or random.Random()
 
-    def apply() -> list[str]:
+    def run(source: random.Random, entered: bool) -> list[str]:
         recorders: list[RecordingDice] = []
 
         def each() -> random.Random:
-            recorders.append(RecordingDice(dice))
+            recorders.append(RecordingDice(source))
             return recorders[-1]
 
-        blows = rules.play_round(saga, fight, dice, each=each)
+        blows = rules.play_round(saga, fight, source, each=each)
         shown = [
             line
             for blow, recorded in zip(blows, recorders, strict=True)
-            for line in (blow.text, *_keep_dice(fight, blow, recorded.said))
+            for line in (
+                blow.text,
+                *_keep_dice(fight, blow, _marked(recorded.said, entered)),
+            )
         ]
         return notes(*shown, *record_ending(saga, fight))
 
-    return Act(apply)
+    if not _dice_fields(saga):
+        return Act(lambda: run(dice, False))
+
+    def apply(values: dict[str, Any]) -> Any:
+        if values.get("dice") != ENTER:
+            return run(dice, False)
+        return _entered(
+            saga,
+            fight,
+            lambda s, f, r: rules.play_round(s, f, r),
+            lambda source: run(source, True),
+        )
+
+    return Form(
+        f"Next Round: {escape(fight.name)}",
+        lambda: _dice_fields(saga),
+        apply,
+        save_label="Play the Round",
+        help_id="fights",
+    )
+
+
+#: Next Blow and Next Round's Dice: the app rolls, or the person enters.
+ROLL = "roll"
+ENTER = "enter"
+
+
+def _dice_fields(saga: Saga) -> list[DialogField]:
+    """The Dice choice, while the saga allows entered dice."""
+    if not options.is_on(saga, options.ENTERED_DICE_ALLOWED):
+        return []
+    return [
+        DialogField(
+            "dice",
+            "Dice",
+            "select",
+            ROLL,
+            options=[("Roll for me", ROLL), ("I'll roll it", ENTER)],
+            hint="I'll roll it asks for each die in turn, both sides', "
+            "saying whose roll it is and why.",
+        )
+    ]
+
+
+def _marked(said: str, entered: bool) -> str:
+    """A dice line, marked with who entered its dice when they were."""
+    if not (said and entered):
+        return said
+    viewer = viewing.current()
+    who = viewer.player.name if viewer.player is not None else "the storyguide"
+    return f"{said} (entered by {who})"
+
+
+def _entered(
+    saga: Saga,
+    fight: Fight,
+    trial: Callable[[Saga, Fight, random.Random], object],
+    play: Callable[[random.Random], Any],
+    faces: tuple[int, ...] = (),
+) -> Any:
+    """Play with the dice a person enters: `trial` is played on a copy of
+    the saga with the faces so far, and each die it lacks is asked for in
+    turn; once it needs none, `play` plays the real fight with them. The
+    saga changes only then, so stopping part way leaves it as it was."""
+    copied = copy.deepcopy(saga)
+    at = next(i for i, f in enumerate(saga.fights) if f is fight)
+    try:
+        trial(copied, copied.fights[at], EnteringDice(faces))
+    except NeedDie as need:
+        return die_prompt(
+            fight,
+            need.why,
+            lambda face: _entered(saga, fight, trial, play, (*faces, face)),
+        )
+    return play(EnteringDice(faces))
+
+
+def die_prompt(fight: Fight, why: str, then: Callable[[int], Any]) -> Form:
+    """Ask for one d10's face, as read (0 to 9), for `why` ("Bero's
+    Defence: stress die"); `then` gets the face."""
+    return Form(
+        why,
+        lambda: [
+            DialogField(
+                "face",
+                "Face",
+                "select",
+                None,
+                options=[(str(n), str(n)) for n in range(10)],
+                required=True,
+                allow_blank=True,
+                hint=f"{escape(fight.name)}: the face your d10 shows, 0 to 9 "
+                "(a 0 is a 0: it may call for botch dice).",
+            )
+        ],
+        lambda values: then(int(values["face"])),
+        save_label="Enter",
+        help_id="fights",
+    )
 
 
 def _keep_dice(fight: Fight, played: rules.Played, said: str) -> list[str]:

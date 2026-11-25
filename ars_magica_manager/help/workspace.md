@@ -401,9 +401,10 @@ A familiar is bound on its magus or in their laboratory.
 - **Current date**: the season and year the saga is in, under its name. It's also shown under the chapters, beside Advance Season, on every page with chapters.
 <!-- /gui -->
 - **Books in play**: the sourcebooks the troupe uses, and how many of the saga's own sources are in play. They're chosen on [Saga Content](help:section-books-in-play), which says what a book out of play switches off.
-- **Optional rules**: Simple dice only, Dominion Magic Resistance, Harsher Infernal vis, Starting income by number of magi, Enforce creation rules strictly, Extended book Quality, Bruises, Dominion growth and Auras change. Each one's effect is described on its card in the saga's settings.
+- **Optional rules**: Simple dice only, Entered dice allowed, Dominion Magic Resistance, Harsher Infernal vis, Starting income by number of magi, Enforce creation rules strictly, Extended book Quality, Bruises, Dominion growth and Auras change. Each one's effect is described on its card in the saga's settings.
   - Four are offered only while their book is in play. They're Harsher Infernal vis from Realms of Power: The Infernal, Extended book Quality from Covenants' Library chapter, Dominion growth from Realms of Power: The Divine, and Auras change from Realms of Power: Magic.
   - Simple dice only and Dominion Magic Resistance are house rules the Definitive Edition offers as examples, not rules of the game (Chapter 16: Sagas, Rules Questions, p. 524).
+  - With Entered dice allowed on, a fight's Next Blow and Next Round let you roll its dice at the table and enter them. See [Fights](help:fights).
   - With Dominion Magic Resistance on, a Christian, Jew or Muslim living in a Dominion aura shows Magic Resistance of 5 x that aura on their sheet. So does anyone whose religion is left blank.
   - **Standard apprenticeship model** (Apprentices) is offered only while that book is in play, and is off by default. See the Apprenticeship step of [the Creation Worksheet](help:creation-worksheet-steps).
   - **Learning cantations in play** (Apprentices) is offered only while that book is in play, and is off by default. See [Learn a Cantation](help:learn-cantation).

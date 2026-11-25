@@ -3060,7 +3060,9 @@
   "sources": [],
   "hidden_catalogs": [],
   "hidden_entries": {},
-  "rule_options": {},
+  "rule_options": {
+    "entered_dice_allowed": true
+  },
   "traditions_off": [],
   "season_plans": [],
   "keep_season_records": true,

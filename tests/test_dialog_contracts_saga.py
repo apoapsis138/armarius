@@ -256,6 +256,13 @@ CONTRACTS: dict[str, Contract] = {
         saved=lambda s: (s.fights[0].round, len(s.fights[0].log)),
         expected=(1, 2),
     ),
+    "enter a die": Contract(
+        prefill={"Face": Select.NULL},
+        edits={"Face": "7"},
+        saved=lambda s: s.fights[0].name,
+        expected="Face 7",
+        invalid={"Face": Select.NULL},
+    ),
     "hire mercenaries": Contract(
         prefill={"Side": "0", "Knights": "0"},
         edits={"Knights": "2", "Levies": "3"},

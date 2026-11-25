@@ -19,6 +19,7 @@ from ars_magica_manager import (
     choice_templates,
     chronicle,
     combat_options_form,
+    fights,
     giving,
     grog_templates,
     guest_stays,
@@ -1411,6 +1412,19 @@ OPENERS: dict[str, Opener] = {
         "conflicts",
         _pick(lambda ws: ws.action_next_blow(), "fights-list"),
         action="next_blow",
+    ),
+    # One die of a blow whose dice are entered: the face named in the
+    # fight's name, so the contract can see it was taken.
+    "enter a die": Opener(
+        "conflicts",
+        _on_conflict_row(
+            "fights-list",
+            lambda s: fights.die_prompt(
+                s.fights[0],
+                "Bero's Defence: stress die",
+                lambda face: setattr(s.fights[0], "name", f"Face {face}"),
+            ),
+        ),
     ),
     "hire mercenaries": Opener(
         "conflicts",

@@ -439,6 +439,7 @@ def roll_initiative(saga: Saga, fight: Fight, rng: random.Random) -> list[str]:
     tie: dict[str, float] = {}
     lines: list[str] = []
     for unit in units(saga, fight).values():
+        dice.rolling(rng, whose(unit.name, "Initiative"))
         die = dice.stress_die(rng, saga=saga)
         total = unit.vanguard.figures().init + (0 if die.botched else die.value)
         rolled[unit.id] = total
@@ -508,6 +509,15 @@ class Played:
     lines: list[str] = field(default_factory=list)
 
 
+def whose(name: str, roll: str) -> str:
+    """Whose roll it is, for a person entering its dice: "Sir Bero's
+    Defence"; "Initiative for A knight of the Baron's" when the name is
+    itself a possessive."""
+    if name.endswith(("'s", "’s")):
+        return f"{roll} for {name}"
+    return f"{name}'s {roll}"
+
+
 def _roll(
     rng: random.Random,
     saga: Saga,
@@ -515,7 +525,9 @@ def _roll(
     base: int,
     lines: list[str],
     botch_dice: int = 1,
+    who: str = "",
 ) -> tuple[int, bool]:
+    dice.rolling(rng, whose(who, label) if who else label)
     die = dice.stress_die(rng, botch_dice, saga=saga)
     if die.botched:
         lines.append(f"{label}: {base:+d} + a botch ({die.botches} on the botch dice)")
@@ -902,10 +914,22 @@ def _strike(
         for f in who.standing():
             f.tire()
     hit_total, botched = _roll(
-        rng, saga, "Attack", chances.total("attack"), lines, group_dice(who, lines)
+        rng,
+        saga,
+        "Attack",
+        chances.total("attack"),
+        lines,
+        group_dice(who, lines),
+        who.name,
     )
     guard, guard_botched = _roll(
-        rng, saga, "Defence", chances.total("defence"), lines, group_dice(target, lines)
+        rng,
+        saga,
+        "Defence",
+        chances.total("defence"),
+        lines,
+        group_dice(target, lines),
+        target.name,
     )
     if guard_botched:
         lines.append(f"{target.name} botches the defence.")
@@ -993,6 +1017,7 @@ def shock_of_the_charge(
     else:
         strength = struck.character.characteristics.strength if struck.character else 0
         base = strength + figures.size + figures.ability
+    dice.rolling(rng, whose(struck.name, "Shock of the charge"))
     die = dice.stress_die(rng, 1, saga=saga)
     total = base + (0 if die.botched else die.value)
     against = damage + horse
@@ -1102,7 +1127,12 @@ def _disengage(saga: Saga, fight: Fight, who: Unit, rng: random.Random) -> Playe
     else:
         extra = combat_groups.disengage_bonus(tries)
         guard, botched = _roll(
-            rng, saga, "Defence", who.vanguard.figures().defence + extra, lines
+            rng,
+            saga,
+            "Defence",
+            who.vanguard.figures().defence + extra,
+            lines,
+            who=who.name,
         )
         escaped = not botched
         for foe in foes:
@@ -1366,8 +1396,12 @@ def _locate(
         lines.append(f"{target.name} leaves no signs: found by sound alone.")
     seek = magic_combat.locate_base(who.vanguard.holder())
     hide = magic_combat.hide_base(target.vanguard.holder(), signs)
-    found, botched = _roll(rng, saga, "Perception + Awareness", int(seek.total), lines)
-    cover, _ = _roll(rng, saga, "Dexterity + Stealth", int(hide.total), lines)
+    found, botched = _roll(
+        rng, saga, "Perception + Awareness", int(seek.total), lines, who=who.name
+    )
+    cover, _ = _roll(
+        rng, saga, "Dexterity + Stealth", int(hide.total), lines, who=target.name
+    )
     if botched or found <= cover:
         return Played(
             f"{who.name} searches for {target.name}, but can't find it.", lines
@@ -1878,13 +1912,13 @@ def _magic(
     if blow.damage is None:
         return Played(f"{odds_.name} takes {target.name}.", lines)
     victim = target.vanguard
-    damage, _ = _roll(rng, saga, "Damage", blow.damage, lines)
+    damage, _ = _roll(rng, saga, "Damage", blow.damage, lines, who=odds_.name)
     shield = victim.character
     form_bonus = derived.form_bonus(shield, odds_.form) if shield else 0
     soak_base = victim.figures().soak + form_bonus
     if form_bonus:
         lines.append(f"{odds_.form} Form Bonus +{form_bonus}")
-    soak, _ = _roll(rng, saga, "Soak", soak_base, lines)
+    soak, _ = _roll(rng, saga, "Soak", soak_base, lines, who=target.name)
     excess = damage - soak
     lines.append(f"Damage {damage} against Soak {soak}: {max(0, excess)} through")
     if excess <= 0:
@@ -1936,8 +1970,17 @@ def _aim(
     guard_terms = aim_defence(fight, target)
     lines += [t.line for t in guard_terms if t.line]
     aim = int(odds_.aim.total) if odds_.aim is not None else 0
-    hit, botched = _roll(rng, saga, "Aiming", aim, lines, odds_.aim_botch_dice)
-    guard, _ = _roll(rng, saga, "Defence", sum(t.amount for t in guard_terms), lines)
+    hit, botched = _roll(
+        rng, saga, "Aiming", aim, lines, odds_.aim_botch_dice, who.name
+    )
+    guard, _ = _roll(
+        rng,
+        saga,
+        "Defence",
+        sum(t.amount for t in guard_terms),
+        lines,
+        who=target.name,
+    )
     if botched:
         return (
             f"{who.name} botches the aim of {odds_.name}: the storyguide says "
@@ -1997,6 +2040,7 @@ def _battle_concentration(
     stamina = caster.characteristics.stamina if caster is not None else 0
     skill = ability_level(caster, "Concentration") if caster is not None else 0
     ease = STANDING_OFF_CONCENTRATION if blow.standing_off else ENGAGED_CONCENTRATION
+    dice.rolling(rng, whose(who.name, "Concentration"))
     die = dice.stress_die(rng, 1, saga=saga)
     total = 0 if die.botched else stamina + skill + die.value
     lines.append(
@@ -2030,6 +2074,7 @@ def _casting_total(
         )
         lines.append(f"Casting Total {score} / 5 = {total}")
         return total
+    dice.rolling(rng, whose(who.name, "Casting Total"))
     die = dice.stress_die(rng, botch_dice, saga=saga)
     if die.botched:
         lines.append(f"Casting: a botch ({die.botches} on the botch dice)")
