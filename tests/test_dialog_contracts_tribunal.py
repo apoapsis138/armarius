@@ -257,12 +257,18 @@ CONTRACTS: dict[str, Contract] = {
         shown={"#establishments-list": "Stables"},
     ),
     "settle inheritance": Contract(
-        prefill={"Heir": "", "By": "Primogeniture"},
-        edits={"Heir": "Heinrich"},
-        saved=lambda s: s.neighbour("gottfried").ruler,
-        expected="Heinrich",
+        prefill={
+            "Heir": "",
+            "Rename the record": "Gottfried of Arnsberg",
+            "By": "Primogeniture",
+        },
+        # His name doesn't carry his ruler's (Count Gottfried), so it's
+        # offered unchanged; a name typed after the Heir is kept.
+        edits={"Heir": "Heinrich", "Rename the record": "Heinrich of Arnsberg"},
+        saved=lambda s: (s.neighbour("gottfried").ruler, s.neighbour("gottfried").name),
+        expected=("Heinrich", "Heinrich of Arnsberg"),
         invalid={"Heir": ""},
-        shown={"#nb-info-left": "Heinrich"},
+        shown={"#nb-info-left": "Heinrich", "#nav-tree": "Heinrich of Arnsberg"},
     ),
     "edit church": Contract(
         prefill={

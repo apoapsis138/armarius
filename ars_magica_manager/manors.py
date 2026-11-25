@@ -57,6 +57,7 @@ from __future__ import annotations
 
 import math
 import random
+import re
 from dataclasses import dataclass
 from typing import Any, Required, TypedDict, cast
 
@@ -1343,10 +1344,73 @@ def edit_household(_saga: Saga, holder: Neighbour) -> Command:
 SETTLE = "Settle an Inheritance"
 
 
+#: What parts an Heirs line's names ("Dieter (14), then Berthold (11)").
+_HEIR_SEPARATOR = re.compile(
+    r",\s*(?:then|and)\s+|,\s*|;\s*|\s+(?:then|and)\s+", re.IGNORECASE
+)
+#: One name on an Heirs line, with an age or note in brackets.
+_HEIR_ENTRY = re.compile(r"\s*([^()]+?)\s*(\([^()]*\))?\s*")
+
+
+def _heir_parts(heirs: str) -> list[str] | None:
+    """An Heirs line as its names and the separators between them, in turn
+    (name, separator, name...), splitting only outside brackets; None when
+    a name in it isn't a plain name with an optional bracket."""
+    parts, start = [], 0
+    for found in _HEIR_SEPARATOR.finditer(heirs):
+        before = heirs[: found.start()]
+        if before.count("(") == before.count(")") and found.start() >= start:
+            parts += [heirs[start : found.start()], found.group()]
+            start = found.end()
+    parts.append(heirs[start:])
+    if not all(_HEIR_ENTRY.fullmatch(entry) for entry in parts[::2]):
+        return None
+    return parts
+
+
+def _bare_name(entry: str) -> str:
+    """A name as an Heirs line or the Heir field gives it, less its bracket."""
+    found = _HEIR_ENTRY.fullmatch(entry)
+    return found.group(1) if found else entry.strip()
+
+
 def _first_heir(holder: Neighbour) -> str:
-    heirs = household(holder).get("heirs") or ""
-    first = heirs.replace(" then ", ",").split(",")[0].strip()
-    return first.split(" (")[0].strip()
+    parts = _heir_parts(household(holder).get("heirs") or "")
+    return _bare_name(parts[0]) if parts else ""
+
+
+def _without_heir(heirs: str, heir: str) -> str:
+    """The Heirs line less the one who has inherited (by name, in any
+    case), the rest kept as written and its last "then" kept; unchanged
+    when he isn't on it or the line can't be read (_heir_parts)."""
+    parts = _heir_parts(heirs)
+    if parts is None:
+        return heirs
+    wanted = _bare_name(heir).casefold()
+    for i, entry in enumerate(parts[::2]):
+        if _bare_name(entry).casefold() != wanted:
+            continue
+        if i == 0:
+            del parts[0:2]
+        else:
+            removed = parts[2 * i - 1]
+            del parts[2 * i - 1 : 2 * i + 1]
+            last = 2 * i - 1 >= len(parts)
+            if last and i > 1 and "then" in removed.casefold():
+                parts[2 * i - 3] = removed
+        return "".join(parts).strip()
+    return heirs
+
+
+def heir_name(name: str, ruler: str, heir: str) -> str:
+    """The lordship's name with the heir in place of the old ruler, when
+    the name carries the ruler's as whole words ("Sir Gauthier of Montbrun"
+    -> "Aymar of Montbrun"); otherwise the name as it is."""
+    ruler, heir = ruler.strip(), heir.strip()
+    if not ruler or not heir:
+        return name
+    pattern = rf"(?<!\w){re.escape(ruler)}(?!\w)"
+    return re.sub(pattern, lambda _m: heir, name, count=1)
 
 
 def settle_fields(
@@ -1358,14 +1422,36 @@ def settle_fields(
     def divided(values: dict[str, Any]) -> bool:
         return values.get("custom") != "Primogeniture"
 
+    heir = _first_heir(holder)
+    # The last name suggested: the Heir refills the name only while it
+    # still holds that (or the record's own), never a name typed over it.
+    suggested = [heir_name(holder.name, holder.ruler, heir)]
+
+    def suggest(values: dict[str, Any]) -> dict[str, Any]:
+        if values.get("rename") not in (suggested[0], holder.name):
+            return {}
+        suggested[0] = heir_name(
+            holder.name, holder.ruler, _bare_name(str(values.get("heir") or ""))
+        )
+        return {"rename": suggested[0]}
+
     return [
         DialogField(
             "heir",
             "Heir",
             "text",
-            _first_heir(holder),
+            heir,
             required=True,
             hint="Who holds the lands now; he becomes the record's ruler.",
+            fills=suggest,
+        ),
+        DialogField(
+            "rename",
+            "Rename the record",
+            "text",
+            suggested[0],
+            hint="Suggested after the heir when the name carries the old "
+            "lord's. Blank keeps the name it has.",
         ),
         DialogField(
             "custom",
@@ -1409,14 +1495,24 @@ def _settle_problem(values: dict[str, Any]) -> str | None:
 
 
 def settle(saga: Saga, holder: Neighbour, values: dict[str, Any]) -> list[str]:
-    """The heir takes the lands (p. 10): he becomes the record's ruler, the
-    relief owed his liege and the widow's third are noted, and the Diary
-    keeps it."""
-    heir = str(values.get("heir") or "").strip()
+    """The heir takes the lands (p. 10): he becomes the record's ruler and
+    leaves its Heirs line, the record takes the new name if one is given,
+    the relief owed his liege and the widow's third are noted, and the
+    Diary keeps it."""
+    heir = _bare_name(str(values.get("heir") or ""))
     custom = str(values.get("custom") or "Primogeniture")
     before = holder.ruler or holder.name
     holder.ruler = heir
-    lines = [f"{heir} inherits from {before} ({custom.lower()})."]
+    renamed = ""
+    name = str(values.get("rename") or "").strip()
+    if name and name != holder.name:
+        holder.name = name
+        renamed = f", renamed {name}"
+    family = household(holder)
+    heirs = family.get("heirs")
+    if heirs:
+        family["heirs"] = _without_heir(heirs, heir)
+    lines = [f"{heir} inherits from {before} ({custom.lower()}){renamed}."]
     listed = manor_list(holder)
     count = len(listed) or lords.manors(holder)
     share = values.get("share")
@@ -1426,6 +1522,8 @@ def settle(saga: Saga, holder: Neighbour, values: dict[str, Any]) -> list[str]:
             f"{count // share} each: give each heir's manors a record of their own "
             f"({LOM} p. 10)."
         )
+        if family.get("heirs"):
+            lines.append("The others sharing the lands stay on the Heirs line.")
     liege = saga.neighbour(holder.answers_to)
     if liege is not None:
         lines.append(f"He owes {liege.name} relief of {lords.relief(holder)} pounds.")
@@ -1439,7 +1537,8 @@ def settle(saga: Saga, holder: Neighbour, values: dict[str, Any]) -> list[str]:
             "text": " ".join([*lines[:1], note]).strip(),
         }
     )
-    lines.append("Edit the Household to name his heirs now.")
+    if not family.get("heirs"):
+        lines.append("Edit the Household to name the new lord's heirs.")
     return notes(*lines)
 
 

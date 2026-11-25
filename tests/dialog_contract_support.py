@@ -38,6 +38,7 @@ from textual.widgets import (
     Select,
     Static,
     TextArea,
+    Tree,
 )
 
 from ars_magica_manager import chronicle, storage
@@ -249,10 +250,18 @@ def _invalid_entries(contract: Contract) -> list[dict[str, Any]]:
 
 def shown_text(screen, selector: str) -> str:
     """What `screen` shows at `selector`: a Collapsible's title, a list's
-    rows (one per line) or a Static's text, markup stripped."""
+    rows (one per line), a Tree's node labels (one per line) or a Static's
+    text, markup stripped."""
     widget = screen.query_one(selector)
     if isinstance(widget, Collapsible):
         text = widget.title
+    elif isinstance(widget, Tree):
+        labels, stack = [], [widget.root]
+        while stack:
+            node = stack.pop()
+            labels.append(str(node.label))
+            stack.extend(node.children)
+        text = "\n".join(labels)
     elif isinstance(widget, SelectableList):
         text = "\n".join(label for _, label in widget._rows)
     else:

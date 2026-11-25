@@ -408,6 +408,187 @@ def test_settling_an_inheritance_makes_the_heir_the_ruler():
     assert lord.details["diary"][-1]["text"].startswith("Dieter III inherits")
 
 
+def _montbrun(saga: Saga) -> Neighbour:
+    lord = _lord(saga)
+    lord.name, lord.ruler = "Sir Gauthier of Montbrun", "Sir Gauthier"
+    manors.household(lord)["heirs"] = "Aymar (19), then Hugues (12)"
+    return lord
+
+
+def _settle_values(form: Form, **changes: object) -> dict[str, object]:
+    values: dict[str, object] = {f.key: f.value for f in form.fields()}
+    values.update(changes)
+    return values
+
+
+def test_settling_suggests_the_lordship_named_after_the_heir():
+    saga = _saga()
+    lord = _montbrun(saga)
+    form = _form(manors.settle_form(saga, lord, widow=False))
+    rename = next(f for f in form.fields() if f.key == "rename")
+    assert rename.label == "Rename the record"
+    assert rename.value == "Aymar of Montbrun"
+    lines = form.apply(_settle_values(form))
+    assert lord.name == "Aymar of Montbrun"
+    assert "renamed Aymar of Montbrun" in lord.details["diary"][-1]["text"]
+    assert "renamed Aymar of Montbrun" in " ".join(lines)
+
+
+@pytest.mark.parametrize(
+    ("name", "ruler", "heir", "expected"),
+    [
+        ("Sir Gauthier of Montbrun", "Sir Gauthier", "Aymar", "Aymar of Montbrun"),
+        ("The Lords of Montbrun", "Sir Gauthier", "Aymar", "The Lords of Montbrun"),
+        ("Montbrun", "", "Aymar", "Montbrun"),
+        ("Sir Gauthier of Montbrun", "Sir Gauthier", "", "Sir Gauthier of Montbrun"),
+        ("Guyenne Marches", "Guy", "Aymar", "Guyenne Marches"),
+        ("Sir Gauthier of Montbrun", "Sir Gauthier ", "Aymar", "Aymar of Montbrun"),
+    ],
+)
+def test_the_suggested_name_swaps_only_a_ruler_the_name_carries(
+    name: str, ruler: str, heir: str, expected: str
+):
+    assert manors.heir_name(name, ruler, heir) == expected
+
+
+def test_a_blank_name_keeps_the_lordships_name():
+    saga = _saga()
+    lord = _montbrun(saga)
+    form = _form(manors.settle_form(saga, lord, widow=False))
+    form.apply(_settle_values(form, rename=""))
+    assert lord.name == "Sir Gauthier of Montbrun"
+    assert "renamed" not in lord.details["diary"][-1]["text"]
+
+
+def test_changing_the_heir_changes_the_suggested_name():
+    saga = _saga()
+    lord = _montbrun(saga)
+    form = _form(manors.settle_form(saga, lord, widow=False))
+    heir = next(f for f in form.fields() if f.key == "heir")
+    assert heir.fills is not None
+    typo = {"heir": "Aymr", "rename": "Aymar of Montbrun"}
+    assert heir.fills(typo) == {"rename": "Aymr of Montbrun"}
+    fixed = {"heir": "Hugues", "rename": "Aymr of Montbrun"}
+    assert heir.fills(fixed) == {"rename": "Hugues of Montbrun"}
+
+
+def test_a_name_the_storyguide_typed_survives_a_change_of_heir():
+    saga = _saga()
+    lord = _montbrun(saga)
+    form = _form(manors.settle_form(saga, lord, widow=False))
+    heir = next(f for f in form.fields() if f.key == "heir")
+    assert heir.fills is not None
+    assert heir.fills({"heir": "Hugues", "rename": "The Lords of Montbrun"}) == {}
+
+
+def test_the_new_lord_leaves_the_heirs_line():
+    saga = _saga()
+    lord = _montbrun(saga)
+    form = _form(manors.settle_form(saga, lord, widow=False))
+    form.apply(_settle_values(form))
+    assert manors.household(lord).get("heirs") == "Hugues (12)"
+
+
+def test_an_heir_not_on_the_heirs_line_leaves_it_alone():
+    saga = _saga()
+    lord = _montbrun(saga)
+    form = _form(manors.settle_form(saga, lord, widow=False))
+    form.apply(_settle_values(form, heir="Raoul"))
+    assert manors.household(lord).get("heirs") == "Aymar (19), then Hugues (12)"
+
+
+@pytest.mark.parametrize(
+    ("heirs", "left"),
+    [
+        ("Aymar (19) and Hugues (12)", "Hugues (12)"),
+        ("Aymar (19, eldest), then Hugues", "Hugues"),
+        ("Aymar; Hugues", "Hugues"),
+    ],
+)
+def test_the_heirs_line_is_read_one_way_for_the_heir_and_his_leaving(
+    heirs: str, left: str
+):
+    saga = _saga()
+    lord = _montbrun(saga)
+    manors.household(lord)["heirs"] = heirs
+    form = _form(manors.settle_form(saga, lord, widow=False))
+    values = _settle_values(form)
+    assert (values["heir"], values["rename"]) == ("Aymar", "Aymar of Montbrun")
+    form.apply(values)
+    assert manors.household(lord).get("heirs") == left
+
+
+def test_an_heirs_line_that_cant_be_read_offers_no_heir_and_is_left_alone():
+    saga = _saga()
+    lord = _montbrun(saga)
+    manors.household(lord)["heirs"] = "Aymar (19, then Hugues"
+    form = _form(manors.settle_form(saga, lord, widow=False))
+    values = _settle_values(form)
+    assert (values["heir"], values["rename"]) == ("", "Sir Gauthier of Montbrun")
+    form.apply(_settle_values(form, heir="Aymar", rename="Aymar of Montbrun"))
+    assert manors.household(lord).get("heirs") == "Aymar (19, then Hugues"
+
+
+@pytest.mark.parametrize("typed", ["Aymar (19)", "aymar"])
+def test_an_heir_typed_with_his_age_or_in_other_case_still_leaves_the_line(
+    typed: str,
+):
+    saga = _saga()
+    lord = _montbrun(saga)
+    form = _form(manors.settle_form(saga, lord, widow=False))
+    form.apply(_settle_values(form, heir=typed))
+    assert lord.ruler == typed.split(" (")[0]
+    assert manors.household(lord).get("heirs") == "Hugues (12)"
+
+
+def test_the_last_heir_leaving_keeps_the_then():
+    saga = _saga()
+    lord = _montbrun(saga)
+    manors.household(lord)["heirs"] = "Aymar (19), Hugues (12), then Bertrand (9)"
+    form = _form(manors.settle_form(saga, lord, widow=False))
+    form.apply(_settle_values(form, heir="Bertrand"))
+    assert manors.household(lord).get("heirs") == "Aymar (19), then Hugues (12)"
+
+
+REMINDER = "Edit the Household to name the new lord's heirs."
+
+
+def test_settling_a_lord_with_no_heirs_line_adds_none():
+    saga = _saga()
+    lord = _lord(saga)
+    form = _form(manors.settle_form(saga, lord, widow=False))
+    lines = form.apply(_settle_values(form, heir="Dieter III"))
+    assert "heirs" not in manors.household(lord)
+    assert REMINDER in lines[-1]
+
+
+def test_the_reminder_waits_until_no_heir_is_left():
+    saga = _saga()
+    lord = _montbrun(saga)
+    form = _form(manors.settle_form(saga, lord, widow=False))
+    assert REMINDER not in " ".join(form.apply(_settle_values(form)))
+    manors.household(lord)["heirs"] = "Hugues (12)"
+    form = _form(manors.settle_form(saga, lord, widow=False))
+    assert REMINDER in " ".join(form.apply(_settle_values(form)))
+
+
+def test_divided_lands_say_the_co_heirs_stay_on_the_heirs_line():
+    saga = _saga()
+    lord = _montbrun(saga)
+    form = _form(manors.settle_form(saga, lord, widow=False))
+    lines = form.apply(_settle_values(form, custom="Divided among sons", share=2))
+    assert "The others sharing the lands stay on the Heirs line." in " ".join(lines)
+
+
+def test_a_younger_heir_who_inherits_leaves_the_others_in_order():
+    saga = _saga()
+    lord = _montbrun(saga)
+    manors.household(lord)["heirs"] = "Aymar (19), Hugues (12), then Bertrand (9)"
+    form = _form(manors.settle_form(saga, lord, widow=False))
+    form.apply(_settle_values(form, heir="Hugues"))
+    assert manors.household(lord).get("heirs") == "Aymar (19), then Bertrand (9)"
+
+
 # -- Buy a Manor and Assart --
 
 

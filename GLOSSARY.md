@@ -424,7 +424,10 @@ _Avoid_: World, setting, map
 
 **Neighbour**:
 Anyone or anything of the Region the troupe deals with: a lord, town,
-church, university, faction, threat, place or custom.
+church, university, faction, threat, place or custom. A lord neighbour is
+the lordship, not the man: its lands, manors, household and Diary pass from
+holder to holder at an inheritance, and the holder of the day is its ruler.
+Its name may carry the holder's name, and may change with the holder.
 _Avoid_: NPC, contact, location
 
 **Place**:
