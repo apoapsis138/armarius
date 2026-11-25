@@ -1,1 +1,0 @@
-**Clearer walkthroughs.** The Walkthroughs PDF now names every amount it means you to spend, where it once said "a bit each" or skipped a step, and gives Kaspar's childhood a section of its own after Adelheid. Bold and red text copies cleanly instead of doubling every letter, and the pictures are sharper on a phone.

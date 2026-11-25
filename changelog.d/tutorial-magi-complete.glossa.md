@@ -1,1 +1,0 @@
-**Complete tutorial magi.** Every magus the tutorial sagas bring has a House Virtue, The Gift, Hermetic Magus and a Parma Magica, so none of them trips a guide up: Rudolf of Tremere, Ottokar, Hephaestina and Guide 17's travelling magi included.

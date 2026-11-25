@@ -1,1 +1,0 @@
-**Walkthroughs that match the app.** Every step of the Walkthroughs PDF was played through in the app and corrected where the two disagreed, with new pictures to match. A Knight's Life and War are held back as "Coming soon" until you can enter your own dice in a fight; their tutorial sagas are still there.

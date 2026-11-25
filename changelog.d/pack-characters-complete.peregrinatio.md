@@ -1,1 +1,0 @@
-**Pack characters built to the creation rules.** Converted Fourth Edition magi now take their House's free Virtue and a native language at 5, generated Jerbitons their free Virtue, and un-Gifted Redcaps are companions with the Redcap Status. Grogs' Flaws are Minor. People the books print only in part are sketches. Each pack's Assumptions page names any printed block kept short.

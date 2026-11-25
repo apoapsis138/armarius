@@ -1,1 +1,0 @@
-**An apprentice can serve in the laboratory before learning Magic Theory.** A helper without The Gift and Magic Theory serves as a servant: that season the lab gains half their Intelligence (rounded up) in Safety, +1 Aesthetics and +1 Mentem Specialization, and they still gain Exposure in Magic Theory. The Assistant list marks them "(servant)".
