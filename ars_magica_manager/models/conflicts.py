@@ -180,7 +180,7 @@ class Fight:
     #: The units that have located each invisible combatant, by its id.
     located: dict[str, list[str]] = field(default_factory=dict)
     log: list[FightEntry] = field(default_factory=list)
-    #: How it ended ("The Covenant win the fight"); "" while it goes on.
+    #: How it ended ("The fight goes to The Covenant."); "" while it goes on.
     over: str = ""
     #: Whether its ending is written in its fighters' Diaries.
     recorded: bool = False

@@ -138,7 +138,17 @@ def test_an_unattacked_fighter_disengages_freely_and_its_side_loses():
     played = rules.play(saga, fight, rules.Blow(rules.DISENGAGE), Scripted(5, 2))
     assert runner.out == "Disengaged"
     assert "disengages" in played.text
-    assert fight.over == "Theirs win the fight."
+    assert fight.over == "The fight goes to Theirs."
+
+
+def test_the_result_reads_right_for_a_side_named_for_one_or_many():
+    """A side's name is typed, so it has no number: the result names the
+    winner without a verb that would have to agree with it."""
+    for name in ("Ulrich's men", "Sir Aimery of Vaux"):
+        fight = fight_of([typed("Runner", init=9)], [typed("Guard")])
+        fight.sides[1].name = name
+        rules.play(saga_with(fight), fight, rules.Blow(rules.DISENGAGE), Scripted(5, 2))
+        assert fight.over == f"The fight goes to {name}."
 
 
 def test_next_round_plays_to_the_end_and_writes_the_diaries():
@@ -151,10 +161,10 @@ def test_next_round_plays_to_the_end_and_writes_the_diaries():
     )
     saga = saga_with(fight, characters=[grog], covenants=[keep])
     told = fights.next_round(saga, fight, Scripted(5, 2, 5, 2)).apply()
-    assert fight.over == "Ours win the fight."
+    assert fight.over == "The fight goes to Ours."
     assert told[-1] == "Written in 2 Diaries."
     assert (grog.diary[-1].name, keep.diary[-1].name) == ("Test fray", "Test fray")
-    assert grog.diary[-1].details.startswith("Ours win the fight. (1 round")
+    assert grog.diary[-1].details.startswith("The fight goes to Ours. (1 round")
     # Once only: asking again writes nothing more.
     assert fights.record_ending(saga, fight) == []
 

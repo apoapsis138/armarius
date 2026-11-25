@@ -163,7 +163,7 @@ def test_a_battle_event_played_as_a_fight():
     # The enemy beaten: everyone of theirs out.
     for c in theirs.combatants:
         c.out = True
-    fight.over = "Ours win the fight."
+    fight.over = "The fight goes to Ours."
     form = battles.event_form(saga, entry)
     values = {f.key: f.value for f in form.fields()}
     assert values["maneuver"] == "Attack" and values["condition_Attack"] == "routed"
