@@ -13,15 +13,18 @@ Shown.
 Pattern: a record kind with its core Form and SectionOps
 (forms/handouts.py), its link fields one entry of the links list
 (record_links), the text read by one small Interpreter
-(handout_markup)."""
+(handout_markup) and laid on its Stationery for each front-end to draw
+(handout_layout)."""
 
 from __future__ import annotations
 
 import hashlib
 import shutil
 import uuid
+from collections.abc import Sequence
 from pathlib import Path
 
+from . import handout_layout as layout
 from . import handout_markup as hm
 from . import picture_files, record_links, scenes, shapes
 from .markup import escape
@@ -94,10 +97,10 @@ def picture_from(ref: str) -> HandoutPicture | None:
     return HandoutPicture(folder, name)
 
 
-def store_picture(source: Path) -> HandoutPicture | None:
-    """Copy `source` into the handouts folder, named by a hash of its
-    bytes (kept as it is when that copy is already there); None when it
-    isn't a picture file the app takes, or can't be read."""
+def new_picture(source: Path) -> HandoutPicture | None:
+    """The handouts folder's picture `source` would be kept as, named by a
+    hash of its bytes, copying nothing; None when it isn't a picture file
+    the app takes (its kind, or too big for the folder), or can't be read."""
     suffix = ".jpg" if source.suffix.lower() == ".jpeg" else source.suffix.lower()
     if suffix not in picture_files.SUFFIXES:
         return None
@@ -105,27 +108,49 @@ def store_picture(source: Path) -> HandoutPicture | None:
         data = source.read_bytes()
     except OSError:
         return None
-    kind = picture_files.KINDS[HANDOUTS]
-    if len(data) > kind.cap:
+    if len(data) > picture_files.KINDS[HANDOUTS].cap:
         return None
-    name = hashlib.sha256(data).hexdigest()[:20] + suffix
-    folder = kind.directory()
+    return HandoutPicture(HANDOUTS, hashlib.sha256(data).hexdigest()[:20] + suffix)
+
+
+def store_picture(source: Path) -> HandoutPicture | None:
+    """Copy `source` into the handouts folder as new_picture names it
+    (kept as it is when that copy is already there); None when it isn't a
+    picture the folder takes."""
+    picture = new_picture(source)
+    if picture is None:
+        return None
+    folder = picture_files.KINDS[HANDOUTS].directory()
     folder.mkdir(parents=True, exist_ok=True)
-    if not (folder / name).is_file():
-        shutil.copyfile(source, folder / name)
-    return HandoutPicture(HANDOUTS, name)
+    if not (folder / picture.name).is_file():
+        shutil.copyfile(source, folder / picture.name)
+    return picture
+
+
+def kept_refs(refs: Sequence[str]) -> list[tuple[str, HandoutPicture]]:
+    """The form's picture references a Handout keeps, each with the
+    picture it is kept as, in order: anything that isn't a picture the
+    app takes left out, and each picture once (two files with the same
+    bytes are one). Save and Preview both go by this, so a Preview's
+    picture numbers are the saved Handout's. Nothing is copied."""
+    found: list[tuple[str, HandoutPicture]] = []
+    for ref in dict.fromkeys(refs):
+        kind, _, rest = ref.partition(":")
+        picture = new_picture(Path(rest)) if kind == NEW_FILE else picture_from(ref)
+        if picture is not None and all(picture != held for _, held in found):
+            found.append((ref, picture))
+    return found
 
 
 def pictures_from(refs: list[str]) -> list[HandoutPicture]:
-    """A form's picture references as the Handout keeps them: each new
-    file copied into the handouts folder, anything else that isn't a
-    picture left out, each once."""
+    """A form's picture references as the Handout keeps them (kept_refs),
+    each new file copied into the handouts folder."""
     found: list[HandoutPicture] = []
-    for ref in dict.fromkeys(refs):
+    for ref, picture in kept_refs(refs):
         kind, _, rest = ref.partition(":")
-        picture = store_picture(Path(rest)) if kind == NEW_FILE else picture_from(ref)
-        if picture is not None and picture not in found:
-            found.append(picture)
+        stored = store_picture(Path(rest)) if kind == NEW_FILE else picture
+        if stored is not None:
+            found.append(stored)
     return found
 
 
@@ -162,6 +187,30 @@ def picture_name(saga: Saga, picture: HandoutPicture) -> str:
         if held is not None:
             return held.name
     return picture.name
+
+
+def ref_name(saga: Saga, ref: str) -> str:
+    """What a form's picture reference is shown by on the page: its map's
+    or portrait's owner, else its file's name."""
+    kind, _, rest = ref.partition(":")
+    if kind == NEW_FILE:
+        return Path(rest).name
+    picture = picture_from(ref)
+    return "(picture)" if picture is None else picture_name(saga, picture)
+
+
+def ref_file(ref: str) -> Path | None:
+    """Where on this computer the picture a form's reference names is, or
+    None when it isn't there (or isn't a picture's reference)."""
+    kind, _, rest = ref.partition(":")
+    if kind == NEW_FILE:
+        found = Path(rest)
+    else:
+        picture = picture_from(ref)
+        if picture is None:
+            return None
+        found = picture_files.KINDS[picture.folder].directory() / picture.name
+    return found if found.is_file() else None
 
 
 def ref_label(saga: Saga, ref: str) -> str:
@@ -316,6 +365,30 @@ def detail(saga: Saga, handout: Handout | None) -> str:
     if handout.text.strip():
         lines += ["", text_markup(saga, handout)]
     return "\n".join(lines)
+
+
+def preview(
+    saga: Saga, title: str, stationery: str, text: str, refs: Sequence[str]
+) -> layout.Preview:
+    """A Handout as its form holds it (its pictures as the form's
+    references, a new file's among them) laid on its Stationery, with
+    where each picture's file is: what the form's Preview draws."""
+    refs = [ref for ref, _picture in kept_refs(refs)]
+    return layout.Preview(
+        layout.lay_out(title, stationery, text, [ref_name(saga, r) for r in refs]),
+        tuple(ref_file(r) for r in refs),
+    )
+
+
+def preview_of(saga: Saga, handout: Handout) -> layout.Preview:
+    """A saved Handout laid on its Stationery, with its pictures' files."""
+    return preview(
+        saga,
+        handout.title,
+        handout.stationery,
+        handout.text,
+        [picture_ref(p) for p in handout.pictures],
+    )
 
 
 def delete(saga: Saga, handout: Handout) -> list[record_links.Change]:

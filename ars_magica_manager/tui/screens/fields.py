@@ -294,6 +294,7 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         confirm: Callable[[dict[str, Any]], Screen[bool]] | None = None,
         inspector: str = "",
         cancel_label: str = "Cancel",
+        preview: Callable[[dict[str, Any]], Screen[None]] | None = None,
     ) -> None: ...
 
     @overload
@@ -309,6 +310,7 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         confirm: Callable[[dict[str, Any]], Screen[bool]] | None = None,
         inspector: str = "",
         cancel_label: str = "Cancel",
+        preview: Callable[[dict[str, Any]], Screen[None]] | None = None,
     ) -> None: ...
 
     def __init__(
@@ -323,9 +325,13 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         confirm: Callable[[dict[str, Any]], Screen[bool]] | None = None,
         inspector: str = "",
         cancel_label: str = "Cancel",
+        preview: Callable[[dict[str, Any]], Screen[None]] | None = None,
     ) -> None:
         super().__init__()
         self.title_text = title
+        #: The screen the Preview button opens for the values as they
+        #: stand, if the form has one; nothing is saved.
+        self.preview = preview
         self.fields = fields
         self.validate = validate
         self.live = live
@@ -358,6 +364,8 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
             with Horizontal(id="fields-buttons"):
                 yield Button(self.save_label, id="btn-save", variant="success")
                 yield Button(self.cancel_label, id="btn-cancel")
+                if self.preview is not None:
+                    yield Button("Preview", id="btn-preview")
 
     def _widgets(self, spec: DialogField) -> ComposeResult:
         widget_id = f"fld-{spec.key}"
@@ -613,6 +621,9 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
             self.action_cancel()
         elif event.button.id == "btn-save":
             self._save()
+        elif event.button.id == "btn-preview" and self.preview is not None:
+            event.stop()
+            self.app.push_screen(self.preview(self.current_values()))
         else:
             key = (event.button.id or "").removeprefix("fld-")
             spec = next(

@@ -1894,6 +1894,20 @@ Choose the Story above the list, or **Every story**.
 
 Like everything the Chronicle carries, a Handout can't hold emoji or invisible characters. Deleting the character who found it, or the Place, keeps their name on the Handout.
 
+**Preview** shows the Handout as it stands in the form, as the players will get it, without saving it.
+<!-- gui -->
+It opens in a window of its own, drawn on its Stationery:
+
+- **Vellum**: a skin ruled in red, its title at the head in red
+- **A sealed letter**: paper folded in three, its title small at the top like a docket, closed with a red wax seal
+- **A proclamation**: heavy parchment in a gilt frame, its title in gilded red letters, a seal hanging from its foot
+
+Each tag is drawn as it says: the initial illuminated in gold, a flourish as a leaf between two rules, each picture placed. A picture this computer hasn't got is drawn as a box naming it.
+<!-- /gui -->
+<!-- tui -->
+It shows the text under its Stationery's name: headings in bold, centred and right lines set so, the initial's letter in colour, a flourish as ~ ❧ ~, and each picture named where it's placed.
+<!-- /tui -->
+
 **See also:** [Handouts](help:section-handouts)
 
 # A Session's page

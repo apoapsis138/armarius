@@ -70,8 +70,10 @@ from ..commands import (
     passes,
 )
 from ..form_spec import DialogField, FieldError, ListEditor
+from ..handout_layout import Preview
 from ..paths import APP_NAME
 from . import shields, sounds
+from .handout_page import preview_window
 from .markup_html import plain, to_html
 from .style import snapping
 from .style.families import DIALOG
@@ -248,7 +250,7 @@ class _Sheet(QDialog):
     def finish(self) -> None:
         """Put the error line and the buttons under the body."""
         self.column.addWidget(self.error)
-        buttons = QHBoxLayout()
+        buttons = self.buttons_row = QHBoxLayout()
         buttons.addStretch(1)
         buttons.addWidget(self.cancel)
         buttons.addWidget(self.save)
@@ -288,10 +290,12 @@ class FieldsDialog(_Sheet):
         picture: Callable[[dict[str, Any]], Any] | None = None,
         inspector: str = "",
         cancel_label: str = "Cancel",
+        preview: Callable[[dict[str, Any]], Preview] | None = None,
     ) -> None:
         super().__init__(title, p, save_label, parent)
         self.cancel.setText(cancel_label)
         self.picture = picture
+        self.preview = preview
         self.fields = fields
         if ask is not None:
             self.ask = ask
@@ -331,6 +335,14 @@ class FieldsDialog(_Sheet):
         self.column.addLayout(under)
         self.save.clicked.connect(self.try_save)
         self.finish()
+        if preview is not None:
+            self.preview_button = QPushButton("Preview")
+            self.preview_button.setObjectName("preview")
+            self.preview_button.setToolTip("Draw it as it stands, without saving.")
+            self.preview_button.clicked.connect(
+                lambda _checked=False: self.show_preview()
+            )
+            self.buttons_row.insertWidget(0, self.preview_button)
         self._update_shown()
         self._size_window()
         #: What a window that keeps something opened with; a calculator's
@@ -561,6 +573,12 @@ class FieldsDialog(_Sheet):
         if hasattr(self, "area"):
             # Fields shown as others are chosen (Lab Work's) need more room.
             self._size_window(grow=True)
+
+    def show_preview(self) -> None:
+        """Open the form's Preview of the values as they stand, as a
+        window over it; nothing is saved."""
+        assert self.preview is not None
+        self.ask(preview_window(self.preview(self._as_they_stand()), self))
 
     def try_save(self) -> None:
         """Save if every field parses and `validate` allows it, else say
@@ -1198,6 +1216,7 @@ def step_dialog(
             picture=step.picture,
             inspector=step.inspector,
             cancel_label=step.cancel_label,
+            preview=step.preview,
         )
     if isinstance(step, Choose):
         choices = step.choices()

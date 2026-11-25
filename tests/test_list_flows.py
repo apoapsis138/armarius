@@ -22,7 +22,9 @@ from ars_magica_manager import (
 )
 from ars_magica_manager import goods as gd
 from ars_magica_manager import mystery_cults as cult_core
+from ars_magica_manager.forms.handouts import HANDOUTS_HELP
 from ars_magica_manager.models import (
+    PROCLAMATION,
     STORY_EVENT,
     Ability,
     AbilityDef,
@@ -95,6 +97,7 @@ from ars_magica_manager.tui.screens import (
     SelectableList,
     WorkspaceScreen,
 )
+from ars_magica_manager.tui.screens.handout_reading import HandoutReading
 from ars_magica_manager.tui.screens.prompts import MenuScreen
 from ars_magica_manager.tui.screens.widgets import SheetSection, section_stop
 from ars_magica_manager.tui.screens.workspace.base import CHOOSE_FIRST
@@ -819,9 +822,16 @@ async def test_a_sessions_scenes_edit_and_take_out_the_chosen_use():
 # -- written Handouts --
 
 
+def _shown(widget: Static) -> str:
+    """A Static's words as it draws them, without their styles."""
+    drawn = widget.render()
+    return getattr(drawn, "plain", str(drawn))
+
+
 async def test_the_handouts_list_edits_and_deletes_the_chosen_handout():
-    """In one session: e opens the chosen Handout, d asks before deleting
-    it."""
+    """In one session: e opens the chosen Handout, whose Preview reads the
+    text as it stands under its Stationery's name, never a raw tag; d asks
+    before deleting it."""
     case = ListCase(
         ("saga_content",),
         "section-handouts",
@@ -841,6 +851,26 @@ async def test_the_handouts_list_edits_and_deletes_the_chosen_handout():
         await pilot.press("down")
         await _press(pilot, app, "e", FieldsDialog)
         dialog = app.screen
+        dialog.query_one(
+            "#fld-text", TextArea
+        ).text = "[heading] Hear ye\n[initial] Know all.\n[flourish]\n[right] Given"
+        dialog.query_one("#fld-stationery", Select).value = PROCLAMATION
+        dialog.query_one("#btn-preview").press()
+        assert await wait_until(pilot, lambda: isinstance(app.screen, HandoutReading))
+        assert app.screen.help_id == HANDOUTS_HELP
+        read = [_shown(s) for s in app.screen.query(Static)]
+        assert read == [
+            "— A proclamation —",
+            "A seal",
+            "Hear ye",
+            "Know all.",
+            "~ ❧ ~",
+            "Given",
+        ]
+        assert [_shown(s) for s in app.screen.query(".handout-right")] == ["Given"]
+        app.screen.query_one("#btn-close").press()
+        assert await wait_until(pilot, lambda: app.screen is dialog)
+        assert _saved(case)[1].text == ""
         dialog.query_one("#fld-title", Input).value = "A sealed letter"
         dialog.query_one("#btn-save").press()
         assert await wait_until(
