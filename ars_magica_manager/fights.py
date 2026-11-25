@@ -10,12 +10,11 @@ terminal's More menu and the desktop's buttons run the same code.
 
 from __future__ import annotations
 
-import copy
 import random
-from collections.abc import Callable
 from typing import Any
 
-from . import diaries, viewing
+from . import diaries
+from . import entered_dice as entering
 from .arts import FORMS, TECHNIQUES
 from .commands import (
     Act,
@@ -28,7 +27,6 @@ from .commands import (
     SectionOps,
     notes,
 )
-from .entered_dice import EnteringDice, NeedDie
 from .form_spec import DialogField, pairs
 from .grids import Grid
 from .markup import escape
@@ -49,7 +47,6 @@ from .rules import (
     casting_virtues,
     combat_groups,
     magic_combat,
-    options,
     penetration,
 )
 from .rules import fight as rules
@@ -1511,23 +1508,25 @@ def next_blow(
         # The chronicle's entry holds the same list of lines, which keeping
         # the dice adds to: copied first, so the dice line is said once.
         lines = list(played.lines)
-        said = _keep_dice(fight, played, _marked(recorded.said, entered))
+        said = _keep_dice(fight, played, entering.marked(recorded.said, entered))
         return notes(played.text, *lines, *record_ending(saga, fight), *said)
 
     def apply(values: dict[str, Any]) -> Any:
         blow = blow_of(values)
-        if values.get("dice") != ENTER:
+        if not entering.chosen(values):
             return strike(blow, dice, False)
-        return _entered(
+        return entering.entered(
             saga,
-            fight,
-            lambda s, f, r: rules.play(s, f, blow, r),
+            fight.name,
+            lambda s, r: rules.play(
+                s, s.fights[entering.place(saga.fights, fight)], blow, r
+            ),
             lambda source: strike(blow, source, True),
         )
 
     return Form(
         f"Next Blow: {escape(fight.name)}",
-        lambda: [*blow_fields(saga, fight), *_dice_fields(saga)],
+        lambda: [*blow_fields(saga, fight), *entering.dice_fields(saga, _BOTH)],
         apply,
         live=lambda v: blow_live(saga, fight, v),
         save_label="Strike",
@@ -1559,121 +1558,52 @@ def next_round(
             for blow, recorded in zip(blows, recorders, strict=True)
             for line in (
                 blow.text,
-                *_keep_dice(fight, blow, _marked(recorded.said, entered)),
+                *_keep_dice(fight, blow, entering.marked(recorded.said, entered)),
             )
         ]
         return notes(*shown, *record_ending(saga, fight))
 
-    if not _dice_fields(saga):
+    if not entering.dice_fields(saga):
         return Act(lambda: run(dice, False))
 
     def apply(values: dict[str, Any]) -> Any:
-        if values.get("dice") != ENTER:
+        if not entering.chosen(values):
             return run(dice, False)
-        return _entered(
+        return entering.entered(
             saga,
-            fight,
-            lambda s, f, r: rules.play_round(s, f, r),
+            fight.name,
+            lambda s, r: rules.play_round(
+                s, s.fights[entering.place(saga.fights, fight)], r
+            ),
             lambda source: run(source, True),
         )
 
     return Form(
         f"Next Round: {escape(fight.name)}",
-        lambda: _dice_fields(saga),
+        lambda: entering.dice_fields(saga, _BOTH),
         apply,
         save_label="Play the Round",
         help_id="fights",
     )
 
 
-#: Next Blow and Next Round's Dice: the app rolls, or the person enters.
-ROLL = "roll"
-ENTER = "enter"
-
-
-def _dice_fields(saga: Saga) -> list[DialogField]:
-    """The Dice choice, while the saga allows entered dice."""
-    if not options.is_on(saga, options.ENTERED_DICE_ALLOWED):
-        return []
-    return [
-        DialogField(
-            "dice",
-            "Dice",
-            "select",
-            ROLL,
-            options=[("Roll for me", ROLL), ("I'll roll it", ENTER)],
-            hint="I'll roll it asks for each die in turn, both sides', "
-            "saying whose roll it is and why.",
-        )
-    ]
-
-
-def _marked(said: str, entered: bool) -> str:
-    """A dice line, marked with who entered its dice when they were."""
-    if not (said and entered):
-        return said
-    viewer = viewing.current()
-    who = viewer.player.name if viewer.player is not None else "the storyguide"
-    return f"{said} (entered by {who})"
-
-
-def _entered(
-    saga: Saga,
-    fight: Fight,
-    trial: Callable[[Saga, Fight, random.Random], object],
-    play: Callable[[random.Random], Any],
-    faces: tuple[int, ...] = (),
-) -> Any:
-    """Play with the dice a person enters: `trial` is played on a copy of
-    the saga with the faces so far, and each die it lacks is asked for in
-    turn; once it needs none, `play` plays the real fight with them. The
-    saga changes only then, so stopping part way leaves it as it was."""
-    copied = copy.deepcopy(saga)
-    at = next(i for i, f in enumerate(saga.fights) if f is fight)
-    try:
-        trial(copied, copied.fights[at], EnteringDice(faces))
-    except NeedDie as need:
-        return die_prompt(
-            fight,
-            need.why,
-            lambda face: _entered(saga, fight, trial, play, (*faces, face)),
-        )
-    return play(EnteringDice(faces))
-
-
-def die_prompt(fight: Fight, why: str, then: Callable[[int], Any]) -> Form:
-    """Ask for one d10's face, as read (0 to 9), for `why` ("Bero's
-    Defence: stress die"); `then` gets the face."""
-    return Form(
-        why,
-        lambda: [
-            DialogField(
-                "face",
-                "Face",
-                "select",
-                None,
-                options=[(str(n), str(n)) for n in range(10)],
-                required=True,
-                allow_blank=True,
-                hint=f"{escape(fight.name)}: the face your d10 shows, 0 to 9 "
-                "(a 0 is a 0: it may call for botch dice).",
-            )
-        ],
-        lambda values: then(int(values["face"])),
-        save_label="Enter",
-        help_id="fights",
-    )
+#: The Dice choice's hint in a fight: every die is asked, both sides'.
+_BOTH = (
+    "I'll roll it asks for each die in turn, both sides', saying whose roll "
+    "it is and why."
+)
 
 
 def _keep_dice(fight: Fight, played: rules.Played, said: str) -> list[str]:
     """A blow's dice line (STORY-2348), kept with its entry in the fight's
-    chronicle: as a list to show, empty when no die was rolled."""
+    chronicle as written and shown as markup (a player's name escaped):
+    empty when no die was rolled."""
     if not said:
         return []
     entry = next((e for e in reversed(fight.log) if e.text == played.text), None)
     if entry is not None:
         entry.lines.append(said)
-    return [said]
+    return [escape(said)]
 
 
 def restart(saga: Saga, fight: Fight | None) -> Command:

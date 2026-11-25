@@ -163,12 +163,8 @@ leaves.
 - **Rolling your own dice.** With the saga's **Entered dice allowed** on
   (Saga Settings, Dice and Combat), Next Blow and Next Round ask **Roll for
   me** or **I'll roll it**. I'll roll it asks for each d10 of the blow, or
-  of the whole round, in turn, both sides': each window names whose roll
-  it is and why ("Bero's Defence: stress die", "a 1: roll again and
-  double", "a 0: the botch die"). Enter the face as it shows, 0 to 9. The
-  rules work out the doublings and botches (DE p. 7). Nothing changes
-  until the last die is in, so cancelling part way leaves the fight as it
-  was. The dice line marks those dice entered, and by whom.
+  of the whole round, in turn, both sides'. See
+  [Rolling your own dice](help:entered-dice).
 - **Restart the Fight** clears the order and the chronicle. Wounds already
   written onto sheets stay.
 
@@ -536,3 +532,26 @@ from its start and the days it has run (p. 112).
 **Raise the Veronese Flag** (Siege Actions, CrIm 30) shows illusory
 men-at-arms on every wall until sunset, so no wall looks undefended
 (p. 116).
+
+## Rolling your own dice
+<!-- help: entered-dice -->
+
+With the saga's **Entered dice allowed** on (Saga Settings, Dice and
+Combat), you can roll a roll's dice at the table and enter them. These
+offer **Roll for me** or **I'll roll it** under **Dice**:
+
+- a fight's **Next Blow** and **Next Round**, every die of the blow or
+  round, both sides'
+- a siege's **Next Siege Event**, the event's dice and any supplies rolls
+  it brings
+- an agent's **Impress**, **Set a Task** and **Resolve the Task**
+
+I'll roll it asks for each d10 in turn, in a window naming whose roll it
+is and why: "Bero's Defence: stress die", "a 1: roll again and double",
+"a 0: the botch die". Enter the face as it shows, 0 to 9; the rules work
+out the doublings and botches (DE p. 7). Nothing changes until the last
+die is in, so cancelling part way leaves everything as it was. The dice
+line marks those dice entered, and by whom.
+
+While a Session is Under way, an agent's rolls are the host's, as every
+Table roll is: they offer no Dice choice.
