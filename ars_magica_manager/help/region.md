@@ -668,6 +668,15 @@ More (`m`) > **Settle an Inheritance**
 passes the lands to the heir.
 
 - The heir becomes the record's ruler.
+- **Rename the record** suggests its new name when its name carries the
+  old lord's: Sir Gauthier of Montbrun becomes Aymar of Montbrun. It
+  follows the Heir as you change it, until you type a name of your own.
+  Keep it, change it, or blank it to keep the name it has.
+- The heir leaves the Household's **Heirs**, and the rest stay in order.
+  Names may be parted by commas, "then", "and" or semicolons. A line it
+  can't read is left for you to edit, and the Heir starts blank.
+- Where the lands are divided, the others sharing them stay on **Heirs**.
+
 - The relief owed the liege is noted.
 - Divided lands are shared out among the heirs. Give each heir's manors
   a record of their own.

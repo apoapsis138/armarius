@@ -366,7 +366,8 @@ def test_ending_a_marriage_notes_both_houses_diaries():
 def test_a_lord_who_dies_first_goes_on_to_settle_his_inheritance():
     saga = _saga()
     _arrange(saga, groom_ref="neighbour:jurgen", bride="Adelheid", state=MARRIED)
-    assert manors.settle_fields(saga, _lord(saga))[3].value is True
+    fields = manors.settle_fields(saga, _lord(saga))
+    assert next(f for f in fields if f.key == "widow").value is True
     form = _form(marriages.end_form(saga, _lord(saga), 0))
     follows = form.apply({"how": "husband", "season": "Winter", "year": 1231})
     assert isinstance(follows, Then)

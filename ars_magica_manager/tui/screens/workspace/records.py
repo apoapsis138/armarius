@@ -255,6 +255,7 @@ class RecordActions(WorkspaceBase):
             HOUSEHOLD_SECTION,
             NEIGHBOUR_INFO_SECTION,
             DIARY_SECTION,
+            tree=True,  # the record may be renamed after the heir
         )
 
     def action_battle_event(self) -> None:
@@ -522,6 +523,7 @@ class RecordActions(WorkspaceBase):
                 HOUSEHOLD_SECTION,
                 NEIGHBOUR_INFO_SECTION,
                 DIARY_SECTION,
+                tree=True,  # a death goes on to settle, which may rename him
             ),
         )
 
