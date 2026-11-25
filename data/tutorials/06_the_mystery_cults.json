@@ -98,6 +98,7 @@
           "dwindling": false,
           "dwindling_from": null,
           "dwindled_years": 0,
+          "harvested_year": null,
           "place_id": null,
           "place_level": 0,
           "ship": null
@@ -148,6 +149,7 @@
           "dwindling": false,
           "dwindling_from": null,
           "dwindled_years": 0,
+          "harvested_year": null,
           "place_id": null,
           "place_level": 0,
           "ship": null
@@ -198,6 +200,7 @@
           "dwindling": false,
           "dwindling_from": null,
           "dwindled_years": 0,
+          "harvested_year": null,
           "place_id": null,
           "place_level": 0,
           "ship": null
@@ -248,6 +251,7 @@
           "dwindling": false,
           "dwindling_from": null,
           "dwindled_years": 0,
+          "harvested_year": null,
           "place_id": null,
           "place_level": 0,
           "ship": null
@@ -298,6 +302,7 @@
           "dwindling": false,
           "dwindling_from": null,
           "dwindled_years": 0,
+          "harvested_year": null,
           "place_id": null,
           "place_level": 0,
           "ship": null
@@ -609,7 +614,7 @@
           "name": "Magic Theory",
           "category": "Academic",
           "xp": 101,
-          "specialty": "Lab Totals",
+          "specialty": "Creo",
           "xp_table": "ability"
         },
         {
@@ -2524,6 +2529,1790 @@
         "stigmata": [],
         "notes": ""
       }
+    },
+    {
+      "id": "gerlach_of_bjornaer",
+      "name": "Gerlach of Bjornaer",
+      "type": "magus",
+      "covenant_id": "cov1",
+      "characteristics": {
+        "intelligence": 3,
+        "perception": 0,
+        "strength": 0,
+        "stamina": 1,
+        "presence": 0,
+        "communication": -1,
+        "dexterity": 0,
+        "quickness": 1
+      },
+      "arts": {
+        "intellego": {
+          "xp": 1
+        },
+        "muto": {
+          "xp": 55
+        },
+        "perdo": {
+          "xp": 6
+        },
+        "rego": {
+          "xp": 1
+        },
+        "animal": {
+          "xp": 36
+        },
+        "corpus": {
+          "xp": 36
+        }
+      },
+      "abilities": [
+        {
+          "name": "Area Lore: Swabian Alb",
+          "category": "General",
+          "xp": 5,
+          "specialty": "forests",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Artes Liberales",
+          "category": "Academic",
+          "xp": 5,
+          "specialty": "grammar",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Athletics",
+          "category": "General",
+          "xp": 15,
+          "specialty": "endurance",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Awareness",
+          "category": "General",
+          "xp": 15,
+          "specialty": "people",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Brawl",
+          "category": "General",
+          "xp": 15,
+          "specialty": "dodge",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Finesse",
+          "category": "Arcane",
+          "xp": 5,
+          "specialty": "targeting",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Folk Ken",
+          "category": "General",
+          "xp": 5,
+          "specialty": "hunters",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Guile",
+          "category": "General",
+          "xp": 5,
+          "specialty": "pretending to know less than you do",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Heartbeast",
+          "category": "Arcane",
+          "xp": 15,
+          "specialty": "changing into a wolf",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Hunt",
+          "category": "General",
+          "xp": 15,
+          "specialty": "small animals",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Dead Language: Latin",
+          "category": "Academic",
+          "xp": 50,
+          "specialty": "Hermetic terms",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Living Language: German",
+          "category": "General",
+          "xp": 75,
+          "specialty": "talking about the wilderness",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Magic Theory",
+          "category": "Arcane",
+          "xp": 30,
+          "specialty": "Animal",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Parma Magica",
+          "category": "Arcane",
+          "xp": 5,
+          "specialty": "Animal",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Penetration",
+          "category": "Arcane",
+          "xp": 5,
+          "specialty": "Muto",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Organization Lore: Order of Hermes",
+          "category": "General",
+          "xp": 5,
+          "specialty": "Bjornaer",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Area Lore: Black Forest",
+          "category": "General",
+          "xp": 5,
+          "specialty": "forests",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Survival",
+          "category": "General",
+          "xp": 30,
+          "specialty": null,
+          "xp_table": "ability"
+        }
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_the_gift",
+          "params": {},
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_hermetic_magus",
+          "params": {},
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_ways_of_the_land",
+          "params": {
+            "land": "forest"
+          },
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_heartbeast",
+          "params": {},
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_inoffensive_to_being",
+          "params": {
+            "being": "animals"
+          },
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_quiet_magic",
+          "params": {},
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_quiet_magic",
+          "params": {},
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_subtle_magic",
+          "params": {},
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_blatant_gift",
+          "params": {},
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_tormenting_master",
+          "params": {},
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_deficient_form",
+          "params": {
+            "form": "ignem"
+          },
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        }
+      ],
+      "traditions": [],
+      "sihr_realm": "",
+      "tradition_effects": [],
+      "powers": [],
+      "constant_effects": [],
+      "covers": [],
+      "campaign_seasons": [],
+      "bound_beings": [],
+      "tradition_pools": {},
+      "spells_known": [
+        {
+          "spell_id": "spell_transformation_of_the_ravenous_beast_to_the_torpid_toad",
+          "mastery_score": 0,
+          "mastery_xp": 0,
+          "mastery_abilities": [],
+          "favourite": false
+        },
+        {
+          "spell_id": "spell_agony_of_the_beast",
+          "mastery_score": 0,
+          "mastery_xp": 0,
+          "mastery_abilities": [],
+          "favourite": false
+        },
+        {
+          "spell_id": "spell_circle_of_beast_warding",
+          "mastery_score": 0,
+          "mastery_xp": 0,
+          "mastery_abilities": [],
+          "favourite": false
+        },
+        {
+          "spell_id": "spell_viper_s_gaze",
+          "mastery_score": 0,
+          "mastery_xp": 0,
+          "mastery_abilities": [],
+          "favourite": false
+        },
+        {
+          "spell_id": "spell_eyes_of_the_cat",
+          "mastery_score": 0,
+          "mastery_xp": 0,
+          "mastery_abilities": [],
+          "favourite": false
+        },
+        {
+          "spell_id": "spell_gift_of_the_bear_s_fortitude",
+          "mastery_score": 0,
+          "mastery_xp": 0,
+          "mastery_abilities": [],
+          "favourite": false
+        },
+        {
+          "spell_id": "spell_the_wound_that_weeps",
+          "mastery_score": 0,
+          "mastery_xp": 0,
+          "mastery_abilities": [],
+          "favourite": false
+        },
+        {
+          "spell_id": "spell_lifting_the_dangling_puppet",
+          "mastery_score": 0,
+          "mastery_xp": 0,
+          "mastery_abilities": [],
+          "favourite": false
+        }
+      ],
+      "invented_spells": [],
+      "inventory": [
+        {
+          "id": "dodge",
+          "kind": "weapon",
+          "name": "Dodge",
+          "lab_id": null,
+          "description": "",
+          "location": "",
+          "location_kind": "",
+          "location_id": null,
+          "quantity": 1,
+          "dimensions": "",
+          "inhabitants": "",
+          "owner": "",
+          "quality": null,
+          "upkeep": null,
+          "build_points": null,
+          "usage": "Standard (2 Seasons)",
+          "gear_type": "Weapon or shield",
+          "gear_quality": "Standard",
+          "gear_id": "weapon_dodge",
+          "load": 0,
+          "weapon_init": 0,
+          "weapon_attack": null,
+          "weapon_defense": 0,
+          "weapon_damage": null,
+          "armor_protection": 0,
+          "armor_slot": "",
+          "make": "",
+          "make_bonus": 0,
+          "carried": true,
+          "assists": "",
+          "assistance": "",
+          "art": "",
+          "pawns": 0,
+          "season": "",
+          "physical_form": "",
+          "infernal": false,
+          "vis_kind": "",
+          "paired_art": "",
+          "virtue_thing": "",
+          "effect_level": null,
+          "contested": false,
+          "secured_until": null,
+          "dwindling": false,
+          "dwindling_from": null,
+          "dwindled_years": 0,
+          "harvested_year": null,
+          "place_id": null,
+          "place_level": 0,
+          "ship": null
+        },
+        {
+          "id": "wizardly_robes",
+          "kind": "item",
+          "name": "Wizardly robes",
+          "lab_id": null,
+          "description": "",
+          "location": "",
+          "location_kind": "",
+          "location_id": null,
+          "quantity": 1,
+          "dimensions": "",
+          "inhabitants": "",
+          "owner": "",
+          "quality": null,
+          "upkeep": null,
+          "build_points": null,
+          "usage": "Standard (2 Seasons)",
+          "gear_type": "",
+          "gear_quality": "Standard",
+          "gear_id": null,
+          "load": 0,
+          "weapon_init": 0,
+          "weapon_attack": 0,
+          "weapon_defense": 0,
+          "weapon_damage": 0,
+          "armor_protection": 0,
+          "armor_slot": "",
+          "make": "",
+          "make_bonus": 0,
+          "carried": true,
+          "assists": "",
+          "assistance": "",
+          "art": "",
+          "pawns": 0,
+          "season": "",
+          "physical_form": "",
+          "infernal": false,
+          "vis_kind": "",
+          "paired_art": "",
+          "virtue_thing": "",
+          "effect_level": null,
+          "contested": false,
+          "secured_until": null,
+          "dwindling": false,
+          "dwindling_from": null,
+          "dwindled_years": 0,
+          "harvested_year": null,
+          "place_id": null,
+          "place_level": 0,
+          "ship": null
+        }
+      ],
+      "silver": 0,
+      "assigned_lab_id": null,
+      "background": {
+        "player": "",
+        "player_ids": [],
+        "everyone_plays": false,
+        "steward_id": "",
+        "setting": "",
+        "size": 0,
+        "confidence_score": 1,
+        "confidence_points": 3,
+        "true_faith_score": 0,
+        "faith_points": 0,
+        "church_rank": "",
+        "fortune_wealthy_in": "even",
+        "relic_faith": 0,
+        "birth_name": "",
+        "year_born": 1198,
+        "race_nationality": "",
+        "place_of_origin": "",
+        "religion": "",
+        "title_profession": ""
+      },
+      "description": {
+        "height": null,
+        "weight": null,
+        "hair": "",
+        "eyes": "",
+        "handedness": "right",
+        "physical_description": "",
+        "biography": "Built from the Bjornaer template (Ars Magica Definitive Edition, Chapter Three: Characters, Character Templates).\n\nFrom the House: Heartbeast.\n\nCustomizing: More at ease with animals than people (Blatant Gift with Inoffensive to Animals). Ways of the Forest should match the heartbeast (a wolf here). Both Major Flaws can change, and Deficient Ignem is common in the House but optional. Quiet and Subtle Magic let him cast in heartbeast form without penalty.",
+        "complexion": "",
+        "complexion_minor": ""
+      },
+      "aging": {
+        "decrepitude": 0,
+        "effects": "",
+        "warping_score": 0,
+        "warping_points": 0,
+        "longevity_modifier": 0,
+        "longevity_year": null,
+        "longevity_by": "",
+        "longevity_effects": [],
+        "decrepitude_points": 0,
+        "aging_points": {},
+        "apparent_age": null,
+        "recovering": "",
+        "twilight_until": "",
+        "aging_due": [],
+        "aura_time": "always",
+        "regimen": 0,
+        "regimen_by": "",
+        "regimen_since": null,
+        "warping_realms": {},
+        "seeks_ascent": false,
+        "twilight_scars": ""
+      },
+      "wounds": {
+        "light": 0,
+        "medium": 0,
+        "heavy": 0,
+        "incapacitated": false,
+        "dead": false,
+        "soak": 0,
+        "states": [],
+        "aid": 0,
+        "crisis": 0,
+        "bruises": {},
+        "diseases": [],
+        "conditions": []
+      },
+      "fatigue_level": "fresh",
+      "long_term_fatigue": 0,
+      "personality_traits": [
+        {
+          "name": "Brave",
+          "score": 2,
+          "known": true,
+          "type": "",
+          "reach": "",
+          "deeds": 0,
+          "replaces": "",
+          "bad": false
+        },
+        {
+          "name": "Status-seeking",
+          "score": 2,
+          "known": true,
+          "type": "",
+          "reach": "",
+          "deeds": 0,
+          "replaces": "",
+          "bad": false
+        },
+        {
+          "name": "Obedient",
+          "score": 1,
+          "known": true,
+          "type": "",
+          "reach": "",
+          "deeds": 0,
+          "replaces": "",
+          "bad": false
+        }
+      ],
+      "reputations": [],
+      "raw_vis": {},
+      "hermetic": {
+        "house": "house_bjornaer",
+        "domus_magna": "",
+        "primus": "",
+        "parens": "",
+        "covenant_of_apprenticeship": "",
+        "age_of_apprenticeship": null,
+        "wizards_sigil": "",
+        "holds_own_sigil": false,
+        "sigil_challenged": false,
+        "certamen_school": "",
+        "road_magic": false,
+        "renounced_year": null,
+        "renounced_by": ""
+      },
+      "diary": [],
+      "tractatus_read": [],
+      "summae_read": [],
+      "lab_text_access": {},
+      "breakthroughs": [],
+      "private_notes": "",
+      "goals": [],
+      "grog_year": null,
+      "animal": null,
+      "labor_points": 0,
+      "income_band": "",
+      "investments": [],
+      "workshop_innovation": 0,
+      "workshop_raw_materials": 0,
+      "progress": [],
+      "formulas": [],
+      "formula_designs": [],
+      "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
+      "refused_vendettas": [],
+      "advanced": {},
+      "in_creation": false,
+      "interests_off": [],
+      "creation_xp": [],
+      "creation_conditions": {
+        "lab_seasons": 0,
+        "aura": 3,
+        "lab_quality": 0,
+        "living_conditions": 1,
+        "aged_to": null,
+        "aging_chart": "",
+        "aging_chart_cap": 0,
+        "vocation": "",
+        "vocation_score": 0
+      },
+      "portrait": "",
+      "detail": "Full",
+      "summary": "",
+      "secrets": [],
+      "known": true,
+      "storyguide_id": "",
+      "links": [],
+      "attitudes": [],
+      "favours": [],
+      "agents": [],
+      "agency_xp": 0,
+      "discipline": [],
+      "alchemy": null,
+      "magic_might": 0,
+      "church": {
+        "grade": "",
+        "diocese": "",
+        "standing": "good",
+        "benefice": "",
+        "barred": false,
+        "notes": "",
+        "ordinations": [],
+        "petitions": [],
+        "cases": []
+      },
+      "enigma": {
+        "path": "",
+        "guide_id": "",
+        "primus_presence": 0,
+        "aptitude_path": "",
+        "reached": [],
+        "stigmata": [],
+        "notes": ""
+      }
+    },
+    {
+      "id": "ysolde_of_merinita",
+      "name": "Ysolde of Merinita",
+      "type": "magus",
+      "covenant_id": "cov1",
+      "characteristics": {
+        "intelligence": 3,
+        "perception": 1,
+        "strength": -1,
+        "stamina": -1,
+        "presence": 1,
+        "communication": 2,
+        "dexterity": -1,
+        "quickness": -1
+      },
+      "arts": {
+        "creo": {
+          "xp": 15
+        },
+        "intellego": {
+          "xp": 1
+        },
+        "muto": {
+          "xp": 15
+        },
+        "perdo": {
+          "xp": 3
+        },
+        "rego": {
+          "xp": 15
+        },
+        "corpus": {
+          "xp": 1
+        },
+        "imaginem": {
+          "xp": 55
+        },
+        "mentem": {
+          "xp": 15
+        }
+      },
+      "abilities": [
+        {
+          "name": "Artes Liberales",
+          "category": "Academic",
+          "xp": 5,
+          "specialty": "rhetoric",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Charm",
+          "category": "General",
+          "xp": 15,
+          "specialty": "gaining trust",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Faerie Lore",
+          "category": "Arcane",
+          "xp": 30,
+          "specialty": "water fay",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Faerie Magic",
+          "category": "Arcane",
+          "xp": 5,
+          "specialty": "illusions",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Folk Ken",
+          "category": "General",
+          "xp": 15,
+          "specialty": "what people will believe",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Guile",
+          "category": "General",
+          "xp": 75,
+          "specialty": "sustained lies",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Dead Language: Latin",
+          "category": "Academic",
+          "xp": 50,
+          "specialty": "Hermetic terms",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Magic Theory",
+          "category": "Arcane",
+          "xp": 30,
+          "specialty": "Imaginem",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Living Language: German",
+          "category": "General",
+          "xp": 75,
+          "specialty": "faeries",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Penetration",
+          "category": "Arcane",
+          "xp": 15,
+          "specialty": "Mentem",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Parma Magica",
+          "category": "Arcane",
+          "xp": 5,
+          "specialty": "Mentem",
+          "xp_table": "ability"
+        }
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_the_gift",
+          "params": {},
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_hermetic_magus",
+          "params": {},
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_strong_faerie_blood",
+          "params": {
+            "blood": "undine"
+          },
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_deft_form",
+          "params": {
+            "form": "imaginem"
+          },
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_faerie_magic",
+          "params": {},
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_free_study",
+          "params": {},
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_puissant_art",
+          "params": {
+            "art": "imaginem"
+          },
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_student_of_realm",
+          "params": {
+            "realm": "faerie"
+          },
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_chaotic_magic",
+          "params": {},
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_plagued_by_supernatural_entity",
+          "params": {},
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_faerie_upbringing",
+          "params": {},
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        }
+      ],
+      "traditions": [],
+      "sihr_realm": "",
+      "tradition_effects": [],
+      "powers": [],
+      "constant_effects": [],
+      "covers": [],
+      "campaign_seasons": [],
+      "bound_beings": [],
+      "tradition_pools": {},
+      "spells_known": [
+        {
+          "spell_id": "spell_phantasmal_animal",
+          "mastery_score": 0,
+          "mastery_xp": 0,
+          "mastery_abilities": [],
+          "favourite": false
+        },
+        {
+          "spell_id": "spell_phantasm_of_the_human_form",
+          "mastery_score": 0,
+          "mastery_xp": 0,
+          "mastery_abilities": [],
+          "favourite": false
+        },
+        {
+          "spell_id": "spell_image_phantom",
+          "mastery_score": 0,
+          "mastery_xp": 0,
+          "mastery_abilities": [],
+          "favourite": false
+        },
+        {
+          "spell_id": "spell_veil_of_invisibility",
+          "mastery_score": 0,
+          "mastery_xp": 0,
+          "mastery_abilities": [],
+          "favourite": false
+        },
+        {
+          "spell_id": "spell_wizard_s_sidestep",
+          "mastery_score": 0,
+          "mastery_xp": 0,
+          "mastery_abilities": [],
+          "favourite": false
+        },
+        {
+          "spell_id": "spell_panic_of_the_trembling_heart",
+          "mastery_score": 0,
+          "mastery_xp": 0,
+          "mastery_abilities": [],
+          "favourite": false
+        },
+        {
+          "spell_id": "spell_the_call_to_slumber",
+          "mastery_score": 0,
+          "mastery_xp": 0,
+          "mastery_abilities": [],
+          "favourite": false
+        }
+      ],
+      "invented_spells": [],
+      "inventory": [
+        {
+          "id": "dodge",
+          "kind": "weapon",
+          "name": "Dodge",
+          "lab_id": null,
+          "description": "",
+          "location": "",
+          "location_kind": "",
+          "location_id": null,
+          "quantity": 1,
+          "dimensions": "",
+          "inhabitants": "",
+          "owner": "",
+          "quality": null,
+          "upkeep": null,
+          "build_points": null,
+          "usage": "Standard (2 Seasons)",
+          "gear_type": "Weapon or shield",
+          "gear_quality": "Standard",
+          "gear_id": "weapon_dodge",
+          "load": 0,
+          "weapon_init": 0,
+          "weapon_attack": null,
+          "weapon_defense": 0,
+          "weapon_damage": null,
+          "armor_protection": 0,
+          "armor_slot": "",
+          "make": "",
+          "make_bonus": 0,
+          "carried": true,
+          "assists": "",
+          "assistance": "",
+          "art": "",
+          "pawns": 0,
+          "season": "",
+          "physical_form": "",
+          "infernal": false,
+          "vis_kind": "",
+          "paired_art": "",
+          "virtue_thing": "",
+          "effect_level": null,
+          "contested": false,
+          "secured_until": null,
+          "dwindling": false,
+          "dwindling_from": null,
+          "dwindled_years": 0,
+          "harvested_year": null,
+          "place_id": null,
+          "place_level": 0,
+          "ship": null
+        },
+        {
+          "id": "wizardly_robes",
+          "kind": "item",
+          "name": "Wizardly robes",
+          "lab_id": null,
+          "description": "",
+          "location": "",
+          "location_kind": "",
+          "location_id": null,
+          "quantity": 1,
+          "dimensions": "",
+          "inhabitants": "",
+          "owner": "",
+          "quality": null,
+          "upkeep": null,
+          "build_points": null,
+          "usage": "Standard (2 Seasons)",
+          "gear_type": "",
+          "gear_quality": "Standard",
+          "gear_id": null,
+          "load": 0,
+          "weapon_init": 0,
+          "weapon_attack": 0,
+          "weapon_defense": 0,
+          "weapon_damage": 0,
+          "armor_protection": 0,
+          "armor_slot": "",
+          "make": "",
+          "make_bonus": 0,
+          "carried": true,
+          "assists": "",
+          "assistance": "",
+          "art": "",
+          "pawns": 0,
+          "season": "",
+          "physical_form": "",
+          "infernal": false,
+          "vis_kind": "",
+          "paired_art": "",
+          "virtue_thing": "",
+          "effect_level": null,
+          "contested": false,
+          "secured_until": null,
+          "dwindling": false,
+          "dwindling_from": null,
+          "dwindled_years": 0,
+          "harvested_year": null,
+          "place_id": null,
+          "place_level": 0,
+          "ship": null
+        }
+      ],
+      "silver": 0,
+      "assigned_lab_id": null,
+      "background": {
+        "player": "",
+        "player_ids": [],
+        "everyone_plays": false,
+        "steward_id": "",
+        "setting": "",
+        "size": 0,
+        "confidence_score": 1,
+        "confidence_points": 3,
+        "true_faith_score": 0,
+        "faith_points": 0,
+        "church_rank": "",
+        "fortune_wealthy_in": "even",
+        "relic_faith": 0,
+        "birth_name": "",
+        "year_born": 1198,
+        "race_nationality": "",
+        "place_of_origin": "",
+        "religion": "",
+        "title_profession": ""
+      },
+      "description": {
+        "height": null,
+        "weight": null,
+        "hair": "",
+        "eyes": "",
+        "handedness": "right",
+        "physical_description": "",
+        "biography": "Built from the Merinita template (Ars Magica Definitive Edition, Chapter Three: Characters, Character Templates).\n\nFrom the House: Faerie Magic.\n\nDetails: Plagued by Supernatural Entity (faerie).\n\nCustomizing: Can take three more points of Flaws and Virtues. The kind of Strong Faerie Blood changes easily; she may look younger than 25.",
+        "complexion": "",
+        "complexion_minor": ""
+      },
+      "aging": {
+        "decrepitude": 0,
+        "effects": "",
+        "warping_score": 0,
+        "warping_points": 0,
+        "longevity_modifier": 0,
+        "longevity_year": null,
+        "longevity_by": "",
+        "longevity_effects": [],
+        "decrepitude_points": 0,
+        "aging_points": {},
+        "apparent_age": null,
+        "recovering": "",
+        "twilight_until": "",
+        "aging_due": [],
+        "aura_time": "always",
+        "regimen": 0,
+        "regimen_by": "",
+        "regimen_since": null,
+        "warping_realms": {},
+        "seeks_ascent": false,
+        "twilight_scars": ""
+      },
+      "wounds": {
+        "light": 0,
+        "medium": 0,
+        "heavy": 0,
+        "incapacitated": false,
+        "dead": false,
+        "soak": 0,
+        "states": [],
+        "aid": 0,
+        "crisis": 0,
+        "bruises": {},
+        "diseases": [],
+        "conditions": []
+      },
+      "fatigue_level": "fresh",
+      "long_term_fatigue": 0,
+      "personality_traits": [
+        {
+          "name": "Mercurial",
+          "score": 3,
+          "known": true,
+          "type": "",
+          "reach": "",
+          "deeds": 0,
+          "replaces": "",
+          "bad": false
+        },
+        {
+          "name": "Honest",
+          "score": -2,
+          "known": true,
+          "type": "",
+          "reach": "",
+          "deeds": 0,
+          "replaces": "",
+          "bad": false
+        },
+        {
+          "name": "Reliable",
+          "score": -3,
+          "known": true,
+          "type": "",
+          "reach": "",
+          "deeds": 0,
+          "replaces": "",
+          "bad": false
+        }
+      ],
+      "reputations": [],
+      "raw_vis": {},
+      "hermetic": {
+        "house": "house_merinita",
+        "domus_magna": "",
+        "primus": "",
+        "parens": "",
+        "covenant_of_apprenticeship": "",
+        "age_of_apprenticeship": null,
+        "wizards_sigil": "",
+        "holds_own_sigil": false,
+        "sigil_challenged": false,
+        "certamen_school": "",
+        "road_magic": false,
+        "renounced_year": null,
+        "renounced_by": ""
+      },
+      "diary": [],
+      "tractatus_read": [],
+      "summae_read": [],
+      "lab_text_access": {},
+      "breakthroughs": [],
+      "private_notes": "",
+      "goals": [],
+      "grog_year": null,
+      "animal": null,
+      "labor_points": 0,
+      "income_band": "",
+      "investments": [],
+      "workshop_innovation": 0,
+      "workshop_raw_materials": 0,
+      "progress": [],
+      "formulas": [],
+      "formula_designs": [],
+      "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
+      "refused_vendettas": [],
+      "advanced": {},
+      "in_creation": false,
+      "interests_off": [],
+      "creation_xp": [],
+      "creation_conditions": {
+        "lab_seasons": 0,
+        "aura": 3,
+        "lab_quality": 0,
+        "living_conditions": 1,
+        "aged_to": null,
+        "aging_chart": "",
+        "aging_chart_cap": 0,
+        "vocation": "",
+        "vocation_score": 0
+      },
+      "portrait": "",
+      "detail": "Full",
+      "summary": "",
+      "secrets": [],
+      "known": true,
+      "storyguide_id": "",
+      "links": [],
+      "attitudes": [],
+      "favours": [],
+      "agents": [],
+      "agency_xp": 0,
+      "discipline": [],
+      "alchemy": null,
+      "magic_might": 0,
+      "church": {
+        "grade": "",
+        "diocese": "",
+        "standing": "good",
+        "benefice": "",
+        "barred": false,
+        "notes": "",
+        "ordinations": [],
+        "petitions": [],
+        "cases": []
+      },
+      "enigma": {
+        "path": "",
+        "guide_id": "",
+        "primus_presence": 0,
+        "aptitude_path": "",
+        "reached": [],
+        "stigmata": [],
+        "notes": ""
+      }
+    },
+    {
+      "id": "hartmut_of_criamon",
+      "name": "Hartmut of Criamon",
+      "type": "magus",
+      "covenant_id": "cov1",
+      "characteristics": {
+        "intelligence": 3,
+        "perception": 0,
+        "strength": 0,
+        "stamina": 2,
+        "presence": 2,
+        "communication": -3,
+        "dexterity": 0,
+        "quickness": 1
+      },
+      "arts": {
+        "creo": {
+          "xp": 10
+        },
+        "intellego": {
+          "xp": 21
+        },
+        "muto": {
+          "xp": 10
+        },
+        "perdo": {
+          "xp": 10
+        },
+        "rego": {
+          "xp": 10
+        },
+        "imaginem": {
+          "xp": 3
+        },
+        "mentem": {
+          "xp": 1
+        },
+        "vim": {
+          "xp": 55
+        }
+      },
+      "abilities": [
+        {
+          "name": "Artes Liberales",
+          "category": "Academic",
+          "xp": 5,
+          "specialty": "rhetoric",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Charm",
+          "category": "General",
+          "xp": 75,
+          "specialty": "educated people",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Concentration",
+          "category": "General",
+          "xp": 30,
+          "specialty": "spell casting",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Enigmatic Wisdom",
+          "category": "Arcane",
+          "xp": 30,
+          "specialty": "riddles",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Folk Ken",
+          "category": "General",
+          "xp": 5,
+          "specialty": "educated people",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Dead Language: Latin",
+          "category": "Academic",
+          "xp": 50,
+          "specialty": "Enigmatic terms",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Magic Sensitivity",
+          "category": "Supernatural",
+          "xp": 15,
+          "specialty": "auras",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Magic Theory",
+          "category": "Arcane",
+          "xp": 30,
+          "specialty": "Vim",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Living Language: German",
+          "category": "General",
+          "xp": 75,
+          "specialty": "long words",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Organization Lore: Order of Hermes",
+          "category": "General",
+          "xp": 5,
+          "specialty": "mysteries",
+          "xp_table": "ability"
+        },
+        {
+          "name": "Parma Magica",
+          "category": "Arcane",
+          "xp": 5,
+          "specialty": null,
+          "xp_table": "ability"
+        }
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_the_gift",
+          "params": {},
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_hermetic_magus",
+          "params": {},
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_flexible_formulaic_magic",
+          "params": {},
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_the_enigma",
+          "params": {},
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_magic_sensitivity",
+          "params": {},
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_puissant_ability",
+          "params": {
+            "ability": "enigmatic wisdom"
+          },
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_side_effect",
+          "params": {
+            "effect": ""
+          },
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_study_bonus",
+          "params": {},
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_magic_addiction",
+          "params": {},
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_twilight_prone",
+          "params": {},
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        },
+        {
+          "vf_id": "vf_incomprehensible",
+          "params": {},
+          "id": "",
+          "temporary": false,
+          "ends_year": null,
+          "ends_season": ""
+        }
+      ],
+      "traditions": [],
+      "sihr_realm": "",
+      "tradition_effects": [],
+      "powers": [],
+      "constant_effects": [],
+      "covers": [],
+      "campaign_seasons": [],
+      "bound_beings": [],
+      "tradition_pools": {},
+      "spells_known": [
+        {
+          "spell_id": "spell_phantasm_of_the_talking_head",
+          "mastery_score": 0,
+          "mastery_xp": 0,
+          "mastery_abilities": [],
+          "favourite": false
+        },
+        {
+          "spell_id": "spell_aura_of_the_ennobled_presence",
+          "mastery_score": 0,
+          "mastery_xp": 0,
+          "mastery_abilities": [],
+          "favourite": false
+        },
+        {
+          "spell_id": "spell_piercing_the_faerie_veil",
+          "mastery_score": 0,
+          "mastery_xp": 0,
+          "mastery_abilities": [],
+          "favourite": false
+        },
+        {
+          "spell_id": "spell_piercing_the_magical_veil",
+          "mastery_score": 0,
+          "mastery_xp": 0,
+          "mastery_abilities": [],
+          "favourite": false
+        },
+        {
+          "spell_id": "spell_unravelling_the_fabric_of_imaginem",
+          "mastery_score": 0,
+          "mastery_xp": 0,
+          "mastery_abilities": [],
+          "favourite": false
+        },
+        {
+          "spell_id": "spell_wind_of_mundane_silence",
+          "mastery_score": 0,
+          "mastery_xp": 0,
+          "mastery_abilities": [],
+          "favourite": false
+        },
+        {
+          "spell_id": "spell_circular_ward_against_demons",
+          "mastery_score": 0,
+          "mastery_xp": 0,
+          "mastery_abilities": [],
+          "favourite": false
+        }
+      ],
+      "invented_spells": [],
+      "inventory": [
+        {
+          "id": "dodge",
+          "kind": "weapon",
+          "name": "Dodge",
+          "lab_id": null,
+          "description": "",
+          "location": "",
+          "location_kind": "",
+          "location_id": null,
+          "quantity": 1,
+          "dimensions": "",
+          "inhabitants": "",
+          "owner": "",
+          "quality": null,
+          "upkeep": null,
+          "build_points": null,
+          "usage": "Standard (2 Seasons)",
+          "gear_type": "Weapon or shield",
+          "gear_quality": "Standard",
+          "gear_id": "weapon_dodge",
+          "load": 0,
+          "weapon_init": 0,
+          "weapon_attack": null,
+          "weapon_defense": 0,
+          "weapon_damage": null,
+          "armor_protection": 0,
+          "armor_slot": "",
+          "make": "",
+          "make_bonus": 0,
+          "carried": true,
+          "assists": "",
+          "assistance": "",
+          "art": "",
+          "pawns": 0,
+          "season": "",
+          "physical_form": "",
+          "infernal": false,
+          "vis_kind": "",
+          "paired_art": "",
+          "virtue_thing": "",
+          "effect_level": null,
+          "contested": false,
+          "secured_until": null,
+          "dwindling": false,
+          "dwindling_from": null,
+          "dwindled_years": 0,
+          "harvested_year": null,
+          "place_id": null,
+          "place_level": 0,
+          "ship": null
+        },
+        {
+          "id": "wizardly_robes",
+          "kind": "item",
+          "name": "Wizardly robes",
+          "lab_id": null,
+          "description": "",
+          "location": "",
+          "location_kind": "",
+          "location_id": null,
+          "quantity": 1,
+          "dimensions": "",
+          "inhabitants": "",
+          "owner": "",
+          "quality": null,
+          "upkeep": null,
+          "build_points": null,
+          "usage": "Standard (2 Seasons)",
+          "gear_type": "",
+          "gear_quality": "Standard",
+          "gear_id": null,
+          "load": 0,
+          "weapon_init": 0,
+          "weapon_attack": 0,
+          "weapon_defense": 0,
+          "weapon_damage": 0,
+          "armor_protection": 0,
+          "armor_slot": "",
+          "make": "",
+          "make_bonus": 0,
+          "carried": true,
+          "assists": "",
+          "assistance": "",
+          "art": "",
+          "pawns": 0,
+          "season": "",
+          "physical_form": "",
+          "infernal": false,
+          "vis_kind": "",
+          "paired_art": "",
+          "virtue_thing": "",
+          "effect_level": null,
+          "contested": false,
+          "secured_until": null,
+          "dwindling": false,
+          "dwindling_from": null,
+          "dwindled_years": 0,
+          "harvested_year": null,
+          "place_id": null,
+          "place_level": 0,
+          "ship": null
+        }
+      ],
+      "silver": 0,
+      "assigned_lab_id": null,
+      "background": {
+        "player": "",
+        "player_ids": [],
+        "everyone_plays": false,
+        "steward_id": "",
+        "setting": "",
+        "size": 0,
+        "confidence_score": 1,
+        "confidence_points": 3,
+        "true_faith_score": 0,
+        "faith_points": 0,
+        "church_rank": "",
+        "fortune_wealthy_in": "even",
+        "relic_faith": 0,
+        "birth_name": "",
+        "year_born": 1198,
+        "race_nationality": "",
+        "place_of_origin": "",
+        "religion": "",
+        "title_profession": ""
+      },
+      "description": {
+        "height": null,
+        "weight": null,
+        "hair": "",
+        "eyes": "",
+        "handedness": "right",
+        "physical_description": "",
+        "biography": "Built from the Criamon template (Ars Magica Definitive Edition, Chapter Three: Characters, Character Templates).\n\nFrom the House: The Enigma.\n\nCustomizing: Short of her full Flaws: she can take another Major Flaw or three Minor ones, with Virtues to match. Charm and Folk Ken (and her Presence) could move into other early-childhood Abilities.",
+        "complexion": "",
+        "complexion_minor": ""
+      },
+      "aging": {
+        "decrepitude": 0,
+        "effects": "",
+        "warping_score": 0,
+        "warping_points": 0,
+        "longevity_modifier": 0,
+        "longevity_year": null,
+        "longevity_by": "",
+        "longevity_effects": [],
+        "decrepitude_points": 0,
+        "aging_points": {},
+        "apparent_age": null,
+        "recovering": "",
+        "twilight_until": "",
+        "aging_due": [],
+        "aura_time": "always",
+        "regimen": 0,
+        "regimen_by": "",
+        "regimen_since": null,
+        "warping_realms": {},
+        "seeks_ascent": false,
+        "twilight_scars": ""
+      },
+      "wounds": {
+        "light": 0,
+        "medium": 0,
+        "heavy": 0,
+        "incapacitated": false,
+        "dead": false,
+        "soak": 0,
+        "states": [],
+        "aid": 0,
+        "crisis": 0,
+        "bruises": {},
+        "diseases": [],
+        "conditions": []
+      },
+      "fatigue_level": "fresh",
+      "long_term_fatigue": 0,
+      "personality_traits": [
+        {
+          "name": "Enthusiastic",
+          "score": 3,
+          "known": true,
+          "type": "",
+          "reach": "",
+          "deeds": 0,
+          "replaces": "",
+          "bad": false
+        },
+        {
+          "name": "Friendly",
+          "score": 2,
+          "known": true,
+          "type": "",
+          "reach": "",
+          "deeds": 0,
+          "replaces": "",
+          "bad": false
+        },
+        {
+          "name": "Practical",
+          "score": -3,
+          "known": true,
+          "type": "",
+          "reach": "",
+          "deeds": 0,
+          "replaces": "",
+          "bad": false
+        }
+      ],
+      "reputations": [],
+      "raw_vis": {},
+      "hermetic": {
+        "house": "house_criamon",
+        "domus_magna": "",
+        "primus": "",
+        "parens": "",
+        "covenant_of_apprenticeship": "",
+        "age_of_apprenticeship": null,
+        "wizards_sigil": "",
+        "holds_own_sigil": false,
+        "sigil_challenged": false,
+        "certamen_school": "",
+        "road_magic": false,
+        "renounced_year": null,
+        "renounced_by": ""
+      },
+      "diary": [],
+      "tractatus_read": [],
+      "summae_read": [],
+      "lab_text_access": {},
+      "breakthroughs": [],
+      "private_notes": "",
+      "goals": [],
+      "grog_year": null,
+      "animal": null,
+      "labor_points": 0,
+      "income_band": "",
+      "investments": [],
+      "workshop_innovation": 0,
+      "workshop_raw_materials": 0,
+      "progress": [],
+      "formulas": [],
+      "formula_designs": [],
+      "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
+      "refused_vendettas": [],
+      "advanced": {},
+      "in_creation": false,
+      "interests_off": [],
+      "creation_xp": [],
+      "creation_conditions": {
+        "lab_seasons": 0,
+        "aura": 3,
+        "lab_quality": 0,
+        "living_conditions": 1,
+        "aged_to": null,
+        "aging_chart": "",
+        "aging_chart_cap": 0,
+        "vocation": "",
+        "vocation_score": 0
+      },
+      "portrait": "",
+      "detail": "Full",
+      "summary": "",
+      "secrets": [],
+      "known": true,
+      "storyguide_id": "",
+      "links": [],
+      "attitudes": [],
+      "favours": [],
+      "agents": [],
+      "agency_xp": 0,
+      "discipline": [],
+      "alchemy": null,
+      "magic_might": 0,
+      "church": {
+        "grade": "",
+        "diocese": "",
+        "standing": "good",
+        "benefice": "",
+        "barred": false,
+        "notes": "",
+        "ordinations": [],
+        "petitions": [],
+        "cases": []
+      },
+      "enigma": {
+        "path": "",
+        "guide_id": "",
+        "primus_presence": 0,
+        "aptitude_path": "",
+        "reached": [],
+        "stigmata": [],
+        "notes": ""
+      }
     }
   ],
   "laboratories": [
@@ -3063,6 +4852,42 @@
       "page": "",
       "experimental_effects": [],
       "details_missing": false
+    },
+    {
+      "id": "spell_piercing_the_magical_veil",
+      "name": "Piercing the Magical Veil",
+      "technique": "Intellego",
+      "form": "Vim",
+      "level": 20,
+      "description": "A version of Piercing the Faerie Veil (Character Templates). This spell allows the caster to see through the boundaries of Faerie regiones, and therefore divine the path to the next level (more details about regiones are given on page 420). There are separate but related spells for Divine, Magical and Infernal regiones.\n\n(Base 3, +1 Conc, +4 Vision)",
+      "requisites": [],
+      "range": "Personal",
+      "duration": "Concentration",
+      "target": "Vision",
+      "ritual": false,
+      "base_level": 3,
+      "source": "DE",
+      "page": "367",
+      "experimental_effects": [],
+      "details_missing": false
+    },
+    {
+      "id": "spell_unravelling_the_fabric_of_imaginem",
+      "name": "Unravelling the Fabric of Imaginem",
+      "technique": "Perdo",
+      "form": "Vim",
+      "level": 20,
+      "description": "A version of Unravelling the Fabric of (Form) (Character Templates). This spell will cancel the effects of any one spell of a specified Form whose level is less than or equal to (spell level + 10 + stress die (no botch)). There are 10 variants that cover each Hermetic Form, and a number of much rarer variants for different kinds of nonHermetic magic.\n\n(Base effect, +2 Voice)",
+      "requisites": [],
+      "range": "Voice",
+      "duration": "Momentary",
+      "target": "Individual",
+      "ritual": false,
+      "base_level": null,
+      "source": "DE",
+      "page": "370",
+      "experimental_effects": [],
+      "details_missing": false
     }
   ],
   "familiars": [
@@ -3278,6 +5103,7 @@
   "traditions_off": [],
   "season_plans": [],
   "keep_season_records": true,
+  "harvest_vis_by_hand": false,
   "unplanned_magi": "exposure",
   "unplanned_companions": "exposure",
   "unplanned_grogs": "exposure",
@@ -3598,5 +5424,7 @@
   "saved_by": "",
   "marriages": [],
   "maps": [],
-  "pins": []
+  "pins": [],
+  "scenes": [],
+  "handouts": []
 }

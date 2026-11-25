@@ -1500,6 +1500,7 @@
           "dwindling": false,
           "dwindling_from": null,
           "dwindled_years": 0,
+          "harvested_year": null,
           "place_id": null,
           "place_level": 0,
           "ship": null
@@ -1550,6 +1551,7 @@
           "dwindling": false,
           "dwindling_from": null,
           "dwindled_years": 0,
+          "harvested_year": null,
           "place_id": null,
           "place_level": 0,
           "ship": null
@@ -1600,6 +1602,7 @@
           "dwindling": false,
           "dwindling_from": null,
           "dwindled_years": 0,
+          "harvested_year": null,
           "place_id": null,
           "place_level": 0,
           "ship": null
@@ -1650,6 +1653,7 @@
           "dwindling": false,
           "dwindling_from": null,
           "dwindled_years": 0,
+          "harvested_year": null,
           "place_id": null,
           "place_level": 0,
           "ship": null
@@ -1700,6 +1704,7 @@
           "dwindling": false,
           "dwindling_from": null,
           "dwindled_years": 0,
+          "harvested_year": null,
           "place_id": null,
           "place_level": 0,
           "ship": null
@@ -60320,7 +60325,7 @@
           "name": "Magic Theory",
           "category": "Academic",
           "xp": 85,
-          "specialty": "Lab Totals",
+          "specialty": "Creo",
           "xp_table": "ability"
         },
         {
@@ -65791,6 +65796,7 @@
   "traditions_off": [],
   "season_plans": [],
   "keep_season_records": true,
+  "harvest_vis_by_hand": false,
   "unplanned_magi": "exposure",
   "unplanned_companions": "exposure",
   "unplanned_grogs": "exposure",
@@ -65822,5 +65828,7 @@
   "saved_by": "",
   "marriages": [],
   "maps": [],
-  "pins": []
+  "pins": [],
+  "scenes": [],
+  "handouts": []
 }

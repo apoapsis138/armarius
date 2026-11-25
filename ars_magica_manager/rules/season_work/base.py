@@ -71,6 +71,9 @@ class SimpleActivity:
     #: The season's experience goes into its work (a formula researched),
     #: not into the subject's score.
     xp_to_work: bool = False
+    #: Laboratory work with no Lab Total of its own: a Philosophic Alchemy
+    #: digestion runs beside it (TMRE p. 41).
+    in_lab: bool = False
 
     @property
     def book(self) -> str:
