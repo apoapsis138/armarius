@@ -1201,7 +1201,8 @@ def play(saga: Saga, fight: Fight, blow: Blow, rng: random.Random) -> Played:
     fight.turn += 1
     side = winner(saga, fight)
     if side is not None:
-        fight.over = f"{side_name(fight, side)} win the fight."
+        # A side's name is typed and has no number, so no verb agrees with it.
+        fight.over = f"The fight goes to {side_name(fight, side)}."
         fight.log.append(FightEntry(fight.round, fight.over))
     elif actor(saga, fight) is None:
         _next_round(fight)

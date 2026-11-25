@@ -1,0 +1,1 @@
+**A fight's result reads right for any side.** It used to say a side "win the fight" even when the side was one knight. Now it reads "The fight goes to Sir Aimery of Vaux", which suits a side named for one person or for many, on the fight's page, in The Blow, in its chronicle and in the Diaries.
