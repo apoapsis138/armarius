@@ -595,10 +595,11 @@ it. `d` abandons the meeting, keeping whatever its steps changed. Choose a
 step to read what was entered at it under the lists.
 <!-- /tui -->
 <!-- gui -->
-**Hold** holds the chosen step, again if it was held already, and saving
-it opens the next. Before the meeting opens, it calls the roll, which
-opens it. **Abandon** gives up the meeting, keeping whatever its steps
-changed. Choose a step to read what was entered at it beside the list.
+**Hold** holds the chosen step, again if it was held already, or with
+none chosen the step in hand, and saving it opens the next. Before the
+meeting opens, it calls the roll, which opens it. **Abandon** gives up
+the meeting, keeping whatever its steps changed. Choose a step to read
+what was entered at it beside the list.
 <!-- /gui -->
 
 ### The Vote
