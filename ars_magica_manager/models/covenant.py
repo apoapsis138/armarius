@@ -8,7 +8,15 @@ from typing import Any, TypedDict
 from ..arts import ART_BY_NAME
 from .common import SEASONS, Secret, known_fields, move_secrets
 from .hermetic_projects import HermeticProject, projects_from
-from .holdings import Arrival, Economics, Inhabitant, Loyalty, Population, Possession
+from .holdings import (
+    Arrival,
+    Economics,
+    Inhabitant,
+    Loyalty,
+    Population,
+    Possession,
+    blank_choices_as_text,
+)
 from .land_shaping import LandProject
 from .stops import CovenantStop, RouteStop, route_from, stops_from
 from .traits import ScoredTrait, VirtueFlawInstance
@@ -45,8 +53,9 @@ STORY_EVENT_STATUSES: tuple[str, ...] = ("Open", "Resolved", "Grown into a threa
 
 
 def _inhabitant_from_dict(data: dict[str, Any]) -> Inhabitant:
-    """An inhabitant line, its arrivals made records."""
-    d = known_fields(Inhabitant, data)
+    """An inhabitant line, its arrivals made records. A blank choice saved
+    as None (a Covenant Role left at "(none)") is read as ""."""
+    d = blank_choices_as_text(known_fields(Inhabitant, data))
     d["arrivals"] = [Arrival(**known_fields(Arrival, a)) for a in d.get("arrivals", [])]
     return Inhabitant(**d)
 
