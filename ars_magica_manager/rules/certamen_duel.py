@@ -19,7 +19,10 @@ totals:
   played at the table.
 
 Each side's plan is fixed for the whole duel: which Art he attacks with
-(the Technique, the Form, or the better for him), the vis he spends a
+(the Technique, the Form, or the better for him: the one whose attack
+beats the rival's defence with the other Art by more, vis counted, weighed
+afresh each round, as a magus may switch his Arts from round to round, DE
+p. 231), the vis he spends a
 round, and the Fatigue penalty at which he concedes. A magus who would
 change his plan mid-duel plays it round by round at the table instead.
 """
@@ -95,29 +98,41 @@ class Duel:
     vis_spent: tuple[dict[str, int], dict[str, int]]
 
 
-def _arts(side: Side, technique: str, form: str) -> tuple[str, str]:
-    """(the Art he attacks with, the one he defends with)."""
+def _arts(side: Side, rival: Side, technique: str, form: str) -> tuple[str, str]:
+    """(the Art he attacks with, the one he defends with). "Better" is the
+    Art whose attack, with the vis he would spend on it, beats by more the
+    rival's defence with the other Art and the vis the rival would spend
+    there; a tie goes to the Technique."""
     if side.plan.attack == TECHNIQUE:
         return technique, form
     if side.plan.attack == FORM:
         return form, technique
-    totals = certamen.certamen_totals(side.magus, technique, form)
-    if totals.attack_technique + totals.defence_form >= (
-        totals.attack_form + totals.defence_technique
+    mine = certamen.certamen_totals(side.magus, technique, form)
+    theirs = certamen.certamen_totals(rival.magus, technique, form)
+
+    def edge(art: str, attack: int, other: str, defence: int) -> int:
+        attack += VIS_BONUS * _pawns(side, art, side.plan.attack_vis)
+        defence += VIS_BONUS * _pawns(rival, other, rival.plan.defence_vis)
+        return attack - defence
+
+    if edge(technique, mine.attack_technique, form, theirs.defence_form) >= edge(
+        form, mine.attack_form, technique, theirs.defence_technique
     ):
         return technique, form
     return form, technique
 
 
+def _pawns(side: Side, art: str, wanted: int) -> int:
+    """The pawns of `art` he would spend: what he wants, held and allowed."""
+    held = side.vis_left.get(art.lower(), 0)
+    return max(0, min(wanted, held, certamen.max_vis(side.plan.magus, art)))
+
+
 def _vis(side: Side, art: str, wanted: int) -> int:
-    """The pawns he spends this round: what he wants, held and allowed."""
-    key = art.lower()
-    pawns = max(
-        0,
-        min(wanted, side.vis_left.get(key, 0), certamen.max_vis(side.plan.magus, art)),
-    )
+    """The pawns he spends this round, taken from what he holds."""
+    pawns = _pawns(side, art, wanted)
     if pawns:
-        side.vis_left[key] -= pawns
+        side.vis_left[art.lower()] -= pawns
         side.vis_spent[art] = side.vis_spent.get(art, 0) + pawns
     return pawns
 
@@ -138,8 +153,8 @@ def _attack(
     technique: str,
     form: str,
 ) -> str:
-    art, _ = _arts(attacker, technique, form)
-    _, guard = _arts(defender, technique, form)
+    art, _ = _arts(attacker, defender, technique, form)
+    _, guard = _arts(defender, attacker, technique, form)
     mine = certamen.certamen_totals(attacker.magus, technique, form)
     theirs = certamen.certamen_totals(defender.magus, technique, form)
     a_vis = _vis(attacker, art, attacker.plan.attack_vis)
