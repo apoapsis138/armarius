@@ -318,6 +318,20 @@ class Arrival:
     year: int
 
 
+#: An Inhabitant's text fields that its form offers as a choice which may
+#: be left blank: a blank choice comes back as None, and is kept as "".
+INHABITANT_CHOICE_TEXT: tuple[str, ...] = ("role", "gift", "linked_ability")
+
+
+def blank_choices_as_text(values: dict[str, Any]) -> dict[str, Any]:
+    """`values` for an Inhabitant with each blank choice (None) in its text
+    fields made "": what a form gives back, or an older save holds."""
+    return {
+        key: "" if value is None and key in INHABITANT_CHOICE_TEXT else value
+        for key, value in values.items()
+    }
+
+
 @dataclass
 class Inhabitant:
     """One stored entry on a covenant's Inhabitants tab.

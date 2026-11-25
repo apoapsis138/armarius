@@ -1,0 +1,1 @@
+**A blank Covenant Role no longer breaks Covenfolk.** Saving a companion or specialist with Covenant Role left at "(none)" made the covenant's Covenfolk chapter fail to open, and the saga couldn't be saved. A blank role, Gift or Linked Ability is now kept as empty, and a saga that already holds one opens as it should.

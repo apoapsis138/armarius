@@ -22,6 +22,7 @@ from .models import (
     Covenant,
     Inhabitant,
     Saga,
+    blank_choices_as_text,
     character_age,
 )
 from .rules import living, reputations, study, xp
@@ -832,7 +833,8 @@ def save_entry(
     """Apply an add/edit form's `values`: a new record (for `grog`, if it's
     a grog's own), an update to the entry's record, or -- for a character
     listed from its sheet and edited for the first time -- a new record
-    linked to that character."""
+    linked to that character. A choice left blank is kept as ""."""
+    values = blank_choices_as_text(values)
     if entry is None:
         covenant.inhabitants.append(
             Inhabitant(

@@ -5,7 +5,7 @@ import pytest
 from support import strip_markup
 from textual.content import Content
 
-from ars_magica_manager import catalog
+from ars_magica_manager import catalog, shapes, storage
 from ars_magica_manager import inhabitants as inh
 from ars_magica_manager.models import (
     INHABITANT_KINDS,
@@ -22,6 +22,7 @@ from ars_magica_manager.models import (
 )
 from ars_magica_manager.rules import covenfolk
 from ars_magica_manager.rules.xp import ability_xp
+from ars_magica_manager.sheets import covenant as sheet_covenant
 
 
 def _saga() -> tuple[Saga, Covenant]:
@@ -998,6 +999,57 @@ def test_save_entry_links_a_new_grogs_record_to_the_grog():
         "turb",
         "grog1",
     )
+
+
+@pytest.mark.parametrize(
+    ("kind", "key"),
+    [
+        ("companion", "role"),  # a listed companion's first edit
+        ("specialist", "role"),
+        ("magus", "gift"),
+        ("craftsperson", "linked_ability"),
+    ],
+)
+def test_a_blank_choice_saves_as_empty_text_and_the_chapter_draws(kind: str, key: str):
+    """A select left at "(none)" comes back as None from either front-end;
+    the record keeps empty text, so the saga saves and Covenfolk draws."""
+    saga, cov = _saga()
+    if kind == "companion":
+        entry = covenfolk.entries_for_kind(saga, cov, kind)[0]
+    else:
+        inh.save_entry(cov, kind, None, {"name": "Someone"})
+        entry = next(e for e in covenfolk.entries_for_kind(saga, cov, kind) if e.record)
+    inh.save_entry(cov, kind, entry, {key: None})
+    assert getattr(cov.inhabitants[-1], key) == ""
+    storage.checked(saga)
+    sheet_covenant.inhabitant_groups(saga, cov)
+
+
+@pytest.mark.parametrize("key", ["role", "gift", "linked_ability"])
+def test_a_saved_none_in_a_text_field_is_repaired_on_load(key: str):
+    cov = Covenant.from_dict(
+        {
+            "id": "c",
+            "saga_id": "s",
+            "name": "C",
+            "inhabitants": [{"id": "x", "kind": "companion", key: None}],
+        }
+    )
+    assert getattr(cov.inhabitants[0], key) == ""
+    shapes.check_built(cov)
+
+
+def test_a_role_of_the_wrong_kind_is_refused_naming_the_record():
+    cov = Covenant.from_dict(
+        {
+            "id": "c",
+            "saga_id": "s",
+            "name": "C",
+            "inhabitants": [{"id": "x", "kind": "companion", "role": 3}],
+        }
+    )
+    with pytest.raises(ValueError, match=r"inhabitants\[x\]\.role"):
+        shapes.check_built(cov)
 
 
 def test_mark_departed_flags_the_record_or_creates_a_departed_one():

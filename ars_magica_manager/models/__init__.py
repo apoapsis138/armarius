@@ -276,6 +276,7 @@ from .holdings import Loyalty as Loyalty
 from .holdings import Population as Population
 from .holdings import Possession as Possession
 from .holdings import Purchase as Purchase
+from .holdings import blank_choices_as_text as blank_choices_as_text
 from .laboratory import FEATURE_VIRTUE_POINTS as FEATURE_VIRTUE_POINTS
 from .laboratory import FOCUS_FLAWS as FOCUS_FLAWS
 from .laboratory import ITEM_DEVICE_PARAM as ITEM_DEVICE_PARAM
