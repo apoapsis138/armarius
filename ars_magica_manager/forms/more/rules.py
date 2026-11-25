@@ -92,6 +92,7 @@ from ...sections import (
     FAITH_SECTION,
     GOODS_SECTION,
     GUESTS_SECTION,
+    HANDOUTS_SECTION,
     HOUSE_RULES_SECTION,
     LAB_TEXTS_SECTION,
     LIBRARY_SECTIONS,
@@ -976,6 +977,15 @@ def shows_record(facts: ActionFacts) -> bool:
         and isinstance(facts.record_to_delete(), shows.SHOWABLE)
         and facts.on_record()
         and show.why_not_here(facts.saga, session) is None
+    )
+
+
+def shows_handout(facts: ActionFacts, section: str) -> bool:
+    """Show, on the chosen row of the Handouts list (Saga content), for the
+    storyguide of the Session Under way, while the Virtual Tabletop
+    (Preview) is on."""
+    return section == HANDOUTS_SECTION and show.offers_handout(
+        facts.saga, facts.chosen_row(section)
     )
 
 

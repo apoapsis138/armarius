@@ -232,7 +232,11 @@ def run_steps(
 def _show(app: App[Any], step: Question, answer: Callable[[object], None]) -> None:
     """Push the screen that asks `step`; its answer goes to `answer`, and
     backing out sends nothing (the run is dropped)."""
-    if isinstance(step, Form):
+    if isinstance(step, Form) and step.reading is not None:
+        # A shown written Handout's copy, read under its Stationery's name:
+        # closing it answers with no values.
+        app.push_screen(HandoutReading(step.reading.laid), lambda _closed: answer({}))
+    elif isinstance(step, Form):
         form = step
 
         def handle_values(values: dict[str, Any] | None) -> None:

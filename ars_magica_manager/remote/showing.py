@@ -1,7 +1,8 @@
 """Shows from and to Remote seats (protocol 4; shows.py).
 
 A storyguide's seat Shows with `show`: what to show (a record by kind and
-id, or a picture already in the saga by folder and name), its title, the
+id, a picture already in the saga by folder and name, or a written
+Handout by its id), its title, the
 Players shown (none: the Table), an open story and the record's Secrets
 ticked to go with it, by their place. The host makes the one
 copy itself, through the Player view, and writes the entry as that seat's
@@ -80,6 +81,7 @@ def call_of(body: Body) -> chronicle.ShowCall:
         story_id=str(body.get("story_id", "")),
         secrets=_ticks(str(body.get("secrets", ""))),
         reveal=body.get("reveal") is True,
+        handout=str(body.get("handout", "")),
     )
 
 
@@ -165,6 +167,8 @@ def show_specs(
                 # Whether the Show also reveals the record (its copy is
                 # made as the players will know it).
                 "reveal": Field(bool, required=False),
+                # A written Handout, by its id (shows.py copies it).
+                "handout": Field(str, max_length=SHOW_ID_MAX, required=False),
             },
             show,
         ),

@@ -320,22 +320,40 @@ def cells(saga: Saga, handout: Handout) -> list[str]:
     ]
 
 
-def text_markup(saga: Saga, handout: Handout) -> str:
-    """The Handout's text as the terminal shows it (markup): a heading in
-    bold, a flourish as a line of tildes, each picture named."""
+def blocks_markup(text: str, names: Sequence[str]) -> str:
+    """Handout `text` as the terminal shows it (markup), read only through
+    the tag parser (handout_markup.blocks): a heading in bold, a flourish
+    as a line of tildes, each picture by its place and its name in `names`
+    (plain text; "" names none), one a picture of the Handout's."""
     lines: list[str] = []
-    for block in hm.blocks(handout.text, len(handout.pictures)):
+    for block in hm.blocks(text, len(names)):
         if block.kind == hm.HEADING:
             lines.append(f"[b]{block.text}[/]")
         elif block.kind == hm.FLOURISH:
             lines.append("~ ~ ~")
         elif block.kind == hm.PICTURE:
-            picture = handout.pictures[block.picture - 1]
-            name = escape(picture_name(saga, picture))
-            lines.append(f"(picture {block.picture}: {name})")
+            name = names[block.picture - 1]
+            named = f": {escape(name)}" if name else ""
+            lines.append(f"(picture {block.picture}{named})")
         else:
             lines.append(block.text)
     return "\n".join(lines)
+
+
+def text_markup(saga: Saga, handout: Handout) -> str:
+    """The Handout's text as the terminal shows it (markup), each picture
+    named (blocks_markup)."""
+    names = [picture_name(saga, p) for p in handout.pictures]
+    return blocks_markup(handout.text, names)
+
+
+def copy_markup(stationery: str, text: str, pictures: int) -> str:
+    """A shown written Handout's copy as the terminal shows it (markup):
+    its text under its Stationery's name, its pictures by their place
+    alone (a copy names no file)."""
+    body = blocks_markup(text, [""] * pictures)
+    named = escape(stationery.capitalize())
+    return f"[$label]Stationery:[/] {named}\n\n{body}"
 
 
 def detail(saga: Saga, handout: Handout | None) -> str:

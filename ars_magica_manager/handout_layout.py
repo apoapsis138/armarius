@@ -195,3 +195,28 @@ class Preview:
     def file(self, number: int) -> Path | None:
         """The file of picture `number` (1 for the first), or None."""
         return self.files[number - 1] if 0 < number <= len(self.files) else None
+
+
+#: What a shown copy's placed picture is captioned: the copy names no
+#: file and no record, so nothing the players don't know reaches them.
+COPY_CAPTION = "shown with it"
+
+
+@dataclass(frozen=True)
+class Reading:
+    """What a player's copy of a shown written Handout draws: the copy laid
+    out, and its pictures' bytes as the host sent them, by picture number
+    less one (None for one not to hand: drawn as a placeholder). Unlike a
+    Preview it names no file on this computer."""
+
+    laid: Laid
+    pictures: tuple[bytes | None, ...] = ()
+
+
+def reading(
+    title: str, stationery_name: str, text: str, pictures: Sequence[bytes | None]
+) -> Reading:
+    """A shown copy (its title, Stationery, text and pictures) laid out
+    through the one parser, each placed picture captioned COPY_CAPTION."""
+    captions = [COPY_CAPTION] * len(pictures)
+    return Reading(lay_out(title, stationery_name, text, captions), tuple(pictures))

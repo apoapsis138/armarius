@@ -1,15 +1,20 @@
 """Show (the glossary's): while a Session is Under way, its storyguide
-shows a record with a page, or a picture already in the saga, to the
-Table or chosen Players. Each is told by a "show" entry in the Chronicle,
-whose card opens the copy.
+shows a record with a page, a picture already in the saga, or a written
+Handout (handouts.py) to the Table or chosen Players. Each is told by a
+"show" entry in the Chronicle, whose card opens the copy.
 
 One copy for everyone shown, made once, at the moment of Showing, and
 never changed: the record as the players read it (through viewing's
 Player view, so no unrevealed Secret, private note or unknown record's
-name), or a picture's bytes as they were. It is kept beside the saga, at
-`shows/<saga id>/<show id>.json` with the picture next to it (ADR 0020),
+name), a picture's bytes as they were, or a written Handout's title,
+Stationery, text and pictures as they stood (editing the Handout later
+changes no copy). It is kept beside the saga, at
+`shows/<saga id>/<show id>.json` with its pictures next to it (ADR 0020),
 so it is in no Export or Content pack, which carry the saga file and the
-pictures its records name.
+pictures its records name. A written Handout's copy keeps its text as
+written, tags and all: a reader draws it only through the tag parser
+(handout_markup.blocks), and its pictures come only by the picture
+request, each named for the Show (`<show id>-<n>.<suffix>`).
 
 Who may open a copy is the Chronicle's audience filter: someone who sees
 the Show's entry. A Remote seat asks for it by the Show's id, and the
@@ -41,10 +46,15 @@ from . import (
     viewing,
     world,
 )
+from .handout_markup import MOST_PICTURES
 from .models import (
+    STATIONERY,
+    VELLUM,
     Character,
     Covenant,
     Familiar,
+    Handout,
+    HandoutPicture,
     Laboratory,
     Saga,
     Secret,
@@ -87,12 +97,22 @@ def secret_mark(secret: Secret) -> str:
 @dataclass(frozen=True)
 class Shown:
     """A Show's copy as its reader opens it: its title, and the record's
-    text (Markdown) or the picture's bytes and file name."""
+    text (Markdown), the picture's bytes and file name, or a written
+    Handout's text (its markup, for handout_markup.blocks), Stationery and
+    pictures (None for one that couldn't be copied or fetched)."""
 
     title: str
     text: str = ""
     picture: bytes | None = None
     picture_name: str = ""
+    #: A written Handout's Stationery ("": the copy isn't one).
+    stationery: str = ""
+    pictures: tuple[bytes | None, ...] = ()
+
+    @property
+    def written(self) -> bool:
+        """Whether this is a written Handout's copy."""
+        return bool(self.stationery)
 
 
 def folder_of(saga_id: str) -> Path:
@@ -138,6 +158,38 @@ def pictures(saga: Saga) -> list[tuple[str, str]]:
     """The pictures already in the saga that may be shown: those its
     records name that are on this computer, as (folder, file name)."""
     return [p for p in record_links.pictures(saga) if _picture_path(*p) is not None]
+
+
+def _handout(saga: Saga, handout_id: str) -> Handout | None:
+    """The saga's written Handout `handout_id`, if it has it. The same
+    lookup as handouts.find, kept here because importing handouts from
+    this module is a cycle (handouts -> scenes -> ... -> at_table ->
+    shows)."""
+    return next((h for h in saga.handouts if h.id == handout_id), None)
+
+
+def _handout_picture_file(picture: HandoutPicture) -> Path | None:
+    """Where a written Handout's picture is on this computer, when it may
+    be copied into a Show: there, and no larger than a shown picture may
+    be."""
+    source = _picture_path(picture.folder, picture.name)
+    if source is None or source.stat().st_size > PICTURE_CAP:
+        return None
+    return source
+
+
+def missing_pictures(saga: Saga, handout_id: str) -> list[int]:
+    """The places (1 for the first) of written Handout `handout_id`'s
+    pictures a Show would copy as placeholders: not on this computer, or
+    too large to show."""
+    handout = _handout(saga, handout_id)
+    if handout is None:
+        return []
+    return [
+        number
+        for number, picture in enumerate(handout.pictures, 1)
+        if _handout_picture_file(picture) is None
+    ]
 
 
 def picture_label(saga: Saga, picture: tuple[str, str]) -> str:
@@ -204,7 +256,12 @@ def why_not_show(
     `why_not_ask`, and a picture's file must be on this computer (the
     host's)."""
     problem = why_not_ask(saga, session, call, who)
-    if problem is None and call.record is None and call.picture not in pictures(saga):
+    if (
+        problem is None
+        and call.record is None
+        and not call.handout
+        and call.picture not in pictures(saga)
+    ):
         return _CHOOSE
     return problem
 
@@ -215,8 +272,8 @@ def why_not_ask(
     """Why `who` may not ask for Show `call` at `session`, or None (a
     Remote seat's form asks this of its copy of the saga): only the
     Session's storyguide while it is Under way (table_rules), of a record
-    that may be shown or a picture already in the saga, to Players at the
-    Session (none: the Table)."""
+    that may be shown, a picture already in the saga or one of its written
+    Handouts, to Players at the Session (none: the Table)."""
     problem = table_rules.why_not_lead(saga, session, who, "shows something")
     if problem:
         return problem
@@ -226,7 +283,12 @@ def why_not_ask(
     if words:
         return words
     record = references.target(saga, call.record) if call.record else None
-    if call.record is not None:
+    if call.handout:
+        if call.record is not None or call.picture is not None:
+            return _CHOOSE
+        if _handout(saga, call.handout) is None:
+            return _CHOOSE
+    elif call.record is not None:
         if not isinstance(record, SHOWABLE):
             return _CHOOSE
     elif call.picture is None or call.picture not in record_links.pictures(saga):
@@ -280,6 +342,35 @@ def _copy_picture(
     return {"name": picture_label(saga, picture), "picture": name}
 
 
+def _copy_handout(
+    saga: Saga, show_id: str, handout_id: str, made: list[Path]
+) -> dict[str, Any]:
+    """A written Handout's copy, as it stands now: its title, Stationery
+    and text, and each of its pictures copied beside it, named for the
+    Show and its place among them, each file noted in `made` before it is
+    written. A picture not on this computer, or too large to show, is ""
+    (drawn as a placeholder), so the text's `[picture n]` still finds the
+    n-th."""
+    handout = _handout(saga, handout_id)
+    if handout is None:
+        raise ValueError(_CHOOSE)
+    names: list[str] = []
+    for number, picture in enumerate(handout.pictures, 1):
+        source = _handout_picture_file(picture)
+        if source is None:
+            names.append("")
+            continue
+        names.append(f"{show_id}-{number}{PurePosixPath(picture.name).suffix.lower()}")
+        made.append(folder_of(saga.id) / names[-1])
+        made[-1].write_bytes(source.read_bytes())
+    return {
+        "name": handout.title,
+        "stationery": handout.stationery,
+        "text": handout.text,
+        "pictures": names,
+    }
+
+
 def show(
     book: chronicle.Chronicle,
     saga: Saga,
@@ -319,7 +410,10 @@ def _show(
     """Show's steps, each file it writes noted in `made` first."""
     title = call.title.strip()
     kept: dict[str, Any] = {"show": show_id, "title": title, "time": chronicle.clock()}
-    if call.record is not None:
+    if call.handout:
+        kept |= _copy_handout(saga, show_id, call.handout, made)
+        ref = []
+    elif call.record is not None:
         kept |= _copy_record(saga, call, copier)
         ref = [call.record.kind, call.record.id, kept["name"]]
     else:
@@ -335,8 +429,14 @@ def _show(
         "title": title,
         "ref": ref,
         "picture": kept.get("picture", ""),
+        # A written Handout's pictures, each fetched only by a reader who
+        # sees this entry (shows_picture).
+        "pictures": [n for n in kept.get("pictures", []) if n],
         # The saga picture shown, so Handouts gather its Shows as one.
         "source": list(call.picture) if call.record is None and call.picture else [],
+        # The written Handout shown, so Handouts gather its Shows as one;
+        # never opened as a record (no "Open the live record").
+        "handout": call.handout,
         "to": to,
         "to_names": [chronicle.name_at(saga, session, t) for t in to],
         "story": story.name if story is not None else "",
@@ -411,13 +511,38 @@ def copy_text(saga_id: str, show_id: str) -> bytes:
     return json.dumps(read_copy(saga_id, show_id), ensure_ascii=False).encode()
 
 
-def from_copy(data: dict[str, Any], picture: bytes | None = None) -> Shown:
-    """A copy as a reader opens it, from its kept form (and its picture)."""
+def copy_pictures(data: dict[str, Any]) -> list[str]:
+    """A written Handout's copy's pictures, by their file names in the Show
+    folder, in order: "" for one not copied, or a name that isn't a bare
+    picture file name (picture_files.safe_name)."""
+    found = data.get("pictures")
+    if not isinstance(found, list):
+        return []
+    return [
+        name if isinstance(name, str) and picture_files.safe_name(name) else ""
+        for name in found[:MOST_PICTURES]
+    ]
+
+
+def from_copy(
+    data: dict[str, Any],
+    picture: bytes | None = None,
+    pictures: tuple[bytes | None, ...] = (),
+) -> Shown:
+    """A copy as a reader opens it, from its kept form (and its picture,
+    or a written Handout's pictures). A Stationery the app doesn't know is
+    drawn as vellum."""
+    stationery = ""
+    if "stationery" in data:
+        kept = data["stationery"]
+        stationery = kept if kept in STATIONERY else VELLUM
     return Shown(
         str(data.get("title", "")),
         str(data.get("text", "")),
         picture,
         str(data.get("picture", "")),
+        stationery,
+        pictures,
     )
 
 
@@ -442,7 +567,10 @@ def opened(saga_id: str, entry: chronicle.Entry) -> Shown:
     picture = picture_bytes(saga_id, name) if name else None
     if name and picture is None:
         raise ValueError("This Show's picture can't be read.")
-    return from_copy(found, picture)
+    pictures = tuple(
+        picture_bytes(saga_id, each) if each else None for each in copy_pictures(found)
+    )
+    return from_copy(found, picture, pictures)
 
 
 # -- who may open one --
@@ -487,6 +615,13 @@ def seen(saga: Saga, show_id: str, who: str) -> chronicle.Entry | None:
 
 def shows_picture(saga: Saga, name: str, who: str) -> bool:
     """Whether `name` is the picture of a Show `who` sees: a Show's picture
-    is named for the Show (its id and the picture's suffix)."""
-    entry = seen(saga, PurePosixPath(name).stem, who) if name else None
-    return entry is not None and entry.body.get("picture") == name
+    is named for the Show (its id and the picture's suffix), a written
+    Handout's each with its place too (`<show id>-<n>.<suffix>`)."""
+    show_id = PurePosixPath(name).stem.partition("-")[0]
+    entry = seen(saga, show_id, who) if name else None
+    if entry is None:
+        return False
+    listed = entry.body.get("pictures")
+    return entry.body.get("picture") == name or (
+        isinstance(listed, list) and name in listed
+    )

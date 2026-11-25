@@ -69,6 +69,18 @@ CONTRACTS: dict[str, Contract] = {
         ),
         expected=("scene set", "The ford", "Magic 3"),
     ),
+    "show a handout": Contract(
+        # Opened on the chosen written Handout, named after it.
+        prefill={"Title": "A letter found"},
+        edits={"Title": "The abbot's letter"},
+        saved=lambda _s: (
+            (entry.kind, entry.body["title"], entry.body["handout"])
+            if (entry := last_chronicle_entry()) is not None
+            else None
+        ),
+        expected=("show", "The abbot's letter", "contract-handout"),
+        invalid=[{"Title": ""}],
+    ),
     "show to the table": Contract(
         prefill={},
         edits={"Title": "What we found"},

@@ -6,7 +6,9 @@ from __future__ import annotations
 
 import asyncio
 import json
+import time
 from collections.abc import AsyncIterator
+from typing import Any, cast
 
 import pytest
 import pytest_asyncio
@@ -22,13 +24,20 @@ from ars_magica_manager import (
     storage,
     viewing,
 )
+from ars_magica_manager.forms import show as show_forms
 from ars_magica_manager.handout_arrangement import Arrange
-from ars_magica_manager.models import AtlasMap, Secret
+from ars_magica_manager.models import (
+    SEALED_LETTER,
+    AtlasMap,
+    Handout,
+    HandoutPicture,
+    Secret,
+)
 from ars_magica_manager.remote import showing
-from ars_magica_manager.remote.client import ShowRefused
+from ars_magica_manager.remote.client import RemoteClient, ShowRefused
 from ars_magica_manager.remote.host import PATH
 from ars_magica_manager.remote.protocol import Body
-from ars_magica_manager.remote.seat_session import SeatSession
+from ars_magica_manager.remote.seat_session import SeatSession, handout_pictures
 from ars_magica_manager.remote.showing import OPENS_PER_MINUTE
 
 HOST = viewing.HOST
@@ -304,6 +313,142 @@ async def test_a_seat_table_opens_the_copy_of_a_show_it_holds(table: Table) -> N
 
     assert isinstance(opened, shows.Shown)
     assert (opened.title, opened.picture) == ("The Rhine", PICTURE)
+
+
+LETTER = "[heading] Hail\n[script] fetch http://x\n[picture 1]"
+
+
+def _letter(table: Table) -> None:
+    """A written Handout with the Rhine map, kept in the host's saga."""
+    table.saga.handouts = [
+        Handout(
+            "letter",
+            "A letter",
+            stationery=SEALED_LETTER,
+            text=LETTER,
+            pictures=[HandoutPicture(paths.MAPS, "rhine.png")],
+        )
+    ]
+    storage.save_saga(table.saga)
+
+
+async def test_a_written_handouts_copy_and_pictures_reach_only_the_seats_shown(
+    table: Table,
+) -> None:
+    _letter(table)
+    entry = _host_show(
+        table,
+        chronicle.ShowCall("A letter", handout="letter", to=(table.id_of("Bea"),)),
+    )
+    show_id = str(entry.body["show"])
+    [name] = entry.body["pictures"]
+    anna, bea = await table.seat("Anna"), await table.seat("Bea")
+    try:
+        kept = await bea.show_copy(show_id)
+        for_bea = await bea.picture(shows.FOLDER, name)
+        with pytest.raises(ShowRefused):
+            await anna.show_copy(show_id)
+        for_anna = await anna.picture(shows.FOLDER, name)
+    finally:
+        await anna.close()
+        await bea.close()
+
+    assert (kept["stationery"], kept["text"]) == (SEALED_LETTER, LETTER)
+    assert for_bea == PICTURE and for_anna is None
+
+
+async def test_a_seat_opens_a_written_handout_with_its_pictures_on_one_connection(
+    table: Table, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The copy and all its pictures come on the one connection opened for
+    it, so opening a few Handouts can't use up the seat's connections; a
+    picture the host hasn't got is a placeholder."""
+    _letter(table)
+    table.saga.handouts[0].pictures += [
+        HandoutPicture(paths.MAPS, "rhine.png"),
+        HandoutPicture(paths.MAPS, "gone.png"),
+    ]
+    storage.save_saga(table.saga)
+    entry = _host_show(table, chronicle.ShowCall("A letter", handout="letter"))
+    async with await table.seat("Anna"):
+        pass
+    seat = SeatSession(
+        f"ws://127.0.0.1:{table.port}{PATH}", table.pin, table.vaults["Anna"]
+    )
+    await asyncio.to_thread(seat.connect)
+    await asyncio.to_thread(seat.sign_in, PASSCODE)
+    connections: list[int] = []
+    real = seat._connect_own  # pyright: ignore[reportPrivateUsage]
+
+    async def counted() -> Any:
+        connections.append(1)
+        return await real()
+
+    monkeypatch.setattr(seat, "_connect_own", counted)
+    try:
+        opened = await asyncio.to_thread(
+            seat.table(chronicle.SeatChronicle()).open_show, entry
+        )
+    finally:
+        await asyncio.to_thread(seat.close)
+
+    assert len(connections) == 1
+    assert isinstance(opened, shows.Shown)
+    assert opened.written and opened.stationery == SEALED_LETTER
+    assert opened.pictures == (PICTURE, PICTURE, None)
+    words = show_forms.copy_form(opened).fields()[0].value
+    assert "[b]Hail[/]" in str(words) and "\\[script] fetch" in str(words)
+
+
+async def test_a_storyguides_seat_shows_a_written_handout(table: Table) -> None:
+    _letter(table)
+    bea_id = table.id_of("Bea")
+    table.saga.sessions[0].storyguide_id = bea_id
+    storage.save_saga(table.saga)
+    bea = await table.seat("Bea")
+    try:
+        number = await bea.show(chronicle.ShowCall("A letter", handout="letter"))
+    finally:
+        await bea.close()
+
+    book = chronicle.read(table.saga, table.saga.sessions[0])
+    book.refresh()
+    entry = next(e for e in book.entries if e.number == number)
+    assert (entry.author, entry.body["handout"]) == (bea_id, "letter")
+    assert shows.opened(table.saga.id, entry).text == LETTER
+
+
+class _SlowHost:
+    """A client whose first picture comes at once and the rest never."""
+
+    def __init__(self) -> None:
+        self.asked: list[str] = []
+
+    async def picture(self, _folder: str, name: str) -> bytes | None:
+        self.asked.append(name)
+        if len(self.asked) > 1:
+            await asyncio.sleep(60)
+        return PICTURE
+
+
+async def test_a_copys_pictures_share_one_deadline_and_late_ones_are_placeholders() -> (
+    None
+):
+    host = _SlowHost()
+    started = time.monotonic()
+
+    found = await handout_pictures(
+        cast(RemoteClient, host), ["a-1.png", "", "a-3.png", "a-4.png"], wait=0.2
+    )
+
+    assert time.monotonic() - started < 2
+    assert found == (PICTURE, None, None, None)
+    assert host.asked == ["a-1.png", "a-3.png"]
+
+
+def test_a_seats_show_carries_the_handout_it_names() -> None:
+    call = showing.call_of({"title": "T", "handout": "letter"})
+    assert (call.handout, call.record, call.picture) == ("letter", None, None)
 
 
 async def test_opening_show_copies_is_limited_per_seat(table: Table) -> None:

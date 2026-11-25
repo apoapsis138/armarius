@@ -21,10 +21,12 @@ from dataclasses import asdict, dataclass, field
 from typing import Any
 
 from . import chronicle, sessions, shapes, shows, viewing
+from . import handout_markup as hm
 from .models import Saga, Session
 
-#: What a Handout holds: a copy of a record, or a picture.
-RECORD, PICTURE = "record", "picture"
+#: What a Handout holds: a copy of a record, a picture, or a written
+#: Handout (handouts.py).
+RECORD, PICTURE, WRITTEN = "record", "picture", "written"
 
 
 @dataclass(frozen=True)
@@ -48,8 +50,9 @@ class Copy:
 @dataclass
 class Kept:
     """A Handout in a Player's list: what was shown (a record's
-    kind:id, or a picture's folder/name), its kind, and each copy, newest
-    first. Its title is the newest copy's."""
+    kind:id, a written Handout's handout:id, or a picture's folder/name),
+    its kind, and each copy, newest first. Its title is the newest
+    copy's."""
 
     key: str
     kind: str
@@ -71,9 +74,13 @@ def _when(copy: Copy) -> tuple[str, int]:
 
 
 def _key(entry: chronicle.Entry) -> tuple[str, str]:
-    """What a Show showed, as a key and its kind: a record by kind and id,
-    else the saga picture it copied (by folder and name; a Show made
-    before it was kept, by its copy's own name)."""
+    """What a Show showed, as a key and its kind: a written Handout by its
+    id, a record by kind and id, else the saga picture it copied (by
+    folder and name; a Show made before it was kept, by its copy's own
+    name)."""
+    handout = entry.body.get("handout")
+    if isinstance(handout, str) and handout:
+        return f"handout:{handout}", WRITTEN
     ref = entry.body.get("ref")
     if isinstance(ref, list) and len(ref) >= 2:
         return f"{ref[0]}:{ref[1]}", RECORD
@@ -105,13 +112,18 @@ _WORDS: dict[tuple[str, str], str] = {}
 
 def _words(saga_id: str, show_id: str) -> str:
     """Show `show_id`'s copy's words, lower-cased ("" for a picture, or a
-    copy that can't be read)."""
+    copy that can't be read); a written Handout's without its tags."""
     found = _WORDS.get((saga_id, show_id))
     if found is None:
         try:
-            found = shows.from_copy(shows.read_copy(saga_id, show_id)).text.lower()
+            data = shows.read_copy(saga_id, show_id)
         except ValueError:
             found = ""
+        else:
+            copy = shows.from_copy(data)
+            pictures = len(shows.copy_pictures(data))
+            text = hm.plain(copy.text, pictures) if copy.written else copy.text
+            found = text.lower()
         _WORDS[saga_id, show_id] = found
     return found
 

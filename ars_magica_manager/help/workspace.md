@@ -1557,15 +1557,16 @@ Click **Message** at the foot of the [Chronicle pane](help:chronicle-pane).
 
 Preview: turn on Virtual Tabletop in Settings.
 
-While a Session is under way, its storyguide can **Show** the players something to look at: a character's, covenant's, laboratory's or familiar's record, or a picture already in the saga, such as a map or a portrait. Show it to the Table, which everyone at the Session sees, or to the Players you choose. Only the Session's storyguide shows, from the host's computer or a Remote seat.
+While a Session is under way, its storyguide can **Show** the players something to look at: a character's, covenant's, laboratory's or familiar's record, a [written Handout](help:handouts-written), or a picture already in the saga, such as a map or a portrait. Show it to the Table, which everyone at the Session sees, or to the Players you choose. Only the Session's storyguide shows, from the host's computer or a Remote seat.
 
 - **What, title, story, to whom.** Choose what to show; its name becomes the title, which you can change. Choose the open story it belongs to, if any (a story is listed once it has been taken up). Under **To**, no one chosen means the Table; while a [Scene plays](help:scenes-play), it starts on the players of the characters present.
-- **A copy, as the players read it now.** A record is copied once, at the moment you Show it, as the players may read it: no Secret you haven't revealed, no private notes, and "(unknown)" for any record they don't know of. A picture is copied as it is. The copy never changes, even if the record does later.
+- **A copy, as the players read it now.** A record is copied once, at the moment you Show it, as the players may read it: no Secret you haven't revealed, no private notes, and "(unknown)" for any record they don't know of. A picture is copied as it is. A written Handout is copied with its Stationery, its text and its pictures as they stand. The copy never changes, even if the record or Handout does later: fixing a typo afterwards changes nothing the players already hold.
+- **A written Handout's copy** is read only through its six tags: anything else in its text is shown as words, never followed or run, and its pictures come only from the host, only to those it was shown to.
 - **Secrets to show.** For a record whose Secrets are yours to tell (among several storyguides, one you run), **Secrets to show** lists those not yet revealed, each with a tick: the ones you tick go into the copy too, as if revealed. That is all they do: in the saga they stay unrevealed. If a ticked Secret is changed or moved before you Show, you're asked to tick it again, so the players never get one you didn't choose.
 - **Also reveal** makes the Show a reveal too, as [Reveal](help:section-secrets) does: the players come to know of the record, and the ticked Secrets are revealed this season, each with its dated line in the troupe covenants' Diary. The copy is made as they will know it. Unticked, nothing changes for the troupe but the copy.
 - **Each one shown gets a Show** in the [Chronicle](help:chronicle), with its title, to open and read the copy. It never opens by itself.
 <!-- gui -->
-- A Show to you pulses the collapsed [Chronicle pane](help:chronicle-pane); a Show to the Table only adds to its count. **Open the live record** sits beside **Open** on its card when you may read the record as it is now.
+- A Show to you pulses the collapsed [Chronicle pane](help:chronicle-pane); a Show to the Table only adds to its count. **Open the live record** sits beside **Open** on its card when you may read the record as it is now; a written Handout has none.
 <!-- /gui -->
 - **At a Remote seat,** the copy and its picture are fetched from the host only while your seat holds the Show: a Show that isn't yours never reaches your computer.
 - **Withdraw** takes a Show back, after asking: a line in the Chronicle, seen by whoever saw the Show, says so, and its card reads Withdrawn. No player can open its copy again, from the host or a Remote seat; the Session's storyguide still can, to look back at it. Only the Session's storyguide withdraws, while it is under way.
@@ -1576,10 +1577,10 @@ While a Session is under way, its storyguide can **Show** the players something 
 The copies are kept on the host's computer, in a folder beside the saga, never written into the saga, so an Export or a Content pack can't carry them.
 
 <!-- tui -->
-To Show, choose the Session under way in the Sessions list, press `m` for More and choose **Show**; on a record's page, More offers **Show to the Table**. To read a Show, choose the Session and choose **Open a Show** in More: a record's copy is shown as text, and a picture is named (open it on the desktop to see it). To withdraw one, choose **Withdraw a Show** there.
+To Show, choose the Session under way in the Sessions list, press `m` for More and choose **Show**; on a record's page, More offers **Show to the Table**, and on a written Handout in Saga Content's Handouts tab, **Show**. To read a Show, choose the Session and choose **Open a Show** in More: a record's copy is shown as text, a written Handout's as its text under its Stationery's name, and a picture is named (open it on the desktop to see it). To withdraw one, choose **Withdraw a Show** there.
 <!-- /tui -->
 <!-- gui -->
-To Show, choose **Show to the Table** in a record's Manage chapter, or choose the Session under way in Sessions and click **Show**. Click **Open** on a Show card to read its copy, in a window of its own, as a picture opens. The storyguide's card has **Withdraw** beside Open.
+To Show, choose **Show to the Table** in a record's Manage chapter, choose a written Handout in Saga Content's Handouts and click **Show**, or choose the Session under way in Sessions and click **Show**. Click **Open** on a Show card to read its copy, in a window of its own, as a picture opens; a written Handout's is drawn on its Stationery. The storyguide's card has **Withdraw** beside Open.
 <!-- /gui -->
 
 **See also:** [The Chronicle](help:chronicle), [Messages and Whispers](help:chronicle-messages), [Handouts](help:handouts)
@@ -1591,15 +1592,21 @@ Preview: turn on Virtual Tabletop in Settings.
 
 Every [Show](help:chronicle-shows) leaves a **Handout** with each Player shown: chosen Players, or, for a Show to the Table, every Player at that Session. A player's Handouts gather what was shown to them in every Session, newest first, so a letter or a map from last month is still at hand.
 
-- **Shown again,** the same record or picture keeps one Handout, with a dated copy for each time; choose which to open. Each copy is the record as it stood when shown.
+- **Shown again,** the same record, picture or written Handout keeps one Handout, with a dated copy for each time; choose which to open. Each copy is the record or Handout as it stood when shown.
+<!-- gui -->
+- **A written Handout** opens on its Stationery, in the same window as its [Preview](help:handouts-written): its initial illuminated, its flourishes drawn and each picture in its place. A picture that couldn't be fetched is a box in its place.
+<!-- /gui -->
+<!-- tui -->
+- **A written Handout** opens as its text under its Stationery's name: headings in bold, centred and right lines set so, and each picture by its number in its place.
+<!-- /tui -->
 - **Withdrawn,** a Show leaves every list.
 - **Only your own.** A player reads their own Handouts and no one else's; the storyguide may read any Player's.
 - **At a Remote seat,** the list and each copy come from the host, which keeps every Session's Chronicle.
 
-**Arrange them your way.** Choose a Handout in your own list to **Open** it, **Rename** it (your title, which only you see; blank puts back the one it was shown under), **Pin** it (pinned ones come first) or **Move to folder** (folders are one level deep, and a folder no Handout is in goes away). Handouts in no folder come first, then each folder in turn. Filter the list by folder, Session, kind (record or picture) or Story, and type in its search to find a Handout by title; **Search their words**, at the top of the list, finds the Handouts whose copies hold the words you give (the host looks through them, at a Remote seat too). A folder can't be called "(no folder)". Your arrangement is yours alone: no other player, nor the storyguide, sees it, and a storyguide reading your Handouts sees them as shown.
+**Arrange them your way.** Choose a Handout in your own list to **Open** it, **Rename** it (your title, which only you see; blank puts back the one it was shown under), **Pin** it (pinned ones come first) or **Move to folder** (folders are one level deep, and a folder no Handout is in goes away). Handouts in no folder come first, then each folder in turn. Filter the list by folder, Session, kind (record, picture or written) or Story, and type in its search to find a Handout by title; **Search their words**, at the top of the list, finds the Handouts whose copies hold the words you give (the host looks through them, at a Remote seat too). A folder can't be called "(no folder)". Your arrangement is yours alone: no other player, nor the storyguide, sees it, and a storyguide reading your Handouts sees them as shown.
 
 <!-- tui -->
-A player opens theirs from the page of any character they play: press `m` for More and choose **Handouts**. The storyguide opens a Player's from Saga Content's Players: choose the Player, press `m` and choose **Handouts**. A record's copy is shown as text, and a picture is named.
+A player opens theirs from the page of any character they play: press `m` for More and choose **Handouts**. The storyguide opens a Player's from Saga Content's Players: choose the Player, press `m` and choose **Handouts**. A record's copy is shown as text and a picture is named.
 <!-- /tui -->
 <!-- gui -->
 A player opens theirs with **Open Handouts**, at the top of the Diary chapter of any character they play. The storyguide opens a Player's from Saga Management's Players: choose the Player, then **Handouts** in More.
@@ -1864,11 +1871,13 @@ They're in the saga's **Saga Content**, under **Handouts**. Choose one to read i
 Each written Handout: its title, its Stationery, who found it and the Story it belongs to. Add writes one, Edit changes the chosen one, and Delete takes it out after asking. Its pictures' files stay.
 
 To see only one Story's Handouts, narrow the list to it, and the title counts what it shows, as "Handouts (1 of 3)". Edit and Delete act on the list as it's shown. The list stays narrowed until you choose every story again or close the app.
+
+With the Virtual Tabletop (Preview) on and a Session under way, **Show** shows the chosen Handout to the Table or the Players you choose, through the [Show](help:chronicle-shows) form. Each Show gives its players a copy as the Handout stands then.
 <!-- tui -->
-Press `/` on the list to choose the Story; leave it blank for every story.
+Press `/` on the list to choose the Story; leave it blank for every story. To Show the chosen Handout, press `m` for More and choose **Show**.
 <!-- /tui -->
 <!-- gui -->
-Choose the Story above the list, or **Every story**.
+Choose the Story above the list, or **Every story**. **Show** sits beside Edit and Delete.
 <!-- /gui -->
 
 **See also:** [Writing a Handout](help:handouts-written)
@@ -1908,7 +1917,9 @@ Each tag is drawn as it says: the initial illuminated in gold, a flourish as a l
 It shows the text under its Stationery's name: headings in bold, centred and right lines set so, the initial's letter in colour, a flourish as ~ ❧ ~, and each picture named where it's placed.
 <!-- /tui -->
 
-**See also:** [Handouts](help:section-handouts)
+On the night, [Show](help:chronicle-shows) it from the Handouts list. Each Show freezes a copy: what you change afterwards reaches only the next Show.
+
+**See also:** [Handouts](help:section-handouts), [Show](help:chronicle-shows), [A player's Handouts](help:handouts)
 
 # A Session's page
 <!-- help: session-page -->

@@ -117,7 +117,7 @@ S spoofing, T tampering, R repudiation, I information disclosure, D denial of se
 | | T | Bulk overwrite (A) | Per-record changes only, merged per ADR 0005 |
 | | I, E | Reaching other files on the PC | Separate process, saga access only through the core; residual risk stated above |
 | | D | Disk fill | Size caps on records and portraits |
-| Host to player | all | A malicious host (E) | Client converts and checks everything once on load (the snapshot shape-checked strictly, field by field, ADR 0012), caps sizes, executes nothing; a Joined game's saga and pictures stay in memory, and only the game's address, pinned fingerprint and name are written (settings) and its Device credential (keychain); bookmarks and local files never sent |
+| Host to player | all | A malicious host (E) | Client converts and checks everything once on load (the snapshot shape-checked strictly, field by field, ADR 0012), caps sizes, executes nothing; a shown written Handout's text is drawn only through the tag parser (handout_markup.blocks), which knows the app's own six tags and turns anything else into escaped words, its Stationery one of the app's own (else vellum), and its pictures only bare file names in the Show folder, each fetched by the picture request; a Joined game's saga and pictures stay in memory, and only the game's address, pinned fingerprint and name are written (settings) and its Device credential (keychain); bookmarks and local files never sent |
 | Player's own computer | all | Malware (F) | Not defended from inside the app; the credential sits in the keychain and the Storyguide can revoke |
 
 ## 6. Alternative transport considered: WebRTC (not now)
