@@ -160,6 +160,15 @@ leaves.
 - **Next Round** plays every turn left in the round. Each fighter strikes
   whoever attacked it last, or the first enemy in the order it may strike.
   A held fighter tries to break free.
+- **Rolling your own dice.** With the saga's **Entered dice allowed** on
+  (Saga Settings, Dice and Combat), Next Blow and Next Round ask **Roll for
+  me** or **I'll roll it**. I'll roll it asks for each d10 of the blow, or
+  of the whole round, in turn, both sides': each window names whose roll
+  it is and why ("Bero's Defence: stress die", "a 1: roll again and
+  double", "a 0: the botch die"). Enter the face as it shows, 0 to 9. The
+  rules work out the doublings and botches (DE p. 7). Nothing changes
+  until the last die is in, so cancelling part way leaves the fight as it
+  was. The dice line marks those dice entered, and by whom.
 - **Restart the Fight** clears the order and the chronicle. Wounds already
   written onto sheets stay.
 

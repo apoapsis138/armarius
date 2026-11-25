@@ -53,6 +53,10 @@ CHARTER_STRENGTH = "charter_strength"
 LARGE_LIBRARY = "large_library"
 MORALE_DISCIPLINE = "morale_discipline"
 
+#: A fight's dice may be rolled at the table and entered: Next Blow and
+#: Next Round ask "Roll for me" or "I'll roll it" (entered_dice).
+ENTERED_DICE_ALLOWED = "entered_dice_allowed"
+
 
 #: The headings of Saga Settings' optional rules, in order.
 DICE = "Dice and Combat"
@@ -91,6 +95,23 @@ OPTIONS: tuple[RuleOption, ...] = (
             "and no botches, so skill counts for more."
         ),
         source=SOURCE,
+    ),
+    RuleOption(
+        key=ENTERED_DICE_ALLOWED,
+        label="Entered dice allowed",
+        brief="Roll a fight's dice at the table and enter them.",
+        group=DICE,
+        effect=(
+            "Next Blow and Next Round ask Roll for me or I'll roll it. I'll "
+            "roll it asks for each d10 of the blow or round in turn, both "
+            "sides', saying whose roll it is and why (a 1 is rolled again and "
+            "doubled, a 0 calls for its botch dice), and marks those dice "
+            "entered by whoever entered them."
+        ),
+        source=(
+            "Ars Magica Definitive Edition, Stress Die, p. 7; combat totals "
+            "and Combat Botches, p. 393"
+        ),
     ),
     RuleOption(
         key="dominion_magic_resistance",

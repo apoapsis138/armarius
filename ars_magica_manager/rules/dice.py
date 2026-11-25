@@ -48,14 +48,32 @@ EASE_FACTORS: tuple[tuple[int, str], ...] = (
 )
 
 
-def _d10(rng: random.Random) -> int:
-    """One throw of a d10, as its face: 0-9."""
+def _d10(rng: random.Random, why: str) -> int:
+    """One throw of a d10, as its face: 0-9. `why` (the throw's part in
+    its die: "stress die", "a 1: roll again and double") is told to the
+    source first, if it listens (`throwing`), so a source that asks a
+    person for the face (entered_dice) can say what to throw."""
+    listener = getattr(rng, "throwing", None)
+    if callable(listener):
+        listener(why)
     return rng.randrange(10)
+
+
+def rolling(rng: random.Random, label: str) -> None:
+    """Tell `rng`, if it listens, which roll the next dice are for
+    ("Bero's Defence")."""
+    listener = getattr(rng, "rolling", None)
+    if callable(listener):
+        listener(label)
+
+
+def _botch_why(index: int, count: int) -> str:
+    return "a 0: the botch die" if count == 1 else f"a 0: botch die {index} of {count}"
 
 
 def simple_die(rng: random.Random) -> int:
     """1-10 (a 0 reads as 10)."""
-    face = _d10(rng)
+    face = _d10(rng, "simple die")
     _tell(rng, DieResult(value=face or 10, faces=(face,), stress=False))
     return face or 10
 
@@ -101,9 +119,10 @@ def stress_die(
     if options.is_on(saga, "simple_dice_only"):
         value = simple_die(rng)
         return DieResult(value=value, faces=(value % 10,), stress=False)
-    first = _d10(rng)
+    first = _d10(rng, "stress die")
     if first == 0:
-        botch_faces = tuple(_d10(rng) for _ in range(max(botch_dice, 0)))
+        count = max(botch_dice, 0)
+        botch_faces = tuple(_d10(rng, _botch_why(i + 1, count)) for i in range(count))
         result = DieResult(value=0, faces=(0,), botch_faces=botch_faces)
         _tell(rng, result)
         return result
@@ -111,7 +130,7 @@ def stress_die(
     multiplier = 1
     while faces[-1] == 1:
         multiplier *= 2
-        faces.append(_d10(rng))
+        faces.append(_d10(rng, "a 1: roll again and double"))
     last = faces[-1] if len(faces) == 1 else (faces[-1] or 10)
     result = DieResult(value=last * multiplier, faces=tuple(faces))
     _tell(rng, result)
@@ -124,7 +143,10 @@ def botch_roll(rng: random.Random, botch_dice: int, *, saga: Saga | None = None)
     dice only."""
     if options.is_on(saga, "simple_dice_only"):
         return 0
-    botch_faces = tuple(_d10(rng) for _ in range(max(botch_dice, 0)))
+    count = max(botch_dice, 0)
+    botch_faces = tuple(
+        _d10(rng, f"botch die {i + 1} of {count}") for i in range(count)
+    )
     if botch_faces:
         _tell(rng, DieResult(value=0, faces=(), botch_faces=botch_faces))
     return botch_faces.count(0)
