@@ -1,1 +1,0 @@
-**Tutorials that match their guides.** Each tutorial saga now holds what its guide asks of it. Leandro has every Art at 5, his House, The Gift and a native language, so Kaspar's apprenticeship works as written. Sir Aimery can joust, the vis stores are full enough, and Adelheid's wand is her talisman. The Walkthroughs PDF matches.

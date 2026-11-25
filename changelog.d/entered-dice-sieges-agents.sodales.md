@@ -1,1 +1,0 @@
-**Roll a siege's and an agent's dice yourself.** With Entered dice allowed on, Next Siege Event, Impress, Set a Task and Resolve the Task offer I'll roll it too, asking for each die by name, supplies rolls included. Help has a new page, Rolling your own dice.

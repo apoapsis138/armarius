@@ -1,1 +1,0 @@
-**Roll a fight's dice yourself.** Turn on Entered dice allowed in Saga Settings, and Next Blow and Next Round ask Roll for me or I'll roll it. I'll roll it asks for each d10 in turn, both sides', saying whose roll it is and why. Nothing changes until the last die is in, and the dice are marked entered.

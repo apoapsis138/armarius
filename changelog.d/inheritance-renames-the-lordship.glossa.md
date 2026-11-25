@@ -1,1 +1,0 @@
-**A lordship renamed with its heir.** Settle an Inheritance suggests the record's new name when it carries the dead lord's: Sir Gauthier of Montbrun becomes Aymar of Montbrun, and the Diary notes it. Keep the name, change it, or blank it to keep the old one. The new lord leaves the Household's Heirs, and the rest stay in order.

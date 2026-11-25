@@ -1,1 +1,0 @@
-**A Craftsman grog from the template passes the worksheet.** Grogs gives the Craftsman Single Weapon, but none of his Virtues lets him learn Martial Abilities at creation. The template now puts that xp into Brawl instead, and its text says where it differs from the book. He can still learn Single Weapon in play.

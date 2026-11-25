@@ -139,6 +139,52 @@ change in it.
 
 <!-- towncrier release notes start -->
 
+## 4.16.0 — 2026-11-25
+
+### Pagina
+
+- **Fixed: a blank Covenant Role broke Covenfolk.** Saving a companion or specialist with Covenant Role left at "(none)" made the covenant's Covenfolk chapter fail to open, and the saga couldn't be saved. A blank role, Gift or Linked Ability is now kept as empty, and a saga that already holds one opens as it should.
+
+### Computus
+
+- **Fixed: Certamen's "whichever Art is better" now chooses.** It always attacked with the Technique. Now, each round, it compares the magus's Attack with each Art, less the rival's Defense against it, vis counted, and attacks with the Art that comes out higher, the Technique on a tie.
+
+### Book of Hours
+
+- **An apprentice can serve in the laboratory before learning Magic Theory.** A helper without The Gift and Magic Theory serves as a servant: that season the lab gains half their Intelligence (rounded up) in Safety, +1 Aesthetics and +1 Mentem Specialization, and they still gain Exposure in Magic Theory. The Assistant list marks them "(servant)".
+- **Fixed: reinventing the Lesser Elixir no longer spoils a digestion.** A season reinventing the Lesser Elixir is laboratory work, so a Philosophic Alchemy digestion settled in the same laboratory now runs on beside it instead of being spoilt as if the alchemist had left.
+- **Deficiencies warned of before an Opening.** Planning to open an apprentice's Arts now names, in warning colour, every Art where the master's score is under 5 and the Deficiency it will give, with the master's score. The sheet's This Season and the Advance Time question say the same, and the Diary lists them once the season is played.
+- **Fixed: a parens teaching his own apprentice no longer pays the Gift's penalty.** A magus with Parma Magica, at any score, extends it over his apprentice, so a season he teaches or trains them loses nothing to his Gift. The season's working shows the waived line and cites the rule (DE p. 270; Apprentices p. 43).
+- **Fixed: Philosophic Alchemy was missing on the desktop.** A magus with Philosophic Alchemy now finds it under A Season's Work on his Planning chapter, to settle or abandon a digestion.
+
+### Gauntlet
+
+- **Fixed: a Craftsman grog from the template passes the worksheet.** Grogs gives the Craftsman Single Weapon, but none of his Virtues lets him learn Martial Abilities at creation. The template now puts that xp into Brawl instead, and its text says where it differs from the book. He can still learn Single Weapon in play.
+- **Fixed: a Gifted child's one Supernatural Ability passes the worksheet.** A Gifted companion who spends Later Life or Tradition Training xp on one Supernatural Ability, without the Virtue for it, is no longer told it's an Ability they may not learn. The check that The Gift allows only one still warns when there are two.
+
+### Glossa
+
+- **Walkthroughs that match the app.** Every step of the Walkthroughs PDF was played through in the app and corrected where the two disagreed, with new pictures. It names every amount to spend, gives Kaspar's childhood its own section, and walks A Knight's Life's joust and melee step by step. Bold and red text copies cleanly, and pictures are sharper on a phone.
+- **Fixed: tutorial sagas that didn't match their guides.** Each tutorial saga holds what its guide asks. Leandro has every Art at 5, his House and a single-Art Magic Theory specialty. Sir Aimery can joust, Adelheid's wand is her talisman, Scintilla's Soak is -2, and every tutorial magus has The Gift, Parma Magica and a House Virtue.
+- **A lordship renamed with its heir.** Settle an Inheritance suggests the record's new name when it carries the dead lord's: Sir Gauthier of Montbrun becomes Aymar of Montbrun, and the Diary notes it. Keep the name, change it, or blank it to keep the old one. The new lord leaves the Household's Heirs, and the rest stay in order.
+
+### Sodales
+
+- **Roll a fight's dice yourself.** Turn on Entered dice allowed in Saga Settings, and Next Blow and Next Round ask Roll for me or I'll roll it. I'll roll it asks for each d10 in turn, both sides', saying whose roll it is and why. Nothing changes until the last die is in, and the dice are marked entered.
+- **Roll a siege's and an agent's dice yourself.** With Entered dice allowed on, Next Siege Event, Impress, Set a Task and Resolve the Task offer I'll roll it too, asking for each die by name, supplies rolls included. Help has a new page, Rolling your own dice.
+
+### Illuminatio
+
+- **Fixed: a fight's result reads right for any side.** It used to say a side "win the fight" even when the side was one knight. Now it reads "The fight goes to Sir Aimery of Vaux", which suits a side named for one person or for many, on the fight's page, in The Blow, in its chronicle and in the Diaries.
+
+### Concilium
+
+- **Fixed: Hold works with no step chosen.** On a Tribunal's Meeting chapter, Hold was greyed out until a step was chosen in the Order of Business. It now holds the step in hand when none is chosen: the roll call before the meeting opens, then each step in turn.
+
+### Peregrinatio
+
+- **Fixed: pack characters built to the creation rules.** Converted Fourth Edition magi now take their House's free Virtue and a native language at 5, generated Jerbitons their free Virtue, and un-Gifted Redcaps are companions with the Redcap Status. Grogs' Flaws are Minor. People the books print only in part are sketches. Each pack's Assumptions page names any printed block kept short.
+
 ## 4.15.0 — 2026-11-22
 
 ### Computus
