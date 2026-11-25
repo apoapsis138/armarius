@@ -17,6 +17,7 @@ from ars_magica_manager.commands import (
     Question,
     drive,
 )
+from ars_magica_manager.entered_dice import ENTER
 from ars_magica_manager.models import Combatant, Fight, FightSide, Saga
 from ars_magica_manager.rules import options
 
@@ -54,7 +55,7 @@ class _Table:
             if self.stop_after is not None and len(self.asked) > self.stop_after:
                 return CANCELLED
             return {"face": str(self.faces.pop(0))}
-        return {"dice": fights.ENTER}
+        return {"dice": ENTER}
 
 
 def test_next_blow_offers_the_choice_only_when_the_saga_allows_entered_dice() -> None:
@@ -136,3 +137,22 @@ def test_next_round_asks_nothing_when_the_app_rolls() -> None:
     saga, fight = _fight()
     saga.rule_options = {}
     assert isinstance(fights.next_round(saga, fight), Act)
+
+
+def test_a_fight_is_found_again_when_the_list_changes_mid_entry() -> None:
+    saga, fight = _fight()
+    other = Fight("Earlier fray")
+    saga.fights.insert(0, other)
+    faces = [5, 2, 1, 4, 6]
+
+    def ask(question: Question) -> Any:
+        assert isinstance(question, Form)
+        if [f.key for f in question.fields()] == ["face"]:
+            if other in saga.fights:
+                saga.fights.remove(other)  # deleted in another window
+            return {"face": str(faces.pop(0))}
+        return {"dice": ENTER}
+
+    outcome = drive(fights.next_blow(saga, fight), ask)
+    assert isinstance(outcome, Finished)
+    assert fight.initiative == {"quick": 15, "slow": 2}

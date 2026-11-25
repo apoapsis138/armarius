@@ -19,7 +19,7 @@ from ars_magica_manager import (
     choice_templates,
     chronicle,
     combat_options_form,
-    fights,
+    entered_dice,
     giving,
     grog_templates,
     guest_stays,
@@ -1419,8 +1419,8 @@ OPENERS: dict[str, Opener] = {
         "conflicts",
         _on_conflict_row(
             "fights-list",
-            lambda s: fights.die_prompt(
-                s.fights[0],
+            lambda s: entered_dice.die_prompt(
+                s.fights[0].name,
                 "Bero's Defence: stress die",
                 lambda face: setattr(s.fights[0], "name", f"Face {face}"),
             ),

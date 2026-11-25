@@ -362,6 +362,7 @@ def _roll(
     lines: list[str],
     botch_dice: int = 1,
 ) -> tuple[int, bool]:
+    dice.rolling(rng, label)
     die = dice.stress_die(rng, botch_dice, saga=saga)
     if die.botched:
         lines.append(f"{label}: {base} + a botch")
@@ -691,6 +692,7 @@ def _supplies_roll(
     siege.supply_rolls += 1
     castle = castle_of(siege)
     ease = castle.supplies_ease(day // DAYS_PER_YEAR)
+    dice.rolling(rng, f"Supplies roll on day {day}")
     die = dice.stress_die(rng, disease_botch_dice(day // DAYS_PER_SEASON), saga=saga)
     bread = (
         BREAD_BONUS if siege.bread_until is not None and day < siege.bread_until else 0

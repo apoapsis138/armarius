@@ -12,6 +12,7 @@ import random
 from typing import Any
 
 from . import armies, diaries, medallions
+from . import entered_dice as entering
 from .commands import Command, Confirm, Form, Refuse, SectionOps, notes
 from .form_spec import DialogField, pairs
 from .grids import Grid
@@ -28,6 +29,7 @@ from .models import (
     SiegeEvent,
     details_list,
 )
+from .recorded_dice import RecordingDice
 from .rules import battle
 from .rules import siege as rules
 
@@ -873,25 +875,52 @@ def next_event(
         )
     dice = rng or random.Random()
 
-    def apply(values: dict[str, Any]) -> list[str]:
+    def event(
+        on: Saga, castle: Siege, values: dict[str, Any], source: random.Random
+    ) -> tuple[rules.Played, list[str]]:
+        """The event and the supplies rolls the interval it begins brings."""
+        played = play_event(castle, values, source, on)
+        supplies = [] if castle.ended else rules.pass_interval(castle, source, on)
+        return played, supplies
+
+    def play(values: dict[str, Any], source: random.Random, entered: bool) -> list[str]:
         # An event is dated the day it is played (the first when the siege
         # is invested, LoM p. 112); the interval it begins passes after it.
         day = siege.days
-        played = play_event(siege, values, dice, saga)
-        supplies = [] if siege.ended else rules.pass_interval(siege, dice, saga)
+        recorded = RecordingDice(source)
+        played, supplies = event(saga, siege, values, recorded)
+        said = entering.marked(recorded.said, entered)
         siege.events.append(
             SiegeEvent(
                 day,
                 values.get("event") or rules.WAIT,
                 played.text,
-                played.lines + supplies,
+                [*played.lines, *supplies, *([said] if entered and said else [])],
             )
         )
-        return notes(played.text, *played.lines, *supplies, *record_ending(saga, siege))
+        return notes(
+            played.text,
+            *played.lines,
+            *supplies,
+            *record_ending(saga, siege),
+            escape(said) if entered else "",
+        )
+
+    def apply(values: dict[str, Any]) -> Any:
+        if not entering.chosen(values):
+            return play(values, dice, False)
+        return entering.entered(
+            saga,
+            siege.name,
+            lambda s, r: event(
+                s, s.sieges[entering.place(saga.sieges, siege)], values, r
+            ),
+            lambda source: play(values, source, True),
+        )
 
     return Form(
         f"Next Siege Event: {escape(siege.name)}",
-        lambda: event_fields(siege),
+        lambda: [*event_fields(siege), *entering.dice_fields(saga)],
         apply,
         live=lambda v: event_live(siege, v),
         save_label="Play",

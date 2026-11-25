@@ -13,11 +13,13 @@ import random
 from dataclasses import replace
 from typing import Any
 
-from .. import diaries, dice_text, table_rolls
+from .. import chronicle, diaries, dice_text, table_rolls
+from .. import entered_dice as entering
 from ..commands import Act, Command, Form, Refuse, SectionOps, delete, notes
 from ..form_spec import DialogField
 from ..markup import BULLET, escape, fit, plural
 from ..models import Agent, Character, Saga
+from ..recorded_dice import RecordingDice
 from ..rules import agents as ag
 from ..rules import dice, scores
 from ..rules.supplement_work import gift_penalty
@@ -571,6 +573,12 @@ def ops(character: Character) -> SectionOps:
 # -- More: Impress, Spend Agency Experience, Set a Task, Resolve the Task --
 
 
+def _dice_fields(saga: Saga) -> list[DialogField]:
+    """The Dice choice, outside a Session: while one is Under way an
+    agent's roll is a Table roll, its dice the host's."""
+    return [] if chronicle.under_way(saga) else entering.dice_fields(saga)
+
+
 def _chosen(character: Character, index: int, what: str) -> Agent | Refuse:
     if not 0 <= index < len(character.agents):
         return Refuse(what, "Choose an agent first.")
@@ -589,15 +597,17 @@ def impress(
         return Refuse("Impress", f"{escape(agent.name)} is already impressed.")
     total = _impress_terms(character)[0]
 
-    def apply() -> list[str]:
+    def roll_it(on: Saga, source: random.Random) -> dice.Roll:
+        dice.rolling(source, f"Impress {agent.name}")
+        return dice.Roll(total, dice.stress_die(source, saga=on), ag.IMPRESS_EASE)
+
+    def apply(source: random.Random | None = rng, entered: bool = False) -> list[str]:
         title = f"Impress: {escape(agent.name)}"
         try:
             with table_rolls.drawing(
-                saga, title, character_id=character.id, own=rng
+                saga, title, character_id=character.id, own=source
             ) as drawn:
-                roll = dice.Roll(
-                    total, dice.stress_die(drawn.dice, saga=saga), ag.IMPRESS_EASE
-                )
+                roll = roll_it(saga, drawn.dice)
                 rolled = dice_text.dice_line(
                     roll.die,
                     _impress_dice_terms(character),
@@ -605,7 +615,8 @@ def impress(
                     roll.ease_factor,
                 )
                 said = notes(
-                    f"Impress {escape(agent.name)}: {escape(rolled)}.",
+                    f"Impress {escape(agent.name)}: "
+                    f"{escape(entering.marked(rolled, entered))}.",
                     f"{escape(agent.name)} is impressed: Agency experience can "
                     "now wear his resistance down."
                     if roll.succeeded
@@ -620,7 +631,32 @@ def impress(
                 agent.resistance = ag.starting_resistance(agent)
         return said
 
-    return Act(apply, title=f"Impress: {escape(agent.name)}")
+    shown = f"Impress: {escape(agent.name)}"
+    fields = _dice_fields(saga)
+    if not fields:
+        return Act(apply, title=shown)
+
+    def entered_play(source: random.Random) -> list[str]:
+        # A Session begun while the dice were entered makes it a Table
+        # roll, whose dice are the host's: nothing is rolled here.
+        if chronicle.under_way(saga):
+            return notes(
+                "A Session is under way: its rolls are the host's. Impress "
+                f"{escape(agent.name)} again to roll at the table."
+            )
+        return apply(source, True)
+
+    return Form(
+        shown,
+        lambda: fields,
+        lambda values: (
+            entering.entered(saga, agent.name, roll_it, entered_play)
+            if entering.chosen(values)
+            else apply()
+        ),
+        save_label="Roll",
+        help_id=AGENTS_SECTION,
+    )
 
 
 def _spend_fields(character: Character, agent: Agent) -> list[DialogField]:
@@ -904,11 +940,21 @@ def set_task(
             "more before he takes a task (LoM p. 24).",
         )
 
-    def apply(values: dict[str, Any]) -> list[str]:
-        task, _timeframe, risk, ability, ease, total, _terms = _task_terms(
+    def persuade(
+        on: Saga, values: dict[str, Any], source: random.Random
+    ) -> dice.DieResult:
+        risk = _task_terms(character, agent, values)[2]
+        dice.rolling(source, f"{character.name}'s persuasion")
+        return _risk_die(on, risk, source)
+
+    def run(
+        values: dict[str, Any], source: random.Random, entered: bool = False
+    ) -> list[str]:
+        task, _timeframe, _risk, ability, ease, total, _terms = _task_terms(
             character, agent, values
         )
-        die = _risk_die(saga, risk, rng or table_rolls.dice())
+        recorded = RecordingDice(source)
+        die = persuade(saga, values, recorded)
         roll = dice.Roll(total, die, ease)
         shown = _die_shown(die)
         what = (values.get("what") or "").strip()
@@ -921,12 +967,23 @@ def set_task(
             if roll.succeeded
             else "He refuses"
             + (", and the botch costs him dearly." if die.botched else "."),
+            escape(entering.marked(recorded.said, True)) if entered else "",
+        )
+
+    def apply(values: dict[str, Any]) -> Any:
+        if not entering.chosen(values):
+            return run(values, rng or table_rolls.dice())
+        return entering.entered(
+            saga,
+            agent.name,
+            lambda s, r: persuade(s, values, r),
+            lambda source: run(values, source, True),
         )
 
     return table_rolls.form(
         Form(
             f"Set a Task: {escape(agent.name)}",
-            lambda: task_fields(character, agent),
+            lambda: [*task_fields(character, agent), *_dice_fields(saga)],
             apply,
             live=task_live(character, agent),
             save_label="Roll",
@@ -1081,9 +1138,28 @@ def resolve(
             return "The Ease Factor cannot be below 0."
         return None
 
-    def apply(values: dict[str, Any]) -> list[str]:
+    def attempt(
+        on: Saga, values: dict[str, Any], source: random.Random
+    ) -> dice.DieResult:
+        dice.rolling(source, f"{agent.name}'s task")
+        return _risk_die(on, _resolve_terms(values)[3], source)
+
+    def apply(values: dict[str, Any]) -> Any:
+        if not entering.chosen(values):
+            return run(values, rng or table_rolls.dice())
+        return entering.entered(
+            saga,
+            agent.name,
+            lambda s, r: attempt(s, values, r),
+            lambda source: run(values, source, True),
+        )
+
+    def run(
+        values: dict[str, Any], source: random.Random, entered: bool = False
+    ) -> list[str]:
         total, ease, band, risk = _resolve_terms(values)
-        die = _risk_die(saga, risk, rng or table_rolls.dice())
+        recorded = RecordingDice(source)
+        die = attempt(saga, values, recorded)
         roll = dice.Roll(total, die, ease)
         what = (values.get("what") or "").strip()
         using = (values.get("using") or "").strip() or "Characteristic + Ability"
@@ -1113,12 +1189,13 @@ def resolve(
             escape(rolled).replace(" against ", " against\u00a0"),
             outcome,
             f"Written in {escape(character.name)}'s Diary.",
+            escape(entering.marked(recorded.said, True)) if entered else "",
         )
 
     return table_rolls.form(
         Form(
             f"Resolve the Task: {escape(agent.name)}",
-            lambda: resolve_fields(agent),
+            lambda: [*resolve_fields(agent), *_dice_fields(saga)],
             apply,
             validate=validate,
             live=resolve_live(agent),
