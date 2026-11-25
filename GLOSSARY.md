@@ -879,6 +879,12 @@ the higher, the stronger. A magus knows it at the level of the version he
 invented or learned, and needs a new version to go higher. (DE p. 313)
 _Avoid_: Gen-level spell, levelless spell
 
+**Ritual**:
+A spell cast slowly, with vis of its Technique or Form spent for each
+magnitude, adding Artes Liberales and Philosophiae to the roll. It always
+rolls a stress die and costs long-term Fatigue even when it succeeds. It
+takes minutes per magnitude, not a season. (DE pp. 213, 216)
+
 **Spell guideline**:
 The base level the books give for one kind of effect in a Technique and
 Form, from which a spell's level is worked out. (DE p. 313)
@@ -896,6 +902,14 @@ Magic Theory + aura. (DE p. 249)
 A magus's notes on one effect he created, which let him or another magus
 make it again far faster; Laboratory Text in full. (DE p. 262)
 
+**Casting Tablet**:
+A book of instructions for casting one spell, written by a magus who
+mastered it, which lets a magus who doesn't know the spell cast it. Its
+author fixes everything about the spell, its vis included, and casting from
+it has its own, riskier results. Reading one needs Artes Liberales and Latin.
+(DE p. 263; Apprentices p. 36)
+_Avoid_: tablet spell, scroll
+
 **Vis**:
 Raw magical power held in a physical substance, attuned to one Art and
 spent when used; it is counted in pawns. (DE pp. 6, 212)
@@ -903,6 +917,24 @@ spent when used; it is counted in pawns. (DE pp. 6, 212)
 **Vis source**:
 A place, creature or thing that yields vis again every year, unlike a
 one-off find. (DE pp. 180, 527)
+
+**Aegis of the Hearth**:
+The Ritual that protects a covenant within its boundary for a Year, as a
+Parma Magica protects a magus: its level keeps out foreign creatures and
+hinders foreign magic. A new casting replaces the old one. (DE pp. 173,
+370-371)
+_Avoid_: the covenant's Parma
+
+**Participant**:
+Anyone who takes part in casting an Aegis of the Hearth, magus or mundane.
+Each participant is a native of that Aegis until it ends. (DE p. 371)
+
+**Native**:
+Someone or something the Aegis of the Hearth doesn't hinder: its
+participants, those a participating magus invites with the ritual's token,
+and enchanted items present or made within it. The natives are set afresh
+at each casting; everyone else is foreign. (DE p. 371)
+_Avoid_: member, resident
 
 **Harvest**:
 Gathering a vis source's yield in its season, once a year: by the
