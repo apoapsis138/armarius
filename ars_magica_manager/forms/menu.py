@@ -107,10 +107,6 @@ _PAGE_CHECKS: dict[str, Callable[[Page], bool]] = {
     "improve": lambda page: bool(
         page.covenant is not None and page.covenant.economics.income_sources
     ),
-    # Philosophic Alchemy's digestions.
-    "philosophic_alchemy": lambda page: available(
-        "philosophic_alchemy", replace(page, section="section-char-season")
-    ),
 }
 
 
@@ -308,6 +304,10 @@ _PLACED_CHECKS: dict[str, Callable[[Page], bool]] = {
     # An apothecary's searching and preserving.
     "apothecary_store": lambda page: available(
         "apothecary_store", replace(page, section="section-char-season")
+    ),
+    # Philosophic Alchemy's digestions.
+    "philosophic_alchemy": lambda page: available(
+        "philosophic_alchemy", replace(page, section="section-char-season")
     ),
     # The pilgrim's road (The Church).
     "pilgrimage": lambda page: available(

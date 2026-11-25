@@ -8,8 +8,11 @@ from dataclasses import asdict
 
 import pytest
 
-from ars_magica_manager import seasons
+from ars_magica_manager import deeds, seasons
+from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.enchanted_devices import capacity_text, device_info_text
+from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.models import (
     DIGEST_SPACES,
     Ability,
@@ -552,3 +555,13 @@ def test_a_being_of_magic_round_trips_and_bad_might_is_refused():
         EnchantedDevice.from_dict({**asdict(device), "extra_spaces": "2.5"})
     digestion = Digestion(product=DIGEST_SPACES, extra_room=True)
     assert Digestion.from_dict(asdict(digestion)).extra_room is True
+
+
+def _season_work(saga: Saga) -> set[str]:
+    page = page_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")
+    return {i.action for i in menu_forms.placed(page, deeds.SEASON_WORK)}
+
+
+def test_the_desktop_offers_philosophic_alchemy_under_a_seasons_work():
+    assert "philosophic_alchemy" in _season_work(_saga(alchemy.PHILOSOPHIC_MINOR))
+    assert "philosophic_alchemy" not in _season_work(_saga())
