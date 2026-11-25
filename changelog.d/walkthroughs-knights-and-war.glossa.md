@@ -1,0 +1,1 @@
+**A Knight's Life and War are back.** Both guides return to the Walkthroughs in full, now that you can enter your own dice in fights, sieges and an agent's rolls. A Knight's Life also says where to find Sir Gauthier, plans the adventure that brings Agency experience, and walks the joust and the melee step by step.
