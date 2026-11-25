@@ -344,6 +344,9 @@ class SectionOps:
     #: Each row's name, as the section lists them (for the front-end to
     #: say which row Edit and Delete will act on).
     rows: Callable[[], list[str]] = field(default=list)
+    #: The row Edit and Delete act on while none is chosen (None: they
+    #: wait for a choice), such as the meeting's step in hand.
+    unchosen: Callable[[], int] | None = None
 
 
 def delete(entries: MutableSequence[Any], index: int, name: str) -> Confirm:

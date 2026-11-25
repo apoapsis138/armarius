@@ -1,0 +1,1 @@
+**Tutorial sagas that match the guides.** Leandro's Magic Theory specialty is Creo, a single Art as the book allows. Great Works' Rabenstein stands on a Place, so projects and menageries can use it. The Mystery Cults' Rabenstein has a Bjornaer, a Merinita and a Criamon magus, so their Scripts can be seen.

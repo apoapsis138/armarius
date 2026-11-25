@@ -1,0 +1,1 @@
+**Certamen's "whichever Art is better" now chooses.** It always attacked with the Technique. Now, each round, it takes his Attack with each Art less his rival's Defense with the other, vis counted, and attacks with the Art that comes out higher, the Technique on a tie. So Adelheid attacks Rudolf with Ignem.

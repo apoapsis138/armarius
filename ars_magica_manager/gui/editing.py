@@ -109,9 +109,17 @@ def verb_buttons(
     one per verb `ops` has, named `nouns` (Add, Edit, Delete), then the
     `more` that act on the chosen row. A verb with no row it could act on
     (an empty list, or Give with nobody to take any of it) isn't shown;
-    one whose row isn't chosen yet is greyed out."""
+    one whose row isn't chosen yet is greyed out, unless `ops.unchosen`
+    names the row to act on then."""
     add, edit, remove = nouns
     buttons: list[QPushButton] = []
+
+    def chosen(count: int) -> int | None:
+        row = chooser.row(count)
+        if row is None and ops.unchosen is not None and count:
+            return min(ops.unchosen(), count - 1)
+        return row
+
     if seat.read_only(part):
         return buttons
     if ops.add is not None:
@@ -129,7 +137,7 @@ def verb_buttons(
     for words, concept, step, allowed in [*verbs, *more]:
 
         def act(step: Callable[[int], Command] = step) -> None:
-            row = chooser.row(len(ops.rows()))
+            row = chosen(len(ops.rows()))
             if row is not None:
                 run(step(row))
 
@@ -139,7 +147,7 @@ def verb_buttons(
 
     def refresh(_index: int | None = None) -> None:
         rows = ops.rows()
-        row = chooser.row(len(rows))
+        row = chosen(len(rows))
         for button, allowed in per_row:
             verb = button.text().strip()
             # Nothing listed it could act on: not offered at all (a filter

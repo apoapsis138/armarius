@@ -1,0 +1,1 @@
+**Hold works with no step chosen.** On a Tribunal's Meeting chapter, Hold was greyed out until a step was chosen in the Order of Business. It now holds the step in hand when none is chosen: the roll call before the meeting opens, then each step in turn.

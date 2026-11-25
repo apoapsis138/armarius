@@ -3074,8 +3074,15 @@ def step_text(saga: Saga, tribunal: Tribunal, index: int | None) -> str:
 
 def business_ops(saga: Saga, tribunal: Tribunal) -> SectionOps:
     """Edit holds the chosen step (again, if it was held; with no meeting
-    open, the Opening); Delete abandons the meeting, keeping what its
-    steps changed."""
+    open, the Opening), or with none chosen the step in hand; Delete
+    abandons the meeting, keeping what its steps changed."""
+
+    def in_hand() -> int:
+        if tribunal.meeting is None:
+            return 0
+        key = current(tribunal, tribunal.meeting).key
+        found = steps(tribunal, tribunal.meeting)
+        return next(i for i, step in enumerate(found) if step.key == key)
 
     def edit(row: int) -> Command:
         if tribunal.meeting is None:
@@ -3100,6 +3107,7 @@ def business_ops(saga: Saga, tribunal: Tribunal) -> SectionOps:
         edit=edit,
         remove=remove,
         rows=lambda: [s.title for s in steps(tribunal, record(saga, tribunal))],
+        unchosen=in_hand,
     )
 
 

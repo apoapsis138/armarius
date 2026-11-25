@@ -662,6 +662,47 @@ def test_the_desktop_shows_a_tribunal_and_lists_them_on_the_saga():
     assert any("Tribunals (6)" in title for title in titles)
 
 
+def test_hold_with_no_step_chosen_holds_the_step_in_hand():
+    pytest.importorskip("PySide6")
+    os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+    from PySide6.QtWidgets import QApplication, QPushButton
+
+    from ars_magica_manager import meeting
+    from ars_magica_manager.commands import Form
+    from ars_magica_manager.gui.themes import PALETTES
+    from ars_magica_manager.gui.tribunal import TribunalPage
+
+    QApplication.instance() or QApplication([])
+    saga = everything_saga()
+    tribunal = saga.tribunals[0]
+    tribunal.meeting = None
+    asked: list[object] = []
+
+    def hold_button() -> QPushButton:
+        page = TribunalPage(saga, tribunal, PALETTES[0], asked.append)
+        chapter = page.codex.pages.widget(page.chapters().index("Meeting"))
+        return next(
+            b for b in chapter.findChildren(QPushButton) if b.text().strip() == "Hold"
+        )
+
+    # The next meeting: Hold opens it at the roll call.
+    button = hold_button()
+    assert button.isEnabled()
+    button.click()
+    form = asked.pop()
+    assert isinstance(form, Form) and form.title.startswith("Hold Tribunal:")
+    # Its roll call saved, Hold goes on with the step in hand.
+    form.apply({f.key: f.value for f in form.fields()})
+    assert tribunal.meeting is not None
+    in_hand = meeting.current(tribunal, tribunal.meeting)
+    assert in_hand.key == "opening"
+    button = hold_button()
+    assert button.isEnabled()
+    button.click()
+    form = asked.pop()
+    assert isinstance(form, Form) and in_hand.title in form.title
+
+
 def test_choosing_a_ruling_a_gild_or_a_diary_entry_shows_it_in_the_inspector():
     pytest.importorskip("PySide6")
     os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")

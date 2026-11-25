@@ -53,6 +53,11 @@ def _side_fields(prefix: str, who: str) -> list[DialogField]:
             "select",
             cd.BETTER,
             options=[(label, key) for key, label in cd.ATTACKS.items()],
+            hint="Whichever is better: each round, for each Art, his Attack "
+            "with it (and the vis he'd spend) less the rival's Defense with "
+            "the other Art (and the vis the rival would spend). He attacks with "
+            "the Art that comes out higher, on a tie the Technique, and defends "
+            "with the other (DE p. 231).",
         ),
         DialogField(f"{prefix}attack_vis", f"{who}'s vis, attacking", "int", 0),
         DialogField(f"{prefix}defence_vis", f"{who}'s vis, defending", "int", 0),

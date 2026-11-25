@@ -13,7 +13,7 @@
       "notes": "A nice place",
       "aura": 3,
       "aura_realm": "Magic",
-      "place_id": null,
+      "place_id": "rabenstein",
       "place_level": 0,
       "own_aura": null,
       "own_realm": "",
@@ -98,6 +98,7 @@
           "dwindling": false,
           "dwindling_from": null,
           "dwindled_years": 0,
+          "harvested_year": null,
           "place_id": null,
           "place_level": 0,
           "ship": null
@@ -148,6 +149,7 @@
           "dwindling": false,
           "dwindling_from": null,
           "dwindled_years": 0,
+          "harvested_year": null,
           "place_id": null,
           "place_level": 0,
           "ship": null
@@ -198,6 +200,7 @@
           "dwindling": false,
           "dwindling_from": null,
           "dwindled_years": 0,
+          "harvested_year": null,
           "place_id": null,
           "place_level": 0,
           "ship": null
@@ -248,6 +251,7 @@
           "dwindling": false,
           "dwindling_from": null,
           "dwindled_years": 0,
+          "harvested_year": null,
           "place_id": null,
           "place_level": 0,
           "ship": null
@@ -298,6 +302,7 @@
           "dwindling": false,
           "dwindling_from": null,
           "dwindled_years": 0,
+          "harvested_year": null,
           "place_id": null,
           "place_level": 0,
           "ship": null
@@ -533,7 +538,45 @@
     }
   ],
   "tribunals": [],
-  "neighbours": [],
+  "neighbours": [
+    {
+      "id": "rabenstein",
+      "name": "Rabenstein",
+      "kind": "place",
+      "summary": "",
+      "detail": "Sketch",
+      "ruler": "",
+      "answers_to": null,
+      "realm": "Magic",
+      "place_id": null,
+      "place_level": 0,
+      "details": {
+        "ruined": false,
+        "aura": 3,
+        "world": null,
+        "boundary": 0,
+        "alignment": "",
+        "tints": "",
+        "divine_kind": "Dominion",
+        "waters": null,
+        "travels_with": null,
+        "tethers": "",
+        "status": null,
+        "known": null,
+        "claimed_by": null,
+        "tarnish": "",
+        "corruption": null,
+        "tomb": false
+      },
+      "attitudes": [],
+      "favours": [],
+      "links": [],
+      "arms": {},
+      "secrets": [],
+      "known": true,
+      "storyguide_id": ""
+    }
+  ],
   "characters": [
     {
       "id": "char1",
@@ -609,7 +652,7 @@
           "name": "Magic Theory",
           "category": "Academic",
           "xp": 101,
-          "specialty": "Lab Totals",
+          "specialty": "Creo",
           "xp_table": "ability"
         },
         {
@@ -3889,6 +3932,7 @@
   "traditions_off": [],
   "season_plans": [],
   "keep_season_records": true,
+  "harvest_vis_by_hand": false,
   "unplanned_magi": "exposure",
   "unplanned_companions": "exposure",
   "unplanned_grogs": "exposure",
@@ -4209,5 +4253,7 @@
   "saved_by": "",
   "marriages": [],
   "maps": [],
-  "pins": []
+  "pins": [],
+  "scenes": [],
+  "handouts": []
 }

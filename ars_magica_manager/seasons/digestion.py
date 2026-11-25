@@ -23,9 +23,11 @@ from ..rules import activities as rules
 from ..rules import book_seasons as bs
 from ..rules import lab_seasons
 from ..rules import tmre_alchemy as alchemy
+from ..rules.season_work import REGISTRY as SEASON_WORK
 
 #: Work done in the laboratory besides lab work: reading, studying vis
-#: (TMRE p. 41), and teaching, training or writing there (`in_lab`).
+#: (TMRE p. 41), and teaching, training or writing there (`in_lab`). A
+#: supplement season whose registry entry is `in_lab` is lab work.
 _STUDY = (rules.READ, rules.VIS_STUDY)
 _IN_LAB = (rules.TEACH, rules.TAUGHT, rules.TRAINED, *bs.SHEET_ACTIVITIES)
 #: A month lost to distractions counts as this many days away.
@@ -38,7 +40,8 @@ def days_out(plan: SeasonPlan | None) -> int | None:
     planned is spent there."""
     if plan is None:
         return 0
-    if plan.lab_id:
+    entry = SEASON_WORK.get(plan.activity)
+    if plan.lab_id or (entry is not None and entry.activity.in_lab):
         return max(0, plan.days_away)
     if plan.activity in _STUDY or (plan.activity in _IN_LAB and plan.in_lab):
         return _MONTH * max(0, plan.months_lost)
