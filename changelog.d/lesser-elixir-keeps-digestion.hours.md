@@ -1,0 +1,1 @@
+**Reinventing the Lesser Elixir keeps a digestion going.** A season reinventing the Lesser Elixir is laboratory work, so a Philosophic Alchemy digestion settled in the same laboratory now runs on beside it instead of being spoilt as if the alchemist had left.

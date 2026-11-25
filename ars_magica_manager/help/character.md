@@ -1312,7 +1312,8 @@ While it digests:
   shown as "Tending the digestion" in its Lab Total. No other lab work is
   possible past twenty.
 - They can't extract vis any other way, or work in another laboratory.
-- Reading or studying vis beside it is fine. A month lost to distractions,
+- Reading or studying vis beside it is fine, and so is reinventing the
+  Lesser Elixir, which is lab work (pp. 42-43). A month lost to distractions,
   a season out of the laboratory such as an adventure or travel, or
   experimenting spoils it. It's then abandoned and gives nothing.
 
