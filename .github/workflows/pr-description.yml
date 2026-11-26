@@ -2,8 +2,9 @@
 # (CONTRIBUTING.md, "Writing a pull request"), checked every time it is
 # opened, pushed to or edited. Checks (checks.yml) runs the same check as part
 # of its `checks` status; this workflow is separate so that an edit to the
-# description alone doesn't rerun, or cancel, the test suite. Require its
-# `pr-description` status too, so an edit can't undo a passing description.
+# description alone doesn't rerun, or cancel, the test suite. Branch
+# protection requires its `pr-description` status as well as `checks`, so an
+# edit can't undo a passing description.
 name: PR description
 
 on:
@@ -13,6 +14,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: read
 
 concurrency:
   group: pr-description-${{ github.event.pull_request.number }}
@@ -23,13 +25,23 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      # The checker comes from main, so a pull request can't change what
+      # judges it or run its own code beside the BLOCKED_NAMES secret.
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
-      # The body reaches the checker as a file through the environment,
-      # never through the shell's own text.
+        with:
+          ref: ${{ github.base_ref }}
+      # The description is fetched as it is now (a re-run sees an edit) into
+      # a file, never into the shell's own text.
       - name: Check the pull request description
         env:
-          BODY: ${{ github.event.pull_request.body }}
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.pull_request.number }}
           BLOCKED_NAMES: ${{ secrets.BLOCKED_NAMES }}
         run: |
-          printf '%s\n' "$BODY" > "$RUNNER_TEMP/pr-body.md"
+          if [ ! -f tools/check_pr_body.py ]; then
+            echo "main has no tools/check_pr_body.py yet; nothing to check with."
+            exit 0
+          fi
+          gh api "repos/$REPO/pulls/$NUMBER" --jq '.body // ""' > "$RUNNER_TEMP/pr-body.md"
           python3 tools/check_pr_body.py "$RUNNER_TEMP/pr-body.md"

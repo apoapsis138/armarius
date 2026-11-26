@@ -188,9 +188,9 @@ what the books print: never invent lists or figures to fill a gap.
   bug review, and the Standards and Spec review against this file and the
   change's story and spec). Its description follows "Writing a pull
   request" below. Merging and releases stay with the maintainer. Never
-  push to `main`, force-push, push a tag or delete a remote branch; a
-  local guard hook refuses those, and `reset --hard`, `clean -f` and
-  `branch -D` too.
+  push to `main`, force-push, push a tag or delete a remote branch. (On
+  the maintainer's computer a local guard hook, outside the repo, refuses
+  those, and `reset --hard`, `clean -f` and `branch -D` too.)
 - A release is a version tag on `main` (see "A release" and "Release
   rhythm" below). Its `release/X.Y.Z` branch is an ordinary short-lived
   one, gone once it merges; there is no long-lived release branch.
@@ -238,11 +238,12 @@ apply; never leave one empty.
 
 The description is about the change, not about who made it or how.
 `tools/check_pr_body.py` checks it in the Checks workflow and again on
-every edit (`.github/workflows/pr-description.yml`), and fails on:
+every edit (`.github/workflows/pr-description.yml`; branch protection
+requires both `checks` and `pr-description`), and fails on:
 
 - a missing heading or an empty section;
-- first-person narration (I, I'm, I've, me, my);
-- tool or agent names, outside code spans;
+- first-person narration (I, I'm, I'd, me, my and the like);
+- tool or agent names, outside code spans (the app's Agents are fine);
 - attribution lines (Co-Authored-By and the like) anywhere: the repo's
   statement on AI use covers them;
 - he, she and the like, as in screen text (quoted book text aside);

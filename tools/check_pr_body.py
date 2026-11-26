@@ -6,15 +6,17 @@ in, and wording that describes the change rather than who made it.
 Exits 1 and prints one line per problem:
 
 - a missing heading of `.github/pull_request_template.md`, or a section left
-  empty (write "None" or "n/a" where it doesn't apply);
-- first-person narration (I, I'm, I've, I'd, I'll, me, my);
-- a tool or agent name (Claude, Claude Code, agent, subagent, Remote
-  Control, tool call, skill invocation). `agent` is matched in lower case
-  only, so the app's Agents can be named;
-- an attribution line (Co-Authored-By, "Generated with", a claude.ai/code
-  link, an Anthropic noreply address), even inside code;
+  empty (write "None" or "n/a" where it doesn't apply); a section's text
+  may sit under a subheading of its own;
+- first-person narration (I, I'm, I've, I'd, I'll, me, my; not "I/O", nor
+  "Me", Mentem's abbreviation);
+- a tool or agent name (Claude, Claude Code, subagent, an AI, coding or
+  review agent, Remote Control, tool call, skill invocation). A plain
+  "agent" passes, so the app's Agents can be named;
+- an attribution line (Co-Authored-By, "Generated with Claude", a
+  claude.ai/code link, an Anthropic noreply address), even inside code;
 - a gendered pronoun, as tests/test_neutral_pronouns.py finds them in
-  screen text;
+  screen text, but for Herbam written as an Art ("(He)", "He 15");
 - a name listed in the BLOCKED_NAMES environment variable (comma
   separated), anywhere. The problem gives the name's place in the list,
   never the name.
@@ -52,19 +54,25 @@ CONTAINERS = frozenset({"Armarius"})
 #: The same words tests/test_neutral_pronouns.py looks for in screen text.
 PRONOUN = re.compile(r"\b(he|him|his|she|her|hers|himself|herself)\b", re.IGNORECASE)
 
+# "I" but not "I/O"; "me" and "my" but not "Me", Mentem's abbreviation.
 _FIRST_PERSON = re.compile(
-    r"(?<![\w'’])I(?:['’](?:m|ve|d|ll))?(?![\w'’])|\b(?i:me|my)\b"
+    r"(?<![\w'’])I(?:['’](?:m|ve|d|ll))?(?![\w'’/])|\b(?:me|my|My)\b"
 )
+# Plain "agent" is left alone: the app has Agents.
 _TOOL_NAMES = re.compile(
-    r"\b(?:(?i:claude code|claude|tool calls?|skill invocations?)|Remote Control"
-    r"|(?:sub)?agents?|Subagents?)\b"
+    r"\b(?i:claude code|claude|tool calls?|skill invocations?|subagents?"
+    r"|(?:ai|coding|review|reviewer) agents?)\b|\bRemote Control\b"
 )
 _ATTRIBUTION = re.compile(
-    r"co-authored-by:|generated with|claude\.ai/code|noreply@anthropic\.com",
+    r"^\W*co-authored-by:|^\W*generated with \[?claude|claude\.ai/code"
+    r"|noreply@anthropic\.com",
     re.IGNORECASE,
 )
-_HEADING = re.compile(r"^ {0,3}#{1,6}[ \t]+(.+?)[ \t]*#*[ \t]*$")
+#: Herbam's abbreviation, written as an Art is: "(He)" or "He 15".
+_HERBAM = re.compile(r"\(He\)|\bHe(?=\s*\d)")
+_HEADING = re.compile(r"^ {0,3}(#{1,6})[ \t]+(.+?)[ \t]*#*[ \t]*$")
 _FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})")
+_CLOSING_FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})[ \t]*$")
 _CODE_SPAN = re.compile(r"(`+).+?\1")
 _QUOTED = re.compile(r'"[^"\n]*"|“[^”\n]*”')
 _COMMENT = re.compile(r"<!--.*?-->", re.DOTALL)
@@ -82,10 +90,11 @@ def _lines(body: str) -> Iterator[tuple[int, str, bool]]:
     for number, line in enumerate(_COMMENT.sub(_blank, body).splitlines(), 1):
         opening = _FENCE.match(line)
         if fence:
+            closing = _CLOSING_FENCE.match(line)
             if (
-                opening
-                and opening.group(1)[0] == fence[0]
-                and len(opening.group(1)) >= len(fence)
+                closing
+                and closing.group(1)[0] == fence[0]
+                and len(closing.group(1)) >= len(fence)
             ):
                 fence = ""
             yield number, line, True
@@ -97,15 +106,23 @@ def _lines(body: str) -> Iterator[tuple[int, str, bool]]:
 
 
 def _sections(body: str) -> dict[str, list[str]]:
-    """Each heading's lines, up to the next heading of any level."""
+    """Each heading's lines, up to the next heading of its own level or
+    higher, subheadings and their text included."""
     sections: dict[str, list[str]] = {}
-    current: list[str] | None = None
+    open_sections: list[tuple[int, list[str]]] = []
     for _, line, in_code in _lines(body):
         heading = None if in_code else _HEADING.match(line)
         if heading:
-            current = sections.setdefault(heading.group(1).strip(), [])
-        elif current is not None:
-            current.append(line)
+            level = len(heading.group(1))
+            open_sections = [(lv, ls) for lv, ls in open_sections if lv < level]
+            for _, lines in open_sections:
+                lines.append(line)
+            open_sections.append(
+                (level, sections.setdefault(heading.group(2).strip(), []))
+            )
+        else:
+            for _, lines in open_sections:
+                lines.append(line)
     return sections
 
 
@@ -115,21 +132,21 @@ def _heading_problems(body: str) -> Iterator[str]:
         if heading not in sections:
             yield f"missing heading: {heading}"
         elif heading not in CONTAINERS and not any(
-            s.strip() for s in sections[heading]
+            s.strip() and not _HEADING.match(s) for s in sections[heading]
         ):
             yield f"empty section: {heading} (write None or n/a if it doesn't apply)"
 
 
 def _wording_problems(body: str) -> Iterator[str]:
     for number, raw, in_code in _lines(body):
-        if in_code or _HEADING.match(raw):
+        if in_code:
             continue
         line = _CODE_SPAN.sub(" ", raw)
         for match in _TOOL_NAMES.finditer(line):
             yield f"line {number}: tool or agent name: {match.group(0)!r}"
         if line.lstrip().startswith(">"):
             continue
-        unquoted = _QUOTED.sub(" ", line)
+        unquoted = _HERBAM.sub(" ", _QUOTED.sub(" ", line))
         for match in _FIRST_PERSON.finditer(unquoted):
             yield (
                 f"line {number}: first person: {match.group(0)!r}"
@@ -139,7 +156,8 @@ def _wording_problems(body: str) -> Iterator[str]:
             yield f"line {number}: gendered pronoun: {match.group(0)!r} (write they/their)"
 
 
-def _raw_problems(body: str, blocked_names: Sequence[str]) -> Iterator[str]:
+def _anywhere_problems(body: str, blocked_names: Sequence[str]) -> Iterator[str]:
+    """Attribution lines and blocked names, looked for in code and comments too."""
     names = [
         (place, re.compile(rf"(?<!\w){re.escape(name.strip())}(?!\w)", re.IGNORECASE))
         for place, name in enumerate(blocked_names, 1)
@@ -158,7 +176,7 @@ def problems(body: str, blocked_names: Sequence[str] = ()) -> list[str]:
     return [
         *_heading_problems(body),
         *_wording_problems(body),
-        *_raw_problems(body, blocked_names),
+        *_anywhere_problems(body, blocked_names),
     ]
 
 
