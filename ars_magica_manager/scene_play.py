@@ -22,7 +22,7 @@ from __future__ import annotations
 from collections.abc import Iterable
 from typing import Any
 
-from . import chronicle, scenes, table_rules, viewing
+from . import chronicle, evening, scenes, table_rules, viewing
 from .models import Saga, Scene, SceneUse, Session
 from .rules.sites import place
 
@@ -201,7 +201,8 @@ def end_scene(
 
 def end_session(saga: Saga, session: Session, *, by: str) -> chronicle.Chronicle:
     """End Session (chronicle.end), ending the Scene playing first, then
-    keeping each use's state on it: the Chronicle's moves are done."""
+    keeping each use's state on it, the Chronicle's moves done, and the
+    evening's account (evening.py)."""
     problem = chronicle.why_not_end(session, by, saga)
     if problem:
         raise ValueError(problem)
@@ -213,4 +214,5 @@ def end_session(saga: Saga, session: Session, *, by: str) -> chronicle.Chronicle
     chronicle.end(saga, session, by=by)
     for use in session.scenes:
         use.state = states.get(use.id, use.state)
+    evening.keep(session, book)
     return book

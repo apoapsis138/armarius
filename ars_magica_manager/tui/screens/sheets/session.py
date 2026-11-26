@@ -11,12 +11,14 @@ from textual.app import ComposeResult
 from textual.containers import Vertical, VerticalScroll
 from textual.widgets import Collapsible, Static, TabbedContent
 
-from .... import scenes, viewing
+from .... import chronicle, scenes, viewing
 from ....boon_hook_text import counted
 from ....forms import scenes as scene_forms
 from ....markup import aligned, escape
 from ....models import Saga, Session
 from ....sections import (
+    SESSION_EVENING_SECTION,
+    SESSION_EVENING_TAB,
     SESSION_INFO_SECTION,
     SESSION_SCENES_SECTION,
     SESSION_SCENES_TAB,
@@ -86,7 +88,34 @@ class SessionSheetView(SheetView):
         with TabbedContent(initial=self.INITIAL_TAB):
             if self.scenes_shown:
                 yield self._tab("Scenes", SCENES_TAB, self._scenes_tab)
+            yield self._tab(
+                session_sheet.EVENING, SESSION_EVENING_TAB, self._evening_tab
+            )
             yield self._tab("Notes", NOTES_TAB, self._notes_tab)
+
+    def _evening_tab(self) -> ComposeResult:
+        """The account End Session wrote, as whoever is looking may read
+        it, each Scene's title over its lines; before then, that it will
+        be (End Session refreshes it, so it fills in on this page)."""
+        with (
+            VerticalScroll(),
+            SheetSection(title=session_sheet.EVENING, id=SESSION_EVENING_SECTION),
+        ):
+            yield self._static(
+                SESSION_EVENING_SECTION, self._evening_text, id="session-evening"
+            )
+
+    def _evening_text(self) -> str:
+        if not session_sheet.shows_evening(self.session):
+            return f"[$label]{escape(session_sheet.NOT_YET)}[/]"
+        groups = session_sheet.evening_groups(self.saga, self.session, chronicle.here())
+        if not groups:
+            return f"[$label]{escape(session_sheet.NO_EVENING)}[/]"
+        parts: list[str] = []
+        for heading, lines in groups:
+            said = "\n".join(escape(line) for line in lines)
+            parts.append(f"[b]{escape(heading)}[/b]\n{said}" if heading else said)
+        return "\n\n".join(parts)
 
     def _scenes_tab(self) -> ComposeResult:
         """The Scenes loaded into it, in order, over the chosen one in full."""

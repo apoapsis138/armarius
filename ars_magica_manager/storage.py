@@ -13,7 +13,7 @@ from dataclasses import fields as dataclass_fields
 from pathlib import Path
 from typing import Any, cast
 
-from . import __version__, catalog, incoming, laboratories, paths, shapes
+from . import __version__, catalog, evening, incoming, laboratories, paths, shapes
 from .files import held_lock, write_atomic
 from .merge import merge
 from .models import Saga
@@ -433,6 +433,8 @@ def load_saga(saga_id: str) -> Saga:
     saga = _from_data(raw)
     data = _with_newer(asdict(saga), _remember_newer(path, raw))
     _last_seen[str(path)] = (text, data, data)
+    # After what the file held is remembered, so the next save writes it.
+    evening.fold_older(saga)
     return saga
 
 

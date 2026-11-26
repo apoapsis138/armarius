@@ -2,12 +2,15 @@
 (sheets/session.py), and its buttons: Edit, Cast at a Glance, Print the
 Cast and, with the Virtual Tabletop (Preview) on, Begin Session, End
 Session, Set Scene, End Scene and its Chronicle, each offered as More
-offers it; then the Scenes loaded into it (scenes_section.py)."""
+offers it; then, once played, the evening's account (evening.py), and the
+Scenes loaded into it (scenes_section.py)."""
 
 from __future__ import annotations
 
 from collections.abc import Callable
 
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QVBoxLayout, QWidget
 
 from .. import chronicle, section_verbs, viewing, virtual_tabletop
@@ -15,17 +18,45 @@ from ..commands import Command
 from ..forms import scene_verbs
 from ..forms import sessions as session_forms
 from ..models import Saga, Session
-from ..sections import SESSION_INFO_SECTION, SESSION_SCENES_SECTION
+from ..sections import (
+    SESSION_EVENING_SECTION,
+    SESSION_INFO_SECTION,
+    SESSION_SCENES_SECTION,
+)
 from ..sheets import session as session_sheet
+from .character_sheet import section
 from .conflicts import buttons
 from .figures import fact_grid
 from .pages import page_header
 from .scenes_section import session_scenes_section
 from .sessions_section import PRINT, print_cast
 from .themes import Palette
-from .widgets import scrolling_page
+from .widgets import scrolling_page, serif, text
 
 Run = Callable[[Command], None]
+
+
+def evening_section(saga: Saga, session: Session, p: Palette) -> QWidget:
+    """ "The evening": the account End Session wrote, as whoever sits here
+    may read it, each Scene's title over its lines."""
+    groups = session_sheet.evening_groups(saga, session, chronicle.here())
+    shown: list[QWidget] = []
+
+    def plain(words: str, name: str, colour: str, font: QFont) -> None:
+        # Words typed at the table, drawn as typed, never as rich text.
+        label = text(words, colour, font, wrap=True)
+        label.setTextFormat(Qt.TextFormat.PlainText)
+        label.setObjectName(name)
+        shown.append(label)
+
+    for heading, lines in groups:
+        if heading:
+            plain(heading, "evening-scene", p["label"], serif(12.5, italic=True))
+        for line in lines:
+            plain(line, "evening-line", p["foreground"], serif(12))
+    if not shown:
+        shown.append(text(session_sheet.NO_EVENING, p["dim"], serif(12.5, italic=True)))
+    return section(session_sheet.EVENING, p, *shown, part=SESSION_EVENING_SECTION)
 
 
 class SessionPage(QWidget):
@@ -45,6 +76,8 @@ class SessionPage(QWidget):
             buttons(self._verbs(), p),
             fact_grid(session_sheet.facts(saga, session), p, 2),
         ]
+        if session_sheet.shows_evening(session):
+            parts.append(evening_section(saga, session, p))
         # Its Scenes are the storyguide's prep (viewing.STORYGUIDE_ONLY).
         if viewing.reads(part=SESSION_SCENES_SECTION):
             parts.append(session_scenes_section(saga, session, p, run))

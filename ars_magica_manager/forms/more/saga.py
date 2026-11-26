@@ -7,6 +7,8 @@ from ...actions import NodeKind
 from ...sections import (
     HANDOUTS_SECTION,
     PLAYERS_SECTION,
+    SESSION_EVENING_SECTION,
+    SESSION_INFO_SECTION,
     SESSION_SCENES_SECTION,
     SESSIONS_SECTION,
 )
@@ -92,7 +94,10 @@ ENTRIES: tuple[MoreAction, ...] = (
         "n",
         "End Session",
         step=lambda page: on_session(page, session_forms.end_session),
-        refresh=changes(SESSIONS_SECTION),
+        # On the Session's own page: Played, and the evening's account.
+        refresh=changes(
+            SESSIONS_SECTION, SESSION_INFO_SECTION, SESSION_EVENING_SECTION
+        ),
         section="section-sessions",
         on_page=False,
         in_section=ends_session,

@@ -1,0 +1,1 @@
+**The evening.** In the Virtual Tabletop preview, End Session keeps an account of the evening on the Session: each Scene set, Roll request, roll, Confidence spent, outcome and Show, by Scene. A Session's page shows it as The evening, each reader seeing only the lines they could see on the night. Struck rolls, withdrawn Shows and Messages leave no line.

@@ -723,6 +723,8 @@ def _saga_with_every_record() -> Saga:  # noqa: PLR0915
             castings=[models.Casting(player_id="p1", character_id=magus.id)],
             # A Scene of the library loaded into it.
             scenes=[models.SceneUse("u1", scene_id="sc1")],
+            # A line of the evening's account.
+            account=[models.AccountLine("roll", "Storyguide: Stress die 7")],
         )
     )
     saga.scenes.append(models.Scene("sc1", title="The ford"))

@@ -25,7 +25,7 @@ import copy
 from collections.abc import Iterator
 from contextlib import contextmanager
 
-from . import memberships, threats, viewing, world
+from . import chronicle, evening, memberships, threats, viewing, world
 from .models import Pin, Player, Saga
 from .place_events import diary as place_diary
 from .place_events import tables as place_tables
@@ -56,6 +56,8 @@ def seat_view(saga: Saga, viewer: viewing.Viewer) -> Saga:
     (ADR 0015)."""
     view = copy.deepcopy(saga)
     view.players = [_name_only(p) for p in saga.players]
+    # A storyguide who reads every record is a player at another's Session.
+    _hide_account_lines(view, viewer)
     if viewing.reads_everything(viewer, view):
         return view
     with looking_as(viewer, view):
@@ -69,6 +71,16 @@ def seat_view(saga: Saga, viewer: viewing.Viewer) -> Saga:
         _hide_scenes(view, viewer)
         _hide_handouts(view, viewer)
     return view
+
+
+def _hide_account_lines(view: Saga, viewer: viewing.Viewer) -> None:
+    """Each played Session's account as `viewer` may read it, for every
+    viewer: a Blind line only for the Session's storyguide, a Private one
+    for its Players and the storyguide, naming no other Player's id
+    (evening.as_sent)."""
+    who = chronicle.person(viewer)
+    for session in view.sessions:
+        session.account = evening.as_sent(view, session, who)
 
 
 def _hide_handouts(view: Saga, viewer: viewing.Viewer) -> None:

@@ -24,4 +24,4 @@ The host's computer keeps the whole Chronicle, whatever each entry's Audience: B
 - If the host stops mid-evening, the Session stays Under way: on restart its Chronicle is read back and play carries on. A last line left half-written is dropped.
 - A backup of a saga includes its Sessions' Chronicle files and its Shows' copies.
 - Messages and Whispers are never written into the saga, so an Export or a Content pack cannot carry them. Neither carries Shows' copies or Players' Handouts.
-- Until the fold at End Session is built, End Session marks the Session Played and closes its Chronicle to writes; the file stays beside the saga, readable from the Session's row.
+- End Session marks the Session Played, closes its Chronicle to writes and folds it into the Session's account (`evening.py`), a line per entry from each kind's own rule, each keeping its Audience; the file stays beside the saga, readable from the Session's row. A Session played before the fold was built gets its account from its file the first time it is read. A seat and a player's export carry only the lines that reader may see.

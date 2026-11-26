@@ -1501,7 +1501,7 @@ A Session's record of everything said and rolled while it's under way. Each line
 On the desktop, the [Chronicle pane](help:chronicle-pane) shows it as it happens, on the host's computer and at each seat, and makes [Free rolls](help:free-roll).
 <!-- /gui -->
 
-**Begin Session** puts a planned Session under way and opens its Chronicle. **End Session** marks it Played, as ticking Played does, ends the [Scene](help:scenes-play) playing, and closes its Chronicle. The Chronicle is still read from the Session's row afterwards, but nothing more is added. Only the Session's storyguide begins or ends it, and only one Session of a saga is under way at a time. End Session isn't **End of Session** on a character's More, which gives Confidence Points for an evening of play.
+**Begin Session** puts a planned Session under way and opens its Chronicle. **End Session** marks it Played, as ticking Played does, ends the [Scene](help:scenes-play) playing, closes its Chronicle, and keeps [the evening](help:session-evening) on the Session. The Chronicle is still read from the Session's row afterwards, but nothing more is added. Only the Session's storyguide begins or ends it, and only one Session of a saga is under way at a time. End Session isn't **End of Session** on a character's More, which gives Confidence Points for an evening of play.
 
 Who sees each roll:
 
@@ -1935,7 +1935,7 @@ On the night, [Show](help:chronicle-shows) it from the Handouts list. Each Show 
 # A Session's page
 <!-- help: session-page -->
 
-Each Session has a page of its own: its date, whether it's planned, under way or played, its game date, its storyguide, who's coming and who's Away, who plays whom, its notes, and the Scenes loaded into it.
+Each Session has a page of its own: its date, whether it's planned, under way or played, its game date, its storyguide, who's coming and who's Away, who plays whom, its notes, the Scenes loaded into it and, once it's played, [the evening](help:session-evening).
 
 <!-- tui -->
 Each Session is under **Sessions** in the tree, in the Sessions list's order. In Saga Content's Sessions tab, choose a Session and use More's **Open Session** (`m`, then `o`). On the page, `e` edits the Session, and More has Cast at a Glance and, with the Virtual Tabletop (Preview) on, Begin Session, End Session and its Chronicle. Its Scenes and its notes have tabs of their own.
@@ -1946,7 +1946,25 @@ On Saga Management's Sessions, choose a Session and click **Open**. The page has
 
 Players read a Session's page as they read the Sessions list, with nothing to change.
 
-**See also:** [Sessions](help:tab-content-sessions), [A Session's Scenes](help:scenes), [The Chronicle](help:chronicle)
+**See also:** [Sessions](help:tab-content-sessions), [A Session's Scenes](help:scenes), [The Chronicle](help:chronicle), [The evening](help:session-evening)
+
+## The evening
+<!-- help: session-evening -->
+
+Preview: turn on Virtual Tabletop in Settings.
+
+What happened at a played Session, kept on the Session when its storyguide clicks **End Session**: a line for each Scene set, Roll request, roll (marked Blind or Private when it was), Confidence spent, outcome noted (naming the Roll request it's of) and Show, in order. Each time a Scene was set its lines go under its title, so a Scene played twice reads twice; what came before the first Scene, or between two, has a heading of its own. A roll that was struck and its Strike, a Show withdrawn, and every Message and Whisper leave no line; the [Chronicle](help:chronicle) keeps them all.
+
+Each reader sees only the lines they could see on the night: a Blind roll's only the Session's storyguide, a Private one only its roller and the storyguide. Another storyguide at the Session reads it as a player. A Remote seat, and a player's export, carry only the lines that player may read. A Session played before the evening was kept gets its account from its Chronicle when the saga is next opened on the host's computer.
+
+<!-- tui -->
+On a Session's page, in its **The evening** tab; it fills in when the Session ends.
+<!-- /tui -->
+<!-- gui -->
+On a played Session's page, under its facts.
+<!-- /gui -->
+
+**See also:** [The Chronicle](help:chronicle), [A Session's page](help:session-page)
 
 ## A Session's Scenes
 <!-- help: scenes -->
