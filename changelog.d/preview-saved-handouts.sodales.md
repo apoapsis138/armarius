@@ -1,0 +1,1 @@
+**Preview a saved Handout.** Choose a written Handout in Saga Content's Handouts and click Preview to read it as the players will get it, without opening Edit: on its Stationery on the desktop, under its Stationery's name in the terminal. It shows it to no one and changes nothing, with or without a Session under way.

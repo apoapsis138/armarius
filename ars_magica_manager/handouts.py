@@ -409,6 +409,30 @@ def preview_of(saga: Saga, handout: Handout) -> layout.Preview:
     )
 
 
+#: The largest picture a Preview draws: the most a Show copies, so the
+#: Preview shows what the players will get.
+PREVIEW_CAP = picture_files.KINDS[MAPS].cap
+
+
+def preview_reading(
+    saga: Saga,
+    handout: Handout,
+    read: picture_files.PictureSource = picture_files.local_picture,
+) -> layout.Reading:
+    """A saved Handout as a Reading, what a shown copy carries, so its
+    Preview opens in the window a player's copy opens in. Its pictures are
+    numbered as a Show numbers them, one for each of the Handout's, each
+    captioned with its name and read through `read` (None for one not
+    there or larger than a Show copies: a placeholder naming it)."""
+    names = [picture_name(saga, p) for p in handout.pictures]
+    laid = layout.lay_out(handout.title, handout.stationery, handout.text, names)
+    found = (read(p.folder, p.name) for p in handout.pictures)
+    return layout.Reading(
+        laid,
+        tuple(b if b is not None and len(b) <= PREVIEW_CAP else None for b in found),
+    )
+
+
 def delete(saga: Saga, handout: Handout) -> list[record_links.Change]:
     """Take `handout` out of the saga. Nothing names a Handout (a Show
     keeps its own copy), so nothing else changes; its picture files stay."""
