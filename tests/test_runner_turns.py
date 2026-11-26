@@ -56,9 +56,14 @@ def test_a_second_run_waits_its_turn_and_says_whose_it_is(turns) -> None:
     assert said and "story_check --full in armarius-a" in said[0]
 
 
-def _lock_seen_from(cwd: Path, temp: Path) -> str:
-    """The lock path a story_check in `cwd` would use, with its own temp folder."""
-    env = {**os.environ, "TMP": str(temp), "TEMP": str(temp), "TMPDIR": str(temp)}
+def _lock_seen_from(cwd: Path, home: Path) -> str:
+    """The lock path a story_check in `cwd` would use, in a session with its
+    own temporary and home folders."""
+    env = {
+        **os.environ,
+        **{name: str(home / "tmp") for name in ("TMP", "TEMP", "TMPDIR")},
+        **{name: str(home) for name in ("HOME", "USERPROFILE", "LOCALAPPDATA")},
+    }
     result = subprocess.run(
         [
             sys.executable,
@@ -77,13 +82,23 @@ def _lock_seen_from(cwd: Path, temp: Path) -> str:
     return result.stdout.strip()
 
 
-def test_every_worktree_and_session_shares_one_turn(tmp_path) -> None:
-    # Parallel builders run in their own worktrees, and a session may set its
-    # own temporary folder: the turn must still be the computer's one turn.
-    one, two = tmp_path / "armarius-a", tmp_path / "armarius-b"
-    for folder in (one, two, one / "tmp", two / "tmp"):
-        folder.mkdir(parents=True, exist_ok=True)
-    assert _lock_seen_from(one, one / "tmp") == _lock_seen_from(two, two / "tmp")
+def test_every_session_shares_one_turn(tmp_path) -> None:
+    # Parallel builders each run in a session that may set its own temporary
+    # and home folders: the turn must still be the one this repo's worktrees
+    # share, kept in the git folder they have in common.
+    one, two = tmp_path / "session-a", tmp_path / "session-b"
+    for folder in (one / "tmp", two / "tmp"):
+        folder.mkdir(parents=True)
+    seen = _lock_seen_from(one, one), _lock_seen_from(two, two)
+    assert seen[0] == seen[1]
+    common = subprocess.run(
+        ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"],
+        cwd=TOOL.parent,
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout.strip()
+    assert Path(seen[0]).parent == Path(common)
 
 
 def test_a_free_runner_is_taken_at_once_and_given_back(turns) -> None:

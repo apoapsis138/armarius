@@ -156,28 +156,30 @@ GOLDENS = (
 def goldens() -> int:
     """Regenerate both golden files at once; then show what changed."""
     env = {**os.environ, "UPDATE_GOLDEN": "1"}
-    processes = [
-        subprocess.Popen(
-            command,
-            cwd=ROOT,
-            env=env,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
-        )
-        for command in GOLDENS
-    ]
     bad = 0
-    for command, process in zip(GOLDENS, processes, strict=True):
-        output, _ = process.communicate()
-        name = command[-1]
-        if process.returncode == 0:
-            print(f"ok    {name}")
-        else:
-            bad += 1
-            print(f"FAIL  {name}\n{output.strip()[-800:]}")
+    # They run tests across the cores, so they take the computer's turn too.
+    with runner_turns.turn(f"story_check --goldens in {ROOT.name}", every=TURN_EVERY):
+        processes = [
+            subprocess.Popen(
+                command,
+                cwd=ROOT,
+                env=env,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+            )
+            for command in GOLDENS
+        ]
+        for command, process in zip(GOLDENS, processes, strict=True):
+            output, _ = process.communicate()
+            name = command[-1]
+            if process.returncode == 0:
+                print(f"ok    {name}")
+            else:
+                bad += 1
+                print(f"FAIL  {name}\n{output.strip()[-800:]}")
     _code, diff = run(["git", "diff", "--stat", "--", "tests/golden"])
     print(diff.strip() or "No golden changed.")
     print("Review the diff of tests/golden before committing.")

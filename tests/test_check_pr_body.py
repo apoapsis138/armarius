@@ -109,6 +109,7 @@ def test_an_integration_pull_request_lists_every_story():
         " experience\n- STORY-2492 Hubris and Sympathy gain it by themselves\n",
         1,
     )
+    assert "- STORY-2491" in body
     assert check.problems(body) == []
 
 

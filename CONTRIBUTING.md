@@ -23,7 +23,9 @@ Tests run in two tiers.
   turns through story_check; and the full suite runs once, on the
   integration branch, not per story. Run the suite only through
   story_check, never a bare `pytest -n auto`, which doesn't take the turn.
-- **Before handing a change over:** `uv run python tools/story_check.py
+- **Before handing a change over:** (for a story on a spec's integration
+  branch, before the integration branch's pull request, not per story)
+  `uv run python tools/story_check.py
   --full` runs the whole suite in parallel (`python -m pytest -q -n auto
   --dist worksteal`, one worker per core; more workers than cores make the
   Pilot tests time out). Both modes rerun each failure once alone, by its
@@ -185,26 +187,33 @@ what the books print: never invent lists or figures to fill a gap.
 ## Branches
 
 - `main` is the one long-lived branch, and it is always releasable.
-  Branch from an up-to-date `main`, keep the branch short-lived (one
-  change), and open a pull request into `main`. Never commit to `main`
-  directly; it changes only through pull requests.
-- **A spec's coupled stories share an integration branch.** When a spec's
-  stories can't each merge into `main` alone and keep it green, the spec
-  gets one short-lived integration branch from `main`, `spec-<topic>`,
-  and one pull request into `main`; that branch counts as one change.
-  Each of its stories is built on its own branch from the integration
-  branch, `spec-<topic>-story-<n>`, in its own worktree, and merges back
-  into it with a merge commit (never a rebase or a force push). Before the
-  pull request opens, merge `main` into the integration branch and run the
-  full suite there once (docs/adr/0033). A story outside such a spec keeps
-  a branch and a pull request of its own. A story blocked by another waits
-  until its blocker has merged: into `main`, or into the integration
-  branch both share. Branches are never stacked.
+  Branch from an up-to-date `main` (or, for a story of a spec with an
+  integration branch, from that branch: the only other base), keep the
+  branch short-lived (one change), and open a pull request into `main`.
+  Never commit to `main` directly; it changes only through pull requests.
+- **A spec's coupled stories share an integration branch** (ADR 0033).
+  When a spec's stories can't each merge into `main` alone and keep it
+  green, the spec gets one short-lived integration branch from `main`,
+  `spec-<topic>`, and one pull request into `main`; that branch counts as
+  one change. Each of its stories is built on its own branch from the
+  integration branch, `spec-<topic>-story-<n>`, in its own worktree, with
+  slice checks and both reviews of its own, but no pull request: whoever
+  runs the spec's build merges each finished story into the integration
+  branch with a merge commit (never a rebase or a force push) and runs a
+  slice check there. Nothing pushes the integration branch until it is
+  complete, so CI first sees it in its pull request. Before that pull
+  request opens, merge `main` into the integration branch, run the full
+  suite there once, and run both reviews on the whole change. A story
+  outside such a spec keeps a branch and a pull request of its own. A
+  story blocked by another waits until its blocker has merged: into
+  `main`, or into the integration branch both share. Branches are never
+  stacked on one another.
 - Whoever builds a change commits it, pushes its own branch and opens its
   pull request, once the checks above pass and both reviews are done (the
   bug review, and the Standards and Spec review against this file and the
-  change's story and spec). Its description follows "Writing a pull
-  request" below. Merging and releases stay with the maintainer. Never
+  change's story and spec); for a spec with an integration branch, that is
+  the integration branch, once. Its description follows "Writing a pull
+  request" below. Merging into `main` and releases stay with the maintainer. Never
   push to `main`, force-push, push a tag or delete a remote branch. (On
   the maintainer's computer a local guard hook, outside the repo, refuses
   those, and `reset --hard`, `clean -f` and `branch -D` too.)
@@ -248,7 +257,8 @@ apply; never leave one empty.
   ids changed: a revert won't undo it) or a two-way door (a revert puts
   everything back)? And its blast radius: which saves, screens, packs or
   seats it touches.
-- **Story** (STORY-n), **Pattern** (the design pattern and why), **Rules**
+- **Story** (STORY-n; for an integration branch, the spec and each of its
+  stories), **Pattern** (the design pattern and why), **Rules**
   (book and printed page, errata too), **Help** (topics changed),
   **Changelog** (the fragment's file) and **Checks** (`story_check --full`'s
   count, and anything else run).
@@ -323,8 +333,10 @@ change is PATCH. MAJOR marks a finished phase of the plan, when the maintainer s
   a week with no fragments has no release.
 - **Hotfixes any time.** An urgent fix ships as soon as it merges, as a
   PATCH release made the same way.
-- **Every branch has a story** on the board, and the story moves to Done
-  when its pull request merges.
+- **Every branch has a story** on the board (an integration branch has a
+  spec, and each of its stories), and the story moves to Done when its
+  pull request merges: for an integration branch, every story of the spec
+  at once.
 
 ## Seeing the screen
 

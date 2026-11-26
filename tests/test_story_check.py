@@ -78,6 +78,42 @@ def test_the_tests_wait_for_another_runs_turn(check, monkeypatch, capsys) -> Non
     assert "armarius-other" in capsys.readouterr().out
 
 
+def test_regenerating_the_goldens_waits_its_turn_too(check, monkeypatch) -> None:
+    started: list[list[str]] = []
+
+    class Finished:
+        returncode = 0
+
+        def __init__(self, command: list[str], **_kwargs: object) -> None:
+            started.append(command)
+
+        def communicate(self) -> tuple[str, str]:
+            return "", ""
+
+    monkeypatch.setattr(check.subprocess, "Popen", Finished)
+    monkeypatch.setattr(check, "run", lambda *a, **k: (0, ""))
+    monkeypatch.setattr(check, "TURN_EVERY", 0.05)
+    other, release = threading.Event(), threading.Event()
+
+    def other_run() -> None:
+        with check.runner_turns.turn("story_check --full in armarius-other"):
+            other.set()
+            release.wait(10)
+
+    holder = threading.Thread(target=other_run)
+    holder.start()
+    assert other.wait(10)
+    result: list[int] = []
+    regenerating = threading.Thread(target=lambda: result.append(check.goldens()))
+    regenerating.start()
+    time.sleep(0.3)
+    assert started == []
+    release.set()
+    holder.join(10)
+    regenerating.join(30)
+    assert result == [0] and len(started) == 2
+
+
 def test_a_flaky_test_fails_the_check_and_is_logged(check, monkeypatch, capsys):
     fake_runs(check, monkeypatch, {"tests/test_a.py::test_b": False})
     assert check.main([]) == 1
