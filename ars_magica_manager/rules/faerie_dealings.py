@@ -584,7 +584,9 @@ def experience_line(trait: ScoredTrait, xp: int, change: int) -> str:
 def break_bargain(character: Character, name: str) -> ScoredTrait:
     """A summoner breaks a bargain made in a summoning: he gains a -3
     Sympathy Trait fitting the faerie (p. 132)."""
-    trait = ScoredTrait(name, BROKEN_BARGAIN_TRAIT, type=faerie_sympathy.SYMPATHY)
+    trait = ScoredTrait(
+        name, BROKEN_BARGAIN_TRAIT, type=faerie_sympathy.SYMPATHY, gains_xp=True
+    )
     character.personality_traits.append(trait)
     return trait
 

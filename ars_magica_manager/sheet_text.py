@@ -36,6 +36,7 @@ from .rules import (
     disease,
     equipment,
     faerie_blood,
+    faerie_sympathy,
     house_magic,
     integrations,
     penetration,
@@ -387,19 +388,55 @@ def vf_info_text(instances: Sequence[VirtueFlawInstance], index: int | None) -> 
     return "\n".join(lines)
 
 
-def trait_rows(traits: Sequence[ScoredTrait]) -> list[tuple[int | None, str]]:
+def trait_rows(
+    traits: Sequence[ScoredTrait], *, with_xp: bool = True
+) -> list[tuple[int | None, str]]:
     """Personality Traits or Reputations as (index, "Name: +2") rows; a
-    Reputation's kind and reach follow in brackets when set."""
-    rows: list[tuple[int | None, str]] = []
-    for index, t in enumerate(traits):
-        row = f"{escape(t.name)}: {t.score:+d}"
+    Reputation's kind and reach follow in brackets when set. When a trait
+    gains experience (and `with_xp`), the list gets the Abilities list's
+    quiet xp column, "18/30", right-aligned after the widest row; a trait
+    without experience leaves it blank, and a list with none has no
+    column."""
+    labels: list[tuple[str, str]] = []
+    for t in traits:
+        row, shown = f"{escape(t.name)}: {t.score:+d}", f"{t.name}: {t.score:+d}"
         where = ", ".join(x for x in (t.type, t.reach, "bad" if t.bad else "") if x)
         if where:
             row += f" [$label]({escape(where)})[/]"
+            shown += f" ({where})"
         if t.replaces:
             row += f" [$label]replacing {escape(t.replaces)}[/]"
-        rows.append((index, row))
-    return rows
+            shown += f" replacing {t.replaces}"
+        labels.append((row, shown))
+    xps = [trait_xp(t) if with_xp else "" for t in traits]
+    if not any(xps):
+        return [(index, row) for index, (row, _) in enumerate(labels)]
+    width = max(len(shown) for _, shown in labels) + 2
+    return [
+        (
+            index,
+            row
+            + (
+                " " * (width - len(shown)) + f"[$label]{xp:>{_XP_WIDTH}}[/]"
+                if xp
+                else ""
+            ),
+        )
+        for index, ((row, shown), xp) in enumerate(zip(labels, xps, strict=True))
+    ]
+
+
+def trait_xp(trait: ScoredTrait) -> str:
+    """A trait's experience as its list shows it, total over the next
+    score's total ("18/30"), or "" for a trait that doesn't gain any. A
+    Sympathy Trait below 0 has no Ability total: its experience toward the
+    next step over what that step costs ("6/15"; RoP: Faerie p. 103)."""
+    progress = trait.progress
+    if progress is not None:
+        return f"{progress.total}/{progress.next_total}"
+    if trait.gains_xp and trait.score < 0 and trait.type == faerie_sympathy.SYMPATHY:
+        return f"{trait.deeds}/{faerie_sympathy.xp_to_raise(trait.score)}"
+    return ""
 
 
 def known_spell_rows(saga: Saga, character: Character) -> list[tuple[int | None, str]]:

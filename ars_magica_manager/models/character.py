@@ -1216,7 +1216,7 @@ class Character:
         d["aging"] = Aging.from_dict(d.get("aging") or {})
         d["wounds"] = Wounds.from_dict(d.get("wounds") or {})
         d["personality_traits"] = [
-            ScoredTrait(**known_fields(ScoredTrait, t))
+            ScoredTrait.personality_from_dict(t)
             for t in d.get("personality_traits", [])
         ]
         d["reputations"] = [reputation_from_dict(t) for t in d.get("reputations", [])]

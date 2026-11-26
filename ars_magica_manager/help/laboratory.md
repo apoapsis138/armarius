@@ -387,7 +387,8 @@ up to it, such as Whimsical +1 from faerie ingredients (DE p. 289). They
 colour the experience of its owner and anyone living there, and suggest the
 Warping its work and its inhabitants suffer. The storyguide may add one to
 a Lab Total for an effect that matches it, or take it off for an opposite
-one.
+one. A trait may gain experience instead, as a character's
+[Personality Traits](help:section-personality-traits) explain.
 <!-- tui -->
 `a` adds one, `e` edits the chosen one and `d` deletes it.
 <!-- /tui -->

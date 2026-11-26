@@ -1,0 +1,1 @@
+**Personality Traits that gain experience.** Tick Gains experience on a Personality Trait and it grows like an Ability, as a Verditius's Hubris does: its XP takes the place of its Score, and the list shows its experience quietly beside the score, as the Abilities list does.

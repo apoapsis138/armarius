@@ -75,6 +75,7 @@ from ..models import (
     ScoredTrait,
     Spell,
 )
+from ..models.traits import is_hubris
 from . import confidence, dice, enchantment, lab, lab_virtues, mysteries, xp
 from .breakdown import Breakdown, Line
 from .casting import magnitude
@@ -189,8 +190,9 @@ def hubris_score(total_xp: int, start: int = 1) -> int:
 
 
 def hubris_of(magus: Character) -> int:
-    """The magus's Hubris Personality Trait (0 without one)."""
-    return next((t.score for t in magus.personality_traits if t.name == HUBRIS), 0)
+    """The magus's Hubris Personality Trait (0 without one), its flavour
+    in brackets or not."""
+    return lab_virtues.hubris_score(magus)
 
 
 # -- Enchant Casting Tools ----------------------------------------------------
@@ -1089,7 +1091,9 @@ HOUSE_REACH = "House Verditius"
 
 
 def hubris_trait(magus: Character) -> ScoredTrait | None:
-    return next((t for t in magus.personality_traits if t.name == HUBRIS), None)
+    """The magus's Hubris Personality Trait, its flavour in brackets or
+    not ("Hubris (Arrogant)"), or None."""
+    return next((t for t in magus.personality_traits if is_hubris(t)), None)
 
 
 def xp_to_next_hubris(magus: Character) -> int:
@@ -1104,13 +1108,15 @@ def xp_to_next_hubris(magus: Character) -> int:
 def gain_hubris(magus: Character, experience: int, start: int = 0) -> str:
     """Add Hubris experience (kept toward the next point, as an Ability
     grows), making the trait at `start` first when he has none and `start`
-    is given (the first Inner Mystery's). What it did, as a line."""
+    is given (the first Inner Mystery's). Hubris always gains experience
+    (DE p. 241), so the sheet shows it. What it did, as a line."""
     trait = hubris_trait(magus)
     if trait is None:
         if not start:
             return ""
-        trait = ScoredTrait(HUBRIS, start)
+        trait = ScoredTrait(HUBRIS, start, gains_xp=True)
         magus.personality_traits.append(trait)
+    trait.gains_xp = True
     before = trait.score
     confidence.add_deeds(trait, experience)
     if trait.score == before:
@@ -1136,7 +1142,7 @@ def apply_hubris(
         said.append(gain_hubris(magus, experience))
     for _ in range(max(0, rises)):
         if hubris_trait(magus) is None:
-            magus.personality_traits.append(ScoredTrait(HUBRIS, 0))
+            magus.personality_traits.append(ScoredTrait(HUBRIS, 0, gains_xp=True))
         said.append(gain_hubris(magus, xp_to_next_hubris(magus)))
     said += settle_vendettas(magus)
     return [line for line in said if line]

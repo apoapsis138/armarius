@@ -396,6 +396,28 @@ A trait roll is a stress die + the trait alone, against:
 A player changes the scores only between sessions, after striking rolls or
 events (DE p. 28).
 
+**Gains experience.** A few traits grow from experience like an Ability
+instead, as a Verditius's Hubris does (DE p. 241). Tick **Gains
+experience?** when you add or edit one: its **XP** then takes the place of
+its Score, and the score follows from it as an Ability's does (score 2 at
+15 xp, 3 at 30). Ticking it starts the XP at what the typed score needs;
+unticking it keeps the experience, put away until it's ticked again. A
+trait below 0 can't gain experience. The list shows each such trait's
+experience after its score, quietly, as the Abilities list does ("18/30":
+18 xp, the next score at 30); a list with none shows no column. The same
+box is on a familiar's, a creature's and a laboratory's Personality
+Traits.
+
+Hubris and a lasting faerie Sympathy Trait always gain experience, by the
+rules (DE p. 241; Realms of Power: Faerie p. 103): the app turns it on for
+them, and ticking **Faerie Sympathy Trait?** settles it, so the box isn't
+offered. A temporary Sympathy Trait gains none (p. 127). A Sympathy Trait
+below 0 keeps its Score, with its **XP toward the next step**: 10 xp from
+-1 to 0, 15 from -2, 20 from -3. The list shows that step's progress
+("6/15"). Experience is spent a step at a time, so one climbing from -3
+reaches 0 with only what's left over toward +1, which then costs 5 as an
+Ability's does (Errata p. 68).
+
 <!-- tui -->
 On a grog who serves a covenant, More (`m`) here offers
 [Reward or Punish](help:grog-discipline) and [Pension](help:grog-pension).
@@ -3561,6 +3583,12 @@ kept in the Diary.
   challenger's (p. 120). Resisting a temptation to sell is left to the
   troupe, as an opposed Personality roll or a Confidence Point spent to
   walk away.
+
+Hubris always gains experience, so the Personality Traits list shows it
+beside the score, total over what the next score needs ("18/30"). Write its
+flavour in brackets after it if you like, as the books do: **Hubris
+(Arrogant)** is still Hubris, on every Lab Total and here (DE p. 241;
+Houses of Hermes: Mystery Cults p. 119).
 
 **At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
 
