@@ -5083,14 +5083,17 @@ Scholarly, Priest Religion, Faerie Blood Dealings with Faerie, Diabolic
 Past The Infernal, Redcap Tribunal & Order, Custos Covenfolk and
 Apprentice Apprenticeship, among others. A saga's own Virtues and Flaws
 add nothing. Its Creation Worksheet has a Review Interests step for
-them. While the character is In Creation they follow its type, House and
-Virtues and Flaws, until you save Edit Interests, which makes them your
-own. Changing its type while In Creation goes back to the new
-type's defaults, and moving to In Play keeps them as they are. A covenant
-starts with everything ticked, and characters already saved keep what
-they had. Ticking an interest doesn't offer what the rules don't. An
-Artist's Career still needs a Craft or Profession, and every action still
-needs its book in play.
+them, which says where each one comes from and whether they are still
+the defaults. While the character is In Creation they follow its type,
+House and Virtues and Flaws, until you save Edit Interests, which makes
+them your own. **Restore the defaults**, beside Edit Interests on that
+step, hands them back to the defaults, which then follow the character
+again, and says which interests are on. Changing its type while In
+Creation goes back to the new type's defaults, and moving to In Play
+keeps them as they are. A covenant starts with everything ticked, and
+characters already saved keep what they had. Ticking an interest doesn't
+offer what the rules don't. An Artist's Career still needs a Craft or
+Profession, and every action still needs its book in play.
 
 ## Planning
 <!-- help: tab-planning -->

@@ -427,9 +427,15 @@ def turned_off(character: Character) -> list[str]:
     any on: while it is In Creation and its interests aren't chosen, every
     one that applies and its Default Interests leave out; otherwise those
     the player turned off."""
-    if not character.in_creation or character.interests_chosen:
-        return list(character.interests_off)
-    return defaults_off(character)
+    if following_defaults(character):
+        return defaults_off(character)
+    return list(character.interests_off)
+
+
+def following_defaults(character: Character) -> bool:
+    """Whether `character`'s interests follow its Default Interests: while
+    it is In Creation and the player hasn't chosen them."""
+    return character.in_creation and not character.interests_chosen
 
 
 def defaults_off(character: Character) -> list[str]:
@@ -456,10 +462,24 @@ def keep_interests(character: Character) -> None:
     character.interests_chosen = True
 
 
+def follow_defaults(character: Character) -> None:
+    """Hand `character`'s interests back to its Default Interests, which
+    follow it again until the player next chooses them."""
+    character.interests_off = []
+    character.interests_chosen = False
+
+
 def interests_off(character: Character) -> list[str]:
     """The interests that are off for `character`: those turned off
     (turned_off), but never one its record keeps on (CHARACTER_GATES)."""
     return _not_kept_on(character, turned_off(character))
+
+
+def interests_on(character: Character) -> list[str]:
+    """The interests on for `character` besides Session & Reputation, in
+    the order of INTERESTS."""
+    off = interests_off(character)
+    return [i for i in OPTIONAL if applies(character, i) and i not in off]
 
 
 def covenant_interests_off(covenant: Covenant) -> list[str]:

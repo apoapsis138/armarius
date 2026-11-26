@@ -13,8 +13,8 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import Any
 
-from .. import action_books, deeds, sourcebooks
-from ..commands import Form, FormCard, notes
+from .. import action_books, deeds, default_interests, sourcebooks
+from ..commands import Act, Form, FormCard, notes
 from ..deeds import OPTIONAL
 from ..form_spec import DialogField
 from ..models import Character, Covenant, Saga
@@ -222,11 +222,66 @@ def covenant_interests_form(
 
 
 def interests_text(character: Character) -> str:
-    """The interests he has turned off, in words."""
-    off = [i for i in OPTIONAL if i in deeds.interests_off(character)]
-    if not off:
+    """Which of `character`'s interests are on, in words: those turned off,
+    or those on when they're fewer."""
+    off = deeds.interests_off(character)
+    turned_off = [i for i in OPTIONAL if i in off]
+    if not turned_off:
         return "Every interest is ticked."
-    return "Turned off: " + ", ".join(off) + "."
+    on = deeds.interests_on(character)
+    if not on:
+        return f"Only {deeds.SESSION} is on."
+    if len(on) < len(turned_off):
+        return "On: " + ", ".join(on) + ". The rest are off."
+    return "Turned off: " + ", ".join(turned_off) + "."
+
+
+def defaults_text(character: Character) -> str:
+    """`character`'s Default Interests besides Session & Reputation, a line
+    for each source ("From being a magus: Research, Tribunal & Order."),
+    its interests in the order of the cards (deeds.INTERESTS)."""
+    by_source: dict[str, set[str]] = {}
+    for interest, why in default_interests.defaults(character):
+        if interest != default_interests.SESSION:
+            by_source.setdefault(why, set()).add(interest)
+    lines = [
+        f"From {_source(why)}: {', '.join(i for i in OPTIONAL if i in interests)}."
+        for why, interests in by_source.items()
+    ]
+    return "\n".join(lines) or "None."
+
+
+def whose_text(character: Character) -> str:
+    """Whether `character`'s interests are still its Default Interests or
+    the player's own."""
+    if deeds.following_defaults(character):
+        return (
+            "These are the defaults: they follow the character's type, House "
+            "and Virtues and Flaws until Edit Interests is saved."
+        )
+    if character.in_creation:
+        return (
+            "These are the player's own. Restore the defaults hands them back "
+            "to the defaults."
+        )
+    return "These are the player's own."
+
+
+def restore_defaults(character: Character) -> Act:
+    """The Restore the defaults button: hand the interests back to the
+    Default Interests (deeds.follow_defaults), and say which are on now."""
+
+    def apply() -> list[str]:
+        deeds.follow_defaults(character)
+        on = ", ".join(deeds.interests_on(character)) or f"only {deeds.SESSION}"
+        return notes(f"{character.name} is back to the defaults: {on}.")
+
+    return Act(apply, TITLE)
+
+
+def _source(why: str) -> str:
+    """A reason as its line names it: "being a magus", "House Merinita"."""
+    return f"being {why}" if why.startswith(("a ", "an ")) else why
 
 
 def interests_form(saga: Saga, character: Character, names: Mapping[str, str]) -> Form:
