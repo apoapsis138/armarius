@@ -948,6 +948,14 @@ def _core_edit(section: str, list_id: str, index: int = 0):
     return _pick(lambda ws: ws._core_verb(section, "edit"), list_id, index)
 
 
+async def _open_trait_gaining_xp(ws) -> None:
+    """Edit the magus's first Personality Trait, made to gain experience
+    with 3 toward its next point."""
+    trait = ws.selected_character.personality_traits[0]
+    trait.gains_xp, trait.deeds = True, 3
+    await _core_edit("section-personality-traits", "personality-traits-list")(ws)
+
+
 def _new_inhabitant(kind: str):
     """Opens the form for a new inhabitant of `kind` with no sheet behind it."""
 
@@ -1840,6 +1848,13 @@ OPENERS: dict[str, Opener] = {
     "edit personality trait": Opener(
         "character",
         _core_edit("section-personality-traits", "personality-traits-list"),
+    ),
+    "personality trait gains experience": Opener(
+        "character",
+        _core_edit("section-personality-traits", "personality-traits-list"),
+    ),
+    "personality trait stops gaining experience": Opener(
+        "character", _open_trait_gaining_xp
     ),
     "edit covenant weapon": Opener(
         "covenant", _core_edit("section-pos-weapon", "pos-weapon-list")

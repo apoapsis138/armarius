@@ -374,7 +374,9 @@ works as on a character's [Virtues](help:section-vf-virtues).
 ### Personality Traits
 <!-- help: section-cr-personality-traits -->
 
-Its Personality Traits and their scores, such as Proud +3.
+Its Personality Traits and their scores, such as Proud +3. A trait may
+gain experience instead, as a character's
+[Personality Traits](help:section-personality-traits) explain.
 
 ### Reputations
 <!-- help: section-cr-reputations -->

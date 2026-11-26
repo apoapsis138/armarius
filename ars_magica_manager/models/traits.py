@@ -231,6 +231,24 @@ class ScoredTrait:
     #: are separate entries, each building like an Ability). Any other
     #: bad Reputation may still be typed with a negative score.
     bad: bool = False
+    #: Personality Traits only: whether it grows from experience like an
+    #: Ability (Hubris, DE p. 241), its experience toward the next point
+    #: kept in `deeds`.
+    gains_xp: bool = False
+
+    @property
+    def progress(self) -> xp_rules.Progress | None:
+        """Where a trait that gains experience stands, as an Ability at its
+        score would show it: the total is worked out from the score and the
+        experience toward the next point, never stored. None for a trait
+        that doesn't gain experience, or one below 0."""
+        if not self.gains_xp or self.score < 0:
+            return None
+        return xp_rules.Progress(
+            score=self.score,
+            total=xp_rules.ability_xp(self.score) + self.deeds,
+            next_total=xp_rules.ability_xp(self.score + 1),
+        )
 
 
 ACADEMIC_REPUTATION = "Academic"

@@ -182,6 +182,36 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Name": ""},
         shown={"#personality-traits-list": "Bold: +3 (Sympathy, temporary)"},
     ),
+    # A trait that gains experience takes its XP in place of its Score and
+    # grows like an Ability: ticking the box starts it at the 15 xp its
+    # score of 2 needs as an Ability, the next score at 30.
+    "personality trait gains experience": Contract(
+        prefill={"Name": "Brave", "Score": "2", "Gains experience?": False},
+        edits={"Gains experience?": True},
+        saved=lambda s: (
+            character(s).personality_traits[0].score,
+            character(s).personality_traits[0].deeds,
+            character(s).personality_traits[0].gains_xp,
+        ),
+        expected=(2, 0, True),
+        # Ability growth has no meaning below 0.
+        invalid={"Score": "-1", "Gains experience?": True},
+        live={"#fields-live": "Score 2 · Score 3 at 30 xp"},
+        shown={"#personality-traits-list": "15/30"},
+    ),
+    # Turning it off keeps the score and the experience, hidden.
+    "personality trait stops gaining experience": Contract(
+        prefill={"Name": "Brave", "Gains experience?": True, "XP": "18"},
+        edits={"Gains experience?": False},
+        saved=lambda s: (
+            character(s).personality_traits[0].score,
+            character(s).personality_traits[0].deeds,
+            character(s).personality_traits[0].gains_xp,
+        ),
+        expected=(2, 3, False),
+        invalid={"XP": "-1"},
+        shown={"#personality-traits-list": "Brave: +2"},
+    ),
     # Choosing a book weapon fills in its figures; a typed name stays.
     "add personal weapon": Contract(
         prefill={"Name": "", "Weapon": Select.NULL, "Attack": "0"},
