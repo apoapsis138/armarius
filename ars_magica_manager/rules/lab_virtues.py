@@ -21,7 +21,8 @@ lab_seasons adds their lines to the Lab Total in `_with_options`):
   (Having once followed another's text isn't recorded, so that part is
   the troupe's.)
 - Hubris (DE p. 241): its score added to a talisman's instilling and to
-  binding a familiar.
+  binding a familiar. The trait is "Hubris", or "Hubris" with its flavour
+  in brackets, "Hubris (Arrogant)" (is_hubris).
 - Faerie Magic (DE p. 238): its score stands in for Magic Theory when
   experimenting or designing a spell with the Mystery's own parameters
   (when it is the higher), adding that many botch dice, each two only a
@@ -42,6 +43,7 @@ from __future__ import annotations
 
 from ..arts import FORMS
 from ..models import Book, Character, SeasonPlan
+from ..models.traits import is_hubris
 from . import hybrid_magic as hybrid
 from . import work_virtues
 from .breakdown import Line
@@ -79,6 +81,11 @@ CYCLE_BONUS = 3
 HOROSCOPE_MAX = 5
 #: Ranges a Short-Ranged magus works at without halving.
 NEAR_RANGES = ("", "Personal", "Touch")
+
+
+def hubris_score(magus: Character) -> int:
+    """The magus's Hubris Personality Trait's score (0 without one)."""
+    return next((t.score for t in magus.personality_traits if is_hubris(t)), 0)
 
 
 def _ids(magus: Character) -> set[str]:
@@ -161,7 +168,7 @@ def option_lines(
         lines.append(
             Line("Cyclic Magic (its bad time)", amount=-CYCLE_BONUS, source=SOURCE)
         )
-    hubris = next((t.score for t in magus.personality_traits if t.name == "Hubris"), 0)
+    hubris = hubris_score(magus)
     if has(magus, HUBRIS) and hubris and (talisman or binding):
         lines.append(Line("Hubris", amount=hubris, source=HUBRIS_SOURCE))
     wanted = max(0, min(plan.horoscope, HOROSCOPE_MAX))

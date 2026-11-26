@@ -132,7 +132,10 @@ def test_a_personality_trait_may_be_a_sympathy_trait():
     assert ops.add is not None and ops.edit is not None
     form = ops.add()
     assert isinstance(form, commands.Form)
-    form.apply(_answer(form, {"name": "Winter", "score": "3", "sympathy": True}))
+    # A lasting Sympathy Trait gains experience: its XP stands in for its
+    # Score, 30 xp making it +3 as an Ability's would (RoP: Faerie p. 103).
+    form.apply(_answer(form, {"name": "Winter", "sympathy": True, "xp": "30"}))
+    assert (traits[0].score, traits[0].gains_xp) == (3, True)
     assert traits[0].type == fs.SYMPATHY
     assert "(Sympathy)" in ops.rows()[0]
     edit = ops.edit(0)
