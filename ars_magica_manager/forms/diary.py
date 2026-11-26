@@ -220,9 +220,8 @@ def covenant_entry_fields(
                     attr(existing, "concerns", ""),
                     options=open_stories.concerns_options(saga, covenant),
                     show_if=form.story,
-                    hint="Who or what the story is about; the Region lists every "
-                    "open story, and a character's or laboratory's Connections "
-                    "its own.",
+                    hint="Who or what the story is about; the Region lists every open "
+                    "story, and each record's Connections its own.",
                 )
             ]
             if saga is not None

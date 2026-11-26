@@ -127,10 +127,9 @@ def saga_fields(saga: Saga | None) -> list[DialogField]:
                 "Harvest vis by hand",
                 "check",
                 saga.harvest_vis_by_hand,
-                hint="Each vis source is gathered with More's Harvest in its "
-                "season; advancing lists those still waiting, for the covenfolk "
-                "to gather or to be lost for the year. Off: advancing fills the "
-                "vis stores by itself.",
+                hint="Each vis source is gathered by Harvest in its season; advancing "
+                "lets the covenfolk gather the rest, or they're lost for the year."
+                " Off: the stores fill by themselves.",
             )
         )
         fields += [
@@ -172,16 +171,15 @@ def saga_fields(saga: Saga | None) -> list[DialogField]:
                 "select",
                 medallions.chosen(saga),
                 options=medallions.options(),
-                hint="How the desktop draws every medallion, the seasons' and "
-                "figures' such as an aura: stained glass, an illuminated letter's adornment, a wax "
-                "seal, Limoges enamel, a Book of Hours roundel, or pen and wash.",
+                hint="How the desktop draws medallions: stained glass, illuminated "
+                "adornment, wax seal, Limoges enamel, Book of Hours roundel, or "
+                "pen and wash.",
             )
         )
         fields.append(
             DialogField(
                 "notify_npc_unplanned",
-                "Be notified when and which non-player characters do not "
-                "have seasonal activity",
+                "Notify me of idle non-player characters",
                 "check",
                 saga.notify_npc_unplanned,
                 hint="Off: Advance Season names only player characters with "
@@ -195,8 +193,8 @@ def saga_fields(saga: Saga | None) -> list[DialogField]:
                 "int",
                 saga.story_flaw_years,
                 hint="Needs You names a player character whose Story or Major "
-                "Personality Flaw no told story has concerned in this many "
-                "years (DE p. 66); 0 turns it off.",
+                "Personality Flaw no story has touched in this many years (DE p. "
+                "66); 0 is off.",
             )
         )
         fields += [
@@ -562,7 +560,7 @@ def laboratory_create_fields(saga: Saga, covenant_id: str | None) -> list[Dialog
         covenant_field(saga, covenant_id),
         DialogField(
             "starting",
-            "One of the covenant's starting labs",
+            "A covenant's starting lab",
             "check",
             _covenant_in_creation(saga, covenant_id),
             hint="Paid for from the covenant's Build Points (one free per magus).",
@@ -632,9 +630,8 @@ def familiar_create_fields(saga: Saga, magus_id: str | None) -> list[DialogField
             "Bound already",
             "check",
             bound,
-            hint="Ticked: a familiar bound before play, the bond granted now. "
-            "Unticked: bind it by lab work, the bond's True Friend and Loyal "
-            "(Partner) +3 coming when that season is played (DE p. 267).",
+            hint="Ticked: bound before play, the bond granted now. Unticked: bind it by"
+            " lab work; its bond +3 comes when that season is played (DE p. 267).",
         ),
     ]
 

@@ -110,10 +110,9 @@ def scored_trait_fields(
                 "Bad Reputation?",
                 "check",
                 attr(existing, "bad", False),
-                hint="A bad Reputation with its own positive score, as an "
-                "Academic one is: Good and Bad ones are separate, and a roll "
-                "takes off the highest Bad one (Art & Academe p. 103). Any "
-                "other bad Reputation may instead be typed below 0.",
+                hint="A bad Reputation with its own positive score, as an Academic one "
+                "is; a roll takes off the highest Bad one (A&A p. 103). Others may"
+                " go below 0.",
             ),
         ]
     if replaceable:

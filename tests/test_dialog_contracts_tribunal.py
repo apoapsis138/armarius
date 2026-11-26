@@ -899,7 +899,7 @@ CONTRACTS: dict[str, Contract] = {
             "Challenger": "mag_sketch",
             "Archmage": "arch1",
             "Contest": "",
-            "Has invented a spell of 7th magnitude": False,
+            "Invented a 7th-magnitude spell": False,
             "Great deed": "",
             "Outcome": "Lost",
         },
@@ -907,7 +907,7 @@ CONTRACTS: dict[str, Contract] = {
             "Challenger": "mag_sketch",
             "Archmage": "arch1",
             "Contest": "defeat him in certamen",
-            "Has invented a spell of 7th magnitude": True,
+            "Invented a 7th-magnitude spell": True,
             "Great deed": "Bound the wyrm",
             "Outcome": "Won",
         },
@@ -926,7 +926,7 @@ CONTRACTS: dict[str, Contract] = {
             {
                 "Challenger": "mag_sketch",
                 "Archmage": "arch1",
-                "Has invented a spell of 7th magnitude": True,
+                "Invented a 7th-magnitude spell": True,
                 "Great deed": "Bound the wyrm",
             },
         ],
@@ -1001,7 +1001,7 @@ CONTRACTS: dict[str, Contract] = {
             "Kind": "war",
             "Brought by": "Leandro",
             "Against": "Severinus",
-            "Arrived at the full moon of month": "2",
+            "Arrived at the full moon of": "2",
         },
         saved=lambda s: [
             (c.kind, c.month, c.served, c.notice_given)
@@ -1210,7 +1210,7 @@ CONTRACTS: dict[str, Contract] = {
         invalid=[
             {"Her parents' land (manors)": "-1"},
             # With a patrimony the eldest son comes out of the division too.
-            {"The eldest son's patrimony, kept out (French custom)": "1"},
+            {"Eldest son's patrimony (French custom)": "1"},
         ],
         shown={"#nb-marriage-facts": "England"},
     ),

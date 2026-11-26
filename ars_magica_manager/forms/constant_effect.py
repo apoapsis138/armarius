@@ -110,7 +110,7 @@ def fields(existing: ConstantEffect | None) -> list[DialogField]:
         ),
         DialogField(
             "designed_for",
-            "Cast by them or designed for them",
+            "Cast by or designed for them",
             "check",
             e.designed_for,
             hint="A special version of a spell invented for them, as a "

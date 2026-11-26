@@ -193,9 +193,9 @@ def entry_form(template: dict[str, str] | None) -> Form:
                 "area",
                 kept.get("text", ""),
                 required=True,
-                hint="A blank is a word in braces, asked for when a ruling "
-                "uses it: {party}, {amount}, {vis source}. A {years} blank "
-                "sets a term: the matter comes due to be debated again.",
+                hint="A blank is a word in braces, asked for when used: {party}, "
+                "{amount}, {vis source}. A {years} blank sets when the matter "
+                "comes back.",
             ),
         ]
 

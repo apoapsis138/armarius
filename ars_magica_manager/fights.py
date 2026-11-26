@@ -174,9 +174,8 @@ def fields(saga: Saga, fight: Fight | None) -> list[DialogField]:
             "Range increments",
             "int",
             f.range if f else 0,
-            hint="0: hand to hand. Missiles take -3 for each range increment "
-            "past the first, and fighters without them can't strike at range "
-            "(DE p. 395).",
+            hint="0: hand to hand. Missiles take -3 per range increment past the first;"
+            " fighters without them can't strike at range (DE p. 395).",
         ),
         DialogField(
             "aura",
@@ -190,10 +189,8 @@ def fields(saga: Saga, fight: Fight | None) -> list[DialogField]:
             "Part of a battle",
             "check",
             bool(f and f.part_of_battle),
-            hint="Amid a battle a magus must pass a Concentration roll to cast: "
-            "Stamina + Concentration + stress die against 12 engaged, 9 "
-            "standing off (Lords of Men p. 109). A battle event's fight "
-            "always is.",
+            hint="Casting amid battle needs Sta + Concentration + stress die: 12 "
+            "engaged, 9 standing off (LoM p. 109). A battle event's fight is.",
         ),
     ]
 
@@ -385,13 +382,13 @@ def _stance_fields(
         ),
         DialogField(
             "weapon_after_invisible",
-            "Weapon picked up after turning invisible",
+            "Weapon picked up while invisible",
             "check",
             v.weapon_after_invisible,
             show_if=lambda values: bool(values.get("invisible")),
-            hint="A non-magical weapon picked up once invisible gets through "
-            "Magic Resistance; the weapon it turned invisible with, or its "
-            "touch, doesn't (HoH:S p. 32).",
+            hint="A non-magical weapon picked up while invisible gets through Magic "
+            "Resistance; the one it vanished with, or its touch, doesn't (HoH:S p."
+            " 32).",
         ),
     ]
 
@@ -792,7 +789,7 @@ def group_fields(saga: Saga, fight: Fight) -> list[DialogField]:
     found.append(
         DialogField(
             "bonus_to",
-            "A trained group's bonus goes to",
+            "Trained group's bonus goes to",
             "select",
             "attack",
             options=[("Attack", "attack"), ("Defence", "defence")],
@@ -1125,9 +1122,9 @@ def _aim_fields() -> list[DialogField]:
             "check",
             False,
             show_if=lambda v: v.get("action") in (rules.CAST, rules.DEVICE),
-            hint="It moves or makes something mundane that strikes: Magic "
-            "Resistance doesn't stop it, but it is aimed like a missile (DE p. "
-            "223). The spells HoH:S p. 30 names are indirect anyway.",
+            hint="Moves or makes something mundane that strikes: Magic Resistance "
+            "doesn't stop it; aimed like a missile (DE p. 223). HoH:S p. 30's "
+            "spells are indirect too.",
         ),
         DialogField(
             "aim_steps",

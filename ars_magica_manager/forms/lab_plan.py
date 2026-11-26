@@ -422,9 +422,8 @@ class LabPlanForm:
                 "check",
                 bool(design and design.lasting),
                 show_if=lambda v: inventing(v) and v.get("technique") == "Creo",
-                hint="A Creo effect whose creation is meant to stay after a "
-                "Momentary Duration must be a Ritual (DE p. 311); a flame or "
-                "bolt that is gone at once is not.",
+                hint="A Creo creation meant to last beyond a Momentary Duration must be"
+                " a Ritual (DE p. 311); a passing flame or bolt need not.",
             ),
         ]
 
@@ -539,9 +538,8 @@ class LabPlanForm:
                 ("Doesn't apply", FOCUS_NO),
             ],
             show_if=_chosen,
-            hint="By its Arts, it applies when the work's Technique and Form "
-            "are among them; choose otherwise for a focus narrower than its "
-            "Arts (DE p. 94).",
+            hint="It applies when the work's Technique and Form are among its Arts; "
+            "choose otherwise for a narrower focus (DE p. 94).",
         )
 
     def design_values(self, values: dict[str, Any]) -> dict[str, Any]:
@@ -689,9 +687,8 @@ class LabPlanForm:
                 items=ListEditor(self._book_name, self._choose_text, "More Lab Texts"),
                 show_if=_doing(lab_seasons.LAB_TEXT),
                 hint=(
-                    "Spells of the same Technique and Form learned the same "
-                    "season, if their levels together are within the lowest "
-                    "Lab Total (DE pp. 262, 264)."
+                    "Spells of one Technique and Form learned together, their levels "
+                    "together within the lowest Lab Total (DE pp. 262, 264)."
                 ),
             ),
             DialogField(
@@ -917,9 +914,8 @@ class LabPlanForm:
                 "int",
                 plan.other_vis if plan else 0,
                 show_if=_doing(es.INSTIL, es.LESSER_WORK, fs.BIND, fs.EMPOWER),
-                hint="Each pawn may be of the Technique or the Form: this many "
-                "are of the Art not chosen above, the rest of that one (DE pp. "
-                "258, 266-268).",
+                hint="Each pawn may be of the Technique or the Form: this many are of "
+                "the Art not chosen above (DE pp. 258, 266-268).",
             ),
         ]
 
@@ -1068,9 +1064,9 @@ class LabPlanForm:
                 options=known,
                 allow_blank=True,
                 placeholder="(none)",
-                hint="Adds its magnitude: inventing (from a Lab Text too), instilling "
-                "an effect, and empowering a familiar's bond (DE pp. 251, 258, 262, "
-                "267).",
+                hint="Adds its magnitude to inventing (from a Lab Text too), "
+                "instilling, and empowering a familiar's bond (DE pp. 251, 258, "
+                "262, 267).",
                 show_if=_doing(
                     lab_seasons.INVENT,
                     lab_seasons.LAB_TEXT,
@@ -1103,7 +1099,7 @@ class LabPlanForm:
             found.append(
                 DialogField(
                     "chthonic",
-                    "A dark or sinister effect (Chthonic Magic for Magic Theory)",
+                    "Dark or sinister (Chthonic Magic)",
                     "check",
                     bool(plan and plan.chthonic),
                     show_if=_chosen,
@@ -1144,10 +1140,9 @@ class LabPlanForm:
                 allow_blank=True,
                 placeholder="(none)",
                 show_if=_chosen,
-                hint="Their season is planned as Assist in a laboratory with "
-                "it: + their Intelligence and Magic Theory. An apprentice "
-                "without The Gift and Magic Theory serves instead: + Safety, "
-                "Aesthetics and a Mentem Specialization.",
+                hint="Their season is planned as Assist here: + Intelligence and Magic "
+                "Theory. Without The Gift and Magic Theory, an apprentice serves "
+                "instead: + Safety, Aesthetics, a Mentem specialty.",
             ),
             DialogField(
                 "details",
@@ -1363,10 +1358,9 @@ class LabPlanForm:
                 show_if=lambda v: (
                     v.get("activity") in es.ATTUNING and v.get("device") == talisman_id
                 ),
-                hint="Each season it is opened or an effect instilled, a "
-                "talisman may gain one attunement from its shapes and "
-                "materials: the bonus to Casting Totals while touching it "
-                "(DE p. 259).",
+                hint="Each season it's opened or an effect instilled, a talisman may "
+                "gain one attunement: a Casting Total bonus while touched (DE p. "
+                "259).",
             )
         ]
 

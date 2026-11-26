@@ -271,7 +271,7 @@ def invest_fields(character: Character) -> list[DialogField]:
         ),
         DialogField(
             "lost",
-            "Lost to story events (nothing comes back)",
+            "Lost to story events (gone)",
             "check",
             False,
             show_if=_kind_is(mr.END),

@@ -492,14 +492,14 @@ def astrology_fields(character: Character) -> list[DialogField]:
         ),
         DialogField(
             "sphere",
-            "Consulting a magical armillary sphere (halved)",
+            "Magical armillary sphere (halved)",
             "check",
             False,
             show_if=duration,
         ),
         DialogField(
             "calm",
-            "Checked over a Diameter (a simple die)",
+            "Checked over a Diameter (simple die)",
             "check",
             False,
             show_if=duration,

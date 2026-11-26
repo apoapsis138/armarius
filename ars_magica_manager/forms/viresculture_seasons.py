@@ -77,9 +77,8 @@ def fields(plan: SeasonPlan | None, activity_is: ActivityIs) -> list[DialogField
             stirpes_text(plan.more_stirpes) if plan and ours else "",
             placeholder="e.g. Second rooster: 10; Hen of Virtue: 10",
             show_if=activity_is(vc.VITALIZE, vc.INVIGORATE),
-            hint="Several in one season (Multiple Laboratory Activities, DE "
-            "p. 264): Vitalizing, the Total must finish them all; Invigorating "
-            "shares its Total among them, all of the one Form (LoH p. 75).",
+            hint="Several in one season (DE p. 264): Vitalizing's Total must finish "
+            "them all; Invigorating shares its Total, all of one Form (LoH p. 75).",
         ),
         DialogField(
             "stirps_form",

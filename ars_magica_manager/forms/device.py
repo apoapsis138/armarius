@@ -496,9 +496,8 @@ def _device_holder_fields(
             "select",
             base.granted_by,
             options=[("No", ""), *pairs(ITEM_VIRTUES)],
-            hint="Minor Enchantments (25 levels a Virtue, no power over 30), a "
-            "magus's Masterpiece (one lesser enchantment) or a Redcap's 50 "
-            "levels (DE pp. 97-98, 105).",
+            hint="Minor Enchantments (25 levels a Virtue, none over 30), a Masterpiece "
+            "(one lesser enchantment) or a Redcap's 50 levels (DE pp. 97-98, 105).",
         ),
     ]
 
@@ -620,9 +619,9 @@ def _arithmetic_device_field(base: EnchantedDevice) -> DialogField:
         ],
         show_if=_is_type(INVESTED),
         hint=(
-            "A Numerologist's Book (lesser 8 pawns, +4; greater 16, +8; at most "
-            "Artes Liberales) adds to its maker's Rotes and architecture; a "
-            "component's Lab Totals add the book (TMRE pp. 91-98)."
+            "A Numerologist's Book (lesser 8 pawns, +4; greater 16, +8; at most Artes "
+            "Liberales) adds to Rotes, architecture and a component's Lab Totals (TMRE "
+            "pp. 91-98)."
         ),
     )
 
@@ -651,8 +650,8 @@ def _verditius_mystery_fields(base: EnchantedDevice) -> list[DialogField]:
             options=_rune_options(TECHNIQUES),
             show_if=_verditius_invested,
             hint=(
-                "Verditius Elder Runes: doubles that Art for its effects, +5 to "
-                "each effect's level, a pawn of the Art's vis (HoH:MC p. 127)."
+                "Verditius Elder Runes: doubles that Art for its effects, +5 to each "
+                "effect's level, a pawn of its vis (HoH:MC p. 127)."
             ),
         ),
         DialogField(
@@ -675,9 +674,9 @@ def _verditius_mystery_fields(base: EnchantedDevice) -> list[DialogField]:
             ],
             show_if=_verditius_invested,
             hint=(
-                "Attuned: holds the maker's highest Technique + Form + "
-                "Philosophiae + Craft. Automaton: its Capacity is its Magic "
-                "Might. Both add the maker's Hubris (HoH:MC pp. 128-135)."
+                "Attuned: the maker's best Technique + Form + Philosophiae + Craft. "
+                "Automaton: Capacity is its Magic Might. Both add Hubris (HoH:MC pp. "
+                "128-135)."
             ),
         ),
     ]

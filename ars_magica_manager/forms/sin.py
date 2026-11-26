@@ -186,7 +186,7 @@ def influence_fields(character: Character) -> list[DialogField]:
         ),
         DialogField(
             "stranger",
-            "The target is a stranger to them",
+            "Target is a stranger to them",
             "check",
             False,
             show_if=_is_person,

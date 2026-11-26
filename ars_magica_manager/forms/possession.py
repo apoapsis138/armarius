@@ -570,7 +570,7 @@ def contested_fields(entry: Any) -> list[DialogField]:
         ),
         DialogField(
             "dwindling",
-            "Dwindling Resource (gone in 10 years)",
+            "Dwindling (gone in 10 years)",
             "check",
             bool(attr(entry, "dwindling", False)),
         ),

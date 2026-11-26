@@ -150,7 +150,7 @@ def ars_fields(saga: Saga, character: Character) -> list[DialogField]:
         ),
         DialogField(
             "deflect",
-            "Deflecting it before it takes effect",
+            "Deflecting it before it lands",
             "check",
             False,
             hint="First beat its Initiative on Quickness + Finesse.",
@@ -415,7 +415,7 @@ def bargain_fields(character: Character) -> list[DialogField]:
         DialogField("faerie", "The faerie", "text", "", required=True),
         DialogField(
             "wants",
-            "First work out what it wants",
+            "First work out its wish",
             "check",
             False,
             hint="Intelligence + Faerie Lore after some trial bargaining.",
@@ -430,7 +430,7 @@ def bargain_fields(character: Character) -> list[DialogField]:
         ),
         DialogField(
             "wants_specialty",
-            "The Sympathy Trait as Faerie Lore's specialty",
+            "Trait as Faerie Lore specialty",
             "check",
             False,
             hint="Adds the Trait, but the die is a stress die and may botch.",
@@ -452,7 +452,7 @@ def bargain_fields(character: Character) -> list[DialogField]:
         ),
         DialogField(
             "bargain_specialty",
-            "The Sympathy Trait as Bargain's specialty",
+            "Trait as Bargain specialty",
             "check",
             True,
             hint="Adds the Trait; a stress die that may botch.",
@@ -460,7 +460,7 @@ def bargain_fields(character: Character) -> list[DialogField]:
         ),
         DialogField(
             "trait",
-            "The Sympathy Trait that fits it",
+            "Sympathy Trait that fits it",
             "select",
             names[0] if names else "",
             options=pairs(names),
@@ -469,7 +469,7 @@ def bargain_fields(character: Character) -> list[DialogField]:
         ),
         DialogField(
             "new_trait",
-            "The -3 Sympathy Trait they gain",
+            "-3 Sympathy Trait they gain",
             "text",
             "",
             hint="Named for the faerie, such as Oak Maidens.",
@@ -721,7 +721,7 @@ def offer_fields(saga: Saga, character: Character) -> list[DialogField]:
         ),
         DialogField(
             "spend_fable",
-            "Spend another fable point on the roll",
+            "Spend another fable point",
             "check",
             False,
             hint="+ their fable score.",
@@ -730,9 +730,7 @@ def offer_fields(saga: Saga, character: Character) -> list[DialogField]:
     if academe:
         fields += [
             DialogField("artistic_reputation", "Artistic Reputation", "int", 0),
-            DialogField(
-                "patron_might", "Might bequeathed by a Faerie Patron", "int", 0
-            ),
+            DialogField("patron_might", "Might from a Faerie Patron", "int", 0),
         ]
     return fields
 

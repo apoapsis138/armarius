@@ -500,9 +500,9 @@ def bond_power_fields(power: BondPower | None) -> list[DialogField]:
             "Work out the modified level",
             "check",
             bool(attr(power, "worked_out", False)),
-            hint="Unticked, Level is the modified level as typed; ticked, it "
-            "is the effect level and uses, Penetration and the ticks below "
-            "are added (DE pp. 256-258, 267-268).",
+            hint="Unticked: Level is the modified level typed. Ticked: it's the effect "
+            "level, with uses, Penetration and the ticks below added (DE pp. "
+            "256-258, 267-268).",
         ),
         mod("maintains_concentration", "Maintains concentration (+5)"),
         mod("environmental_trigger", "Environmental trigger (+3)"),

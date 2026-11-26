@@ -129,7 +129,7 @@ def ship_fields(
         ),
         DialogField(
             "galley",
-            "A galley (oars; can ram and shear oars)",
+            "Galley (oars; can ram and shear)",
             "check",
             attr(ship, "galley", False),
         ),
@@ -180,7 +180,7 @@ def ship_fields(
         ),
         DialogField(
             "close_to_home",
-            "Raiding close to home (16 men a quarter ton)",
+            "Raiding near home (16 men per ¼ ton)",
             "check",
             attr(ship, "close_to_home", False),
         ),

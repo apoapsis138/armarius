@@ -419,9 +419,8 @@ class Curantis(core.Step):
                 options=options,
                 allow_blank=True,
                 placeholder="(none appointed)",
-                hint="Voted in until the next meeting, usually unopposed: the "
-                "elders agree the single candidate beforehand. No one serves "
-                "two terms running.",
+                hint="Voted in until the next meeting, usually unopposed as the elders "
+                "agree a candidate beforehand. No one serves two terms running.",
             ),
             DialogField(
                 "notary",

@@ -304,7 +304,7 @@ A charge whose words name a low crime of the Peripheral Code says so too
 - **Against** is the magus it's declared on. It names one magus, so to war
   on a covenant, declare on each of its magi.
 - **Filed** is the season it arrived.
-- **Arrived at the full moon of month** is which of the season's three
+- **Arrived at the full moon of** is which of the season's three
   full moons (1 to 3).
 
 The war begins at the next full moon and lasts until the one after. That
@@ -351,7 +351,7 @@ over, **War's End** records how (see [War's End](help:wars-end)).
 
 **Spell traces.** A charge, motion, appeal or March can record a spell
 trace found as evidence. Give **Spell trace: the spell's level**, its
-**Duration**, whether it was **a Ritual**, and **months since it ended**,
+**Duration**, whether it was **a Ritual**, and **Spell trace: months since ending**,
 blank while the spell is still active. The details give the trace's
 magnitude now (HoH: True Lineages p. 71; Hooks p. 83):
 
@@ -935,7 +935,7 @@ the library for credit.
 
 Reading what is found takes a season of the magus's credit, unless
 they're exempt. That's everything but lab notes and the records. Untick
-**They read what is found this season** to search without reading. The
+**They read what's found this season** to search without reading. The
 loan then covers no season until one is paid. A magus with no credit left
 can't read, so Contribute first.
 

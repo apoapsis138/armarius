@@ -1185,7 +1185,7 @@ has them:
     a pawn for every 10.
   - With Hermetic Alchemy, **Shape & material** adds the vessel's bonuses,
     up to Magic Theory.
-- **A dark or sinister effect** (Chthonic Magic). Tick it for such work.
+- **Dark or sinister (Chthonic Magic)**. Tick it for such work.
   The magus's Chthonic Magic then stands in for Magic Theory (Realms of
   Power: The Infernal p. 123).
 

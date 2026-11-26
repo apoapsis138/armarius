@@ -98,7 +98,7 @@ def turbulence_fields(saga: Saga, character: Character) -> list[DialogField]:
         ),
         DialogField(
             "aegis",
-            "Aegis of the Hearth they had no part in",
+            "Aegis they had no part in",
             "int",
             0,
             hint="Its level: half comes off the incurring roll (0: none, or they took "
@@ -127,7 +127,7 @@ def turbulence_fields(saga: Saga, character: Character) -> list[DialogField]:
         ),
         DialogField(
             "gift_roll",
-            "A storyguide character: roll for losing the Gift",
+            "Storyguide character: roll Gift loss",
             "check",
             False,
             show_if=_lab,

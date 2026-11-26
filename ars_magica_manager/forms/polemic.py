@@ -537,9 +537,8 @@ def argument_fields(
             attr(argument, "ability", rules.SUGGESTED_ABILITIES[0]),
             options=pairs(abilities),
             required=True,
-            hint="Any knowledge Ability; the book suggests the first three, Area "
-            "Lore with the troupe's agreement (p. 28). Every text on the "
-            "argument is written on it.",
+            hint="Any knowledge Ability; the first three suggested, Area Lore by troupe"
+            " agreement (p. 28). Every text on the argument is on it.",
         ),
         DialogField(
             "case_id",

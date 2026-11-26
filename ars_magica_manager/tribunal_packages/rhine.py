@@ -686,7 +686,7 @@ def challenge_form(saga: Saga, tribunal: Tribunal) -> Form:
             ),
             DialogField(
                 "spell",
-                "Has invented a spell of 7th magnitude",
+                "Invented a 7th-magnitude spell",
                 "check",
                 bool(able and spell_of({"challenger": able[0].id}).get("spell")),
                 hint="Ticked for you when one they invented is recorded.",

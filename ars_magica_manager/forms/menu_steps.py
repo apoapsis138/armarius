@@ -238,9 +238,8 @@ def export_fields(record: transfer.Record, folder: Path) -> list[DialogField]:
             "File",
             "text",
             str(folder / transfer.default_file_name(record)),
-            hint="What it holds travels with it: a character's familiar, devices, "
-            "books and Diary; a laboratory's books and devices. Import it into "
-            "another saga with More's Import on that saga.",
+            hint="Its contents travel with it: a character's familiar, devices, books "
+            "and Diary; a lab's books and devices. Import it with More's Import.",
         ),
     ]
     if kind == transfer.COVENANT:
@@ -447,7 +446,7 @@ def magic_fields() -> list[DialogField]:
         ),
         DialogField(
             "made",
-            "Pounds the magic makes a year",
+            "Pounds the magic makes yearly",
             "optint",
             None,
             placeholder="(the gain: Projected less Current)",
@@ -994,9 +993,9 @@ def export_saga(saga: Saga, folder: Path, deliver: Deliver | None = None) -> For
                 "File",
                 "text",
                 str(folder / transfer.saga_file_name(saga)),
-                hint="Every covenant, laboratory, character and familiar, with "
-                "their books, devices and the saga's own spells and house rules. "
-                "Import it into another saga with Import, A Whole Saga.",
+                hint="Every covenant, laboratory, character and familiar, with books, "
+                "devices, spells and house rules. Import it with Import, A Whole "
+                "Saga.",
             ),
         ],
         apply,

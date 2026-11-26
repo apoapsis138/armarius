@@ -159,7 +159,7 @@ def _award_fields(of: str) -> list[DialogField]:
         ),
         DialogField(
             "in_folio",
-            "In a folio (twice the points)",
+            "In a folio (double points)",
             "check",
             False,
             show_if=_in_text(of),

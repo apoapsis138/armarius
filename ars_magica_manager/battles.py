@@ -286,10 +286,9 @@ def fields(
             options=[(escape(c.name), c.id) for c in saga.covenants],
             allow_blank=True,
             placeholder="(no covenant's land)",
-            hint="The covenant whose land an army ravaged: those who return "
-            "to it from the campaign take -2 on their next Aging roll; in "
-            "extreme cases the land may take an Infernal aura, the "
-            "storyguide's (Lords of Men p. 103).",
+            hint="The covenant whose land was ravaged: those returning to it take -2 on"
+            " their next Aging roll; in extreme cases an Infernal aura, the "
+            "storyguide's call (LoM p. 103).",
         ),
     ]
     for index, label in enumerate(("First army", "Second army")):
@@ -301,9 +300,8 @@ def fields(
                 "select",
                 _linked(side),
                 options=_army_options(saga),
-                hint="A lord, town or other power of the Region, or a covenant: "
-                "the battle shows on a lord's Fief tab and is written in each "
-                "side's Diary.",
+                hint="A lord, town, other Region power or covenant: the battle shows on"
+                " a lord's Fief tab and in each side's Diary.",
             ),
             DialogField(
                 f"name_{index}",

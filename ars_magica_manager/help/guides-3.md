@@ -84,7 +84,7 @@ The saga is saved in your [save folder](help:saga-picker) as soon as it's made, 
 6. **Choose the medallions.** **Medallion style** chooses how the desktop draws the seasons as medallions, on the band at the top of every page, the Seasons page, the calendars and a siege's page. Stained glass is the default, and the others include a wax seal and Limoges enamel.
 7. **Say what an unplanned season gives.** **Magi / Companions / Grogs with nothing planned** set what a season left unplanned gives when it's advanced, Work / Exposure (the default) or Nothing. See [Unplanned seasons](help:advance-unplanned).
 <!-- tui -->
-8. **Name idle characters, if you like.** **Be notified when and which non-player characters do not have seasonal activity**, off by default, makes Advance Season name non-player characters with nothing planned too.
+8. **Name idle characters, if you like.** **Notify me of idle non-player characters**, off by default, makes Advance Season name non-player characters with nothing planned too.
 9. **Set the Story Flaw spotlight.** **Story Flaw spotlight (years)**, 3 by default and 0 for off, is how long a player character's Story or Major Personality Flaw may go without a told story before [Needs You](help:section-attention) names them.
 10. **Save.** The saga's summary now lists your books and the optional rules turned on.
 <!-- /tui -->
@@ -128,11 +128,11 @@ You can come back to these settings at any time.
 2. **Fill in the form.** Give a Name, a Type and the Covenant, and a Template, or None to build the character step by step (see [New Character](help:character-group-new)).
 <!-- tui -->
 3. **Create.** Choose Create. The character's [sheet](help:character) opens, and their node appears under Characters.
-4. **Add a laboratory.** Choose the covenant or its Laboratories group, press `n`, then `l` for New Laboratory. The form asks for a Name, a Size, the Covenant, and whether it's **One of the covenant's starting labs**, ticked for you while the covenant is In Creation. See [Laboratories group](help:laboratory-group).
+4. **Add a laboratory.** Choose the covenant or its Laboratories group, press `n`, then `l` for New Laboratory. The form asks for a Name, a Size, the Covenant, and whether it's **A covenant's starting lab**, ticked for you while the covenant is In Creation. See [Laboratories group](help:laboratory-group).
 <!-- /tui -->
 <!-- gui -->
 3. **Create.** Choose Create. A character built step by step opens on their Creation Worksheet, and one made from a template opens on their [sheet](help:character). Either way, their card joins the covenant's People.
-4. **Add a laboratory.** Open the covenant's **Laboratories** chapter and click the **New Laboratory** card. The form asks for a Name, a Size, the Covenant, and whether it's **One of the covenant's starting labs**, ticked for you while the covenant is In Creation. See [Laboratories group](help:laboratory-group).
+4. **Add a laboratory.** Open the covenant's **Laboratories** chapter and click the **New Laboratory** card. The form asks for a Name, a Size, the Covenant, and whether it's **A covenant's starting lab**, ticked for you while the covenant is In Creation. See [Laboratories group](help:laboratory-group).
 <!-- /gui -->
 
 ### Give a magus their laboratory

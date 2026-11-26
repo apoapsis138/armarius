@@ -360,7 +360,7 @@ def invoke_fields(saga: Saga, character: Character) -> list[DialogField]:
             ),
             DialogField(
                 "own_relic_of_saint",
-                "Their relic is of this saint",
+                "Their relic is this saint's",
                 "check",
                 False,
                 show_if=lambda v: v.get("relic") == OWN_RELIC,
@@ -961,7 +961,7 @@ def piety_fields(character: Character) -> list[DialogField]:
         ),
         DialogField(
             "works_done",
-            "The season of charitable works is done",
+            "Charitable works season done",
             "check",
             False,
             hint="Then: Piety experience and a Faith Point.",

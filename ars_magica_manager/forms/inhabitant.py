@@ -64,7 +64,7 @@ def inhabitant_fields(
         fields.append(
             DialogField(
                 "on_council",
-                "On the council, with a full vote",
+                "On the council, full vote",
                 "check",
                 entry.on_council if entry else False,
                 hint="An unGifted council member counts 0 in Base Loyalty's "
@@ -724,7 +724,7 @@ def loyalty_fields(saga: Saga, covenant: Covenant) -> list[DialogField]:
         ),
         DialogField(
             "_lc",
-            "Living Conditions (from the covenant's Living Conditions (Mundane))",
+            "Living Conditions (the covenant's Mundane)",
             "info",
             inh.living_conditions_loyalty(covenant),
         ),
@@ -757,8 +757,7 @@ def loyalty_fields(saga: Saga, covenant: Covenant) -> list[DialogField]:
         ),
         DialogField(
             "_sp",
-            "Specialists (Presence + Ability of Steward/Chamberlain/Turb "
-            "Captain/Autocrat)",
+            "Specialists (Presence + Ability)",
             "info",
             inh.specialists_loyalty(saga, covenant),
         ),
@@ -773,7 +772,7 @@ def loyalty_fields(saga: Saga, covenant: Covenant) -> list[DialogField]:
         ),
         DialogField(
             "_rp",
-            "Reputation (-5 per point of a known bad Reputation)",
+            "Reputation (-5 per bad point)",
             "info",
             inh.reputation_loyalty(covenant),
         ),

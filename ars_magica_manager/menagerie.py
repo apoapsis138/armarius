@@ -850,7 +850,7 @@ def breed_fields(
         DialogField("similar", "Similar animals near (+1)", "check", False),
         DialogField(
             "only",
-            "The only pair of their kind (−3)",
+            "Only pair of their kind (−3)",
             "check",
             only,
             hint="Ticked when no other beast of their animal, of any breed, is "

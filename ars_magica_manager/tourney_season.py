@@ -56,7 +56,7 @@ def tourney_fields(character: Character) -> list[DialogField]:
         ),
         DialogField(
             "artist",
-            "An artist's record: its aesthetic quality",
+            "Artist's record: aesthetic quality",
             "optint",
             None,
             show_if=_hosting,

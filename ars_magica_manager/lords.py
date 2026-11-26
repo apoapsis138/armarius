@@ -363,7 +363,7 @@ def _affinity_fields(d: dict[str, Any]) -> list[DialogField]:
         ),
         DialogField(
             "affinity_divided",
-            "Their country is divided among affinities",
+            "Their country is divided",
             "check",
             bool(d.get("affinity_divided")),
             hint="Halves the bonus.",

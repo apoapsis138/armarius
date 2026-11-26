@@ -168,9 +168,8 @@ def _secret_fields(saga: Saga, who: str) -> list[DialogField]:
             "check",
             False,
             show_if=lambda values: str(values.get("what") or "").startswith(_RECORD),
-            hint="The players come to know of the record, and the ticked Secrets "
-            "are revealed this season, each with its line in the Diary, as "
-            "Reveal does. Unticked, nothing changes for the troupe.",
+            hint="The players learn of the record, and the ticked Secrets are revealed "
+            "this season, each in the Diary, as Reveal does. Unticked: no change.",
         ),
     ]
 

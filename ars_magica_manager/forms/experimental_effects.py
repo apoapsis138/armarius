@@ -93,9 +93,8 @@ def effect_fields(existing: ExperimentalEffect | None) -> list[DialogField]:
             "Potency (steps)",
             "int",
             attr(existing, "potency", 0),
-            hint="Each step is 5 points of the Lab Total behind it (1 of a "
-            "Longevity Ritual's modifier): the app's reading, as the rules "
-            "give no size.",
+            hint="Each step is 5 points of the Lab Total behind it (1 of a Longevity "
+            "modifier): the app's reading; the rules give no size.",
         )
     )
     return fields
@@ -147,8 +146,8 @@ def effects_field(effects: Sequence[ExperimentalEffect], name: str = "") -> Dial
             effect_form,
             f"Experimental effects: {escape(name)}" if name else "Experimental effects",
         ),
-        hint="What experimenting left on it, warts and all. A new Range, "
-        "Duration or Target is given to it on saving; its level never changes.",
+        hint="What experimenting left on it. A new Range, Duration or Target is applied"
+        " on saving; its level never changes.",
     )
 
 

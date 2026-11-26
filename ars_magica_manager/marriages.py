@@ -341,7 +341,7 @@ def _marriage_fields(saga: Saga, marriage: Marriage) -> list[DialogField]:
         ),
         DialogField(
             "patrimony",
-            "The eldest son's patrimony, kept out (French custom)",
+            "Eldest son's patrimony (French custom)",
             "int",
             m.patrimony,
             show_if=family(NOBLE),
@@ -402,13 +402,13 @@ def _marriage_fields(saga: Saga, marriage: Marriage) -> list[DialogField]:
         ),
         DialogField(
             "her_consent",
-            "She consents (needed for the sacrament)",
+            "She consents (for the sacrament)",
             "check",
             m.her_consent,
         ),
         DialogField(
             "father_consent",
-            "Her father consents (where custom asks it)",
+            "Her father consents (by custom)",
             "check",
             m.father_consent,
         ),

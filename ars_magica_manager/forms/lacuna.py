@@ -163,7 +163,7 @@ def lacuna_fields(saga: Saga, magus: Character) -> list[DialogField]:
         ),
         DialogField(
             "target_in_dominion",
-            "The target is within the Dominion",
+            "Target within the Dominion",
             "check",
             False,
             show_if=in_lacuna,

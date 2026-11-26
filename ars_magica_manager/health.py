@@ -92,7 +92,7 @@ def harm_fields(saga: Saga) -> list[DialogField]:
         ),
         DialogField(
             "coverage",
-            "How much it covers (heat and corrosion)",
+            "How much it covers (heat, corrosion)",
             "select",
             "1",
             options=[(name, str(n)) for name, n in harm.COVERAGE],
@@ -148,7 +148,7 @@ def harm_fields(saga: Saga) -> list[DialogField]:
         *(academe_fields() if academe else []),
         DialogField(
             "ease",
-            "Ease Factor of the Stamina check",
+            "Stamina check Ease Factor",
             "int",
             6,
             show_if=agents,
@@ -185,7 +185,7 @@ def harm_fields(saga: Saga) -> list[DialogField]:
         ),
         DialogField(
             "periods",
-            "For how many of those periods",
+            "For how many periods",
             "int",
             1,
             show_if=_kind_is(harm.DEPRIVATION),
@@ -405,7 +405,7 @@ def recovery_fields(
         fields += [
             DialogField(
                 "intervene",
-                "Surgical intervention when a roll fails",
+                "Surgery when a roll fails",
                 "check",
                 False,
                 hint="Surgery against 9: it holds the wound, but leaves a lasting "

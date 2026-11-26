@@ -39,13 +39,12 @@ def fields(plan: SeasonPlan | None, activity_is: ActivityIs) -> list[DialogField
             "optint",
             plan.book_level if plan and ours else None,
             show_if=shown,
-            hint="Fitting the potion's form and function (Creo, Corpus, "
-            "longevity, healing) or the alchemist's own magic; no ingredient "
-            "counts above Magic Theory (TMRE p. 42).",
+            hint="Fitting the potion's form and function, or the alchemist's own magic;"
+            " none counts above Magic Theory (TMRE p. 42).",
         ),
         DialogField(
             "elixir_devised",
-            "They devised it themselves (Vulgar Alchemy)",
+            "Self-devised (Vulgar Alchemy)",
             "check",
             bool(plan.devised) if plan and ours else False,
             show_if=shown,

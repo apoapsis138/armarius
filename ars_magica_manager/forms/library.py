@@ -393,9 +393,8 @@ def _book_kind_fields(
             "An exhibit (hundreds of objects)",
             "check",
             bool(attr(book, "exhibit", False)),
-            hint="A realia exhibit of hundreds of objects counts as a lab's "
-            "Study Requirement or Bonus for a reader whose Art is under 15 "
-            "(Against the Dark p. 61); a smaller realia doesn't.",
+            hint="A realia exhibit of hundreds of objects is a lab Study Requirement or"
+            " Bonus for an Art under 15 (Against the Dark p. 61).",
             show_if=lambda v: (
                 shows.book_type(v) == "Tractatus" and v.get("opus") == book_kinds.REALIA
             ),
@@ -567,9 +566,9 @@ def _book_authorship_fields(
                     "Holy (not Hermetic)",
                     "check",
                     bool(attr(book, "holy", False)),
-                    hint="Written in holy magic: a holy magus learns from it "
-                    "at the full total, not halved (RoP: The Divine p. 67). A "
-                    "text by a holy magus of the saga is holy anyway.",
+                    hint="Holy magic: a holy magus learns from it at the full total, "
+                    "not halved (RoP: The Divine p. 67); a saga holy magus's text "
+                    "is holy anyway.",
                 )
             ]
             if attr(book, "holy", False) or hybrid.any_holy_magus(saga)
