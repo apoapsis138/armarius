@@ -13,6 +13,7 @@ import pytest
 pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
+from chronicle_support import evening_with_damage, line_of, whole, written
 from PySide6.QtGui import QColor
 from PySide6.QtWidgets import QApplication, QLabel, QToolButton, QWidget
 
@@ -378,6 +379,55 @@ def test_a_damaged_chronicle_hides_the_pane_and_the_page_still_works(
     assert not window.chronicle_pane.isVisibleTo(window)
     assert told and told[-1] == "Chronicle"
     window.close()
+
+
+@pytest.mark.usefixtures("app")
+def test_entries_caught_up_together_each_draw_one_card() -> None:
+    """Another process (the listener for a seat) wrote a Strike and then a
+    Message: caught up at once, the Strike redraws the cards, already
+    holding the Message, and the Message isn't drawn a second time."""
+    pane, saga, session, book, _ran = _pane()
+    _roll(saga, session, book, 5)
+    other = chronicle.Chronicle(book.path, [])
+    other.refresh()
+    chronicle.strike(other, session, 2, "Typo", by=HOST, saga=saga)
+    chronicle.message(other, saga, session, "Evening.", by="ana")
+
+    book.refresh()
+
+    assert pane.lines().count("Ana: Evening.") == 1
+
+
+def _cards(who: str, extra: str) -> list[str]:
+    """The pane's cards, as `who` reads an evening with one entry of each
+    kind and then its damaged variants: all of them (`extra` "all"), only
+    those still whole ("whole"), or all of them told one by one as they
+    come ("told")."""
+    saga, session, book, variants = evening_with_damage()
+    written(saga, session, book, variants if extra == "all" else whole(variants))
+    if extra != "told":
+        pane = ChroniclePane(SCRIPTORUM, lambda _command: None)
+        pane.attach(saga, session, chronicle.read(saga, session), who)
+        return pane.lines()
+    written(saga, session, book, [])
+    book = chronicle.read(saga, session)
+    pane = ChroniclePane(SCRIPTORUM, lambda _command: None)
+    pane.attach(saga, session, book, who)
+    with book.path.open("a", encoding="utf-8") as out:
+        out.write("".join(f"{line_of(e)}\n" for e in variants))
+    book.refresh()
+    return pane.lines()
+
+
+@pytest.mark.usefixtures("app")
+@pytest.mark.parametrize("who", [HOST, "ana"])
+def test_the_pane_passes_over_a_damaged_entry_of_any_kind(who: str) -> None:
+    """Drawn whole or told as it comes, a damaged entry of any kind draws
+    no card and breaks none: the cards are those of the whole entries."""
+    expected = _cards(who, "whole")
+
+    assert _cards(who, "all") == expected
+    assert _cards(who, "told") == expected
 
 
 @pytest.mark.usefixtures("app")

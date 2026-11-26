@@ -1,0 +1,1 @@
+**A damaged Chronicle entry no longer breaks the Chronicle.** In the Virtual Tabletop preview, an entry whose contents can't be read, in the Chronicle's file or sent by a host, is passed over: the pane, Read the Chronicle, Handouts and Remote seats show the rest. Entries arriving together no longer draw a card twice in the desktop's Chronicle pane.

@@ -120,16 +120,16 @@ def test_a_session_never_begun_has_no_chronicle_to_read() -> None:
 
 @pytest.mark.usefixtures("preview")
 def test_the_chronicle_shows_only_what_its_reader_may_see() -> None:
-    """The host's own view goes through the audience filter: a Private roll
-    of Ana's is not shown to the host when Ana's storyguide is another."""
+    """The host's own view goes through the audience filter: an entry seen
+    by Ana alone is not shown to the host when Ana's storyguide is another."""
     saga = _saga()
     session = ss.in_order(saga)[0]
     book = chronicle.begin(saga, session, by=chronicle.storyguide_of(session))
     book.add(
-        chronicle.ROLL,
+        chronicle.OUTCOME,
         "ana",
         chronicle.chosen("ana"),
-        {"secret": "MARKER"},
+        {"request": 1, "text": "MARKER"},
     )
     session.storyguide_id = "ana"
 
