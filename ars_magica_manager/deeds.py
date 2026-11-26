@@ -434,9 +434,19 @@ def turned_off(character: Character) -> list[str]:
 
 def defaults_off(character: Character) -> list[str]:
     """Every interest that applies to `character` and its Default Interests
-    leave out."""
+    leave out, but never one its record keeps on (CHARACTER_GATES): kept
+    as its own, an interest the player has only ever seen on stays on
+    once the record no longer holds it."""
     on = {interest for interest, _ in default_interests.defaults(character)}
-    return [i for i in OPTIONAL if i not in on and applies(character, i)]
+    return _not_kept_on(
+        character, [i for i in OPTIONAL if i not in on and applies(character, i)]
+    )
+
+
+def _not_kept_on(character: Character, off: list[str]) -> list[str]:
+    """Those of `off` that `character`'s record doesn't keep on."""
+    gates = CHARACTER_GATES
+    return [i for i in off if i not in gates or not gates[i].kept_on(character)]
 
 
 def keep_interests(character: Character) -> None:
@@ -449,12 +459,7 @@ def keep_interests(character: Character) -> None:
 def interests_off(character: Character) -> list[str]:
     """The interests that are off for `character`: those turned off
     (turned_off), but never one its record keeps on (CHARACTER_GATES)."""
-    gates = CHARACTER_GATES
-    return [
-        i
-        for i in turned_off(character)
-        if i not in gates or not gates[i].kept_on(character)
-    ]
+    return _not_kept_on(character, turned_off(character))
 
 
 def covenant_interests_off(covenant: Covenant) -> list[str]:

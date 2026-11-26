@@ -635,7 +635,7 @@ def magus_ops(saga: Saga, covenant: Covenant) -> SectionOps:
     def add() -> Command:
         def apply(values: dict[str, Any]) -> None:
             magus = creation.add_character(saga, values["name"], "magus", covenant.id)
-            magus.in_creation = False
+            creation.set_in_creation(saga, magus, False)
             _set_magus(magus, values)
 
         return Form("Add a Magus", lambda: magus_fields(None), apply, save_label="Add")

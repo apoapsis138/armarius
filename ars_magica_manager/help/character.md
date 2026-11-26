@@ -5080,9 +5080,9 @@ Creation they follow its type, until you save Edit Interests, which makes
 them your own. Changing its type while In Creation goes back to the new
 type's defaults, and moving to In Play keeps them as they are. A covenant
 starts with everything ticked, and characters already saved keep what
-they had. Ticking an interest doesn't offer what the rules don't. An Artist's Career still
-needs a Craft or Profession, and every action still needs its book in
-play.
+they had. Ticking an interest doesn't offer what the rules don't. An
+Artist's Career still needs a Craft or Profession, and every action still
+needs its book in play.
 
 ## Planning
 <!-- help: tab-planning -->

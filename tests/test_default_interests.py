@@ -12,11 +12,13 @@ from ars_magica_manager import (
     creation,
     deeds,
     default_interests,
+    storage,
 )
 from ars_magica_manager import grog_templates as gt
-from ars_magica_manager.commands import Confirm
+from ars_magica_manager.commands import Confirm, Form
 from ars_magica_manager.forms import character as character_forms
 from ars_magica_manager.forms import interests, menu_steps, more
+from ars_magica_manager.forms import world as world_forms
 from ars_magica_manager.models import (
     SKETCH,
     Agent,
@@ -73,6 +75,19 @@ def test_a_save_from_before_defaults_keeps_its_own_interests(in_creation: bool):
     assert deeds.interests_off(old) == [deeds.SCHOLARLY]
 
 
+def test_a_save_whose_interests_chosen_isnt_a_yes_or_no_is_refused():
+    with pytest.raises(ValueError, match="interests_chosen"):
+        storage.saga_from_data(
+            {
+                "id": "s",
+                "name": "S",
+                "characters": [
+                    {"id": "k", "name": "K", "type": "grog", "interests_chosen": "no"}
+                ],
+            }
+        )
+
+
 def test_a_character_made_in_code_keeps_every_interest_on():
     made = Character(id="p", name="P", type="grog", in_creation=True)
     assert made.interests_chosen and deeds.interests_off(made) == []
@@ -103,6 +118,50 @@ def test_a_record_still_keeps_its_interest_on_over_the_defaults():
     grog = _unchosen("grog")
     grog.agents = [Agent(name="A")]
     assert deeds.AGENTS not in deeds.interests_off(grog)
+
+
+def _with_agent(character: Character) -> Character:
+    character.agents = [Agent(name="A")]
+    return character
+
+
+def test_keeping_the_defaults_keeps_what_a_record_held_on():
+    saga = Saga(id="s", name="S")
+    grog = _with_agent(creation.add_character(saga, "New", "grog", None))
+    creation.set_in_creation(saga, grog, False)
+    grog.agents = []
+    assert deeds.AGENTS not in deeds.interests_off(grog)
+
+
+def test_saving_edit_interests_keeps_what_a_record_held_on():
+    grog = _with_agent(_unchosen("grog"))
+    form = interests.interests_form(Saga(id="s", name="S"), grog, more.LABELS)
+    form.apply({f.key: f.value for f in form.fields()})
+    grog.agents = []
+    assert deeds.AGENTS not in deeds.interests_off(grog)
+
+
+def test_a_ready_to_play_template_keeps_what_a_record_holds_on():
+    template = character_templates.find("tpl_grizzled_veteran")
+    assert template is not None
+    saga = Saga(id="s", name="S", current_year=1220)
+    made = _with_agent(creation.add_character(saga, "New", "grog", None))
+    character_templates.apply(saga, made, template, {})
+    made.agents = []
+    assert deeds.AGENTS not in deeds.interests_off(made)
+    assert deeds.KNIGHTLY in deeds.interests_off(made)
+
+
+def test_a_sketch_covenants_new_magus_starts_with_the_magus_defaults():
+    saga = Saga(id="s", name="S")
+    covenant = creation.add_covenant(saga, "Fengheld")
+    add = world_forms.magus_ops(saga, covenant).add
+    assert add is not None
+    form = add()
+    assert isinstance(form, Form)
+    form.apply({f.key: f.value for f in form.fields()} | {"name": "Tytus"})
+    (magus,) = saga.characters
+    assert magus.interests_chosen and _on(magus) == ON["magus"]
 
 
 @pytest.mark.parametrize("why", ["chosen", "in play"])
@@ -145,6 +204,13 @@ def test_a_new_character_starts_with_its_defaults(character_type: CharacterType)
     made = creation.add_character(saga, "New", character_type, None)
     assert made.in_creation and not made.interests_chosen
     assert _on(made) == ON[character_type]
+
+
+def test_a_new_grog_made_an_animal_starts_with_the_animal_defaults():
+    saga = Saga(id="s", name="S")
+    hound = creation.add_character(saga, "Hound", "grog", None)
+    hound.animal = AnimalForm(species="Dog")
+    assert _on(hound) == [deeds.COVENFOLK]
 
 
 def _made_from(template: object) -> Character:

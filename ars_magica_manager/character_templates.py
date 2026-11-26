@@ -155,10 +155,10 @@ def apply(
     if template.house:
         c.hermetic.house = template.house
     c.description.biography = _biography(template)
-    c.in_creation = False
     # Ready to play: it starts with its Default Interests, kept as its own.
-    c.interests_off = deeds.defaults_off(c)
-    c.interests_chosen = True
+    c.in_creation, c.interests_chosen = True, False
+    deeds.keep_interests(c)
+    c.in_creation = False
 
 
 def _ability(entry: dict, values: dict[str, str]) -> Ability:
