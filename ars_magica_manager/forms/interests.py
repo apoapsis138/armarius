@@ -250,10 +250,11 @@ def defaults_text(character: Character) -> str:
     for interest, why in default_interests.defaults(character):
         if interest != default_interests.SESSION:
             by_source.setdefault(why, set()).add(interest)
-    return "\n".join(
+    lines = [
         f"From {_source(why)}: {', '.join(i for i in OPTIONAL if i in interests)}."
         for why, interests in by_source.items()
-    )
+    ]
+    return "\n".join(lines) or "None."
 
 
 def whose_text(character: Character) -> str:
@@ -262,7 +263,7 @@ def whose_text(character: Character) -> str:
     if deeds.following_defaults(character):
         return (
             "These are the defaults: they follow the character's type, House "
-            "and Virtues until you save Edit Interests."
+            "and Virtues and Flaws until you save Edit Interests."
         )
     if character.in_creation:
         return (

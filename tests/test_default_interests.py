@@ -319,6 +319,13 @@ def test_review_interests_says_where_each_default_comes_from(
     assert "every character" not in text
 
 
+def test_review_interests_says_when_the_session_is_the_only_default(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    monkeypatch.setattr(default_interests, "RULES", [])
+    assert "Reputation:\nNone.\n" in _review(_unchosen("magus"))
+
+
 def test_review_interests_says_whether_they_are_the_defaults_or_the_players():
     grog = _unchosen("grog")
     assert "follow the character's type, House and Virtues" in _review(grog)
