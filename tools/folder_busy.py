@@ -1,9 +1,9 @@
-"""Whether another thread's checks are running in this folder.
+"""Whether another run's checks are working in this folder.
 
     uv run python tools/folder_busy.py
 
-Threads share this folder, so a stash, pull, branch switch or reset
-changes the files under any check another thread is running, and its
+Several runs may share this folder, so a stash, pull, branch switch or reset
+changes the files under any check another run is making, and its
 result no longer means anything. `story_check.py` marks the folder busy
 while it runs (`marked`); run this before any of those git commands. It
 prints what is running and exits 1 while the folder is busy, and exits 0

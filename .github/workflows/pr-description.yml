@@ -26,7 +26,8 @@ jobs:
     timeout-minutes: 5
     steps:
       # The checker comes from main, so a pull request can't change what
-      # judges it or run its own code beside the BLOCKED_NAMES secret.
+      # judges it or run its own code beside the BLOCKED_NAMES and
+      # BLOCKED_TERMS secrets.
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           ref: ${{ github.base_ref }}
@@ -38,6 +39,7 @@ jobs:
           REPO: ${{ github.repository }}
           NUMBER: ${{ github.event.pull_request.number }}
           BLOCKED_NAMES: ${{ secrets.BLOCKED_NAMES }}
+          BLOCKED_TERMS: ${{ secrets.BLOCKED_TERMS }}
         run: |
           if [ ! -f tools/check_pr_body.py ]; then
             echo "main has no tools/check_pr_body.py yet; nothing to check with."

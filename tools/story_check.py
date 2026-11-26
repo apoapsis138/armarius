@@ -11,7 +11,7 @@ front-ends start). Each
 prints one line (ok, or the failing test names / the first lines of the
 tool's output), and the exit code is nonzero if any failed.
 
-The folder is marked busy while it runs (`folder_busy.py`), so a thread
+The folder is marked busy while it runs (`folder_busy.py`), so another run
 sharing it waits before a stash, pull, branch switch or reset. Its tests
 wait for this computer's test-runner turn (`runner_turns.py`), so runs
 from other worktrees don't compete for the CPU; the wait doesn't count
@@ -156,28 +156,30 @@ GOLDENS = (
 def goldens() -> int:
     """Regenerate both golden files at once; then show what changed."""
     env = {**os.environ, "UPDATE_GOLDEN": "1"}
-    processes = [
-        subprocess.Popen(
-            command,
-            cwd=ROOT,
-            env=env,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
-        )
-        for command in GOLDENS
-    ]
     bad = 0
-    for command, process in zip(GOLDENS, processes, strict=True):
-        output, _ = process.communicate()
-        name = command[-1]
-        if process.returncode == 0:
-            print(f"ok    {name}")
-        else:
-            bad += 1
-            print(f"FAIL  {name}\n{output.strip()[-800:]}")
+    # They run tests across the cores, so they take the computer's turn too.
+    with runner_turns.turn(f"story_check --goldens in {ROOT.name}", every=TURN_EVERY):
+        processes = [
+            subprocess.Popen(
+                command,
+                cwd=ROOT,
+                env=env,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+            )
+            for command in GOLDENS
+        ]
+        for command, process in zip(GOLDENS, processes, strict=True):
+            output, _ = process.communicate()
+            name = command[-1]
+            if process.returncode == 0:
+                print(f"ok    {name}")
+            else:
+                bad += 1
+                print(f"FAIL  {name}\n{output.strip()[-800:]}")
     _code, diff = run(["git", "diff", "--stat", "--", "tests/golden"])
     print(diff.strip() or "No golden changed.")
     print("Review the diff of tests/golden before committing.")
@@ -240,7 +242,7 @@ def main(argv: list[str]) -> int:
 
 
 if __name__ == "__main__":
-    # The folder is marked busy for the whole run, so another thread
+    # The folder is marked busy for the whole run, so another run
     # sharing it waits before a stash or pull (folder_busy.py).
     with marked("story_check " + " ".join(sys.argv[1:] or ["(slice)"])):
         sys.exit(main(sys.argv[1:]))

@@ -10,16 +10,18 @@ Exits 1 and prints one line per problem:
   may sit under a subheading of its own;
 - first-person narration (I, I'm, I've, I'd, I'll, me, my; not "I/O", nor
   "Me", Mentem's abbreviation);
-- a tool or agent name (Claude, Claude Code, subagent, an AI, coding or
-  review agent, Remote Control, tool call, skill invocation). A plain
-  "agent" passes, so the app's Agents can be named;
-- an attribution line (Co-Authored-By, "Generated with Claude", a
-  claude.ai/code link, an Anthropic noreply address), even inside code;
+- an attribution line (one starting Co-Authored-By: or "Generated with"),
+  even inside code;
 - a gendered pronoun, as tests/test_neutral_pronouns.py finds them in
   screen text, but for Herbam written as an Art ("(He)", "He 15");
+- a term listed in the BLOCKED_TERMS environment variable (comma
+  separated), outside code;
 - a name listed in the BLOCKED_NAMES environment variable (comma
-  separated), anywhere. The problem gives the name's place in the list,
-  never the name.
+  separated), anywhere.
+
+A blocked term or name is matched as a whole word or phrase, ignoring
+case, and the problem gives its place in its list, never the word itself:
+the lists are kept as repository secrets.
 
 Code spans and blocks are left out of the wording checks; quoted text (a
 `>` line or a "double-quoted" span, such as a book's words) is left out of
@@ -58,16 +60,7 @@ PRONOUN = re.compile(r"\b(he|him|his|she|her|hers|himself|herself)\b", re.IGNORE
 _FIRST_PERSON = re.compile(
     r"(?<![\w'’])I(?:['’](?:m|ve|d|ll))?(?![\w'’/])|\b(?:me|my|My)\b"
 )
-# Plain "agent" is left alone: the app has Agents.
-_TOOL_NAMES = re.compile(
-    r"\b(?i:claude code|claude|tool calls?|skill invocations?|subagents?"
-    r"|(?:ai|coding|review|reviewer) agents?)\b|\bRemote Control\b"
-)
-_ATTRIBUTION = re.compile(
-    r"^\W*co-authored-by:|^\W*generated with \[?claude|claude\.ai/code"
-    r"|noreply@anthropic\.com",
-    re.IGNORECASE,
-)
+_ATTRIBUTION = re.compile(r"^\W*(?:co-authored-by:|generated with\b)", re.IGNORECASE)
 #: Herbam's abbreviation, written as an Art is: "(He)" or "He 15".
 _HERBAM = re.compile(r"\(He\)|\bHe(?=\s*\d)")
 _HEADING = re.compile(r"^ {0,3}(#{1,6})[ \t]+(.+?)[ \t]*#*[ \t]*$")
@@ -137,13 +130,25 @@ def _heading_problems(body: str) -> Iterator[str]:
             yield f"empty section: {heading} (write None or n/a if it doesn't apply)"
 
 
-def _wording_problems(body: str) -> Iterator[str]:
+def _listed(words: Sequence[str]) -> list[tuple[int, re.Pattern[str]]]:
+    """Each listed word or phrase with its place in the list, as a
+    case-blind whole-word pattern."""
+    return [
+        (place, re.compile(rf"(?<!\w){re.escape(word.strip())}(?!\w)", re.IGNORECASE))
+        for place, word in enumerate(words, 1)
+        if word.strip()
+    ]
+
+
+def _wording_problems(body: str, blocked_terms: Sequence[str]) -> Iterator[str]:
+    terms = _listed(blocked_terms)
     for number, raw, in_code in _lines(body):
         if in_code:
             continue
         line = _CODE_SPAN.sub(" ", raw)
-        for match in _TOOL_NAMES.finditer(line):
-            yield f"line {number}: tool or agent name: {match.group(0)!r}"
+        for place, term in terms:
+            if term.search(line):
+                yield f"line {number}: blocked term #{place} from BLOCKED_TERMS"
         if line.lstrip().startswith(">"):
             continue
         unquoted = _HERBAM.sub(" ", _QUOTED.sub(" ", line))
@@ -158,24 +163,22 @@ def _wording_problems(body: str) -> Iterator[str]:
 
 def _anywhere_problems(body: str, blocked_names: Sequence[str]) -> Iterator[str]:
     """Attribution lines and blocked names, looked for in code and comments too."""
-    names = [
-        (place, re.compile(rf"(?<!\w){re.escape(name.strip())}(?!\w)", re.IGNORECASE))
-        for place, name in enumerate(blocked_names, 1)
-        if name.strip()
-    ]
+    names = _listed(blocked_names)
     for number, line in enumerate(body.splitlines(), 1):
         if _ATTRIBUTION.search(line):
-            yield f"line {number}: attribution line (the repo has its own statement on AI use)"
+            yield f"line {number}: attribution line"
         for place, name in names:
             if name.search(line):
                 yield f"line {number}: blocked name #{place} from BLOCKED_NAMES"
 
 
-def problems(body: str, blocked_names: Sequence[str] = ()) -> list[str]:
+def problems(
+    body: str, blocked_names: Sequence[str] = (), blocked_terms: Sequence[str] = ()
+) -> list[str]:
     """Every problem with a pull request description, in a stable order."""
     return [
         *_heading_problems(body),
-        *_wording_problems(body),
+        *_wording_problems(body, blocked_terms),
         *_anywhere_problems(body, blocked_names),
     ]
 
@@ -185,8 +188,11 @@ def main(argv: Sequence[str]) -> int:
         body = Path(argv[1]).read_text(encoding="utf-8")
     else:
         body = sys.stdin.buffer.read().decode("utf-8")
-    blocked = os.environ.get("BLOCKED_NAMES", "").split(",")
-    found = problems(body, blocked)
+    found = problems(
+        body,
+        os.environ.get("BLOCKED_NAMES", "").split(","),
+        os.environ.get("BLOCKED_TERMS", "").split(","),
+    )
     for problem in found:
         print(problem)
     if found:

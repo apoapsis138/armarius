@@ -150,7 +150,7 @@ jobs:
   # A pull request's description follows the template and describes the
   # change (CONTRIBUTING.md, "Writing a pull request"). The checker comes
   # from main, so a pull request can't change what judges it or run its own
-  # code beside the BLOCKED_NAMES secret. The description is fetched as it
+  # code beside the BLOCKED_NAMES and BLOCKED_TERMS secrets. The description is fetched as it
   # is now (a re-run sees an edit) into a file, never into the shell's text.
   # pr-description.yml checks it again whenever it is edited.
   pr-body:
@@ -170,6 +170,7 @@ jobs:
           REPO: ${{ github.repository }}
           NUMBER: ${{ github.event.pull_request.number }}
           BLOCKED_NAMES: ${{ secrets.BLOCKED_NAMES }}
+          BLOCKED_TERMS: ${{ secrets.BLOCKED_TERMS }}
         run: |
           if [ ! -f tools/check_pr_body.py ]; then
             echo "main has no tools/check_pr_body.py yet; nothing to check with."
