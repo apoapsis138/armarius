@@ -153,7 +153,9 @@ The familiar's Flaws, each with its tier, and their points in the title.
 <!-- help: section-fam-personality-traits -->
 
 The familiar's Personality Traits, each a name and a score that you type.
-The Loyal (Partner) trait comes from the bond.
+The Loyal (Partner) trait comes from the bond. A trait may gain experience
+instead, as a character's
+[Personality Traits](help:section-personality-traits) explain.
 
 ### Reputations
 <!-- help: section-fam-reputations -->

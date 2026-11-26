@@ -523,7 +523,7 @@ def trait_section(
     return section(
         f"{title} ({len(rows)})",
         p,
-        trait_list(rows, p, chooser.choose),
+        trait_list(rows, p, chooser.choose, [st.trait_xp(t) for t in traits]),
         buttons=[*verb_buttons(ops, chooser, run, p), *more],
     )
 

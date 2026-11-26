@@ -259,9 +259,12 @@ def trait_list(
     traits: Sequence[tuple[str, int]],
     p: Palette,
     on_choose: Callable[[int], None] | None = None,
+    xp: Sequence[str] = (),
 ) -> QWidget:
     """Traits as name, score and a bar, one under another. With
-    `on_choose`, clicking a row chooses it (its index) and outlines it."""
+    `on_choose`, clicking a row chooses it (its index) and outlines it.
+    `xp`, one per trait ("" for none), is each trait's experience ("18/30"),
+    shown quietly after its bar when any trait has some."""
     box = QWidget()
     grid = QGridLayout(box)
     grid.setContentsMargins(0, 0, 0, 0)
@@ -269,17 +272,25 @@ def trait_list(
     grid.setVerticalSpacing(6)
     if not traits:
         grid.addWidget(text("None recorded.", p["dim"], serif(12, italic=True)), 0, 0)
+    with_xp = any(xp)
     rows: list[_TraitRow] = []
     for row, (name, score) in enumerate(traits):
         if on_choose is not None:
             band = _TraitRow(row, p, lambda index: _chose(rows, index, on_choose))
-            grid.addWidget(band, row, 0, 1, 3)
+            grid.addWidget(band, row, 0, 1, 4 if with_xp else 3)
             rows.append(band)
         label = text(name, p["foreground"], serif(13))
         number = text(f"{score:+d}", p["heading"], serif(13, bold=True))
         number.setAlignment(Qt.AlignmentFlag.AlignRight)
         bar = TraitBar(score, p)
-        for column, part in enumerate((label, number, bar)):
+        parts: list[QWidget] = [label, number, bar]
+        if with_xp:
+            shown = text(xp[row], p["dim"], serif(11.5))
+            shown.setAlignment(
+                Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
+            )
+            parts.append(shown)
+        for column, part in enumerate(parts):
             # Clicks go through to the row's band beneath.
             part.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
             grid.addWidget(part, row, column)

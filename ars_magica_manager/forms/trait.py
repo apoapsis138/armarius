@@ -14,6 +14,7 @@ from ..form_spec import DialogField, attr
 from ..markup import escape
 from ..models import ScoredTrait
 from ..rules import reputations
+from ..rules import xp as xp_rules
 from ..rules.faerie_sympathy import SYMPATHY, TEMPORARY
 from ..sections import LAB_TRAITS_SECTION
 from ..world import REPUTATION_TYPES
@@ -50,6 +51,7 @@ def scored_trait_fields(
     include_reach: bool = False,
     replaceable: list[str] | None = None,
     include_sympathy: bool = False,
+    include_xp: bool = False,
 ) -> list[DialogField]:
     """A Personality Trait or Reputation: a name and a score, optionally
     bounded (covenant Reputations are -3..+3); for a Reputation, its kind
@@ -58,7 +60,9 @@ def scored_trait_fields(
     given the `replaceable` bad Reputations' names, which one it replaces
     (DE pp. 386-387); and for a character's Personality Trait, whether it
     is a faerie Sympathy Trait and whether a temporary one
-    (`include_sympathy`; RoP: Faerie pp. 102-103, 127)."""
+    (`include_sympathy`; RoP: Faerie pp. 102-103, 127). A Personality
+    Trait may gain experience (`include_xp`): its XP then stands in for its
+    Score, and the score follows from it as an Ability's does."""
     fields = [
         DialogField(
             "name",
@@ -73,8 +77,11 @@ def scored_trait_fields(
             _score_label(min_score, max_score),
             "int",
             attr(existing, "score", 0),
+            show_if=(lambda values: not values.get("gains_xp")) if include_xp else None,
         ),
     ]
+    if include_xp:
+        fields += xp_fields(existing)
     if include_reach:
         fields += [
             DialogField(
@@ -162,7 +169,11 @@ def _score_label(min_score: int | None, max_score: int | None) -> str:
 def score_problem(
     values: dict[str, Any], min_score: int | None, max_score: int | None
 ) -> str | None:
-    """Why a trait form's score is out of bounds, or None."""
+    """Why a trait form's score is out of bounds, or its experience can't
+    be had, or None."""
+    if values.get("gains_xp"):
+        xp = values.get("xp")
+        return None if xp is not None and xp >= 0 else STARTS_AT_ZERO
     score = values["score"]
     if (min_score is not None and score < min_score) or (
         max_score is not None and score > max_score
@@ -171,22 +182,94 @@ def score_problem(
     return None
 
 
+#: Why a trait can't gain experience: Ability growth starts at 0.
+STARTS_AT_ZERO = "A trait that gains experience starts at 0 or more."
+
+
+def xp_fields(existing: ScoredTrait | None) -> list[DialogField]:
+    """Whether a Personality Trait gains experience, and its XP in place of
+    its Score while it does: the total an Ability at its score would have,
+    the experience toward the next point included. Ticking the box fills
+    the XP from the typed score (blank, and refused, for one below 0);
+    unticking it fills the score from the XP."""
+    progress = existing.progress if existing is not None else None
+    kept = existing.deeds if existing is not None else 0
+
+    def fill(values: dict[str, Any]) -> dict[str, Any]:
+        if not values.get("gains_xp"):
+            xp = values.get("xp")
+            if xp is None or xp < 0:
+                return {}
+            return {"score": xp_rules.score_from_xp(xp, xp_rules.ABILITY_FACTOR)}
+        score = values.get("score")
+        if score is None or score < 0:
+            return {"xp": None}
+        # The experience it had toward the next point comes back with it.
+        same = existing is not None and existing.score == score
+        return {"xp": xp_rules.ability_xp(score) + (kept if same else 0)}
+
+    start = existing.score if existing is not None else 0
+    return [
+        DialogField(
+            "gains_xp",
+            "Gains experience?",
+            "check",
+            # One taken below 0 (a broken bargain, a punishment) opens
+            # unticked, so its form can still be saved.
+            existing is not None and existing.gains_xp and existing.score >= 0,
+            hint="Grows from experience like an Ability, as Hubris does "
+            "(DE p. 241); its XP then stands in for its Score.",
+            fills=fill,
+        ),
+        DialogField(
+            "xp",
+            "XP",
+            "optint",
+            progress.total
+            if progress is not None
+            else (xp_rules.ability_xp(start) + kept if start >= 0 else None),
+            show_if=lambda values: bool(values.get("gains_xp")),
+        ),
+    ]
+
+
+def xp_live(values: dict[str, Any]) -> str:
+    """The form's live line while the trait gains experience: the score
+    its XP buys and the total the next one needs."""
+    if not values.get("gains_xp"):
+        return ""
+    return st.live_score(values.get("xp"), xp_rules.ABILITY_FACTOR)
+
+
 def trait_from(
     values: dict[str, Any], existing: ScoredTrait | None = None
 ) -> ScoredTrait:
     """The trait the form's values describe; an edited one keeps the deeds
-    it has counted toward its next level."""
+    it has counted toward its next level. One that gains experience takes
+    its score from its XP, the rest kept toward the next point."""
     bad = bool(values.get("bad"))
+    deeds = existing.deeds if existing is not None else 0
+    if values.get("gains_xp"):
+        xp = values["xp"]
+        score = xp_rules.score_from_xp(xp, xp_rules.ABILITY_FACTOR)
+        deeds = xp - xp_rules.ability_xp(score)
+    else:
+        # A Reputation marked bad keeps its score's size, above 0.
+        score = abs(values["score"]) if bad else values["score"]
+        if "gains_xp" in values and existing is not None and existing.score != score:
+            # Experience kept while unticked belongs to the score it was
+            # earned toward: a new score typed by hand starts afresh.
+            deeds = 0
     return ScoredTrait(
         name=values["name"],
-        # A Reputation marked bad keeps its score's size, above 0.
-        score=abs(values["score"]) if bad else values["score"],
+        score=score,
         known=values.get("known", True),
         type=_kind(values),
         reach=values.get("reach", ""),
-        deeds=existing.deeds if existing is not None else 0,
+        deeds=deeds,
         replaces=values.get("replaces") or "",
         bad=bad,
+        gains_xp=bool(values.get("gains_xp")),
     )
 
 
@@ -214,6 +297,8 @@ def trait_ops(traits: list[ScoredTrait], section: str) -> SectionOps:
         bounds["include_reach"] = True
     if section in SYMPATHY_SECTIONS:
         bounds["include_sympathy"] = True
+    if noun == "Personality Trait":
+        bounds["include_xp"] = True
 
     def form(title: str, index: int | None) -> Form:
         existing = traits[index] if index is not None else None
@@ -238,6 +323,7 @@ def trait_ops(traits: list[ScoredTrait], section: str) -> SectionOps:
             validate=lambda values: score_problem(
                 values, bounds.get("min_score"), bounds.get("max_score")
             ),
+            live=xp_live if bounds.get("include_xp") else None,
         )
 
     return SectionOps(

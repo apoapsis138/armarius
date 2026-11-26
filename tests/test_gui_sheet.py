@@ -57,6 +57,7 @@ from ars_magica_manager.models import (
     IncomeSource,
     Inhabitant,
     Neighbour,
+    ScoredTrait,
     SeasonPlan,
     VirtueFlawInstance,
 )
@@ -851,6 +852,28 @@ def test_adding_editing_and_deleting_a_personality_trait(app):
     assert isinstance(asked[0], ConfirmDialog)
     assert asked[0].question == "Delete Brave?"
     assert not storage.load_saga(saga.id).characters[0].personality_traits
+
+
+def test_a_personality_trait_that_gains_experience_shows_it_beside_its_bar(app):
+    saga = _sample_saga_with_covenant()
+    character = saga.characters[0]
+    character.personality_traits = [ScoredTrait("Brave", 2)]
+    storage.save_saga(saga)
+    window = MainWindow(saga_ids=[saga.id])
+    assert window.saga is not None
+    window.show_character(character.id)
+    page = window.page()
+    assert isinstance(page, CharacterSheet)
+    page.open_chapter("Description")
+    assert "/30" not in _texts(page)
+    # One row: Edit acts on it. 18 xp is Brave 2 with 3 toward 3 (at 30).
+    answering(window, {"gains_xp": True, "xp": "18"})
+    section_buttons(page, "Personality Traits")["Edit"].click()
+    saved = storage.load_saga(saga.id).characters[0].personality_traits[0]
+    assert (saved.score, saved.deeds, saved.gains_xp) == (2, 3, True)
+    page = window.page()
+    assert isinstance(page, CharacterSheet)
+    assert "18/30" in [label.text() for label in page.findChildren(QLabel)]
 
 
 class _Heard:

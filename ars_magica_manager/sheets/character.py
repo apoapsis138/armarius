@@ -1116,7 +1116,12 @@ def statblock(saga: Saga, character: Character) -> list[tuple[str, str]]:
     ):
         if traits:
             block.append(
-                (heading, ", ".join(label for _, label in st.trait_rows(traits)))
+                (
+                    heading,
+                    ", ".join(
+                        label for _, label in st.trait_rows(traits, with_xp=False)
+                    ),
+                )
             )
     return block
 

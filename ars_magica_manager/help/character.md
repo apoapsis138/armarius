@@ -396,6 +396,18 @@ A trait roll is a stress die + the trait alone, against:
 A player changes the scores only between sessions, after striking rolls or
 events (DE p. 28).
 
+**Gains experience.** A few traits grow from experience like an Ability
+instead, as a Verditius's Hubris does (DE p. 241). Tick **Gains
+experience?** when you add or edit one: its **XP** then takes the place of
+its Score, and the score follows from it as an Ability's does (score 2 at
+15 xp, 3 at 30). Ticking it starts the XP at what the typed score needs;
+unticking it keeps the experience, put away until it's ticked again. A
+trait below 0 can't gain experience. The list shows each such trait's
+experience after its score, quietly, as the Abilities list does ("18/30":
+18 xp, the next score at 30); a list with none shows no column. The same
+box is on a familiar's, a creature's and a laboratory's Personality
+Traits.
+
 <!-- tui -->
 On a grog who serves a covenant, More (`m`) here offers
 [Reward or Punish](help:grog-discipline) and [Pension](help:grog-pension).
