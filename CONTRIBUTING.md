@@ -159,9 +159,10 @@ constant.
 **Comments** state the rule or design choice plainly, not who decided it
 or when. Story and bug numbers belong in commit messages and pull request
 titles or descriptions, not in changelog fragments (they're for the user),
-code comments or docstrings; `tests/test_source_hygiene.py` fails on a new
-one, and on an invisible character (a NUL, a zero-width space, a
-byte-order mark) in any source or doc file.
+code comments or docstrings. `tests/test_source_hygiene.py` fails on a new
+STORY-n or FEAT-nn in code, a workflow or a fragment, and on an invisible
+character (a NUL, a zero-width space, a byte-order mark, a bidirectional
+control) in any tracked text file.
 
 **No generative-AI art.** Every image, icon, symbol, texture or font the
 app ships or draws is either drawn in code or taken from a source under a
