@@ -1,0 +1,35 @@
+# A pull request's description follows the template and describes the change
+# (CONTRIBUTING.md, "Writing a pull request"), checked every time it is
+# opened, pushed to or edited. Checks (checks.yml) runs the same check as part
+# of its `checks` status; this workflow is separate so that an edit to the
+# description alone doesn't rerun, or cancel, the test suite. Require its
+# `pr-description` status too, so an edit can't undo a passing description.
+name: PR description
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-description-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  pr-description:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      # The body reaches the checker as a file through the environment,
+      # never through the shell's own text.
+      - name: Check the pull request description
+        env:
+          BODY: ${{ github.event.pull_request.body }}
+          BLOCKED_NAMES: ${{ secrets.BLOCKED_NAMES }}
+        run: |
+          printf '%s\n' "$BODY" > "$RUNNER_TEMP/pr-body.md"
+          python3 tools/check_pr_body.py "$RUNNER_TEMP/pr-body.md"
