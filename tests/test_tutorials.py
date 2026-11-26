@@ -168,14 +168,16 @@ def test_a_walkthrough_character_has_its_defaults_and_its_guides_needs_on():
         for character in saga.characters:
             needs = FEATURED[number].get(character.name, ())
             off = deeds.interests_off(character)
-            should = [i for i in deeds.defaults_off(character) if i not in needs]
+            should_be_off = [i for i in deeds.defaults_off(character) if i not in needs]
             wrong += [
-                f"{number}: {character.name} has {i} on" for i in should if i not in off
+                f"{number}: {character.name} has {i} on"
+                for i in should_be_off
+                if i not in off
             ]
             wrong += [
                 f"{number}: {character.name} has {i} off"
                 for i in off
-                if i not in should
+                if i not in should_be_off
             ]
     assert not wrong, "\n".join(wrong)
 
