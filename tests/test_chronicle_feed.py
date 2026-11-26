@@ -3,40 +3,15 @@ one entry's line, and which entries call a collapsed pane's attention."""
 
 from __future__ import annotations
 
-import random
-
 import pytest
+from chronicle_support import HOST, Faces
+from chronicle_support import begun as _begun
+from chronicle_support import blind as _blind
+from chronicle_support import every_kind as _every_kind
 
-from ars_magica_manager import chronicle, viewing
-from ars_magica_manager.models import Casting, Character, Player, Saga, Session
+from ars_magica_manager import chronicle
+from ars_magica_manager.models import Saga, Session
 from ars_magica_manager.remote import events
-
-HOST = viewing.HOST
-
-
-class Faces(random.Random):
-    def __init__(self, *faces: int) -> None:
-        super().__init__()
-        self.faces = list(faces)
-
-    def randrange(self, *_args: object, **_kwargs: object) -> int:  # type: ignore[override]
-        return self.faces.pop(0)
-
-
-def _begun() -> tuple[Saga, Session, chronicle.Chronicle]:
-    saga = Saga(id="fengheld", name="Fengheld")
-    saga.players = [Player("ana", "Ana"), Player("ben", "Ben")]
-    saga.characters = [Character(id="aelfric", name="Aelfric", type="magus")]
-    session = Session("s1", castings=[Casting(player_id="ana", character_id="aelfric")])
-    saga.sessions = [session]
-    return saga, session, chronicle.begin(saga, session, by=HOST)
-
-
-def _blind(saga: Saga, session: Session, book: chronicle.Chronicle) -> None:
-    request = chronicle.RollRequest(
-        character_id="aelfric", visibility=chronicle.BLIND, for_what="Ambush"
-    )
-    chronicle.free_roll(book, saga, session, request, by=HOST, rng=Faces(5))
 
 
 def test_one_entrys_line_is_the_chronicles_line_for_it() -> None:
@@ -101,49 +76,6 @@ def test_a_reader_sees_an_answer_against_the_ease_factor_kept_from_players() -> 
     assert not ana.may_answer(request, "aelfric")  # answered already
 
 
-def _every_kind(saga: Saga, session: Session, book: chronicle.Chronicle) -> None:
-    """One entry of each kind the Chronicle writes, with Ana and Ben at the
-    table: a Blind roll for Ana's character (and its line for her), a
-    Private and a Table roll, a form's roll, a Roll request to Ana's
-    character with its Ease Factor kept, a Strike, a Confidence spend, an
-    outcome, a Message to the Table, Whispers each way, a Show to Ana and
-    its withdrawal, a Scene set and ended, and the end."""
-    _blind(saga, session, book)
-    rolled = chronicle.RollRequest(character_id="aelfric", visibility=chronicle.PRIVATE)
-    chronicle.free_roll(book, saga, session, rolled, by="ana", rng=Faces(3))
-    chronicle.free_roll(
-        book, saga, session, chronicle.RollRequest(), by=HOST, rng=Faces(2)
-    )
-    book.add(
-        chronicle.FORM_ROLL,
-        HOST,
-        chronicle.storyguide_only(),
-        {"form": "Aging", "lines": [], "faces": [4]},
-    )
-    call = chronicle.RollCall(("aelfric",), "Perception", ease_factor=6, hide_ease=True)
-    request = chronicle.request_rolls(book, saga, session, call, by=HOST)
-    book.add(chronicle.VOID, HOST, chronicle.table(), {"strikes": 3, "reason": "Typo"})
-    book.add(chronicle.CONFIDENCE, "ana", chronicle.table(), {"roll": 3, "points": 1})
-    book.add(
-        chronicle.OUTCOME,
-        HOST,
-        chronicle.table(),
-        {"request": request.number, "text": "The door gives."},
-    )
-    chronicle.message(book, saga, session, "Evening.", by="ben")
-    chronicle.message(book, saga, session, "Psst.", to=("ana",), by="ben")
-    chronicle.message(book, saga, session, "Hush.", to=("ben",), by=HOST)
-    shown = {"show": "x", "title": "A map", "to": ["ana"], "to_names": ["Ana"]}
-    show = book.add(chronicle.SHOW, HOST, chronicle.chosen("ana"), shown)
-    withdrawn = {"withdraws": show.number, "title": "A map"}
-    book.add(chronicle.WITHDRAWN, HOST, chronicle.chosen("ana"), withdrawn)
-    banner = {"use": "u", "title": "The ford", "place": "A ford"}
-    book.add(chronicle.SCENE_SET, HOST, chronicle.table(), banner)
-    ended = {"use": "u", "title": "The ford"}
-    book.add(chronicle.SCENE_ENDED, HOST, chronicle.table(), ended)
-    chronicle.end(saga, session, by=HOST)
-
-
 def test_each_kind_says_who_it_is_for() -> None:
     """The kind registry holds the "for whom" rule (Strategy): a Blind
     roll's number is for the storyguide, its line for the player rolled
@@ -157,8 +89,8 @@ def test_each_kind_says_who_it_is_for() -> None:
             e.kind for e in book.entries if who in chronicle.for_whom(e, session, saga)
         ]
 
-    assert kinds_for(HOST) == ["roll", "form_roll"]
-    assert kinds_for("ana") == ["rolled", "request", "message", "show"]
+    assert kinds_for(HOST) == ["roll", "form_roll", "roll"]
+    assert kinds_for("ana") == ["rolled", "request", "rolled", "message", "show"]
     assert kinds_for("ben") == ["message"]
 
 
@@ -187,7 +119,7 @@ def test_a_kind_must_say_who_it_is_for() -> None:
     """A new kind can't forget its rule: leaving it out is refused."""
     with pytest.raises(TypeError):
         chronicle.Kind(  # type: ignore[call-arg]
-            "handout", lambda _body: "A handout.", held_back=()
+            "handout", lambda _body: "A handout.", held_back=(), body=chronicle.NoBody
         )
 
 
@@ -195,7 +127,10 @@ def test_a_kind_must_say_what_it_holds_back_from_seats() -> None:
     """Nor what a seat isn't sent: even "nothing" is said."""
     with pytest.raises(TypeError):
         chronicle.Kind(  # type: ignore[call-arg]
-            "handout", lambda _body: "A handout.", for_whom=chronicle.for_whom
+            "handout",
+            lambda _body: "A handout.",
+            for_whom=chronicle.for_whom,
+            body=chronicle.NoBody,
         )
 
 

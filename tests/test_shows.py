@@ -8,6 +8,7 @@ from __future__ import annotations
 import json
 
 import pytest
+from chronicle_support import line_of
 
 from ars_magica_manager import (
     chronicle,
@@ -448,12 +449,24 @@ def test_a_show_withdrawn_meanwhile_by_another_copy_isnt_withdrawn_twice() -> No
 
 
 def test_a_damaged_withdrawal_is_passed_over() -> None:
-    _saga, _session, book = _begun()
-    book.add(chronicle.WITHDRAWN, HOST, chronicle.table(), {"title": "Hilda"})
-    book.add(
-        chronicle.WITHDRAWN, HOST, chronicle.table(), {"withdraws": "x", "title": "H"}
-    )
-    assert shows.withdrawn(book) == set()
+    saga, session, book = _begun()
+    for body in ({"title": "Hilda"}, {"withdraws": "x", "title": "H"}):
+        with pytest.raises(ValueError, match="wrong shape"):
+            book.add(chronicle.WITHDRAWN, HOST, chronicle.table(), body)
+        entry = chronicle.Entry(
+            len(book.entries) + 1,
+            "",
+            chronicle.WITHDRAWN,
+            HOST,
+            chronicle.table(),
+            body,
+        )
+        with book.path.open("a", encoding="utf-8") as out:
+            out.write(line_of(entry) + "\n")
+        book.refresh()
+    chronicle.forget_open()
+
+    assert shows.withdrawn(chronicle.read(saga, session)) == set()
 
 
 def test_a_withdrawals_title_keeps_the_character_rule() -> None:

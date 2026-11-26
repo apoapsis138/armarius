@@ -167,6 +167,8 @@ class _Plan:
     keys: tuple[str, ...] = ()
     #: LITERAL: the values allowed.
     values: tuple[object, ...] = ()
+    #: TYPED: the keys it must hold.
+    required: tuple[str, ...] = ()
 
 
 _PLAIN = {bool: BOOL, int: INT, float: FLOAT}
@@ -198,6 +200,7 @@ def _plan(hint: Any) -> _Plan:
             allows_none,
             inner=tuple(_plan(h) for h in found.values()),
             keys=tuple(found),
+            required=_required_keys(hint),
         )
     if origin in (dict, Mapping) or hint is dict:
         key, value = get_args(hint) or (Any, Any)
@@ -211,6 +214,21 @@ def _plan(hint: Any) -> _Plan:
     if isinstance(hint, type):
         return _Plan(OTHER, allows_none, hint)
     return _Plan(ANY, True)  # a Callable or a type variable: not data from a file
+
+
+def _required_keys(hint: Any) -> tuple[str, ...]:
+    """The keys TypedDict `hint` must hold: `__required_keys__` (each
+    class's own totality, inherited keys included), corrected by the
+    `Required` and `NotRequired` it can't see in annotations written as
+    text (`from __future__ import annotations`)."""
+    total_keys = frozenset(getattr(hint, "__required_keys__", frozenset()))
+    found = typing.get_type_hints(hint, include_extras=True)
+    return tuple(
+        key
+        for key, each in found.items()
+        if get_origin(each) is typing.Required
+        or (key in total_keys and get_origin(each) is not typing.NotRequired)
+    )
 
 
 @cache
@@ -609,6 +627,74 @@ def _built_sequence(value: object, plan: _Plan) -> None:
             _built(entry, plan.inner[index] if sized else plan.inner[0])
         except _Refused as refused:
             refused.parts.append(_item(entry, index))
+            raise
+
+
+def why_not_fits(value: object, hint: Any) -> str | None:
+    """Why `value`, a dict read back from JSON with no record to build (a
+    Chronicle entry's body), isn't of type `hint` (a TypedDict) exactly,
+    naming where; None when it is. Every key a TypedDict requires is there,
+    a JSON list stands for a tuple, and a tuple of fixed size has that many
+    items."""
+    try:
+        _fits(value, _plan(hint))
+    except _Refused as refused:
+        return str(_named(refused))
+    return None
+
+
+def _fits(value: object, plan: _Plan) -> None:
+    kind = plan.kind
+    if value is None or kind not in (SEQUENCE, TYPED, MAPPING, UNION):
+        _built(value, plan)
+    elif kind == SEQUENCE:
+        if not isinstance(value, list | tuple):
+            raise _Refused("expected a list")
+        items = typing.cast("list[object]", value)
+        sized = plan.cls[1]
+        if sized and len(items) != len(plan.inner):
+            raise _Refused(f"expected {len(plan.inner)} items")
+        for index, item in enumerate(items):
+            try:
+                _fits(item, plan.inner[index] if sized else plan.inner[0])
+            except _Refused as refused:
+                refused.parts.append(_item(item, index))
+                raise
+    elif kind == UNION:
+        first: _Refused | None = None
+        for arm in plan.inner:
+            try:
+                _fits(value, arm)
+            except _Refused as refused:
+                first = first or refused
+            else:
+                return
+        assert first is not None  # a union has arms
+        raise first
+    else:
+        _fits_mapping(value, plan)
+
+
+def _fits_mapping(value: object, plan: _Plan) -> None:
+    if not isinstance(value, dict):
+        raise _Refused("expected a record")
+    entries = typing.cast(dict[object, object], value)
+    for key in plan.required:
+        if key not in entries:
+            refused = _Refused("missing")
+            refused.parts.append(key)
+            raise refused
+    plans = _typed(plan) if plan.kind == TYPED else None
+    for key, entry in entries.items():
+        inner = plans.get(str(key)) if plans is not None else plan.inner[1]
+        if inner is None:
+            continue
+        try:
+            if plans is None:
+                _fits(key, plan.inner[0])
+            _fits(entry, inner)
+        except _Refused as refused:
+            refused.parts.append(str(key) if plans is not None else f"[{key}]")
             raise
 
 

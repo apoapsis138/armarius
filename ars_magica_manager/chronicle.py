@@ -44,7 +44,7 @@ import secrets
 from collections.abc import Callable, Mapping
 from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
-from typing import Any, Protocol
+from typing import Any, NotRequired, Protocol, TypedDict
 
 from . import dice_text, paths, references, sessions, shapes, table_rules, viewing
 from .files import held_lock
@@ -125,8 +125,16 @@ def _on_file(entry: Entry) -> dict[str, Any]:
     return kept
 
 
+#: An entry whose body isn't its kind's (`checked`), as it is held in memory:
+#: the file keeps what was written. No kind is named this.
+DAMAGED = "damaged"
+
+
 def sees(entry: Entry, who: str, session: Session, saga: Saga | None = None) -> bool:
-    """Whether `who` may see `entry`: the audience filter."""
+    """Whether `who` may see `entry`: the audience filter. A damaged entry
+    is seen by no one."""
+    if entry.kind == DAMAGED:
+        return False
     if entry.audience.to == TABLE:
         return True
     if who == storyguide_of(session, saga):
@@ -206,10 +214,14 @@ class Chronicle:
         with it (a Blind roll's line for its player), written in the same
         hold of the lock, so the two are on file before anyone is told.
         `guard`, asked once caught up under the lock, says why the entry
-        may no longer be written (another copy did it first), or None."""
+        may no longer be written (another copy did it first), or None. A
+        body that isn't its kind's is refused, so nothing damaged is written."""
         problem = typed_problem(kind, body)
         if problem:
             raise ValueError(problem)
+        wrong = body_problem(kind, body)
+        if wrong:
+            raise ValueError(f"A {kind} entry of the wrong shape: {wrong}")
         self.path.parent.mkdir(parents=True, exist_ok=True)
         with held_lock(_lock_of(self.path)):
             caught_up = self._catch_up(mend=True)
@@ -220,9 +232,13 @@ class Chronicle:
             if stale:
                 self._tell(caught_up)
                 raise ValueError(stale)
-            entry = self._write(kind, author, audience, body)
-            written = [entry]
+            entry = Entry(len(self.entries) + 1, clock(), kind, author, audience, body)
             follows = then(entry) if then is not None else None
+            wrong = body_problem(follows[0], follows[3]) if follows else None
+            if follows and wrong:
+                self._tell(caught_up)
+                raise ValueError(f"A {follows[0]} entry of the wrong shape: {wrong}")
+            written = [self._append(entry)]
             if follows is not None:
                 written.append(self._write(*follows))
         # Subscribers are told once the lock is let go and all of it is on
@@ -235,7 +251,12 @@ class Chronicle:
         self, kind: str, author: str, audience: Audience, body: dict[str, Any]
     ) -> Entry:
         """Append one entry (the file's lock held)."""
-        entry = Entry(len(self.entries) + 1, clock(), kind, author, audience, body)
+        return self._append(
+            Entry(len(self.entries) + 1, clock(), kind, author, audience, body)
+        )
+
+    def _append(self, entry: Entry) -> Entry:
+        """Append `entry`, numbered next (the file's lock held)."""
         with self.path.open("a", encoding="utf-8", newline="\n") as out:
             out.write(json.dumps(_on_file(entry), ensure_ascii=False) + "\n")
             out.flush()
@@ -260,7 +281,7 @@ class Chronicle:
     def _catch_up(self, *, mend: bool = False) -> list[Entry]:
         """Read what is new in the file; `mend` (only with the file's lock
         held) cuts a half-written last line first."""
-        found = _load(self.path, mend=mend)
+        found = _load(self.path, mend=mend, known=len(self.entries))
         try:
             self._read_size = self.path.stat().st_size
         except FileNotFoundError:
@@ -305,11 +326,13 @@ def files_of(saga_id: str) -> list[Path]:
     return sorted(folder.glob("*.jsonl")) if folder.is_dir() else []
 
 
-def _load(path: Path, *, mend: bool = False) -> list[Entry]:
+def _load(path: Path, *, mend: bool = False, known: int = 0) -> list[Entry]:
     """The entries in `path`; a last line left half-written is dropped, a
-    damaged line before it refused (ValueError). With `mend`, before more
-    is written, the dropped half line is cut from the file too, so the next
-    entry starts a line of its own."""
+    damaged line before it refused (ValueError), and an entry whose body
+    isn't its kind's held as DAMAGED (`checked`), past the first `known`
+    (those a Chronicle holds already, checked when it read them). With
+    `mend`, before more is written, the dropped half line is cut from the
+    file too, so the next entry starts a line of its own."""
     try:
         raw = path.read_bytes()
     except FileNotFoundError:
@@ -326,7 +349,8 @@ def _load(path: Path, *, mend: bool = False) -> list[Entry]:
             raise ValueError(
                 f"{path.name}, line {index + 1}: not a Chronicle entry"
             ) from None
-        entries.append(shapes.build(Entry, data))
+        entry = shapes.build(Entry, data)
+        entries.append(entry if index < known else checked(entry))
         whole += len(line) + 1
     if mend and whole < len(raw):
         with path.open("r+b") as out:
@@ -1557,6 +1581,174 @@ def confidence_line(body: dict[str, Any]) -> str:
     return line
 
 
+# -- each kind's body --
+#
+# What every reader of an entry relies on, as a type (shapes.why_not_fits
+# checks a body against it where entries come in: `checked`). A key some
+# reader takes as written (`body["for"]`) is required; one read with a
+# fallback, or written only by later versions, may be left out, but is of
+# its type when there.
+
+
+class NoBody(TypedDict):
+    """Begin and End Session: nothing but the envelope."""
+
+
+#: A roll from the sheet or a Free roll (`_body`); `request` names the Roll
+#: request it answers; `terms` were kept from a later version on.
+RollBody = TypedDict(
+    "RollBody",
+    {
+        "stress": bool,
+        "faces": list[int],
+        "botch_faces": list[int],
+        "die": int,
+        "modifier": int,
+        "total": int,
+        "botches": NotRequired[int],
+        "ease_factor": int | None,
+        "succeeded": NotRequired[bool | None],
+        "margin": NotRequired[int | None],
+        "for": str,
+        "character_id": str,
+        "character_name": str,
+        "terms": NotRequired[list[tuple[str, int]]],
+        "request": NotRequired[int],
+    },
+)
+
+
+class FormRollBody(TypedDict):
+    """A Table roll made from a form (`form_roll`); its whole dice were
+    kept from a later version on."""
+
+    form: str
+    faces: list[int]
+    character_id: NotRequired[str]
+    character_name: NotRequired[str]
+    dice: NotRequired[list[dict[str, Any]]]
+    lines: NotRequired[list[str]]
+    cancelled: NotRequired[bool]
+
+
+#: A Blind roll's line for its player (`_write_roll`).
+RolledBody = TypedDict(
+    "RolledBody",
+    {"roll": NotRequired[int], "for": str, "character_name": str},
+)
+
+
+class StrikeBody(TypedDict):
+    strikes: int
+    reason: str
+
+
+class ConfidenceBody(TypedDict):
+    """A Confidence spend (`spend_confidence`)."""
+
+    roll: int
+    points: int
+    total: int
+    character_name: str
+    character_id: NotRequired[str]
+    ease_factor: NotRequired[int | None]
+    succeeded: bool | None
+    margin: int | None
+
+
+class Asked(TypedDict):
+    """One character a Roll request asks, and who answers for it."""
+
+    id: str
+    name: str
+    roller: str
+
+
+class AuraKept(TypedDict):
+    """The aura a Roll request's answers are rolled in (the host's alone)."""
+
+    score: int
+    realm: str
+    regio: bool
+
+
+#: A Roll request (`request_rolls`).
+RequestBody = TypedDict(
+    "RequestBody",
+    {
+        "characters": list[Asked],
+        "characteristic": str,
+        "ability": str,
+        "ease_factor": NotRequired[int | None],
+        "visibility": str,
+        "for": NotRequired[str],
+        "stress": NotRequired[bool],
+        "aura": NotRequired[AuraKept],
+    },
+)
+
+
+class EaseKeptBody(TypedDict):
+    request: int
+    ease_factor: int
+
+
+class OutcomeBody(TypedDict):
+    request: int
+    text: str
+
+
+class MessageBody(TypedDict):
+    """A Message or Whisper (`_message_body`); `to` stays at the host."""
+
+    words: str
+    author_name: str
+    to: NotRequired[list[str]]
+    to_names: NotRequired[list[str]]
+    links: NotRequired[list[tuple[str, str, str]]]
+
+
+class ShowBody(TypedDict):
+    """A Show (shows.py); its later keys may be missing from older ones,
+    and `to` stays at the host."""
+
+    title: str
+    show: NotRequired[str]
+    ref: NotRequired[list[str]]
+    picture: NotRequired[str]
+    pictures: NotRequired[list[str]]
+    source: NotRequired[list[str]]
+    handout: NotRequired[str]
+    to: NotRequired[list[str]]
+    to_names: NotRequired[list[str]]
+    story: NotRequired[str]
+    story_id: NotRequired[str]
+
+
+class WithdrawnBody(TypedDict):
+    withdraws: int
+    title: str
+
+
+class SceneSetBody(TypedDict):
+    """A Scene's banner (scene_play.banner)."""
+
+    title: str
+    place: str
+    use: NotRequired[str]
+    place_ref: NotRequired[list[str]]
+    picture: NotRequired[str]
+    aura: NotRequired[str]
+    aura_score: NotRequired[int]
+    aura_realm: NotRequired[str]
+    regio: NotRequired[bool]
+
+
+class SceneEndedBody(TypedDict):
+    title: str
+    use: NotRequired[str]
+
+
 # -- the kinds of entry --
 
 #: How an entry is drawn as a card (each front-end keeps its own look):
@@ -1647,13 +1839,19 @@ class Kind:
     Every kind names its rule, `_no_one` included, so a new kind can't
     leave it out by mistake. `held_back`: the keys of its body the host
     keeps and never sends a seat (a Whisper's recipients' Player ids);
-    every kind names it too, `()` for one that sends its whole body."""
+    every kind names it too, `()` for one that sends its whole body.
+    `body`: the type its body has (a TypedDict), which every reader may
+    rely on; an entry whose body doesn't fit is damaged (`checked`), and
+    read by no one. `untyped`: for a kind with no `typed` keys, why its
+    body holds no words anyone typed."""
 
     name: str
     line: Callable[[dict[str, Any]], str]
     for_whom: ForWhom
     held_back: tuple[str, ...]
+    body: type
     typed: tuple[str, ...] = ()
+    untyped: str = ""
     strikable: bool = False
     card: str = NOTE
     amends: Callable[[Entry], bool] = _never
@@ -1665,8 +1863,22 @@ class Kind:
 KINDS: dict[str, Kind] = {
     spec.name: spec
     for spec in (
-        Kind(BEGIN, lambda _body: "Session begun.", for_whom=_no_one, held_back=()),
-        Kind(END, lambda _body: "Session ended.", for_whom=_no_one, held_back=()),
+        Kind(
+            BEGIN,
+            lambda _body: "Session begun.",
+            for_whom=_no_one,
+            held_back=(),
+            body=NoBody,
+            untyped="An empty body.",
+        ),
+        Kind(
+            END,
+            lambda _body: "Session ended.",
+            for_whom=_no_one,
+            held_back=(),
+            body=NoBody,
+            untyped="An empty body.",
+        ),
         Kind(
             ROLL,
             _roll_line,
@@ -1678,6 +1890,7 @@ KINDS: dict[str, Kind] = {
             sounds=True,
             for_whom=_blind_number,
             held_back=(),
+            body=RollBody,
         ),
         Kind(
             FORM_ROLL,
@@ -1691,6 +1904,7 @@ KINDS: dict[str, Kind] = {
             sounds=True,
             for_whom=_blind_number,
             held_back=(),
+            body=FormRollBody,
         ),
         # Its "for" copies its roll's, already checked; kept typed all the same.
         Kind(
@@ -1701,6 +1915,7 @@ KINDS: dict[str, Kind] = {
             storyguide_skips=True,
             for_whom=_rolled_for,
             held_back=(),
+            body=RolledBody,
         ),
         Kind(
             VOID,
@@ -1710,6 +1925,7 @@ KINDS: dict[str, Kind] = {
             amends=_always,
             for_whom=_no_one,
             held_back=(),
+            body=StrikeBody,
         ),
         Kind(
             CONFIDENCE,
@@ -1717,6 +1933,8 @@ KINDS: dict[str, Kind] = {
             amends=_always,
             for_whom=_no_one,
             held_back=(),
+            body=ConfidenceBody,
+            untyped="Numbers, and the character's name from the saga.",
         ),
         Kind(
             REQUEST,
@@ -1728,6 +1946,7 @@ KINDS: dict[str, Kind] = {
             # it to know whether it answers (Reader.may_answer). The aura
             # the answers are rolled in stays here (the storyguide's).
             held_back=("aura",),
+            body=RequestBody,
         ),
         Kind(
             REQUEST_EASE,
@@ -1739,6 +1958,8 @@ KINDS: dict[str, Kind] = {
             amends=_always,
             for_whom=_no_one,
             held_back=(),
+            body=EaseKeptBody,
+            untyped="Numbers alone.",
         ),
         Kind(
             OUTCOME,
@@ -1747,6 +1968,7 @@ KINDS: dict[str, Kind] = {
             amends=_always,
             for_whom=_no_one,
             held_back=(),
+            body=OutcomeBody,
         ),
         Kind(
             MESSAGE,
@@ -1757,6 +1979,7 @@ KINDS: dict[str, Kind] = {
             # A seat is told whether it is for them (for_you), and reads
             # the others' names; their ids stay here (ADR 0031).
             held_back=("to",),
+            body=MessageBody,
         ),
         Kind(
             SHOW,
@@ -1767,6 +1990,7 @@ KINDS: dict[str, Kind] = {
             for_whom=_whispered_to,
             # As a Whisper's: the Players shown by name only (ADR 0031).
             held_back=("to",),
+            body=ShowBody,
         ),
         # A Show taken back: a note seen by whoever saw the Show, whose
         # card it changes to read withdrawn; for no one, as a Strike is.
@@ -1778,6 +2002,7 @@ KINDS: dict[str, Kind] = {
             amends=_always,
             for_whom=_no_one,
             held_back=(),
+            body=WithdrawnBody,
         ),
         # A Scene's banner and its end: words from the saga, and the place
         # as the players know it (scene_play.py); for the Table, so no one.
@@ -1787,20 +2012,25 @@ KINDS: dict[str, Kind] = {
             card=SCENE_CARD,
             for_whom=_no_one,
             held_back=(),
+            body=SceneSetBody,
+            untyped="The Scene's title, place and aura, from the saga.",
         ),
         Kind(
             SCENE_ENDED,
             lambda body: f"Scene ended: {body['title']}",
             for_whom=_no_one,
             held_back=(),
+            body=SceneEndedBody,
+            untyped="The Scene's title, from the saga.",
         ),
     )
 }
 
 #: The keys of each kind's body that hold typed words (KINDS' `typed`).
 TYPED: dict[str, tuple[str, ...]] = {k: s.typed for k, s in KINDS.items() if s.typed}
-#: The kinds whose bodies hold no typed words: numbers and names from the saga.
-UNTYPED = frozenset(k for k, s in KINDS.items() if not s.typed)
+#: The kinds whose bodies hold no typed words, each with why not (KINDS'
+#: `untyped`): numbers, and names from the saga.
+UNTYPED: dict[str, str] = {k: s.untyped for k, s in KINDS.items() if not s.typed}
 #: The kinds of entry a Strike may take from the count: rolls.
 STRIKABLE = frozenset(k for k, s in KINDS.items() if s.strikable)
 
@@ -1808,6 +2038,22 @@ STRIKABLE = frozenset(k for k, s in KINDS.items() if s.strikable)
 def kind_of(entry: Entry) -> Kind | None:
     """`entry`'s kind, or None for one this version doesn't know."""
     return KINDS.get(entry.kind)
+
+
+def body_problem(kind: str, body: dict[str, Any]) -> str | None:
+    """Why `body` isn't the body of an entry of `kind` (Kind.body), or
+    None; a kind this version doesn't know is taken as it comes."""
+    spec = KINDS.get(kind)
+    return shapes.why_not_fits(body, spec.body) if spec is not None else None
+
+
+def checked(entry: Entry) -> Entry:
+    """`entry` as it came in (from the Chronicle's file, or a seat's host),
+    or, when its body isn't its kind's, a DAMAGED entry in its place: it
+    keeps its number, so what follows still reads, and is read by no one."""
+    if body_problem(entry.kind, entry.body) is None:
+        return entry
+    return replace(entry, kind=DAMAGED, body={})
 
 
 def text(entries: list[Entry], book: Chronicle) -> str:
@@ -2009,9 +2255,12 @@ class Reader:
     def reads(self, entry: Entry) -> bool:
         """Whether this person reads `entry`: at the host, through the
         audience filter; at a seat, what the host sent, less the line
-        telling a player a Blind roll was made, for the storyguide."""
+        telling a player a Blind roll was made, for the storyguide, and
+        anything damaged (as the host's own filter, `sees`)."""
         if not self.at_seat:
             return reads(entry, self.who, self.session, self.saga)
+        if entry.kind == DAMAGED:
+            return False
         spec = KINDS.get(entry.kind)
         return not (
             spec is not None and spec.storyguide_skips and self.runs_the_session

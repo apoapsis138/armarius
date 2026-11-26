@@ -115,7 +115,8 @@ def frame(session_id: str, entry: chronicle.Entry) -> Reply:
 
 def entry_of(body: Body) -> tuple[str, chronicle.Entry]:
     """A frame's Session and entry, as a seat reads it; ValueError for one
-    of the wrong shape (the host may be hostile)."""
+    of the wrong shape (the host may be hostile), and a damaged entry
+    (chronicle.checked) for a body that isn't its kind's."""
     number, inner = body.get("number"), body.get("body")
     texts = [body.get(k) for k in ("session", "time", "kind", "author", "audience")]
     if not isinstance(number, int) or not isinstance(inner, str):
@@ -126,14 +127,17 @@ def entry_of(body: Body) -> tuple[str, chronicle.Entry]:
     data: Any = json.loads(inner)
     if not isinstance(data, dict):
         raise ValueError("A Chronicle entry's body isn't a record.")
-    return session_id, chronicle.Entry(
-        number,
-        time_,
-        kind,
-        author,
-        chronicle.Audience(audience),
-        data,
-        for_you=body.get("for_you") is True,
+    # A body that isn't its kind's is held as damaged and read by no one.
+    return session_id, chronicle.checked(
+        chronicle.Entry(
+            number,
+            time_,
+            kind,
+            author,
+            chronicle.Audience(audience),
+            data,
+            for_you=body.get("for_you") is True,
+        )
     )
 
 

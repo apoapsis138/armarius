@@ -954,6 +954,10 @@ class ChroniclePane(QWidget):
         self.collapsed = False
         #: Entries come while collapsed, shown on the strip.
         self.unseen = 0
+        #: The number of the last entry the cards were drawn to: several
+        #: caught up at once are all in the book when the first is told,
+        #: and one that redraws the cards draws the rest already.
+        self._drawn_to = 0
         #: How many times the strip has pulsed (one per entry for you).
         self.pulses = 0
         #: The shown picture open last, kept while its window is.
@@ -1099,6 +1103,7 @@ class ChroniclePane(QWidget):
         self.book = None
         self.table = None
         self._clear_cards()
+        self._drawn_to = 0
         self.unseen = 0
         self._draw_strip()
         self.hide()
@@ -1137,8 +1142,10 @@ class ChroniclePane(QWidget):
             return
         if not self._reads(entry):
             return
-        # A Show just made is out; the cards it could amend aren't redrawn.
-        self._card(entry, chronicle.voided(book), set())
+        if entry.number > self._drawn_to:
+            # A Show just made is out; the cards it could amend aren't redrawn.
+            self._card(entry, chronicle.voided(book), set())
+            self._drawn_to = entry.number
         if entry.kind in (chronicle.SCENE_SET, chronicle.SCENE_ENDED, chronicle.END):
             self._draw_now()
         if spec is not None and spec.sounds:
@@ -1182,6 +1189,7 @@ class ChroniclePane(QWidget):
         for entry in book.entries:
             if self._reads(entry):
                 self._card(entry, struck, gone)
+        self._drawn_to = book.entries[-1].number if book.entries else 0
         self._draw_now()
 
     def now_playing(self) -> scene_verbs.NowPlaying | None:

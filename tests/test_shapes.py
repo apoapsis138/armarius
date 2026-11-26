@@ -5,7 +5,9 @@ and every test saga pass it."""
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import asdict, dataclass, field
+from typing import NotRequired, TypedDict
 
 import pytest
 from support import everything_saga
@@ -156,3 +158,75 @@ def test_a_character_of_a_type_the_app_does_not_know_is_refused():
     saga = Saga("s", "S", characters=[Character("c", "Cara", "Magus")])  # type: ignore[arg-type]
     with pytest.raises(ValueError, match=r"characters\[c\]\.type: not one of"):
         shapes.check_built(saga)
+
+
+# -- a dict read back from JSON, against its TypedDict --
+
+
+class _Asked(TypedDict):
+    id: str
+    name: str
+
+
+class _Body(TypedDict):
+    title: str
+    total: int
+    ease: int | None
+    asked: list[_Asked]
+    pair: tuple[str, int]
+    note: NotRequired[str]
+
+
+def _body() -> dict[str, object]:
+    return {
+        "title": "Ford",
+        "total": 7,
+        "ease": None,
+        "asked": [{"id": "a", "name": "Aelfric"}],
+        "pair": ["Modifier", 3],
+    }
+
+
+def test_a_whole_dict_fits_its_typeddict_with_or_without_what_it_may_leave_out():
+    assert shapes.why_not_fits(_body(), _Body) is None
+    assert shapes.why_not_fits(_body() | {"note": "kept"}, _Body) is None
+
+
+@pytest.mark.parametrize(
+    ("change", "why"),
+    [
+        ({"title": None}, "title: missing"),
+        ({"total": True}, "total: expected int, not bool"),
+        ({"total": "7"}, "total: expected int, not str"),
+        ({"note": 3}, "note: expected str, not int"),
+        ({"asked": [{"id": "a"}]}, r"asked\[a\]\.name: missing"),
+        ({"asked": ["a"]}, r"asked\[0\]: expected a record"),
+        ({"pair": ["Modifier"]}, "pair: expected 2 items"),
+        ({"pair": "Modifier"}, "pair: expected a list"),
+    ],
+)
+def test_a_dict_of_the_wrong_shape_says_where(change: dict[str, object], why: str):
+    found = shapes.why_not_fits(_body() | change, _Body)
+
+    assert found is not None and re.fullmatch(why, found), found
+
+
+class _Notes(TypedDict, total=False):
+    note: str
+
+
+class _Noted(_Notes):
+    title: str
+
+
+def test_a_typeddict_keeps_each_classs_own_totality():
+    assert shapes.why_not_fits({"title": "Ford"}, _Noted) is None
+    assert shapes.why_not_fits({"note": "kept"}, _Noted) == "title: missing"
+
+
+def test_a_key_left_out_that_must_be_there_is_named():
+    body = _body()
+    del body["total"]
+
+    assert shapes.why_not_fits(body, _Body) == "total: missing"
+    assert shapes.why_not_fits([], _Body) == "expected a record"

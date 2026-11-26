@@ -331,8 +331,8 @@ def test_every_kind_the_chronicle_writes_is_described_once() -> None:
         }
 
     assert written == set(chronicle.KINDS)
-    assert set(chronicle.TYPED) | chronicle.UNTYPED == set(chronicle.KINDS)
-    assert not set(chronicle.TYPED) & chronicle.UNTYPED
+    assert set(chronicle.TYPED) | set(chronicle.UNTYPED) == set(chronicle.KINDS)
+    assert not set(chronicle.TYPED) & set(chronicle.UNTYPED)
     assert all(spec.name == name for name, spec in chronicle.KINDS.items())
 
 
@@ -340,7 +340,9 @@ def test_the_dice_lines_maths_signs_are_typed_text_the_chronicle_keeps() -> None
     *_, book = _begun()
     line = f"1 {chr(0x2192)} 4 {chr(0xD7)} 2 {chr(0x2212)} 1"
 
-    entry = book.add(chronicle.OUTCOME, HOST, chronicle.table(), {"text": line})
+    entry = book.add(
+        chronicle.OUTCOME, HOST, chronicle.table(), {"request": 1, "text": line}
+    )
 
     assert entry.body["text"] == line
 
