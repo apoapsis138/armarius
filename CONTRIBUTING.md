@@ -17,7 +17,12 @@ Tests run in two tiers.
 - **One run at a time on a computer:** story_check's tests wait while
   another worktree's are running (it says whose), since runs sharing the
   cores stop at their time limit and flake. The lint and type checks
-  don't wait.
+  don't wait. When several builders work at once (a spec's stories, see
+  "Branches"), only single-test runs overlap (`uv run python -m pytest -p
+  no:xdist tests/<file>.py::<test>`, which never waits); slice checks take
+  turns through story_check; and the full suite runs once, on the
+  integration branch, not per story. Run the suite only through
+  story_check, never a bare `pytest -n auto`, which doesn't take the turn.
 - **Before handing a change over:** `uv run python tools/story_check.py
   --full` runs the whole suite in parallel (`python -m pytest -q -n auto
   --dist worksteal`, one worker per core; more workers than cores make the
@@ -183,6 +188,18 @@ what the books print: never invent lists or figures to fill a gap.
   Branch from an up-to-date `main`, keep the branch short-lived (one
   change), and open a pull request into `main`. Never commit to `main`
   directly; it changes only through pull requests.
+- **A spec's coupled stories share an integration branch.** When a spec's
+  stories can't each merge into `main` alone and keep it green, the spec
+  gets one short-lived integration branch from `main`, `spec-<topic>`,
+  and one pull request into `main`; that branch counts as one change.
+  Each of its stories is built on its own branch from the integration
+  branch, `spec-<topic>-story-<n>`, in its own worktree, and merges back
+  into it with a merge commit (never a rebase or a force push). Before the
+  pull request opens, merge `main` into the integration branch and run the
+  full suite there once (docs/adr/0033). A story outside such a spec keeps
+  a branch and a pull request of its own. A story blocked by another waits
+  until its blocker has merged: into `main`, or into the integration
+  branch both share. Branches are never stacked.
 - Whoever builds a change commits it, pushes its own branch and opens its
   pull request, once the checks above pass and both reviews are done (the
   bug review, and the Standards and Spec review against this file and the

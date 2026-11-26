@@ -3,6 +3,7 @@ threads build stories side by side, and runs that compete for the CPU stop
 at their limit and flake (STORY-2350)."""
 
 import importlib.util
+import os
 import subprocess
 import sys
 import threading
@@ -53,6 +54,36 @@ def test_a_second_run_waits_its_turn_and_says_whose_it_is(turns) -> None:
     waiter.join(10)
     assert order == ["first done", "second in"]
     assert said and "story_check --full in armarius-a" in said[0]
+
+
+def _lock_seen_from(cwd: Path, temp: Path) -> str:
+    """The lock path a story_check in `cwd` would use, with its own temp folder."""
+    env = {**os.environ, "TMP": str(temp), "TEMP": str(temp), "TMPDIR": str(temp)}
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "import importlib.util\n"
+            f"spec = importlib.util.spec_from_file_location('t', {str(TOOL)!r})\n"
+            "m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)\n"
+            "print(m.LOCK)\n",
+        ],
+        cwd=cwd,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    return result.stdout.strip()
+
+
+def test_every_worktree_and_session_shares_one_turn(tmp_path) -> None:
+    # Parallel builders run in their own worktrees, and a session may set its
+    # own temporary folder: the turn must still be the computer's one turn.
+    one, two = tmp_path / "armarius-a", tmp_path / "armarius-b"
+    for folder in (one, two, one / "tmp", two / "tmp"):
+        folder.mkdir(parents=True, exist_ok=True)
+    assert _lock_seen_from(one, one / "tmp") == _lock_seen_from(two, two / "tmp")
 
 
 def test_a_free_runner_is_taken_at_once_and_given_back(turns) -> None:

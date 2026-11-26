@@ -14,7 +14,7 @@
 
 ### Story
 
-<!-- STORY-n -->
+<!-- STORY-n, or for a spec's integration branch the spec and each of its stories, one per line. -->
 
 ### Pattern
 

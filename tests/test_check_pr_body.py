@@ -102,6 +102,16 @@ def test_an_empty_section_is_named_but_none_is_fine():
         assert check.problems(GOOD.replace("None: a plain function.", word)) == []
 
 
+def test_an_integration_pull_request_lists_every_story():
+    body = GOOD.replace(
+        "STORY-2492\n",
+        "Spec: Hubris and Sympathy experience.\n\n- STORY-2491 A Trait gains"
+        " experience\n- STORY-2492 Hubris and Sympathy gain it by themselves\n",
+        1,
+    )
+    assert check.problems(body) == []
+
+
 def test_a_section_may_hold_its_text_under_a_subheading():
     body = GOOD.replace("## Evidence\n", "## Evidence\n\n#### Before and after\n", 1)
     body = body.replace("## Summary\n", "## Summary\n\n#### Diagram\n", 1)

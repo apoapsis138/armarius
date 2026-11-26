@@ -7,8 +7,13 @@ alone, and the full suite flakes. So `story_check.py` holds the computer's
 turn while its tests run (`turn`); another run waits, saying whose turn it
 is, and goes on when it's free. Lint, format and type checks don't wait.
 
-The turn is an operating-system lock on a file in the computer's temporary
-folder, shared by every worktree; a run that dies holding it frees it.
+The turn is an operating-system lock on a file in the user's home folder
+(`~/.cache/armarius/`), shared by every worktree and every session, whatever
+temporary folder a session sets; a run that dies holding it frees it.
+
+Only story_check's test runs take the turn. A single test run on its own
+(`pytest -p no:xdist tests/<file>.py::<test>`, a builder's red or green)
+doesn't wait: several builders may run those side by side.
 """
 
 from __future__ import annotations
@@ -18,14 +23,13 @@ import datetime
 import json
 import os
 import sys
-import tempfile
 import time
 from collections.abc import Callable, Generator
 from pathlib import Path
 from typing import IO
 
-#: The computer's one test-runner turn, shared by every worktree.
-LOCK = Path(tempfile.gettempdir()) / "armarius-test-runner.lock"
+#: The computer's one test-runner turn, shared by every worktree and session.
+LOCK = Path.home() / ".cache" / "armarius" / "test-runner.lock"
 
 
 def _try_lock(handle: IO[bytes]) -> bool:
