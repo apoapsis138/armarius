@@ -208,7 +208,6 @@ vf_performance_magic
 vf_periapt
 vf_perpetuity
 vf_personal_power
-vf_personal_power_quality
 vf_philosophic_alchemy
 vf_philosophic_alchemy_major
 vf_planetary_magic

@@ -23,24 +23,47 @@ PARAGRAPH_CAP = 750
 #: An entry whose description is longer than this is "long" and needs a summary.
 LONG_ENTRY = 750
 
-#: A word the PDF split after its "fi" or "fl" ligature: "specifi c".
-SPLIT_LIGATURE = re.compile(r"\b([A-Za-z]*(?:fi|fl)) ([a-z]+)\b")
+#: A word the PDF split after its "fi" or "fl" ligature: "specifi c", "Fi rst".
+#: (A word in capitals, such as a book's abbreviation "LFI", is left alone.)
+SPLIT_LIGATURE = re.compile(r"\b([A-Z]?[a-z]*(?:fi|fl)|F[il]) ([a-z]+)\b")
 #: Words that really end in "fi" or "fl" before another word.
 WHOLE_WORDS = {"sufi"}
 #: An underscore the extraction left in running text.
 STRAY_UNDERSCORE = re.compile(r"_")
 
 
+def _records(data: object) -> Iterator[dict[str, object]]:
+    """Every record in a catalog, whatever its layout: a list of records, or
+    records under one or more keys (`entries`, `spells`, `weapons`...)."""
+    if isinstance(data, list):
+        for item in data:
+            if isinstance(item, dict):
+                yield item
+    elif isinstance(data, dict):
+        if "description" in data or "summary" in data:
+            yield data
+            return
+        for value in data.values():
+            yield from _records(value)
+
+
 def _entries() -> Iterator[tuple[str, str, dict[str, object]]]:
-    """(catalog file name, entry id, entry) for every entry of every catalog."""
+    """(catalog file name, entry id or name, entry) for every entry of every
+    catalog."""
     for path in sorted(DATA.glob("*_catalog.json")):
         data = json.loads(path.read_text(encoding="utf-8"))
-        if isinstance(data, dict) and "entries" in data:
-            data = data["entries"]
-        items = data.values() if isinstance(data, dict) else data
-        for entry in items:
-            if isinstance(entry, dict):
-                yield path.name, str(entry.get("id", "?")), entry
+        for entry in _records(data):
+            yield path.name, str(entry.get("id") or entry.get("name") or "?"), entry
+
+
+def test_every_catalog_yields_entries():
+    counts = {path.name: 0 for path in DATA.glob("*_catalog.json")}
+    for name, _id, _entry in _entries():
+        counts[name] += 1
+    empty = sorted(name for name, count in counts.items() if count == 0)
+    assert not empty, "catalogs with no entries found (a new layout?):\n" + "\n".join(
+        empty
+    )
 
 
 def _texts() -> Iterator[tuple[str, str]]:
@@ -97,7 +120,7 @@ def test_every_long_virtue_or_flaw_has_a_summary():
 
 
 def test_no_new_over_long_paragraph():
-    listed = STILL_LONG_FILE.read_text(encoding="utf-8").split()
+    listed = STILL_LONG_FILE.read_text(encoding="utf-8-sig").split()
     assert listed == sorted(set(listed)), (
         f"keep {STILL_LONG_FILE.name} sorted, one id per line"
     )
@@ -118,6 +141,8 @@ def test_no_new_over_long_paragraph():
 
 def test_the_checks_catch_what_they_look_for():
     assert split_ligatures("a specifi c rule, refl exes") == ["specifi c", "refl exes"]
+    assert split_ligatures("Fi rst, the Fl ame") == ["Fi rst", "Fl ame"]
     assert split_ligatures("off their staff with Sufi traditions") == []
+    assert split_ligatures("LFI p. 12") == []
     assert _over_cap("x" * (PARAGRAPH_CAP + 1))
     assert not _over_cap(("x" * PARAGRAPH_CAP + "\n\n") * 3)
