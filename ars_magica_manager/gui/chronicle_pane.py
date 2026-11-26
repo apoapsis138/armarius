@@ -102,7 +102,7 @@ def remembered_collapsed() -> bool:
 
 
 def number_font(size: float, *, bold: bool = True) -> QFont:
-    """Numbers are set in the system's UI face (FEAT-16's type rules)."""
+    """Numbers are set in the system's UI face (the desktop's type rules)."""
     font = QFont(fonts.UI)
     font.setPointSizeF(size)
     font.setBold(bold)

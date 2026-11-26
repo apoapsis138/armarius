@@ -1,5 +1,4 @@
-"""A source of chance that keeps the dice it gives out (STORY-2291,
-STORY-2348): every face in order, and each whole die `rules.dice` makes
+"""A source of chance that keeps the dice it gives out: every face in order, and each whole die `rules.dice` makes
 (its doublings and botch dice) kept together, for the dice line
 (dice_text) to say. Table rolls record a form's dice with it
 (table_rolls), and Advance Season each season's.

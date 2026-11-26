@@ -444,7 +444,7 @@ class Rolled:
 
     @property
     def line(self) -> str:
-        """The roll in the one dice line, then what it did (STORY-2348)."""
+        """The roll in the one dice line, then what it did."""
         rolled = dice_text.dice_line(
             self.die, [("Modifier", self.modifiers)], self.total
         )

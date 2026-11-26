@@ -1592,7 +1592,7 @@ _BOTH = (
 
 
 def _keep_dice(fight: Fight, played: rules.Played, said: str) -> list[str]:
-    """A blow's dice line (STORY-2348), kept with its entry in the fight's
+    """A blow's dice line, kept with its entry in the fight's
     chronicle as written and shown as markup (a player's name escaped):
     empty when no die was rolled."""
     if not said:

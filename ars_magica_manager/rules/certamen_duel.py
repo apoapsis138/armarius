@@ -168,7 +168,7 @@ def _attack(
     attack = _total(mine, True, art, technique) + a_die.value + VIS_BONUS * a_vis
     defence = _total(theirs, False, guard, technique) + d_die.value + VIS_BONUS * d_vis
     advantage = certamen.attack_advantage(attack, defence)
-    # Both sides' dice, each beside its total (DE p. 231; STORY-2348).
+    # Both sides' dice, each beside its total (DE p. 231).
     attacked = f"{attack} ({dice_text.die_text(a_die)})"
     defended = f"{defence} ({dice_text.die_text(d_die)})"
     if not advantage:
