@@ -13,9 +13,10 @@ from ars_magica_manager import (
     deeds,
     default_interests,
     storage,
+    worksheet,
 )
 from ars_magica_manager import grog_templates as gt
-from ars_magica_manager.commands import Confirm, Form
+from ars_magica_manager.commands import Confirm, Finished, Form, drive
 from ars_magica_manager.forms import character as character_forms
 from ars_magica_manager.forms import interests, menu_steps, more
 from ars_magica_manager.forms import world as world_forms
@@ -292,6 +293,73 @@ def test_demoting_a_new_character_keeps_its_interests_where_they_are():
     assert isinstance(step, Confirm)
     step.apply()
     assert made.interests_chosen and _on(made) == ON["grog"]
+
+
+def _review(character: Character) -> str:
+    """The Review Interests step's text for `character`."""
+    saga = Saga(id="s", name="S")
+    return worksheet.panel_for(character, "interests").budget(saga, character)
+
+
+def test_review_interests_says_where_each_default_comes_from(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    def by_house(character: Character) -> list[default_interests.Reason]:
+        return [
+            (deeds.MYSTERY_CULTS, "House Merinita"),
+            (deeds.FAERIE, "House Merinita"),
+        ]
+
+    monkeypatch.setattr(
+        default_interests, "RULES", [*default_interests.RULES, by_house]
+    )
+    text = _review(_unchosen("magus"))
+    assert "From being a magus: Research, Tribunal & Order." in text
+    assert "From House Merinita: Mystery Cults, Dealings with Faerie." in text
+    assert "every character" not in text
+
+
+def test_review_interests_says_whether_they_are_the_defaults_or_the_players():
+    grog = _unchosen("grog")
+    assert "follow the character's type, House and Virtues" in _review(grog)
+    deeds.keep_interests(grog)
+    assert "the player's own" in _review(grog)
+    assert "follow the character's type" not in _review(grog)
+
+
+def test_review_interests_lists_the_defaults_in_the_order_of_the_cards():
+    text = _review(_unchosen("grog"))
+    assert "From being a grog: Craft & Trade, Covenfolk.\n" in text
+    assert "\nOn: Craft & Trade, Covenfolk." in text
+
+
+def test_review_interests_names_the_few_on_rather_than_the_many_off():
+    text = _review(_unchosen("magus"))
+    assert "On: Research, Tribunal & Order. The rest are off." in text
+    assert "Turned off" not in text
+
+
+def _actions(character: Character) -> dict[str, worksheet.Action]:
+    saga = Saga(id="s", name="S")
+    panel = worksheet.panel_for(character, "interests")
+    return {action.label: action for action in panel.actions(saga, character)}
+
+
+def test_restore_the_defaults_hands_the_interests_back_and_says_whats_on():
+    grog = _unchosen("grog")
+    grog.interests_off = [deeds.CRAFT]
+    deeds.keep_interests(grog)
+    outcome = drive(_actions(grog)["Restore the defaults"].start(), lambda _: None)
+    assert outcome == Finished(["C is back to the defaults: Craft & Trade, Covenfolk."])
+    assert not grog.interests_chosen and grog.interests_off == []
+    assert _on(grog) == ON["grog"]
+
+
+def test_restore_the_defaults_is_offered_only_in_creation():
+    grog = _unchosen("grog")
+    assert list(_actions(grog)) == ["Edit Interests", "Restore the defaults"]
+    grog.in_creation = False
+    assert list(_actions(grog)) == ["Edit Interests"]
 
 
 def test_every_default_is_one_of_the_interests():
