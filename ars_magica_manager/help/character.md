@@ -5071,21 +5071,29 @@ for a covenant that will never take them up. A manor or a ship on record
 keeps them on. Hermetic Projects need no card, since they wait until a
 project begins.
 
-A new character starts with the interests that fit its type, its
-**Default Interests**, besides Session & Reputation: a magus has Research
-and Tribunal & Order, a companion or mythic companion Religion, a grog
-Covenfolk and Craft & Trade, and an animal grog Covenfolk. Its Creation
-Worksheet has a Review Interests step for them, which says where each one
-comes from and whether they are still the defaults. While the character is
-In Creation they follow its type, until you save Edit Interests, which
-makes them your own. **Restore the defaults**, beside Edit Interests on
-that step, hands them back to the defaults, which then follow the
-character again, and says which interests are on. Changing its type
-while In Creation goes back to the new type's defaults, and moving to In
-Play keeps them as they are. A covenant starts with everything ticked,
-and characters already saved keep what they had. Ticking an interest
-doesn't offer what the rules don't. An Artist's Career still needs a
-Craft or Profession, and every action still needs its book in play.
+A new character starts with the interests that fit its type, House and
+Virtues and Flaws, its **Default Interests**, besides Session &
+Reputation. A magus has Research and Tribunal & Order, a companion or
+mythic companion Religion, a grog Covenfolk and Craft & Trade, and an
+animal grog Covenfolk. A magus of Bjornaer, Criamon, Merinita or
+Verditius adds Mystery Cults, Merinita Dealings with Faerie as well,
+Verditius Craft & Trade, Jerbiton Scholarly and Flambeau Knightly.
+Virtues and Flaws add what they're about: Knight adds Knightly, Educated
+Scholarly, Priest Religion, Faerie Blood Dealings with Faerie, Diabolic
+Past The Infernal, Redcap Tribunal & Order, Custos Covenfolk and
+Apprentice Apprenticeship, among others. A saga's own Virtues and Flaws
+add nothing. Its Creation Worksheet has a Review Interests step for
+them, which says where each one comes from and whether they are still
+the defaults. While the character is In Creation they follow its type,
+House and Virtues and Flaws, until you save Edit Interests, which makes
+them your own. **Restore the defaults**, beside Edit Interests on that
+step, hands them back to the defaults, which then follow the character
+again, and says which interests are on. Changing its type while In
+Creation goes back to the new type's defaults, and moving to In Play
+keeps them as they are. A covenant starts with everything ticked, and
+characters already saved keep what they had. Ticking an interest doesn't
+offer what the rules don't. An Artist's Career still needs a Craft or
+Profession, and every action still needs its book in play.
 
 ## Planning
 <!-- help: tab-planning -->
