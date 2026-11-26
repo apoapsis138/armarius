@@ -1,0 +1,1 @@
+**Fixed: broken words in Virtue and Flaw text.** Sixty-two descriptions no longer show words split by the book's typesetting ("specifi c", "refl exes") or stray underscores, and their paragraph and list breaks are back where the book has them.
