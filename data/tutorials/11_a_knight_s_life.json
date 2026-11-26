@@ -508,7 +508,10 @@
         "manor_list": [],
         "establishments": []
       },
-      "interests_off": [],
+      "interests_off": [
+        "Manors",
+        "Ships"
+      ],
       "charter_of_covenant": {
         "name": "",
         "preamble": "",
@@ -708,7 +711,9 @@
           }
         ]
       },
-      "interests_off": [],
+      "interests_off": [
+        "Ships"
+      ],
       "charter_of_covenant": {
         "name": "",
         "preamble": "",
@@ -1215,7 +1220,20 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
-      "interests_off": [],
+      "interests_off": [
+        "Knightly",
+        "Scholarly",
+        "Insight",
+        "Religion",
+        "Agents",
+        "Hermetic Mysteries",
+        "Mystery Cults",
+        "Craft & Trade",
+        "Dealings with Faerie",
+        "The Infernal",
+        "Apprenticeship",
+        "Covenfolk"
+      ],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -1838,7 +1856,19 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
-      "interests_off": [],
+      "interests_off": [
+        "Scholarly",
+        "Insight",
+        "Religion",
+        "Agents",
+        "Hermetic Mysteries",
+        "Mystery Cults",
+        "Craft & Trade",
+        "Dealings with Faerie",
+        "The Infernal",
+        "Apprenticeship",
+        "Covenfolk"
+      ],
       "creation_xp": [
         {
           "step": "childhood",
@@ -2375,7 +2405,17 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
-      "interests_off": [],
+      "interests_off": [
+        "Scholarly",
+        "Insight",
+        "Mystery Cults",
+        "Craft & Trade",
+        "Tribunal & Order",
+        "Dealings with Faerie",
+        "The Infernal",
+        "Apprenticeship",
+        "Covenfolk"
+      ],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
