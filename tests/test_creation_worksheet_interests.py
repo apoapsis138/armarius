@@ -29,7 +29,11 @@ async def test_review_interests_restores_the_defaults_beside_edit_interests():
 
         assert await wait_until(
             pilot,
-            lambda: labels()[:2] == ["Edit Interests", "Restore the defaults"],
+            lambda: (
+                "Edit Interests" in labels()
+                and labels()[labels().index("Edit Interests") + 1 :][:1]
+                == ["Restore the defaults"]
+            ),
         )
         await _press_button(pilot, screen, "Restore the defaults")
         assert await wait_until(

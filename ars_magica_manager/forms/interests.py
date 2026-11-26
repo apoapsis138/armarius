@@ -228,18 +228,12 @@ def interests_text(character: Character) -> str:
     turned_off = [i for i in OPTIONAL if i in off]
     if not turned_off:
         return "Every interest is ticked."
-    on = interests_on(character)
+    on = deeds.interests_on(character)
     if not on:
         return f"Only {deeds.SESSION} is on."
     if len(on) < len(turned_off):
         return "On: " + ", ".join(on) + ". The rest are off."
     return "Turned off: " + ", ".join(turned_off) + "."
-
-
-def interests_on(character: Character) -> list[str]:
-    """The interests on for `character` besides Session & Reputation."""
-    off = deeds.interests_off(character)
-    return [i for i in OPTIONAL if deeds.applies(character, i) and i not in off]
 
 
 def defaults_text(character: Character) -> str:
@@ -263,7 +257,7 @@ def whose_text(character: Character) -> str:
     if deeds.following_defaults(character):
         return (
             "These are the defaults: they follow the character's type, House "
-            "and Virtues and Flaws until you save Edit Interests."
+            "and Virtues and Flaws until Edit Interests is saved."
         )
     if character.in_creation:
         return (
@@ -274,12 +268,12 @@ def whose_text(character: Character) -> str:
 
 
 def restore_defaults(character: Character) -> Act:
-    """Restore the defaults: hand the interests back to the Default
-    Interests, and say which are on now."""
+    """The Restore the defaults button: hand the interests back to the
+    Default Interests (deeds.follow_defaults), and say which are on now."""
 
     def apply() -> list[str]:
-        deeds.restore_defaults(character)
-        on = ", ".join(interests_on(character)) or f"only {deeds.SESSION}"
+        deeds.follow_defaults(character)
+        on = ", ".join(deeds.interests_on(character)) or f"only {deeds.SESSION}"
         return notes(f"{character.name} is back to the defaults: {on}.")
 
     return Act(apply, TITLE)

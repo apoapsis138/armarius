@@ -462,7 +462,7 @@ def keep_interests(character: Character) -> None:
     character.interests_chosen = True
 
 
-def restore_defaults(character: Character) -> None:
+def follow_defaults(character: Character) -> None:
     """Hand `character`'s interests back to its Default Interests, which
     follow it again until the player next chooses them."""
     character.interests_off = []
@@ -473,6 +473,13 @@ def interests_off(character: Character) -> list[str]:
     """The interests that are off for `character`: those turned off
     (turned_off), but never one its record keeps on (CHARACTER_GATES)."""
     return _not_kept_on(character, turned_off(character))
+
+
+def interests_on(character: Character) -> list[str]:
+    """The interests on for `character` besides Session & Reputation, in
+    the order of INTERESTS."""
+    off = interests_off(character)
+    return [i for i in OPTIONAL if applies(character, i) and i not in off]
 
 
 def covenant_interests_off(covenant: Covenant) -> list[str]:
