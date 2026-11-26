@@ -110,7 +110,7 @@ def _with(character: Character, *vf_ids: str) -> Character:
     return character
 
 
-#: One Virtue or Flaw of each interest's group, from the spec's table.
+#: One Virtue or Flaw of each interest's group (default_interests.SOURCE).
 @pytest.mark.parametrize(
     ("vf_id", "interest", "why"),
     [

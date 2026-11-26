@@ -24,25 +24,27 @@ SOURCE = (
     # Verditius), Merinita's study of faeries, Verditius's enchanted
     # wares, Jerbiton's mundane scholarship and Flambeau as the Order's
     # knights.
-    "Ars Magica Definitive Edition pp. 12-17, 46; The Mysteries, Revised "
-    "p. 4. "
+    "Ars Magica Definitive Edition pp. 12-17, 46 (Faerie Magic pp. "
+    "236-238); The Mysteries, Revised p. 4. "
     # Virtues and Flaws, by interest.
     "Knightly: Knight DE p. 88, Brother Knight DE p. 73 and RoP:D p. 92, "
     "Landed Noble DE p. 89, Great Noble Lords of Men p. 31. "
     "Scholarly: Educated and its Bardic, Hebrew, Islamic and Vernacular "
     "kinds DE p. 77 (Hebrew RoP:D p. 136, Islamic RoP:D p. 115), Clerk DE "
     "p. 74. "
-    "Insight: Font of Knowledge DE p. 82; Divination and Augury and "
-    "Additional Divination Method The Mysteries, Revised pp. 58-62; "
+    "Insight: Font of Knowledge DE p. 82; Divination and Augury The "
+    "Mysteries, Revised pp. 58-62, Additional Divination Method ibid. "
+    "p. 59; "
     "Mazdean Astrology The Cradle & the Crescent pp. 98-99, Solomonic "
     "Astrology ibid. p. 30; (Type) Divining Hedge Magic, Revised p. 19. "
     "Religion: Priest DE p. 104, Eastern Priest RoP:D pp. 92-93, Mazdean "
     "Priest DE p. 97 and The Cradle & the Crescent p. 93, Patron Angel "
     "RoP:D p. 99. "
     "Dealings with Faerie: Faerie Blood DE p. 79 (Bloodcap HoH:TL p. 104, "
-    "Spinnen Lion & Lily p. 97, Jentil and Laminak Faith & Flame p. 91), Strong "
-    "Faerie Blood DE p. 110, Faerie Sight and Faerie Speech RoP:F p. 50 "
-    "and The Cradle & the Crescent p. 79, (Faerie) Summoning RoP:F p. 113, "
+    "Spinnen Lion & Lily p. 97, Jentil and Laminak Faith & Flame p. 91), "
+    "Strong Faerie Blood DE p. 110, Faerie Sight and Faerie Speech RoP:F "
+    "p. 50 and The Cradle & the Crescent p. 79 (Errata p. 68 is for Tales "
+    "of Mythic Europe's Faerie Speech), (Faerie) Summoning RoP:F p. 113, "
     "Faerie Magic DE p. 79, Faerie-Raised Magic DE p. 79 and HoH:MC p. 86 "
     "(Errata p. 55), Faerie Upbringing and Faerie Friend DE p. 128. "
     "Craft & Trade: Craftsman DE p. 75, Merchant DE p. 98, Guild "
@@ -216,10 +218,10 @@ def by_virtue(character: Character) -> list[Reason]:
     """The interests its Virtues and Flaws take up, each named as the sheet
     names it ("Faerie Blood (Jentil)")."""
     found: list[Reason] = []
+    by_id = catalog.load_virtue_flaw_catalog_by_id()
     for vf in character.virtues_flaws:
         if vf.vf_id not in BY_VIRTUE:
             continue
-        by_id = catalog.load_virtue_flaw_catalog_by_id()
         reason = (BY_VIRTUE[vf.vf_id], catalog.describe_virtue_flaw(vf, by_id))
         if reason not in found:
             found.append(reason)
