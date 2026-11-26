@@ -210,6 +210,9 @@ NO_CONTRACT: dict[str, str] = {
     "nothing to change (test_handout_list.py drives it).",
     "player_handouts": "It only reads: a Player's Handouts, then one's copy "
     "with nothing to change (test_handout_list.py drives it).",
+    "preview_handout": "It only reads: the chosen Handout on its Stationery, "
+    "with nothing to fill (test_preview_handout.py, test_gui_preview_handout.py "
+    "and test_tui_shown_handout.py drive it).",
     "open_session": "opens the Session's page, not a dialog "
     "(test_session_page.py, test_tui_session_page.py)",
 }

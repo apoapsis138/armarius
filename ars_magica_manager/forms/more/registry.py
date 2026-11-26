@@ -74,6 +74,7 @@ ORDER: tuple[str, ...] = (
     "end_scene",
     "show_at_session",
     "show_handout",
+    "preview_handout",
     "show_record",
     "my_handouts",
     "player_handouts",

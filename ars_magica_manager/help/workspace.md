@@ -1881,12 +1881,14 @@ Each written Handout: its title, its Stationery, who found it and the Story it b
 
 To see only one Story's Handouts, narrow the list to it, and the title counts what it shows, as "Handouts (1 of 3)". Edit and Delete act on the list as it's shown. The list stays narrowed until you choose every story again or close the app.
 
+**Preview** reads the chosen Handout as it's saved, the way the players will get it, without opening Edit. It shows it to no one and changes nothing, so it works whether or not a Session is under way.
+
 With the Virtual Tabletop (Preview) on and a Session under way, **Show** shows the chosen Handout to the Table or the Players you choose, through the [Show](help:chronicle-shows) form. Each Show gives its players a copy as the Handout stands then.
 <!-- tui -->
-Press `/` on the list to choose the Story; leave it blank for every story. To Show the chosen Handout, press `m` for More and choose **Show**.
+Press `/` on the list to choose the Story; leave it blank for every story. To Preview or Show the chosen Handout, press `m` for More and choose **Preview** or **Show**. Preview shows its text under its Stationery's name, each picture named where it's placed.
 <!-- /tui -->
 <!-- gui -->
-Choose the Story above the list, or **Every story**. **Show** sits beside Edit and Delete.
+Choose the Story above the list, or **Every story**. **Preview** and **Show** sit beside Edit and Delete. Preview opens the Handout on its Stationery, in the same window a player's copy opens in; a picture this computer hasn't got is drawn as a box naming it.
 <!-- /gui -->
 
 **See also:** [Writing a Handout](help:handouts-written)
@@ -1912,7 +1914,7 @@ Choose the Story above the list, or **Every story**. **Show** sits beside Edit a
 
 Like everything the Chronicle carries, a Handout can't hold emoji or invisible characters. Deleting the character who found it, or the Place, keeps their name on the Handout.
 
-**Preview** shows the Handout as it stands in the form, as the players will get it, without saving it.
+**Preview** shows the Handout as it stands in the form, as the players will get it, without saving it. To read a saved one without opening Edit, choose it on the [Handouts](help:section-handouts) list and use Preview there.
 <!-- gui -->
 It opens in a window of its own, drawn on its Stationery:
 

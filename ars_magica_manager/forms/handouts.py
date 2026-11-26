@@ -23,6 +23,7 @@ from ..commands import (
     Confirm,
     Form,
     Picked,
+    Refuse,
     SectionOps,
     confirm_delete,
 )
@@ -31,8 +32,11 @@ from ..handout_layout import Preview
 from ..markup import escape
 from ..models import STATIONERY, VELLUM, Handout, Saga
 from ..picture_files import SUFFIXES
+from ..sections import HANDOUTS_SECTION
 
 HANDOUTS_HELP = "handouts-written"
+#: What a saved Handout's Preview from the list is titled.
+PREVIEW_TITLE = "Preview"
 
 #: A picture choice that opens this computer's files instead.
 _NEW = "__new__"
@@ -202,6 +206,33 @@ def _preview(saga: Saga, values: dict[str, Any]) -> Preview:
         values.get("stationery") or VELLUM,
         values.get("text") or "",
         list(values.get("pictures") or []),
+    )
+
+
+def offers_preview(saga: Saga, row: int | None) -> bool:
+    """Whether Preview is offered on the Handouts list's row `row` (as
+    narrowed now): a Handout is there. The one rule both front-ends ask;
+    who may is viewing's (the storyguide only)."""
+    return row is not None and 0 <= row < len(handouts.shown(saga))
+
+
+def preview_handout(saga: Saga, row: int | None) -> Form | Refuse:
+    """Preview, from the Handouts list: the saved Handout at `row` laid on
+    its Stationery, as a Reading each front-end draws in place of fields
+    (the window a player's shown copy opens in, on the desktop; its text
+    under its Stationery's name, in the terminal), its pictures named.
+    Closing it changes nothing, and nobody else sees it."""
+    listed = handouts.shown(saga)
+    if row is None or not 0 <= row < len(listed):
+        return Refuse(PREVIEW_TITLE, "Choose a Handout first.")
+    handout = listed[row]
+    return Form(
+        f"{PREVIEW_TITLE}: {escape(handout.title or '(untitled)')}",
+        list,
+        lambda _values: None,
+        save_label="Close",
+        help_id=HANDOUTS_SECTION,
+        reading=handouts.preview_reading(saga, handout),
     )
 
 

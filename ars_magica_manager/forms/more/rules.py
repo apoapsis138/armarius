@@ -48,6 +48,7 @@ from ...actions import (
 from ...forms import acclaim as acclaim_forms
 from ...forms import careers, go_to, message, scene_verbs, sheet_roll, show
 from ...forms import charter as charter_forms
+from ...forms import handouts as handout_forms
 from ...forms import hubris as hubris_forms
 from ...forms import notes_goals as goal_forms
 from ...forms import secrets as secret_forms
@@ -985,6 +986,15 @@ def shows_handout(facts: ActionFacts, section: str) -> bool:
     storyguide of the Session Under way, while the Virtual Tabletop
     (Preview) is on."""
     return section == HANDOUTS_SECTION and show.offers_handout(
+        facts.saga, facts.chosen_row(section)
+    )
+
+
+def previews_handout(facts: ActionFacts, section: str) -> bool:
+    """Preview, on the chosen row of the Handouts list (Saga content),
+    with or without a Session under way or the Virtual Tabletop on: it
+    shows no one and writes nothing."""
+    return section == HANDOUTS_SECTION and handout_forms.offers_preview(
         facts.saga, facts.chosen_row(section)
     )
 

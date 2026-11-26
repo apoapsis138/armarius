@@ -39,6 +39,7 @@ from .. import saga_content as sc
 from .. import spells as spl
 from ..arts import FORMS, TECHNIQUES
 from ..forms import goods as goods_forms
+from ..forms import handouts as handout_forms
 from ..forms import saga_content as scf
 from ..forms import show as show_forms
 from ..models import Saga, Spell
@@ -54,6 +55,7 @@ from . import pictures
 from .character_sheet import TextBlock, section
 from .editing import (
     Chooser,
+    RowVerb,
     Run,
     choose_cards,
     choose_rows,
@@ -548,16 +550,29 @@ class SagaContentPage(QWidget):
             if saga.handouts
             else "None yet: Add writes one to show the players."
         )
-        # Show (the More registry's show_handout), offered by the same core
-        # rule the terminal's More asks (show_forms.offers_handout).
-        more = [
+        # Preview and Show (the More registry's preview_handout and
+        # show_handout), each offered by the same core rule the terminal's
+        # More asks; Show only while the Virtual Tabletop is on.
+        more: list[RowVerb] = [
             (
-                "Show",
+                "Preview",
                 "lab_text",
-                lambda row: show_forms.show_handout(saga, row),
-                lambda row: show_forms.offers_handout(saga, row),
+                lambda row: handout_forms.preview_handout(saga, row),
+                lambda row: (
+                    viewing.offers("preview_handout")
+                    and handout_forms.offers_preview(saga, row)
+                ),
             )
         ]
+        if virtual_tabletop.on():
+            more.append(
+                (
+                    "Show",
+                    "lab_text",
+                    lambda row: show_forms.show_handout(saga, row),
+                    lambda row: show_forms.offers_handout(saga, row),
+                )
+            )
         holder.addWidget(
             section(
                 handouts.title(saga),
@@ -569,7 +584,7 @@ class SagaContentPage(QWidget):
                     self.run,
                     p,
                     nouns=("Write a Handout", "Edit", "Delete"),
-                    more=more if virtual_tabletop.on() else (),
+                    more=more,
                     part=HANDOUTS_SECTION,
                 ),
                 part=HANDOUTS_SECTION,

@@ -11,6 +11,7 @@ from ...sections import (
     SESSIONS_SECTION,
 )
 from .. import downtime, player_handouts, scene_verbs
+from .. import handouts as handout_forms
 from .. import hosting as hosting_forms
 from .. import message as message_forms
 from .. import reveal as reveal_forms
@@ -40,6 +41,7 @@ from .rules import (
     on_saga,
     opens_session,
     opens_show,
+    previews_handout,
     reads_chronicle,
     reads_player_handouts,
     sends_message,
@@ -142,6 +144,20 @@ ENTRIES: tuple[MoreAction, ...] = (
         section=HANDOUTS_SECTION,
         on_page=False,
         in_section=shows_handout,
+    ),
+    # Preview a written Handout on its Stationery, from the same list: its
+    # row's own button on the desktop (forms/handouts.py). It writes nothing.
+    MoreAction(
+        "preview_handout",
+        "p",
+        "Preview",
+        step=lambda page: handout_forms.preview_handout(
+            page.saga, page.chosen_row(HANDOUTS_SECTION)
+        ),
+        refresh=calculator(),
+        section=HANDOUTS_SECTION,
+        on_page=False,
+        in_section=previews_handout,
     ),
     # Set and end a Scene loaded into the Session (forms/scene_verbs.py).
     MoreAction(

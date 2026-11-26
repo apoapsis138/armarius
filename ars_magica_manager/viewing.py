@@ -438,6 +438,8 @@ STORYGUIDE_ONLY_ACTIONS: frozenset[str] = frozenset(
         "grow_story",
         "take_up_tale",
         "take_up_story",
+        # A written Handout, unshown: the storyguide's alone.
+        "preview_handout",
     }
 )
 
