@@ -302,7 +302,7 @@ def _cost_lines(journey: tr.Journey, travellers: int, cargo: float) -> list[str]
     if journey.known_magus_doubled:
         lines.append(
             "[dim]A known magus pays double for passage, and only a captain "
-            f"desperate enough to risk his ship will take him ({CG} p. 85).[/]"
+            f"desperate enough to risk their ship will take them ({CG} p. 85).[/]"
         )
     return lines
 

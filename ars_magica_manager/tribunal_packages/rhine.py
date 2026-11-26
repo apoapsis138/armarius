@@ -239,8 +239,8 @@ def covenant_gild_fields(
                 ],
                 allow_blank=True,
                 placeholder="(no gild)",
-                hint="One gild at most, never one he has the Enmity Flaw "
-                "for (Guardians of the Forests pp. 22, 28).",
+                hint="One gild at most, never one they have the Enmity Flaw for (GotF "
+                "pp. 22, 28).",
             )
         )
     return found
@@ -502,8 +502,8 @@ def mark_form(saga: Saga, tribunal: Tribunal) -> Form:
                 None,
                 options=_magus_options([m for m in magi if not ranks.is_master(m)]),
                 required=True,
-                hint="A journeyman famed for his magical prowess (a Redcap: for "
-                "his loyal service).",
+                hint="A journeyman famed for their magical prowess (a Redcap: for their"
+                " loyal service).",
             ),
             DialogField(
                 "sponsor",
@@ -512,16 +512,16 @@ def mark_form(saga: Saga, tribunal: Tribunal) -> Form:
                 None,
                 options=_magus_options([m for m in magi if ranks.is_master(m)]),
                 required=True,
-                hint="A master not of his covenant or House; the three from "
-                "three different gilds.",
+                hint="A master not of their covenant or House; the three from three "
+                "different gilds.",
             ),
             DialogField(
                 "asked",
-                "Asked of him",
+                "Asked of them",
                 "text",
                 "",
                 placeholder="e.g. a summa for the Great Library",
-                hint="What the master asked before giving his token, if anything.",
+                hint="What the master asked before giving their token, if anything.",
             ),
         ]
 
@@ -672,16 +672,16 @@ def challenge_form(saga: Saga, tribunal: Tribunal) -> Form:
                 None,
                 options=_magus_options(_archmagi(saga)),
                 required=True,
-                hint="Seven losses and he is challenged no more.",
+                hint="Seven losses and they're challenged no more.",
             ),
             DialogField(
                 "contest",
                 "Contest",
                 "text",
                 "",
-                placeholder="e.g. to defeat him in certamen",
-                hint="Set by the archmage the first time he is challenged, then "
-                "his for life; it must involve magical powers.",
+                placeholder="e.g. to defeat them in certamen",
+                hint="Set by the archmage the first time they're challenged, then "
+                "theirs for life; it must involve magical powers.",
                 show_if=lambda v: not contest_of(v),
             ),
             DialogField(
@@ -689,7 +689,7 @@ def challenge_form(saga: Saga, tribunal: Tribunal) -> Form:
                 "Has invented a spell of 7th magnitude",
                 "check",
                 bool(able and spell_of({"challenger": able[0].id}).get("spell")),
-                hint="Ticked for you when one he invented is recorded.",
+                hint="Ticked for you when one they invented is recorded.",
             ),
             DialogField(
                 "deed",
@@ -729,7 +729,7 @@ def challenge_form(saga: Saga, tribunal: Tribunal) -> Form:
                 "magnitude (Guardians of the Forests p. 24)."
             )
         if not contest_of(values) and not (values.get("contest") or "").strip():
-            return "Name the archmage's contest: he sets it at his first challenge."
+            return "Name the archmage's contest: they set it at their first challenge."
         return None
 
     def apply(values: dict[str, Any]) -> None:
@@ -802,7 +802,7 @@ def magus_facts(
                     "Apprentice",
                     f"{viewing.name_of(apprentice)}: a journeyman's, so a recruited "
                     "hedge "
-                    "wizard at his Gauntlet, never his filius (GotF p. 24)",
+                    "wizard at their Gauntlet, never their filius (GotF p. 24)",
                 )
             )
     return found

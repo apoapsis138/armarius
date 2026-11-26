@@ -45,7 +45,7 @@ def fields(plan: SeasonPlan | None, activity_is: ActivityIs) -> list[DialogField
         ),
         DialogField(
             "elixir_devised",
-            "He devised it himself (Vulgar Alchemy)",
+            "They devised it themselves (Vulgar Alchemy)",
             "check",
             bool(plan.devised) if plan and ours else False,
             show_if=shown,
@@ -58,8 +58,8 @@ def fields(plan: SeasonPlan | None, activity_is: ActivityIs) -> list[DialogField
             (plan.vis_art if plan and ours else "") or "Vim",
             options=[(art, art) for art in aw.DOSE_ARTS],
             show_if=shown,
-            hint="A dose of his Longevity Ritual: a pawn for every five years "
-            "of his age (DE p. 261).",
+            hint="A dose of their Longevity Ritual: a pawn for every five years of "
+            "their age (DE p. 261).",
         ),
     ]
 

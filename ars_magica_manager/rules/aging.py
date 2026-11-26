@@ -327,8 +327,8 @@ def fatal_crisis(text: str) -> bool:
 
 #: Medical attention through a crisis (DE p. 392).
 PHYSICIAN = (
-    "An attendant's Int + Medicine against 6 adds his Medicine score to it; "
-    "only one doctor helps, and his botch takes 3 off (DE p. 392)."
+    "An attendant's Int + Medicine against 6 adds their Medicine score; only one doctor"
+    " helps, and their botch takes 3 off (DE p. 392)."
 )
 
 

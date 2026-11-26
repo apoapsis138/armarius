@@ -397,13 +397,13 @@ def royal_benefit(character: Character) -> HouseBenefit:
     free (Against the Dark p. 122)."""
     index = transylvania.royal_shapeshifter_index(character)
     if index is None:
-        return HouseBenefit(giver="his crown")
+        return HouseBenefit(giver="their crown")
     entry = catalog.load_virtue_flaw_catalog_by_id()[transylvania.SHAPESHIFTER]
     return HouseBenefit(
         virtue_points=int(entry.cost),
         held=(entry.name,),
         free_indices=frozenset({index}),
-        giver="his crown",
+        giver="their crown",
     )
 
 

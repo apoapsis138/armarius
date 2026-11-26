@@ -304,7 +304,7 @@ def school_text(magus: Character) -> str:
     rule = school.follower
     summary = f": {rule.summary}" if rule is not None else ""
     house = (
-        " (not his House's style)"
+        " (not their House's style)"
         if school.house and magus.hermetic.house != school.house
         else ""
     )

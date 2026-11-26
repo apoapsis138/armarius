@@ -194,7 +194,7 @@ def test_a_first_concoction_over_several_seasons():
     work = sw.work(saga, martin, plan, None)
     assert work.progress == [("concoction", "Greek Fire", 10, 3)]
     assert not work.lab_texts and not work.products
-    # No store of his own: the ingredients come from an apothecary's.
+    # No store of their own: the ingredients come from an apothecary's.
     assert work.labor_points == 0
 
 
@@ -287,7 +287,7 @@ def test_the_ligature_form():
     assert scholar.labor_points == -1
     assert scholar.diary[-1].name == "Ligature: Hugh's surgery"
     botch = form.apply({**values, "die": 0, "botched": True, "own_store": False})
-    assert any("Botched, unknown to him" in line for line in botch)
+    assert any("Botched, unknown to them" in line for line in botch)
     assert scholar.labor_points == -1
     assert "below 9" in form.apply({**values, "die": 1, "own_store": False})[1]
     nobody = Character(id="n", name="Nobody", type="companion")

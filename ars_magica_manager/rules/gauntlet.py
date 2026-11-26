@@ -208,18 +208,18 @@ def pass_gauntlet(character: Character) -> list[str]:
     character.type = "magus"
     parma = ability_level(character, "Parma Magica")
     return [
-        "Hermetic Magus replaces Apprentice: he swears the Oath of Hermes and "
-        "is given Parma Magica's final key"
-        + (f" (Parma Magica {parma} now protects him)." if parma else "."),
+        "Hermetic Magus replaces Apprentice: they swear the Oath of Hermes and "
+        "are given Parma Magica's final key"
+        + (f" (Parma Magica {parma} now protects them)." if parma else "."),
     ]
 
 
 def fail_gauntlet(character: Character) -> list[str]:
     failed = failures(character) + 1
     return [
-        "Another year as an apprentice before he tries again"
+        "Another year as an apprentice before they try again"
         + (
-            "; after this, the Quaesitores set his Gauntlet."
+            "; after this, the Quaesitores set their Gauntlet."
             if failed >= QUAESITOR_AFTER
             else "."
         )
@@ -232,8 +232,8 @@ def lose_gift(character: Character, how: str) -> list[str]:
         if SUPPRESSED_GIFT not in _ids(character):
             character.virtues_flaws.append(VirtueFlawInstance(SUPPRESSED_GIFT))
         return [
-            "Suppressed Gift: no Hermetic magic, no new Supernatural or Hermetic "
-            "Virtues while it lasts; his Supernatural Virtues and Abilities still "
+            "Suppressed Gift: no Hermetic magic and no new Supernatural or Hermetic "
+            "Virtues while it lasts; their Supernatural Virtues and Abilities still "
             "work. How it returns is the troupe's story."
         ]
     was_apprentice = apprentice(character)
@@ -249,7 +249,7 @@ def lose_gift(character: Character, how: str) -> list[str]:
     if character.type == "magus":
         character.type = "companion"
     return [
-        "The Gift is gone: no spells, no magic of any kind, and his Supernatural "
+        "The Gift is gone: no spells or magic of any kind, and their Supernatural "
         "Virtues and Abilities no longer work."
         + (" Failed Apprentice replaces Apprentice." if was_apprentice else "")
     ]
@@ -271,7 +271,7 @@ def cantations_in_play(saga: Saga | None) -> bool:
 def cantation_problem(level: int, times_cast: int, known: bool) -> str | None:
     """Why a spontaneous spell can't become formulaic (None: it can)."""
     if known:
-        return "He knows that spell already."
+        return "They know that spell already."
     if level < 1:
         return "Give the spell's level."
     if times_cast < level:

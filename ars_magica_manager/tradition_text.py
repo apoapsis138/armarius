@@ -318,9 +318,9 @@ def _opening_lines(
     lines = [
         f"[b]Opening[/] a Gifted student's Gift: a season. Opening Total "
         f"{int(total.total)} ({terms}).",
-        "Against 2 x the student's Supernatural Abilities and Arts (+12 if his "
-        "Gift was Opened before); with none it always works. Up to twice that "
-        "he loses them; beyond it he keeps them.",
+        "Against 2 x the student's Supernatural Abilities and Arts (+12 if their Gift "
+        "was Opened before); with none it always works. Up to twice that they lose "
+        "them; beyond it they keep them.",
     ]
     if tradition not in ts.openable(character):
         lines.append("[dim]Only a Gifted member Opened to the tradition can Open.[/]")

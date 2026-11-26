@@ -303,10 +303,9 @@ ACTIVITIES: dict[str, Activity] = {
         Activity(
             lab_seasons.TAUGHT_SPELLS,
             "Learn spells from a teacher",
-            "A season learning spells from a magus who knows them and spends "
-            "the season teaching: at most his highest Lab Total in levels, his "
-            "Lab Total in each Technique and Form, and no spell above your own "
-            "Lab Total for it.",
+            "A season learning spells from a magus who teaches them: at most their "
+            "highest Lab Total in levels, their Lab Total in each Technique and Form, "
+            "and your own Lab Total.",
             lab_seasons.spell_teaching.SOURCE,
             who=("magus",),
             lab=True,
@@ -600,8 +599,8 @@ ACTIVITIES: dict[str, Activity] = {
         Activity(
             book_seasons.TEACH_ABBREVIATIONS,
             "Teach Lab Text abbreviations",
-            "A season writing with a student: he can then read your texts up "
-            "to Latin x 20 levels.",
+            "A season writing with a student: they can then read your texts up to Latin"
+            " x 20 levels.",
             book_seasons.DECODE_SOURCE,
             who=("magus",),
             group=groups.TEACHING,
@@ -658,9 +657,9 @@ ACTIVITIES: dict[str, Activity] = {
         Activity(
             laboratory_seasons.ASSIST,
             "Assist in a laboratory",
-            "Helping a magus with his lab work: + Intelligence + Magic Theory "
-            "to his Lab Total, or without The Gift and Magic Theory as a "
-            "servant (+ Safety, Aesthetics, Mentem); Exposure in Magic Theory.",
+            "Helping a magus with their lab work: + Intelligence + Magic Theory to "
+            "their Lab Total, or as a servant without The Gift (+ Safety, Aesthetics, "
+            "Mentem); Exposure in Magic Theory.",
             laboratory_seasons.ASSIST_SOURCE,
             group=groups.ORDER,
         ),
@@ -708,8 +707,8 @@ HEDGE_SOURCE = "Hedge Magic, Revised Edition, Chapters Two to Seven, pp. 17-141"
 ACTIVITIES[tradition_seasons.OPEN] = Activity(
     tradition_seasons.OPEN,
     "Open a student's Gift to a tradition",
-    "A season with a Gifted student: the Opening Total against twice his "
-    "Supernatural Abilities and Arts (+12 if already Opened).",
+    "A season with a Gifted student: the Opening Total against twice their Supernatural"
+    " Abilities and Arts (+12 if already Opened).",
     tradition_seasons.SOURCE,
     book="HMRE",
     tradition="*",
@@ -1180,7 +1179,7 @@ def _reading_problems(saga: Saga, character: Character, plan: SeasonPlan) -> lis
     if book.type == "Tractatus" and book_seasons.written_by(book, character):
         found.append(
             f"{character.name} wrote {book.name}: nobody gains from studying "
-            "a tractatus of his own (DE p. 378)."
+            "a tractatus of their own (DE p. 378)."
         )
     language = book.language or "Latin"
     # A character with no Abilities typed (a stat-less NPC) isn't checked.
@@ -2257,9 +2256,9 @@ def _apprentice_outcome(
     if botched:
         # A botch dupes the searcher (DE p. 269).
         result.notes.append(
-            "Perception + a botch: the magus thinks he has found a Gifted "
-            "child, but is duped, by the child or by a power that has "
-            "replaced it with its servant (the storyguide decides)."
+            "Perception + a botch: the magus thinks they've found a Gifted child, but "
+            "is duped, by the child or a power that replaced it (the storyguide "
+            "decides)."
         )
         return
     result.notes.append(

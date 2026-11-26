@@ -72,8 +72,8 @@ def test_a_search_rolls_intelligence_and_the_chosen_area_lore_against_9():
     found = sw.work(saga, magus, _search(3), None)
     # Int 2 + Area Lore: Paris 4 + 3 = 9.
     assert found.notes == [
-        "Int + Area Lore + die = 9 against 9: the obvious lacunae are found. He "
-        "knows 12 small lacunae there (3 per level of Area Lore: Paris)."
+        "Int + Area Lore + die = 9 against 9: the obvious lacunae are found. They "
+        "know 12 small lacunae there (3 per level of Area Lore: Paris)."
     ]
     assert found.progress == [("lacunae", "Lacunae of Paris", 9, 9)]
     short = sw.work(saga, magus, _search(2, "Area Lore: Rome"), None)

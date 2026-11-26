@@ -92,7 +92,7 @@ def test_the_details_follow_how_far_he_is_won():
     assert "Stress die + [b]5[/]" in hartwig and "against 6" in hartwig
     assert "55 Agency experience" in hartwig  # 10 + 9 + ... + 1
     bertolf = agent_forms.info(lord, 2, wide=False)
-    assert "3 Agency experience recruits him (2 + 1)" in bertolf
+    assert "3 Agency experience recruits them (2 + 1)" in bertolf
     konrad = agent_forms.info(lord, 0, wide=True)
     # Communication 1 + Charm 4 + Bond 2 - Gift 0.
     assert "stress die + [b]7[/]" in konrad
@@ -311,13 +311,13 @@ def test_resolving_rolls_his_scores_and_writes_the_diary():
     entry = lord.diary[-1]
     assert entry.name == "Sir Konrad's task: steal the ring"
     assert "+ 20 (Dex + Legerdemain)" in entry.details
-    assert "He does it, by" in entry.details  # a simple die can't botch
+    assert "They do it, by" in entry.details  # a simple die can't botch
     assert (entry.year, entry.season) == (saga.current_year, saga.current_season)
     assert said[-1] == "Written in Lord Robert's Diary."
     hopeless = agent_forms.resolve(saga, lord, 0, random.Random(1))
     assert isinstance(hopeless, Form)
     hopeless.apply({"total": -20, "band": "impressive", "ease": 18, "risk": "none"})
-    assert "He fails, by" in lord.diary[-1].details
+    assert "They fail, by" in lord.diary[-1].details
     assert lord.diary[-1].name == "Sir Konrad's task"
 
 

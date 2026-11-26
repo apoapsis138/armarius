@@ -364,7 +364,7 @@ def test_a_rank_s_needs_are_checked():
     assert town_guilds.shortfalls(leandro, guild, "journeyman") == []
     master = town_guilds.shortfalls(leandro, guild, "master")
     assert "Guild Lore 2 (has 1)" in master
-    assert "Leadership half his Craft (has 0)" in master
+    assert "Leadership half their Craft (has 0)" in master
 
 
 # -- the court (pp. 29-30) --

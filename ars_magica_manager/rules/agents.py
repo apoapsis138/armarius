@@ -59,7 +59,7 @@ STATUS_RESISTANCE: dict[str, tuple[str, int]] = {
 MODIFIERS: dict[str, tuple[str, int, bool]] = {
     "major_trouble": ("A Major Flaw likely to trouble the principal", -3, False),
     "minor_trouble": ("A Minor Flaw likely to trouble the principal", -1, False),
-    "dominated": ("A Minor Flaw the principal uses to dominate him", -6, False),
+    "dominated": ("A Minor Flaw the principal uses to dominate them", -6, False),
     "skill": ("Main Ability 6 or more", 1, True),
     "exceptional": ("Main Ability 8 or more", 3, True),
     "minor_virtue": ("A Minor General or Supernatural Virtue", 1, True),
@@ -102,7 +102,7 @@ TIMEFRAME: dict[str, tuple[str, int]] = {
 #: simple die).
 RISK: dict[str, tuple[str, int, int | None]] = {
     "none": ("None at all", 0, None),
-    "embarrassment": ("Embarrassment or his reputation", 1, 1),
+    "embarrassment": ("Embarrassment or their reputation", 1, 1),
     "injury": ("Injury or imprisonment", 3, 3),
     "death": ("Death", 6, 5),
 }

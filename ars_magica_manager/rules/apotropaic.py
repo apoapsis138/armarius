@@ -179,8 +179,8 @@ def _say(level: int) -> dict[str, Callable[[], str]]:
             "still rolls Infernal vis's botch dice"
         ),
         "Command the Vile Spirit": lambda: (
-            "Communication + Leadership + his Hierarchy, less the demon's, sets "
-            "how well it obeys"
+            "Communication + Leadership + their Hierarchy, less the demon's, sets how "
+            "well it obeys"
         ),
     }
 

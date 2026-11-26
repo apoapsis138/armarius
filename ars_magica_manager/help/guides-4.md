@@ -2461,7 +2461,7 @@ Friday's game is set: Ana and Bruno are coming, Clara is away.
 # How to choose a theme
 <!-- help: guide-themes; gui -->
 
-Your magus is a Bonisagus, and you'd like the app to look like her House's
+Your magus is a Bonisagus, and you'd like the app to look like their House's
 books.
 
 1. **Open Settings.** Click the **gear** at the right of the top bar. The

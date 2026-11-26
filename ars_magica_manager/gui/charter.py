@@ -285,7 +285,7 @@ def law_note(saga: Saga, covenant: Covenant, p: Palette) -> TextBlock:
         lines.append(f"[dim]{escape(note)}[/]")
     for line in cc.probations_ended(saga, covenant):
         lines.append(
-            f"[$text-warning]{escape(line)}: Seal the Charter to make him a full "
+            f"[$text-warning]{escape(line)}: Seal the Charter to make them a full "
             "member, or extend it.[/]"
         )
     if out := cc.still_resident(saga, covenant):

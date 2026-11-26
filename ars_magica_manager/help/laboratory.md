@@ -678,7 +678,7 @@ allow (The Mysteries Revised Edition pp. 89-90).
   whenever the magus reopens it, with no Craft roll, up to their Magic
   Theory in all.
 - **Consummate Talisman**: its Personal Muto Vim effects work on the
-  magus's Formulaic spells, listed as "On his Formulaic spells". Its Names
+  magus's Formulaic spells, listed as "On their Formulaic spells". Its Names
   of Power work on any spell they cast, spoken aloud, their bonus at most
   Magic Theory.
 - Inscription on the Soul alone attunes no bonus without work on the

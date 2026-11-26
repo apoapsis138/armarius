@@ -289,7 +289,7 @@ def _supernatural(
     if laboratory is None:
         return (
             f"{student.name} has Supernatural Abilities: opening the Arts needs "
-            f"{magus.name}'s Intellego Vim Lab Total, so give him a laboratory."
+            f"{magus.name}'s Intellego Vim Lab Total, so give them a laboratory."
         )
     total = int(lab.lab_total(saga, magus, "Intellego", "Vim", laboratory).total)
     if total < level:
@@ -419,7 +419,7 @@ def open_arts(
         student.hermetic.parens = magus.name
         if not student.hermetic.house:
             student.hermetic.house = magus.hermetic.house
-        told.append(f"{magus.name} claims {student.name} as his apprentice.")
+        told.append(f"{magus.name} claims {student.name} as their apprentice.")
     student.abilities = [
         a for a in student.abilities if a.name not in work_.lost_abilities
     ]

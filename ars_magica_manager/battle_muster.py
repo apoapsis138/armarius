@@ -46,15 +46,15 @@ SOURCE = "Lords of Men, Chapter Eight: Massed Combat, pp. 102-109"
 ALLY_MODIFIERS: dict[str, tuple[str, int]] = {
     "winter": ("Raising an army in winter", -3),
     "harvest": ("Raising an army around harvest", -1),
-    "last_season": ("He raised an army the previous season", -3),
-    "this_year": ("He raised one earlier this year", -1),
+    "last_season": ("They raised an army the previous season", -3),
+    "this_year": ("They raised one earlier this year", -1),
     "crusade": ("During an active crusade", -3),
-    "wealthy": ("He is Wealthy", 1),
-    "poor": ("He is Poor", -1),
-    "inspirational": ("He is Inspirational", 3),
+    "wealthy": ("Wealthy", 1),
+    "poor": ("Poor", -1),
+    "inspirational": ("Inspirational", 3),
     "underlings": ("Difficult Underlings", -2),
     "threat": ("The affinity's lands are under threat", 1),
-    "revolt": ("He is in revolt against his liege", -2),
+    "revolt": ("In revolt against their liege", -2),
     "major_social_virtue": ("A Major social Virtue", 3),
     "minor_social_virtue": ("A Minor social Virtue", 1),
     "minor_social_flaw": ("A Minor social Flaw", -1),
@@ -147,25 +147,23 @@ def _ally_fields(saga: Saga, entry: Battle) -> list[DialogField]:
             "A crusade",
             "check",
             False,
-            hint="Called by a churchman with Senior Clergy: his Affinity is "
-            "the most prominent noble's of his diocese, rolled on the Allied "
-            "Troops Table (Lords of Men p. 104; the book's Army Size Table "
-            "doesn't exist, so the troupe's reading).",
+            hint="A churchman with Senior Clergy calls on the diocese's leading noble's"
+            " Affinity (LoM p. 104).",
         ),
         DialogField(
             "affinity",
             "Affinity score",
             "int",
             0,
-            hint="His Affinity (p. 102); for a crusade, the noble's.",
+            hint="Their Affinity (p. 102); for a crusade, the noble's.",
         ),
         DialogField(
             "core",
             "Core vassal groups",
             "int",
             core_groups(saga, first) or first.groups,
-            hint="His household and vassals before scutage or mercenaries: "
-            "his lord's title gives it, levies only on home ground (p. 102).",
+            hint="Their household and vassals, from their title; levies only on home "
+            "ground (p. 102).",
         ),
         *(
             DialogField(key, label, "check", False)
@@ -176,8 +174,7 @@ def _ally_fields(saga: Saga, entry: Battle) -> list[DialogField]:
             "Simple die",
             "optint",
             None,
-            hint="Blank: rolled now. A total better than 12 adds troops past "
-            "his own force (p. 103).",
+            hint="Blank: rolled now. Over 12 adds troops past their own force (p. 103).",
         ),
     ]
 
@@ -191,7 +188,7 @@ def _ally_live(saga: Saga, values: dict[str, Any]) -> str:
     ]
     return (
         f"[$label]Before the die[/] {total}  [dim]({', '.join(terms)})[/]\n"
-        f"[i]A simple die more; the table: {', '.join(reversed(rows))} of his "
+        f"[i]A simple die more; the table: {', '.join(reversed(rows))} of their "
         f"{core} core groups.[/]"
     )
 
@@ -301,13 +298,8 @@ def _hire_fields(saga: Saga, entry: Battle) -> list[DialogField]:
             options=[("Become Average", "Average"), ("Become Poor", "Poor")],
             allow_blank=True,
             placeholder="(no loan)",
-            hint="A Wealthy lord may become Average for five times the "
-            "difference of the two budgets, or Poor for five times the "
-            "Wealthy budget; an Average one Poor for five times his; a Poor "
-            "lord can't borrow. Repaid from spoils or stories. He spends the "
-            "loan and his new wealth's budget. It needs a banker able to "
-            "lend it and to collect if he defaults, and may take weeks: not "
-            "for a lightning war (p. 104).",
+            hint="Borrow a step down in wealth (a Poor lord can't); repaid from spoils,"
+            " needs a banker, takes weeks (p. 104).",
         ),
     ]
 
@@ -325,7 +317,7 @@ def _hire_problem(saga: Saga, entry: Battle, values: dict[str, Any]) -> str | No
         if not allowed:
             return "A Poor lord can't take a War Loan (p. 104)."
         if becomes not in allowed:
-            return f"{lord.name} is {armies.wealth(lord)}: a loan can't leave him {becomes}."
+            return f"{lord.name} is {armies.wealth(lord)}: a loan can't leave them {becomes}."
     room = budget(saga, side, becomes=becomes if lord is not None else "")
     cost = battle.mercenary_cost(_hired(values))
     if room is not None and cost > room:
@@ -409,10 +401,12 @@ def _deploy_fields(saga: Saga, entry: Battle) -> list[DialogField]:
             None,
             options=_characters(saga),
             allow_blank=True,
-            hint="The commander, or a lieutenant; a commander who rolls after "
-            "his lieutenant must keep his own total (p. 104).",
+            hint="The commander or a lieutenant; a commander rolling after their "
+            "lieutenant must keep their own total (p. 104).",
         ),
-        DialogField("area", "Area Lore of", "text", "", placeholder="blank: his best"),
+        DialogField(
+            "area", "Area Lore of", "text", "", placeholder="blank: their best"
+        ),
         DialogField(
             "spell",
             "A spell on the ground (magnitude)",

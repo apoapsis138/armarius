@@ -111,9 +111,9 @@ def boost_form(saga: Saga, magus: Character) -> Form | Refuse:
     if not boostable(saga, magus):
         return Refuse(
             TITLE,
-            f"{escape(magus.name)} knows no spell he may boost: that needs "
-            "Boosted Magic (any Formulaic spell, DE p. 72), Boosted or "
-            "Mutantum Magic for a Boosted spell, or Boosted Casting.",
+            f"{escape(magus.name)} knows no spell they may boost: that needs "
+            "Boosted Magic (any Formulaic spell, DE p. 72), Boosted or Mutantum Magic for a Boosted spell, "
+            "or Boosted Casting.",
         )
     return Form(
         f"{TITLE}: {escape(magus.name)}",

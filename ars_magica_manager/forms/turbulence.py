@@ -98,25 +98,25 @@ def turbulence_fields(saga: Saga, character: Character) -> list[DialogField]:
         ),
         DialogField(
             "aegis",
-            "Aegis of the Hearth he had no part in",
+            "Aegis of the Hearth they had no part in",
             "int",
             0,
-            hint="Its level: half of it comes off the incurring roll (0: none, "
-            "or he took part in it).",
+            hint="Its level: half comes off the incurring roll (0: none, or they took "
+            "part in it).",
         ),
         DialogField(
             "confidence_incur",
             "Confidence spent on incurring",
             "int",
             0,
-            hint="+3 a point, at most his Confidence Score.",
+            hint="+3 a point, at most their Confidence Score.",
         ),
         DialogField(
             "confidence_control",
             "Confidence spent on controlling",
             "int",
             0,
-            hint="+3 a point, at most his Confidence Score.",
+            hint="+3 a point, at most their Confidence Score.",
         ),
         DialogField(
             "sympathy",
@@ -173,13 +173,13 @@ def turbulence_lines(
     old = tb.years(saga, character)
     lines = [
         f"Incurring: {shown} = {modifiers:+d} + stress die (it can botch), "
-        "against the higher of the storyguide's stress die (no botch) and his age"
+        "against the higher of the storyguide's stress die (no botch) and their age"
         + (f" ({old})." if old is not None else " (no birth year: 0).")
     ]
     if tb.uncontrollable(character, occasion):
         lines.append(
-            "Turbulence Prone: he can't control it, and its effects are always "
-            "bad; the control roll only sizes it."
+            "Turbulence Prone: they can't control it, and its effects are always bad; "
+            "the control roll only sizes it."
         )
     else:
         lines.append(
@@ -192,7 +192,7 @@ def turbulence_lines(
     if occasion == tb.FORCED:
         lines.append(
             "Forcing it spends a Confidence Point "
-            f"(he has {character.background.confidence_points})."
+            f"(they have {character.background.confidence_points})."
         )
     if occasion == tb.LAB and (assisting := _lab_check(saga, character)):
         lead, _, reasons = lead_work(saga, assisting)
@@ -204,7 +204,7 @@ def turbulence_lines(
                 else "stressful by the troupe's call (odd hours, a Lab Total "
                 "barely enough)."
             )
-            + " Uncontrolled, his aid to the Lab Total is halved."
+            + " Uncontrolled, their aid to the Lab Total is halved."
         )
         if values.get("gift_roll"):
             lines.append(
@@ -228,10 +228,10 @@ def turbulence_problem(character: Character, values: dict[str, Any]) -> str | No
         if spent < 0:
             return "Confidence spent can't be negative."
         if spent > score:
-            return f"At most his Confidence Score ({score}) on one roll."
+            return f"At most their Confidence Score ({score}) on one roll."
     if _spent(values) > character.background.confidence_points:
         return (
-            f"That spends {_spent(values)} Confidence Points; he has "
+            f"That spends {_spent(values)} Confidence Points; they have "
             f"{character.background.confidence_points}."
         )
     if _int(values, "aegis") < 0:

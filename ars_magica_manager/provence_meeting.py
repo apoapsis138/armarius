@@ -95,8 +95,8 @@ class Residency(core.Step):
                     f"Grant residency: {escape(magus.name)}",
                     "check",
                     magus.id in kept.get("granted", []),
-                    hint="Not a resident when the meeting opened: the Tribunal "
-                    "may grant it by vote at his first meeting.",
+                    hint="Not a resident when the meeting opened: the Tribunal may "
+                    "grant it by vote at their first meeting.",
                 )
             )
         residents = [
@@ -113,8 +113,8 @@ class Residency(core.Step):
                 options=residents,
                 allow_blank=True,
                 placeholder="(none)",
-                hint="A resident who registered with the Redcaps or the Praeco "
-                "that he is leaving for another Tribunal.",
+                hint="A resident who registered with the Redcaps or the Praeco that "
+                "they're leaving for another Tribunal.",
             ),
             DialogField(
                 "breach",
@@ -124,9 +124,9 @@ class Residency(core.Step):
                 options=residents,
                 allow_blank=True,
                 placeholder="(none)",
-                hint="A resident who voted at another Tribunal's meeting without "
-                "registering his departure first: he has broken the Peripheral "
-                "Code, and is no longer a resident.",
+                hint="A resident who voted elsewhere without registering their "
+                "departure: they've broken the Peripheral Code, and are no longer "
+                "resident.",
             ),
             core._note_field(meeting, self.key),
         ]
@@ -134,7 +134,9 @@ class Residency(core.Step):
 
     def validate(self, meeting: Meeting, values: dict[str, Any]) -> str | None:
         if values.get("departed") and values.get("departed") == values.get("breach"):
-            return "One magus can't both register his departure and leave unregistered."
+            return (
+                "One magus can't both register their departure and leave unregistered."
+            )
         return None
 
     def apply(
@@ -173,8 +175,8 @@ class Residency(core.Step):
         if names:
             lines.append(f"Granted residency by vote: {', '.join(names)}")
         for key, words in (
-            ("departed", "Registered his departure"),
-            ("breach", "Voted at another Tribunal without registering his departure"),
+            ("departed", "Registered their departure"),
+            ("breach", "Voted at another Tribunal without registering their departure"),
         ):
             magus = saga.character(record.get(key))
             if magus is not None:
@@ -197,10 +199,10 @@ class Residency(core.Step):
             f"residents for the next three meetings; {count} present "
             f"{'is' if count == 1 else 'are'} not resident. A magus Gauntleted "
             "in the Tribunal is a resident until three meetings pass without "
-            "him.",
-            "Each newcomer you tick is granted residency by vote and stays a "
-            "resident until he leaves; a departure ends a magus's residency, "
-            "and one unregistered is a breach of the Peripheral Code.",
+            "them.",
+            "Each newcomer you tick is granted residency by vote and stays a resident "
+            "until they leave; a departure ends residency, and an unregistered one "
+            "breaches the Peripheral Code.",
         )
 
     def minutes(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):

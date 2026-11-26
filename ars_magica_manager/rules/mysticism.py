@@ -167,13 +167,13 @@ def path_problems(character: Character, chosen: str) -> list[str]:
         found.append("Both paths need a positive Pious trait (TC pp. 21, 23).")
     if not divine_ties(character):
         found.append(
-            "He must be tied to the Divine: True Faith, a Divine Supernatural "
+            "They must be tied to the Divine: True Faith, a Divine Supernatural "
             "Ability, or Divine Warping (TC p. 21)."
         )
     if chosen == CONTEMPLATIVE and (leaning := sins(character)):
         found.append(
-            "A contemplative has no sinful trait (RoP: The Divine p. 40): he "
-            "leans to " + ", ".join(leaning) + "."
+            "A contemplative has no sinful trait (RoP: The Divine p. 40): they "
+            "lean to " + ", ".join(leaning) + "."
         )
     if chosen == MONISTIC and not (
         _has(character, VISIONS) or _has(character, TRUE_FAITH)
@@ -182,7 +182,7 @@ def path_problems(character: Character, chosen: str) -> list[str]:
     held = path(character)
     if held and held != chosen and ds.ascents(character):
         found.append(
-            f"He has ascended on {held.lower()}: its form stays for life "
+            f"They've ascended on {held.lower()}: its form stays for life "
             "(RoP: The Divine p. 63)."
         )
     return found
@@ -190,7 +190,7 @@ def path_problems(character: Character, chosen: str) -> list[str]:
 
 def leave_problem(character: Character) -> str | None:
     if path(character) and ds.ascents(character):
-        return "His Ascent's form stays for life: the path can't be left."
+        return "Their Ascent's form stays for life: the path can't be left."
     return None
 
 
@@ -209,7 +209,7 @@ def gloom_lines(character: Character, points: int) -> list[str]:
     """What Warping Points do to one in the Divine Gloom (TC p. 23)."""
     if points <= 0 or not ds.divine_gloom(character):
         return []
-    holy = ", ".join(holy_abilities(character)) or "his Holy Abilities"
+    holy = ", ".join(holy_abilities(character)) or "their Holy Abilities"
     return [
         f"Divine Gloom: {points} experience point(s) among Dominion Lore and "
         f"{holy}, and {points} lost from mundane Abilities (never "
@@ -224,20 +224,20 @@ def ascent_lines(character: Character, gloom_points: int = 0) -> list[str]:
     chosen = path(character)
     if chosen == CONTEMPLATIVE:
         return [
-            "As a contemplative mystic his Ascent is the Divine Form (TC p. 21): "
-            "his Warping Score adds to True Faith's Magic Resistance, Soak gains "
-            "that Resistance / 5, Penetration his Warping Score + 5 x True Faith; "
+            "As a contemplative mystic their Ascent is the Divine Form (TC p. 21): "
+            "their Warping Score adds to True Faith's Magic Resistance, Soak gains "
+            "that Resistance / 5, Penetration their Warping Score + 5 x True Faith; "
             "an impious act botches with 3 x Warping Score more dice, a venial "
             "sin brings a Light wound and a mortal one a Medium, healed only "
             "naturally; and a Commanding Aura (Penetration 0, Voice)."
         ]
     if chosen == MONISTIC:
         return [
-            "As a monistic mystic his Ascent is the Divine Gloom (TC p. 23). He "
-            "may try to integrate a Revelation: More's Monistic Revelation "
-            "(Intelligence + Concentration + stress die against his Warping "
-            "Score + stress die, TC p. 24).",
-            "Pious adds to overcoming Celestial Disorientation; he is a beacon to "
+            "As a monistic mystic their Ascent is the Divine Gloom (TC p. 23). They may"
+            " try to integrate a Revelation: More's Monistic Revelation (Intelligence +"
+            " Concentration + stress die against their Warping Score + stress die, TC "
+            "p. 24).",
+            "Pious adds to overcoming Celestial Disorientation; they're a beacon to "
             "angels, demons, elementals and faeries.",
             *gloom_lines(character, gloom_points),
         ]
@@ -335,7 +335,7 @@ COMPONENTS: dict[str, Component] = {
         ),
         Component(
             "alms",
-            "His wealth given as alms (loses Wealthy, or gains Poor)",
+            "Their wealth given as alms (loses Wealthy, or gains Poor)",
             9,
         ),
         Component(
@@ -368,7 +368,7 @@ def begin_problem(character: Character, name: str) -> str | None:
     if name.strip().casefold() == "true faith":
         return "True Faith is never a Revelation (TC p. 22)."
     if find_path(character, name.strip()) is not None:
-        return f"His path to {name.strip()} is already under way."
+        return f"Their path to {name.strip()} is already under way."
     return None
 
 
@@ -395,7 +395,7 @@ def component_problem(
     if component is None:
         return "Choose the Quest Component."
     if key == "alms" and _has(character, POOR) and not _has(character, WEALTHY):
-        return "He is Poor already: he has no wealth to give."
+        return "They're Poor already: they have no wealth to give."
     return None
 
 
@@ -470,7 +470,7 @@ def integration_problem(
     if path(character) != MONISTIC:
         return "Only a monistic mystic integrates a Revelation (TC p. 24)."
     if not ds.ascents(character):
-        return "He integrates a Revelation on a Divine Ascent: he has had none."
+        return "They integrate a Revelation on a Divine Ascent: they've had none."
     label, needed = INTEGRATIONS.get(choice, ("", 0))
     if not label:
         return "Choose what the Revelation brings."
@@ -481,12 +481,12 @@ def integration_problem(
         if realm not in LORE_REALMS:
             return "Choose Magic or Faerie."
         if realm in held:
-            return f"His Dominion Lore already serves for {realm} Lore."
+            return f"Their Dominion Lore already serves for {realm} Lore."
     if choice == INFERNAL_LORE:
         if not all(r in held for r in LORE_REALMS):
             return "First both Magic and Faerie (TC p. 24)."
         if "Infernal" in held:
-            return "His Dominion Lore already serves for Infernal Lore."
+            return "Their Dominion Lore already serves for Infernal Lore."
     return None
 
 

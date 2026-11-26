@@ -379,7 +379,7 @@ def may_influence_ceremonially(character: Character) -> str:
     if ability_level(character, "Infernal Lore") < CEREMONY_LORE:
         return "A ceremony needs Infernal Lore 1."
     if character.background.confidence_points < 1:
-        return "A ceremony costs a Confidence Point, and he has none."
+        return "A ceremony costs a Confidence Point, and they have none."
     return ""
 
 
@@ -451,8 +451,8 @@ def absolution_costs(character: Character) -> list[str]:
     costs: list[str] = []
     if any(vf.vf_id == FALSE_GIFT for vf in character.virtues_flaws):
         costs.append(
-            "The False Gift: he loses The Gift and every Supernatural Ability "
-            "learned with it, the Hermetic Arts included (p. 124)."
+            "The False Gift: they lose The Gift and every Supernatural Ability learned "
+            "with it, the Hermetic Arts included (p. 124)."
         )
     for vf in character.virtues_flaws:
         if vf.vf_id == FALSE_POWER:

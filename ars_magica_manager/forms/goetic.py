@@ -61,7 +61,7 @@ def goetic_fields(saga: Saga, character: Character) -> list[DialogField]:
             "The spirit's Might",
             "int",
             10,
-            hint="Scouring: the Might he hopes for; it draws about half the total.",
+            hint="Scouring: the Might they hope for; it draws about half the total.",
         ),
         DialogField("demon", "The spirit is a demon", "check", False),
         DialogField(
@@ -69,7 +69,7 @@ def goetic_fields(saga: Saga, character: Character) -> list[DialogField]:
             "The demon's Hierarchy",
             "int",
             0,
-            hint="Its Hierarchy x 5 goes on the target; his own x 5 on the total.",
+            hint="Its Hierarchy x 5 goes on the target; their own x 5 on the total.",
             show_if=lambda v: bool(v.get("demon")),
         ),
         DialogField(
@@ -202,8 +202,8 @@ def lines(character: Character, values: dict[str, Any]) -> list[str]:
         weak = might + gr.HIERARCHY_STEP * rank
         said.append(
             f"Against {level}: a die of {max(level - base, 0)} holds the spirit in "
-            f"the circle; {max(weak - base, 0)} calls it only while he "
-            "concentrates. A Fatigue level either way."
+            f"the circle; {max(weak - base, 0)} calls it only while they "
+            "concentrate. A Fatigue level either way."
         )
     elif art in (gr.BINDING, gr.COMMANDING) and in_circle and not resists:
         said.append("It allows the effect: only a botch fails.")

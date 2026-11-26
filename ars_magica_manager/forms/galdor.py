@@ -51,7 +51,7 @@ def _tradition() -> TraditionDef:
 def _aura_fields(saga: Saga, character: Character) -> list[DialogField]:
     aura, realm = scene_aura.aura_now(saga, character)
     return [
-        DialogField("aura", "Aura", "int", aura, hint="Where he sings."),
+        DialogField("aura", "Aura", "int", aura, hint="Where they sing."),
         DialogField(
             "aura_realm",
             "Aura realm",
@@ -83,7 +83,7 @@ def _song_field(character: Character) -> DialogField:
         songs[0] if songs else None,
         options=[(s, s) for s in songs],
         allow_blank=not songs,
-        hint="It caps the magnitude he may ask for.",
+        hint="It caps the magnitude they may ask for.",
     )
 
 
@@ -208,12 +208,12 @@ def conjure_fields(saga: Saga, character: Character) -> list[DialogField]:
             "Touching the ground",
             "check",
             False,
-            hint="Halves the total; a platform, chair or table keeps him off it.",
+            hint="Halves the total; a platform, chair or table keeps them off it.",
         ),
         *_aura_fields(saga, character),
         DialogField(
             "hours",
-            "Hours he holds the song",
+            "Hours they hold the song",
             "int",
             0,
             show_if=lambda values: values.get("duration") == galdor.CONCENTRATION,
@@ -264,7 +264,7 @@ def _hold(
     _tire(character, tired)
     return (
         [
-            f"He holds the song {plural(hours, 'hour')}, for "
+            f"They hold the song {plural(hours, 'hour')}, for "
             f"{plural(tired, 'Fatigue level')}."
         ],
         0,
@@ -328,7 +328,7 @@ def conjure(
             zeroes += held_zeroes
         if result.lingers and finished:
             lines.append(
-                f"It works on {plural(dice.simple_die(rng), 'hour')} after he stops "
+                f"It works on {plural(dice.simple_die(rng), 'hour')} after they stop "
                 "singing."
             )
     return _write(saga, character, f"Conjured: {song}", lines, zeroes, aura, rng)
@@ -399,11 +399,11 @@ def bargain_fields(character: Character) -> list[DialogField]:
             "Favour owed",
             "text",
             "",
-            hint="Any service he owes the lord besides.",
+            hint="Any service they owe the lord besides.",
         ),
         DialogField(
             "how",
-            "His answer",
+            "The answer",
             "select",
             AGREES,
             options=[
@@ -431,7 +431,7 @@ def bargain_fields(character: Character) -> list[DialogField]:
         ),
         DialogField(
             "duty",
-            "He accepts",
+            "They accept",
             "select",
             "None",
             options=_pairs(galdor.DUTIES),
@@ -584,7 +584,7 @@ def bind_fields(saga: Saga, character: Character) -> list[DialogField]:
             "select",
             LIFETIME,
             options=[
-                ("For his lifetime", LIFETIME),
+                ("For their lifetime", LIFETIME),
                 ("A single service", SERVICE),
             ],
             hint="A single service lasts a year and a day.",
@@ -638,7 +638,7 @@ def bind_problem(character: Character, values: dict[str, Any]) -> str | None:
     if not galdor.songs_of(character):
         return f"{escape(character.name)} knows no Song Talent."
     if not values.get("craft"):
-        return "He needs a Craft to make the item."
+        return "They need a Craft to make the item."
     if (values.get("uses") or 0) < 0:
         return "The uses a day can't be fewer than 0."
     return _level_problem(character, values)
@@ -712,7 +712,7 @@ def bind(
                 notes=(
                     f"From the deal with {values.get('deal') or 'a lord'}. "
                     + (
-                        "Bound for his lifetime."
+                        "Bound for their lifetime."
                         if lifetime
                         else f"One service, within {galdor.SERVICE_LIFE}."
                     )

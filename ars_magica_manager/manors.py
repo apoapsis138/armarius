@@ -792,7 +792,7 @@ def estab_grid(_saga: Saga, holder: Neighbour) -> Grid:
         rows,
         list(range(len(rows))),
         f"No kennels, mews or stables. Every noble keeps Standard stables as part "
-        f"of his estate; kennels and mews must be built ({LOM} p. 58).",
+        f"of their estate; kennels and mews must be built ({LOM} p. 58).",
         styles=styles,
         caps=[13, 18, 10, 12, 5, 6, 0],
         stretch=6,
@@ -832,7 +832,7 @@ def estab_info(_saga: Saga, holder: Neighbour, row: int) -> str:
         why = (
             "a covenant keeps Standard stables free, and pays for better"
             if is_covenant(holder)
-            else f"a stable that befits him costs nothing; his is "
+            else f"a stable that befits them costs nothing; theirs is "
             f"{free_stable(holder)} or less"
         )
         upkeep_line = f"[$label]Upkeep:[/] none [dim]({why}, p. 59)[/]"
@@ -935,12 +935,10 @@ def estab_fields(
             placeholder="e.g. Ulrich the marshal",
             hint="Superior and better need one (p. 59).",
         ),
-        DialogField(
-            "intelligence", "His Intelligence", "optint", e.get("intelligence")
-        ),
+        DialogField("intelligence", "Intelligence", "optint", e.get("intelligence")),
         DialogField(
             "profession",
-            "His Profession score",
+            "Profession score",
             "optint",
             e.get("profession"),
             hint="Marshal, Falconer or Master of Kennels: twice the Living "
@@ -1202,9 +1200,9 @@ def season_losses(saga: Saga) -> list[SeasonRecordLine]:
 # -- the household --
 
 INHERITANCE: dict[str, str] = {
-    "Primogeniture": "all to the heir he names, or the eldest, or the strongest "
-    "his liege chooses",
-    "Divided among sons": "his lands split between his sons",
+    "Primogeniture": "all to the heir they name, or the eldest, or the strongest their "
+    "liege chooses",
+    "Divided among sons": "their lands split between their sons",
 }
 #: The household's usual size (p. 9).
 HOUSEHOLDS = (
@@ -1273,7 +1271,7 @@ def household_text(_saga: Saga, holder: Neighbour) -> str:
     usual = f"[dim]Households run {HOUSEHOLDS} ({LOM} p. 9)"
     if isinstance(size, int):
         return usual + ".[/]"
-    return usual + "; his knights of the mesnie are counted in it (p. 11).[/]"
+    return usual + "; their knights of the mesnie are counted in it (p. 11).[/]"
 
 
 def household_fields(holder: Neighbour) -> list[DialogField]:
@@ -1292,7 +1290,7 @@ def household_fields(holder: Neighbour) -> list[DialogField]:
             "text",
             h.get("mesnie", ""),
             placeholder="e.g. 6 knights and 10 serjeants, 12 servants",
-            hint="His household knights: a wealthy lord has eight to ten (p. 11).",
+            hint="Their household knights: a wealthy lord has eight to ten (p. 11).",
         ),
         DialogField(
             "heirs",
@@ -1303,7 +1301,7 @@ def household_fields(holder: Neighbour) -> list[DialogField]:
         ),
         DialogField(
             "custom",
-            "His lands pass by",
+            "Their lands pass by",
             "select",
             h.get("custom") or None,
             options=pairs(tuple(INHERITANCE)),
@@ -1317,8 +1315,8 @@ def household_fields(holder: Neighbour) -> list[DialogField]:
             "text",
             h.get("hunting", ""),
             placeholder="e.g. free warren on all five manors; a chase by grant",
-            hint="Warrens, chases and parks are his alone; forests the king's "
-            "(pp. 48, 79).",
+            hint="Warrens, chases and parks are theirs alone; forests the king's (pp. "
+            "48, 79).",
         ),
     ]
 
@@ -1442,7 +1440,7 @@ def settle_fields(
             "text",
             heir,
             required=True,
-            hint="Who holds the lands now; he becomes the record's ruler.",
+            hint="Who holds the lands now; they become the record's ruler.",
             fills=suggest,
         ),
         DialogField(
@@ -1526,7 +1524,7 @@ def settle(saga: Saga, holder: Neighbour, values: dict[str, Any]) -> list[str]:
             lines.append("The others sharing the lands stay on the Heirs line.")
     liege = saga.neighbour(holder.answers_to)
     if liege is not None:
-        lines.append(f"He owes {liege.name} relief of {lords.relief(holder)} pounds.")
+        lines.append(f"They owe {liege.name} relief of {lords.relief(holder)} pounds.")
     if values.get("widow"):
         lines.append(f"The widow keeps {WIDOWS_SHARE} (DE p. 513).")
     note = str(values.get("note") or "").strip()
@@ -1586,11 +1584,11 @@ def buy_fields(saga: Saga, holder: Neighbour) -> list[DialogField]:
         found.append(
             DialogField(
                 "pay",
-                f"Pay it from his coin ({lords.coin(holder)} pounds)",
+                f"Pay it from their coin ({lords.coin(holder)} pounds)",
                 "check",
                 lords.coin(holder) > 0,
-                hint="Unticked, he pays by installments from his yearly "
-                "surplus, at a worse price (LoM p. 85).",
+                hint="Unticked, they pay by installments from their yearly surplus, at "
+                "a worse price (LoM p. 85).",
             )
         )
     found.append(DialogField("note", "Note", "text", ""))
@@ -1632,15 +1630,15 @@ def buy(saga: Saga, holder: Neighbour, values: dict[str, Any]) -> list[str]:
     else:
         if values.get("pay"):
             holder.details["coin"] = lords.coin(holder) - price
-            lines.append(f"Paid from his coin: {lords.coin(holder)} pounds left.")
+            lines.append(f"Paid from their coin: {lords.coin(holder)} pounds left.")
         else:
             spare = lords.surplus(holder)
             lines.append(
-                f"Paid by installments from his surplus of {spare} pounds a year"
+                f"Paid by installments from their surplus of {spare} pounds a year"
                 + (
                     f": about {round_up(price / spare)} years."
                     if spare > 0
-                    else "; he has none to spare, so the seller must wait."
+                    else "; they have none to spare, so the seller must wait."
                 )
             )
         place_events.diary(holder).append(
@@ -1669,7 +1667,7 @@ def _buy_problem(saga: Saga, holder: Neighbour, values: dict[str, Any]) -> str |
     if covenant is not None and values.get("pay") and price > covenant.economics.wealth:
         return f"The covenant has only {covenant.economics.wealth} pounds."
     if covenant is None and values.get("pay") and price > lords.coin(holder):
-        return f"He has only {lords.coin(holder)} pounds in coin."
+        return f"They have only {lords.coin(holder)} pounds in coin."
     return None
 
 

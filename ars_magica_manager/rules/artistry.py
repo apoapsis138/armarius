@@ -161,11 +161,11 @@ REPUTATION_EVENTS: dict[str, tuple[str, int | None]] = {
     "became_patron": ("Became patron to a younger artist", 1),
     "travelled": ("Travelled to a distant country to study its art", 1),
     "studied_master": (
-        "Studied with an artist 2 or more higher (his Reputation, once)",
+        "Studied with an artist 2 or more higher (their Reputation, once)",
         None,
     ),
     "studied_creature": ("Studied with a supernatural creature (its magnitude)", None),
-    "adventure": ("An adventure that broadcast his skill", 1),
+    "adventure": ("An adventure that broadcast their skill", 1),
     "lost_patron": ("Lost a patron", -12),
     "abandoned_work": (
         "Ruined or abandoned a piece experimenting (its Aesthetic Quality)",
@@ -201,7 +201,7 @@ SPONSOR_KINDS: dict[str, tuple[str, int]] = {
     "benefactor": ("A benefactor (one piece)", -3),
     "second": ("A benefactor's second piece", 3),
     "more": ("A benefactor's pieces past two", 6),
-    "patron": ("A benefactor to become his patron", 9),
+    "patron": ("A benefactor to become their patron", 9),
     "new_patron": ("A patron", 0),
 }
 #: The sponsor's Social Status Virtue (p. 131).
@@ -482,12 +482,12 @@ def benefits(reputation: int) -> list[str]:
     lines: list[str] = []
     if reputation >= SOCIAL_FROM:
         lines.append(
-            f"+{reputation - SOCIAL_FROM + 1} to social rolls his renown sways "
+            f"+{reputation - SOCIAL_FROM + 1} to social rolls their renown sways "
             "(never a season's work)"
         )
     if reputation >= MINOR_MUSE_AT:
         lines.append(
-            "a muse watches him"
+            "a muse watches them"
             + (
                 " (a major one: Plagued by Supernatural Entity)"
                 if reputation >= MAJOR_MUSE_AT
@@ -495,11 +495,11 @@ def benefits(reputation: int) -> list[str]:
             )
         )
     if reputation >= SIGN_AT:
-        lines.append("he signs his work, known throughout the land; +1 Confidence")
+        lines.append("they sign their work, known throughout the land; +1 Confidence")
     if reputation >= PINNACLE:
         lines.append("+3 to every piece; Reputation xp is never lost")
     if reputation >= LEGENDARY_AT:
-        lines.append("his muse takes him: a legendary artist")
+        lines.append("their muse takes them: a legendary artist")
     return lines
 
 
@@ -650,12 +650,12 @@ def instill_problem(character: Character, craft: str, plan: ArtworkPlan) -> str 
         return None
     if not inclination_form(character):
         return (
-            "Only a maestro with Hermetic Inclination in a Form can instill magic "
-            "as he makes his art (A&A p. 135)."
+            "Only a maestro with Hermetic Inclination in a Form can instill magic as "
+            "they make their art (A&A p. 135)."
         )
     if instill_total(character, craft, plan) <= plan.instill_level:
         return (
-            f"His instilling total {instill_total(character, craft, plan)} doesn't "
+            f"Their instilling total {instill_total(character, craft, plan)} doesn't "
             f"pass the effect's level {plan.instill_level} (A&A p. 135)."
         )
     return None

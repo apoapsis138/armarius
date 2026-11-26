@@ -326,7 +326,7 @@ def test_lore_3_is_a_warning_counted_by_initiations_taken(saga):
     matthaios.virtues_flaws.append(AFFINITY)
     assert sw.problems(saga, matthaios, _weaver_plan()) == []
     notes = sw.work(saga, matthaios, _weaver_plan(), None).notes
-    assert any(f"typically needs {LORE} 3 (he has 1)" in n for n in notes)
+    assert any(f"typically needs {LORE} 3 (they have 1)" in n for n in notes)
 
 
 def test_an_initiate_needs_the_lore_at_1(saga):

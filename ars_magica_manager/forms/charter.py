@@ -203,8 +203,8 @@ def seal_fields(saga: Saga, covenant: Covenant) -> list[DialogField]:
             "Seals",
             "info",
             "Each member's seal or signature is affixed to the charter, to "
-            "show he agrees to it. A charter may have full and associate "
-            f"members, and a probation before full membership ({COV} p. 33).",
+            "show they agree to it. A charter may have full and associate "
+            f"members, and a probation first ({COV} p. 33).",
         )
     ]
     for shown in cc.seals(saga, covenant):
@@ -258,8 +258,8 @@ def seal_fields(saga: Saga, covenant: Covenant) -> list[DialogField]:
                 options=pairs(SEASONS),
                 allow_blank=True,
                 show_if=dated,
-                hint="A probation's end (blank: the charter's term from his "
-                "sealing), or when he was expelled.",
+                hint="A probation's end (blank: the charter's term from their sealing),"
+                " or when they were expelled.",
             ),
             DialogField(
                 f"until_year_{cid}", "Year", "optint", until_year, show_if=dated
@@ -936,8 +936,8 @@ def censure_fields(
             c.penalty if c else CENSURE_WITHHELD,
             options=pairs(CENSURES),
             required=True,
-            hint=f"Privileges the covenant holds in common, withheld until he "
-            f"makes amends; his standing lowered; or expulsion ({COV} pp. 35-36).",
+            hint=f"Privileges held in common, withheld until they "
+            f"make amends; their standing lowered; or expulsion ({COV} pp. 35-36).",
         ),
     ]
     found += [
@@ -968,7 +968,7 @@ def censure_fields(
             options=pairs(SEASONS),
             allow_blank=True,
             show_if=_withholds,
-            hint="Blank: until he makes amends.",
+            hint="Blank: until they make amends.",
         ),
         DialogField(
             "until_year",
@@ -1036,14 +1036,14 @@ def censure_live(
             escape(cc.censure_words(saga, censure)),
         ]
         if change := _standing_change(saga, covenant, censure):
-            lines.append(f"His seal: {escape(change[0])} → {escape(change[1])}.")
+            lines.append(f"Their seal: {escape(change[0])} → {escape(change[1])}.")
         if warning := cc.personal_warning(censure.withheld):
             lines.append(f"[$text-warning]{escape(warning)}[/]")
         if censure.penalty == CENSURE_EXPELLED:
             lines.append(
                 "[dim]Expulsion is the gravest censure: in most covenants only "
-                f"a magus who betrays the charter is expelled ({COV} p. 35). You "
-                "will be asked whether to take him off the covenant's lists now.[/]"
+                f"a magus who betrays the charter is expelled ({COV} p. 35). You'll "
+                "be asked whether to take them off the covenant's lists.[/]"
             )
         return "\n".join(lines)
 
@@ -1093,10 +1093,10 @@ def censure_clause(saga: Saga, covenant: Covenant, index: int | None) -> Command
         ):
             return Then(
                 Confirm(
-                    f"{escape(magus.name)} is expelled. Take him off "
+                    f"{escape(magus.name)} is expelled. Take them off "
                     f"{escape(covenant.name)}'s lists now? Choose No to do it "
-                    "yourself; you'll be asked again when the next season is "
-                    "played while he is still of the covenant.",
+                    "yourself; you'll be asked again each season "
+                    "while they're still of the covenant.",
                     lambda: end_membership(saga, covenant, magus),
                     yes_label="Remove",
                     title=END_MEMBERSHIP,

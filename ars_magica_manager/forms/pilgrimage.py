@@ -278,9 +278,9 @@ def lines(character: Character, values: dict[str, Any]) -> list[str]:
     else:
         problem = pil.claim_problem(character, record)
         said.append(problem or "Reached: the aim may be claimed.")
-        said.append("The troupe must agree the aim suits him (TC p. 16).")
+        said.append("The troupe must agree the aim suits them (TC p. 16).")
         said.append(
-            "He must have avoided mortal sin on the road, and confess his venial "
+            "They must have avoided mortal sin on the road, and confess their venial "
             "sins on arrival (TC p. 18)."
         )
     said.append(
@@ -310,7 +310,7 @@ def _claim(
         instance = VirtueFlawInstance(vf_id)
         character.virtues_flaws.append(instance)
         cch.apply_virtue(saga, character, instance)
-        done = f"He gains {by_id[vf_id].name}."
+        done = f"They gain {by_id[vf_id].name}."
         ability = pil.grant_ability(character, by_id[vf_id])
         if ability is not None:
             done += (
@@ -320,7 +320,7 @@ def _claim(
     elif aim == pil.HOLY_MAGIC:
         instance = VirtueFlawInstance("vf_holy_magic")
         character.virtues_flaws.append(instance)
-        done = "He initiates himself in Holy Magic."
+        done = "They initiate themselves in Holy Magic."
     elif aim == pil.LOSE_VF:
         index_text, _, vf_id = str(values.get(f"vf_{record.target}")).partition(":")
         index = int(index_text)
@@ -329,13 +329,13 @@ def _claim(
             raise LookupError(f"{vf_id} is no longer at that place.")
         cch.unapply_virtue(saga, character, instance)
         character.virtues_flaws.pop(index)
-        done = f"He loses {by_id[vf_id].name}."
+        done = f"They lose {by_id[vf_id].name}."
     elif aim == pil.LOSE_TRAIT:
         name = str(values.get("trait"))
         character.personality_traits = [
             t for t in character.personality_traits if t.name != name
         ]
-        done = f"His {name} is gone."
+        done = f"Their {name} is gone."
     else:
         detail = str(values.get("detail") or "").strip()
         label = pil.AIMS[aim][0]

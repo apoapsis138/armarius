@@ -99,8 +99,8 @@ def manors(neighbour: Neighbour) -> int:
 def manors_text(neighbour: Neighbour) -> str:
     rows = neighbour.details.get("manor_list")
     if isinstance(rows, list) and rows:
-        return f"{len(rows)} (from his Manors tab)"
-    return f"{manors(neighbour)} (as entered; list them on his Manors tab)"
+        return f"{len(rows)} (from their Manors tab)"
+    return f"{manors(neighbour)} (as entered; list them on their Manors tab)"
 
 
 class Castle(TypedDict, total=False):
@@ -288,13 +288,13 @@ def affinity_text(neighbour: Neighbour) -> str:
     if bonus == 0:
         return "None: not of banneret stature"
     halved = (
-        " (halved: his country is divided)"
+        " (halved: their country is divided)"
         if neighbour.details.get("affinity_divided")
         else ""
     )
     return (
         f"+{bonus}{halved} to social rolls among the region's nobles, for "
-        f"{nobility.AFFINITY_USES}; less if he neglects his affinity's offices "
+        f"{nobility.AFFINITY_USES}; less if they neglect their affinity's offices "
         "and largesse (LoM p. 22)"
     )
 
@@ -327,8 +327,8 @@ def fields(_saga: Saga, neighbour: Neighbour | None) -> list[DialogField]:
             "Manors",
             "int",
             d.get("manors", 1),
-            hint="A baron holds about 20, a count 50. Used while his Manors "
-            "tab lists none.",
+            hint="A baron holds about 20, a count 50. Used while their Manors tab lists"
+            " none.",
         ),
         DialogField(
             "seat", "Seat", "text", d.get("seat", ""), placeholder="e.g. Arnsberg"
@@ -338,8 +338,8 @@ def fields(_saga: Saga, neighbour: Neighbour | None) -> list[DialogField]:
             "Coin in hand (pounds)",
             "int",
             coin(neighbour) if neighbour is not None else 0,
-            hint="What he could pay at once, as for a manor he buys (Lords of "
-            "Men p. 85); his yearly surplus is beside it.",
+            hint="What they could pay at once, as for a manor they buy (LoM p. 85); "
+            "their yearly surplus is beside it.",
         ),
         *_affinity_fields(d),
     ]
@@ -358,13 +358,12 @@ def _affinity_fields(d: dict[str, Any]) -> list[DialogField]:
                 for bonus, text in nobility.AFFINITY.items()
             ],
             allow_blank=True,
-            placeholder="(as his title)",
-            hint="His bonus to social rolls among the region's nobles (Lords "
-            "of Men p. 21).",
+            placeholder="(as their title)",
+            hint="Their bonus to social rolls among the region's nobles (LoM p. 21).",
         ),
         DialogField(
             "affinity_divided",
-            "His country is divided between warring affinities",
+            "Their country is divided among affinities",
             "check",
             bool(d.get("affinity_divided")),
             hint="Halves the bonus.",
@@ -498,8 +497,8 @@ def gratitude_grid(saga: Saga, neighbour: Neighbour) -> Grid:
         ["Owed to", "Points", "Earns", "For"],
         rows,
         list(range(len(rows))),
-        "He owes no one Gratitude: a story that serves him earns 1 or 2 points, "
-        "a renowned feat 5.",
+        "They owe no one Gratitude: a story that serves them earns 1 or 2 points, a "
+        "renowned feat 5.",
         styles,
         caps=[20, 6, 40, 0],
         stretch=3,
@@ -524,14 +523,14 @@ def gratitude_fields(
             "Points",
             "int",
             e.get("points", 1),
-            hint="1 or 2 for a story that serves him, 5 for a renowned feat.",
+            hint="1 or 2 for a story that serves them, 5 for a renowned feat.",
         ),
         DialogField(
             "why",
             "For",
             "text",
             e.get("why", ""),
-            placeholder="e.g. Rescued his son from the Ruhr",
+            placeholder="e.g. Rescued their son from the Ruhr",
         ),
     ]
 
@@ -584,14 +583,14 @@ def redeem_fields(entry: Gratitude) -> list[DialogField]:
             "Points spent",
             "int",
             first.gratitude if first.key != "goods" else min(1, owed),
-            hint=f"He owes {owed}.",
+            hint=f"They owe {owed}.",
         ),
         DialogField(
             "what",
-            "What he gave",
+            "What they gave",
             "text",
             "",
-            placeholder="e.g. the manor of Hagen, the hand of his ward",
+            placeholder="e.g. the manor of Hagen, the hand of their ward",
         ),
     ]
 
@@ -616,11 +615,11 @@ def redeem(
     entry["spent"] = [*entry.get("spent", []), text]
     who = _who(saga, entry)
     line = f"{lord.name} rewarded {who}: {text}."
-    lines = [line, f"He owes {who} {entry['points']} point(s) now."]
+    lines = [line, f"They owe {who} {entry['points']} point(s) now."]
     if reward.requires:
         lines.append(f"It asks {reward.requires}.")
     if reward.granter:
-        lines.append(f"It costs him {reward.granter}.")
+        lines.append(f"It costs them {reward.granter}.")
     if reward.virtue:
         lines.append(
             f"The new station brings its Virtue: add {reward.virtue} to "
@@ -689,8 +688,8 @@ TAB = KindTab(
 def diary_grid(_saga: Saga, lord: Neighbour) -> Grid:
     return place_events.diary_rows(
         lord,
-        "Nothing written yet: each Battle Event, and each fight or siege he is "
-        "linked to, is written here.",
+        "Nothing written yet: each Battle Event, and each fight or siege they're linked"
+        " to, is written here.",
     )
 
 

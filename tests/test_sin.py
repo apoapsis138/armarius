@@ -271,7 +271,7 @@ def test_a_summoning_total_and_its_target():
     )
     assert against.total == total.total + 2 * 5
     assert gr.outcome(gr.SUMMONING, 20, 10).text.startswith("Summoned and held")
-    assert "concentrates" in gr.outcome(gr.SUMMONING, 12, 10).text
+    assert "concentrate;" in gr.outcome(gr.SUMMONING, 12, 10).text
     assert not gr.outcome(gr.SUMMONING, 9, 10).worked
     assert gr.scouring_might(25) == 12
 

@@ -278,7 +278,9 @@ def mason_text(saga: Saga, covenant: Covenant, project: HermeticProject) -> str:
         else "not yet a level a season (it takes 5)"
     )
     nxt = (found.effective // hp.LEVEL_PER_SCORE + 1) * hp.LEVEL_PER_SCORE
-    devices = f", devices +{found.devices} (at most his score)" if found.devices else ""
+    devices = (
+        f", devices +{found.devices} (at most their score)" if found.devices else ""
+    )
     extras: list[str] = []
     if hp.owns_de_architectura(saga, project, covenant.id):
         extras.append("De Architectura +1")
@@ -500,7 +502,7 @@ def device_info(saga: Saga, holder: Neighbour, index: int) -> str:
     if device.kind == hp.CRAFT:
         lines.append(
             "[dim]Each kind of device counts once, and their total is at most "
-            f"his {hp.MASON_CRAFT} ({HP} p. 39).[/]"
+            f"the mason's {hp.MASON_CRAFT} ({HP} p. 39).[/]"
         )
     elif device.kind == BUTTRESS:
         lines.append(
@@ -565,7 +567,7 @@ def project_fields(
             options=_people_options(saga, covenant),
             allow_blank=True,
             placeholder="(none yet)",
-            hint=f"His {hp.MASON_CRAFT} sets how fast the tower rises ({HP} p. 36).",
+            hint=f"Their {hp.MASON_CRAFT} sets how fast the tower rises ({HP} p. 36).",
             show_if=_is_tower,
         ),
         DialogField(
@@ -1075,7 +1077,7 @@ def stress_live(
             lines.append("[$text-warning]Nothing is built yet: nothing to strain.[/]")
         if hp.mason(saga, project) is None:
             lines.append(
-                f"[$text-warning]No master mason: his {hp.MASON_CRAFT} "
+                f"[$text-warning]No master mason: their {hp.MASON_CRAFT} "
                 "counts for nothing.[/]"
             )
         lines += [

@@ -360,9 +360,9 @@ def status_change(character: Character, grade: str) -> StatusChange:
         if SENIOR_CLERGY in statuses:
             return StatusChange()
         return StatusChange(
-            warning="A bishop takes the Senior Clergy Social Status, a Major "
-            "Virtue, in place of his own: swap it on Virtues & Flaws "
-            "(DE p. 107; The Church pp. 25-26)."
+            warning="A bishop takes the Senior Clergy Social Status, a Major Virtue, in"
+            " place of their own: swap it on Virtues & Flaws (DE p. 107; The "
+            "Church pp. 25-26)."
         )
     if grade == PRIEST:
         if PRIEST_STATUS in statuses or SENIOR_CLERGY in statuses:
@@ -433,12 +433,12 @@ def ordain(character: Character, record: Ordination, *, swap: bool = True) -> li
     if record.result == BOTCHED:
         career.barred = True
         return [
-            f"Botched the examination for {record.grade}: he may sit it again only "
+            f"Botched the examination for {record.grade}: they may sit it again only "
             f"once a petition (EF {APPEAL_EASE}) allows it ({TC} p. 34)."
         ]
     if not ordained(record.result):
         return [
-            f"Not ordained {record.grade}: he may appeal (a petition, EF "
+            f"Not ordained {record.grade}: they may appeal (a petition, EF "
             f"{APPEAL_EASE}) or sit it again another season ({TC} p. 34)."
         ]
     career.grade = record.grade
@@ -642,7 +642,7 @@ EXAMPLES: tuple[tuple[str, int], ...] = (
     ("Appeal an ordination exam", 9),
     ("A dispensation for a grade", 9),
     ("Leave to sit an examination again", 9),
-    ("Appoint him to a vacant benefice", 9),
+    ("Appoint them to a vacant benefice", 9),
     ("Excommunicate a freeman or minor cleric", 9),
     ("License of absence from a benefice", 9),
     ("Establish a chapel", 9),

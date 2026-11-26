@@ -327,7 +327,7 @@ def fields(
             "select",
             s.besieger_id,
             options=[*none, *((escape(n.name), n.id) for n in lords)],
-            hint="The siege shows on his Fief tab, and on the castle's lord's.",
+            hint="The siege shows on their Fief tab, and on the castle's lord's.",
         ),
     ]
     if siege is not None:
@@ -386,9 +386,8 @@ def _from_castle_field(saga: Saga, siege: Siege | None) -> list[DialogField]:
             options=found,
             allow_blank=True,
             placeholder="(typed below)",
-            hint="Fills the castle's name, Garrison, Defenses (by its kind: free "
-            "Standard, minor Superior, great Excellent, p. 111), Supplies and "
-            "moat from the lord's Castles list, and links him as its holder.",
+            hint="Fills the castle's name, Garrison, Defenses, Supplies and moat from "
+            "the lord's Castles list (p. 111), and links them as holder.",
         ),
     ]
 
@@ -424,7 +423,7 @@ def _expert_fields(saga: Saga, s: Siege) -> list[DialogField]:
             options=people,
             allow_blank=True,
             placeholder="(the total typed below)",
-            hint=f"Intelligence + {rules.EXPERT_ABILITIES[role]} from his sheet"
+            hint=f"Intelligence + {rules.EXPERT_ABILITIES[role]} from their sheet"
             + (
                 "; Profession: Sapper can't be used untrained, Profession: "
                 "Miner can with three botch dice (p. 114)."

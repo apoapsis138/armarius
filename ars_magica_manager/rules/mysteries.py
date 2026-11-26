@@ -321,7 +321,7 @@ def ungifted_problem(
         )
     if not gifted(mystagogue) and not knows:
         who = (
-            f"{mystagogue.name} can't Initiate himself"
+            f"{mystagogue.name} can't Initiate themselves"
             if mystagogue is initiate
             else f"{mystagogue.name} can't be the Mystagogue"
         )

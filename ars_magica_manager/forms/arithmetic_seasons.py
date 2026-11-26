@@ -95,7 +95,7 @@ def fields(plan: SeasonPlan | None, activity_is: ActivityIs) -> list[DialogField
             show_if=activity_is(aw.BIND_STRUCTURE),
             hint=f"Each failed placement costs {tn.REWORK_DAYS_LEAST} day "
             f"(posts in a field) to {tn.REWORK_DAYS_MOST} (niches in a "
-            "building) of recomputing, and he tries again while the season "
+            "building) of recomputing, and they retry while the season "
             "lasts; blank is a month (TMRE p. 98).",
         ),
     ]

@@ -139,7 +139,7 @@ def spirits_fields(saga: Saga, character: Character) -> list[DialogField]:
         ),
         DialogField(
             "step",
-            "He varies it",
+            "They vary it",
             "select",
             "0",
             options=list(STEPS),
@@ -270,7 +270,7 @@ def spirits_fields(saga: Saga, character: Character) -> list[DialogField]:
             "A Magical Focus applies",
             "check",
             False,
-            hint="It doubles the lower of his best Arts.",
+            hint="It doubles the lower of their best Arts.",
             show_if=on(GHOST, ASCENSION),
         ),
         DialogField(
@@ -285,7 +285,7 @@ def spirits_fields(saga: Saga, character: Character) -> list[DialogField]:
             "The Transformation's level",
             "int",
             0,
-            hint="0: his transformation limit.",
+            hint="0: their transformation limit.",
             show_if=on(GHOST, ASCENSION),
         ),
         DialogField(
@@ -387,18 +387,18 @@ def lines(character: Character, values: dict[str, Any]) -> list[str]:
         total, ease = _intuit_roll(character, values, might)
         what = "Intuit" if working == INTUIT else "A season's fasting and invocation"
         after = (
-            "Failing, he can't try again until Per + Lore rises; a botch warns "
-            "the spirit."
+            "Failing, they can't try again until Per + Lore rises; a botch warns the "
+            "spirit."
             if working == INTUIT
-            else "Failing, he may try another season."
+            else "Failing, they may try another season."
         )
         return [
             f"{what}: stress die {total:+d} against {ease}: a die of "
             f"{max(ease - total, 0)}.",
             after,
-            "Known, his own synthemata give a Muto Vim spell adding its level "
-            "to his Casting Score against the being (the Hedge Lord's "
-            "Synthemata, Diameter: level - 5).",
+            "Known, their own synthemata give a Muto Vim spell adding its level to "
+            "their Casting Score against the being (the Hedge Lord's Synthemata, "
+            "Diameter: level - 5).",
         ]
     if working == EMPOWERMENT:
         return _empowerment(values, might)
@@ -424,7 +424,7 @@ def _spell_spirit(values: dict[str, Any], might: int) -> list[str]:
     )
     said = [ts.spell_spirit_problem(might, power)] if might < power else []
     said += [
-        f"His Invoke spell: level {level} (Might {might} + Duration + "
+        f"Their Invoke spell: level {level} (Might {might} + Duration + "
         f"Penetration), with the power's Arts; +{ts.invoke_penetration_bonus(added)} "
         "to the spirit's Penetration.",
         f"The spirit casts at {cast.casting_total} (Might + aura, no die) "
@@ -442,7 +442,7 @@ def _form_spirit(values: dict[str, Any], might: int) -> list[str]:
     cast = ts.form_spirit(might, _spirit_aura(values), effect)
     level = ts.invoke_level(might, _int(values, "duration_levels"))
     return [
-        f"His Invoke spell: level {level} (Might {might} + Duration).",
+        f"Their Invoke spell: level {level} (Might {might} + Duration).",
         f"The spirit's Casting Total {cast.casting_total} ((Might + aura) / 2, "
         f"no die): level {effect} "
         + ("works" if cast.succeeds else "is beyond it")
@@ -509,9 +509,9 @@ def _names(character: Character, values: dict[str, Any]) -> list[str]:
     return [
         f"Their bonus together: {total} (no more than Magic Theory {theory}).",
         f"Each Name is a Muto Vim spell of level 5 x its bonus: {levels}.",
-        "Invocation Magic casts each Name before the spell, a round apiece, "
-        "firmly aloud; Loud Voice or Exaggerated Gestures add +2 to the Name's "
-        "own casting. A botch strikes his magic.",
+        "Invocation Magic casts each Name before the spell, a round apiece, aloud; Loud"
+        " Voice or Exaggerated Gestures add +2 to the Name's casting. A botch strikes "
+        "their magic.",
     ]
 
 
@@ -593,7 +593,7 @@ def _familiar(character: Character, values: dict[str, Any], might: int) -> list[
             f"A Daimon: {ts.daimon_familiar_vis(might)} pawn(s) sacrificed first"
             + (
                 f"; Technique + Form {te_fo} is under twice its Might, and it may "
-                "think him unworthy."
+                "think them unworthy."
                 if ts.daimon_rejects(te_fo, might)
                 else "."
             )
@@ -609,7 +609,7 @@ def _blending(values: dict[str, Any]) -> list[str]:
     return [
         f"A Rego Vim effect (Muto, Corpus and the item's Form requisites) of "
         f"level {level}; {ts.blending_warping(level)} Warping Point(s).",
-        "He may attune one of its bonuses in the first season.",
+        "They may attune one of its bonuses in the first season.",
     ]
 
 
@@ -643,7 +643,7 @@ def _ascension(character: Character, values: dict[str, Any]) -> list[str]:
     points = ts.transformation_points(transformation, form_level)
     left = ts.ceremonies(needed, max(0, _int(values, "gathered")), points)
     said = (
-        [f"The Ascendant Form must be at least level {least} ({arts or 'his Arts'})."]
+        [f"The Ascendant Form must be at least level {least} ({arts or 'their Arts'})."]
         if form_level < least
         else []
     )
@@ -658,7 +658,7 @@ def _ascension(character: Character, values: dict[str, Any]) -> list[str]:
             if left is not None
             else "it must exceed the Form."
         ),
-        f"He rolls Stamina against {ts.ASCENSION_STAMINA_EASE} or passes out.",
+        f"They roll Stamina against {ts.ASCENSION_STAMINA_EASE} or pass out.",
     ]
 
 
@@ -687,25 +687,25 @@ def roll(
             saga=saga,
         )
         said = (
-            "botched: the ritual is lost to him"
+            "botched: the ritual is lost to them"
             if rolled.die.botched
-            else "he endures"
+            else "they endure"
             if rolled.succeeded
-            else "he passes out, but still gains its points"
+            else "they pass out, but still gain its points"
         )
         return notes(f"Stamina {rolled.modifiers:+d} + {rolled.die.value}: {said}.")
     total, ease = _intuit_roll(character, values, max(0, _int(values, "might", 10)))
     rolled = dice.roll(rng, total, ease_factor=ease, saga=saga)
     if rolled.die.botched:
         outcome = "Botched: the spirit knows of the attempt" + (
-            ", and a channel past his Magic Resistance opens."
+            ", and a channel past their Magic Resistance opens."
             if rolled.die.botches > 1
             else "."
         )
     elif rolled.succeeded:
-        outcome = "He knows its synthemata."
+        outcome = "They know its synthemata."
     else:
-        outcome = "It escapes him."
+        outcome = "It escapes them."
     return notes(
         f"{total:+d} + {rolled.die.value} = {rolled.total} against {ease}: {outcome}"
     )

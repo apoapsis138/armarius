@@ -130,7 +130,7 @@ def test_a_child_bid_for_by_one_magus_is_his_and_keeps_his_tokens():
     child = saga.characters[before]
     assert child.name == "Eirene" and child.covenant_id == "cov_ionian"
     assert child.hermetic.parens == "Ionian 0"
-    assert "keeps 2 tokens" in child.summary
+    assert "keep 2 tokens" in child.summary
     assert theban_meeting.apprentices(thebes)[-1]["tokens"] == 2
 
 

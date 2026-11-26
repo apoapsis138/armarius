@@ -224,11 +224,11 @@ def roll_fields(saga: Saga) -> list[DialogField]:
             options=[(escape(c.name), c.id) for c in saga.characters],
             allow_blank=True,
             placeholder="(the defendant or a proxy without a sheet)",
-            hint="The defendant, or his proxy: an unGifted proxy spares him "
-            "The Gift's penalty.",
+            hint="The defendant, or their proxy: an unGifted proxy spares them The "
+            "Gift's penalty.",
         ),
         DialogField("communication", "Communication", "optint", 0, show_if=proxy),
-        DialogField("law_score", "His score in the law", "optint", 0, show_if=proxy),
+        DialogField("law_score", "Their score in the law", "optint", 0, show_if=proxy),
         DialogField(
             "law",
             "Law argued",
@@ -244,14 +244,14 @@ def roll_fields(saga: Saga) -> list[DialogField]:
             None,
             hint="The arguer's, as a + or -; The Gift is counted already.",
         ),
-        DialogField("innocent", "He truly is innocent", "check", False),
+        DialogField("innocent", "They truly are innocent", "check", False),
         DialogField("bad_name", "A bad name in this court", "check", False),
         DialogField(
             "witnesses",
             "Witnesses say guilty",
             "check",
             False,
-            hint="Most credible witnesses declare him guilty.",
+            hint="Most credible witnesses declare them guilty.",
         ),
     ]
 
@@ -262,7 +262,7 @@ def roll_live(saga: Saga, case: CourtCase) -> Any:
         lines = [
             f"[b]{escape(case['accused'])}[/]  [$label]"
             f"{escape(case.get('charge') or 'charged')}[/]",
-            f"[i]{escape(p.arguer)} pleads for him before the "
+            f"[i]{escape(p.arguer)} pleads for them before the "
             f"{escape(court_name(case))}.[/]",
             f"Stress die + [b]{p.total}[/] [dim]= {' '.join(p.terms)}[/]",
             f"Against [b]{p.ease}[/]"
@@ -272,7 +272,7 @@ def roll_live(saga: Saga, case: CourtCase) -> Any:
         ]
         if p.logic is not None:
             lines.append(
-                f"[dim]Civil Law weighs logic: his Artes Liberales {p.logic} may "
+                f"[dim]Civil Law weighs logic: their Artes Liberales {p.logic} may "
                 "shake a witness's credit, if the storyguide allows.[/]"
             )
         return "\n".join(lines)
@@ -315,9 +315,9 @@ def court_roll(
         return notes(
             f"{escape(case['accused'])}: the die shows {shown}, + {p.total} = "
             f"{roll.total} against {p.ease}.",
-            "The court finds him innocent."
+            "The court finds them innocent."
             if innocent
-            else "The court finds him guilty: edit the case to pass sentence "
+            else "The court finds them guilty: edit the case to pass sentence "
             f"({CG} p. 30).",
         )
 
@@ -402,7 +402,7 @@ def case_info(_saga: Saga, neighbour: Neighbour, row: int) -> str:
             + f". [dim]{found.effect} ({CG} p. 30)[/]"
         )
     if outlawed(case):
-        lines.append("[$text-error]His fine is unpaid: he is an outlaw.[/]")
+        lines.append("[$text-error]Their fine is unpaid: they're an outlaw.[/]")
     if case.get("note"):
         lines.append(escape(case.get("note", "")))
     return "\n".join(lines)
@@ -469,7 +469,7 @@ def case_fields(
             "The fine is unpaid",
             "check",
             bool(c.get("unpaid")),
-            hint="An unpaid fine makes him an outlaw (p. 30).",
+            hint="An unpaid fine makes them an outlaw (p. 30).",
             show_if=fined,
         ),
         DialogField("note", "Note", "text", c.get("note", "")),
@@ -490,7 +490,7 @@ def sentences_text(_saga: Saga, _neighbour: Neighbour) -> str:
         aligned(
             [(s.name, f"{s.effect} [dim]{s.crimes}[/]") for s in SENTENCES.values()]
         )
-        + f"\n[dim]A defendant who insists he is innocent may choose a trial by "
+        + f"\n[dim]A defendant who insists they're innocent may choose a trial by "
         f"ordeal, which many charters limit or ban ({CG} p. 30).[/]"
     )
 

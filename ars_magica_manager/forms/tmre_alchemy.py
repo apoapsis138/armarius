@@ -30,7 +30,7 @@ TITLE = "Philosophic Alchemy"
 HELP = "philosophic-alchemy"
 #: Whose raw vis the pawns go to (a lab plan's `vis_from`).
 VIS_TO: tuple[tuple[str, str], ...] = (
-    ("His own", ""),
+    ("Their own", ""),
     ("The laboratory's", "laboratory"),
     ("The covenant's", "covenant"),
 )
@@ -128,8 +128,8 @@ def digestion_fields(saga: Saga, character: Character) -> list[DialogField]:
             found[0].id if found else "",
             options=[(d.name, d.id) for d in found] or [("(none unopened)", "")],
             show_if=_spaces,
-            hint="An invested device not yet opened, held by the magus or "
-            "his laboratory.",
+            hint="An invested device not yet opened, held by the magus or their "
+            "laboratory.",
         ),
         DialogField(
             "spaces_as",
@@ -191,8 +191,8 @@ def preview_lines(saga: Saga, character: Character, digestion: Digestion) -> lis
             "Lab Total gives the yield."
         )
     lines.append(
-        f"Each season it adds {alchemy.TENDING_DAYS} days' distraction to his "
-        "other lab work; more than 20 days away, or experimenting, spoil it "
+        f"Each season it adds {alchemy.TENDING_DAYS} days' distraction to their "
+        "other lab work; more than 20 days away, or experimenting, spoils it "
         f"({alchemy.PHILOSOPHIC_SOURCE})."
     )
     return lines
@@ -345,7 +345,7 @@ def _great_live(character: Character, age: int) -> Callable[[dict[str, Any]], st
             f"{test.ease} (age {alchemy.great_ease_basis(character, age)} / 10, "
             "rounded up).",
             f"Grant Might level {level}: Magic Might {test.might}.",
-            "Success: he becomes a being of Magic, no longer aging nor gaining "
+            "Success: they become a being of Magic, no longer aging or gaining "
             "Warping; failure wastes the potion, and the next adds 1 more (at "
             f"most Magic Theory {alchemy.magic_theory(character)}).",
         ]
@@ -353,7 +353,7 @@ def _great_live(character: Character, age: int) -> Callable[[dict[str, Any]], st
             lines.insert(
                 0,
                 f"Already immortal (Magic Might {character.magic_might}): a "
-                "better potion raises his Might.",
+                "better potion raises their Might.",
             )
         return "\n".join(f"{BULLET} {line}" for line in lines)
 

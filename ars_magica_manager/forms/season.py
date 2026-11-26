@@ -812,7 +812,7 @@ def _supplement_bonus_fields(
         ),
         DialogField(
             "workshop_aura",
-            "Aura where he works",
+            "Aura where they work",
             "optint",
             plan.site_aura if plan else None,
             show_if=activity_is("make_wondrous_item"),
@@ -1061,7 +1061,7 @@ def _script_fields(
             "check",
             bool(plan and plan.knows_power),
             show_if=initiation,
-            hint="Counted anyway when he has the Virtue initiated; otherwise "
+            hint="Counted anyway when they have the Virtue initiated; otherwise "
             "the Target rises (18 / 30, or a hedge Script's +3 / +9).",
         ),
         DialogField(

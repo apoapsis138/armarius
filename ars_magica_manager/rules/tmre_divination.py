@@ -463,7 +463,7 @@ def outcome(divination: Divination, rolled: dice.Roll) -> str:
     if divination.kind == DREAM_CALLING:
         if rolled.succeeded:
             return (
-                f"{head} against {ease}: tonight he dreams of the subject, "
+                f"{head} against {ease}: tonight they dream of the subject, "
                 "a dream to interpret later (p. 63)."
             )
         return f"{head} against {ease}: the dream wanders elsewhere."
@@ -550,7 +550,7 @@ def duration_outcome(rolled: dice.Roll, units: int, unit: str) -> str:
     miss = ease - rolled.total
     return (
         f"{head}: miscalculated -- it lasts anywhere from {max(0, units - miss)} "
-        f"to {units + miss} {unit} (the storyguide's choice; he finds out when "
+        f"to {units + miss} {unit} (the storyguide's choice; they find out when "
         "it ends)."
     )
 
@@ -589,10 +589,10 @@ def horoscope_outcome(rolled: dice.Roll, what: str) -> str:
         f"{rolled.modifiers:+d} + {shown} = {rolled.total} against {rolled.ease_factor}"
     )
     if rolled.die.botched:
-        return f"{head}: a botch -- the {what} is faulty and he doesn't know it."
+        return f"{head}: a botch -- the {what} is faulty and they don't know it."
     if rolled.succeeded:
         return f"{head}: the {what} is sound."
-    return f"{head}: the {what} is faulty, and he knows it."
+    return f"{head}: the {what} is faulty, and they know it."
 
 
 def periapt_charges(lab_total: int) -> int:

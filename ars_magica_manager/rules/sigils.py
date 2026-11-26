@@ -64,10 +64,10 @@ def sigil_text(saga: Saga, magus: Character) -> str:
         return ""
     name, _ = sigil_holder(saga, magus)
     if not name:
-        return "Voting sigil: his own."
+        return "Voting sigil: their own."
     _, when = sigil_challenge(magus, saga.current_year)
     return (
-        f"Voting sigil: held by {name}, until he beats his parens in certamen "
+        f"Voting sigil: held by {name}, until they beat their parens in certamen "
         f"or the parens dies (DE p. 16). {when}"
     )
 
@@ -153,11 +153,11 @@ def sigil_challenge(magus: Character, year: int) -> tuple[bool, str]:
     if magus.hermetic.house != TREMERE or magus.hermetic.holds_own_sigil:
         return False, ""
     if not magus.hermetic.sigil_challenged:
-        return True, "He may challenge for it when he chooses (HoH: TL p. 123)."
+        return True, "They may challenge for it when they choose (HoH: TL p. 123)."
     if decennial(year):
-        return True, "He may challenge for it at this year's Decennial."
+        return True, "They may challenge for it at this year's Decennial."
     return False, (
-        f"His next challenge for it waits for the Decennial of "
+        f"Their next challenge for it waits for the Decennial of "
         f"{next_decennial(year)} (HoH: TL p. 123)."
     )
 

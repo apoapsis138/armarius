@@ -82,8 +82,8 @@ WIN_CONDITIONS: dict[str, tuple[tuple[str, str, bool], ...]] = {
         ("failed", "Not taken", False),
     ),
     "Heroic Gesture": (
-        ("died", "The leader died: his death secures the victory", True),
-        ("survived", "He survived, meeting the storyguide's conditions", True),
+        ("died", "The leader died: their death secures the victory", True),
+        ("survived", "They survived, meeting the storyguide's conditions", True),
         ("other", "Another player character was killed", False),
         ("failed", "It failed", False),
     ),

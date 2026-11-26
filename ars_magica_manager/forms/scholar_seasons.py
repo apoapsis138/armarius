@@ -96,7 +96,7 @@ def _piece_fields(
             "int",
             art.assistants,
             show_if=on,
-            hint=f"At most his Leadership ({artistry.most_assistants(character)}); "
+            hint=f"At most their Leadership ({artistry.most_assistants(character)}); "
             "they cut the time to no less than half (A&A p. 125).",
         ),
         DialogField(
@@ -150,7 +150,7 @@ def _maestro_fields(art: ArtworkPlan, on: ShowIf) -> list[DialogField]:
     return [
         DialogField(
             "art_realm",
-            "His realm",
+            "Realm",
             "select",
             art.realm or None,
             options=[(r, r) for r in REALMS],
@@ -160,7 +160,7 @@ def _maestro_fields(art: ArtworkPlan, on: ShowIf) -> list[DialogField]:
         ),
         DialogField(
             "art_aura",
-            "Aura where he works",
+            "Aura where they work",
             "int",
             art.aura,
             show_if=on,
@@ -209,7 +209,7 @@ def _scholar_fields(
             plan.book_id if plan else None,
             options=[(escape(b.name), b.id) for b in lectures],
             allow_blank=True,
-            placeholder="(none of his not yet edited)",
+            placeholder="(none of theirs not yet edited)",
             show_if=activity_is(academe.EDIT_LECTURES),
         ),
     ]

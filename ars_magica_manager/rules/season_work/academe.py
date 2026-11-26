@@ -169,7 +169,7 @@ def _ingredients(
         result.notes.append(f"{made}: no ingredients (parchment and ink).")
     elif store is character:
         result.labor_points -= cost
-        result.notes.append(f"{made}: {cost} Labor Points from his own store.")
+        result.notes.append(f"{made}: {cost} Labor Points from their own store.")
     elif store is not None:
         result.labor_from.append((store.id, cost))
         result.notes.append(
@@ -319,7 +319,7 @@ def _experiment_reputation(
         result.reputation_xp.append((name, artistry.xp_to_next(found)))
     elif artistry.loses_nothing(rep):
         if outcome in ("disaster", "ruined", "disparaged"):
-            result.notes.append("Artist Reputation 10: he loses no Reputation xp.")
+            result.notes.append("Artist Reputation 10: they lose no Reputation xp.")
     elif outcome in ("disaster", "disparaged"):
         lost = artistry.xp_of_a_level(found)
         if lost:
@@ -376,7 +376,7 @@ def _create_art(
     if outcome not in ("disaster", "ruined") and artistry.season_xp(quality, rep):
         result.reputation_xp.append((artistry.trade(craft), 1))
         result.notes.append(
-            f"Aesthetic Quality over three times his {artistry.trade(craft)} "
+            f"Aesthetic Quality over three times their {artistry.trade(craft)} "
             f"Reputation {rep}: 1 xp in it (A&A p. 126)."
         )
     if art.instill_level:
@@ -394,7 +394,7 @@ def _create_art(
     if art.base not in ("years", "decades"):
         weeks = max(0.0, time.days / 2 / 7 - art.assistants)
         result.notes.append(
-            f"An Arcane Connection to him for {weeks:g} weeks (half the time to "
+            f"An Arcane Connection to them for {weeks:g} weeks (half the time to "
             "make it, a week less for each assistant; A&A p. 125)."
         )
 
@@ -413,7 +413,7 @@ def _instill(
     result.notes.append(
         f"Instilling a level {art.instill_level} effect: total {total}, {points} "
         f"point(s) toward it; {artistry.instill_fatigue(art.instill_level)} "
-        "Fatigue level(s) lost while he works on it (A&A p. 135)."
+        "Fatigue level(s) lost while they work on it (A&A p. 135)."
     )
 
 
@@ -436,7 +436,7 @@ def _create_art_problems(
     elif art.assistants > artistry.most_assistants(character):
         found.append(
             f"{character.name} can use at most {artistry.most_assistants(character)} "
-            "assistants (his Leadership, A&A p. 125)."
+            "assistants (their Leadership, A&A p. 125)."
         )
     if art.wound and artistry.LIFE_LINKED not in ids:
         found.append("Only Life-Linked Art adds a self-inflicted wound (A&A p. 134).")
@@ -698,7 +698,7 @@ def _lecture_xp(saga: Saga, teacher: Character, result: SupplementWork) -> None:
         result.academic_xp.append((teacher.id, 1))
         result.notes.append(
             f"{teacher.name}'s lecture commentaries come to {made}: 1 xp toward "
-            "his Good Academic Reputation (A&A p. 103)."
+            "their Good Academic Reputation (A&A p. 103)."
         )
 
 
@@ -732,7 +732,7 @@ def _edit_lectures_problems(
 ) -> list[str]:
     book = _own_commentary(saga, character, plan)
     if book is None:
-        return ["Choose a lecture commentary of his own lectures to edit."]
+        return ["Choose a commentary of their own lectures to edit."]
     if book.glossed:
         return [f"{book.name} has been edited (or glossed) already."]
     return []
@@ -786,14 +786,14 @@ def _seek_post(
     if total < ease:
         result.notes.append(f"{total} against {ease}: no post; the season is wasted.")
         return
-    result.notes.append(f"{total} against {ease}: {label.lower()}'s post is his.")
+    result.notes.append(f"{total} against {ease}: {label.lower()}'s post is theirs.")
     result.academic_xp.append(("", 1))
-    result.notes.append("1 xp toward his Good Academic Reputation (A&A p. 103).")
+    result.notes.append("1 xp toward their Good Academic Reputation (A&A p. 103).")
     if post == "cathedral_teacher":
         count = scholarship.student_dice(character)
         students = sum(dice.simple_die(rng) for _ in range(count))
         result.notes.append(
-            f"{students} students come ({count} simple dice); he can teach "
+            f"{students} students come ({count} simple dice); they can teach "
             f"{scholarship.students_taught(character)} (A&A p. 84)."
         )
 
@@ -803,7 +803,7 @@ def _seek_post_problems(
 ) -> list[str]:
     post = plan.title.strip()
     if post not in scholarship.POSTS:
-        return ["Choose the post he seeks."]
+        return ["Choose the post they seek."]
     problem = scholarship.post_problem(character, post)
     return [problem] if problem else []
 
@@ -812,8 +812,8 @@ register(
     SimpleActivity(
         EDIT_LECTURES,
         "Edit a lecture commentary",
-        "A season rewriting a commentary of his own lectures: its Quality + 1 "
-        "and his writing Virtues, once. Exposure 2.",
+        "A season rewriting a commentary of their own lectures: its Quality + 1 and "
+        "their writing Virtues, once. Exposure 2.",
         ACADEME,
         "931",
         who=COMPANIONS,

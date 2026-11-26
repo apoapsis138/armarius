@@ -194,7 +194,7 @@ def finish_checks(saga: Saga, record: Record) -> list[Check]:
                 warped,
                 "taken"
                 if warped
-                else "his parens gave him one (no faerie Virtue or Flaw)",
+                else "their parens gave them one (no faerie Virtue or Flaw)",
                 MERINITA_SOURCE,
             )
         )

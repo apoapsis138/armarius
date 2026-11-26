@@ -297,10 +297,10 @@ def _opening_note(
                 FAILS: "the Opening fails.",
                 LOSES: (
                     f"Opened to {tradition.name}, but {student.name} loses the "
-                    "Supernatural Abilities and Arts he had, and their Virtues and "
+                    "Supernatural Abilities and Arts they had, and their Virtues and "
                     "Flaws (remove them by hand)."
                 ),
-                KEEPS: f"Opened to {tradition.name}, keeping what he had.",
+                KEEPS: f"Opened to {tradition.name}, keeping what they had.",
             }[work.result]
         )
     rule = tradition.opening

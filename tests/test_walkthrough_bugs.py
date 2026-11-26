@@ -717,7 +717,7 @@ def test_mercenaries_cost_the_budget_and_a_loan_drops_wealth():
     assert "budget is 40" in form.validate({"side": "0", "knights": 3})
     # Average to Poor: five times his 40 (p. 104).
     assert form.validate({"side": "0", "knights": 3, "loan": "Poor"}) is None
-    assert "can't leave him Average" in form.validate(
+    assert "can't leave them Average" in form.validate(
         {"side": "0", "knights": 3, "loan": "Average"}
     )
     form.apply({"side": "0", "knights": 3, "loan": "Poor"})

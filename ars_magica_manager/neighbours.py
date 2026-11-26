@@ -115,7 +115,7 @@ for _kind in (
     NeighbourKind(
         "lord",
         "Lord",
-        "a noble and his household",
+        "a noble and their household",
         "lords",
         "LoM",
         lords.fields,

@@ -235,12 +235,12 @@ def live(saga: Saga, character: Character, values: dict[str, Any]) -> str:
     aura, realm = realms.aura_of(host)
     terms = host_terms(saga, host)
     lines = [
-        f"While a guest, his casting counts {escape(host.name)}'s {realm} aura of "
-        f"{aura}, unless Current Location says he is elsewhere."
+        f"While a guest, their casting counts {escape(host.name)}'s {realm} aura of "
+        f"{aura}, unless Current Location says they're elsewhere."
     ]
     if values.get("library"):
         lines.append(
-            "Its library's books join those he may study and copy (scribal "
+            "Its library's books join those they may study and copy (scribal "
             "hospitality, DE p. 381)."
         )
     if terms is not None:
@@ -263,7 +263,7 @@ def apply(saga: Saga, character: Character, values: dict[str, Any]) -> list[str]
             saga,
             character,
             before,
-            f"Left {before.name}, where he was a guest",
+            f"Left {before.name}, where they were a guest",
             f"{character.name}'s stay as a guest ended",
         )
         return notes(f"{escape(character.name)}'s stay at {escape(before.name)} ended.")
@@ -289,7 +289,7 @@ def apply(saga: Saga, character: Character, values: dict[str, Any]) -> list[str]
                 saga,
                 character,
                 before,
-                f"Left {before.name}, where he was a guest",
+                f"Left {before.name}, where they were a guest",
                 f"{character.name}'s stay as a guest ended",
             )
         _write(
@@ -306,7 +306,7 @@ def stay_form(saga: Saga, character: Character | None) -> Command:
     if character is None:
         return Refuse(TITLE, "Choose a character first.")
     if not hosts(saga, character):
-        return Refuse(TITLE, "The saga has no other covenant for him to stay at.")
+        return Refuse(TITLE, "The saga has no other covenant for them to stay at.")
     return Form(
         f"{TITLE}: {escape(character.name)}",
         lambda: fields(saga, character),
@@ -378,7 +378,7 @@ def detail_text(saga: Saga, covenant: Covenant, row: int | None) -> str:
     """The chosen guest's stay (markup)."""
     found = guests(saga, covenant)
     if row is None or not 0 <= row < len(found):
-        return "[$label]Choose a guest to see the terms of his stay.[/]"
+        return "[$label]Choose a guest to see the terms of their stay.[/]"
     guest = found[row]
     stay = guest.stay
     assert stay is not None
@@ -394,7 +394,7 @@ def detail_text(saga: Saga, covenant: Covenant, row: int | None) -> str:
             else ""
         ),
         "[$label]Library:[/] "
-        + ("may study and copy" if stay.library else "closed to him")
+        + ("may study and copy" if stay.library else "closed to them")
         + "; [$label]laboratory:[/] "
         + ("one of the covenant's" if stay.laboratory else "none given"),
     ]
@@ -451,7 +451,7 @@ def pay_form(saga: Saga, covenant: Covenant, row: int | None) -> Command:
         if not options:
             return Refuse(
                 PAY_TITLE,
-                f"{escape(guest.name)} holds no vis. Give him some, or record the "
+                f"{escape(guest.name)} holds no vis. Give them some, or record the "
                 "fee as paid another way by editing the stay.",
             )
 
@@ -472,7 +472,7 @@ def pay_form(saga: Saga, covenant: Covenant, row: int | None) -> Command:
             heading,
             lambda: [
                 DialogField(
-                    "store", "From his vis", "select", options[0][1], options=options
+                    "store", "From their vis", "select", options[0][1], options=options
                 ),
                 DialogField("pawns", "Pawns", "int", stay.fee),
             ],
@@ -507,9 +507,9 @@ def pay_form(saga: Saga, covenant: Covenant, row: int | None) -> Command:
             saga,
             guest,
             covenant,
-            f"Served {covenant.name} for his hospitality ({served})"
+            f"Served {covenant.name} for their hospitality ({served})"
             + (f": {what}" if what else ""),
-            f"{guest.name} served the covenant for his hospitality ({served})"
+            f"{guest.name} served the covenant for their hospitality ({served})"
             + (f": {what}" if what else ""),
         )
         stay.paid.append(year)
@@ -523,7 +523,7 @@ def pay_form(saga: Saga, covenant: Covenant, row: int | None) -> Command:
                 "The service given",
                 "text",
                 "",
-                placeholder="what he did for the covenant",
+                placeholder="what they did for the covenant",
             )
         ],
         serve,

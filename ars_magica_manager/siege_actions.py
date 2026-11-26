@@ -223,8 +223,8 @@ def supplies_story(saga: Saga, siege: Siege, rng: random.Random | None = None) -
             else:
                 text = (
                     f"Raise the Siege: the commander fails to resist ({total} "
-                    f"against {RAISE_EASE}): until sunset he takes the darkest "
-                    "view of the siege. Whether he lifts it is the storyguide's "
+                    f"against {RAISE_EASE}): until sunset they take the darkest "
+                    "view of the siege. Whether they lift it is the storyguide's "
                     "call: record it in the siege's Ended (Edit)."
                 )
         siege.events.append(rules_event(siege, text))

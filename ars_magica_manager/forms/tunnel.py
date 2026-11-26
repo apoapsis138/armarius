@@ -81,7 +81,7 @@ def tunnel_fields(saga: Saga, magus: Character) -> list[DialogField]:
             "Level cast",
             "int",
             20,
-            hint="A General spell: the level of his version.",
+            hint="A General spell: the level of their version.",
         ),
         DialogField(
             "connection",
@@ -119,18 +119,18 @@ def tunnel_fields(saga: Saga, magus: Character) -> list[DialogField]:
             options=_targets(saga, magus),
             allow_blank=True,
             placeholder="(someone not in the saga)",
-            hint="A magus of the saga: his own Magic Resistance against each Form.",
+            hint="A magus of the saga: their own Magic Resistance against each Form.",
         ),
         DialogField(
             "parma",
             "Target's Parma Magica",
             "int",
             0,
-            hint="For a target not in the saga: x5, his Forms not counted.",
+            hint="For a target not in the saga: x5, their Forms not counted.",
         ),
         DialogField(
             "aegis",
-            "He shelters in an Aegis of level",
+            "They shelter in an Aegis of level",
             "optint",
             None,
         ),
@@ -250,16 +250,16 @@ def tunnel_live(saga: Saga, magus: Character) -> Callable[[dict[str, Any]], str]
                 + ("" if short <= 0 else f" (a die of {short})")
             )
         if not fits:
-            lines.append("  [dim]None of the spells he knows fits through.[/]")
+            lines.append("  [dim]None of the spells they know fits through.[/]")
         if aegis:
             lines.append(
                 f"[$text-warning]Inside an Aegis of {aegis}: every spell must also "
                 "Penetrate it, unless cast by one who holds its token.[/]"
             )
         lines.append(
-            "[dim]The target can cast back through it once he senses it; Break "
-            "the Siege suppresses a tunnel of less than its level + 2 "
-            "magnitudes (HP pp. 78-81, errata p. 81; DE p. 219).[/]"
+            "[dim]The target can cast back through it once they sense it; Break the "
+            "Siege suppresses a tunnel under its level + 2 magnitudes (HP pp. 78-81, "
+            "errata p. 81; DE p. 219).[/]"
         )
         return "\n".join(lines)
 

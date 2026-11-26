@@ -47,7 +47,7 @@ def fields(character: Character) -> list[DialogField]:
             "select",
             PERSON,
             options=[
-                ("Those in his spiritual care (a trait)", PERSON),
+                ("Those in their spiritual care (a trait)", PERSON),
                 ("A Divine aura (temper it)", AURA),
             ],
         ),
@@ -66,11 +66,11 @@ def fields(character: Character) -> list[DialogField]:
         ),
         DialogField(
             "authority",
-            "His authority over them",
+            "Authority over them",
             "select",
             holy.SPIRITUAL,
             options=[
-                ("Spiritual: his parish, child, pupil or guest", holy.SPIRITUAL),
+                ("Spiritual: their parish, child, pupil or guest", holy.SPIRITUAL),
                 ("Temporal only (Temporal Influence)", holy.TEMPORAL),
                 ("None: strangers who will listen (Inspirational)", holy.NONE),
             ],
@@ -99,8 +99,8 @@ def fields(character: Character) -> list[DialogField]:
             "The ceremony's group modifier",
             "int",
             0,
-            hint="Others praying with him: everyone's Ceremony less their number, "
-            "and each one's Presence + Leadership (p. 36).",
+            hint="Others praying with them: everyone's Ceremony less their number, and "
+            "each one's Presence + Leadership (p. 36).",
             show_if=_is_ceremony,
         ),
     ]
@@ -118,7 +118,7 @@ def lines(character: Character, values: dict[str, Any]) -> list[str]:
         found.append(
             f"The ceremony spends a {point} Point, which adds nothing to the roll."
             if point
-            else "A ceremony spends a Faith or Confidence Point, and he has none."
+            else "A ceremony spends a Faith or Confidence Point, and they have none."
         )
     if person:
         why = holy.may_influence(
@@ -135,8 +135,8 @@ def lines(character: Character, values: dict[str, Any]) -> list[str]:
         found.append(
             "The temper adds to every roll in the aura that suits it and takes "
             "from those against it; it "
-            f"{holy.lasts(method, temper=True)}. He holds one temper at a time, "
-            "a new one replacing his last; another leader's temper in the same "
+            f"{holy.lasts(method, temper=True)}. They hold one temper at a time, "
+            "a new one replacing their last; another leader's temper in the same "
             "aura is schism (pp. 38, 41). A botch: Warping, Fatigue or a bad name."
         )
     return found
@@ -154,7 +154,7 @@ def problem(character: Character, values: dict[str, Any]) -> str | None:
         )
         return why or None
     if method == holy.CEREMONY and not holy.point_to_spend(character):
-        return "A ceremony spends a Faith or Confidence Point, and he has none."
+        return "A ceremony spends a Faith or Confidence Point, and they have none."
     return None
 
 

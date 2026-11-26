@@ -179,7 +179,7 @@ def test_its_meetings_hold_the_praeco_s_purse_and_the_curantis():
     saga, rhine = _transylvanian()
     titles = [s.title for s in meeting.steps(rhine, meeting.record(saga, rhine))]
     i = titles.index("The Praeco's purse")
-    assert titles[i + 1] == "The Curantis and his Notary"
+    assert titles[i + 1] == "The Curantis and their Notary"
     assert titles[i + 2] == "Rulings and fines"
 
 
@@ -281,7 +281,7 @@ def test_the_curantis_serves_one_term_with_his_notary_and_salary():
     rhine.treasury = []
     form = _step_form(saga, rhine, "curantis")
     assert _problem(form, curantis="mag1", notary="mag1") == (
-        "The Curantis can't be his own Notary."
+        "The Curantis can't be their own Notary."
     )
     _save(form, curantis="mag1", notary="mag_sketch", salary=8, salary_art="Corpus")
     assert tr.curantes(rhine)[-1]["character_id"] == "mag1"
@@ -292,7 +292,7 @@ def test_the_curantis_serves_one_term_with_his_notary_and_salary():
     assert tr.offices(saga, rhine, tr.entry_of(saga, rhine, "mag1") or {}) == "Curantis"
     notary = tr.entry_of(saga, rhine, "mag_sketch") or {}
     assert tr.offices(saga, rhine, notary) == "Praeco, Curantis's Notary"
-    assert "Leandro was appointed Curantis, with Severinus as his Notary" in (
+    assert "Leandro was appointed Curantis, with Severinus as their Notary" in (
         rhine.diary[-1].details
     )
     # Held again, the salary isn't paid twice.
@@ -305,7 +305,7 @@ def test_the_curantis_serves_one_term_with_his_notary_and_salary():
     assert "two terms running" in _problem(form, curantis="mag1")
     _save(form, built=False, curantis="mag_sketch", notary=None, salary=None)
     assert tr.curantes(rhine)[0]["built"] is False
-    assert "Leandro built no new zenodochium in his term" in rhine.diary[-1].details
+    assert "Leandro built no new zenodochium in their term" in rhine.diary[-1].details
 
 
 def test_a_colona_may_not_be_curantis():

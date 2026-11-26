@@ -84,7 +84,7 @@ LORD_KINDS: tuple[str, ...] = ("Noble", "Church", "Faerie", "Demon")
 
 #: How a lord holds the charter: (label, what it means).
 HOLDS: dict[str, tuple[str, str]] = {
-    "Sole": ("Sole", "He holds the charter alone."),
+    "Sole": ("Sole", "They hold the charter alone."),
     "Shared": (
         "Shared (paragium)",
         "Lords granting in partnership; an agreement between them, generally "
@@ -849,7 +849,7 @@ def citizen_info(saga: Saga, neighbour: Neighbour, row: int) -> str:
     character = saga.character(entry["character_id"])
     lines = []
     if entry.get("since_year") is None:
-        lines.append("[i]When he came to live here isn't recorded.[/]")
+        lines.append("[i]When they came to live here isn't recorded.[/]")
     elif is_citizen(saga, entry):
         lines.append(
             f"[i]Resident since {resident_since(entry)}: a citizen since "
@@ -858,13 +858,13 @@ def citizen_info(saga: Saga, neighbour: Neighbour, row: int) -> str:
     else:
         lines.append(
             f"[i]Resident since {resident_since(entry)}: a citizen in "
-            f"{citizen_from(entry)}, a year and a day after he came ({CG} p. 9).[/]"
+            f"{citizen_from(entry)}, a year and a day after they came ({CG} p. 9).[/]"
         )
     if connected(neighbour):
         lines.append(
             "[$label]Sympathetic connection:[/] +1 to the Penetration multiplier "
-            "against everyone under the same charter, its family's towns too, "
-            "while he is a citizen."
+            "against everyone under the same charter, its family's towns too, while "
+            "they're a citizen."
         )
     else:
         lines.append(
@@ -872,7 +872,7 @@ def citizen_info(saga: Saga, neighbour: Neighbour, row: int) -> str:
         )
     if character is not None and is_cleric(character):
         lines.append(
-            "[$text-warning]A cleric: canon law rarely lets him be a citizen "
+            "[$text-warning]A cleric: canon law rarely lets them be a citizen "
             f"({CG} pp. 9-10).[/]"
         )
     if entry.get("note"):
@@ -907,7 +907,7 @@ def citizen_fields(
             "Came to live here (year)",
             "optint",
             e.get("since_year", saga.current_year),
-            hint="A year and a day of residence makes him a citizen (p. 9).",
+            hint="A year and a day of residence makes them a citizen (p. 9).",
         ),
         DialogField("note", "Note", "text", e.get("note", "")),
     ]
@@ -1089,7 +1089,7 @@ CHARTER_TAB = KindTab(
         ),
     ),
     icon="lab_text",
-    panel="[dim]Choose a lord or a citizen to see his hold or his link.[/]",
+    panel="[dim]Choose a lord or a citizen to see their hold or link.[/]",
 )
 
 

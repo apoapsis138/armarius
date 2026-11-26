@@ -191,7 +191,7 @@ def test_losing_the_gift_by_the_dice():
     # The stress die shows 0, then three botch dice: 4, 0, 7.
     rolled = tb.gift_roll(saga, Faces(0, 4, 0, 7), 21)
     assert rolled.lost
-    assert "loses his Gift" in tb.gift_roll_line(rolled)
+    assert "loses their Gift" in tb.gift_roll_line(rolled)
     safe = tb.gift_roll(saga, Faces(5), 21)
     assert not safe.lost and "safe" in tb.gift_roll_line(safe)
 

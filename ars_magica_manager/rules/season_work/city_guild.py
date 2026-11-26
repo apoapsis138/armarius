@@ -436,10 +436,9 @@ def _wondrous_problems(saga: Saga, character: Character, plan: SeasonPlan) -> li
         ]
     if not touched_realm(character):
         return [
-            "Name the realm of his Touched by (Realm) or Mythic Farrier "
-            "Virtue: Magic, Faerie, Divine or Infernal (City & Guild p. 71; "
-            "a farrier most likely Magic or Faerie, Infernal possible, Grogs "
-            "p. 76)."
+            "Name the realm of their Touched by (Realm) or Mythic Farrier Virtue: "
+            "Magic, Faerie, Divine or Infernal (C&G p. 71; a farrier most likely Magic "
+            "or Faerie, Grogs p. 76)."
         ]
     if plan.teacher_id == character.id:
         return ["The assistant is someone other than the craftsman."]
@@ -679,7 +678,7 @@ def _make_wondrous_item(
         parts.append(f"aura {aura:+d}")
     if plan.site_aura is None:
         result.notes.append(
-            "No aura entered where he works: none counted (City & Guild p. 72)."
+            "No aura entered where they work: none counted (C&G p. 72)."
         )
     helper = saga.character(plan.teacher_id) if plan.teacher_id else None
     if helper is not None:

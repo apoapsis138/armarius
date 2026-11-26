@@ -662,9 +662,9 @@ def apply_character_traditions(
             told.append(f"Joining brings {', '.join(escape(a) for a in added)}.")
         if creation_tradition.gifted(character):
             told.append(
-                "A Gifted member's Gift is Opened by a Gifted master of the "
-                "tradition: plan Open a student's Gift to a tradition for him "
-                "(Hedge Magic Revised p. 7)."
+                "A Gifted member's Gift is Opened by a Gifted master of the tradition: "
+                "plan Open a student's Gift to a tradition for them (Hedge Magic "
+                "Revised p. 7)."
             )
     return notes(*told)
 
@@ -699,7 +699,7 @@ def lab_text_access_fields(saga: Saga, character: Character) -> list[DialogField
             "_known",
             "Reads now",
             "info",
-            "; ".join(known.values()) or "(only his own and general texts)",
+            "; ".join(known.values()) or "(only their own and general texts)",
         ),
         DialogField(
             "author",

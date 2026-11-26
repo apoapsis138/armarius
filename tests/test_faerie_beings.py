@@ -418,7 +418,7 @@ def test_a_rites_notes():
     notes = " ".join(faerie_rites.rite_notes(caster, trad, pool))
     assert (
         "needs 6 point(s) of the Sympathy Traits that apply to its target, "
-        "negatives by their size; more than all his (2)"
+        "negatives by their size; more than all of theirs (2)"
     ) in notes
     assert "Symbol needs 3" in notes
     assert "Symbol and Aura: a ritual" in notes
@@ -523,7 +523,11 @@ def test_a_faerie_calling_reads_the_characters_faerie_rank():
     assert not any("His Sympathy Traits" in n for n in plain.notes)
     person.personality_traits = [_sym("Winter", 4)]
     good = realm_warping.faerie_calling(person, 2, 0, random.Random(1), saga, False)
-    assert "His Sympathy Traits make his Faerie Rank +4: a good Calling." in good.notes
+    assert (
+        "Their Sympathy Traits make their Faerie Rank +4: a good Calling." in good.notes
+    )
     person.personality_traits = [_sym("Iron", -5)]
     bad = realm_warping.faerie_calling(person, 2, 0, random.Random(1), saga, False)
-    assert "His Sympathy Traits make his Faerie Rank -5: a bad Calling." in bad.notes
+    assert (
+        "Their Sympathy Traits make their Faerie Rank -5: a bad Calling." in bad.notes
+    )

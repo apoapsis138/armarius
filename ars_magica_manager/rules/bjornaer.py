@@ -512,7 +512,7 @@ def power_problems(
     if lab_total <= effect_level:
         found.append(
             f"The Lab Total {lab_total} must exceed the Power's level "
-            f"{effect_level}: its formulation is beyond him."
+            f"{effect_level}: its formulation is beyond them."
         )
     if key == "major_power" and constant:
         found.append("A Major Power can't have a constant effect.")
@@ -645,7 +645,7 @@ def familiar_bound(saga: Saga, magus: Character, ever_bound: bool = False) -> st
         return "has bound a familiar"
     entry = next((e for e in magus.diary if e.activity in FAMILIAR_DIARY), None)
     if entry is not None:
-        return f"bound a familiar ({entry.season} {entry.year}, in his Diary)"
+        return f"bound a familiar ({entry.season} {entry.year}, in their Diary)"
     return "has bound a familiar before" if ever_bound else ""
 
 
@@ -677,7 +677,7 @@ def mystery_problem(
         if other:
             return (
                 f"{initiate.name} is an Initiate of another House's Mystery: the "
-                f"House refuses him ({MC} p. 18)."
+                f"House refuses them ({MC} p. 18)."
             )
         return ""
     if (vf_id in NEEDS_HEARTBEAST or seeks_inner(vf_id, script_key)) and not (
@@ -720,7 +720,7 @@ def mystagogue_problem(
     if refinement_key(script_key):
         if mystagogue is not initiate:
             return (
-                "A Refinement is the magus's own work: he Initiates himself "
+                "A Refinement is the magus's own work: they Initiate themselves "
                 f"({REFINEMENT_SOURCE})."
             )
         return ""
@@ -738,7 +738,7 @@ def mystagogue_problem(
         if mystagogue.characteristics.presence + cult_lore(mystagogue) < least:
             return (
                 f"{mystagogue.name}'s Presence + {CULT_LORE} is below {least}: "
-                f"he can't Initiate a Clan Mystery ({INITIATION_SOURCE})."
+                f"they can't Initiate a Clan Mystery ({INITIATION_SOURCE})."
             )
     return ""
 
@@ -761,8 +761,8 @@ def ordeal_problem(
         if lost_id in held:
             return ""
         return (
-            f"{initiate.name} can change shape: the ancestors reject him unless "
-            f"the Ordeal takes his Skinchanger or Shapeshifter ({MC} p. 17)."
+            f"{initiate.name} can change shape: the ancestors reject them unless "
+            f"the Ordeal takes their Skinchanger or Shapeshifter ({MC} p. 17)."
         )
     if gained is None:
         return (
@@ -828,7 +828,7 @@ def outcome(initiate: Character, vf_id: str, script_key: str) -> tuple[int, str,
     return (
         xp,
         "Minor",
-        "The probationer takes his heartbeast's shape at once and gains "
+        "The probationer takes their heartbeast's shape at once and gains "
         f"Heartbeast 1; the familiar forgone counts as a Minor Ordeal "
         f"({INITIATION_SOURCE}).",
     )

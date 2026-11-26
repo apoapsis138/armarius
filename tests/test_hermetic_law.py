@@ -72,7 +72,7 @@ def test_a_declaration_is_between_two_magi_not_a_covenant():
     }
     assert "two magi" in (law.war_problem(saga, "", values) or "")
     values["against"] = "Leandro"
-    assert "himself" in (law.war_problem(saga, "", values) or "")
+    assert "themselves" in (law.war_problem(saga, "", values) or "")
     values["against"] = "Severinus"
     values["month"] = 4
     assert "1 to 3" in (law.war_problem(saga, "", values) or "")
@@ -235,10 +235,10 @@ def test_the_estate_is_shared_and_a_quaesitor_gains_nothing():
     assert law.estate_shares(case) == [
         ("Leandro", 0.25),
         ("Alys", 0.25),
-        ("his heir", 0.5),
+        ("their heir", 0.5),
     ]
     case.prosecutor = ""
-    assert law.estate_shares(case) == [("Leandro", 0.5), ("his heir", 0.5)]
+    assert law.estate_shares(case) == [("Leandro", 0.5), ("their heir", 0.5)]
     case.kind = law.MARCH
     assert law.estate_shares(case)[0] == ("the Tribunal's coffers", 0.5)
 
@@ -256,16 +256,16 @@ def test_the_victim_and_the_prosecutor_are_separate_roles():
     assert law.estate_shares(case) == [
         ("Alys", 0.25),
         ("Leandro", 0.25),
-        ("his heir", 0.5),
+        ("their heir", 0.5),
     ]
     case.prosecutor = "Alys"
-    assert law.estate_shares(case) == [("Alys", 0.5), ("his heir", 0.5)]
+    assert law.estate_shares(case) == [("Alys", 0.5), ("their heir", 0.5)]
     # Beside it, TL p. 53's convention: the slayer takes the heir's half
     # once the victim and prosecutor are paid; no heir is charged.
     lines = dict(law.march_lines(case))
     assert "Alys half" in lines["If Marched"]
     assert (
-        "slays him takes the heir's half, once Alys is paid" in lines["By convention"]
+        "slays them takes the heir's half, once Alys is paid" in lines["By convention"]
     )
     assert "no heir is charged" in lines["By convention"]
 

@@ -41,9 +41,9 @@ CEREMONY = "Ceremony"
 #: Whom the aid is asked against in war (p. 42).
 INFIDEL, OTHER_REALM, BELIEVER = "infidel", "other_realm", "believer"
 FOES: dict[str, str] = {
-    INFIDEL: "Infidels or heretics, as his faith sees them",
+    INFIDEL: "Infidels or heretics, as their faith sees them",
     OTHER_REALM: "A supernatural menace not of the Divine",
-    BELIEVER: "Fellow believers of his own faith",
+    BELIEVER: "Fellow believers of their own faith",
 }
 
 

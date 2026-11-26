@@ -190,10 +190,10 @@ FORBEARS: dict[str, Forbear] = {
 
 #: The Muslim Invocation Modifiers that are a tick (p. 103), by key.
 TICKS: dict[str, tuple[str, int]] = {
-    "feast_day": ("His feast day, normally his birthday", 3),
-    "pilgrimage": ("A pilgrimage made to his tomb or shrine", 2),
-    "relic_touched": ("Touching his relic", 1),
-    "relic_owned": ("Owning his relic", 2),
+    "feast_day": ("Their feast day, normally their birthday", 3),
+    "pilgrimage": ("A pilgrimage made to their tomb or shrine", 2),
+    "relic_touched": ("Touching their relic", 1),
+    "relic_owned": ("Owning their relic", 2),
     "peril": ("Imminent peril", 2),
     "no_zakat": ("No zakat paid within a year", -3),
     "miracle_lately": ("A miracle received within a month", -5),
@@ -238,7 +238,7 @@ def asking(
             terms.append(f"{'+' if value > 0 else '-'} {label} {abs(value)}")
             total += value
 
-    add("his trait", max(0, trait))
+    add("their trait", max(0, trait))
     add("Divine aura", max(0, aura))
     for key in ticks:
         label, value = TICKS[key]
@@ -268,7 +268,7 @@ def make_hajj(character: Character) -> list[str]:
     )
     if held is None:
         character.personality_traits.append(ScoredTrait(PIOUS, HAJJ_PIOUS))
-        lines.append(f"He gains Pious +{HAJJ_PIOUS}.")
+        lines.append(f"They gain Pious +{HAJJ_PIOUS}.")
     elif held.score < HAJJ_PIOUS:
         lines.append(f"Pious rises from {held.score:+d} to +{HAJJ_PIOUS}.")
         held.score = HAJJ_PIOUS
@@ -277,5 +277,5 @@ def make_hajj(character: Character) -> list[str]:
             f"Pious stays {pious(character):+d}: the Hajj never raises it above +3."
         )
     character.background.faith_points += HAJJ_FAITH
-    lines.append(f"He gains {HAJJ_FAITH} Faith Points.")
+    lines.append(f"They gain {HAJJ_FAITH} Faith Points.")
     return lines

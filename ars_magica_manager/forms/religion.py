@@ -87,7 +87,7 @@ def faith_facts(character: Character) -> list[tuple[str, str]]:
         if path := mysticism.path(character):
             facts.append(("Mystic path", escape(path)))
         if refused := dv.refused(character):
-            facts.append(("Refused him", ", ".join(map(escape, refused))))
+            facts.append(("Refused them", ", ".join(map(escape, refused))))
     facts.append(("Pious", f"{pious(character):+d}"))
     return facts
 

@@ -237,7 +237,7 @@ def test_a_token_neutralizes_a_shard_of_another_covenant():
     assert "own covenant" in (
         problem(saga, thebes, "cov_ionian_0", "cov_ionian_1") or ""
     )
-    assert "his own" in (problem(saga, thebes, "cov_kretan_0", "cov_kretan_0") or "")
+    assert "their own" in (problem(saga, thebes, "cov_kretan_0", "cov_kretan_0") or "")
     assert "no tokens" in (problem(saga, thebes, "cov_aegean_0", "cov_kretan_0") or "")
     row = theban.magi(thebes).index(shard)
     form = theban.neutralize_step(saga, thebes, row)
@@ -410,7 +410,7 @@ def test_an_oppidum_needs_two_members_a_cives_two_houses_and_its_aediles():
     saga = everything_saga()
     tribunal, covenant = _transylvania(saga)
     # One cives against two others: the others are dominant, so one
-    # aedile, and he must be the cives.
+    # aedile, and they've must be the cives.
     assert t.aediles_needed(saga, tribunal, covenant) == 1
     t.aediles(tribunal)["opp"] = ["o1"]
     assert "Opp 1 is of the dominant group" in t.oppidum_problems(

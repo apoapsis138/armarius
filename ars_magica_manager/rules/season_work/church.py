@@ -190,14 +190,14 @@ def _ordination_check(saga: Saga, character: Character, plan: SeasonPlan) -> lis
         ]
     if career.barred:
         return [
-            "His last examination botched: a petition must let him sit again "
+            "Their last examination botched: a petition must let them sit again "
             "(Petition the Church, EF 9; The Church p. 34)."
         ]
     grade = ordination_grade(character, plan)
     if grade is None:
-        return ["He holds every grade an examination gives: a bishop is elected."]
+        return ["They hold every grade an examination gives: a bishop is elected."]
     if clergy.rank(grade.name) <= clergy.rank(career.grade):
-        return [f"He is already ordained {career.grade}."]
+        return [f"They're already ordained {career.grade}."]
     return []
 
 

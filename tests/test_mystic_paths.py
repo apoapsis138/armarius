@@ -97,7 +97,7 @@ def test_a_contemplative_needs_piety_no_sin_and_a_tie_to_the_divine():
     assert my.path_problems(clara, my.CONTEMPLATIVE) == []
     assert my.divine_ties(clara) == ["Sense Holiness and Unholiness"]
     clara.personality_traits.append(ScoredTrait("Proud", 2))
-    assert "leans to Proud" in my.path_problems(clara, my.CONTEMPLATIVE)[0]
+    assert "lean to Proud" in my.path_problems(clara, my.CONTEMPLATIVE)[0]
     impious = _clara(pious=0)
     assert any(
         "positive Pious" in p for p in my.path_problems(impious, my.CONTEMPLATIVE)
@@ -383,7 +383,7 @@ def test_gods_aid_spends_a_point_and_its_zero_rolls_three_botch_dice():
     assert form.validate is not None and form.validate(values) is None
     form.apply(values)
     assert clara.background.confidence_points == 2
-    assert "+1 to his rolls toward the fight" in clara.diary[-1].details
+    assert "+1 to their rolls toward the fight" in clara.diary[-1].details
     botched = _form(forms.gods_aid_form(saga, clara, Faces(0, 0, 5, 5)))
     botched.apply(_values(botched, aim="the vote"))
     assert "A botch (1 zero(s))" in clara.diary[-1].details

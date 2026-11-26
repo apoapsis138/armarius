@@ -32,7 +32,7 @@ ENDINGS: dict[str, str] = {
     STRUCK: "A bargain was struck",
     NO_BARGAIN: "No bargain was made",
     CONTEST: "Settle it by a contested Bargain roll",
-    BROKEN: "He broke a bargain made in a summoning",
+    BROKEN: "They broke a bargain made in a summoning",
 }
 TRAIT_KEY = "trait_"
 
@@ -122,8 +122,8 @@ def ars_fields(saga: Saga, character: Character) -> list[DialogField]:
             "The faerie's Might",
             "int",
             10,
-            hint="Its Magic Resistance too. Summoning: the Might he calls, at "
-            "most 5 x the Traits that fit.",
+            hint="Its Magic Resistance too. Summoning: the Might they call, at most 5 x"
+            " the Traits that fit.",
         ),
         DialogField(
             "dismissal",
@@ -165,7 +165,7 @@ def ars_fields(saga: Saga, character: Character) -> list[DialogField]:
         ),
         DialogField(
             "held",
-            "Held by his Summoning (one that penetrated)",
+            "Held by their Summoning",
             "check",
             False,
             hint="Its Might then counts as level 0 for Penetration.",
@@ -261,7 +261,7 @@ def ars_lines(saga: Saga, character: Character, values: dict[str, Any]) -> list[
     least = fd.total_needed(target, bonus)
     if fd.needs_penetration(target):
         said.append(
-            f"Penetration bonus {bonus:+d} (his Penetration and the best Trait "
+            f"Penetration bonus {bonus:+d} (their Penetration and the best Trait "
             f"that fits) against Magic Resistance {target.might}, less "
             f"{fd.penetration_level(target)} for the level."
         )
@@ -274,7 +274,7 @@ def ars_lines(saga: Saga, character: Character, values: dict[str, Any]) -> list[
             f"+ stress die must beat Initiative {_int(values, 'initiative')}."
         )
     said.append(
-        f"A Fatigue level (he is {character.fatigue_level}); "
+        f"A Fatigue level (they're {character.fatigue_level}); "
         f"{fd.botch_dice(character, _int(values, 'aura'), str(values.get('aura_realm') or realms.HERMETIC))} "
         "botch dice."
     )
@@ -300,7 +300,7 @@ def ars_problem(character: Character, values: dict[str, Any]) -> str | None:
             f"this is {reach}."
         )
     if _exhausted(character):
-        return "He has no Fatigue level left to spend."
+        return "They have no Fatigue level left to spend."
     if _int(values, "dismissed", 1) < 1:
         return "At least one effect is dismissed."
     return None
@@ -346,7 +346,7 @@ def ars_roll(
     lines.insert(
         0,
         f"{power} {base:+d} + {rolled.die.value} = {rolled.total} against "
-        f"{against}" + (" (held by his Summoning)" if target.held else "") + ".",
+        f"{against}" + (" (held by their Summoning)" if target.held else "") + ".",
     )
     lines.append(result.text)
     if power == fd.BONDING and result.worked:
@@ -357,7 +357,7 @@ def ars_roll(
             trait, xp, character.aging.warping_score, limited=False
         )
         lines.append(fd.experience_line(trait, xp, change))
-    lines.append(f"A Fatigue level spent: he is {character.fatigue_level}.")
+    lines.append(f"A Fatigue level spent: they're {character.fatigue_level}.")
     if power == fd.SUMMONING:
         lines.append(
             "When the summoning ends, record whether a bargain was struck "
@@ -379,8 +379,8 @@ def ars_fabulosa_form(
     if not _traits(character):
         return Refuse(
             ARS_TITLE,
-            "The Ars Fabulosa need a Sympathy Trait that fits the faerie "
-            "(RoP: Faerie p. 131); he has none.",
+            "The Ars Fabulosa need a Sympathy Trait that fits the faerie (RoP: Faerie "
+            "p. 131); they have none.",
         )
     chance = rng or table_rolls.dice()
     who = character
@@ -469,7 +469,7 @@ def bargain_fields(character: Character) -> list[DialogField]:
         ),
         DialogField(
             "new_trait",
-            "The -3 Sympathy Trait he gains",
+            "The -3 Sympathy Trait they gain",
             "text",
             "",
             hint="Named for the faerie, such as Oak Maidens.",
@@ -499,7 +499,7 @@ def bargain_lines(character: Character, values: dict[str, Any]) -> list[str]:
         used = _specialty(trait, values, "wants_specialty")
         total = fd.wants_total(character, used)
         die = (
-            f"stress die (his {used[0].name} Trait as specialty: it may botch, "
+            f"stress die (their {used[0].name} Trait as specialty: it may botch, "
             "for Warping Points)"
             if used
             else "simple die"
@@ -512,7 +512,7 @@ def bargain_lines(character: Character, values: dict[str, Any]) -> list[str]:
         used = _specialty(trait, values, "bargain_specialty")
         mine = fd.bargain_total(character, used)
         said.append(
-            f"Contested: his Communication + Bargain + Faerie Rank {mine:+d}"
+            f"Contested: their Communication + Bargain + Faerie Rank {mine:+d}"
             + (f" ({used[0].name} as specialty)" if used else "")
             + f" + stress die, against {_int(values, 'faerie_total', 3):+d} + "
             "stress die; the higher wins, a tie striking no bargain (the app's "
@@ -521,8 +521,8 @@ def bargain_lines(character: Character, values: dict[str, Any]) -> list[str]:
     if ending == BROKEN:
         said.append(
             "A bargain made in a summoning binds the faerie; breaking it gives "
-            f"him a {fd.BROKEN_BARGAIN_TRAIT} Sympathy Trait fitting the faerie, "
-            "and it may cost him Faerie Rank. Dismissing could have freed him "
+            f"them a {fd.BROKEN_BARGAIN_TRAIT} Sympathy Trait fitting the faerie, "
+            "and it may cost them Faerie Rank. Dismissing could have freed them "
             "of it without that."
         )
     elif trait is not None:
@@ -532,9 +532,9 @@ def bargain_lines(character: Character, values: dict[str, Any]) -> list[str]:
             "the next value)."
         )
     else:
-        said.append("He has no Sympathy Trait for the experience.")
+        said.append("They have no Sympathy Trait for the experience.")
     if ending in (STRUCK, CONTEST):
-        said.append("The bargain binds the faerie, whatever he does.")
+        said.append("The bargain binds the faerie, whatever they do.")
     return said
 
 
@@ -564,9 +564,11 @@ def bargain_problem(character: Character, values: dict[str, Any]) -> str | None:
     if _ending(values) == BROKEN:
         name = str(values.get("new_trait") or "").strip()
         if not name:
-            return "Name the -3 Sympathy Trait he gains."
+            return "Name the -3 Sympathy Trait they gain."
         if any(t.name.casefold() == name.casefold() for t in _traits(character)):
-            return f"He already has a Sympathy Trait named {name}."
+            return (
+                f"{escape(character.name)} already has a Sympathy Trait named {name}."
+            )
     return None
 
 
@@ -593,7 +595,7 @@ def bargain_save(
         lines.append(
             f"What it wants: {rolled.modifiers:+d} + {rolled.die.value} = "
             f"{rolled.total} against {ease}: "
-            + ("he works it out." if rolled.succeeded else "he can't tell.")
+            + ("they work it out." if rolled.succeeded else "they can't tell.")
         )
         lines += _specialty_experience(character, used, rolled)
     if ending == CONTEST:
@@ -609,7 +611,7 @@ def bargain_save(
         # app's assumption.
         won = not mine.die.botched and mine.total > theirs.total
         lines.append(
-            f"Contested Bargain: he {mine.total}, the faerie {theirs.total}: "
+            f"Contested Bargain: {escape(character.name)} {mine.total}, the faerie {theirs.total}: "
             + ("a bargain is struck." if won else "no bargain.")
         )
         lines += _specialty_experience(character, used, mine)
@@ -618,7 +620,7 @@ def bargain_save(
         name = str(values.get("new_trait") or "").strip()
         fd.break_bargain(character, name)
         lines.append(
-            f"He broke his bargain with {faerie}: a new Sympathy Trait "
+            f"{escape(character.name)} broke their bargain with {faerie}: a new Sympathy Trait "
             f"{name} {fd.BROKEN_BARGAIN_TRAIT:+d}."
         )
     else:
@@ -671,7 +673,9 @@ def offer_fields(saga: Saga, character: Character) -> list[DialogField]:
     held = fd.offer_abilities(character)
     academe = sourcebooks.in_play("A&A", sourcebooks.saga_books(saga))
     fields = [
-        DialogField("change_text", "The change he asks for", "text", "", required=True),
+        DialogField(
+            "change_text", "The change they ask for", "text", "", required=True
+        ),
         DialogField("ability", "Ability", "select", held[0], options=pairs(held)),
         DialogField(
             "threat",
@@ -710,7 +714,7 @@ def offer_fields(saga: Saga, character: Character) -> list[DialogField]:
         ),
         DialogField(
             "fable_score",
-            "His fable score",
+            "Fable score",
             "int",
             1,
             hint="This visit's; it needs an unspent fable point.",
@@ -720,7 +724,7 @@ def offer_fields(saga: Saga, character: Character) -> list[DialogField]:
             "Spend another fable point on the roll",
             "check",
             False,
-            hint="+ his fable score.",
+            hint="+ their fable score.",
         ),
     ]
     if academe:
@@ -766,7 +770,7 @@ def offer_lines(character: Character, values: dict[str, Any]) -> list[str]:
         f"Offer {base:+d} + stress die ({terms}).",
         f"Accepted on {ease}: a die of {max(ease - base, 0)}.",
         f"It costs {fd.offer_fable_cost(offer)} fable point(s) and a Long-Term "
-        "Fatigue level, accepted or not; an offer not understood binds him to "
+        "Fatigue level, accepted or not; an offer not understood binds them to "
         "no promise.",
         f"Fable score {score}: a point adds +{score} to a roll; raising it to "
         f"{score + 1} costs {fd.fable_points_to_raise(score)} points.",
@@ -780,7 +784,7 @@ def offer_problem(character: Character, values: dict[str, Any]) -> str | None:
     if _int(values, "artistic_reputation") < 0 or _int(values, "patron_might") < 0:
         return "A Reputation or a Might can't be negative."
     if _exhausted(character):
-        return "He has no Fatigue level left to spend."
+        return "They have no Fatigue level left to spend."
     return None
 
 
@@ -805,14 +809,14 @@ def offer_roll(
         f"Asked: {asked} ({offer.change}; {offer.promise}; a {threat} threat).",
         f"Offer {base:+d} + {rolled.die.value} = {rolled.total} against {ease}: "
         + (
-            "accepted; the change happens, and he owes the promise."
+            "accepted; the change happens, and they owe the promise."
             if rolled.succeeded
             else "botched."
             if rolled.die.botched
             else "not accepted."
         ),
         f"{fd.offer_fable_cost(offer)} fable point(s) and a Long-Term Fatigue "
-        f"level spent: he is {character.fatigue_level}.",
+        f"level spent: they're {character.fatigue_level}.",
     ]
     _diary(saga, character, OFFER_TITLE, lines)
     return notes(*lines)

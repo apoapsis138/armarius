@@ -163,7 +163,7 @@ def redeem_problem(owed: int, reward: Reward, spent: int) -> str | None:
     if spent < 1:
         return "Spend at least 1 point."
     if spent > owed:
-        return f"He owes only {owed} point{'' if owed == 1 else 's'}."
+        return f"They owe only {owed} point{'' if owed == 1 else 's'}."
     if reward.key != "goods" and spent < reward.gratitude:
         return f"{reward.change} needs {reward.gratitude} Gratitude."
     return None
@@ -206,7 +206,7 @@ AFFINITY_USES = (
 NOBLE_DEEDS: dict[str, tuple[str, int]] = {
     "season": ("A season of great deeds noted by the landed class", 1),
     "crusade": ("A season at war in a distant land (on top of the war's)", 1),
-    "squire": ("Knighting a successful squire he trained", 1),
+    "squire": ("Knighting a successful squire they trained", 1),
     "noble_liege": ("Gaining a noble liege", 3),
     "royal_liege": ("Gaining a royal liege", 6),
 }

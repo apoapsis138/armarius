@@ -63,7 +63,7 @@ def _short_status(agent: Agent) -> str:
 _SHORT_MODIFIERS = {
     "major_trouble": "Major troubling Flaw",
     "minor_trouble": "Minor troubling Flaw",
-    "dominated": "Flaw used to dominate him",
+    "dominated": "Flaw used to dominate them",
     "skill": "Main Ability 6+",
     "exceptional": "Main Ability 8+",
     "minor_virtue": "Minor Virtue",
@@ -286,14 +286,14 @@ def _coercion_lines(agent: Agent) -> list[str]:
     lines: list[str] = []
     if agent.coerced:
         lines.append(
-            "[$text-warning]Held by coercion: he thinks you his inferior. You "
-            "have Difficult Underlings for him, and he a Story Flaw such as "
-            "Blackmail or Dark Secret (LoM pp. 22-23).[/]"
+            "[$text-warning]Held by coercion: they think you their inferior. You have "
+            "Difficult Underlings for them, and they a Story Flaw such as Blackmail or "
+            "Dark Secret (LoM pp. 22-23).[/]"
         )
     elif "dominated" in agent.modifiers:
         lines.append(
-            "[$text-warning]Dominated through a Flaw, he hates you: Difficult "
-            "Underlings for him only (LoM p. 23).[/]"
+            "[$text-warning]Dominated through a Flaw, they hate you: Difficult "
+            "Underlings for them only (LoM p. 23).[/]"
         )
     return lines
 
@@ -306,7 +306,7 @@ def info(character: Character, index: int | None, *, wide: bool) -> str:
     (bulleted lists)."""
     if index is None or not 0 <= index < len(character.agents):
         # One line, as every details panel's hint is.
-        return "[dim]Choose an agent to see how he was won and what he can be asked.[/]"
+        return "[dim]Choose an agent to see how they were won and what they can be asked.[/]"
     a = character.agents[index]
     start = ag.starting_resistance(a)
     lines: list[str] = []
@@ -336,7 +336,7 @@ def info(character: Character, index: int | None, *, wide: bool) -> str:
             "for another story."
         )
         lines.append(
-            f"Once impressed, {ag.xp_to_recruit(now)} Agency experience wears his "
+            f"Once impressed, {ag.xp_to_recruit(now)} Agency experience wears their "
             f"resistance of {now} to nothing ({character.agency_xp} unspent)."
         )
         return _finish(lines, a)
@@ -345,12 +345,10 @@ def info(character: Character, index: int | None, *, wide: bool) -> str:
         steps = " + ".join(str(n) for n in range(now, 0, -1))
         lines.append(
             f"[$label]Impressed:[/] yes. Resistance now [b]{now}[/]: "
-            f"{ag.xp_to_recruit(now)} Agency experience recruits him ({steps}); "
+            f"{ag.xp_to_recruit(now)} Agency experience recruits them ({steps}); "
             f"{character.agency_xp} unspent [dim]({LOM} p. 24)[/]."
         )
-        lines.append(
-            "[dim]Recruited, his Bond starts at 0; tasks need a Bond of +1.[/]"
-        )
+        lines.append("[dim]Recruited, their Bond starts at 0; tasks need +1.[/]")
         return _finish(lines, a)
     need = ag.XP_PER_LEVEL * (a.bond + 1)
     lines.append(
@@ -359,7 +357,7 @@ def info(character: Character, index: int | None, *, wide: bool) -> str:
         f"{need} xp to {a.bond + 1:+d}; LoM p. 25)[/]"
     )
     if not ag.may_be_asked(a):
-        lines.append("[$text-error]A Bond of +1 is needed before he takes a task.[/]")
+        lines.append("[$text-error]A Bond of +1 is needed before they take a task.[/]")
         return _finish(lines, a)
     total, terms = persuasion(character, a)
     lines.append(f"[$label]Persuasion:[/] stress die + [b]{total}[/] [dim]= {terms}[/]")
@@ -381,7 +379,7 @@ def info(character: Character, index: int | None, *, wide: bool) -> str:
     else:
         lines.append("")
         lines.append(f"[$label]Tasks for Agents[/] [dim]({LOM} p. 24)[/]")
-        lines.append("[i]Ease Factor, and the die he needs[/]")
+        lines.append("[i]Ease Factor, and the die they need[/]")
         for heading, keys in (("Information", _INFORMATION), ("Deeds", _DEEDS)):
             lines.append(f"[b]{heading}[/]")
             for key, words in keys:
@@ -434,15 +432,15 @@ def fields(existing: Agent | None) -> list[DialogField]:
                 (f"{label} {value:+d}", key)
                 for key, (label, value) in ag.STATUS_RESISTANCE.items()
             ],
-            hint="His Social Status Virtue or Flaw (LoM p. 23).",
+            hint="Their Social Status Virtue or Flaw (LoM p. 23).",
         ),
         DialogField(
             "coerced",
-            "Thinks you his inferior (held by coercion)",
+            "Thinks you their inferior (held by coercion)",
             "check",
             a.coerced,
-            hint="You gain Difficult Underlings for him; he has a Story Flaw "
-            "such as Blackmail or Dark Secret (LoM pp. 22-23).",
+            hint="You gain Difficult Underlings for them; they have a Story Flaw such "
+            "as Blackmail or Dark Secret (LoM pp. 22-23).",
         ),
     ]
     for key, (label, change, _resource) in ag.MODIFIERS.items():
@@ -457,7 +455,7 @@ def fields(existing: Agent | None) -> list[DialogField]:
             "Resources",
             "text",
             a.resources,
-            placeholder="What you gain through him: Abilities, wealth, men",
+            placeholder="What you gain through them: Abilities, wealth, men",
         ),
         DialogField(
             "impressed",
@@ -477,7 +475,7 @@ def fields(existing: Agent | None) -> list[DialogField]:
             "Bond",
             "text",
             a.bond_trait,
-            placeholder="Why he is drawn to you, e.g. Loves wife",
+            placeholder="Why they're drawn to you, e.g. Loves wife",
         ),
         DialogField("bond", "Bond score", "int", a.bond, hint="A new agent's is 0."),
         DialogField("bond_xp", "Bond experience", "int", a.bond_xp),
@@ -529,7 +527,7 @@ def live(character: Character, index: int | None) -> Any:
             lines.append(
                 f"Being recruited, not yet counted: {ag.xp_to_recruit(now)} Agency "
                 f"experience wears a resistance of {now} to nothing"
-                + ("." if draft.impressed else ", once he is impressed.")
+                + ("." if draft.impressed else ", once they're impressed.")
             )
         lines += _coercion_lines(draft)
         return "\n".join(lines)
@@ -618,9 +616,9 @@ def impress(
                     f"Impress {escape(agent.name)}: "
                     f"{escape(entering.marked(rolled, entered))}.",
                     f"{escape(agent.name)} is impressed: Agency experience can "
-                    "now wear his resistance down."
+                    "now wear down their resistance."
                     if roll.succeeded
-                    else "He is not impressed: try again in another story (LoM p. 24).",
+                    else "They're not impressed: try again in another story (LoM p. 24).",
                 )
                 drawn.lines = said
         except (ValueError, table_rolls.DiceUnavailable) as problem:
@@ -663,13 +661,13 @@ def _spend_fields(character: Character, agent: Agent) -> list[DialogField]:
     if ag.recruited(agent):
         need = ag.XP_PER_LEVEL * (agent.bond + 1) - agent.bond_xp
         how = [
-            ("Raise his Bond with Agency experience (LoM p. 25)", "bond"),
-            (f"Raise his Bond with money ({ag.XP_PER_POUND} a pound)", "pounds"),
+            ("Raise their Bond with Agency experience (LoM p. 25)", "bond"),
+            (f"Raise their Bond with money ({ag.XP_PER_POUND} a pound)", "pounds"),
         ]
         default = "bond" if character.agency_xp else "pounds"
     else:
         need = ag.xp_to_recruit(ag.current_resistance(agent))
-        how = [("Wear down his resistance (LoM p. 24)", "resistance")]
+        how = [("Wear down their resistance (LoM p. 24)", "resistance")]
         default = "resistance"
     return [
         DialogField(
@@ -726,7 +724,7 @@ def spend(character: Character, index: int) -> Command:
         return agent
     if not ag.can_spend(character, agent):
         why = (
-            "impress him first"
+            "impress them first"
             if not agent.impressed
             else "there is no Agency experience to spend"
         )
@@ -767,7 +765,9 @@ def spend(character: Character, index: int) -> Command:
                 + (f" ({spent.left} left over, kept)." if spent.left else ".")
             )
             if spent.recruited:
-                lines.append("[$text-success]He becomes an agent, with a Bond of 0.[/]")
+                lines.append(
+                    "[$text-success]They become an agent, with a Bond of 0.[/]"
+                )
         else:
             lines.append(
                 f"Bond {agent.bond:+d} to [b]{after.bond:+d}[/] "
@@ -844,14 +844,14 @@ def task_fields(character: Character, agent: Agent) -> list[DialogField]:
         ),
         DialogField(
             "risk",
-            "Risk to him",
+            "Risk to them",
             "select",
             "none",
             options=[(label, key) for key, (label, _, _) in ag.RISK.items()],
         ),
         DialogField(
             "what",
-            "What he is asked",
+            "What they're asked",
             "text",
             "",
             placeholder="e.g. Learn what the bishop wrote to the duke",
@@ -889,7 +889,7 @@ def task_live(character: Character, agent: Agent) -> Any:
                 f"[$label]{escape(agent.bond_trait or 'Bond')} {agent.bond:+d}[/]",
                 f"[i]{label}, {ag.TIMEFRAME[timeframe][0].lower()}, "
                 + (
-                    "at no risk to him"
+                    "at no risk to them"
                     if botch is None
                     else f"risking {risk_label.lower()}"
                 )
@@ -897,7 +897,7 @@ def task_live(character: Character, agent: Agent) -> Any:
                 f"Ease Factor [b]{ease}[/] [dim](task {base} + haste "
                 f"{ag.TIMEFRAME[timeframe][1]} + risk {risk_change}; LoM p. 24)[/]",
                 f"Persuasion: {die} + [b]{total}[/] [dim]({terms})[/]{botches}",
-                f"He takes it on with a die of [b]{_die_needed(ease, total)}[/].",
+                f"They take it on with a die of [b]{_die_needed(ease, total)}[/].",
             ]
         )
 
@@ -936,8 +936,8 @@ def set_task(
     if not ag.may_be_asked(agent):
         return Refuse(
             "Set a Task",
-            f"{escape(agent.name)} needs to be an agent with a Bond of +1 or "
-            "more before he takes a task (LoM p. 24).",
+            f"{escape(agent.name)} needs a Bond of +1 or "
+            "more before they take a task (LoM p. 24).",
         )
 
     def persuade(
@@ -963,10 +963,10 @@ def set_task(
             + (f", asked to {escape(what)}" if what else "")
             + f": the die shows {shown}, + {total} ({ability}) = {roll.total} "
             f"against {ease}.",
-            f"He takes the task on ({ag.TASKS[task][0].lower()})."
+            f"They take the task on ({ag.TASKS[task][0].lower()})."
             if roll.succeeded
-            else "He refuses"
-            + (", and the botch costs him dearly." if die.botched else "."),
+            else "They refuse"
+            + (", and the botch costs them dearly." if die.botched else "."),
             escape(entering.marked(recorded.said, True)) if entered else "",
         )
 
@@ -1009,13 +1009,13 @@ def resolve_fields(agent: Agent) -> list[DialogField]:
     return [
         DialogField(
             "resources",
-            "His resources",
+            "Their resources",
             "info",
-            escape(agent.resources) or "None noted on his record.",
+            escape(agent.resources) or "None noted on their record.",
         ),
         DialogField(
             "what",
-            "What he does",
+            "What they do",
             "text",
             "",
             placeholder="e.g. Steal a ring from a lady's finger",
@@ -1032,7 +1032,7 @@ def resolve_fields(agent: Agent) -> list[DialogField]:
             "Characteristic + Ability",
             "int",
             0,
-            hint="His own scores, added: the roll is his, not yours (LoM p. 24).",
+            hint="Their own scores, added: the roll is theirs, not yours (LoM p. 24).",
         ),
         DialogField(
             "band",
@@ -1051,7 +1051,7 @@ def resolve_fields(agent: Agent) -> list[DialogField]:
         ),
         DialogField(
             "risk",
-            "Risk to him",
+            "Risk to them",
             "select",
             "none",
             options=[(label, key) for key, (label, _, _) in ag.RISK.items()],
@@ -1072,7 +1072,7 @@ def _resolve_terms(values: dict[str, Any]) -> tuple[int, int, str, str]:
 
 def _with(values: dict[str, Any]) -> str:
     using = (values.get("using") or "").strip()
-    return escape(using) if using else "his Characteristic + Ability"
+    return escape(using) if using else "their Characteristic + Ability"
 
 
 def resolve_live(agent: Agent) -> Any:
@@ -1090,14 +1090,14 @@ def resolve_live(agent: Agent) -> Any:
             f"[$label]{escape(agent.bond_trait or 'Bond')} {agent.bond:+d}[/]",
             f"[i]{escape(what) if what else ag.TASK_BANDS[band][0]}, "
             + (
-                "at no risk to him"
+                "at no risk to them"
                 if botch is None
                 else f"risking {risk_label.lower()}"
             )
             + ".[/]",
-            f"His roll: {die} + [b]{total}[/] [dim]({_with(values)})[/] against "
+            f"Their roll: {die} + [b]{total}[/] [dim]({_with(values)})[/] against "
             f"Ease Factor [b]{ease}[/]{botches} [dim](LoM p. 24)[/]",
-            f"He succeeds with a die of [b]{_die_needed(ease, total)}[/].",
+            f"They succeed with a die of [b]{_die_needed(ease, total)}[/].",
         ]
         top = ag.TASK_BANDS[band][1]
         if ease > top:
@@ -1109,7 +1109,7 @@ def resolve_live(agent: Agent) -> Any:
             )
             lines.append(
                 f"[$text-warning]Ease Factor {ease} is more than this band's "
-                f"{top}: {found}, which his persuasion did not cover.[/]"
+                f"{top}: {found}, which their persuasion didn't cover.[/]"
             )
         return "\n".join(lines)
 
@@ -1129,7 +1129,7 @@ def resolve(
     if not ag.recruited(agent):
         return Refuse(
             "Resolve the Task",
-            f"{escape(agent.name)} is not yet your agent: win him, then set him "
+            f"{escape(agent.name)} isn't your agent yet: win them over, then set them "
             "a task (LoM p. 24).",
         )
 
@@ -1168,14 +1168,14 @@ def resolve(
             f"{roll.total} against {ease}."
         )
         if roll.succeeded:
-            outcome = "He does it" + (f", by {roll.margin}." if roll.margin else ".")
+            outcome = "They do it" + (f", by {roll.margin}." if roll.margin else ".")
         elif die.botched:
             outcome = (
-                "He botches: it goes badly wrong for him, and he risked "
+                "They botch: it goes badly wrong for them, and they risked "
                 f"{ag.RISK[risk][0].lower()}."
             )
         else:
-            outcome = f"He fails, by {-(roll.margin or 0)}."
+            outcome = f"They fail, by {-(roll.margin or 0)}."
         diaries.write(
             saga.current_year,
             saga.current_season,
@@ -1201,7 +1201,7 @@ def resolve(
             live=resolve_live(agent),
             save_label="Roll",
             help_id=RESOLVE_HELP,
-            inspector="His Roll",
+            inspector="Their Roll",
         ),
         saga,
         character_id=character.id,

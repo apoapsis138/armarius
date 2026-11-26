@@ -37,7 +37,7 @@ def _search_lacuna(
     lore, score = lacunae.search_lore(character, subject_ability(plan))
     area = lacunae.area_of(lore) if lore else ""
     known = (
-        f" He knows {lacunae.known_count(score)} small lacunae there "
+        f" They know {lacunae.known_count(score)} small lacunae there "
         f"({lacunae.PER_LORE} per level of {lore})."
         if area
         else ""

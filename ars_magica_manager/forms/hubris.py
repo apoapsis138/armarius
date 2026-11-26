@@ -35,7 +35,7 @@ CHOICES: tuple[tuple[str, str], ...] = (
     ("Refuses a declared vendetta (Dishonorable 4, a point of Hubris lost)", REFUSE),
     ("Resists a declared vendetta (a roll)", RESIST),
 )
-WAGE_CHOICE = ("Wages the vendetta on a magus he refused", WAGE)
+WAGE_CHOICE = ("Wages the vendetta on a magus they refused", WAGE)
 
 
 def _choices(character: Character) -> list[tuple[str, str]]:
@@ -75,8 +75,8 @@ def hubris_fields(character: Character) -> list[DialogField]:
             "text",
             "",
             show_if=_is(REFUSE),
-            hint="Waging a vendetta on him later, with the Hubris regained, "
-            "loses the Reputation.",
+            hint="Waging a vendetta on them later, with the Hubris regained, loses the "
+            "Reputation.",
         ),
         DialogField(
             "target",
@@ -100,8 +100,8 @@ def hubris_fields(character: Character) -> list[DialogField]:
             "int",
             character.characteristics.intelligence,
             show_if=_is(RESIST),
-            hint="A Personality Trait that works against Hubris, or her "
-            "Intelligence without one; a stress die is added.",
+            hint="A Personality Trait that works against Hubris, or their Intelligence "
+            "without one; a stress die is added.",
         ),
         DialogField(
             "challenger",

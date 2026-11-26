@@ -544,7 +544,7 @@ def test_a_reparations_vis_goes_from_the_penitent_to_the_treasury(_seeded):
     )
     assert (
         words
-        == "a summa on Corpus and 5 pawns of Vim (2 of the pawns offered he hadn't)"
+        == "a summa on Corpus and 5 pawns of Vim (2 of the pawns offered they hadn't)"
     )
     # Holding the step again gives the vis back first.
     _save(meeting.step_form(saga, thebes, step), contrition_pen=False)

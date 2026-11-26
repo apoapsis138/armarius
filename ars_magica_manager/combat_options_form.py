@@ -74,7 +74,7 @@ def _crowd(_who: Character | None, _values: dict[str, Any]) -> str:
     most = co.MOST_ATTACKERS
     return (
         f"At most {most['open']} attack one man in the open, {most['wall']} with "
-        f"his back to a wall, {most['doorway']} from each side of a doorway (LoM "
+        f"their back to a wall, {most['doorway']} from each side of a doorway (LoM "
         "p. 131)."
     )
 

@@ -55,7 +55,7 @@ def _problems(saga: Saga, character: Character, plan: SeasonPlan) -> list[str]:
     project = _project(saga, character)
     if project is None:
         return [
-            f"{character.name} is master mason of no Hermetic Project: name him "
+            f"{character.name} is master mason of no Hermetic Project: name them "
             "on the covenant's Projects tab."
         ]
     why = hp.season_work(project, work_of(plan))
@@ -123,9 +123,9 @@ register(
     SimpleActivity(
         BUILD_TOWER,
         "Build the Great Tower",
-        "A master mason's season on a Great Tower: new levels (one a season "
-        "for each 5 of his effective Craft: Mason), a damage level repaired, "
-        "or a shoddy section rebuilt as standard. Exposure 2.",
+        "A master mason's season on a Great Tower: new levels (one a season for each 5 "
+        "of their effective Craft: Mason), a damage level repaired, or a shoddy section"
+        " rebuilt. Exposure 2.",
         HERMETIC_PROJECTS,
         "932",
         who=COMPANIONS,

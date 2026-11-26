@@ -69,9 +69,9 @@ def residency(tribunal: Tribunal, magus: Character) -> tuple[bool, str]:
         if gone.get("breach"):
             return False, (
                 f"voted at another Tribunal in {gone.get('year')} without "
-                "registering his departure"
+                "registering their departure"
             )
-        return False, f"registered his departure in {gone.get('year')}"
+        return False, f"registered their departure in {gone.get('year')}"
     since = registered(tribunal).get(magus.id)
     if since is not None:
         return True, f"registered or granted by vote in {since}"

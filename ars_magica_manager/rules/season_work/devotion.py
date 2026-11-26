@@ -42,8 +42,8 @@ register(
     SimpleActivity(
         "personal_devotion",
         "Personal devotion",
-        "A season of prayer at a saint's shrine: 5 Devotion Points toward "
-        "him (name the saint). Exposure 2 in Church or Dominion Lore.",
+        "A season of prayer at a saint's shrine: 5 Devotion Points toward them (name "
+        "the saint). Exposure 2 in Church or Dominion Lore.",
         CHURCH,
         "FAITH-1",
         who=ANYONE,

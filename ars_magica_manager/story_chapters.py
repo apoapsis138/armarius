@@ -303,8 +303,8 @@ def cast_fields(saga: Saga) -> list[DialogField]:
             "Days it took",
             "optint",
             None,
-            hint="Days away from the laboratory for a magus who keeps his "
-            "season's work (DE p. 265).",
+            hint="Days away from the laboratory for a magus who keeps their season's "
+            "work (DE p. 265).",
         ),
     ]
 

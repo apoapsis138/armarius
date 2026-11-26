@@ -103,19 +103,19 @@ def artist_fields(character: Character) -> list[DialogField]:
             "int",
             0,
             show_if=sponsoring,
-            hint="His highest business or social Reputation, added to the Ease "
-            "Factor (A&A p. 131).",
+            hint="Their highest business or social Reputation, added to the Ease Factor"
+            " (A&A p. 131).",
         ),
         DialogField(
             "repeat",
-            "Asking him again (+3)",
+            "Asking them again (+3)",
             "check",
             False,
             show_if=sponsoring,
         ),
         DialogField(
             "scout",
-            "Pick him first (+3)",
+            "Pick them first (+3)",
             "check",
             False,
             show_if=sponsoring,
@@ -196,8 +196,8 @@ def artist_live(character: Character) -> Any:
             lines += [
                 f"Communication + Bargain + Reputation [b]{total}[/] + a stress die "
                 f"against [b]{ease}[/] [dim](A&A p. 131)[/]",
-                f"At Reputation {rep} he needs {artistry.sponsor_needs(rep)}.",
-                f"A character sponsoring him pays at least {artistry.sponsor_cost(rep)} "
+                f"At Reputation {rep} they need {artistry.sponsor_needs(rep)}.",
+                f"A character sponsoring them pays at least {artistry.sponsor_cost(rep)} "
                 "Mythic Pound(s) a season's piece.",
             ]
         elif what == PERFORM:
@@ -213,12 +213,12 @@ def artist_live(character: Character) -> Any:
         elif what == KEEP:
             lines.append(
                 f"A simple die: {artistry.ABANDON_ON} or more and the sponsor "
-                "abandons him [dim](A&A p. 131)[/]"
+                "abandons them [dim](A&A p. 131)[/]"
             )
         else:
             lines.append(
                 "Gains and losses of Artist Reputation xp [dim](A&A p. 126)[/]"
-                + ("; from 10 he loses none." if artistry.loses_nothing(rep) else "")
+                + ("; from 10 they lose none." if artistry.loses_nothing(rep) else "")
             )
         lines += [f"• {line}" for line in artistry.benefits(rep)]
         if rep >= artistry.LEGENDARY_AT and craft:
@@ -236,7 +236,7 @@ def _add_reputation(character: Character, craft: str, xp: int) -> str:
     """Add (or take off) Artist Reputation xp; nothing is lost from 10."""
     rep = artistry.reputation_score(character, craft)
     if xp < 0 and artistry.loses_nothing(rep):
-        return "At Artist Reputation 10 he loses no Reputation xp."
+        return "At Artist Reputation 10 they lose no Reputation xp."
     city_guild.add_trade_reputation(character, artistry.trade(craft), xp)
     return (
         f"{xp:+d} xp in the {artistry.trade(craft)} Reputation: now "
@@ -263,7 +263,7 @@ def _seek_sponsor(
         scout = artistry.scout_total(character) + die
         if botched:
             return [
-                f"Picking the sponsor: {shown}. The wrong man: he refuses outright."
+                f"Picking the sponsor: {shown}. The wrong one: they refuse outright."
             ]
         if scout >= artistry.SCOUT_EASE:
             bonus += artistry.SPONSOR_SCOUT_BONUS
@@ -275,10 +275,10 @@ def _seek_sponsor(
     total = artistry.sponsor_total(character, craft) + bonus + die
     label = artistry.SPONSOR_KINDS[kind][0]
     if botched:
-        lines.append(f"{label}: {shown}. Refused for good: he must find another.")
+        lines.append(f"{label}: {shown}. Refused for good: they must find another.")
     elif total >= ease:
         lines.append(
-            f"{label}: {total} against {ease}: he becomes the sponsor's client."
+            f"{label}: {total} against {ease}: they become the sponsor's client."
         )
         gained = artistry.SPONSOR_XP.get(kind, 0)
         if gained:
@@ -324,7 +324,7 @@ def apply_artist(
         name = "A sponsor's patience"
         lines = [
             f"Simple die {die}: "
-            + ("the sponsor keeps faith." if kept else "the sponsor abandons him.")
+            + ("the sponsor keeps faith." if kept else "the sponsor abandons them.")
         ]
     else:
         key = str(values.get("deed") or "craft_raised")
@@ -447,7 +447,7 @@ def scholar_fields(character: Character) -> list[DialogField]:
             "Reputation",
             "text",
             "",
-            placeholder=", ".join(named) or "(blank: his highest, or a new one)",
+            placeholder=", ".join(named) or "(blank: their highest, or a new one)",
             show_if=academic,
             hint="The Academic Reputation it goes to, by name; a new name starts one.",
         ),
@@ -531,15 +531,15 @@ def apply_scholar(
         )
         name = f"Sought a place: {label.lower()}"
         if botched:
-            lines = [f"Die {shown}: this teacher will never take him."]
+            lines = [f"Die {shown}: this teacher will never take them."]
         elif total >= ease:
             gained = scholarship.add_academic_xp(character, 1)
             lines = [
                 f"{total} against {ease}: accepted as a student.",
-                f"1 xp in his {gained.name} Reputation (A&A p. 103).",
+                f"1 xp in their {gained.name} Reputation (A&A p. 103).",
             ]
         else:
-            lines = [f"{total} against {ease}: refused; he may try again next year."]
+            lines = [f"{total} against {ease}: refused; they may try again next year."]
     else:
         key = str(values.get("deed") or "tractatus")
         multiple = scholarship.INTERFAITH_MULTIPLE if values.get("interfaith") else 1

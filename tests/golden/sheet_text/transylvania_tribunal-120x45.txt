@@ -193,11 +193,11 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Order of Business (3 days)
 
-        Step                         Day
-      ○ The roll call and proxies    The First Day
+        Step                           Day
+      ○ The roll call and proxies      The First Day
       ○ Opening and the oaths
-      ○ The Praeco's purse           The Third Day
-      ○ The Curantis and his Notary
+      ○ The Praeco's purse             The Third Day
+      ○ The Curantis and their Notary
       ○ Rulings and fines
       ○ Treasury and vis
       ○ Closing

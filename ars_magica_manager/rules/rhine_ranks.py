@@ -158,8 +158,8 @@ def apprentice_problem(master: Character) -> str:
         return ""
     return (
         f"{master.name} is a journeyman: only a master takes an apprentice in "
-        "the Rhine; one he trains passes his Gauntlet as a recruited hedge "
-        "wizard, never his filius (Guardians of the Forests p. 24)."
+        "the Rhine; one they train passes their Gauntlet as a recruited hedge "
+        "wizard, never their filius (GotF p. 24)."
     )
 
 
@@ -194,7 +194,7 @@ def mark_problem(applicant: Character, sponsor: Character, given: Sequence[str])
     if is_master(applicant):
         return f"{applicant.name} is already a {rank_name(applicant).lower()}."
     if sponsor.id == applicant.id:
-        return "A magus doesn't give himself a mark of approval."
+        return "A magus doesn't give themselves a mark of approval."
     if not is_master(sponsor):
         return (
             f"{sponsor.name} is a journeyman: only masters give marks of "
@@ -233,18 +233,18 @@ def mark_warnings(
         if sponsor.gild and sponsor.gild in enmities:
             found.append(
                 f"{applicant.name} has the Enmity of the {sponsor.gild}: its "
-                f"magi are unlikely to sponsor him (p. 20)."
+                f"magi are unlikely to sponsor them (p. 20)."
             )
     redcap = applicant.hermetic.house == REDCAP_HOUSE
     years = years_past_gauntlet(saga, applicant)
     usual = REDCAP_YEARS if redcap else USUAL_YEARS
     if applicant.background.year_born is not None and years < usual:
         found.append(
-            f"{years} years past his Gauntlet: few are made master within "
+            f"{years} years past their Gauntlet: few are made master within "
             f"{usual} (p. 24)."
         )
     if not any(r.type == "Hermetic" for r in applicant.reputations):
-        famed = "loyal service to the Order" if redcap else "his magical prowess"
+        famed = "loyal service to the Order" if redcap else "their magical prowess"
         found.append(
             f"No Hermetic Reputation recorded: no master gives a mark to a "
             f"magus not famed for {famed} (pp. 23-24)."
@@ -287,7 +287,7 @@ def challenge_problem(
     challenged this one, and the archmage has lost fewer than seven times
     (p. 24)."""
     if challenger.id == archmage.id:
-        return "An archmage isn't challenged by himself."
+        return "An archmage isn't challenged by themselves."
     if not is_archmage(archmage):
         return f"{archmage.name} is not an archmage."
     if is_archmage(challenger):
@@ -324,8 +324,8 @@ def challenge_warnings(
     found = []
     if losses(bouts) == LOSSES - 1:
         found.append(
-            f"{archmage.name} has lost six: challenging him is bad etiquette, "
-            "as a seventh loss makes his title honorary (p. 24)."
+            f"{archmage.name} has lost six: challenging them is bad etiquette, "
+            "as a seventh loss makes their title honorary (p. 24)."
         )
     parens = next(
         (c for c in saga.characters if c.name == challenger.hermetic.parens), None
@@ -337,7 +337,7 @@ def challenge_warnings(
         and parens.id not in challenged
     ):
         found.append(
-            f"His parens {parens.name} is an archmage: by custom he is "
+            f"Their parens {parens.name} is an archmage: by custom they're "
             "challenged first (p. 24)."
         )
     if invented_magnitude(challenger) < ARCHMAGE_MAGNITUDE:

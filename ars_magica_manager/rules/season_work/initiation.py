@@ -616,7 +616,7 @@ def _later_lore_warning(initiate: Character, plan: SeasonPlan) -> list[str]:
         return []
     return [
         f"{initiate.name} has taken {taken} of the cult's Initiations, and a "
-        f"later one typically needs {rule.lore} {LATER_LORE} (he has {score}): "
+        f"later one typically needs {rule.lore} {LATER_LORE} (they have {score}): "
         "the troupe may allow it (TMRE p. 13)."
     ]
 
@@ -704,12 +704,12 @@ def _criamon_terms(
     guide = criamon.stand_in(character, mystagogue, plan.hedge_script)
     if guide is not None and guide.house:
         result.notes.append(
-            f"A guide the House provides guides him: Presence + {lore_name} "
+            f"A guide the House provides guides them: Presence + {lore_name} "
             f"{guide.total} (Houses of Hermes: Mystery Cults p. 60)."
         )
     elif guide is not None:
         result.notes.append(
-            f"A ghostly Primus guides him: Presence {guide.presence:+d}, "
+            f"A ghostly Primus guides them: Presence {guide.presence:+d}, "
             f"{lore_name} {guide.lore} (Houses of Hermes: Mystery Cults p. 60)."
         )
     elif (

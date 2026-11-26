@@ -103,7 +103,7 @@ def test_apprentice_search_with_acclaim():
     assert "as normal" in ac.apprentice_search(9, False)
     taken = ac.apprentice_search(5, False)
     assert "from another magus" in taken and "antagonized" not in taken
-    assert "antagonized" in ac.apprentice_search(4, False)
+    assert "antagonize that magus" in ac.apprentice_search(4, False)
     assert "Enemies" in ac.apprentice_search(15, True)
 
 
@@ -276,9 +276,9 @@ def test_league_colleagues_count_reputations_three_higher():
 
 def test_heard_of_meets_or_beats_the_ease():
     reputation = ScoredTrait("Painter", 2)
-    assert "has heard" in ac.heard_of(Rigged(4), reputation, 6).said
-    assert "hasn't" in ac.heard_of(Rigged(3), reputation, 6).said
-    assert "has heard" in ac.heard_of(Rigged(3), reputation, 6, colleague=True).said
+    assert "they've heard" in ac.heard_of(Rigged(4), reputation, 6).said
+    assert "haven't" in ac.heard_of(Rigged(3), reputation, 6).said
+    assert "they've heard" in ac.heard_of(Rigged(3), reputation, 6, colleague=True).said
 
 
 def test_heard_eases_by_type():
@@ -298,7 +298,7 @@ def test_reputation_roll_form_records_the_roll():
         "Stress die + 5 against 6 (same town)" in forms.roll_lines(character, values)[0]
     )
     said = forms.record_roll(saga, character, values, Rigged(4))
-    assert "has heard" in said[0]
+    assert "they've heard" in said[0]
     # STORY-2348: the roll in the one dice line, kept in the Diary too.
     assert said[0].startswith("Painter: Stress die 4, +5 = 9: ")
     assert character.diary[-1].name == "Reputation Roll"

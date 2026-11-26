@@ -186,7 +186,7 @@ def delegate_fields(
             placeholder="(choose)",
             show_if=lambda v: not v.get("sent_by"),
             hint="Bonisagus's Primus is the Praeco, Guernicus's the Presiding "
-            "Quaesitor: named as a magus of the saga, he is made so (DE p. 22).",
+            "Quaesitor: named as a magus of the saga, they're made so (DE p. 22).",
         ),
         DialogField(
             "character_id",

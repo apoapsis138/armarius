@@ -205,20 +205,20 @@ SERVICE: tuple[tuple[str, str, str], ...] = (
         "By a Redcap, who witnessed it",
         "duly served: the Redcap is its legal witness (HoH: TL p. 47)",
     ),
-    ("in_person", "Into his hands", "duly served"),
+    ("in_person", "Into their hands", "duly served"),
     (
         "sanctum_door",
-        "Nailed to his sanctum door, he at home",
+        "Nailed to their sanctum door, they at home",
         "duly served, as most Tribunals hold (HoH: Societates p. 23)",
     ),
     (
         "representative",
-        "To his representative or forwarding address",
+        "To their representative or forwarding address",
         "served, where the Tribunal asks magi to name one (HoH: Societates p. 23)",
     ),
     (
         "absent",
-        "He was away and named no one",
+        "They were away and named no one",
         "taken as wilfully ignored where the Tribunal asks magi to name a "
         "representative (HoH: Societates p. 23)",
     ),
@@ -271,9 +271,9 @@ def war_problem(saga: Saga, case_id: str, values: dict[str, object]) -> str | No
     against = str(values.get("against") or "").strip()
     month, year = values.get("month"), values.get("filed_year")
     if not by or not against:
-        return "A Wizard's War names the magus who declares it and the one he declares it on."
+        return "A Wizard's War names the magus who declares it and the one they declare it on."
     if _same(by, against):
-        return "A magus can't declare Wizard's War on himself."
+        return "A magus can't declare Wizard's War on themselves."
     if any(_same(against, c.name) for c in saga.covenants):
         return (
             "A Wizard's War is between two magi: declare one on each of the "
@@ -416,8 +416,8 @@ def march_problem(case: Case, called: bool, refused: int | None) -> str | None:
     if called and not may_march(case):
         return (
             f"{case.title}: only a high crime lets the prosecution call for a "
-            "Wizard's March; any other conviction Marches the magus only if he "
-            f"refuses the penalty {REFUSALS} times (HoH: TL pp. 46, 59)."
+            "Wizard's March; any other conviction Marches the magus only if they "
+            f"refuse the penalty {REFUSALS} times (HoH: TL pp. 46, 59)."
         )
     return None
 
@@ -433,7 +433,7 @@ def estate_shares(case: Case) -> list[tuple[str, float]]:
     prosecutor = case.prosecutor.strip() or brought or victim
     victim_share = code_of_hermes.MARCH_SHARES["victim"]
     prosecutor_share = code_of_hermes.MARCH_SHARES["prosecutor"]
-    heir = ("his heir", code_of_hermes.MARCH_SHARES["heir"])
+    heir = ("their heir", code_of_hermes.MARCH_SHARES["heir"])
     if case.kind == MARCH:
         return [("the Tribunal's coffers", victim_share + prosecutor_share), heir]
     if _same(victim, prosecutor):
@@ -454,8 +454,8 @@ def march_lines(case: Case) -> list[tuple[str, str]]:
         lines.append(
             (
                 "Ratified",
-                "at the next Tribunal, where the Quaesitor who called it must "
-                "justify it; he may gain nothing by it (HoH: TL p. 63)",
+                "at the next Tribunal, where the Quaesitor who called it must justify "
+                "it; they may gain nothing by it (HoH: TL p. 63)",
             )
         )
         how = ""
@@ -468,8 +468,8 @@ def march_lines(case: Case) -> list[tuple[str, str]]:
     lines.append(
         (
             "If Marched",
-            f"{how}his estate: {shares}; safe until the Tribunal closes, then "
-            "any magus may slay him (DE p. 18; HoH: TL pp. 58-60)",
+            f"{how}their estate: {shares}; safe until the Tribunal closes, then "
+            "any magus may slay them (DE p. 18; HoH: TL pp. 58-60)",
         )
     )
     lines.append(("By convention", _convention_text(case)))
@@ -479,15 +479,15 @@ def march_lines(case: Case) -> list[tuple[str, str]]:
 def _convention_text(case: Case) -> str:
     """The slayer's claim on the heir's share (HoH: TL p. 53), shown beside
     True Lineages's split."""
-    paid = [who for who, _s in estate_shares(case) if who != "his heir"]
+    paid = [who for who, _s in estate_shares(case) if who != "their heir"]
     first = " and ".join(paid)
     return (
-        "whoever slays him takes the heir's half, once "
+        "whoever slays them takes the heir's half, once "
         f"{first} {'is' if len(paid) == 1 else 'are'} paid: the heir takes "
-        "the parens's duty to strike first, and the slayer may charge him "
+        "the parens's duty to strike first, and the slayer may charge them "
         "with failing it and settle for the inheritance, a convention so "
         "established that no one bothers with the formality (HoH: TL p. 53), "
-        "which fits the tradition that his goods go to his slayers (DE p. "
+        "which fits the tradition that their goods go to their slayers (DE p. "
         "18). The Definitive Edition makes the parens's duty a social "
         "expectation (p. 21), so no heir is charged here"
     )
@@ -520,7 +520,7 @@ def standing_text(saga: Saga, character: Character) -> str:
         by = f" ({h.renounced_by})" if h.renounced_by.strip() else ""
         lines.append(
             f"Renounced in {h.renounced_year}{by}: cast out of the Order, any "
-            "magus may slay him (DE p. 18)"
+            "magus may slay them (DE p. 18)"
         )
     now = season_order(season=saga.current_season, year=saga.current_year) * MONTHS
     for _tribunal, case in wars(saga):
@@ -690,7 +690,7 @@ class Aim:
 #: What Intrigue may seek and its Ease Factor (HoH: TL p. 24).
 INTRIGUE_AIMS: tuple[Aim, ...] = (
     Aim("overt_goal", 6, LEARN, "learn someone's open political aim"),
-    Aim("stay_course", 6, INFLUENCE, "keep someone on the course he follows"),
+    Aim("stay_course", 6, INFLUENCE, "keep someone on the course they follow"),
     Aim("allies", 9, LEARN, "learn someone's political allies"),
     Aim("suspicion", 9, INFLUENCE, "make someone suspicious"),
     Aim("delay", 9, INFLUENCE, "hold up what someone is doing"),
@@ -701,7 +701,9 @@ INTRIGUE_AIMS: tuple[Aim, ...] = (
     Aim("settle_minor", 12, INFLUENCE, "help rivals settle a small dispute"),
     Aim("silent_partners", 15, LEARN, "learn someone's hidden partners"),
     Aim("sever_alliance", 15, INFLUENCE, "break an alliance of trusted allies"),
-    Aim("against_interest", 15, INFLUENCE, "lead someone to act against his own good"),
+    Aim(
+        "against_interest", 15, INFLUENCE, "lead someone to act against their own good"
+    ),
     Aim("settle_major", 15, INFLUENCE, "help rivals settle a great dispute"),
 )
 
@@ -793,7 +795,7 @@ def intrigue_lines(saga: Saga, case: Case) -> list[tuple[str, str]]:
     elif cost:
         gift = f"The Gift costs {cost}, as not both are under Parma Magica"
     else:
-        gift = "he has no Gift to cost him anything"
+        gift = "they have no Gift to cost them anything"
     return [
         (
             "Intrigue",

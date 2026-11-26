@@ -130,6 +130,6 @@ def effect_notes(
     hierarchy = infernalists.hierarchy(character)
     line = "each 10 levels short, a botch and a Warping Point (Vituperation at 2)"
     if hierarchy:
-        line += f"; his Hierarchy stands in as {HIERARCHY_STANDS_IN * hierarchy}"
+        line += f"; their Hierarchy stands in as {HIERARCHY_STANDS_IN * hierarchy}"
     found.append(line + "; a true botch: a soul for Hell within a season (p. 102)")
     return found

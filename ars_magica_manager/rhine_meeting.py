@@ -180,7 +180,7 @@ class Rite(core.Step):
                     "text",
                     default_sigil(saga, magus, entry),
                     placeholder="the retired magus whose sigil",
-                    hint="Typically his master's, if retired; else a respected "
+                    hint="Typically their master's, if retired; else a respected "
                     "retired magus of like House, gild or outlook.",
                     show_if=lambda v, i=index: bool(v.get(f"confer_{i}")),
                 )

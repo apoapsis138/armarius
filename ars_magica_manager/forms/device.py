@@ -585,9 +585,8 @@ def _device_bonus_fields(
             "check",
             base.verditius_runes,
             hint=(
-                "Its Verditius maker crafted it in its first season (Verditius "
-                "Magic, DE pp. 240-241): his Philosophiae adds to its Shape & "
-                "Material bonuses."
+                "Made by a Verditius in its first season (DE pp. 240-241): their "
+                "Philosophiae adds to its Shape & Material bonuses."
             ),
         ),
         DialogField(
@@ -597,9 +596,8 @@ def _device_bonus_fields(
             base.verditius_craft,
             show_if=lambda values: bool(values.get("verditius_runes")),
             hint=(
-                "The Craft Ability, e.g. Craft: Jeweler (blank: shaped by "
-                "magic). The maker adds it to his Lab Totals for the item and "
-                "opens it for that many fewer pawns."
+                "The Craft Ability, e.g. Craft: Jeweler (blank: magic). The maker adds "
+                "it to their Lab Totals, cutting opening pawns."
             ),
         ),
         *_verditius_mystery_fields(base),

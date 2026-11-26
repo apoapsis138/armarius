@@ -108,7 +108,7 @@ class Element:
 #: aside; "another trial" is any the storyguide designs at that value.
 ELEMENTS: tuple[Element, ...] = (
     Element("disease", "Natural hazards such as virulent disease", 3),
-    Element("temptation", "A temptation he is prone to succumb to", 3),
+    Element("temptation", "A temptation they're prone to succumb to", 3),
     Element("trial_3", "Another trial of faith and perseverance", 3),
     Element("bandits", "Dangerous mundane foes: bandits or robbers", 6),
     Element("enemies", "Dangerous foes who are religious or political enemies", 6),
@@ -201,7 +201,7 @@ def element_value(key: str) -> int:
 
 def element_label(key: str) -> str:
     if key == CHRISTIAN_ABROAD:
-        return "Travel in a Christian land outside his homeland and native land"
+        return "Travel in a Christian land outside their homeland and native land"
     if key == HEATHEN_LANDS:
         return "Travel in non-Christian or heretic-controlled lands"
     return ELEMENT_BY_KEY[key].label
@@ -232,7 +232,7 @@ def failed(character: Character, record: Progress) -> str:
     story = _story(character, record.name)
     story.points += 1
     return (
-        "Failed: the pilgrimage's aim fails unless a later element he overcomes "
+        "Failed: the pilgrimage's aim fails unless a later element they overcome "
         f"remedies it ({story.points} outstanding)."
     )
 

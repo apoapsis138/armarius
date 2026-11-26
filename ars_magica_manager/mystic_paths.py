@@ -79,7 +79,7 @@ def _gain(saga: Saga, character: Character, vf_id: str) -> str:
     instance = VirtueFlawInstance(vf_id)
     character.virtues_flaws.append(instance)
     cch.apply_virtue(saga, character, instance)
-    said = f"He gains {entry.name}."
+    said = f"They gain {entry.name}."
     ability = pil.grant_ability(character, entry)
     if ability is not None:
         said += f" {ability.name} starts at {pil.GAINED_ABILITY_SCORE}."
@@ -100,7 +100,7 @@ def path_fields(character: Character) -> list[DialogField]:
     return [
         DialogField(
             "path",
-            "His path",
+            "Path",
             "select",
             my.path(character) or NONE,
             options=[
@@ -124,7 +124,7 @@ def path_problem(character: Character) -> Any:
     def problem(values: dict[str, Any]) -> str | None:
         chosen = _chosen(values)
         if chosen == my.path(character):
-            return "That is his path already." if chosen else "He follows no path."
+            return "That is their path already." if chosen else "They follow no path."
         if not chosen:
             return my.leave_problem(character)
         found = my.path_problems(character, chosen)
@@ -157,10 +157,10 @@ def path_lines(character: Character, values: dict[str, Any]) -> list[str]:
         found += [
             "Warping: the Divine Ascent at a single Warping Point, its form the "
             "Divine Gloom (TC p. 23).",
-            "A season practising a Holy Ability gives his Concentration in "
+            "A season practising a Holy Ability gives their Concentration in "
             f"experience ({my.practice_xp(character, holy_[0]) if holy_ else 4}), "
             "not 4: type it as the practice's Source Quality.",
-            "Revelations from his Ascents: More's Monistic Revelation (TC p. 24).",
+            "Revelations from their Ascents: More's Monistic Revelation (TC p. 24).",
         ]
     if ds.divine_form(character):
         found.append(
@@ -193,9 +193,9 @@ def mystic_path_form(saga: Saga, character: Character | None) -> Command:
         chosen = _chosen(values)
         ds.set_path(who, chosen)
         line = (
-            f"He follows {chosen.lower()}."
+            f"They follow {chosen.lower()}."
             if chosen
-            else "He leaves the mystic's path."
+            else "They leave the mystic's path."
         )
         diaries.write_ruled(saga, who, PATH_TITLE, line, my.SOURCE)
         return notes(escape(line))
@@ -349,7 +349,7 @@ def spiritual_problem(character: Character) -> Any:
         if what == COUNT:
             key = str(values.get("component") or "")
             if key == "vow" and not str(values.get("vow") or "").strip():
-                return "Say what he vows."
+                return "Say what they vow."
             return my.component_problem(character, record, key)
         found = my.claim_problem(record)
         if found is None and record is not None and _revealed(record) is None:
@@ -373,8 +373,8 @@ def spiritual_lines(character: Character, values: dict[str, Any]) -> list[str]:
         ]
         if revelation.holy:
             found.append(
-                "A Supernatural Ability gained so starts at 1, with no penalty "
-                "for his other Supernatural Abilities or Arts."
+                "A Supernatural Ability gained so starts at 1, with no penalty for "
+                "their other Supernatural Abilities or Arts."
             )
         return found
     record = _record(character, values)
@@ -391,20 +391,20 @@ def spiritual_lines(character: Character, values: dict[str, Any]) -> list[str]:
                 + (", reached." if after >= record.target else ".")
             )
             if key == "vow":
-                found.append("He takes the Minor Flaw Vow.")
+                found.append("They take the Minor Flaw Vow.")
             if key == "alms":
                 found.append(
-                    "He loses Wealthy."
+                    "They lose Wealthy."
                     if _has(character, my.WEALTHY)
-                    else "He takes the Poor Flaw: holy poverty."
+                    else "They take the Poor Flaw: holy poverty."
                 )
             if key == "crusade":
                 found.append(
-                    "He finds the money for his travel and keep; the troupe may "
-                    "lift a Social Status Flaw (TC p. 19)."
+                    "They find the money for their travel and keep; the troupe may lift"
+                    " a Social Status Flaw (TC p. 19)."
                 )
     else:
-        found.append(my.claim_problem(record) or "Reached: the Revelation is his.")
+        found.append(my.claim_problem(record) or "Reached: the Revelation is theirs.")
     return found
 
 
@@ -452,7 +452,7 @@ def _component_effects(
 ) -> list[str]:
     if key == "vow":
         character.virtues_flaws.append(VirtueFlawInstance(my.VOW))
-        return [f"He vows {str(values.get('vow') or '').strip()}: the Minor Flaw Vow."]
+        return [f"They vow {str(values.get('vow') or '').strip()}: the Minor Flaw Vow."]
     if key == "alms":
         wealthy = next(
             (vf for vf in character.virtues_flaws if vf.vf_id == my.WEALTHY), None
@@ -460,11 +460,11 @@ def _component_effects(
         if wealthy is not None:
             cch.unapply_virtue(saga, character, wealthy)
             character.virtues_flaws.remove(wealthy)
-            return ["He loses Wealthy."]
+            return ["They lose Wealthy."]
         poor = VirtueFlawInstance(my.POOR)
         character.virtues_flaws.append(poor)
         cch.apply_virtue(saga, character, poor)
-        return ["He takes the Poor Flaw."]
+        return ["They take the Poor Flaw."]
     if key == "crusade" and values.get("cross_faith"):
         character.background.faith_points += pil.CRUSADER_FAITH
         return [f"+{pil.CRUSADER_FAITH} Faith Point for taking the cross."]
@@ -588,15 +588,15 @@ def revelation_lines(character: Character, values: dict[str, Any]) -> list[str]:
     found = [
         f"Intelligence + Concentration {total:+d} + stress die, against Warping "
         f"Score {against} + stress die (no botch): {chance:.0f}% (TC p. 24).",
-        "Failing, the Gloom comes as usual; succeeding, it comes, and with it "
-        "what he chose.",
+        "Failing, the Gloom comes as usual; succeeding, it comes, and with it what they"
+        " chose.",
     ]
     choice = _choice(values)
     if choice in (my.MINOR_VIRTUE, my.MAJOR_VIRTUE) and my.first_revelation(character):
-        found.append("His first Revelation is always Second Sight.")
+        found.append("Their first Revelation is always Second Sight.")
     held = my.lore_realms(character)
     if held:
-        found.append("Dominion Lore serves him for " + ", ".join(held) + " Lore.")
+        found.append("Dominion Lore serves them for " + ", ".join(held) + " Lore.")
     problem = revelation_problem(character)(values)
     if problem:
         found.append(problem)
@@ -617,7 +617,7 @@ def apply_revelation(
         return notes(escape(line))
     choice = _choice(values)
     if choice == my.KEEP_MUNDANE:
-        what = "he loses no mundane experience to this Gloom."
+        what = "they lose no mundane experience to this Gloom."
     elif choice in (my.MINOR_VIRTUE, my.MAJOR_VIRTUE):
         vf_id = (
             my.SECOND_SIGHT
@@ -631,7 +631,7 @@ def apply_revelation(
     else:
         realm = "Infernal" if choice == my.INFERNAL_LORE else str(values.get("realm"))
         my.note_revelation(character, f"{realm} Lore")
-        what = f"his Dominion Lore serves for {realm} Lore in any roll."
+        what = f"their Dominion Lore serves for {realm} Lore in any roll."
     line = f"{rolled}: a Revelation: {what}"
     diaries.write_ruled(saga, character, REVELATION_TITLE, line, my.SOURCE)
     return notes(escape(line))
@@ -670,7 +670,7 @@ def aid_fields(character: Character) -> list[DialogField]:
     return [
         DialogField(
             "aim",
-            "What he asks God's aid in",
+            "What they ask God's aid in",
             "text",
             "",
             required=True,
@@ -678,7 +678,7 @@ def aid_fields(character: Character) -> list[DialogField]:
         ),
         DialogField(
             "group",
-            "For his followers too",
+            "For their followers too",
             "check",
             False,
             hint="One with spiritual authority, for a few parishioners or an army.",
@@ -717,7 +717,7 @@ def _aid_total(character: Character, values: dict[str, Any]) -> int:
 def aid_problem(character: Character) -> Any:
     def problem(values: dict[str, Any]) -> str | None:
         if not str(values.get("aim") or "").strip():
-            return "Say what he asks God's aid in."
+            return "Say what they ask God's aid in."
         if found := aid.may_ask(character):
             return found
         group = bool(values.get("group"))
@@ -740,13 +740,13 @@ def aid_lines(character: Character, values: dict[str, Any]) -> list[str]:
     found = [
         f"Stress die + Communication + Dominion Lore{' + Ceremony' if values.get('ceremony') and values.get('group') else ''} "
         f"{total:+d}: 9 gives +1, 15 +2, 24 +3 ({odds}).",
-        f"He spends a {aid.point(character)} Point. A 0 rolls {holy.AID_BOTCH_DICE} "
+        f"They spend a {aid.point(character)} Point. A 0 rolls {holy.AID_BOTCH_DICE} "
         "botch dice: divine disfavour until penance.",
         "The bonus adds to each roll in the scene made toward the aim, "
         "spellcasting too, until one fails or the scene ends (p. 41).",
     ]
     if values.get("group"):
-        found.append("His followers gain the bonus, and so does he (p. 42).")
+        found.append("Their followers gain the bonus, and so do they (p. 42).")
     if values.get("war"):
         found.append(
             "A Trained Group adds a member's bonus to its combat bonus, beyond "
@@ -778,7 +778,7 @@ def apply_aid(
     else:
         bonus = aid.bonus(rolled.total)
         line = f"{total:+d} + {rolled.die.value} = {rolled.total}: " + (
-            f"+{bonus} to his rolls toward {aim} this scene, until one fails."
+            f"+{bonus} to their rolls toward {aim} this scene, until one fails."
             if bonus
             else f"short of 9: no aid in {aim}."
         )
@@ -842,7 +842,9 @@ def font_problem(character: Character) -> Any:
         if not name:
             return "Name the Ability."
         if not fok.untrained(character, name):
-            return f"He has {name} already: the Font serves only untrained Abilities."
+            return (
+                f"They have {name} already: the Font serves only untrained Abilities."
+            )
         if _number(values.get("uses")) < 0:
             return "The times today can't be below 0."
         return None
@@ -857,7 +859,7 @@ def font_lines(character: Character, values: dict[str, Any]) -> list[str]:
     found = [
         f"Intelligence + Font of Knowledge {total:+d} + stress die against {ease} "
         f"(6 + 3 a use today): {chance:.0f}% (DE p. 165).",
-        f"Succeeding, he attempts the task as if he had the Ability at "
+        f"Succeeding, they attempt the task as if they had the Ability at "
         f"{fok.AS_IF_SCORE}.",
     ]
     problem = font_problem(character)(values)
@@ -874,7 +876,7 @@ def apply_font(
     rolled = dice.roll(rng, fok.total(character), ease_factor=ease, saga=saga)
     shown = "a botch" if rolled.die.botched else str(rolled.die.value)
     if rolled.succeeded and not rolled.die.botched:
-        line = f"{fok.total(character):+d} + {shown} against {ease}: he may use {name} at {fok.AS_IF_SCORE}."
+        line = f"{fok.total(character):+d} + {shown} against {ease}: they may use {name} at {fok.AS_IF_SCORE}."
     else:
         line = f"{fok.total(character):+d} + {shown} against {ease}: the Font is silent on {name}."
     diaries.write_ruled(saga, character, FONT_TITLE, line, fok.SOURCE)
@@ -921,7 +923,7 @@ def aura_fields(character: Character) -> list[DialogField]:
             "Withdrawn until penance",
             "check",
             ds.aura_withdrawn(character),
-            hint="A legatus missus who delays or strays from his mission, or one "
+            hint="A legatus missus who delays or strays from their mission, or one "
             "God's will excommunicates (DE pp. 74, 420).",
         ),
         DialogField(
@@ -946,7 +948,7 @@ def aura_lines(character: Character, values: dict[str, Any]) -> list[str]:
             "Rightful Authority, to Voice range, Penetration 0."
         ),
         "A relic's Magic Resistance adds to the office's, not to Soak (DE p. 420).",
-        "A legatus missus loses the aura when his mission is done (DE p. 74).",
+        "A legatus missus loses the aura when their mission is done (DE p. 74).",
     ]
     if values.get("withdrawn"):
         found.append("Withdrawn: no Magic Resistance, Soak or aura from it.")
@@ -973,10 +975,10 @@ def commanding_aura_form(saga: Saga, character: Character | None) -> Command:
         why = str(values.get("why") or "").strip()
         ds.set_aura_withdrawn(who, withdrawn, why)
         line = (
-            "His Commanding Aura is withdrawn until penance"
+            "Their Commanding Aura is withdrawn until penance"
             + (f": {why}." if why else ".")
             if withdrawn
-            else "His penance done, his Commanding Aura returns."
+            else "Their penance done, their Commanding Aura returns."
         )
         diaries.write_ruled(saga, who, AURA_TITLE, line, ds.SOURCE)
         return notes(escape(line))

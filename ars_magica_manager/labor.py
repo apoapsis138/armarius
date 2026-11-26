@@ -296,7 +296,7 @@ def invest_fields(character: Character) -> list[DialogField]:
         ),
         DialogField(
             "mine",
-            "His representative's roll",
+            "Their representative's roll",
             "int",
             0,
             show_if=_kind_is(mr.LEGAL),

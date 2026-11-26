@@ -29,7 +29,7 @@ CONCEDE: list[tuple[str, str]] = [
     ("At -1 (Weary)", "1"),
     ("At -3 (Tired)", "3"),
     ("At -5 (Dazed)", "5"),
-    ("Never: fights until he falls", ""),
+    ("Never: fights until they fall", ""),
 ]
 
 
@@ -53,11 +53,8 @@ def _side_fields(prefix: str, who: str) -> list[DialogField]:
             "select",
             cd.BETTER,
             options=[(label, key) for key, label in cd.ATTACKS.items()],
-            hint="Whichever is better: each round, for each Art, his Attack "
-            "with it (and the vis he'd spend) less the rival's Defense with "
-            "the other Art (and the vis the rival would spend). He attacks with "
-            "the Art that comes out higher, on a tie the Technique, and defends "
-            "with the other (DE p. 231).",
+            hint="Each round, they attack with the Art whose Attack beats the rival's "
+            "Defense by more, and defend with the other (DE p. 231).",
         ),
         DialogField(f"{prefix}attack_vis", f"{who}'s vis, attacking", "int", 0),
         DialogField(f"{prefix}defence_vis", f"{who}'s vis, defending", "int", 0),
@@ -103,7 +100,7 @@ def fields(saga: Saga, magus: Character) -> list[DialogField]:
             hint="What the loser does or refrains from doing.",
         ),
         *_side_fields("", escape(magus.name)),
-        *_side_fields("their_", "His rival"),
+        *_side_fields("their_", "Their rival"),
         DialogField(
             "take_fatigue",
             "Take the Fatigue they lose",

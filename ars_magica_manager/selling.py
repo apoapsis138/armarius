@@ -35,7 +35,7 @@ def sell_fields(character: Character) -> list[DialogField]:
     return [
         DialogField(
             "bargaining",
-            "His bargaining",
+            "Their bargaining",
             "info",
             f"Presence {presence:+d} + Bargain {bargain} = "
             f"{sl.bargain_total(character)}",
@@ -45,7 +45,7 @@ def sell_fields(character: Character) -> list[DialogField]:
             "The goods",
             "text",
             "",
-            placeholder="(what he sells: a lot of 8 shortswords...)",
+            placeholder="(what they sell: a lot of 8 shortswords...)",
         ),
         DialogField(
             "standard",
@@ -69,7 +69,7 @@ def sell_fields(character: Character) -> list[DialogField]:
             "int",
             0,
             show_if=_important,
-            hint="His Communication + Bargain + a stress die.",
+            hint="Their Communication + Bargain + a stress die.",
         ),
         DialogField(
             "die",
@@ -106,7 +106,7 @@ def _odds(total: int) -> str:
     need = sl.EASE - total
     best = sl.EASE - 1 + sl.CAP // sl.STEP - total
     if need > 10:
-        return "No simple die reaches it: he sells at the standard price."
+        return "No simple die reaches it: they sell at the standard price."
     over = (
         f"Any die sells at least {sl.STEP}% over"
         if need <= 1
@@ -126,21 +126,21 @@ def sell_live(character: Character) -> Any:
         goods = str(values.get("goods") or "").strip()
         lines = [
             f"[b]{escape(character.name)}[/]  [$label]Presence + Bargain {total}[/]",
-            f"[i]{escape(goods) if goods else 'His goods'}, at "
+            f"[i]{escape(goods) if goods else 'Their goods'}, at "
             f"{standard} pence standard.[/]",
         ]
         if _important(values):
             theirs = int(values.get("theirs") or 0)
             lines += [
-                f"His roll: a stress die + [b]{total}[/] against the customer's "
+                f"Their roll: a stress die + [b]{total}[/] against the customer's "
                 f"[b]{theirs}[/] [dim](City & Guild p. 75)[/]",
-                f"Each point he wins by is {sl.STEP}% more, each he loses by "
+                f"Each point they win by is {sl.STEP}% more, each they lose by "
                 f"{sl.STEP}% less, at most {sl.CAP}% either way; a botch sells "
                 "for next to nothing.",
             ]
         else:
             lines += [
-                f"His roll: a simple die + [b]{total}[/] against Ease Factor "
+                f"Their roll: a simple die + [b]{total}[/] against Ease Factor "
                 f"[b]{sl.EASE}[/] [dim](City & Guild p. 75)[/]",
                 _odds(total),
             ]
@@ -173,7 +173,7 @@ def apply_sale(
     saga: Saga, character: Character, values: dict[str, Any], rng: random.Random
 ) -> list[str]:
     standard = int(values.get("standard") or 0)
-    goods = str(values.get("goods") or "").strip() or "his goods"
+    goods = str(values.get("goods") or "").strip() or "their goods"
     die, botched, shown = _roll(saga, values, rng)
     mine = sl.bargain_total(character) + die
     customer = str(values.get("customer") or sl.TYPICAL)
@@ -184,9 +184,7 @@ def apply_sale(
     else:
         rolled = f"{shown}: {mine} against Ease Factor {sl.EASE}."
     if found.botched:
-        outcome = (
-            "A botch: desperate for the sale, he lets the goods go for next to nothing."
-        )
+        outcome = "A botch: desperate for the sale, they let the goods go for next to nothing."
     elif found.change:
         outcome = (
             f"{abs(found.change)}% {'over' if found.change > 0 else 'under'} the "

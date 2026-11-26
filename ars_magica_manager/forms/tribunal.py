@@ -527,7 +527,7 @@ def _law_fields(saga: Saga, case: Case | None) -> list[DialogField]:
         ),
         DialogField(
             "intrigue_blatant",
-            "Intrigue: his Gift is Blatant",
+            "Intrigue: their Gift is Blatant",
             "check",
             attr(case, "intrigue_blatant", False),
             hint="The Blatant Gift Flaw counts without this.",

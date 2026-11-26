@@ -88,13 +88,13 @@ def _reinvent(
     result.notes.append(
         f"{ingredient.name}: {alchemy.ingredient_points(ingredient.bonus, ingredient.devised, theory)} "
         f"Elixir Point(s); {points} in all give Elixir Level {level} (at most "
-        f"Magic Theory {theory}), added to his Longevity Ritual's "
+        f"Magic Theory {theory}), added to their Longevity Ritual's "
         f"{character.aging.longevity_modifier} while this dose is in force "
         f"({alchemy.LESSER_SOURCE})."
     )
     if pawns:
         result.notes.append(
-            f"The dose of his Longevity Ritual takes {pawns} pawn(s) of "
+            f"The dose of their Longevity Ritual takes {pawns} pawn(s) of "
             f"{_art(plan)} vis from {vis.payer(character, plan)} raw vis."
         )
 
@@ -137,9 +137,9 @@ register(
     SimpleActivity(
         REINVENT_ELIXIR,
         "Reinvent the Lesser Elixir",
-        "A season in the laboratory adding a special ingredient to the Lesser "
-        "Elixir, its Shape and Material bonus in Elixir Points: the Elixir "
-        "Level adds to his own Longevity Ritual.",
+        "A season in the laboratory adding a special ingredient to the Lesser Elixir, "
+        "its Shape and Material bonus in Elixir Points: the Elixir Level adds to their "
+        "own Longevity Ritual.",
         LESSER,
         STORY,
         hint="Exposure (2 xp), as other lab work, in Magic Theory.",

@@ -152,7 +152,7 @@ def test_what_custom_frowns_on_in_the_marks():
         ranks.Sponsor(_char(saga, "m_oak"), "Oak Gild"),
         ranks.Sponsor(_char(saga, "m_haw"), "Oak Gild"),
     ]
-    # Fifty years old, 25 past his Gauntlet: early is no concern.
+    # Fifty years old, 25 past their Gauntlet: early is no concern.
     found = ranks.mark_warnings(saga, leandro, sponsors, ["Oak Gild"])
     assert any("three different gilds" in w for w in found)
     assert any("Enmity of the Oak Gild" in w for w in found)
@@ -160,7 +160,7 @@ def test_what_custom_frowns_on_in_the_marks():
     leandro.background.year_born = 1190
     leandro.reputations.clear()
     found = ranks.mark_warnings(saga, leandro, sponsors[:1])
-    assert any("5 years past his Gauntlet" in w for w in found)
+    assert any("5 years past their Gauntlet" in w for w in found)
     assert any("magical prowess" in w for w in found)
 
 
@@ -171,7 +171,7 @@ def test_three_marks_make_a_master():
     assert isinstance(form, Form)
     applicants = {f.key: f for f in form.fields()}["applicant"].options
     assert ("Leandro (Journeyman)", "mag1") in applicants
-    # A master of his own House is refused.
+    # A master of their own House is refused.
     _char(saga, "m_oak").hermetic.house = "house_flambeau"
     refused = form.validate(_values(form, applicant="mag1", sponsor="m_oak"))
     assert refused is not None and "House" in refused

@@ -304,10 +304,10 @@ def test_the_dream_working_form_for_the_dreamer_and_wounds():
     assert "10 against 9" in said and "magnitude: 10" in said
     wound = {"roll": forms.WOUND, "wound": "medium", "earlier_medium": 1}
     assert "against [b]6[/]" in form.live(wound)
-    assert "stays in the dream" in form.apply({**wound, "die": 4})[1]
-    assert "wakes him" in form.apply({**wound, "die": 3})[1]
+    assert "stay in the dream" in form.apply({**wound, "die": 4})[1]
+    assert "wakes them" in form.apply({**wound, "die": 3})[1]
     shaken = {"roll": forms.DISTURBED, "disturbance": "Knocked down"}
-    assert "he wakes" in form.apply({**shaken, "die": 4})[1]
+    assert "they wake" in form.apply({**shaken, "die": 4})[1]
     assert form.validate({**wound, "earlier_light": -1})
 
 

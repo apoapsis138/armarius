@@ -67,16 +67,16 @@ def baraka_fields(character: Character) -> list[DialogField]:
         ),
         DialogField(
             "at_shrine",
-            "At his shrine",
+            "At their shrine",
             "check",
             False,
-            hint="Baraka is sought only at the forbear's shrine, usually his "
-            "tomb; the Qur'an anywhere (RoP: The Divine p. 103).",
+            hint="Sought at the forbear's shrine, usually their tomb; the Qur'an "
+            "anywhere (RoP: The Divine p. 103).",
             show_if=lambda v: v.get("forbear") != bk.QURAN,
         ),
         DialogField(
             "trait",
-            "His highest Muslim Personality Trait",
+            "Highest Muslim Personality Trait",
             "select",
             traits[0][1] if traits else NONE,
             options=[*traits, ("(none)", NONE)],
@@ -85,7 +85,7 @@ def baraka_fields(character: Character) -> list[DialogField]:
         ),
         DialogField(
             "aura",
-            "Divine aura where he asks",
+            "Divine aura where they ask",
             "int",
             0,
             hint="+1 a level; the ritual prayer, a Muslim holiday and Ramadan "
@@ -167,7 +167,7 @@ def baraka_live(character: Character) -> Any:
         chance = bk.chance(found.total) * 100
         powers = ", ".join(sr.POWERS[k].name for k in forbear.powers)
         lines = [
-            "[i]A forbear's blessing, sought at his shrine; he is never threatened.[/]",
+            "[i]A forbear's blessing, sought at their shrine; they're never threatened.[/]",
             f"Simple die {_signed(found.total)} [dim]= {' '.join(found.terms)}[/]",
             f"Against [b]15 + the storyguide's simple die[/], rolled in secret: "
             f"[b]{chance:.0f}%[/] [dim](RoP: The Divine pp. 87, 103)[/]",
@@ -200,10 +200,10 @@ def baraka_form(
         power = sr.POWERS.get(str(values.get("power") or ""))
         if rolled.heard:
             asked = f": {power.name}" if power is not None else ""
-            lines.append(f"The baraka of {forbear.name} aids him{asked}.")
+            lines.append(f"The baraka of {forbear.name} aids them{asked}.")
             title = f"Baraka of {forbear.name}"
         else:
-            lines.append("No blessing comes; he may ask again another day.")
+            lines.append("No blessing comes; they may ask again another day.")
             title = f"Sought the baraka of {forbear.name}"
         _diary(saga, character, title, " ".join(lines))
         return notes(*map(escape, lines))

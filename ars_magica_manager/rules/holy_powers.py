@@ -127,7 +127,7 @@ def effect_notes(
         "short of its level, a tragedy of hubris: Minor 1-10, Major 11-20, Ultimate 21+"
     )
     if faith > 0:
-        line += f"; his True Faith stands in as {FAITH_STANDS_IN * faith}"
+        line += f"; their True Faith stands in as {FAITH_STANDS_IN * faith}"
     found.append(line + " (p. 46)")
     if power == "Blessing" and effect.duration == "Year":
         found.append("one always under a Blessing gains a Warping Point a year (p. 49)")

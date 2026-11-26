@@ -718,9 +718,8 @@ class LabPlanForm:
                 ),
                 show_if=_doing(lab_seasons.TAUGHT_SPELLS),
                 hint=(
-                    "Any Techniques and Forms: at most the teacher's highest Lab "
-                    "Total in levels, his Lab Total in each Technique and Form, "
-                    "and no spell above your Lab Total for it (DE p. 251)."
+                    "At most the teacher's highest Lab Total in levels, their Lab Total"
+                    " in each Technique and Form, and your own (DE p. 251)."
                 ),
             ),
             DialogField(
@@ -1108,9 +1107,9 @@ class LabPlanForm:
                     "check",
                     bool(plan and plan.chthonic),
                     show_if=_chosen,
-                    hint="Chthonic Magic stands in for Magic Theory, and adds to "
-                    "the pawns of Infernal vis he may use (RoP: The Infernal "
-                    "p. 123).",
+                    hint="Chthonic Magic stands in for Magic Theory, and adds to the "
+                    "pawns of Infernal vis they may use (RoP: The Infernal p. "
+                    "123).",
                 )
             )
         return found
@@ -1298,8 +1297,8 @@ class LabPlanForm:
                     "int",
                     plan.recreating_theory if plan else 0,
                     show_if=typed,
-                    hint="The record doesn't keep the magus's Magic Theory when "
-                    "he experimented: type it, and it is added again (DE p. 274).",
+                    hint="The record doesn't keep their Magic Theory when they "
+                    "experimented: type it, and it's added again (DE p. 274).",
                 )
             )
         return found
@@ -1447,8 +1446,8 @@ class LabPlanForm:
             + ", ".join(escape(b.name) for b in texts)
             + "."
             if texts
-            else "No Longevity Lab Text at hand: tick only if his discoverer "
-            "taught him."
+            else "No Longevity Lab Text at hand: tick only if their discoverer taught "
+            "them."
         )
         return [
             DialogField(
