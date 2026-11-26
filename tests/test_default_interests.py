@@ -1,6 +1,7 @@
 """Default Interests: the interests a new character starts with, by its
-type (the approved design, not a book rule), with Session & Reputation
-always on."""
+type (the approved design, not a book rule), its House and its Virtues
+and Flaws (default_interests.SOURCE), with Session & Reputation always
+on."""
 
 from __future__ import annotations
 
@@ -26,6 +27,7 @@ from ars_magica_manager.models import (
     Character,
     CharacterType,
     Saga,
+    VirtueFlawInstance,
 )
 
 
@@ -58,6 +60,156 @@ def test_each_default_says_why_it_is_on():
         (deeds.SESSION, "every character"),
         (deeds.COVENFOLK, "an animal grog"),
     ]
+
+
+def _added(character: Character) -> list[default_interests.Reason]:
+    """What `character`'s defaults add to its type's and the session's."""
+    plain = Character(id="p", name="P", type=character.type, animal=character.animal)
+    already = default_interests.defaults(plain)
+    return [r for r in default_interests.defaults(character) if r not in already]
+
+
+def _magus_of(house: str) -> Character:
+    magus = _new("magus")
+    magus.hermetic.house = house
+    return magus
+
+
+#: What each House adds to a magus's defaults (DE pp. 12-17, 46).
+@pytest.mark.parametrize(
+    ("house", "expected"),
+    [
+        ("house_bjornaer", [deeds.MYSTERY_CULTS]),
+        ("house_criamon", [deeds.MYSTERY_CULTS]),
+        ("house_merinita", [deeds.MYSTERY_CULTS, deeds.FAERIE]),
+        ("house_verditius", [deeds.MYSTERY_CULTS, deeds.CRAFT]),
+        ("house_jerbiton", [deeds.SCHOLARLY]),
+        ("house_flambeau", [deeds.KNIGHTLY]),
+        ("house_bonisagus", []),
+        ("house_guernicus", []),
+        ("house_mercere", []),
+        ("house_tremere", []),
+        ("house_tytalus", []),
+        ("house_ex_miscellanea", []),
+    ],
+)
+def test_a_magus_takes_up_what_its_house_does(house: str, expected: list[str]):
+    added = _added(_magus_of(house))
+    name = catalog.load_house_catalog_by_id()[house].name
+    assert added == [(interest, f"House {name}") for interest in expected]
+
+
+def test_only_a_magus_takes_up_what_a_house_does():
+    companion = _new("companion")
+    companion.hermetic.house = "house_merinita"
+    assert _added(companion) == []
+
+
+def _with(character: Character, *vf_ids: str) -> Character:
+    character.virtues_flaws += [VirtueFlawInstance(vf_id=v) for v in vf_ids]
+    return character
+
+
+#: One Virtue or Flaw of each interest's group, from the spec's table.
+@pytest.mark.parametrize(
+    ("vf_id", "interest", "why"),
+    [
+        ("vf_knight", deeds.KNIGHTLY, "Knight"),  # DE p. 88
+        ("vf_educated", deeds.SCHOLARLY, "Educated"),  # DE p. 77
+        ("vf_font_of_knowledge", deeds.INSIGHT, "Font of Knowledge"),  # DE p. 82
+        ("vf_priest", deeds.RELIGION, "Priest"),  # DE p. 104
+        ("vf_faerie_sight", deeds.FAERIE, "Faerie Sight"),  # RoP:F p. 50
+        ("vf_craftsman", deeds.CRAFT, "Craftsman"),  # DE p. 75
+        ("vf_diabolist", deeds.INFERNAL, "Diabolist"),  # RoP:I p. 112
+        ("vf_redcap", deeds.TRIBUNAL, "Redcap"),  # DE p. 91
+        ("vf_custos", deeds.COVENFOLK, "Custos"),  # DE p. 75
+        ("vf_apprentice", deeds.APPRENTICESHIP, "Apprentice"),  # DE p. 70
+    ],
+)
+def test_a_virtue_takes_up_what_it_is_about(vf_id: str, interest: str, why: str):
+    assert _added(_with(_new("companion"), vf_id)) == [(interest, why)]
+
+
+#: Every kind of Faerie Blood (DE pp. 79, 110; HoH:TL p. 104; Lion &
+#: Lily p. 97; Faith & Flame p. 91), named as the sheet names it.
+@pytest.mark.parametrize(
+    ("vf_id", "why"),
+    [
+        ("vf_faerie_blood", "Faerie Blood"),
+        ("vf_faerie_blood_bloodcap", "Faerie Blood (Bloodcap)"),
+        ("vf_faerie_blood_jentil", "Faerie Blood (Jentil)"),
+        ("vf_faerie_blood_jentil_major", "Faerie Blood (Jentil)"),
+        ("vf_faerie_blood_laminak", "Faerie Blood (Laminak)"),
+        ("vf_faerie_blood_spinnen", "Faerie Blood (Spinnen)"),
+        ("vf_strong_faerie_blood", "Strong Faerie Blood"),
+    ],
+)
+def test_faerie_blood_of_every_kind_deals_with_faerie(vf_id: str, why: str):
+    assert _added(_with(_new("grog"), vf_id)) == [(deeds.FAERIE, why)]
+
+
+@pytest.mark.parametrize(
+    ("vf_id", "expected"),
+    [
+        # RoP:F p. 113: faeries summoned.
+        ("vf_faerie_summoning", [(deeds.FAERIE, "(Faerie) Summoning")]),
+        # RoP:I pp. 87, 114-115: the Goetic Art.
+        ("vf_summoning", [(deeds.INFERNAL, "Summoning")]),
+        # Hedge Magic, Revised: spirits of any realm, so nothing.
+        ("vf_type_summoning", []),
+        ("vf_type_summoning_major", []),
+    ],
+)
+def test_each_summoning_deals_with_the_realm_it_calls_on(
+    vf_id: str, expected: list[default_interests.Reason]
+):
+    assert _added(_with(_new("companion"), vf_id)) == expected
+
+
+def test_a_flaw_counts_as_well_as_a_virtue():
+    # Diabolic Past, DE p. 126.
+    added = _added(_with(_new("companion"), "vf_diabolic_past"))
+    assert added == [(deeds.INFERNAL, "Diabolic Past")]
+
+
+def test_the_defaults_are_the_union_of_type_and_virtues():
+    grog = _with(_new("grog"), "vf_custos", "vf_educated")
+    assert default_interests.defaults(grog) == [
+        (deeds.SESSION, "every character"),
+        (deeds.COVENFOLK, "a grog"),
+        (deeds.CRAFT, "a grog"),
+        (deeds.COVENFOLK, "Custos"),
+        (deeds.SCHOLARLY, "Educated"),
+    ]
+
+
+def test_a_rhine_apprentice_is_an_apprentice():
+    # Guardians of the Forests p. 19: the DE's Apprentice, for any Tribunal.
+    added = _added(_with(_new("companion"), "vf_apprentice_rhine_tribunal"))
+    assert added == [(deeds.APPRENTICESHIP, "Apprentice (Rhine Tribunal)")]
+
+
+def test_a_virtue_taken_twice_gives_its_reason_once():
+    added = _added(_with(_new("companion"), "vf_knight", "vf_knight"))
+    assert added == [(deeds.KNIGHTLY, "Knight")]
+
+
+def test_a_sagas_own_virtue_takes_up_nothing():
+    assert _added(_with(_new("companion"), "vf_saga_custom")) == []
+
+
+def test_every_virtue_and_house_in_the_rules_is_in_the_catalogs():
+    virtues = catalog.load_virtue_flaw_catalog_by_id()
+    houses = catalog.load_house_catalog_by_id()
+    missing = [v for v in default_interests.BY_VIRTUE if v not in virtues]
+    missing += [h for h in default_interests.BY_HOUSE if h not in houses]
+    assert missing == []
+
+
+def test_every_interest_the_rules_take_up_is_one_of_the_interests():
+    named = set(default_interests.BY_VIRTUE.values())
+    named |= {i for interests in default_interests.BY_HOUSE.values() for i in interests}
+    assert named <= set(deeds.INTERESTS)
 
 
 @pytest.mark.parametrize("in_creation", [True, False])
@@ -164,6 +316,28 @@ def test_a_sketch_covenants_new_magus_starts_with_the_magus_defaults():
     assert magus.interests_chosen and _on(magus) == ON["magus"]
 
 
+def test_a_house_change_in_creation_moves_the_interests_until_chosen():
+    magus = _unchosen("magus")
+    magus.hermetic.house = "house_flambeau"
+    assert _on(magus) == [deeds.KNIGHTLY, deeds.RESEARCH, deeds.TRIBUNAL]
+    magus.hermetic.house = "house_jerbiton"
+    assert _on(magus) == [deeds.SCHOLARLY, deeds.RESEARCH, deeds.TRIBUNAL]
+    deeds.keep_interests(magus)
+    magus.hermetic.house = "house_verditius"
+    assert _on(magus) == [deeds.SCHOLARLY, deeds.RESEARCH, deeds.TRIBUNAL]
+
+
+def test_a_virtue_added_then_removed_in_creation_moves_the_interests_until_chosen():
+    companion = _unchosen("companion")
+    _with(companion, "vf_knight")
+    assert _on(companion) == [deeds.KNIGHTLY, deeds.RELIGION]
+    companion.virtues_flaws.clear()
+    assert _on(companion) == [deeds.RELIGION]
+    deeds.keep_interests(companion)
+    _with(companion, "vf_knight")
+    assert _on(companion) == [deeds.RELIGION]
+
+
 @pytest.mark.parametrize("why", ["chosen", "in play"])
 def test_a_chosen_or_in_play_character_keeps_its_stored_interests(why: str):
     grog = _unchosen("grog")
@@ -235,18 +409,28 @@ def _made_from(template: object) -> Character:
 
 
 def test_a_grog_template_leaves_the_defaults_to_follow_the_grog():
-    grog = _made_from(catalog.load_grog_template_catalog()[0])
+    advisor = catalog.load_grog_template_catalog()[0]
+    assert advisor.id == "gt_advisor"  # Educated, so Scholarly too
+    grog = _made_from(advisor)
     assert grog.in_creation and not grog.interests_chosen
-    assert _on(grog) == ON["grog"]
+    assert _on(grog) == [deeds.SCHOLARLY, *ON["grog"]]
 
 
-@pytest.mark.parametrize("template_id", ["tpl_knight", "tpl_tremere"])
-def test_a_ready_to_play_template_starts_in_play_with_its_defaults(template_id: str):
+@pytest.mark.parametrize(
+    ("template_id", "expected"),
+    [
+        ("tpl_knight", [deeds.KNIGHTLY, deeds.RELIGION]),
+        ("tpl_tremere", ON["magus"]),
+    ],
+)
+def test_a_ready_to_play_template_starts_in_play_with_its_defaults(
+    template_id: str, expected: list[str]
+):
     template = character_templates.find(template_id)
     assert template is not None
     made = _made_from(template)
     assert not made.in_creation and made.interests_chosen
-    assert _on(made) == ON[template.type]
+    assert _on(made) == expected
 
 
 def _edit_info(saga: Saga, character: Character, **changes: object) -> None:
