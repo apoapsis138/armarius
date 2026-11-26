@@ -14,7 +14,7 @@
 
 ### Story
 
-<!-- STORY-n -->
+<!-- STORY-n, or each story the change covers, one per line. -->
 
 ### Pattern
 

@@ -1,4 +1,4 @@
-"""The busy mark story_check leaves while it runs, so a thread sharing the
+"""The busy mark story_check leaves while it runs, so another run sharing the
 folder waits before a stash or pull (tools/folder_busy.py)."""
 
 import importlib.util

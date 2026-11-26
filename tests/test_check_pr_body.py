@@ -102,6 +102,17 @@ def test_an_empty_section_is_named_but_none_is_fine():
         assert check.problems(GOOD.replace("None: a plain function.", word)) == []
 
 
+def test_a_pull_request_may_list_several_stories():
+    body = GOOD.replace(
+        "STORY-2492\n",
+        "Spec: Hubris and Sympathy experience.\n\n- STORY-2491 A Trait gains"
+        " experience\n- STORY-2492 Hubris and Sympathy gain it by themselves\n",
+        1,
+    )
+    assert "- STORY-2491" in body
+    assert check.problems(body) == []
+
+
 def test_a_section_may_hold_its_text_under_a_subheading():
     body = GOOD.replace("## Evidence\n", "## Evidence\n\n#### Before and after\n", 1)
     body = body.replace("## Summary\n", "## Summary\n\n#### Diagram\n", 1)
@@ -155,50 +166,50 @@ def test_a_closing_fence_takes_no_info_string():
     assert check.problems(_with("```\nshown:\n```python\nI ran it\n```")) == []
 
 
+#: Stand-ins for the private BLOCKED_TERMS list.
+TERMS = ("Quillpen", "scribe bot", "inkwell.example/code")
+
+
 @pytest.mark.parametrize(
     "sentence",
     [
-        "Claude wrote this.",
-        "Made with Claude Code.",
-        "The coding agent checked the diff.",
-        "An AI agent wrote it.",
-        "A subagent reviewed it.",
-        "Run over Remote Control.",
-        "One tool call was slow.",
-        "After a skill invocation the tests passed.",
+        "Quillpen wrote this.",
+        "The Scribe Bot checked the diff.",
+        "See inkwell.example/code for the run.",
     ],
 )
-def test_agent_and_tool_names_fail(sentence: str):
-    found = check.problems(_with(sentence))
-    assert found and all("tool or agent name" in p for p in found)
+def test_blocked_terms_fail_without_being_printed(sentence: str):
+    found = check.problems(_with(sentence), blocked_terms=TERMS)
+    assert found and all("blocked term #" in p for p in found)
+    assert not any(term.lower() in p.lower() for p in found for term in TERMS)
 
 
 @pytest.mark.parametrize(
     "text",
     [
-        "The `agent` field, and `claude.yml`.",
-        "Agents can now be tamed from the More menu.",
-        "Tamed agents now show on the covenant sheet.",
+        "The `quillpen` field.",
+        "```\nQuillpen log\n```",
+        "Quillpens and scribes are other words.",
     ],
 )
-def test_names_inside_code_and_the_apps_agents_pass(text: str):
-    assert check.problems(_with(text)) == []
+def test_blocked_terms_in_code_or_inside_other_words_pass(text: str):
+    assert check.problems(_with(text), blocked_terms=TERMS) == []
 
 
 def test_a_heading_of_its_own_is_checked_too():
-    found = check.problems(_with("### What I changed with Claude"))
+    found = check.problems(
+        _with("### What I changed with Quillpen"), blocked_terms=TERMS
+    )
     assert any("first person" in p for p in found)
-    assert any("tool or agent name" in p for p in found)
+    assert any("blocked term" in p for p in found)
 
 
 @pytest.mark.parametrize(
     "line",
     [
         "Co-Authored-By: Someone <x@example.com>",
-        "🤖 Generated with [Claude Code](https://claude.com/claude-code)",
-        "Generated with Claude",
-        "Session: https://claude.ai/code/session_1",
-        "<noreply@anthropic.com>",
+        "🤖 Generated with [Quillpen](https://inkwell.example)",
+        "Generated with a tool",
     ],
 )
 def test_attribution_lines_fail_even_in_code(line: str):
@@ -252,7 +263,10 @@ def test_problems_name_their_line():
 
 
 def _run(
-    body: str = "", env_names: str = "", path: Path | None = None
+    body: str = "",
+    env_names: str = "",
+    path: Path | None = None,
+    env_terms: str = "",
 ) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         [sys.executable, str(ROOT / "tools" / "check_pr_body.py")]
@@ -261,7 +275,7 @@ def _run(
         capture_output=True,
         text=True,
         encoding="utf-8",
-        env={**os.environ, "BLOCKED_NAMES": env_names},
+        env={**os.environ, "BLOCKED_NAMES": env_names, "BLOCKED_TERMS": env_terms},
         check=False,
     )
 
@@ -272,6 +286,13 @@ def test_the_script_reads_stdin_and_the_env():
     assert bad.returncode == 1
     assert "blocked name" in bad.stdout
     assert "Zephyrine" not in bad.stdout + bad.stderr
+
+
+def test_the_script_reads_blocked_terms_from_the_env():
+    bad = _run(_with("Quillpen wrote it."), env_terms="scribe bot,Quillpen")
+    assert bad.returncode == 1
+    assert "blocked term #2 from BLOCKED_TERMS" in bad.stdout
+    assert "Quillpen" not in bad.stdout + bad.stderr
 
 
 def test_the_script_reads_a_file(tmp_path: Path):
