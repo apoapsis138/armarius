@@ -88,9 +88,8 @@ def fields(saga: Saga, magus: Character) -> list[DialogField]:
             "select",
             FORMS[0],
             options=pairs(FORMS),
-            hint="By custom the challenger chooses the Technique and the "
-            "challenged the Form; each may veto the other's first choice, "
-            "then must accept the second (DE p. 231).",
+            hint="The challenger chooses the Technique, the challenged the Form; each "
+            "may veto the other's first choice once (DE p. 231).",
         ),
         DialogField(
             "stakes",

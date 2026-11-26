@@ -73,7 +73,7 @@ def craft_fields() -> list[DialogField]:
         ),
         DialogField(
             "mundane",
-            "Mundane Ease Factor or Workshop Total",
+            "Ease Factor or Workshop Total",
             "int",
             9,
             hint="+3 for magic is added.",

@@ -440,9 +440,8 @@ def table_fields(
             "area",
             e.get("rows", ""),
             required=True,
-            hint='One a line: "1-3: Nothing stirs", "9+: The Hall opens", '
-            '"botch: The mist closes". End a row with "(SG: ...)" for a note '
-            "shown on the roll but kept out of the Diary.",
+            hint='One a line: "1-3: Nothing stirs", "9+: The Hall opens", "botch: ...".'
+            ' End a row with "(SG: ...)" for a note kept out of the Diary.',
         ),
     ]
 
@@ -661,10 +660,9 @@ def fields(saga: Saga, place: Neighbour | None) -> list[DialogField]:
             "This year's botches and other magic",
             "int",
             d.get("aura_adjust", d.get("raising", 0)),
-            hint="+1 for each beneficial botch of 2+ Warping Points, -1 for each "
-            "detrimental one, +1 for each other spending of 3+ pawns of vis "
-            "there; the app counts vis study and extraction itself. Cleared "
-            "each winter.",
+            hint="+1 per beneficial botch of 2+ Warping Points, -1 per detrimental, +1 "
+            "per other spending of 3+ pawns there (vis study and extraction "
+            "counted). Cleared each winter.",
             show_if=magic,
         ),
         DialogField(
@@ -695,7 +693,7 @@ def fields(saga: Saga, place: Neighbour | None) -> list[DialogField]:
         ),
         DialogField(
             "maintained",
-            "Kept by a demon or an Infernal enchantment",
+            "Kept by a demon or Infernal enchantment",
             "check",
             bool(d.get("maintained")),
             hint="While something keeps it, it doesn't erode.",

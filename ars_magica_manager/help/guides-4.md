@@ -2091,7 +2091,7 @@ storyguide asks the fee each year.
 2. **Choose the host.** Choose it in **Staying at**. A Rhine covenant
    fills in three years and three pawns of vis a year (Guardians of the
    Forests p. 20). Elsewhere, type the terms the troupe agrees. Tick
-   **May study and copy from its library**.
+   **May study and copy its library**.
 3. **Cast and study there.** Her Casting Scores now count the host's
    aura. In her season's plan, the host's books are offered beside her
    own, to study or copy.

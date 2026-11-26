@@ -142,7 +142,7 @@ People marked departed in the Covenfolk chapter are left out of this chapter and
 
 Anyone left with nothing planned takes the saga's default, and Advance Season asks about each player character. Non-player characters take it quietly, unless you tick
 <!-- tui -->
-**Be notified when and which non-player characters do not have seasonal activity**.
+**Notify me of idle non-player characters**.
 <!-- /tui -->
 <!-- gui -->
 **Name Idle Non-Player Characters**.

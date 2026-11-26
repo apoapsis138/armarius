@@ -651,7 +651,7 @@ The covenfolk's Prevailing Loyalty.
 **Base Loyalty Points** is the average of the council's Gifts (Covenants
 p. 38). An ordinary Gift is -30, a Blatant Gift -105, and a Gentle Gift
 or none 0. The council is the magi, and each companion or specialist
-ticked **On the council, with a full vote** on their entry, who counts 0.
+ticked **On the council, full vote** on their entry, who counts 0.
 A token seat doesn't count. The average rounds to the nearest whole
 number, as the book's example does (-225 over seven is -32).
 

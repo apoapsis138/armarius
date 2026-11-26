@@ -330,9 +330,9 @@ def stop_fields(
                 "Its aura travels with it",
                 "check",
                 False,
-                hint="A ship's own aura, say: the aura typed on it becomes a "
-                "Place that moves with it, and the stronger aura holds sway "
-                "(DE p. 410). Leave it off and the aura stays behind.",
+                hint="A ship's own aura, say: it becomes a Place that moves with it, "
+                "and the stronger aura holds sway (DE p. 410). Off: the aura stays"
+                " behind.",
             )
         )
     return fields

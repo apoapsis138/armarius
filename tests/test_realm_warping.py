@@ -190,7 +190,7 @@ def test_the_form_offers_the_ascent_only_to_a_magus_with_miraculous_abilities():
     magus.abilities.append(Ability(_holy_power(), xp=5))
     fields = character_forms.aging_fields(magus.aging, saga, magus)
     ascent = next(f for f in fields if f.key == "seeks_ascent")
-    assert ascent.label == "Seeks Divine Ascent instead of Twilight"
+    assert ascent.label == "Seeks Divine Ascent, not Twilight"
     values = {f.key: f.value for f in fields}
     values["seeks_ascent"] = True
     character_forms.apply_aging(saga, magus, values, _Dice())

@@ -154,17 +154,8 @@ ALLOWED_TEXT: dict[tuple[str, str], str] = {
 #: The longest a Deeds-chapter description may be: one line beside its button.
 DESCRIPTION_MOST = 80
 
-#: Descriptions already longer, left for the coming verbosity pass. Shorten
-#: one and take it off; nothing new joins the list.
-STILL_LONG = {
-    "NOTES[what_changed]",
-    "NOTES[house_acclaim]",
-    "NOTES[make_ligature]",
-    "NOTES[experiment_script]",
-    "SEASON_NOTES[grog_story_xp]",
-    "UNDERTAKING_NOTES[begin_project]",
-    "UNDERTAKING_NOTES[travel]",
-}
+#: Descriptions allowed to stay longer. None now; nothing new joins the list.
+STILL_LONG: set[str] = set()
 
 
 def _table_name(node: ast.AST, parents: dict[ast.AST, ast.AST]) -> str:

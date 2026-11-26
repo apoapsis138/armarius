@@ -84,7 +84,7 @@ def fields(saga: Saga, case: Case) -> list[DialogField]:
             ),
             DialogField(
                 f"{key}_foe_reputation",
-                "Their foe's highest Reputation (twice it for a win)",
+                "Foe's highest Reputation (x2 if won)",
                 "int",
                 _highest(other),
             ),

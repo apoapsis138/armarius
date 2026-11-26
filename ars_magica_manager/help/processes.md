@@ -174,7 +174,7 @@ The Activity list offers what this character may do. Activities marked "magi" ar
   - A magus tends no more Stirpes than their Viresculture score. Those past it don't breed, and the Diary says so. Each needs 12 Labor Points a year, and the yield is a pawn less for every 6 Labor Points short and for each month left unattended. The app takes its care as given, so take a pawn off by hand for care short or months unattended.
   - With the Aura Variation rules, a year's harvest takes a fifth of its pawns, rounded up, off the aura's yearly modifier.
 - **The Lesser Elixir (The Mysteries Revised Edition pp. 42-43):** in Mysteries, for a magus with the Virtue, which needs Hermetic Alchemy.
-  - **Reinvent the Lesser Elixir** names the special ingredient added and its Shape and Material bonus. Tick **They devised it themselves** for one found by Vulgar Alchemy, and its points are doubled. No ingredient counts above Magic Theory.
+  - **Reinvent the Lesser Elixir** names the special ingredient added and its Shape and Material bonus. Tick **Self-devised** for one found by Vulgar Alchemy, and its points are doubled. No ingredient counts above Magic Theory.
   - The Elixir Points of all the magus's ingredients give the Elixir Level as an Art's experience gives its score (1, 3, 6, 10, 15...). It's at most their Magic Theory as they devise it.
   - The season prepares a dose of their own Longevity Ritual from its Lab Text, which must be at hand and readable. They need a Longevity Ritual in force. The dose takes a pawn of **The dose's vis** (Creo, Corpus or Vim) for every five years of their age, from the raw vis **Vis from** names. They use no more of it than their score in that Art, as for a dose rebrewed from the Lab Text (DE p. 261; p. 42).
   - From then on their aging rolls subtract the Elixir Level as well as the ritual's modifier, until an Aging Crisis ends the ritual. Performing their own ritual again from its Lab Text, or making a new one themselves, adds the ingredients again. A ritual someone else makes for them leaves the Elixir out.
@@ -511,7 +511,7 @@ A plan that can't be carried out is listed too, with the reason. **Leave it** sk
 
 Non-player characters with nothing planned aren't named: they take the default.
 <!-- tui -->
-Tick **Be notified when and which non-player characters do not have seasonal activity** in the saga's settings to have them named and asked about too.
+Tick **Notify me of idle non-player characters** in the saga's settings to have them named and asked about too.
 <!-- /tui -->
 <!-- gui -->
 Tick **Name Idle Non-Player Characters** in the saga's settings to have them named and asked about too.

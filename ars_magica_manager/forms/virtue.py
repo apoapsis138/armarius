@@ -309,7 +309,7 @@ def lab_param_fields(
         fields.append(
             DialogField(
                 "illusory",
-                "The Virtue that is only an illusion",
+                "The Virtue that is an illusion",
                 "select",
                 current.get("illusory") or None,
                 options=illusion_options(lab),

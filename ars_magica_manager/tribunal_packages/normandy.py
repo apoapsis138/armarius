@@ -354,9 +354,9 @@ def tourney_fields(
             "Points",
             "int",
             r.get("points", 0),
-            hint="Its starting tally (a point for each member of its covenant, "
-            "one for a visiting team or a coenobium's member) and any points "
-            "the events below don't give (The Lion and the Lily p. 31).",
+            hint="Its starting tally (a point a covenant member, one for a visiting "
+            "team or coenobium member) plus points the events below don't give "
+            "(TLatL p. 31).",
         ),
     ] + [
         DialogField(

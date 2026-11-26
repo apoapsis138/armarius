@@ -120,7 +120,7 @@ def played_by_field(
     return [
         DialogField(
             "everyone_plays",
-            "Played by everyone in the troupe",
+            "Played by the whole troupe",
             "check",
             background.everyone_plays,
             hint="A shared grog, say: every player may change it.",
@@ -324,9 +324,8 @@ def aging_fields(
             "Magic",
             options=pairs(REALMS),
             show_if=lambda v: (v.get("gain_warping") or 0) > 0 and _one_event(v),
-            hint="For Susceptibility to Warping, which gives a point more for "
-            "each realm a year's Warping came from (DE p. 146), and the main "
-            "source the Warping's effects reflect (DE p. 391).",
+            hint="For Susceptibility to Warping (+1 a realm a year's Warping came from,"
+            " DE p. 146) and the main source its effects show (DE p. 391).",
         ),
         DialogField(
             "faerie_days",
@@ -378,7 +377,7 @@ def _ascent_fields(aging: Aging, character: Character | None) -> list[DialogFiel
     return [
         DialogField(
             "seeks_ascent",
-            "Seeks Divine Ascent instead of Twilight",
+            "Seeks Divine Ascent, not Twilight",
             "check",
             aging.seeks_ascent,
             hint="A magus with Miraculous Abilities has one form of Warping "
@@ -637,8 +636,8 @@ def hermetic_fields(
                     "check",
                     h.road_magic,
                     hint="Mercurian Magic: Road and Road Network after a season's "
-                    "teaching; a starting magus whose parens has Mercurian Magic "
-                    "may have learned it (TMRE p. 116).",
+                    "teaching; a starting magus may have them from their parens "
+                    "(TMRE p. 116).",
                 )
             ]
             if mercurian

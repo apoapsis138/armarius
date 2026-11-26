@@ -832,7 +832,7 @@ def economics_row_fields(
         fields.append(
             DialogField(
                 "soldier_pay",
-                "Pence a day to professional soldiers",
+                "Pence a day per soldier",
                 "int",
                 economics.soldier_pay,
                 hint="Each adds a pound of Wages a year (DE p. 193).",

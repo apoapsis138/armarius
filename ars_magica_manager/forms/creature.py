@@ -151,7 +151,7 @@ def _creature_realm_fields(c: Creature | None) -> list[DialogField]:
         ),
         DialogField(
             "might_pool",
-            "Might Pool now (blank = not tracked)",
+            "Might Pool now (blank: untracked)",
             "optint",
             attr(c, "might_pool", None),
             show_if=_has_realm,
@@ -215,7 +215,7 @@ def _faerie_fields(c: Creature | None) -> list[DialogField]:
         ),
         DialogField(
             "vampire_precautions",
-            "A vampire: the precautions that stop it forming",
+            "Vampire: precautions against forming",
             "text",
             attr(c, "vampire_precautions", ""),
             show_if=_faerie,
@@ -224,7 +224,7 @@ def _faerie_fields(c: Creature | None) -> list[DialogField]:
         ),
         DialogField(
             "vampire_limitations",
-            "A vampire: the limitations it obeys",
+            "Vampire: limitations it obeys",
             "text",
             attr(c, "vampire_limitations", ""),
             show_if=_faerie,
@@ -233,7 +233,7 @@ def _faerie_fields(c: Creature | None) -> list[DialogField]:
         ),
         DialogField(
             "vampire_death",
-            "A vampire: the one way that kills it for good",
+            "Vampire: the one sure death",
             "text",
             attr(c, "vampire_death", ""),
             show_if=_faerie,
@@ -378,9 +378,8 @@ def new_creature_fields(saga: Saga) -> list[DialogField]:
             options=bestiary_book.options(sourcebooks.saga_books(saga)),
             allow_blank=True,
             placeholder="(a blank creature)",
-            hint="One of the Definitive Edition's creatures (DE pp. 428-492), "
-            "or of a book in play such as Lords of Men's animals, copied into "
-            "the saga to change as you like.",
+            hint="A creature from the Definitive Edition (DE pp. 428-492) or a book in "
+            "play, copied into the saga to change as you like.",
         ),
         *fields,
     ]
@@ -632,7 +631,7 @@ def power_fields(power: CreaturePower | None) -> list[DialogField]:
         ),
         DialogField(
             "level",
-            "Effect level (blank = none given)",
+            "Effect level (blank: none)",
             "optint",
             attr(power, "level", None),
         ),
@@ -642,9 +641,8 @@ def power_fields(power: CreaturePower | None) -> list[DialogField]:
             "select",
             attr(power, "quality", "") or "",
             options=[("Typed", ""), *((q, q) for q in creature_build.POWERS)],
-            hint="Suggests the cost and Initiative from the effect level (RoP: "
-            "Magic p. 36): a new power's are filled in, and typed ones that "
-            "differ are checked, never refused.",
+            hint="Suggests cost and Initiative from the effect level (RoP: Magic p. "
+            "36): filled in for a new power, checked for a typed one.",
         ),
         DialogField(
             "penetration_bonus",

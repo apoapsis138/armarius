@@ -436,7 +436,7 @@ def fields(existing: Agent | None) -> list[DialogField]:
         ),
         DialogField(
             "coerced",
-            "Thinks you their inferior (held by coercion)",
+            "Thinks you inferior (coercion)",
             "check",
             a.coerced,
             hint="You gain Difficult Underlings for them; they have a Story Flaw such "
@@ -466,7 +466,7 @@ def fields(existing: Agent | None) -> list[DialogField]:
         ),
         DialogField(
             "resistance",
-            "Resistance left (blank: the table's; 0: recruited)",
+            "Resistance left (blank: table's; 0: recruited)",
             "optint",
             a.resistance,
         ),

@@ -258,7 +258,7 @@ def path_fields(saga: Saga, character: Character) -> list[DialogField]:
         ),
         DialogField(
             "aptitude",
-            "Head bound in infancy (or a like modification) for",
+            "Head bound in infancy for",
             "select",
             enigma.aptitude_path,
             options=[

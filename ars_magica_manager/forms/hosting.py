@@ -127,9 +127,8 @@ def host_form() -> Form:
                 "I know this is reachable from the internet",
                 "check",
                 False,
-                hint="Hosting on such an address is refused unless this is "
-                "ticked: anyone on the internet could open the app and try "
-                "passcodes, and nothing is encrypted.",
+                hint="Refused unless ticked: anyone on the internet could open the app "
+                "and try passcodes, and nothing is encrypted.",
                 show_if=_may_be_public,
             ),
             DialogField(

@@ -178,7 +178,7 @@ def fields(saga: Saga, character: Character) -> list[DialogField]:
         DialogField("fee", "How many", "int", stay.fee, show_if=_fee_asked),
         DialogField(
             "library",
-            "May study and copy from its library",
+            "May study and copy its library",
             "check",
             stay.library,
             show_if=_staying,

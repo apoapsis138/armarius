@@ -1,0 +1,1 @@
+**Shorter helper text.** The Deeds chapter's descriptions fit one line beside their buttons, and long field labels and hints across the forms say the same in fewer words, keeping their page references.

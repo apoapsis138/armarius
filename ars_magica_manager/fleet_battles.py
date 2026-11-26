@@ -179,9 +179,9 @@ def side_fields(saga: Saga, side: BattleSide, index: int) -> list[DialogField]:
             f"{label}'s ships bearded",
             "check",
             side.bearded,
-            hint="Iron plates on the bows: slower, but armoured, more "
-            "resistant to damage, and better at ramming and taking collisions; "
-            "the storyguide sets the bonus (Tales of Power pp. 106, 110).",
+            hint="Iron plates on the bows: slower, armoured, sturdier, better at "
+            "ramming and taking collisions; the storyguide sets the bonus (ToP pp."
+            " 106, 110).",
             show_if=_at_sea,
         ),
     ]

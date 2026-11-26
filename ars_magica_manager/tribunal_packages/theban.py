@@ -488,7 +488,7 @@ def longevity_form(saga: Saga, tribunal: Tribunal) -> Form:
             ),
             DialogField(
                 "great",
-                "A Ritual of the 10th magnitude or more",
+                "A Ritual of 10th magnitude or more",
                 "check",
                 False,
                 hint="Earns the crafter two tokens rather than one.",

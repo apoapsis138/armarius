@@ -208,10 +208,9 @@ def fields(existing: DeepCover | None) -> list[DialogField]:
             "Reputation xp",
             "int",
             c.reputation_xp,
-            hint="A cover starts at 1 (5 xp) with a noteworthy act before "
-            "witnesses; each staged event or tie (marriage, children, an "
-            "office) adds 1. A persona starts at 1, and gains every xp put "
-            "into Persona after it is made (p. 90).",
+            hint="A cover starts at 1 (5 xp) with a noteworthy act before witnesses; "
+            "each staged event or tie adds 1. A persona starts at 1 and gains all "
+            "Persona xp (p. 90).",
         ),
         DialogField(
             "last_used",
@@ -326,9 +325,8 @@ def _disguise_fields(character: Character) -> list[DialogField]:
             "Convincing someone of it",
             "check",
             True,
-            hint="Questioned by a suspicious priest, or covering a comrade's "
-            "slip: the Ease Factor falls by the cover's Reputation. Unticked: "
-            "establishing it, with no help from a Reputation (HoH:S p. 88).",
+            hint="Questioned by a suspicious priest, say: the Ease Factor falls by the "
+            "cover's Reputation. Unticked: establishing it (HoH:S p. 88).",
             show_if=_looks,
         ),
         *(

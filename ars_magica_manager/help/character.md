@@ -990,7 +990,7 @@ offers:
   leaves the disease be. A success returns the disease to the stage it
   began at and gives +3 to its next Recovery roll (Art & Academe p. 61).
   Whether surgery can help a disease at all is in its description.
-- **Surgical intervention when a roll fails**: tick it, choose the
+- **Surgery when a roll fails**: tick it, choose the
   chirurgeon and where the wounds are (the head, the torso, a limb), then
   roll. Each Recovery roll that fails gets a Surgery roll against 9.
   - Success holds the wound as a stable result, with its +3.
@@ -1430,7 +1430,7 @@ of the magus's known Rituals, or a level typed.
 
 It shows the vis still needed: a pawn a magnitude, halved with Mercurian
 Magic and a third more with Waster of Vis, less the sacrifice, never below
-0. **Pay the vis still needed from** takes the rest from their own raw vis
+0. **Pay the remaining vis from** takes the rest from their own raw vis
 (the default), or their laboratory's or the covenant's stores. It's of the
 Ritual's Technique unless **Of** names another Art. Save is refused when
 there isn't enough. Choose **Not now** to pay it by hand. Saving writes it
@@ -2806,7 +2806,7 @@ A Hermetic magus goes into Twilight, True Faith or not, unless something takes i
 
 - The False Gift, or an infernal tradition, brings Vituperation (Realms of Power: The Infernal p. 124).
 - A homunculus wizard has a Faerie Calling (Realms of Power: Faerie p. 118).
-- A magus who also has Miraculous Abilities has only one form of Warping for life, chosen by the troupe. Tick **Seeks Divine Ascent instead of Twilight** on their Aging & Warping form for the Ascent (Realms of Power: The Divine p. 63).
+- A magus who also has Miraculous Abilities has only one form of Warping for life, chosen by the troupe. Tick **Seeks Divine Ascent, not Twilight** on their Aging & Warping form for the Ascent (Realms of Power: The Divine p. 63).
 
 The Divine and Infernal answers come before Faerie's.
 
@@ -3339,7 +3339,7 @@ saga.
   year. Leave the last year blank for an open-ended stay.
 - **Fee**: pawns of vis, pounds of silver or seasons of service a year, or
   no fee, and **How many**.
-- **May study and copy from its library** and **Has a laboratory there**,
+- **May study and copy its library** and **Has a laboratory there**,
   and the **Conditions of hospitality** in words.
 
 Choosing a host of the Rhine Tribunal fills in its Peripheral Code's terms
@@ -4807,8 +4807,8 @@ they never keep both.
   to swap it on Virtues & Flaws rather than doing it.
 - Wealthy and Poor aren't Social Statuses and are never touched.
 
-The Ordination season offers the swap with **Swap their Social Status for
-the clergy's**, ticked by default. Untick it to leave their status for the
+The Ordination season offers the swap with **Take the clergy's Social Status**,
+ticked by default. Untick it to leave their status for the
 troupe to change on Virtues & Flaws. A major order means celibacy from
 then on (p. 35).
 

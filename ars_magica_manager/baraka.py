@@ -96,7 +96,7 @@ def baraka_fields(character: Character) -> list[DialogField]:
             for key, (label, value) in bk.TICKS.items()
         ),
         DialogField("donation", "Donation now (+1 to +3)", "int", 0),
-        DialogField("sin", "A recent sinful act (-1 to -3)", "int", 0),
+        DialogField("sin", "A recent sin (-1 to -3)", "int", 0),
         DialogField(
             "power",
             "The miracle asked",

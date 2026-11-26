@@ -444,7 +444,7 @@ def _law_fields(saga: Saga, case: Case | None) -> list[DialogField]:
     return [
         DialogField(
             "month",
-            "Arrived at the full moon of month",
+            "Arrived at the full moon of",
             "optint",
             attr(case, "month", None),
             hint="1 to 3 of the season filed: the war begins at the next "
@@ -492,7 +492,7 @@ def _law_fields(saga: Saga, case: Case | None) -> list[DialogField]:
         ),
         DialogField(
             "trace_months",
-            "Spell trace: months since it ended",
+            "Spell trace: months since ending",
             "optint",
             attr(case, "trace_months", None),
             hint="Blank: the spell is still active.",

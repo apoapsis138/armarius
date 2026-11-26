@@ -121,24 +121,24 @@ INTEREST_OF: dict[str, str] = {
 #: What each action on the Deeds chapter does, in a line.
 NOTES: dict[str, str] = {
     "end_session": "Confidence and Reputation experience for the session.",
-    "what_changed": "Their scores, spells, Virtues, Warping, wounds and holdings since "
-    "the last session.",
+    "what_changed": "Scores, spells, Virtues, Warping, wounds and holdings since the "
+    "last session.",
     "reputation_roll": "Whether someone has heard of them: Reputation against how far "
     "away they are.",
-    "house_acclaim": "An award of House Acclaim, or a roll with it, for a "
-    "magus of Bonisagus or Flambeau.",
+    "house_acclaim": "House Acclaim for a Bonisagus or Flambeau: an award, or a roll "
+    "with it.",
     "melee_event": "A roll on the Melee Events Table in a tournament's grand charge.",
     "disputatio": "A schoolmen's debate with another character.",
-    "make_ligature": "A small charm that helps one roll, tied to Artes "
-    "Liberales, Philosophiae or Medicine.",
+    "make_ligature": "A charm that helps one roll, tied to Artes Liberales, "
+    "Philosophiae or Medicine.",
     "font_of_knowledge": "Use an Ability they lack as if they had it at 2, through Font"
     " of Knowledge.",
     "tmre_divination": "A divination answering one question, as a "
     "Momentary Intellego spell would.",
     "tmre_astrology": "An astrological reckoning: Intelligence + Artes "
     "Liberales (Astronomy).",
-    "experiment_script": "As Mystagogue, a rite to find a new Initiation "
-    "Script, checked once the Initiate has carried it out.",
+    "experiment_script": "As Mystagogue, devise a new Initiation Script, checked once "
+    "it's carried out.",
     "theban_letter": "Composing or reading a letter in the Theban magi's "
     "rhetorical style.",
     "invoke_oath": "The injured party calls on the spirit that witnessed "
@@ -222,8 +222,8 @@ SEASON_NOTES: dict[str, str] = {
     "scholar_career": "A scholar's steps between their seasons, from a place at a "
     "school onward.",
     "turbulence": NOTES["turbulence"],
-    "grog_story_xp": "A story's experience for a grog, and the season it takes from "
-    "their yearly update.",
+    "grog_story_xp": "A grog's story experience, and the season it takes from their "
+    "yearly update.",
     "pilgrimage": "A pilgrimage's road, from its aim to its end.",
     "philosophic_alchemy": "Vis extraction left to digest while they do other work.",
 }
@@ -408,10 +408,9 @@ UNDERTAKINGS = "Undertakings"
 
 #: What each undertaking does, in a line.
 UNDERTAKING_NOTES: dict[str, str] = {
-    "begin_project": "Begin a great work of Hermetic Projects: a Great "
-    "Tower, a Menagerie, or a project followed stage by stage.",
-    "travel": "Work out a journey: the days, the cost and the arrival, "
-    "written in each traveller's Diary.",
+    "begin_project": "Begin a Hermetic Project: a Great Tower, a Menagerie, or a staged"
+    " project.",
+    "travel": "Work out a journey's days, cost and arrival, in each traveller's Diary.",
     "hunt": "A hunt on the road, once the party has found a hunting spot.",
     "area_lore": "Seeking along the road: Intelligence + Area Lore.",
 }

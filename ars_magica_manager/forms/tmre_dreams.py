@@ -212,7 +212,7 @@ def dream_fields(saga: Saga, character: Character) -> list[DialogField]:
         ),
         DialogField(
             "split_parma",
-            "Parma stretched over body and spirit (-3)",
+            "Parma over body and spirit (-3)",
             "check",
             False,
             show_if=in_spell,
@@ -232,7 +232,7 @@ def dream_fields(saga: Saga, character: Character) -> list[DialogField]:
         ),
         DialogField(
             "magus_power",
-            "The dreamer, not a magus, has a magus's power (+3)",
+            "A non-magus dreamer with magus-like power (+3)",
             "check",
             False,
             show_if=_is(RESHAPE),
@@ -637,7 +637,7 @@ def sacrifice_fields(saga: Saga, magus: Character) -> list[DialogField]:
         DialogField("made_by_magic", "Created or altered by magic", "check", False),
         DialogField(
             "pay_from",
-            "Pay the vis still needed from",
+            "Pay the remaining vis from",
             "select",
             vis_stores.CHARACTER,
             options=[*vis_stores.PLACES, ("Not now (pay it by hand)", NOT_NOW)],

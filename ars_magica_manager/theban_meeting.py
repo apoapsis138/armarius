@@ -260,9 +260,8 @@ class Assembly(core.Step):
                 options=accusable,
                 allow_blank=True,
                 placeholder="(no decree of defamation)",
-                hint="A polites present, said to have acted against the unity of "
-                "the polity; against one who is absent, the Conciliatory Board "
-                "decides after the Tribunal (The Sundered Eagle p. 32).",
+                hint="A polites present, accused of acting against the polity's unity; "
+                "for one absent, the Conciliatory Board decides after (TSE p. 32).",
             ),
             DialogField(
                 "accuser",
@@ -917,9 +916,8 @@ class Sortition(core.Step):
                     ("Some other cause: no shard", "other"),
                 ],
                 show_if=lambda values: bool(values.get("set_aside")),
-                hint="A polites eligible for the list who refuses consent is "
-                "given a shard (The Sundered Eagle p. 32); one unable to "
-                "attend stays on the list.",
+                hint="A polites eligible for the list who refuses consent gets a shard "
+                "(TSE p. 32); one unable to attend stays on the list.",
             ),
             core._note_field(meeting, self.key),
         ]

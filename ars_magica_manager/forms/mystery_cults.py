@@ -553,7 +553,7 @@ def _cult_fields(saga: Saga, existing: MysteryCult | None) -> list[DialogField]:
         ),
         DialogField(
             "agenda",
-            "As a secret society: what it works for",
+            "Secret society: what it works for",
             "text",
             attr(existing, "agenda", ""),
             hint="A cult is a faction in the Order's politics too: its members' "
@@ -855,7 +855,7 @@ def _script_fields(
         ),
         DialogField(
             "place",
-            "Travel to a special place and time (+3)",
+            "Special place and time (+3)",
             "check",
             bool(mc.count_of(existing, "place")),
         ),
@@ -889,7 +889,7 @@ def _script_fields(
         ),
         DialogField(
             "replaces",
-            "A Minor Virtue it replaces (+3)",
+            "A Minor Virtue replaced (+3)",
             "check",
             bool(mc.count_of(existing, "virtue_replaced")),
         ),

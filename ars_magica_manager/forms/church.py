@@ -250,7 +250,7 @@ def orders_fields(character: Character) -> list[DialogField]:
         ),
         DialogField(
             "barred",
-            "Barred from examination until a petition succeeds",
+            "Barred until a petition succeeds",
             "check",
             career.barred,
         ),
@@ -444,7 +444,7 @@ def ordination_fields(existing: Ordination | None, saga: Saga) -> list[DialogFie
             "from before play here.",
         ),
         DialogField("intelligence", "Intelligence then", "int", o.intelligence),
-        DialogField("score", "Their score in the Ability examined", "int", o.score),
+        DialogField("score", "Their score in the Ability", "int", o.score),
         DialogField("die", "Stress die", "int", o.die),
         DialogField("examiner", "Examined by", "text", o.examiner),
         DialogField("note", "Note", "text", o.note),
@@ -552,7 +552,7 @@ def season_fields(
         ),
         DialogField(
             "ordination_swap",
-            "Swap their Social Status for the clergy's",
+            "Take the clergy's Social Status",
             "check",
             plan.swap_status if plan is not None and ours else True,
             show_if=shown,
@@ -562,7 +562,7 @@ def season_fields(
         ),
         DialogField(
             "ordination_die",
-            "Stress die, if rolled at the table",
+            "Stress die rolled at the table",
             "optint",
             plan.die if plan is not None and ours else None,
             placeholder="(rolled when the season is applied)",

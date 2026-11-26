@@ -1268,7 +1268,7 @@ The cult's Lore, realm and founding.
 - **Members** are worked out, not listed. One joins by gaining the cult's Lore, so a member is everyone who has it, at any score, and the founder, who may have it at 0 (TMRE pp. 11, 13, 19). One of its Virtues alone doesn't make a member, since most can be taken at creation. Each member is shown at the highest degree whose Virtue they hold. Someone with only the Lore is a probationer.
 - **If anyone may join**, an unGifted Initiate needs an Ordeal in every Initiation, and their past Ordeals don't lower its Target (Hedge Magic Revised Edition p. 14).
 
-**As a secret society.** A cult is a faction in the Order's politics too, as a Tribunal's factions are. On Add or Edit, **As a secret society: what it works for** gives its agenda. **Its attitude toward** each of the troupe's covenants, from Hostile (-3) to Allied (+3), says how it stands with them. The chosen cult's details show both.
+**As a secret society.** A cult is a faction in the Order's politics too, as a Tribunal's factions are. On Add or Edit, **Secret society: what it works for** gives its agenda. **Its attitude toward** each of the troupe's covenants, from Hostile (-3) to Allied (+3), says how it stands with them. The chosen cult's details show both.
 
 At a Tribunal meeting, a covenant with a member among its magi leans with its cult before the debate:
 
@@ -1804,7 +1804,7 @@ Deleting a player asks first, and counts what loses them: the characters they pl
 ### What a signed-in player can do
 <!-- help: players-access -->
 
-Only the storyguide chooses who plays a character, in the character's Biographical Detail. Tick **Played by** for each player who plays them, several in troupe-style play, or **Played by everyone in the troupe** for a character the troupe shares, such as a grog. Any of a character's players may change the character. If two change the same thing at once, the later save is kept and the other is told.
+Only the storyguide chooses who plays a character, in the character's Biographical Detail. Tick **Played by** for each player who plays them, several in troupe-style play, or **Played by the whole troupe** for a character the troupe shares, such as a grog. Any of a character's players may change the character. If two change the same thing at once, the later save is kept and the other is told.
 
 A signed-in player can then:
 

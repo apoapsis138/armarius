@@ -110,7 +110,7 @@ def goetic_fields(saga: Saga, character: Character) -> list[DialogField]:
         ),
         DialogField(
             "in_circle",
-            "The spirit is held in a summoning circle",
+            "Held in a summoning circle",
             "check",
             True,
             show_if=lambda v: not summons(v),

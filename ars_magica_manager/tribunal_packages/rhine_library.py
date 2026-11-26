@@ -701,7 +701,7 @@ def search_fields(saga: Saga, magus_id: str | None) -> list[DialogField]:
         DialogField("level", "Level wanted", "int", 15, show_if=_shows_level),
         DialogField(
             "lore",
-            "Add their Durenmar Lore to the Quality",
+            "Add their Durenmar Lore to Quality",
             "check",
             False,
             hint="-1 for each earlier use of it in the same Art or Ability.",
@@ -718,7 +718,7 @@ def search_fields(saga: Saga, magus_id: str | None) -> list[DialogField]:
         ),
         DialogField(
             "read",
-            "They read what is found this season",
+            "They read what's found this season",
             "check",
             True,
             hint="A season of their credit, unless they're exempt.",

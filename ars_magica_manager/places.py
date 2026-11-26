@@ -650,9 +650,9 @@ def kind_fields(d: Mapping[str, Any]) -> list[DialogField]:
             "text",
             d.get(keys["Magic"], ""),
             placeholder="e.g. Ignem, Healing, Luck, Fearful",
-            hint="At most one: an Art (its spells and lab work take the aura "
-            "again), Healing, Luck, Distracting, or a feeling those without "
-            "The Gift take on (RoP: Magic pp. 15-16).",
+            hint="At most one: an Art (its spells and lab work take the aura again), "
+            "Healing, Luck, Distracting, or a mood the unGifted take on (RoP: "
+            "Magic pp. 15-16).",
             show_if=realm_is("Magic"),
         ),
         DialogField(
@@ -671,9 +671,9 @@ def kind_fields(d: Mapping[str, Any]) -> list[DialogField]:
             "select",
             d.get(keys["Divine"]) or aura_kinds.DOMINION,
             options=pairs(aura_kinds.DIVINE_KINDS),
-            hint="The Dominion comes from worship; an Empyreal aura from a "
-            "relic, saint, miracle or holy creature. Both wane at night and "
-            "wax on holy days (RoP: The Divine pp. 7, 12).",
+            hint="The Dominion comes from worship; an Empyreal aura from a relic, "
+            "saint, miracle or holy creature. Both wane at night, wax on holy days"
+            " (RoP: The Divine pp. 7, 12).",
             show_if=realm_is("Divine"),
         ),
     ]
@@ -875,9 +875,8 @@ def level_fields(
                 for realm, kinds in REGIO_KINDS.items()
                 for kind in kinds
             ],
-            hint="A Divine regio is terrestrial or celestial (RoP: The Divine "
-            "p. 13), an Infernal one Tartaran or Abyssal (RoP: The Infernal "
-            "p. 16); a kind not of its realm is ignored.",
+            hint="A Divine regio is terrestrial or celestial (RoP: The Divine p. 13), "
+            "an Infernal one Tartaran or Abyssal (RoP: The Infernal p. 16).",
         ),
         DialogField(
             "see",

@@ -20,7 +20,7 @@ def session_fields(character: Character) -> list[DialogField]:
     deeds done for each Reputation."""
     played = DialogField(
         "played",
-        "Played for a good part of it, and contributed",
+        "Played much of it and contributed",
         "check",
         True,
         hint="Without it the session earns no Confidence (DE p. 29).",

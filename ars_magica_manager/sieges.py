@@ -194,9 +194,9 @@ def fields(
             "Garrison (combat groups)",
             "optint",
             s.garrison if siege is not None else None,
-            hint="10 or fewer a Day, +1 Weight of Numbers; 11-20 a Week, +2; "
-            "21-40 a Month, +3; 41 or more a Season, +4. Blank: the army of the "
-            "lord holding the castle (linked below), else 10.",
+            hint="10 or fewer a Day (+1 Weight of Numbers); 11-20 a Week (+2); 21-40 a "
+            "Month (+3); 41+ a Season (+4). Blank: the holding lord's army, else "
+            "10.",
         ),
         DialogField(
             "defenses",
@@ -220,7 +220,7 @@ def fields(
             "enchanted", "Permanent defensive enchantments (+1)", "check", s.enchanted
         ),
         DialogField(
-            "moat", "A moat (Defenses a step higher against mines)", "check", s.moat
+            "moat", "A moat (Defenses up a step against mines)", "check", s.moat
         ),
         DialogField("miners", "Besiegers' units of miners", "int", s.miners),
         *(
@@ -707,11 +707,9 @@ def event_fields(siege: Siege) -> list[DialogField]:
             "check",
             False,
             show_if=lambda v: v.get("event") == rules.ESCALADE,
-            hint="Instead of a single event: a battle on Conflicts with only "
-            "the troops at this wall, the Garrison row's Weight of Numbers and "
-            "the Defense Bonus for the garrison, and no baggage to strike; "
-            "each besiegers' win takes the Garrison a step down (Lords of Men "
-            "pp. 114-115).",
+            hint="Instead of one event: a battle on Conflicts with only this wall's "
+            "troops, the Garrison's Weight of Numbers and Defense Bonus, and no "
+            "baggage; each win lowers the Garrison a step (LoM pp. 114-115).",
         ),
         DialogField(
             "result",

@@ -142,7 +142,7 @@ def _roll_fields(
         fields.append(
             DialogField(
                 f"{prefix}_disaster",
-                "The Disaster (5 or more zeroes)",
+                "Disaster (5 or more zeroes)",
                 "select",
                 "lab",
                 options=[
@@ -341,7 +341,7 @@ def _discovery_fields(
     fields += [
         DialogField(
             f"{key}_ability",
-            "The Ability it teaches (15 xp)",
+            "Ability taught (15 xp)",
             "select",
             "Magic Theory",
             options=pairs(abilities),

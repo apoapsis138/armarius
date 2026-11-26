@@ -97,10 +97,9 @@ def scored_trait_fields(
                 "Bad Reputation?",
                 "check",
                 attr(existing, "bad", False),
-                hint="A bad Reputation with its own positive score, as an "
-                "Academic one is: Good and Bad ones are separate, and a roll "
-                "takes off the highest Bad one (Art & Academe p. 103). Any "
-                "other bad Reputation may instead be typed below 0.",
+                hint="A bad Reputation with its own positive score, as an Academic one "
+                "is; a roll takes off the highest Bad one (A&A p. 103). Others may"
+                " go below 0.",
             ),
         ]
     if replaceable:
@@ -126,19 +125,18 @@ def scored_trait_fields(
                 "Faerie Sympathy Trait?",
                 "check",
                 kind in (SYMPATHY, TEMPORARY),
-                hint="A bond with the Faerie realm (Winter, Iron): a fitting "
-                "Ability's specialty on a stress die; rises with xp to the "
-                "Warping Score; sets the Faerie Rank (RoP: Faerie pp. 102-103).",
+                hint="A bond with the Faerie realm: a fitting Ability's specialty on a "
+                "stress die; rises with xp to the Warping Score; sets the Faerie "
+                "Rank (RoP: Faerie pp. 102-103).",
             ),
             DialogField(
                 "temporary",
                 "Temporary Sympathy Trait?",
                 "check",
                 kind == TEMPORARY,
-                hint="From sympathetic influence or a Grant rite: works as a "
-                "Sympathy Trait, but xp doesn't raise it and it isn't in the "
-                "Faerie Rank (RoP: Faerie pp. 103-105, 127). A tinted aura's "
-                "Traits are plain Personality Traits.",
+                hint="From sympathetic influence or a Grant rite: a Sympathy Trait that"
+                " xp doesn't raise, outside the Faerie Rank (RoP: Faerie pp. "
+                "103-105, 127). A tinted aura's are plain Personality Traits.",
             ),
         ]
     if include_known:

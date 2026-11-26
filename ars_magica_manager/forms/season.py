@@ -1033,10 +1033,9 @@ def _script_fields(
             allow_blank=True,
             placeholder="(nothing given up)",
             show_if=initiation,
-            hint="What the Script gives up, taken when the season is played "
-            "even if the Initiation fails: wealth, a season serving the cult, "
-            "a talisman, familiar or device, books, vis or an apprentice. Its "
-            "bonus is the Script's Sacrifice component (TMRE pp. 12, 15-16).",
+            hint="What the Script gives up, taken even if the Initiation fails: wealth,"
+            " service, a talisman, familiar, device, books, vis or an apprentice "
+            "(TMRE pp. 12, 15-16).",
         ),
         DialogField(
             "sacrifice_art",
@@ -1070,9 +1069,8 @@ def _script_fields(
             "check",
             bool(plan and plan.experimental_script),
             show_if=initiation,
-            hint="No Script, or one that falls short: the Script bonus above is "
-            "the proposed rite's; rolls the Extraordinary Results chart and "
-            "the rite's validity.",
+            hint="No Script, or one that falls short: the bonus above is the proposed "
+            "rite's; rolls Extraordinary Results and the rite's validity.",
         ),
         DialogField(
             "script_risk",
@@ -1532,10 +1530,9 @@ def _teacher_field(
             "record_lectures",
             "make_wondrous_item",
         ),
-        hint="A teacher plans Teach for the same season; the magus you "
-        "assist plans lab work. An Initiation's Mystagogue: none for a "
-        "self-initiation. A wondrous item's one assistant (half their "
-        "Craft).",
+        hint="A teacher plans Teach that season; the magus you assist plans lab work. "
+        "Mystagogue: none for self-initiation. Wondrous item: one assistant (half "
+        "their Craft).",
     )
 
 
@@ -1665,7 +1662,7 @@ def _book_work_fields(
         ),
         DialogField(
             "culture_lore",
-            "Has Area Lore 3 of the source culture",
+            "Area Lore 3 of the source culture",
             "check",
             attr(existing, "culture_lore", False),
             show_if=_activity_is(book_seasons.TRANSLATE_BOOK),
@@ -2029,8 +2026,8 @@ def _when_field(
         "select",
         when_value(opened),
         options=options,
-        hint="This season or one up to a year ahead. A later season is worked "
-        "out from the character as the seasons planned before it leave them.",
+        hint="This season or one up to a year ahead, worked out from the seasons "
+        "planned before it.",
     )
 
 

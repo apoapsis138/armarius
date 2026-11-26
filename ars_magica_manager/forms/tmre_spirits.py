@@ -250,7 +250,7 @@ def spirits_fields(saga: Saga, character: Character) -> list[DialogField]:
         ),
         DialogField(
             "rituals",
-            "Ritual effects' levels, in order of use",
+            "Ritual effects' levels, in order",
             "text",
             "25",
             show_if=on(EMPOWERMENT),
@@ -275,7 +275,7 @@ def spirits_fields(saga: Saga, character: Character) -> list[DialogField]:
         ),
         DialogField(
             "size_levels",
-            "Levels added for the Haunt's Size",
+            "Levels added for Haunt's Size",
             "int",
             0,
             show_if=on(GHOST),

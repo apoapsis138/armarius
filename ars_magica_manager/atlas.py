@@ -670,9 +670,8 @@ def map_fields(saga: Saga, atlas_map: AtlasMap | None = None) -> list[DialogFiel
             "Placeholder width",
             "optint",
             _shape(atlas_map)[0],
-            hint="With no picture yet, a placeholder is drawn in the shape of "
-            "the map to come (3 by 2, or its size in pixels), so the pins keep "
-            "their places when the picture arrives.",
+            hint="A placeholder in the map's shape (3 by 2, or its pixel size) keeps "
+            "the pins in place until the picture arrives.",
             show_if=lambda values: not values.get("picture"),
         ),
         DialogField(

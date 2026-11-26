@@ -111,7 +111,7 @@ def project_fields(project: LandProject | None) -> list[DialogField]:
     found += [
         DialogField(
             "unnatural",
-            "An unnatural material (Muto requisite, +1)",
+            "Unnatural material (Muto requisite, +1)",
             "check",
             p.unnatural,
             hint="Burning or self-healing stone needs further requisites (TME p. 58).",
@@ -143,7 +143,7 @@ def project_fields(project: LandProject | None) -> list[DialogField]:
         ),
         DialogField(
             "slope",
-            "An ablative slope at the wall's foot",
+            "Ablative slope at the wall's foot",
             "check",
             p.slope,
             show_if=_not_solid,
@@ -166,7 +166,7 @@ def project_fields(project: LandProject | None) -> list[DialogField]:
         ),
         DialogField(
             "aegis",
-            "Aegis of the Hearth's level (0: none)",
+            "Aegis of the Hearth level (0: none)",
             "int",
             p.aegis,
             hint="Over the whole island, raised for its size; it may keep "

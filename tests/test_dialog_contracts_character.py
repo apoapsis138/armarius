@@ -992,7 +992,7 @@ CONTRACTS: dict[str, Contract] = {
     ),
     # An apprentice's magic and the Gauntlet (Apprentices).
     "turbulence": Contract(
-        prefill={"Why": "botch", "Aegis of the Hearth they had no part in": "0"},
+        prefill={"Why": "botch", "Aegis they had no part in": "0"},
         edits={"Sympathetic multiplier": "1"},
         saved=lambda s: s.character("mag1").diary[-1].name,
         expected="Turbulence",
@@ -1296,7 +1296,7 @@ CONTRACTS: dict[str, Contract] = {
             "The altar's deity": "Mercury",
             "The beast sacrificed": "a white ram",
             "Pawns it stands in for": "2",
-            "Pay the vis still needed from": "not_now",
+            "Pay the remaining vis from": "not_now",
         },
         saved=lambda s: character(s).diary[-1].name,
         expected="Sacrifice to Mercury",
@@ -1316,7 +1316,7 @@ CONTRACTS: dict[str, Contract] = {
         edits={
             "The research": "spell",
             "Magnitude of the spell": "6",
-            "In a folio (twice the points)": True,
+            "In a folio (double points)": True,
         },
         saved=lambda s: [
             (r.score, r.deeds, r.reach)
@@ -1450,7 +1450,7 @@ CONTRACTS: dict[str, Contract] = {
         edits={
             "Year": "1205",
             "Intelligence then": "1",
-            "Their score in the Ability examined": "1",
+            "Their score in the Ability": "1",
             "Stress die": "7",
             "Result": "learned",
         },
@@ -1493,12 +1493,12 @@ CONTRACTS: dict[str, Contract] = {
             "Path": "",
             "Guide": "house",
             "A ghostly Primus's Presence": "0",
-            "Head bound in infancy (or a like modification) for": "",
+            "Head bound in infancy for": "",
         },
         edits={
             "Path": "seeming",
             "A ghostly Primus's Presence": "2",
-            "Head bound in infancy (or a like modification) for": "body",
+            "Head bound in infancy for": "body",
         },
         saved=lambda s: (
             character(s).enigma.path,

@@ -255,7 +255,7 @@ def change_fields(saga: Saga, character: Character) -> list[DialogField]:
         ),
         DialogField(
             "keep_old",
-            "Keep the old status too (its description allows it)",
+            "Keep the old status too (if allowed)",
             "check",
             False,
             show_if=_is(vc.SOCIAL_STATUS),
@@ -290,7 +290,7 @@ def change_fields(saga: Saga, character: Character) -> list[DialogField]:
         ),
         DialogField(
             "new_to_saga",
-            "New to the saga (larger changes allowed)",
+            "New to the saga (bigger changes)",
             "check",
             False,
             show_if=_is(vc.EXCHANGE),
