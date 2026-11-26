@@ -72,20 +72,17 @@ COVENANTS_USE: dict[int, dict[str, tuple[str, ...]]] = {
     11: {"Val Sombre": (deeds.MANORS,)},
 }
 
-#: The guides whose sagas come from a Tribunal's pack, full of characters
-#: in the background.
-PACK_GUIDES = (13, 14, 15)
-
 
 @cache
-def _sagas() -> tuple[tuple[int, Saga], ...]:
+def _texts() -> tuple[tuple[int, str], ...]:
     return tuple(
-        (
-            t.number,
-            storage.saga_from_data(json.loads(t.path.read_text(encoding="utf-8"))),
-        )
-        for t in tutorials.listed()
+        (t.number, t.path.read_text(encoding="utf-8")) for t in tutorials.listed()
     )
+
+
+def _sagas() -> list[tuple[int, Saga]]:
+    """Each tutorial as a saga of its own, read afresh for each test."""
+    return [(n, storage.saga_from_data(json.loads(text))) for n, text in _texts()]
 
 
 def test_every_guide_has_a_tutorial_in_order():
@@ -163,30 +160,30 @@ def test_every_guide_step_finds_the_interests_it_needs_on():
     assert not wrong, "\n".join(wrong)
 
 
-def test_a_walkthrough_shows_only_defaults_and_what_its_guide_uses():
+def test_a_walkthrough_character_has_its_defaults_and_its_guides_needs_on():
+    """Only those: a character in the background, a pack saga's crowd
+    among them, is at its plain Default Interests."""
     wrong = []
     for number, saga in _sagas():
         for character in saga.characters:
             needs = FEATURED[number].get(character.name, ())
             off = deeds.interests_off(character)
+            should = [i for i in deeds.defaults_off(character) if i not in needs]
             wrong += [
-                f"{number}: {character.name} has {i} on"
-                for i in deeds.defaults_off(character)
-                if i not in needs and i not in off
+                f"{number}: {character.name} has {i} on" for i in should if i not in off
+            ]
+            wrong += [
+                f"{number}: {character.name} has {i} off"
+                for i in off
+                if i not in should
             ]
     assert not wrong, "\n".join(wrong)
 
 
-def test_the_background_of_a_pack_saga_is_at_its_plain_defaults():
-    wrong = [
-        f"{number}: {c.name} has {c.interests_off}, not {deeds.defaults_off(c)}"
-        for number, saga in _sagas()
-        if number in PACK_GUIDES
-        for c in saga.characters
-        if c.name not in FEATURED[number]
-        and sorted(c.interests_off) != sorted(deeds.defaults_off(c))
-    ]
-    assert not wrong, "\n".join(wrong)
+def test_every_tutorial_has_its_guides_table():
+    numbers = [t.number for t in tutorials.listed()]
+    assert sorted(FEATURED) == numbers
+    assert set(COVENANTS_USE) <= set(numbers)
 
 
 def test_a_covenant_has_manors_and_ships_off_unless_its_guide_uses_them():
