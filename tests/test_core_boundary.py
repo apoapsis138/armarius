@@ -97,7 +97,7 @@ def test_no_core_module_imports_a_ui():
 
 
 @pytest.mark.parametrize("front_end", sorted(FRONT_ENDS))
-def test_a_front_end_imports_only_the_core_and_its_own_libraries(front_end):
+def test_a_front_end_imports_only_the_core_and_its_own_libraries(front_end: str):
     bad = sorted(
         f"{_module_name(path)} imports {module}"
         for path in _files(front_end)
@@ -107,7 +107,7 @@ def test_a_front_end_imports_only_the_core_and_its_own_libraries(front_end):
     assert not bad, "; ".join(bad)
 
 
-def test_the_check_catches_a_ui_import(tmp_path):
+def test_the_check_catches_a_ui_import(tmp_path: Path):
     root = tmp_path / PACKAGE
     (root / "rules").mkdir(parents=True)
     module = root / "rules" / "leaky.py"
@@ -149,6 +149,8 @@ LAYERS: tuple[tuple[str, frozenset[str]], ...] = (
             {
                 "",
                 "arts",
+                # The interests a new character starts with: `deeds` asks it.
+                "default_interests",
                 # A written Handout's text read into blocks (ADR 0021).
                 "handout_markup",
                 # Its blocks laid on a Stationery, for each front-end to draw.
@@ -292,7 +294,7 @@ def test_no_import_points_up_a_layer():
     )
 
 
-def test_the_layer_check_catches_an_upward_import(tmp_path):
+def test_the_layer_check_catches_an_upward_import(tmp_path: Path):
     root = tmp_path / PACKAGE
     (root / "models").mkdir(parents=True)
     (root / "rules").mkdir()

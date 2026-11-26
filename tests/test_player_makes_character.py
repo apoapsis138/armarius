@@ -8,7 +8,7 @@ from dataclasses import asdict
 
 import pytest
 
-from ars_magica_manager import creation, players, seat, viewing
+from ars_magica_manager import creation, deeds, players, seat, viewing
 from ars_magica_manager.forms import creation as creation_forms
 from ars_magica_manager.models import (
     Character,
@@ -94,6 +94,15 @@ def test_the_character_a_seated_player_makes_names_them():
     made = creation.add_character(saga, "Leandro", "magus", "home")
     assert made.background.player_ids == ["ana"]
     assert players.characters_of(saga, ana) == [made]
+
+
+def test_a_seated_players_new_character_starts_with_its_defaults():
+    saga, ana = _saga()
+    seat.sign_in(saga, ana)
+    made = creation.add_character(saga, "Leandro", "magus", "home")
+    off = deeds.interests_off(made)
+    assert deeds.RESEARCH not in off and deeds.TRIBUNAL not in off
+    assert deeds.KNIGHTLY in off
 
 
 def test_the_storyguide_makes_a_character_no_one_plays():

@@ -1,0 +1,1 @@
+**New characters start with interests that fit them.** A new magus has Research and Tribunal & Order, a companion Religion, a grog Covenfolk and Craft & Trade, and an animal grog Covenfolk, so a new sheet is shorter. They follow the character's type until you save Edit Interests. Characters already saved keep what they had.

@@ -136,11 +136,6 @@ def _card(
     )
 
 
-def _has(character: Character, interest: str) -> bool:
-    """Whether the interest applies to him at all."""
-    return character.type == "magus" or interest not in deeds.MAGI_ONLY
-
-
 def interest_cards(
     saga: Saga, character: Character, names: Mapping[str, str]
 ) -> list[FormCard]:
@@ -150,7 +145,7 @@ def interest_cards(
     return [
         _card(saga, character, interest, names)
         for interest in deeds.INTERESTS
-        if _has(character, interest)
+        if deeds.applies(character, interest)
     ]
 
 
@@ -235,19 +230,22 @@ def interests_text(character: Character) -> str:
 
 
 def interests_form(saga: Saga, character: Character, names: Mapping[str, str]) -> Form:
-    """A tick for each interest he may turn off."""
+    """A tick for each interest the character may turn off, ticked as they
+    are now (the Default Interests, until chosen). Saving makes the choice
+    the player's."""
 
     def fields() -> list[DialogField]:
+        off = deeds.turned_off(character)
         return [
             DialogField(
                 _key(i),
                 i,
                 "check",
-                value=i not in character.interests_off,
+                value=i not in off,
                 hint=deeds.SUMMARIES[i],
             )
             for i in OPTIONAL
-            if _has(character, i)
+            if deeds.applies(character, i)
             and not (
                 i in deeds.CHARACTER_GATES
                 and deeds.CHARACTER_GATES[i].kept_on(character)
@@ -255,12 +253,12 @@ def interests_form(saga: Saga, character: Character, names: Mapping[str, str]) -
         ]
 
     def apply(values: dict[str, Any]) -> list[str]:
-        # An interest with no field here (kept on) stays as it was chosen.
+        # An interest with no field here (kept on) stays as it was.
+        off = deeds.turned_off(character)
         character.interests_off = [
-            i
-            for i in OPTIONAL
-            if not values.get(_key(i), i not in character.interests_off)
+            i for i in OPTIONAL if not values.get(_key(i), i not in off)
         ]
+        character.interests_chosen = True
         return notes(f"{character.name}: {interests_text(character)}")
 
     return Form(

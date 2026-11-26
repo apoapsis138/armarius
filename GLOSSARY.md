@@ -316,6 +316,16 @@ The walk through the book's creation steps for one record In Creation, with
 each step's budget and checks; it edits the real record.
 _Avoid_: Wizard, character builder
 
+**Interest**:
+A kind of deed a character or covenant takes up; an interest that's off
+leaves its actions, and any chapter of its own, off the sheet.
+_Avoid_: category, filter
+
+**Default Interests**:
+The interests a new character of a given type starts with; the player can
+change them on the worksheet's Review Interests step and later on the
+Manage chapter.
+
 **Library**:
 Every book at a covenant: those it owns and those owned by its laboratories
 and characters. It is a view, not a record of its own.
