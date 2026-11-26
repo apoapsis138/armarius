@@ -15,6 +15,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass
 
+from . import default_interests
 from .models import Character, Covenant
 from .rules import faiths
 
@@ -416,13 +417,42 @@ UNDERTAKING_NOTES: dict[str, str] = {
 }
 
 
+def applies(character: Character, interest: str) -> bool:
+    """Whether `interest` applies to `character` at all (MAGI_ONLY)."""
+    return character.type == "magus" or interest not in MAGI_ONLY
+
+
+def turned_off(character: Character) -> list[str]:
+    """The interests turned off for `character`, before its record keeps
+    any on: while it is In Creation and its interests aren't chosen, every
+    one that applies and its Default Interests leave out; otherwise those
+    the player turned off."""
+    if not character.in_creation or character.interests_chosen:
+        return list(character.interests_off)
+    return defaults_off(character)
+
+
+def defaults_off(character: Character) -> list[str]:
+    """Every interest that applies to `character` and its Default Interests
+    leave out."""
+    on = {interest for interest, _ in default_interests.defaults(character)}
+    return [i for i in OPTIONAL if i not in on and applies(character, i)]
+
+
+def keep_interests(character: Character) -> None:
+    """Make `character`'s interests, as they are now, its own: they no
+    longer follow its Default Interests."""
+    character.interests_off = turned_off(character)
+    character.interests_chosen = True
+
+
 def interests_off(character: Character) -> list[str]:
-    """The interests that are off for `character`: those turned off, but
-    never one its record keeps on (CHARACTER_GATES)."""
+    """The interests that are off for `character`: those turned off
+    (turned_off), but never one its record keeps on (CHARACTER_GATES)."""
     gates = CHARACTER_GATES
     return [
         i
-        for i in character.interests_off
+        for i in turned_off(character)
         if i not in gates or not gates[i].kept_on(character)
     ]
 

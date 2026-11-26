@@ -5071,9 +5071,16 @@ for a covenant that will never take them up. A manor or a ship on record
 keeps them on. Hermetic Projects need no card, since they wait until a
 project begins.
 
-Everything starts ticked, so nothing goes missing until you say so. A new
-character's Creation Worksheet has a Review Interests step for it. Ticking
-an interest doesn't offer what the rules don't. An Artist's Career still
+A new character starts with the interests that fit its type, its
+**Default Interests**, besides Session & Reputation: a magus has Research
+and Tribunal & Order, a companion or mythic companion Religion, a grog
+Covenfolk and Craft & Trade, and an animal grog Covenfolk. Its Creation
+Worksheet has a Review Interests step for them. While the character is In
+Creation they follow its type, until you save Edit Interests, which makes
+them your own. Changing its type while In Creation goes back to the new
+type's defaults, and moving to In Play keeps them as they are. A covenant
+starts with everything ticked, and characters already saved keep what
+they had. Ticking an interest doesn't offer what the rules don't. An Artist's Career still
 needs a Craft or Profession, and every action still needs its book in
 play.
 

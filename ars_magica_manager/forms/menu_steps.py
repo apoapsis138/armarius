@@ -15,6 +15,7 @@ from .. import (
     creation,
     creatures,
     cult_transfer,
+    deeds,
     deletion,
     neighbours,
     packs,
@@ -201,6 +202,8 @@ def change_detail(saga: Saga, record: Character | Covenant, detail: str) -> Comm
         if detail == FULL:
             creation.set_in_creation(saga, record, True)
         else:
+            if isinstance(record, Character):
+                deeds.keep_interests(record)
             record.in_creation = False
 
     verb = (
