@@ -26,13 +26,6 @@ data/exports/
 # App-wide settings (e.g. selected theme) -- local machine state, not source
 data/app_settings.json
 
-# The maintainer's local setup, not part of the public repo.
-CLAUDE.md
-.claude/
-tests/test_prefer_tools_hook.py
-
-# Internal working notes, not meant for the public repo.
-HANDOFF.md
 # Rules notes and source PDFs live outside the repo.
 reference/
 
