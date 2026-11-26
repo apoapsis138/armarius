@@ -149,8 +149,6 @@ LAYERS: tuple[tuple[str, frozenset[str]], ...] = (
             {
                 "",
                 "arts",
-                # The interests a new character starts with: `deeds` asks it.
-                "default_interests",
                 # A written Handout's text read into blocks (ADR 0021).
                 "handout_markup",
                 # Its blocks laid on a Stationery, for each front-end to draw.
@@ -172,7 +170,19 @@ LAYERS: tuple[tuple[str, frozenset[str]], ...] = (
         ),
     ),
     # The catalogs and the books they come from: data the rules look up.
-    ("data", frozenset({"book_kinds", "catalog", "sourcebooks"})),
+    (
+        "data",
+        frozenset(
+            {
+                "book_kinds",
+                "catalog",
+                # The interests a new character starts with, by its House
+                # and Virtues read from the catalogs: `deeds` asks it.
+                "default_interests",
+                "sourcebooks",
+            }
+        ),
+    ),
     # The rules, and the top-level modules that are rules too (a covenant's
     # Boons and Hooks, what a book is worth, raw vis, the dice line every
     # roll is written in): they keep to the layers below.
