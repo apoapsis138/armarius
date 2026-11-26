@@ -104,9 +104,9 @@ _SEASONS = (
         "devotion",
         "path_devotion",
         "Spiritual path: devotion",
-        "A season of personal devotion: +1 toward the Revelation named, and a "
-        "Devotion Point toward the saint in its details (his patron if none). "
-        "Only exposure, in Dominion Lore.",
+        "A season of personal devotion: +1 toward the Revelation named, and a Devotion "
+        "Point toward the saint in its details (their patron if none). Exposure in "
+        "Dominion Lore.",
         "Dominion Lore only.",
     ),
     (

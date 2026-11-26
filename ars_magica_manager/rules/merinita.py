@@ -257,7 +257,7 @@ def fatigue_cost(might: int, reached: str) -> int:
     2, ...) x its Might / 5 (p. 89; Might 10, Winded 2, Weary 4)."""
     levels: tuple[str, ...] = FATIGUE_LEVELS
     if reached not in levels[1:]:
-        raise ValueError(f"{reached!r} isn't a Fatigue level she can reach.")
+        raise ValueError(f"{reached!r} isn't a Fatigue level they can reach.")
     return levels.index(reached) * might_per_fatigue(might)
 
 
@@ -617,7 +617,7 @@ def charm_problems(magus: Character, charms: Sequence[tuple[str, str]]) -> list[
         found.append(f"{magus.name} hasn't been Initiated into Charm Magic.")
     most = faerie_magic(magus)
     if len(charms) > most:
-        found.append(f"A spell holds at most {most} charms, her Faerie Magic.")
+        found.append(f"A spell holds at most {most} charms, their Faerie Magic.")
     return found
 
 

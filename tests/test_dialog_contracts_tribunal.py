@@ -196,7 +196,7 @@ CONTRACTS: dict[str, Contract] = {
     ),
     "court roll": Contract(
         prefill={"Law argued": "civil"},
-        edits={"Who pleads": "comp1", "He truly is innocent": True},
+        edits={"Who pleads": "comp1", "They truly are innocent": True},
         saved=lambda s: bool(s.neighbour("soest").details["court_cases"][0]["verdict"]),
         expected=True,
         live={"#fields-live": "Against 3 = 6 -3 truly innocent"},
@@ -837,7 +837,7 @@ CONTRACTS: dict[str, Contract] = {
         shown={"#trib-archai-list": "to 1232"},
     ),
     "edit ostracism": Contract(
-        prefill={"Meeting (year)": "1214", "Sherds against him": "30"},
+        prefill={"Meeting (year)": "1214", "Sherds against them": "30"},
         edits={"Sherds cast": "100", "Exile ends (year)": "1230"},
         saved=lambda s: s.tribunal("alps").package_data["alps"]["ostracised"][0][
             "until"
@@ -879,12 +879,12 @@ CONTRACTS: dict[str, Contract] = {
         prefill={
             "Applicant": "mag1",
             "Mark given by": "mag_sketch",
-            "Asked of him": "",
+            "Asked of them": "",
         },
         edits={
             "Applicant": "mag1",
             "Mark given by": "mag_sketch",
-            "Asked of him": "a tract",
+            "Asked of them": "a tract",
         },
         saved=lambda s: s.tribunal("rhine").package_data["rhine"]["marks"]["mag1"][0][
             "sponsor_id"
@@ -970,7 +970,7 @@ CONTRACTS: dict[str, Contract] = {
         shown={"#manors-list": "Hagen"},
     ),
     "area lore on a manor": Contract(
-        prefill={"Looking for": "free_goods", "He lives": "home"},
+        prefill={"Looking for": "free_goods", "They live": "home"},
         edits={"Who asks": "comp1", "Looking for": "major_inn"},
         saved=lambda s: s.character("comp1").diary[-1].name.startswith("Area Lore"),
         expected=True,
@@ -1091,16 +1091,16 @@ CONTRACTS: dict[str, Contract] = {
         live={"#fields-live": "formulaic or ritual"},
     ),
     "character acts": Contract(
-        prefill={"His roll": "Qik + Athletics - Encumbrance", "Harder or easier": "0"},
-        edits={"What he does": "Leaps back", "Harder or easier": "-3"},
+        prefill={"Roll": "Qik + Athletics - Encumbrance", "Harder or easier": "0"},
+        edits={"What they do": "Leaps back", "Harder or easier": "-3"},
         saved=lambda s: s.neighbour("drachenfels").details["diary"][-1]["text"],
         expected="Leandro found the path backwards.",
-        invalid={"His roll": "Luck + Dice"},
+        invalid={"Roll": "Luck + Dice"},
         live={"#fields-live": "adjusted to 9"},
     ),
     "character faces ward": Contract(
-        prefill={"His Magic Resistance": ""},
-        edits={"His Magic Resistance": "5"},
+        prefill={"Magic Resistance": ""},
+        edits={"Magic Resistance": "5"},
         saved=lambda s: s.neighbour("drachenfels").details["diary"][-1]["text"],
         expected="Leandro found the path backwards.",
         live={"#fields-live": "passes it untouched"},

@@ -109,7 +109,7 @@ def standing_words(career: ChurchCareer) -> str:
     if standing == GOOD_STANDING:
         return ok(label)
     if standing == IRREGULAR:
-        return warn(f"{label}: no Faith Points until he confesses")
+        return warn(f"{label}: no Faith Points until they confess")
     return bad(label)
 
 
@@ -156,8 +156,8 @@ def next_line(saga: Saga, character: Character) -> str:
     career = character.church
     if career.barred:
         return bad(
-            "Barred: his last examination botched; a petition (EF 9) must let "
-            f"him sit again ({TC} p. 34)."
+            "Barred: their last examination botched; a petition (EF 9) must let "
+            f"them sit again ({TC} p. 34)."
         )
     grade = cl.next_grade(career)
     if grade is None:
@@ -170,7 +170,7 @@ def next_line(saga: Saga, character: Character) -> str:
     )
     age = _age(saga, character)
     if grade.name == "Acolyte" and age is not None and age < 20:
-        line += " " + warn(f"An acolyte is usually past twenty; he is {age}.")
+        line += " " + warn(f"An acolyte is usually past twenty; they're {age}.")
     return line
 
 
@@ -228,8 +228,8 @@ def orders_fields(character: Character) -> list[DialogField]:
             "select",
             career.grade,
             options=[("None (a layman)", ""), *pairs(cl.NAMES)],
-            hint="Set here a grade he held before play; a season's Ordination "
-            "examines him for the next.",
+            hint="A grade they held before play; an Ordination season examines them for"
+            " the next.",
         ),
         DialogField("diocese", "Birth diocese", "text", career.diocese),
         DialogField(
@@ -238,7 +238,7 @@ def orders_fields(character: Character) -> list[DialogField]:
             "select",
             career.standing,
             options=[(cl.STANDING_LABELS[s], s) for s in STANDINGS],
-            hint=f"Irregular: no Faith Points until he confesses ({TC} p. 37).",
+            hint=f"Irregular: no Faith Points until they confess ({TC} p. 37).",
         ),
         DialogField(
             "benefice",
@@ -356,7 +356,7 @@ def ordination_entry(o: Ordination) -> Entry:
     if o.examiner:
         extras.append(f"Examined by {o.examiner.lower()}")
     if o.elsewhere:
-        extras.append("outside his birth diocese")
+        extras.append("outside their birth diocese")
     note = "; ".join(extras + ([o.note] if o.note else []))
     return Entry(
         row=_col(o.grade, W_GRADE)
@@ -403,7 +403,7 @@ def ordination_rows(character: Character) -> list[tuple[int | None, str]]:
         return [
             (
                 None,
-                "[dim]None yet: an Ordination season examines him for the next "
+                "[dim]None yet: an Ordination season examines them for the next "
                 "grade.[/]",
             )
         ]
@@ -444,7 +444,7 @@ def ordination_fields(existing: Ordination | None, saga: Saga) -> list[DialogFie
             "from before play here.",
         ),
         DialogField("intelligence", "Intelligence then", "int", o.intelligence),
-        DialogField("score", "His score in the Ability examined", "int", o.score),
+        DialogField("score", "Their score in the Ability examined", "int", o.score),
         DialogField("die", "Stress die", "int", o.die),
         DialogField("examiner", "Examined by", "text", o.examiner),
         DialogField("note", "Note", "text", o.note),
@@ -522,7 +522,7 @@ def season_fields(
     sought = plan.title if plan is not None and ours else ""
     if sought not in {g.name for g in grades}:
         sought = grades[0].name if grades else ""
-    diocese = character.church.diocese or "his birth diocese"
+    diocese = character.church.diocese or "their birth diocese"
     return [
         DialogField(
             "ordination_grade",
@@ -544,7 +544,7 @@ def season_fields(
         ),
         DialogField(
             "ordination_elsewhere",
-            "Ordained outside his birth diocese",
+            "Ordained outside their birth diocese",
             "check",
             bool(plan.ordained_elsewhere) if plan is not None and ours else False,
             show_if=shown,
@@ -552,11 +552,11 @@ def season_fields(
         ),
         DialogField(
             "ordination_swap",
-            "Swap his Social Status for the clergy's",
+            "Swap their Social Status for the clergy's",
             "check",
             plan.swap_status if plan is not None and ours else True,
             show_if=shown,
-            hint="A character has one Social Status: the grade's replaces his "
+            hint="The grade's Social Status replaces their "
             f"own (Clerk, then Priest; {TC} pp. 25, 34; DE p. 63). Untick to "
             "leave it for the troupe to change on Virtues & Flaws.",
         ),
@@ -606,7 +606,7 @@ def examination_text(saga: Saga, character: Character, grade_name: str) -> str:
         "Reputation of 1 for ignorance",
         f"  {bad(f'{ease - cl.PASSING_MISS - 1} or less')}  not ordained; appeal "
         f"by petition (EF {cl.APPEAL_EASE}), or try again next season",
-        f"  {bad('botch')}  only a petition lets him try again",
+        f"  {bad('botch')}  only a petition lets them try again",
         "",
         f"[dim]The season is also study: Source Quality 2 in {grade.ability} "
         f"({TC} pp. 33-34).[/]",
@@ -837,8 +837,8 @@ def petition_fields(
             "text",
             q.scribe,
             show_if=lambda v: v.get("method") != AUDIENCE,
-            hint="Who writes it for him (blank: he writes it himself); his "
-            f"Communication + Church Lore is used instead ({TC} p. 48).",
+            hint="Who writes it for them (blank: they write it themselves); the scribe's "
+            f"Communication + Church Lore is used ({TC} p. 48).",
         ),
         DialogField(
             "scribe_total",
@@ -883,7 +883,7 @@ def petition_fields(
             "Church Reputation",
             "int",
             q.reputation,
-            hint="His Reputation with the Church: a bonus, or a penalty if bad.",
+            hint="Their Reputation with the Church: a bonus, or a penalty if bad.",
         ),
         DialogField("spells", "Spells on the deciders", "int", q.spells),
         DialogField(
@@ -1038,11 +1038,13 @@ def petition_live(
             )
             if others:
                 lines.append(
-                    warn("He has already petitioned this season: usually one a season.")
+                    warn(
+                        "They've already petitioned this season: usually one a season."
+                    )
                 )
         lines.append(
-            "[dim]No die. One petition a season, and it takes no season unless "
-            f"he travels ({TC} pp. 46-48).[/]"
+            "[dim]No die. One petition a season; it takes no season unless "
+            f"they travel ({TC} pp. 46-48).[/]"
         )
         return "\n".join(lines)
 
@@ -1127,8 +1129,8 @@ VERDICT_LABELS = {PENDING: "Pending", "acquitted": "Acquitted", GUILTY: "Guilty"
 CANON_RULE = (
     "[dim]Canon courts shed no blood: no death or bodily punishment. The judge "
     "decides, with no jury; about a dozen oath-helpers swearing to the "
-    "accused's good character acquit him (compurgation). No one need attend "
-    f"more than two days' travel from his diocese ({TC} pp. 35-37).[/]"
+    "accused's good character acquit them (compurgation). No one need attend "
+    f"more than two days' travel from their diocese ({TC} pp. 35-37).[/]"
 )
 
 
@@ -1220,7 +1222,7 @@ def canon_fields(
     saga: Saga, character: Character, case: CanonCase | None
 ) -> list[DialogField]:
     c = case or CanonCase("Slander", season=saga.current_season, year=saga.current_year)
-    name = character.name or "He"
+    name = character.name or "The character"
     return [
         DialogField("charge", "Charge", "select", c.charge, options=pairs(cl.CHARGES)),
         DialogField(
@@ -1290,7 +1292,7 @@ def canon_live(values: dict[str, Any]) -> str:
             f"[b]{escape(punishment)}[/]: {escape(cl.PUNISHMENTS.get(punishment, ''))}"
         )
         if punishment == cl.EXCOMMUNICATION and values.get("role") != ACCUSER:
-            lines.append("Shown on Holy Orders as his standing.")
+            lines.append("Shown on Holy Orders as their standing.")
     lines.append(CANON_RULE)
     return "\n".join(lines)
 
@@ -1409,7 +1411,7 @@ def exorcism_live(character: Character) -> Callable[[dict[str, Any]], str]:
             )
         if not cl.may_use_faith_points(character.church):
             lines.append(
-                warn("Irregular: he can't use Faith Points until he confesses.")
+                warn("Irregular: they can't use Faith Points until they confess.")
             )
         lines.append(
             "[dim]Any cleric may exorcise; an ordained exorcist gets +1. A Divine "

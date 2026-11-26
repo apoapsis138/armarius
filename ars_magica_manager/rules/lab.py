@@ -662,7 +662,7 @@ def ritual_vis_problem(magus: Character, art: str, pawns: int) -> str:
         return ""
     return (
         f"The ritual takes {pawns} pawns of {art} vis; performed from its Lab "
-        f"Text, {magus.name} can use at most his {art} score ({score}) of it, "
+        f"Text, {magus.name} can use at most their {art} score ({score}) of it, "
         f"as for a ritual spell ({RITUAL_VIS_SOURCE})."
     )
 

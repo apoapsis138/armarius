@@ -170,9 +170,8 @@ def side_fields(saga: Saga, side: BattleSide, index: int) -> list[DialogField]:
                 ("(none)", ""),
                 *((escape(f"{c.name}: {pilot_words(c)}"), c.id) for c in pilots),
             ],
-            hint="Intelligence + his seafaring Profession + stress die is the "
-            "Deployment Total: the pilot's Ability in place of Area Lore (Tales "
-            "of Power p. 106).",
+            hint="Int + their seafaring Profession + stress die: the pilot's Ability "
+            "replaces Area Lore (ToP p. 106).",
             show_if=_at_sea,
         ),
         DialogField(
@@ -253,8 +252,8 @@ def battle_live(saga: Saga, values: dict[str, Any]) -> str:
         first, second = values.get("groups_0"), values.get("groups_1")
         if first is None or second is None:
             return (
-                "On land: Weight of Numbers by the armies' combat groups; a "
-                "lord's left blank are his title's army (Lords of Men p. 105)."
+                "On land: Weight of Numbers by the armies' combat groups; a lord left "
+                "blank uses their title's army (LoM p. 105)."
             )
         return (
             f"On land: {first} combat groups against {second}, Weight of "

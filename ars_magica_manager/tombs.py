@@ -1228,10 +1228,10 @@ def _opening_fields(saga: Saga, obstacle: Obstacle) -> list[DialogField]:
             None,
             options=[(escape(c.name), c.id) for c in saga.characters],
             required=True,
-            hint="The one it is springing on acts first, whatever his Quickness.",
+            hint="The one it springs on acts first, whatever their Quickness.",
         ),
         *(
-            DialogField(_with_key(c), f"With him: {escape(c.name)}", "check", False)
+            DialogField(_with_key(c), f"With them: {escape(c.name)}", "check", False)
             for c in _party(saga)
         ),
     ]
@@ -1375,10 +1375,10 @@ def _action_fields(spring: Springing) -> list[DialogField]:
     found = [
         DialogField(
             "action",
-            "What he does",
+            "What they do",
             "text",
             "",
-            placeholder="e.g. Hears the stone shift and throws himself back",
+            placeholder="e.g. Hears the stone shift and throws themselves back",
         ),
         DialogField(
             "fast_cast",
@@ -1392,12 +1392,12 @@ def _action_fields(spring: Springing) -> list[DialogField]:
             "The spell worked",
             "check",
             False,
-            hint="Roll the spell as usual. If it failed, the trap still has him.",
+            hint="Roll the spell as usual. If it failed, the trap still has them.",
             show_if=lambda values: bool(values.get("fast_cast")),
         ),
         DialogField(
             "roll",
-            "His roll",
+            "Roll",
             "text",
             obstacle.roll or ROLLS[0],
             hint="As the troupe agrees: Characteristic + Ability, - Encumbrance "
@@ -1417,10 +1417,10 @@ def _action_fields(spring: Springing) -> list[DialogField]:
         found.append(
             DialogField(
                 "resistance",
-                "His Magic Resistance",
+                "Magic Resistance",
                 "optint",
                 None,
-                hint="Blank for none: at least its Penetration, and he passes.",
+                hint="Blank for none: at least its Penetration, and they pass.",
             )
         )
     return found

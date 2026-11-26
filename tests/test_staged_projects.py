@@ -257,7 +257,7 @@ def test_gather_a_connection_keeps_it_in_a_laboratory():
     form.apply(values)
     held = found.laboratories[0].arcane_connections[-1]
     assert (held.to, held.lasts) == (
-        "Brand: a book or lab text he has written lately",
+        "Brand: a book or lab text they've written lately",
         "Weeks or months",
     )
     work = _covenant(found).hermetic_projects[0].works[-1]

@@ -258,10 +258,10 @@ def _walker(stations: int) -> Character:
 
 def test_the_reduction_in_the_books_words():
     assert cr.reduction_words([("Minor", 0, 3)]) == (
-        "his first Initiation since a Minor Ordeal"
+        "their first Initiation since a Minor Ordeal"
     )
     assert cr.reduction_words([("Medium", 1, 4), ("Minor", 0, 3)]) == (
-        "his second Initiation since a Medium Ordeal"
+        "their second Initiation since a Medium Ordeal"
     )
     assert cr.reduction_words([]) == ""
 
@@ -502,9 +502,10 @@ def test_the_path_text_says_what_the_next_avenue_needs():
     words = cf.path_text(saga, kyrillos)
     assert "of Seeming" in words and "2 of 5: True Sight" in words
     assert (
-        "Target 21 − 3 (his first Initiation since a Minor Ordeal) = [b]18[/]" in words
+        "Target 21 − 3 (their first Initiation since a Minor Ordeal) = [b]18[/]"
+        in words
     )
-    assert "But his House Criamon Lore is 3: the third station needs 4." in words
+    assert "But their House Criamon Lore is 3: the third station needs 4." in words
     assert "needs 4" in words
     assert "Disfigured, Vow" in words
     rows = cf.station_rows(kyrillos)

@@ -210,7 +210,7 @@ def religion_field(religion: str) -> DialogField:
         options=[(name, name) for name in RELIGIONS],
         allow_blank=True,
         placeholder="(not set: counts as Christian)",
-        hint="His faith decides what the Religion chapter offers him.",
+        hint="Their faith decides what the Religion chapter offers them.",
     )
 
 
@@ -604,20 +604,20 @@ def hermetic_fields(
             "check",
             h.holds_own_sigil,
             show_if=lambda values: values.get("house") == sigils.TREMERE,
-            hint="House Tremere: a parens holds his filius's sigil until the "
-            "filius beats him in certamen or the parens dies (DE p. 16).",
+            hint="House Tremere: a parens holds their filius's sigil until the filius "
+            "beats them in certamen or the parens dies (DE p. 16).",
         ),
         DialogField(
             "sigil_challenged",
-            "Has challenged for his sigil",
+            "Has challenged for their sigil",
             "check",
             h.sigil_challenged,
             show_if=lambda values: (
                 values.get("house") == sigils.TREMERE
                 and not values.get("holds_own_sigil")
             ),
-            hint="He may challenge his parens once when he chooses, then at "
-            "each Decennial of the House (HoH: TL p. 123).",
+            hint="They may challenge their parens once when they choose, then at each "
+            "House Decennial (HoH: TL p. 123).",
         ),
         DialogField(
             "certamen_school",
@@ -626,8 +626,8 @@ def hermetic_fields(
             h.certamen_school,
             options=[("(none recorded)", "")]
             + [(f"{s.name} ({s.school})", s.id) for s in certamen_styles.SCHOOLS],
-            hint="The style he was trained in, or joined by a season's study "
-            "with a member (HoH: TL p. 135).",
+            hint="The style they trained in, or joined by a season's study with a "
+            "member (HoH: TL p. 135).",
         ),
         *(
             [
@@ -649,8 +649,8 @@ def hermetic_fields(
             "Renounced (year)",
             "optint",
             h.renounced_year,
-            hint="Cast out of the Order by a Wizard's March: closing a meeting "
-            "that Marched him sets it (DE p. 18).",
+            hint="Cast out by a Wizard's March: closing the meeting that Marched them "
+            "sets it (DE p. 18).",
         ),
         DialogField(
             "renounced_by",

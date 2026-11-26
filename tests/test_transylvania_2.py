@@ -307,7 +307,7 @@ def test_a_crowned_slavic_magyar_or_vlach_king_has_shapeshifter_free():
     benefit = cv.free_benefit(king)
     assert benefit.free_indices == frozenset({1})
     assert benefit.virtue_points == 3
-    assert "his crown" in benefit.giver
+    assert "their crown" in benefit.giver
     # Shapeshifter's 3 points are outside the balance.
     fewest, most = cv.virtue_allowance(king, 1)
     assert (fewest, most) == (4, 4)

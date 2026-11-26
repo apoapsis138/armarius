@@ -175,16 +175,21 @@ class Gathering:
 
 GATHERINGS: tuple[Gathering, ...] = (
     Gathering(
-        "blood", "His spilled blood, caught in a phial", "Years or decades", "pp. 86-88"
+        "blood",
+        "Their spilled blood, caught in a phial",
+        "Years or decades",
+        "pp. 86-88",
     ),
-    Gathering("weapon", "The weapon that drew his blood", "Years or decades", "p. 87"),
+    Gathering(
+        "weapon", "The weapon that drew their blood", "Years or decades", "p. 87"
+    ),
     Gathering(
         "text",
-        "A book or Lab Text he has written lately",
+        "A book or Lab Text they've written lately",
         "Weeks or months",
         "p. 90",
     ),
-    Gathering("breath", "His breath, sealed in a phial", "Hours or days", "p. 91"),
+    Gathering("breath", "Their breath, sealed in a phial", "Hours or days", "p. 91"),
 )
 GATHERING_BY_KEY: dict[str, Gathering] = {g.key: g for g in GATHERINGS}
 

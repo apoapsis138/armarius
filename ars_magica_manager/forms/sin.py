@@ -51,7 +51,7 @@ def sin_fields(character: Character) -> list[DialogField]:
         ),
         DialogField(
             "method",
-            "How he sins",
+            "How they sin",
             "select",
             sin_rules.SEASON,
             options=[(label, key) for key, label in sin_rules.METHODS.items()],
@@ -67,7 +67,7 @@ def sin_lines(character: Character, values: dict[str, Any]) -> list[str]:
     lines = sin_rules.gain_text(trait, method)
     if not sin_rules.has_confidence_score(character):
         lines.append(
-            "With no Confidence Score he may still spend the points: on "
+            "With no Confidence Score they may still spend the points: on "
             "influence or tarnish, or with the storyguide's leave +1 a point "
             f"to a fitting roll, at most {sin_rules.spend_cap(trait.score)} on "
             "one roll."
@@ -158,7 +158,7 @@ def influence_fields(character: Character) -> list[DialogField]:
             "select",
             PERSON,
             options=[
-                ("A person who follows his lead", PERSON),
+                ("A person who follows their lead", PERSON),
                 ("An Infernal aura (tarnish it)", AURA),
             ],
         ),
@@ -186,7 +186,7 @@ def influence_fields(character: Character) -> list[DialogField]:
         ),
         DialogField(
             "stranger",
-            "The target is a stranger to him",
+            "The target is a stranger to them",
             "check",
             False,
             show_if=_is_person,
@@ -208,12 +208,12 @@ def influence_lines(character: Character, values: dict[str, Any]) -> list[str]:
             sin_rules.may_influence_ceremonially(character)
             or (
                 "The ceremony spends a Confidence Point "
-                f"(he has {character.background.confidence_points})."
+                f"(they have {character.background.confidence_points})."
             )
         )
     if person:
         lines.append(
-            "Only one willing to follow his lead is touched; a character who "
+            "Only one willing to follow their lead is touched; a character who "
             f"resists is not. The trait {sin_rules.lasts(method, tarnish=False)}."
         )
         if values.get("stranger") and not sin_rules.may_influence_strangers(character):

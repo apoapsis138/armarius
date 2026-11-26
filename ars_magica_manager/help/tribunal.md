@@ -385,7 +385,7 @@ each with a stress die. **Intrigue: both under Parma Magica** is ticked to
 start, as between magi at a Tribunal, and The Gift then costs nothing.
 Untick it when either party isn't under Parma, such as a mundane or a
 magus whose Parma is down. The Gift then costs 3, or 6 for a Blatant Gift.
-Tick **Intrigue: his Gift is Blatant** for that, or give the character the
+Tick **Intrigue: their Gift is Blatant** for that, or give the character the
 Blatant Gift Flaw (p. 24). Folk Ken rolls through the Tribunal may give
 -3 to +3 to Intelligence + Intrigue at the storyguide's word (p. 25).
 
@@ -449,7 +449,7 @@ What an argument records:
   (ideal) for a polemic or apologia, and Opposed to (ideal) for a diatribe
   (pp. 31, 33, 35). Blank means the argument itself.
 - **It concerns**: its reach on the Prevailing Wisdom Table (p. 29):
-  - a magus 3, or their Reputation if higher (**His Reputation**)
+  - a magus 3, or their Reputation if higher (**Reputation**)
   - a covenant 6
   - a Tribunal 9
   - a House 12
@@ -935,7 +935,7 @@ the library for credit.
 
 Reading what is found takes a season of the magus's credit, unless
 they're exempt. That's everything but lab notes and the records. Untick
-**He reads what is found this season** to search without reading. The
+**They read what is found this season** to search without reading. The
 loan then covers no season until one is paid. A magus with no credit left
 can't read, so Contribute first.
 

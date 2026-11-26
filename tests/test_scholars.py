@@ -113,7 +113,7 @@ def test_grifos_mural_is_nineteen_in_his_church_and_takes_two_seasons():
     # Dex 3 + Painting 8 + Puissant 2 + Free Expression 3 + Imaginem 10 / 5.
     assert found.quality == 18
     assert artistry.creation_time(grifo, plan, 18).seasons == 2
-    # In the Divine aura 3 of his church, a maestro of the Divine adds the
+    # In the Divine aura 3 of their church, a maestro of the Divine adds the
     # aura / 5, rounded up (p. 124): 19, where the book's example (p. 134)
     # leaves the +1 out and gives 18.
     aligned = ArtworkPlan(realm="Divine", aura=3, aura_realm="Divine")
@@ -204,7 +204,7 @@ def test_reputation_xp_and_benefits():
     assert artistry.benefits(5) == []
     lines = artistry.benefits(10)
     assert lines[0].startswith("+5 to social rolls")
-    assert any("signs his work" in line for line in lines)
+    assert any("sign their work" in line for line in lines)
     assert any("never lost" in line for line in lines)
     assert artistry.muse_kind(15) == "minor" and artistry.muse_warping(20) == 3
     legend = artistry.legendary(_grifo(), PAINTING)
@@ -547,7 +547,7 @@ def test_seeking_a_post():
     won = next(
         sw.work(saga, julian, plan, random.Random(seed))
         for seed in range(400)
-        if "post is his"
+        if "post is theirs"
         in " ".join(sw.work(saga, julian, plan, random.Random(seed)).notes)
     )
     assert won.academic_xp == [("", 1)]

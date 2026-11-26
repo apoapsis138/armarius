@@ -107,7 +107,7 @@ def test_passing_makes_a_magus_and_gives_parmas_key():
     before = penetration.magic_resistance(hugo, "Vim")
     assert not any("Parma" in line.label for line in before.lines)
     said = gt.pass_gauntlet(hugo)
-    assert "Parma Magica 1 now protects him" in said[0]
+    assert "Parma Magica 1 now protects them" in said[0]
     assert hugo.type == "magus"
     assert gt.HERMETIC_MAGUS in _ids(hugo) and "vf_apprentice" not in _ids(hugo)
     after = penetration.magic_resistance(hugo, "Vim")
@@ -126,7 +126,7 @@ def test_losing_the_gift_for_good_or_suppressed():
 def test_a_cantation_must_be_cast_its_level_in_times():
     assert gt.cantation_problem(5, 4, False) is not None
     assert gt.cantation_problem(5, 5, False) is None
-    assert gt.cantation_problem(5, 9, True) == "He knows that spell already."
+    assert gt.cantation_problem(5, 9, True) == "They know that spell already."
     assert gt.cantation_cost(5) == 5
 
 

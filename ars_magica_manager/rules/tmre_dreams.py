@@ -461,7 +461,7 @@ def ritual_vis_breakdown(
     if needed != pawns:
         lines.append(
             Line(
-                "His Virtues (Mercurian Magic, Waster of Vis)",
+                "Their Virtues (Mercurian Magic, Waster of Vis)",
                 amount=needed - pawns,
                 source=casting_virtues.SOURCE,
             )

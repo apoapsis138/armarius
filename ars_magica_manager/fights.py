@@ -785,8 +785,8 @@ def group_fields(saga: Saga, fight: Fight) -> list[DialogField]:
                 "",
                 options=[("None: an untrained group", ""), *options],
                 show_if=shown,
-                hint="A group that spent a season improving combat skills "
-                "together; its leader coordinates up to his Leadership in fighters.",
+                hint="A group that trained together for a season; its leader "
+                "coordinates up to their Leadership in fighters.",
             ),
         ]
     found.append(
@@ -1209,8 +1209,8 @@ ACTION_WORDS: dict[str, str] = {
     "short of the level by 10 or less still casts it, for a Fatigue level.",
     rules.DEVICE: "Used at Quickness + stress die, with no Fatigue; its "
     "Penetration is what it was enchanted with.",
-    rules.LOCATE: "Spends the round searching: Perception + Awareness against "
-    "the invisible foe's Dexterity + Stealth, and beating it finds him so he "
+    rules.LOCATE: "Spends the round searching: Perception + Awareness against the "
+    "invisible foe's Dexterity + Stealth; beating it finds them, so they "
     "may be struck.",
     rules.DISENGAGE: "A Defence Total against each foe who struck it last "
     "round; +3 for each try after the first.",

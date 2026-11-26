@@ -149,7 +149,7 @@ SPACES: tuple[Space, ...] = (
     Space("temporary", "A temporary space (chalk circles in a rented room)", 12),
     Space("natural", "A space naturally suited (a cliff ledge at sunrise)", 9),
     Space("designed", "A space carefully designed for it", 6),
-    Space("laboratory", "His laboratory", 3),
+    Space("laboratory", "Their laboratory", 3),
     Space("ceremonial_room", "A room built only for ceremonial casting", 1),
 )
 SPACE_BY_KEY = {space.key: space for space in SPACES}

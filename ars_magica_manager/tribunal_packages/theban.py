@@ -216,7 +216,7 @@ def token_fields(saga: Saga, entry: dict[str, Any] | None) -> list[DialogField]:
                 ("Polites (citizen)", "polites"),
                 ("Metoikos (resident foreigner)", "metoikos"),
             ],
-            hint="A metoikos is a guest, or a polites who has lost his rights.",
+            hint="A metoikos is a guest, or a polites who has lost their rights.",
         ),
         DialogField("tokens", "Tokens", "int", e.get("tokens", 0)),
         DialogField("shards", "Shards", "int", e.get("shards", 0)),
@@ -317,14 +317,14 @@ def neutralize_problem(
     if token_holder is None or shard_holder is None:
         return "Choose the magus spending a token and the one with a shard."
     if token_holder.id == shard_holder.id:
-        return "A magus can't neutralize his own shards with his own tokens."
+        return "A magus can't neutralize their own shards with their own tokens."
     if (
         token_holder.covenant_id
         and token_holder.covenant_id == shard_holder.covenant_id
     ):
         return (
             f"{token_holder.name} and {shard_holder.name} share a covenant: a "
-            "magus may not neutralize the shards of one of his own covenant."
+            "magus may not neutralize the shards of one of their own covenant."
         )
     for magus, key, words in (
         (token_holder, "tokens", "a token"),
@@ -629,7 +629,7 @@ def lend_form(saga: Saga, tribunal: Tribunal, entry: dict[str, Any]) -> Form:
                 "Repayment plan",
                 "text",
                 "",
-                placeholder="e.g. two pawns a year from his Creo source",
+                placeholder="e.g. two pawns a year from their Creo source",
             ),
             DialogField(
                 "emergency",
@@ -653,7 +653,7 @@ def lend_form(saga: Saga, tribunal: Tribunal, entry: dict[str, Any]) -> Form:
                 "Into the magus's own vis",
                 "check",
                 True,
-                hint="The pawns join his vis, for his project.",
+                hint="The pawns join their vis, for their project.",
             ),
         ]
 

@@ -132,7 +132,7 @@ def saint_options(saga: Saga, character: Character) -> list[tuple[str, str]]:
             found.append((escape(label), name.strip()))
 
     patron = dv.patron(character)
-    offer(patron, f"{patron} (his patron)")
+    offer(patron, f"{patron} (their patron)")
     for record in dv.devotions(character):
         offer(record.name, f"{record.name} (Devotion {dv.score(record.points)})")
     for church in byzantine.church_list(saga):
@@ -245,7 +245,7 @@ def relic_choices(saga: Saga, character: Character) -> list[tuple[str, str, str,
     found: list[tuple[str, str, str, int]] = []
     if character.background.relic_faith > 0:
         faith = character.background.relic_faith
-        found.append((f"His own relic (Faith {faith})", OWN_RELIC, "", faith))
+        found.append((f"Their own relic (Faith {faith})", OWN_RELIC, "", faith))
     for church in byzantine.church_list(saga):
         for row, relic in enumerate(churches.relics(church)):
             if churches.is_eikon(relic):
@@ -313,11 +313,11 @@ def invoke_fields(saga: Saga, character: Character) -> list[DialogField]:
         *_saint_fields(saga, character),
         DialogField(
             "appropriate",
-            "The matter is his concern",
+            "The matter is their concern",
             "check",
             False,
-            hint="A saint whose concern is the matter at hand, or a "
-            "sacramental's: no -15 though not his patron (The Church p. 13).",
+            hint="A saint whose concern this is, or a sacramental's: no -15 though not "
+            "their patron (The Church p. 13).",
         ),
     ]
     if sourcebooks.in_play(sr.TCI, _books(saga)):
@@ -327,27 +327,27 @@ def invoke_fields(saga: Saga, character: Character) -> list[DialogField]:
                 "Of Irish birth",
                 "check",
                 _irish(character),
-                hint="Patrick, Brigid and Columba are his patrons "
-                "(The Contested Isle p. 134).",
+                hint="Patrick, Brigid and Columba are their patrons (The Contested Isle"
+                " p. 134).",
             )
         )
     found += [
         DialogField("tomb", "At the saint's tomb (+1)", "check", False),
-        DialogField("aura", "Divine aura where he prays", "int", 0),
-        DialogField("feast_day", "On his feast day (+3)", "check", False),
+        DialogField("aura", "Divine aura where they pray", "int", 0),
+        DialogField("feast_day", "On their feast day (+3)", "check", False),
         DialogField(
             "pilgrimage",
-            "Pilgrimage for him (+2)",
+            "Pilgrimage for them (+2)",
             "check",
             False,
-            hint="In his honour, within the year.",
+            hint="In their honour, within the year.",
         ),
     ]
     if relics:
         found += [
             DialogField(
                 "relic",
-                "A relic he holds",
+                "A relic they hold",
                 "select",
                 None,
                 options=[(escape(label), key) for label, key, _, _ in relics],
@@ -360,7 +360,7 @@ def invoke_fields(saga: Saga, character: Character) -> list[DialogField]:
             ),
             DialogField(
                 "own_relic_of_saint",
-                "His relic is of this saint",
+                "Their relic is of this saint",
                 "check",
                 False,
                 show_if=lambda v: v.get("relic") == OWN_RELIC,
@@ -370,7 +370,7 @@ def invoke_fields(saga: Saga, character: Character) -> list[DialogField]:
         found.append(
             DialogField(
                 "icon",
-                "An icon he venerated",
+                "An icon they venerated",
                 "select",
                 None,
                 options=[(escape(label), key) for label, key, _ in icons],
@@ -492,7 +492,7 @@ def invoke_live(saga: Saga, character: Character) -> Any:
             lines.append(f"[dim]No -15: {escape(found.familiar)}.[/]")
         else:
             lines.append(
-                "[$text-error]-15: not his patron, nor one he is devoted to.[/]"
+                "[$text-error]-15: not their patron, nor one they're devoted to.[/]"
             )
         faith, of_saint = _relic(saga, character, values)
         if faith is not None and of_saint and the_church(saga):
@@ -505,8 +505,8 @@ def invoke_live(saga: Saga, character: Character) -> Any:
             record = dv.devotion(character, name)
             if record is not None:
                 lines.append(
-                    f"[dim]Devotion: {escape(dv.devotion_label(record))}; he "
-                    "keeps the saint's feast each year.[/]"
+                    f"[dim]Devotion: {escape(dv.devotion_label(record))}; they "
+                    "keep the saint's feast each year.[/]"
                 )
         if warning:
             lines.append(f"[$text-error]{escape(warning)}[/]")
@@ -535,7 +535,7 @@ def invoke_form(
         power = sr.POWERS.get(str(values.get("power") or ""))
         if rolled.heard:
             asked = f": {power.name}" if power is not None else ""
-            lines.append(f"{name} hears him and works a miracle{asked}.")
+            lines.append(f"{name} hears them and works a miracle{asked}.")
             if dv.devoted(character, name) and the_church(saga):
                 lines.append(
                     "Witnessing it is worth 5 to 10 Devotion Points (The "
@@ -543,7 +543,7 @@ def invoke_form(
                 )
             title = f"Miracle of {name}"
         else:
-            lines.append(f"{name} does not answer; he may ask again tomorrow.")
+            lines.append(f"{name} does not answer; they may ask again tomorrow.")
             title = f"Invoked {name}"
         if not values.get("yazata"):
             dv.note_answer(
@@ -639,13 +639,13 @@ def _threat_problem(character: Character) -> Any:
         if not any(
             dv.same_saint(_saint_name(values), n) for n in dv.refused(character)
         ):
-            return "Only a saint who refused his invocation may be threatened."
+            return "Only a saint who refused their invocation may be threatened."
         spent = _number(values.get("confidence"))
         if spent < 0:
             return "Confidence spent can't be below 0."
         if spent > character.background.confidence_points:
             return (
-                f"He has only {character.background.confidence_points} "
+                f"They have only {character.background.confidence_points} "
                 "Confidence Points."
             )
         if _number(values.get("might")) < 0:
@@ -666,9 +666,8 @@ def threaten_live(saga: Saga, character: Character) -> Any:
             "humiliation of a saint.[/]",
             f"Stress die {_signed(total)} [dim]= {' '.join(terms)}[/]",
             f"Against [b]{ease}[/] [dim](9 + Might / 5, RoP: The Divine pp. 87-88)[/]",
-            "[dim]Fail: no answer to his prayers for a month. Fail by 10 or "
-            "more: a minor curse and nothing for a season. Botch: the "
-            "saint's curse.[/]",
+            "[dim]Fail: no answer to their prayers for a month. Fail by 10 or more: a "
+            "minor curse and nothing for a season. Botch: the saint's curse.[/]",
         ]
         lines += _saint_lines(saga, name, values.get("power"))
         problem = _threat_problem(character)(values)
@@ -689,8 +688,8 @@ def threaten_form(
     if not dv.refused(character):
         return Refuse(
             THREATEN,
-            "No saint has refused him: only a saint who refused his invocation "
-            "may be threatened (RoP: The Divine p. 87).",
+            "No saint has refused them: only a saint who refused their invocation may "
+            "be threatened (RoP: The Divine p. 87).",
         )
 
     def apply(values: dict[str, Any]) -> list[str]:
@@ -863,14 +862,13 @@ def patron_fields(saga: Saga, character: Character) -> list[DialogField]:
     return [
         DialogField(
             "saint",
-            "His patron saint",
+            "Patron saint",
             "select",
             next((v for _, v in listed if dv.same_saint(v, held)), NO_PATRON),
             options=[("(none)", NO_PATRON), *listed],
             required=True,
-            hint="Often his church's, his home's or his trade's saint, or one "
-            "he is devoted to: the player's choice. Anyone may have one, Pious "
-            "or not (The Church p. 13).",
+            hint="Often their church's, home's or trade's saint, or one they're devoted"
+            " to. Anyone may have one (The Church p. 13).",
         ),
         DialogField(
             "other",
@@ -902,9 +900,9 @@ def patron_form(saga: Saga, character: Character | None) -> Command:
             return []
         dv.set_patron(character, chosen)
         line = (
-            f"{chosen} is now his patron saint."
+            f"{chosen} is now their patron saint."
             if chosen
-            else f"{was} is no longer his patron saint."
+            else f"{was} is no longer their patron saint."
         )
         _diary(saga, character, "Patron saint", line)
         return notes(escape(line))
@@ -954,7 +952,7 @@ def piety_fields(character: Character) -> list[DialogField]:
         ),
         DialogField(
             "wealthy",
-            "He is wealthy",
+            "Wealthy",
             "check",
             wealthy,
             hint="A pound or more a season; the poor give what they can, "

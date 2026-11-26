@@ -330,7 +330,9 @@ def test_vituperation_and_sacrifice():
     assert infernalists.confidence_after(witch, 3, botched=True) == (1, 0)
     assert infernalists.SACRIFICES["an innocent human"] == 10
     # The local aura is in the total (p. 95): his home aura stands for it.
-    assert "against 9 (with his home aura 3" in infernalists.vituperation_text(witch, 3)
+    assert "against 9 (with their home aura 3" in infernalists.vituperation_text(
+        witch, 3
+    )
 
 
 # -- Faerie and Magic --

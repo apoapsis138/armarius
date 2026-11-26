@@ -50,7 +50,7 @@ SOURCE = (
 
 SHIPWRIGHT, CRAFT_MAGIC, CREO_RITUAL = "shipwright", "craft_magic", "creo_ritual"
 METHODS: dict[str, str] = {
-    SHIPWRIGHT: "A shipwright and his team",
+    SHIPWRIGHT: "A shipwright and their team",
     CRAFT_MAGIC: "Rego craft magic (The Hands of Phereclus)",
     CREO_RITUAL: "A Creo ritual (Conjuration of the Seaworthy Cog)",
 }

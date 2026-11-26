@@ -291,7 +291,7 @@ def loyalty_cost(
         points = min(base - reputation, 0)
         lines.append(
             f"{category} {base:+d}"
-            + (f", his Reputation {-reputation:+d}" if reputation else "")
+            + (f", their Reputation {-reputation:+d}" if reputation else "")
             + "."
         )
     elif ordered_by == OFFICER:
@@ -306,7 +306,7 @@ def loyalty_cost(
         cost = WOUND_PENALTIES[step]
         points += cost
         lines.append(
-            f"A {step} wound dealt by the magus himself"
+            f"A {step} wound dealt by the magus themselves"
             + (" (by magic, one step worse)" if by_magic else "")
             + f" {cost:+d}."
         )
@@ -445,6 +445,6 @@ def wage_adjustment(saga: Saga, covenant: Covenant, multiplier: float) -> float:
 PENSION = "pension"
 RENT = "rent"
 RETIREMENT_TERMS: tuple[tuple[str, str], ...] = (
-    ("A pension (half his Wages)", PENSION),
+    ("A pension (half their Wages)", PENSION),
     ("Rent instead (fed free)", RENT),
 )

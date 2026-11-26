@@ -210,7 +210,7 @@ def _faerie_fields(c: Creature | None) -> list[DialogField]:
             "The story it wants",
             "text",
             attr(c, "faerie_story", ""),
-            placeholder="e.g. to be wooed by a mortal knight and spurn him",
+            placeholder="e.g. to be wooed by a mortal knight and spurn them",
             show_if=_faerie,
         ),
         DialogField(

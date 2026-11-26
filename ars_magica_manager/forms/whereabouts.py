@@ -38,7 +38,7 @@ def fields(saga: Saga, character: Character) -> list[DialogField]:
             where,
             options=[
                 (
-                    "Where he is a guest (its aura)"
+                    "Where they're a guest (its aura)"
                     if character.stay is not None
                     else "At home (the covenant's aura)",
                     HOME,

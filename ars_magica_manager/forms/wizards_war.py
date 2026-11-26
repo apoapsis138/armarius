@@ -39,7 +39,7 @@ SOURCE = (
 #: How a war ends, by key: what it says.
 OUTCOMES: dict[str, str] = {
     "ran_out": "The month of war ran out, both alive",
-    "declarer_won": "The declarer slew his foe",
+    "declarer_won": "The declarer slew their foe",
     "foe_won": "The foe slew the declarer",
     "peace": "They made peace before it was fought",
 }
@@ -84,7 +84,7 @@ def fields(saga: Saga, case: Case) -> list[DialogField]:
             ),
             DialogField(
                 f"{key}_foe_reputation",
-                "His foe's highest Reputation (for a win: twice it)",
+                "Their foe's highest Reputation (twice it for a win)",
                 "int",
                 _highest(other),
             ),

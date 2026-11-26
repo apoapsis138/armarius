@@ -361,7 +361,7 @@ def test_the_talisman_s_panel_says_what_its_mysteries_allow():
     saga.enchanted_devices.append(staff)
     text = device_info_text(saga, staff)
     assert "Great Talisman: an attunement each season" in text
-    assert "On his Formulaic spells:[/] Wizard's Boost" in text
+    assert "On their Formulaic spells:[/] Wizard's Boost" in text
 
 
 # -- the Lesser Elixir through a season ------------------------------------------
@@ -497,12 +497,12 @@ def test_a_rebrew_is_limited_by_the_art_score():
     magus.arts["vim"] = ArtScore(xp=art_xp(3))
     plan = _reinvent(saga, title="amber", book_level=3)
     found = problems(saga, magus, plan)
-    assert "at most his Vim score (3)" in found[0] and "p. 261" in found[0]
+    assert "at most their Vim score (3)" in found[0] and "p. 261" in found[0]
     text = saga.books[0]
     found, again = lab_seasons.ritual_again(
         saga, magus, saga.laboratories[0], text, "Vim", "character"
     )
-    assert again is None and "at most his Vim score (3)" in found[0]
+    assert again is None and "at most their Vim score (3)" in found[0]
     assert "TMRE" not in found[0] and "p. 42" in found[0]
 
 
@@ -516,7 +516,7 @@ def test_the_great_elixir_s_test_makes_him_a_being_of_magic():
     magus.characteristics.stamina = -3
     failed = alchemy.great_test(magus, 20, 1, 80)
     assert (failed.ease, failed.total, failed.succeeds) == (2, -2, False)
-    assert "did not work" in alchemy.drink_great_elixir(magus, 20, failed)
+    assert "didn't work" in alchemy.drink_great_elixir(magus, 20, failed)
     assert magus.alchemy is not None and magus.alchemy.great_attempts == 1
     magus.characteristics.stamina = 2
     test = alchemy.great_test(magus, 20, 1, 80)
@@ -528,7 +528,7 @@ def test_the_great_elixir_s_test_makes_him_a_being_of_magic():
     assert not aging.rolls_this_year(magus, 60)
     assert warping.immune(magus)
     # Later, his Ease Factor stays at the age he transformed; a better
-    # potion raises his Might.
+    # potion raises their Might.
     assert alchemy.great_ease_for(magus, 200) == 2
     better = alchemy.great_test(magus, 200, 5, 100)
     alchemy.drink_great_elixir(magus, 200, better)

@@ -1059,7 +1059,7 @@ to be won at all:
 **Play it out as a fight.** Tick it to have the event made into a fight
 on Conflicts (Lords of Men pp. 105-108).
 
-- The leader and their own group fight. The group, **His group** on the
+- The leader and their own group fight. The group, **Their group** on the
   form, comes from the Standard Combat Groups table (p. 108).
 - They face the groups the Size sets. Lesser is one about half theirs,
   Even one, Outnumbered two, Overwhelmed three. I Stand Alone is the
@@ -2305,7 +2305,7 @@ which the same rules resolve (pp. 35, 42).
    it, leave it be, or it springs all the same.
 4. **Each character acts.** The one in danger goes first, the rest by
    Quickness, each seeing how those before did. Each says one thing
-   they do. The troupe agrees **His roll**, a Characteristic + Ability,
+   they do. The troupe agrees **Roll**, a Characteristic + Ability,
    `- Encumbrance` if it counts, or blank if the action needs none. The
    storyguide moves the Ease Factor by 3, 6 or more for that action.
 5. **A magus casts.** A magus answers with **a Fast-Cast spell**, judged

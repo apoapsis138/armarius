@@ -119,9 +119,8 @@ class PraecoPurse(core.Step):
                 "The Praeco's projects",
                 "area",
                 kept.get("projects", tr.projects(tribunal)),
-                hint="What the Tribunal charges the Praeco to fund until the "
-                "next meeting; they, and the levies she may raise, change at "
-                "every meeting (Against the Dark p. 19).",
+                hint="What the Praeco must fund until the next meeting; these and the "
+                "levies they may raise change each meeting (AtD p. 19).",
             ),
             _art_field("art", "Levies in", kept.get("art"), silver=True),
         ]
@@ -145,7 +144,7 @@ class PraecoPurse(core.Step):
             ),
             DialogField(
                 "source",
-                "From her vis source",
+                "From the Praeco's vis source",
                 "optint",
                 kept.get("source"),
                 hint="Pawns from the large vis source set aside for the "
@@ -158,9 +157,8 @@ class PraecoPurse(core.Step):
                 "text",
                 kept.get("stipends", ""),
                 placeholder="e.g. 4 pawns of Vim to each Quaesitor",
-                hint="The Redcaps' and Quaesitores' stipends, as the Peripheral "
-                "Code sets them: she collects them and Redcaps deliver them, "
-                "so the treasury doesn't change.",
+                hint="The Redcaps' and Quaesitores' stipends: the Praeco collects them "
+                "and Redcaps deliver them; the treasury doesn't change.",
             ),
         ]
         for note in outstanding_notes(tribunal, meeting):
@@ -349,7 +347,7 @@ class PraecoPurse(core.Step):
         return (
             f"{oppida} oppid{'um' if oppida == 1 else 'a'} the Praeco may levy, "
             f"and {notes} promissory note{'' if notes == 1 else 's'} outstanding.",
-            "Each levy is owed to the treasury until paid; her vis source and "
+            "Each levy is owed to the treasury until paid; the Praeco's vis source and "
             "what a new note borrows come in, and a redeemed note's pawns go out.",
         )
 
@@ -397,8 +395,8 @@ class Curantis(core.Step):
                     "Zenodochium built",
                     "check",
                     bool(kept.get("built", outgoing.get("built", False))),
-                    hint=f"Whether {name} built a new zenodochium in his term, "
-                    "as he is expected to (Against the Dark p. 97).",
+                    hint=f"Whether {name} built a new zenodochium in their term, "
+                    "as they're expected to (Against the Dark p. 97).",
                 ),
             ]
         else:
@@ -427,14 +425,14 @@ class Curantis(core.Step):
             ),
             DialogField(
                 "notary",
-                "His Notary",
+                "Notary",
                 "select",
                 kept.get("notary"),
                 options=options,
                 allow_blank=True,
                 placeholder="(none)",
-                hint=f"{chooser}; often a Redcap, or a magus fresh from his "
-                "Gauntlet. He acts as the Curantis's aedile.",
+                hint=f"{chooser}; often a Redcap, or a magus fresh from their "
+                "Gauntlet. They act as the Curantis's aedile.",
                 show_if=lambda v: bool(v.get("curantis")),
             ),
             DialogField(
@@ -442,8 +440,8 @@ class Curantis(core.Step):
                 "Salary for the term",
                 "optint",
                 kept.get("salary"),
-                hint="A generous vis salary from the treasury, set to the vis "
-                "of your saga: he must be powerful to do the work.",
+                hint="A generous vis salary from the treasury, set to the vis of your "
+                "saga: they must be powerful to do the work.",
                 show_if=lambda v: bool(v.get("curantis")),
             ),
             _art_field(
@@ -464,7 +462,7 @@ class Curantis(core.Step):
         if chosen in self._refused:
             return self._refused[chosen]
         if values.get("notary") == chosen:
-            return "The Curantis can't be his own Notary."
+            return "The Curantis can't be their own Notary."
         if (values.get("salary") or 0) < 0:
             return "A salary can't be fewer than none."
         return None
@@ -522,17 +520,17 @@ class Curantis(core.Step):
         if outgoing is not None and "built" in kept:
             name = tr._name(saga, outgoing.get("character_id"))
             lines.append(
-                f"{name} built a new zenodochium in his term"
+                f"{name} built a new zenodochium in their term"
                 if kept["built"]
-                else f"{name} built no new zenodochium in his term"
+                else f"{name} built no new zenodochium in their term"
             )
         if kept.get("curantis"):
             line = f"{tr._name(saga, kept['curantis'])} was appointed Curantis"
             if kept.get("notary"):
-                line += f", with {tr._name(saga, kept['notary'])} as his Notary"
+                line += f", with {tr._name(saga, kept['notary'])} as their Notary"
             if kept.get("salary"):
                 line += (
-                    f"; his salary {pawns(kept['salary'], kept.get('art') or 'Vim')}"
+                    f"; their salary {pawns(kept['salary'], kept.get('art') or 'Vim')}"
                 )
             lines.append(line)
         return lines
@@ -555,7 +553,7 @@ class Curantis(core.Step):
         )
         return (
             f"The officer of the zenodochia, for a term to the next meeting: {who}.",
-            "His salary leaves the treasury now; he and his Notary show on the "
+            "Their salary leaves the treasury now; they and their Notary show on the "
             "Five Covenants list.",
         )
 
@@ -567,4 +565,4 @@ class Curantis(core.Step):
 
 
 core.register_step("praeco_purse", "The Praeco's purse", PraecoPurse, "end")
-core.register_step("curantis", "The Curantis and his Notary", Curantis, "end")
+core.register_step("curantis", "The Curantis and their Notary", Curantis, "end")

@@ -208,7 +208,7 @@ def test_a_longevity_ritual_is_performed_again_from_its_text():
     found, again = lab_seasons.ritual_again(
         saga, magus, lab, text, "Corpus", "laboratory"
     )
-    assert again is None and "at most his Corpus score (3)" in found[0]
+    assert again is None and "at most their Corpus score (3)" in found[0]
     magus.arts["corpus"] = ArtScore(xp=art_xp(5))
     found, again = lab_seasons.ritual_again(
         saga, magus, lab, text, "Corpus", "laboratory"

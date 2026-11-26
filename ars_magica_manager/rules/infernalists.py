@@ -85,15 +85,17 @@ def vituperation_text(character: Character, aura: int) -> str:
     """The rolls a Vituperation calls for, worked out for the character in
     the `aura` he lives in (the local aura counts, p. 95)."""
     rise, _ = confidence_after(character, 0, botched=False)
-    after = "his Confidence Score rises by 1" if rise else "his Confidence Score stays"
+    after = (
+        "their Confidence Score rises by 1" if rise else "their Confidence Score stays"
+    )
     return (
         f"On {VITUPERATION_AT}+ Warping Points at once: {avoid_total(character)} "
-        f"+ stress die against {against_total(character, 0, aura)} (with his "
+        f"+ stress die against {against_total(character, 0, aura)} (with their "
         f"home aura {aura}; use the aura where it happens) + the points "
         "+ stress die (no botch). Failing: lost for a Twilight's "
-        "duration, then an Aging roll adding his Warping Score "
-        f"({character.aging.warping_score}); {after}, and he gains a "
-        "Confidence Point a Warping Point unless he botched (RoP: The "
+        "duration, then an Aging roll adding their Warping Score "
+        f"({character.aging.warping_score}); {after}, and they gain a "
+        "Confidence Point a Warping Point unless they botched (RoP: The "
         "Infernal p. 95)."
     )
 

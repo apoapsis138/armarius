@@ -214,7 +214,7 @@ def test_a_holy_character_fails_the_ascension_and_ascends():
     # His die 5: 2 + 5 = 7; theirs 8: 0 + 3 + 1 + 5 + 8 = 17; margin 10.
     notes = seasons.gain_warping(saga, person, 3, _Dice(5, 8), realm="Divine")
     assert warping.total_points(person) == 13
-    assert any("ascends for 12 days, +10 more" in line for line in notes)
+    assert any("ascend for 12 days, +10 more" in line for line in notes)
     assert person.diary[-1].name == "Divine Ascent"
     assert "Realms of Power: The Divine" in person.diary[-1].details
     assert person.aging.warping_realms == {"Divine": 13}
@@ -236,7 +236,7 @@ def test_a_holy_character_who_resists_stays():
     person = saga.characters[0]
     person.traditions = ["trad_ascetics"]
     notes = seasons.gain_warping(saga, person, 2, _Dice(9, 2))
-    assert any("does not ascend" in line for line in notes)
+    assert any("don't ascend" in line for line in notes)
     assert person.diary[-1].name == "Warping +2"
 
 
@@ -248,12 +248,12 @@ def test_an_infernalist_s_vituperation_hardens_his_confidence_once_over():
     # His die 2: 1 + 0 + 0 + 2 = 3, far below the Warping's side.
     notes = seasons.gain_warping(saga, person, 2, _Dice(2, 5), realm="Infernal")
     assert person.diary[-1].name == "Vituperation"
-    assert any("Aging roll adding his Warping Score (3)" in line for line in notes)
+    assert any("Aging roll adding their Warping Score (3)" in line for line in notes)
     # RoP: The Infernal p. 95: the Points come at once (they wait on
     # nothing); the Score's rise waits on the ordeal and its Aging roll.
     due = next(line for line in notes if "Confidence Points" in line)
     assert "+2 Confidence Points, given now" in due
-    assert "rises from 0 to 1 (below his Warping Score 3)" in due
+    assert "rises from 0 to 1 (below their Warping Score 3)" in due
     assert person.background.confidence_score == 0
     assert person.background.confidence_points == 2
 
@@ -265,7 +265,7 @@ def test_vituperation_s_confidence_rise_may_wait_on_decrepitude():
     person.aging.decrepitude = 1
     due = realm_warping.confidence_due(person, 3, botched=False)
     assert "+3 Confidence Points" in due
-    assert "rises by 1 only if that Aging roll leaves his Decrepitude" in due
+    assert "rises by 1 only if that Aging roll leaves their Decrepitude" in due
 
 
 def test_a_botched_vituperation_gives_no_confidence_points():

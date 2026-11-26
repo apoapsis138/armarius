@@ -1938,8 +1938,8 @@ class CharacterSheet(QWidget):
             return scrolling_page(
                 p,
                 TextBlock(
-                    "[dim]Nothing here yet: the deeds the saga's books bring "
-                    "show here when they fit him.[/]",
+                    "[dim]Nothing here yet: deeds from the saga's books show here when "
+                    "they fit this character.[/]",
                     p,
                 ),
             )

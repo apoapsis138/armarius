@@ -492,17 +492,17 @@ CONTRACTS: dict[str, Contract] = {
         },
     ),
     "set agent task": Contract(
-        prefill={"Task": "common", "Done": "weeks", "Risk to him": "none"},
-        edits={"Task": "sensitive", "Done": "days", "Risk to him": "injury"},
+        prefill={"Task": "common", "Done": "weeks", "Risk to them": "none"},
+        edits={"Task": "sensitive", "Done": "days", "Risk to them": "injury"},
         saved=lambda s: [a.name for a in character(s).agents],
         expected=["Sir Konrad", "Father Bertolf"],
         live={"#fields-live": "Ease Factor 10 (task 6 + haste 1 + risk 3"},
         shown={"#char-agents-list": "Sir Konrad"},
     ),
     "resolve agent task": Contract(
-        prefill={"Task": "easy", "Ease Factor": "6", "Risk to him": "none"},
+        prefill={"Task": "easy", "Ease Factor": "6", "Risk to them": "none"},
         edits={
-            "What he does": "steal the ring",
+            "What they do": "steal the ring",
             "Characteristic + Ability": "5",
             "Task": "hard",
         },
@@ -684,14 +684,14 @@ CONTRACTS: dict[str, Contract] = {
             [e.loyalty for e in s.covenant("cov1").diary if e.loyalty],
         ),
         expected=(2, 3, ["flogging"], [-12]),
-        invalid={"Reward or punishment": "promotion", "His rank now": ""},
+        invalid={"Reward or punishment": "promotion", "Rank now": ""},
         live={
             "#fields-live": "5 blows: 2 Light Wounds and 3 Long-Term Fatigue levels."
         },
     ),
     "retire a grog": Contract(
-        prefill={"He retires on": "pension"},
-        edits={"He retires on": "rent", "Note": "keeps the gate"},
+        prefill={"They retire on": "pension"},
+        edits={"They retire on": "rent", "Note": "keeps the gate"},
         saved=lambda s: (
             [(d.kind, d.note) for d in s.character("grog9").discipline],
             s.character("grog9").diary[-1].name,
@@ -974,9 +974,9 @@ CONTRACTS: dict[str, Contract] = {
         live={"#fields-live": "Presence + Concentration"},
     ),
     "a mother's curse": Contract(
-        prefill={"His mother": "", "Area of expertise": "military"},
+        prefill={"Mother": "", "Area of expertise": "military"},
         edits={
-            "His mother": "Maria",
+            "Mother": "Maria",
             "Area of expertise": "academic",
             "What lifts it": "restore the family's honor",
         },
@@ -986,13 +986,13 @@ CONTRACTS: dict[str, Contract] = {
             if "mothers_curse" in vf.vf_id
         ],
         expected=[{"expertise": "academic"}],
-        invalid={"His mother": ""},
+        invalid={"Mother": ""},
         live={"#fields-live": "to every academic roll"},
     ),
     # Sin, tarnish and the Goetic Arts (RoP: The Infernal).
     "confidence through sin": Contract(
-        prefill={"The sinful trait": "Cruel (Envious)", "How he sins": "season"},
-        edits={"How he sins": "ceremony"},
+        prefill={"The sinful trait": "Cruel (Envious)", "How they sin": "season"},
+        edits={"How they sin": "ceremony"},
         saved=lambda s: (
             s.character("mag1").background.confidence_points,
             s.character("mag1").aging.warping_realms,
@@ -1022,7 +1022,7 @@ CONTRACTS: dict[str, Contract] = {
     ),
     # An apprentice's magic and the Gauntlet (Apprentices).
     "turbulence": Contract(
-        prefill={"Why": "botch", "Aegis of the Hearth he had no part in": "0"},
+        prefill={"Why": "botch", "Aegis of the Hearth they had no part in": "0"},
         edits={"Sympathetic multiplier": "1"},
         saved=lambda s: s.character("mag1").diary[-1].name,
         expected="Turbulence",
@@ -1081,7 +1081,7 @@ CONTRACTS: dict[str, Contract] = {
         invalid=[{"Effect level": "high"}, {"Effect level": "30"}],
     ),
     "bargain with a lord": Contract(
-        prefill={"The lord": "", "Vis a year": "0", "His answer": "agrees"},
+        prefill={"The lord": "", "Vis a year": "0", "The answer": "agrees"},
         edits={"The lord": "The Brun lord", "The service": "A ward", "Vis a year": "9"},
         saved=lambda s: (
             character(s).bound_beings[-1].name,
@@ -1122,11 +1122,11 @@ CONTRACTS: dict[str, Contract] = {
         live={"#fields-live": "binds the faerie"},
     ),
     "an offer to faerie": Contract(
-        prefill={"His fable score": "1", "The threat it overcomes": "Serious"},
-        edits={"The change he asks for": "a bridge of leaves"},
+        prefill={"Fable score": "1", "The threat it overcomes": "Serious"},
+        edits={"The change they ask for": "a bridge of leaves"},
         saved=lambda s: character(s).diary[-1].name,
         expected="An Offer to Faerie",
-        invalid={"His fable score": "0"},
+        invalid={"Fable score": "0"},
         live={"#fields-live": "Accepted on 12"},
     ),
     # The lacuna and the pilgrim (HoH:S, The Church).
@@ -1153,15 +1153,15 @@ CONTRACTS: dict[str, Contract] = {
     # Devotion and the saints (The Church, RoP: The Divine).
     "invoke a saint": Contract(
         prefill={"The saint": "The Magi", "A donation": "0"},
-        edits={"In imminent peril (+2)": True, "Divine aura where he prays": "3"},
+        edits={"In imminent peril (+2)": True, "Divine aura where they pray": "3"},
         saved=lambda s: character(s).diary[-1].name,
         expected="Invoked The Magi",
-        invalid={"Divine aura where he prays": "x"},
+        invalid={"Divine aura where they pray": "x"},
         live={"#fields-live": "+ peril 2"},
     ),
     "threaten a saint": Contract(
         prefill={"The saint": "The Magi", "The saint's Divine Might": "25"},
-        edits={"Exposing his bones (+1)": True},
+        edits={"Exposing their bones (+1)": True},
         saved=lambda s: character(s).diary[-1].name,
         expected="Threatened The Magi",
         invalid={"Confidence Points spent": "99"},
@@ -1169,10 +1169,10 @@ CONTRACTS: dict[str, Contract] = {
     ),
     "invoke baraka": Contract(
         prefill={"The forbear": "quran"},
-        edits={"Divine aura where he asks": "3"},
+        edits={"Divine aura where they ask": "3"},
         saved=lambda s: character(s).diary[-1].name.split(" of ")[-1],
         expected="Khawass al-Qur'an (the Qur'an)",
-        invalid={"Divine aura where he asks": "x"},
+        invalid={"Divine aura where they ask": "x"},
         live={"#fields-live": "never threatened"},
     ),
     "the hajj": Contract(
@@ -1183,16 +1183,16 @@ CONTRACTS: dict[str, Contract] = {
         live={"#fields-live": "Faith Points"},
     ),
     "patron saint": Contract(
-        prefill={"His patron saint": "-none-"},
+        prefill={"Patron saint": "-none-"},
         edits={
-            "His patron saint": "-another-",
+            "Patron saint": "-another-",
             "Another saint's name": "Saint Crispin",
         },
         saved=lambda s: [
             p.name for p in character(s).progress if p.kind == "patron saint"
         ],
         expected=["Saint Crispin"],
-        invalid=[{"His patron saint": "-another-", "Another saint's name": ""}],
+        invalid=[{"Patron saint": "-another-", "Another saint's name": ""}],
     ),
     "devotion points": Contract(
         prefill={"How": "season", "Points gained (or lost)": "5"},
@@ -1217,7 +1217,7 @@ CONTRACTS: dict[str, Contract] = {
         prefill={
             "Influence": "person",
             "How": "season",
-            "His authority over them": "spiritual",
+            "Authority over them": "spiritual",
         },
         edits={"The trait inspired": "Kind"},
         saved=lambda s: character(s).diary[-1].name,
@@ -1227,11 +1227,11 @@ CONTRACTS: dict[str, Contract] = {
     ),
     # Mystic paths, God's aid, the Font and the Commanding Aura.
     "mystic path": Contract(
-        prefill={"His path": "none"},
-        edits={"His path": "Contemplative mysticism"},
+        prefill={"Path": "none"},
+        edits={"Path": "Contemplative mysticism"},
         saved=lambda s: ds.path(character(s)),
         expected="Contemplative mysticism",
-        invalid={"His path": "none"},
+        invalid={"Path": "none"},
         live={"#fields-live": "Divine Form"},
     ),
     "spiritual path": Contract(
@@ -1255,11 +1255,11 @@ CONTRACTS: dict[str, Contract] = {
         live={"#fields-live": "Intelligence + Concentration"},
     ),
     "invoke god's aid": Contract(
-        prefill={"What he asks God's aid in": ""},
-        edits={"What he asks God's aid in": "the duel"},
+        prefill={"What they ask God's aid in": ""},
+        edits={"What they ask God's aid in": "the duel"},
         saved=lambda s: character(s).diary[-1].name,
         expected="God's Aid",
-        invalid={"What he asks God's aid in": ""},
+        invalid={"What they ask God's aid in": ""},
         live={"#fields-live": "Communication + Dominion Lore"},
     ),
     "interests": Contract(
@@ -1480,7 +1480,7 @@ CONTRACTS: dict[str, Contract] = {
         edits={
             "Year": "1205",
             "Intelligence then": "1",
-            "His score in the Ability examined": "1",
+            "Their score in the Ability examined": "1",
             "Stress die": "7",
             "Result": "learned",
         },
@@ -1608,7 +1608,7 @@ CONTRACTS: dict[str, Contract] = {
         edits={"The stakes": "a book"},
         saved=lambda s: character(s).diary[-1].name.startswith("Certamen: Leandro"),
         expected=True,
-        invalid={"His rival's vis, attacking": "x"},
+        invalid={"Their rival's vis, attacking": "x"},
     ),
     "where he is": Contract(
         prefill={"Location": "home"},

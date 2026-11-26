@@ -195,8 +195,8 @@ DEEDS: dict[str, Award] = {
     ),
     "renounced": Award(
         "Slew a renounced magus",
-        "3 x his highest Reputation",
-        amount="His highest Reputation",
+        "3 x their highest Reputation",
+        amount="Highest Reputation",
         per=3,
     ),
     "beast": Award(
@@ -397,20 +397,20 @@ def apprentice_search(total: int, botched: bool) -> str:
     22), against the Definitive Edition's Ease Factor (DE p. 269)."""
     if botched:
         return (
-            "a botch: the magus he took the apprentice from is so vehement "
-            "an enemy that he gains the Major Story Flaw Enemies."
+            "a botch: the apprentice's former master becomes so vehement an enemy that "
+            "they gain the Major Story Flaw Enemies."
         )
     if total >= APPRENTICE_EASE:
         return "a Gifted child is found, as normal: added to the saga as a character."
     if APPRENTICE_EASE - total >= ANTAGONIZED_BY:
         return (
-            "he takes an apprentice from another magus, as is his right, "
-            "and has antagonized him: he must be compensated to be placated. "
-            "The storyguide names whose apprentice (DE p. 270)."
+            "they take an apprentice from another magus, as is their right, and "
+            "antagonize that magus, who must be compensated to be placated. The "
+            "storyguide names whose (DE p. 270)."
         )
     return (
-        "he takes an apprentice from another magus, as is his right: the "
-        "storyguide names whose (DE p. 270)."
+        "they take an apprentice from another magus, as is their right: the storyguide "
+        "names whose (DE p. 270)."
     )
 
 
@@ -520,11 +520,11 @@ def heard_of(
     bonus = heard_bonus(reputation, colleague)
     die, total, botched = roll(rng, bonus, saga)
     if botched:
-        said = "a botch: he has heard nothing, or something wrong."
+        said = "a botch: they've heard nothing, or something wrong."
     elif total >= ease:
-        said = f"meets {ease} by {total - ease}: he has heard of it."
+        said = f"meets {ease} by {total - ease}: they've heard of it."
     else:
-        said = f"below {ease}: he hasn't heard of it."
+        said = f"below {ease}: they haven't heard of it."
     return Rolled(bonus, die, botched, total, said)
 
 

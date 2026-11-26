@@ -238,8 +238,8 @@ def cult_info(saga: Saga, cult: MysteryCult) -> str:
             )
     lines += [
         "",
-        f"[dim]A probationer needs the Lore at 1 before his first Initiation; "
-        "the second and later typically need 3, which the troupe may set "
+        f"[dim]A probationer needs the Lore at 1 before their first Initiation, "
+        "and usually 3 after; the troupe may set that "
         f"aside ({T} pp. 11, 13).[/]",
     ]
     return "\n".join(lines)
@@ -459,7 +459,7 @@ def component_info(part: CultComponent) -> str:
         f"[b]{escape(mc.component_name(part))}[/]  ·  {part.kind}  ·  {part.bonus:+d}",
         mc.KIND_NOTES[part.key],
         "",
-        "[dim]If any component costs the Initiate nothing (he lives by the "
+        "[dim]If any component costs the Initiate nothing (they live by the "
         f"special place), the whole Script is void ({T} p. 16).[/]",
     ]
     return "\n".join(lines)
@@ -1248,7 +1248,7 @@ def _experiment_fields(
             "Initiate",
             "select",
             "",
-            options=[("The Mystagogue herself", "")]
+            options=[("The Mystagogue", "")]
             + [(escape(c.name), c.id) for c in saga.characters],
             hint="Experimenting on another is harder: the validity roll's Ease "
             "Factor is 15 + the bonus, not 9 + it.",
@@ -1327,7 +1327,7 @@ def experiment_live(saga: Saga, cult: MysteryCult) -> Callable[[dict[str, Any]],
         value = getattr(guide.characteristics, cult.characteristic.lower(), 0)
         total = mc.initiation_total(guide, cult, bonus, risk).total
         target = mc.target_for(guide, degree, initiate)
-        knows = "she has" if mc.holds(guide, degree) else "she lacks"
+        knows = "they have" if mc.holds(guide, degree) else "they lack"
         verdict = (
             "[$text-success]works[/]"
             if total >= target

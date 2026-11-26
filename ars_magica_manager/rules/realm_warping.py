@@ -440,13 +440,13 @@ def divine_ascent(
             + "."
         )
         if resist >= against:
-            notes.append("Too tied to the mundane world, he does not ascend.")
+            notes.append("Too tied to the mundane world, they don't ascend.")
             return warping_rules.TwilightResult(False, notes=notes)
         extra = against - resist
     count, unit, seasons = ascent_time(a.warping_score, gained + extra, faith)
     notes.append(
-        f"He ascends for {count} {unit}, +{extra} more Warping Points (no "
-        "further Ascent from them); his body stays, untouched by any power, "
+        f"They ascend for {count} {unit}, +{extra} more Warping Points (no "
+        "further Ascent from them); their body stays, untouched by any power, "
         "or vanishes until it ends."
     )
     points = gained + extra
@@ -457,10 +457,10 @@ def divine_ascent(
         notes += mysticism.ascent_lines(character, points if first else extra)
     else:
         notes.append(
-            "The form chosen at his first Ascent stays for life: Divine Gloom "
+            "The form chosen at their first Ascent stays for life: Divine Gloom "
             f"({points} xp among Dominion Lore and holy Abilities, and {points} xp "
             "lost from mundane ones), Divine Form (Magic Resistance and "
-            "Penetration from his Warping Score) or Divine Unity (his Warping "
+            "Penetration from their Warping Score) or Divine Unity (their Warping "
             "Score added to the virtue's Personality Trait). No Final Ascent."
         )
     return warping_rules.TwilightResult(
@@ -484,14 +484,14 @@ def confidence_due(character: Character, gained: int, *, botched: bool) -> str:
     )
     if background.confidence_score < aging.warping_score:
         rise = (
-            f"his Confidence Score rises from {background.confidence_score} to "
-            f"{background.confidence_score + 1} (below his Warping Score "
+            f"their Confidence Score rises from {background.confidence_score} to "
+            f"{background.confidence_score + 1} (below their Warping Score "
             f"{aging.warping_score})"
         )
     else:
         rise = (
-            f"his Confidence Score ({background.confidence_score}) rises by 1 "
-            "only if that Aging roll leaves his Decrepitude above it (now "
+            f"their Confidence Score ({background.confidence_score}) rises by 1 "
+            "only if that Aging roll leaves their Decrepitude above it (now "
             f"{aging.decrepitude})"
         )
     return f"{gain[0].upper()}{gain[1:]}; once the ordeal and that Aging roll are over, {rise}."
@@ -526,12 +526,12 @@ def vituperation(
             + "."
         )
         if not botched and resist >= against:
-            notes.append("He masters the forces in two minutes.")
+            notes.append("They master the forces in two minutes.")
             return warping_rules.TwilightResult(False, notes=notes)
     score = character.aging.warping_score
     time, seasons = warping_rules.time_for_score(score, rng, saga)
     notes.append(
-        f"Torn away as if in Hell for {time}; then an Aging roll adding his "
+        f"Torn away as if in Hell for {time}; then an Aging roll adding their "
         f"Warping Score ({score}), with no Longevity Ritual (last year's Living "
         "Conditions if it lasted a season or less)."
     )
@@ -577,12 +577,12 @@ def faerie_calling(
         + f" against 3 x (Warping Score {score} - Faerie Rank). With a Faerie Rank of {rank} or more it is a good "
         "Calling (a new +1 Sympathy Trait, or +1 to a fitting one); otherwise "
         "a bad one (-1). Rank 10 or more on a good one, or -10 or less on a "
-        "bad one, and he becomes a faerie for good.",
+        "bad one, and they become a faerie for good.",
     ]
     held = faerie_sympathy.faerie_rank(character.personality_traits)
     if held is not None:
         notes.append(
-            f"His Sympathy Traits make his Faerie Rank {held:+d}: a "
+            f"Their Sympathy Traits make their Faerie Rank {held:+d}: a "
             + ("good" if held >= rank else "bad")
             + " Calling."
         )

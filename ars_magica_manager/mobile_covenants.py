@@ -892,7 +892,7 @@ def detach_fields(
                 f"{escape(magus.name)} travels with this ship",
                 "check",
                 True,
-                hint="Untick to stay with the fleet: his laboratory goes without him.",
+                hint="Untick to stay with the fleet: their laboratory goes without them.",
             )
         )
     return fields

@@ -148,8 +148,8 @@ def fields(saga: Saga, character: Character) -> list[DialogField]:
             allow_blank=True,
             placeholder="(choose)",
             show_if=_effect(SPELL, comprehended=True),
-            hint="The storyguide's choice, of as many magnitudes as the points; "
-            "she need not be able to cast it.",
+            hint="The storyguide's choice, of as many magnitudes as the points; they "
+            "need not be able to cast it.",
         ),
         DialogField(
             "lost_spell",

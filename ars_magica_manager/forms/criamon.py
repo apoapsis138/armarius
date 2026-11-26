@@ -137,7 +137,7 @@ def target_words(character: Character) -> str:
 def _components(station: cr.Station, extra: int = 0) -> str:
     parts = [f"{name} +{bonus}" for name, bonus in station.components]
     if extra:
-        parts.append(f"his aptitude for the path (head binding) +{extra}")
+        parts.append(f"their aptitude for the path (head binding) +{extra}")
     return ", ".join(parts)
 
 
@@ -147,8 +147,8 @@ def next_text(saga: Saga, character: Character) -> str:
     path = cr.path_of(character)
     if path is None:
         return (
-            "[$label]Next:[/] he walks no path yet: Change Path chooses one, "
-            "or Follow an Avenue steps onto a path's first station."
+            "[$label]Next:[/] they walk no path yet: Change Path chooses one, or Follow"
+            " an Avenue steps onto a path's first station."
         )
     if not path.stations:
         return (
@@ -158,7 +158,7 @@ def next_text(saga: Saga, character: Character) -> str:
     found = cr.next_station(character, path)
     if found is None:
         return (
-            f"[$label]Next:[/] none: he has reached the last station of {path.title}."
+            f"[$label]Next:[/] none: they've reached the last station of {path.title}."
         )
     place, station = found
     guide = cr.guide_of(saga, character, character.enigma.guide_id)
@@ -188,8 +188,8 @@ def aside_text(character: Character) -> str:
     path = cr.path_of(character)
     aside = cr.set_aside(character, path)
     rule = (
-        "[dim]One path at a time: a magus who steps onto another keeps only his "
-        f"Enigmatic Wisdom; rejoining, he regains its stations ({MC} pp. 58-60).[/]"
+        "[dim]One path at a time: a magus who steps onto another keeps only their "
+        f"Enigmatic Wisdom; rejoining, they regain its stations ({MC} pp. 58-60).[/]"
     )
     if not aside:
         return rule
@@ -233,13 +233,12 @@ def path_fields(saga: Saga, character: Character) -> list[DialogField]:
             "select",
             enigma.path,
             options=[
-                ("As his stations show", ""),
+                ("As their stations show", ""),
                 *[(p.title, p.key) for p in cr.paths_open_to(character)],
             ],
-            hint="One path at a time: stepping onto another keeps only his "
-            f"Enigmatic Wisdom of the old one's stations ({MC} p. 58). The "
-            "Path of the Mirror is the Primus's alone (pp. 57, 59): it is "
-            "offered when his Hermetic background names him the Primus.",
+            hint="One path at a time: they keep only their "
+            f"Enigmatic Wisdom from the old one ({MC} p. 58). The "
+            "Mirror is the Primus's (pp. 57, 59).",
         ),
         DialogField(
             "guide",
@@ -254,7 +253,7 @@ def path_fields(saga: Saga, character: Character) -> list[DialogField]:
             "A ghostly Primus's Presence",
             "int",
             enigma.primus_presence,
-            hint=f"The Presence he had in life; his Lore is {cr.GHOST_LORE} "
+            hint=f"The Presence they had in life; their Lore is {cr.GHOST_LORE} "
             f"({MC} p. 60).",
         ),
         DialogField(
@@ -388,7 +387,7 @@ def avenue_fields(saga: Saga, character: Character) -> list[DialogField]:
         DialogField("guide", "Guide", "select", guide, options=guides, required=True),
         DialogField(
             "talisman",
-            "Lose his talisman in place of the special time and place",
+            "Give up their talisman instead",
             "check",
             False,
             hint="The same +3, not an added one (p. 64).",
@@ -427,7 +426,7 @@ def avenue_live(saga: Saga, character: Character) -> Any:
     def live(values: dict[str, Any]) -> str:
         found = _chosen(values)
         if found is None:
-            return "[dim]He has reached every station he can.[/]"
+            return "[dim]They've reached every station they can.[/]"
         path, place, station = found
         guide = _guide_from(saga, character, values.get("guide") or "")
         route = cr.avenue(character, path, place, guide, ordeal_reduction(character))
@@ -442,34 +441,34 @@ def avenue_live(saga: Saga, character: Character) -> Any:
         ]
         if route.script > station.bonus:
             lines.append(
-                f"His head was bound in infancy for {path.title}: "
+                f"Their head was bound in infancy for {path.title}: "
                 f"+{route.script - station.bonus} to its first station ({MC} p. 51)."
             )
         lines += [bad(escape(problem)) for problem in route.problems]
         lines += [warn(escape(words)) for words in route.warnings]
         lines.append(
             f"The avenue's story: {escape(station.story)} ({MC} p. {station.page}). "
-            "Failing, he may try again; utter failure may bring a Twilight check."
+            "Failing, they may try again; utter failure may bring a Twilight check."
         )
         if values.get("talisman"):
             lines.append(
-                "He gives up his talisman in place of the special time and "
-                "place: the same +3."
+                "They give up their talisman in place of the special time and place: "
+                "the same +3."
             )
         lines.append(escape(_on_success(character, station)))
         current = cr.path_of(character)
         if current is not None and current is not path:
             lines.append(
                 warn(
-                    f"He steps from {current.title} onto {path.title}: its "
-                    "stations are set aside while he walks it."
+                    f"They step from {current.title} onto {path.title}: its "
+                    "stations are set aside while they walk it."
                 )
             )
         season, year = values.get("season") or "", values.get("year")
         if season and isinstance(year, int):
             planned = plan_for(saga, character, season, year)
             if planned is not None:
-                lines.append(warn(f"This replaces his plan for {season} {year}."))
+                lines.append(warn(f"This replaces their plan for {season} {year}."))
         lines.append(f"[dim]{MC} pp. 59-60, {station.page}; DE pp. 387-389.[/]")
         return "\n".join(lines)
 
@@ -482,7 +481,7 @@ def avenue_form(saga: Saga, character: Character) -> Form:
     def apply(values: dict[str, Any]) -> list[str]:
         found = _chosen(values)
         if found is None:
-            return notes("Nothing planned: he has no avenue left to follow.")
+            return notes("Nothing planned: they have no avenue left to follow.")
         path, place, station = found
         guide = values.get("guide") or ""
         season = values.get("season") or saga.current_season
@@ -499,8 +498,8 @@ def avenue_form(saga: Saga, character: Character) -> Form:
                 else guide or None,
                 hedge_script=cr.script_key(path, place),
                 effect_id=station.virtue_id,
-                details="He gives up his talisman in place of the special time "
-                "and place (the same +3)."
+                details="They give up their talisman in place of the special time and "
+                "place (the same +3)."
                 if values.get("talisman")
                 else "",
             ),
@@ -707,7 +706,7 @@ def stigmata_header() -> str:
 
 
 STIGMATA_EMPTY = (
-    "[dim]None yet: the first usually appears when he answers the Riddle of "
+    "[dim]None yet: the first usually appears when they answer the Riddle of "
     "the Magus (a adds one).[/]"
 )
 

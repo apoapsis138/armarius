@@ -679,7 +679,7 @@ def _quarry_name(saga: Saga, values: dict[str, Any]) -> str:
 def validate_gather(saga: Saga) -> Callable[[dict[str, Any]], str | None]:
     def validate(values: dict[str, Any]) -> str | None:
         if not _quarry_name(saga, values):
-            return "Choose the quarry, or type his name."
+            return "Choose the quarry, or type their name."
         return None
 
     return validate
@@ -837,8 +837,8 @@ def aegis_live(saga: Saga) -> Callable[[dict[str, Any]], str]:
             )
         lines.append(
             "[dim]A magus casting from inside a hostile Aegis loses half its level "
-            "from his Casting Total; destroying one is likely deprivation of "
-            f"magical power, unless the war is declared on the whole covenant "
+            "from their Casting Total; destroying one is likely deprivation of "
+            f"magical power, unless the war is on the whole covenant "
             f"({HP} pp. 79, 94).[/]"
         )
         return "\n".join(lines)
@@ -948,8 +948,8 @@ def death_fields(saga: Saga, covenant: Covenant) -> list[DialogField]:
             "Days dead before animated",
             "int",
             0,
-            hint="His corpse's Physical Characteristics fall 1 a day, to -5 "
-            "(p. 108). 0 for his own body, kept by the ward.",
+            hint="Their corpse's Physical Characteristics fall 1 a day, to -5 (p. 108)."
+            " 0 for their own body, kept by the ward.",
         ),
     ]
 
@@ -972,7 +972,7 @@ def _player_roll(
     die = dice.stress_die(rng, saga=saga)
     total = (0 if die.botched else die.value) + aura + lore + vim
     words = (
-        f"his stress die {die.value}{' (a botch)' if die.botched else ''} + aura "
+        f"their stress die {die.value}{' (a botch)' if die.botched else ''} + aura "
         f"{aura} + Magic Lore {lore} + Vim Form Bonus {vim} = {total}"
     )
     return total, die.botched, words
@@ -984,7 +984,7 @@ def _storyguide_roll(character: Character, rng: random.Random) -> tuple[int, str
     die = dice.stress_die(rng, 0)
     total = die.value + traits + lore
     words = (
-        f"the storyguide's stress die {die.value} + his Personality Traits {traits} "
+        f"the storyguide's stress die {die.value} + their Personality Traits {traits} "
         f"+ {lore_name} {lore} = {total}"
     )
     return total, lore_name, words
@@ -993,7 +993,7 @@ def _storyguide_roll(character: Character, rng: random.Random) -> tuple[int, str
 def _sole_trait(character: Character) -> str:
     traits = character.personality_traits
     if not traits:
-        return "none (he had none)"
+        return "none (they had none)"
     top = max(traits, key=lambda t: abs(t.score))
     return f"{top.name} {top.score * 2:+d}"
 
@@ -1034,21 +1034,21 @@ def death_lines(
     season, xp = sp.SEASON_XP[ghost]
     lines.append(
         f"Magic Might {might} (raised by Improved Might Qualities); a {season} "
-        f"spirit, {xp} experience to buy back the Abilities he had; "
+        f"spirit, {xp} experience to buy back the Abilities they had; "
         f"{sp.vis_pawns(might)} pawns of vis of its Form ({HP} pp. 108-110)."
     )
     air = sp.magical_air(gift) if gift else "Magical Air"
     lines.append(
         "Virtues: Magic Spirit for The Gift, Transformed (Being)"
         + (f", and {air}" if air else "")
-        + f"; his one Personality Trait {_sole_trait(character)} ({HP} pp. 109, "
+        + f"; their one Personality Trait {_sole_trait(character)} ({HP} pp. 109, "
         "111)."
     )
     days = values.get("days") or 0
     fall = sp.decay(days)
     if days:
         lines.append(
-            "His corpse: Mental Characteristics n/a; Physical ones "
+            "Their corpse: Mental Characteristics n/a; Physical ones "
             + (f"{fall} each" if fall is not None else "n/a, a year dead")
             + f" ({HP} p. 108)."
         )
@@ -1105,9 +1105,9 @@ def death_form(
         lambda: death_fields(saga, covenant),
         apply,
         live=lambda _values: (
-            "Rolled when he dies: the ghost his spirit becomes, if any. His "
-            "sheet is then rebuilt by hand as a magic creature's (HP pp. "
-            "107-111; Realms of Power: Magic)."
+            "Rolled when they die: the ghost their spirit becomes, if any. Their sheet "
+            "is then rebuilt by hand as a magic creature's (HP pp. 107-111; RoP: "
+            "Magic)."
         ),
         save_label="Roll",
         help_id=STAGED_SECTION,

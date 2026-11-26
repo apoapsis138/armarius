@@ -196,7 +196,7 @@ def rite_notes(
             + (", the Traits of both states for a change" if conjure else "")
         )
         if need > have:
-            line += f"; more than all his ({have})"
+            line += f"; more than all of theirs ({have})"
         notes.append(line + f" (RoP: Faerie p. 121{', 125' if conjure else ''})")
     symbols = symbol_points(effect)
     if symbols:

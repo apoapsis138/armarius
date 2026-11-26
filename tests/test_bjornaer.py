@@ -181,7 +181,7 @@ def test_a_refinements_ease_vis_and_script():
     assert bj.embryonic_script(ulf, "size", sympathy=9).total == 12  # capped +5
     assert bj.power_problems("minor_power", 20, 20) == [
         "The Lab Total 20 must exceed the Power's level 20: its formulation is "
-        "beyond him."
+        "beyond them."
     ]
     assert bj.power_problems("major_power", 20, 25, constant=True) == [
         "A Major Power can't have a constant effect."
@@ -241,7 +241,7 @@ def test_a_familiar_ever_bound_stops_the_ritual():
     hrafn.diary.append(
         DiaryEntry(1215, "Autumn", "Binding Corvus", activity=bj.FAMILIAR_DIARY[0])
     )
-    assert "Autumn 1215, in his Diary" in sw.problems(saga, hrafn, plan)[0]
+    assert "Autumn 1215, in their Diary" in sw.problems(saga, hrafn, plan)[0]
     hrafn.diary.clear()
     assert sw.problems(saga, hrafn, plan) == []
     plan.familiar_ever_bound = True
@@ -359,7 +359,7 @@ def test_ulf_refines_his_shadow_wolf():
     assert "Initiation Total 17" in done.notes[-1]
     assert any("eat 7 pawns of the Power's Form vis" in n for n in done.notes)
     led = _plan("u", bj.REFINEMENT_PREFIX + "Acquiring a Quality", teacher_id="a")
-    assert "Initiates himself" in sw.problems(saga, ulf, led)[0]
+    assert "Initiate themselves" in sw.problems(saga, ulf, led)[0]
     hrafn = _who(saga, "h")
     hrafn.virtues_flaws = [VirtueFlawInstance(bj.HEARTBEAST)]
     hrafn.abilities = [Ability(LORE, xp=ability_xp(1))]

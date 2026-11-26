@@ -42,8 +42,8 @@ register(
     SimpleActivity(
         "measure_fixed_stars",
         "Learn to measure the fixed stars",
-        "A season learning Ptolemy's measure of the array of fixed stars, the "
-        "first stage of his coordinates (no experience).",
+        "A season learning Ptolemy's measure of the fixed stars, the first stage of "
+        "their coordinates (no experience).",
         HESPERIDES,
         "AM-2",
         who=MAGI,

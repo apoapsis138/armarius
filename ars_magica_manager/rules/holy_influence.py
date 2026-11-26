@@ -252,7 +252,7 @@ def may_influence(character: Character, authority: str, method: str) -> str:
     Temporal Influence; anyone willing only ceremonially, with
     Inspirational; a ceremony needs a point to spend."""
     if method == CEREMONY and not point_to_spend(character):
-        return "A ceremony spends a Faith or Confidence Point, and he has none."
+        return "A ceremony spends a Faith or Confidence Point, and they have none."
     if authority == SPIRITUAL:
         return ""
     if authority == TEMPORAL:
@@ -320,7 +320,7 @@ def may_invoke_aid(character: Character) -> str:
     if character.type == "grog" or _has(character, LOW_SELF_ESTEEM):
         return "Only one who can spend a Confidence Point (or a Faith Point) asks God's aid."
     if character.background.confidence_points < 1:
-        return "Asking God's aid spends a Confidence Point, and he has none."
+        return "Asking God's aid spends a Confidence Point, and they have none."
     return ""
 
 

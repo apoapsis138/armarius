@@ -84,14 +84,13 @@ def discipline_fields(character: Character) -> list[DialogField]:
             "select",
             "A month",
             options=durations,
-            hint="A year of improved rations is +1 to his Living Conditions for "
-            "aging; a season or two of the year on reduced rations -1, three or "
-            "four -2 (Grogs pp. 23, 25).",
+            hint="Better rations for a year: +1 to their Living Conditions for aging; "
+            "reduced for 1-2 seasons -1, 3-4 -2 (Grogs pp. 23, 25).",
             show_if=_kind_in(*gd.LASTING),
         ),
         DialogField(
             "rank",
-            "His rank now",
+            "Rank now",
             "text",
             gd.rank(character),
             placeholder="custos",
@@ -124,7 +123,7 @@ def discipline_fields(character: Character) -> list[DialogField]:
         ),
         DialogField(
             "leaves",
-            "He leaves the covenant",
+            "They leave the covenant",
             "check",
             True,
             show_if=_kind_in(gd.DISMISSAL),
@@ -168,7 +167,7 @@ def discipline_fields(character: Character) -> list[DialogField]:
         ),
         DialogField(
             "own_hand",
-            "Dealt by the magus himself",
+            "Dealt by the magus themselves",
             "check",
             False,
             show_if=lambda v: _by_magus(v) and _wounding(v),
@@ -182,19 +181,19 @@ def discipline_fields(character: Character) -> list[DialogField]:
         ),
         DialogField(
             "reputation",
-            "His Reputation",
+            "Reputation",
             "int",
             0,
-            hint="Among the covenfolk: + if he is loved (adds to the penalty), - "
-            "if disliked.",
+            hint="Among the covenfolk: + if they're loved (adds to the penalty), - if "
+            "disliked.",
             show_if=_punishing,
         ),
         DialogField(
             "loyal_change",
-            "His Loyal changes by",
+            "Their Loyal changes by",
             "int",
             0,
-            hint="The books leave his own Loyal to the troupe; it may drop for a "
+            hint="The books leave their own Loyal to the troupe; it may drop for a "
             "while after a punishment (Grogs p. 24).",
         ),
         DialogField("note", "Why", "text", "", placeholder="for valour at the ford"),
@@ -220,14 +219,14 @@ def _int(value: Any, default: int) -> int:
 
 #: What a reward or punishment does that needs no figures.
 _SAID: dict[str, str] = {
-    gd.IMPROVED_RATIONS: "A whole year of them is +1 to his Living Conditions for "
+    gd.IMPROVED_RATIONS: "A whole year of them is +1 to their Living Conditions for "
     "that year's aging roll.",
-    gd.PAY_AND_A_HALF: "Half his Wages again on the covenant's Wages while it lasts.",
-    gd.IMPROVED_EQUIPMENT: "His for good, but surrendered if he is demoted (record it "
-    "on his Personal Gear).",
+    gd.PAY_AND_A_HALF: "Half their Wages again on the covenant's Wages while it lasts.",
+    gd.IMPROVED_EQUIPMENT: "Theirs for good, but surrendered if they're demoted (record"
+    " it on their Personal Gear).",
     gd.CASTIGATION: "A single blow with the rod, at once.",
-    gd.INFERIOR_DUTIES: "The worst jobs, done in his free time.",
-    gd.REDUCED_RATIONS: "A season or two of the year on them is -1 to his Living "
+    gd.INFERIOR_DUTIES: "The worst jobs, done in their free time.",
+    gd.REDUCED_RATIONS: "A season or two of the year on them is -1 to their Living "
     "Conditions for aging, three or four -2.",
     gd.FUSTUARIUM: "Beaten to death by the blindfolded turb. Few covenants have "
     "the right to order a death.",
@@ -264,7 +263,7 @@ def _described(character: Character, record: Discipline, duration: str) -> list[
         held = gd.rewards_held(character)
         if held:
             lines.append(
-                "He surrenders the equipment he was given: "
+                "They surrender the equipment they were given: "
                 + "; ".join(r.note or gd.LABELS[r.kind] for r in held)
                 + "."
             )
@@ -294,13 +293,13 @@ def _harm(done: Outcome, values: dict[str, Any]) -> None:
         days = gd.whipping_recovery(lashes)
         done.lines.append(f"{lashes} lashes: {hurt}.")
         done.lines.append(
-            f"{'A day' if days == 1 else 'A week'} to recover; his pay is docked "
+            f"{'A day' if days == 1 else 'A week'} to recover; their pay is docked "
             "for any longer."
         )
     elif kind == gd.DISMISSAL:
         done.leaves = bool(values.get("leaves", True))
         done.lines.append(
-            "He leaves the covenant and its lists; he may bear a grudge."
+            "They leave the covenant and its lists; they may bear a grudge."
             if done.leaves
             else "Dismissed, but still on the covenant's lists."
         )
@@ -341,7 +340,7 @@ def outcome(saga: Saga, character: Character, values: dict[str, Any]) -> Outcome
         _loyalty(saga, character, done, values)
     change = _int(values.get("loyal_change"), 0)
     if change:
-        done.lines.append(f"His {LOYAL_TRAIT} {change:+d}.")
+        done.lines.append(f"Their {LOYAL_TRAIT} {change:+d}.")
     return done
 
 
@@ -360,7 +359,7 @@ def _problem(values: dict[str, Any]) -> str | None:
     if kind in (gd.PROMOTION, gd.REDUCTION_IN_RANK) and not str(
         values.get("rank") or ""
     ):
-        return "Give the rank he holds now."
+        return "Give the rank they hold now."
     if kind == gd.WHIPPING and _int(values.get("lashes"), 0) < 1:
         return "A whipping is at least one lash."
     return None
@@ -480,13 +479,12 @@ def pension_fields(saga: Saga, character: Character) -> list[DialogField]:
         fields.append(
             DialogField(
                 "terms",
-                "He retires on",
+                "They retire on",
                 "select",
                 gd.PENSION,
                 options=list(gd.RETIREMENT_TERMS),
-                hint="He still counts as one of the covenant for its finances; Grogs "
-                "gives half to three-quarters of his pay, the Definitive Edition "
-                "half (p. 186), which the app uses.",
+                hint="They still count for the covenant's finances; half pay (DE p. "
+                "186; Grogs allows up to three-quarters).",
             )
         )
     fields += [
@@ -512,15 +510,15 @@ def apply_pension(
     covenant.loyalty.pension = bool(values.get("grants"))
     note = str(values.get("note") or "")
     if character.wounds.dead:
-        kind, terms, title = gd.WIDOW_PENSION, "", "His widow's pension"
+        kind, terms, title = gd.WIDOW_PENSION, "", "Widow's pension"
         covenant.loyalty.pensioners += 1
         lines = [
-            "His widow draws the pension he would have had: half Wages a year, "
+            "Their widow draws the pension they would have had: half Wages a year, "
             f"one of the covenant's {covenant.loyalty.pensioners} pensioner(s)."
         ]
         if not covenant.loyalty.pension:
             lines.append(
-                "The covenant grants no pensions: she costs nothing until it does."
+                "The covenant grants no pensions: the widow costs nothing until it does."
             )
     else:
         kind = gd.RETIRED
@@ -529,10 +527,10 @@ def apply_pension(
             "Retired on a pension" if terms == gd.PENSION else "Retired, paying rent"
         )
         lines = [
-            "He still counts as one of the covenant for its finances.",
-            "His Wages are halved: his pension."
+            "They still count as one of the covenant for its finances.",
+            "Their Wages are halved: their pension."
             if terms == gd.PENSION
-            else "He draws no Wages, and pays rent for his lodging; he is fed free.",
+            else "They draw no Wages, and pay rent for their lodging; they're fed free.",
         ]
     character.discipline.append(
         Discipline(saga.current_year, saga.current_season, kind, None, note=terms)
@@ -552,7 +550,7 @@ def pension_form(saga: Saga, character: Character | None) -> Command:
     if refused is not None or character is None:
         return refused or Refuse(PENSION_TITLE, "Choose a grog first.")
     if character.wounds.dead and gd.widow_pensioned(character):
-        return Refuse(PENSION_TITLE, "His widow already has his pension.")
+        return Refuse(PENSION_TITLE, "The widow already has their pension.")
     if not character.wounds.dead and gd.retirement(character) is not None:
         return Refuse(PENSION_TITLE, f"{escape(character.name)} has already retired.")
     grog = character

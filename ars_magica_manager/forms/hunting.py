@@ -117,7 +117,7 @@ def _area_field(saga: Saga) -> DialogField:
         options=area_options(saga),
         allow_blank=True,
         placeholder="(each one's best)",
-        hint="The region the ground lies in; each roller uses his score in it.",
+        hint="The region the ground lies in; each roller uses their own score in it.",
     )
 
 
@@ -257,8 +257,8 @@ def hunt_fields(ground: Ground) -> list[DialogField]:
             "Household huntsman: Hunt",
             "int",
             DEFAULT_HUNT,
-            hint="With no huntsman named: his Characteristics taken as 0, his "
-            "Animal Handling as his Hunt.",
+            hint="With no huntsman named: their Characteristics taken as 0, their "
+            "Animal Handling as their Hunt.",
             show_if=no_huntsmen,
         ),
         DialogField(
@@ -828,12 +828,12 @@ def lore_fields(ground: Ground) -> list[DialogField]:
         ),
         DialogField(
             "away",
-            "He lives",
+            "They live",
             "select",
             hr.AT_HOME,
             options=[(label, key) for key, label in hr.AWAY.items()],
             required=True,
-            hint=f"Away from his own ground he subtracts 3 ({hr.CG} p. 82).",
+            hint=f"Away from their own ground they subtract 3 ({hr.CG} p. 82).",
         ),
         DialogField("what", "What exactly", "text", "", placeholder="a farrier"),
     ]
@@ -873,10 +873,10 @@ def lore_live(ground: Ground) -> Callable[[dict[str, Any]], str]:
                 if need <= 1
                 else f"{need} or more"
                 if need <= 10
-                else "beyond him"
+                else "beyond them"
             )
             + ".",
-            f"[dim]He knows how to find it or whom to ask; Charm or Bargain win it "
+            f"[dim]They know how to find it or whom to ask; Charm or Bargain win it "
             f"({hr.CG} p. 82). {escape(ground.place)}.[/]",
         ]
         return "\n".join(lines)
@@ -912,7 +912,7 @@ def seek(
     found = bool(roll.succeeded)
     text = (
         f"{ground.place}, looking for {what}: "
-        + ("he knows where, or whom to ask" if found else "he doesn't know")
+        + ("they know where, or whom to ask" if found else "they don't know")
         + f" ({hr.said(roll)})."
     )
     diaries.write(

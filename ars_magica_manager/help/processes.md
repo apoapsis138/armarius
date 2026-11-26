@@ -174,7 +174,7 @@ The Activity list offers what this character may do. Activities marked "magi" ar
   - A magus tends no more Stirpes than their Viresculture score. Those past it don't breed, and the Diary says so. Each needs 12 Labor Points a year, and the yield is a pawn less for every 6 Labor Points short and for each month left unattended. The app takes its care as given, so take a pawn off by hand for care short or months unattended.
   - With the Aura Variation rules, a year's harvest takes a fifth of its pawns, rounded up, off the aura's yearly modifier.
 - **The Lesser Elixir (The Mysteries Revised Edition pp. 42-43):** in Mysteries, for a magus with the Virtue, which needs Hermetic Alchemy.
-  - **Reinvent the Lesser Elixir** names the special ingredient added and its Shape and Material bonus. Tick **He devised it himself** for one found by Vulgar Alchemy, and its points are doubled. No ingredient counts above Magic Theory.
+  - **Reinvent the Lesser Elixir** names the special ingredient added and its Shape and Material bonus. Tick **They devised it themselves** for one found by Vulgar Alchemy, and its points are doubled. No ingredient counts above Magic Theory.
   - The Elixir Points of all the magus's ingredients give the Elixir Level as an Art's experience gives its score (1, 3, 6, 10, 15...). It's at most their Magic Theory as they devise it.
   - The season prepares a dose of their own Longevity Ritual from its Lab Text, which must be at hand and readable. They need a Longevity Ritual in force. The dose takes a pawn of **The dose's vis** (Creo, Corpus or Vim) for every five years of their age, from the raw vis **Vis from** names. They use no more of it than their score in that Art, as for a dose rebrewed from the Lab Text (DE p. 261; p. 42).
   - From then on their aging rolls subtract the Elixir Level as well as the ritual's modifier, until an Aging Crisis ends the ritual. Performing their own ritual again from its Lab Text, or making a new one themselves, adds the ingredients again. A ritual someone else makes for them leaves the Elixir out.
@@ -269,7 +269,7 @@ A failure wastes the season, and a botch also costs a Medium Wound or a Bad Repu
 - To use an inception, cast the target's nativity once, a day's work of Intelligence + Artes Liberales + a die against 9. Then a minute per level gives the answer.
 
 - **Make a wondrous item:** the Workshop Total adds the aura's modifier.
-  - Enter the aura where the craftsman works, and its realm, in **Aura where he works**. Blank counts none. It's read on the Realm Interaction table for the realm the craftsman's Touched by (Realm) names. Faerie in a Magic aura adds half, Divine nothing (City & Guild p. 72, DE pp. 410-411).
+  - Enter the aura where the craftsman works, and its realm, in **Aura where they work**. Blank counts none. It's read on the Realm Interaction table for the realm the craftsman's Touched by (Realm) names. Faerie in a Magic aura adds half, Divine nothing (City & Guild p. 72, DE pp. 410-411).
   - The Virtue must name Magic, Faerie, Divine or Infernal (p. 71), or the season says so.
   - Choose the one assistant in the Teacher / master field. Half their Craft is added (City & Guild p. 72). Count no other help in Other.
   - A Mythic Farrier (Grogs p. 76) makes wondrous horseshoes the same way, with Intelligence or Dexterity + Craft: Farrier, in one Form. Their power works on the horse or the ground it treads. Name the farrier's realm on the Virtue, most likely Magic or Faerie, Infernal possible.
@@ -737,7 +737,7 @@ On the desktop, choose the Acta in the Diary and press Print to print it to a PD
 - The Praeco collects the Redcaps' and Quaesitores' stipends and Redcaps deliver them, so they only go into the minutes.
 - The Praeco may redeem promissory notes, whose pawns leave the treasury, and issue a new one. What it borrows comes into the treasury now.
 
-*The Curantis and his Notary* (p. 97). The Curantis keeps the zenodochia, the Tribunal's safehouses for travelling magi. They're appointed at every meeting for a term to the next, usually unopposed, and no one serves two terms running.
+*The Curantis and their Notary* (p. 97). The Curantis keeps the zenodochia, the Tribunal's safehouses for travelling magi. They're appointed at every meeting for a term to the next, usually unopposed, and no one serves two terms running.
 
 - Say whether the outgoing Curantis built a new zenodochium in their term, as they're expected to.
 - Choose the new Curantis and the Notary the outgoing Curantis selected, often a Redcap or a magus fresh from their Gauntlet. Give the Curantis's salary, which leaves the treasury now.

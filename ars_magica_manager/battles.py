@@ -317,16 +317,15 @@ def fields(
                 f"{label} fights on its home ground",
                 "check",
                 side.at_home,
-                hint="Only on home ground does a lord raise his levies (Lords "
-                "of Men pp. 31, 102).",
+                hint="A lord raises their levies only on home ground (LoM pp. 31, 102).",
             ),
             DialogField(
                 f"groups_{index}",
                 f"{label}'s combat groups",
                 "optint",
                 side.groups if entry is not None else None,
-                hint="Groups of five men. Blank, a lord's title's army fills it "
-                "in, his levies only at home; add his allies and mercenaries.",
+                hint="Groups of five men. Blank: their title's army, levies only at "
+                "home; add their allies and mercenaries.",
             ),
             DialogField(
                 f"deployment_{index}",
@@ -649,7 +648,7 @@ def _event_fields(saga: Saga, entry: Battle) -> list[DialogField]:
         ),
         DialogField(
             "rally",
-            "His rally, if the Morale failed",
+            "Their rally, if Morale failed",
             "optint",
             None,
             hint=f"Presence + Leadership + stress die at the next event's "
@@ -694,7 +693,7 @@ def _rally_fields(saga: Saga, entry: Battle) -> list[DialogField]:
         ),
         DialogField(
             "rally_roll",
-            "His roll",
+            "Roll",
             "optint",
             None,
             show_if=lambda v: rallied(v) and v.get("rally_way") != "story",
@@ -727,24 +726,21 @@ def _fight_fields(playing: Fight | None, won: bool | None) -> list[DialogField]:
                 "Play it out as a fight",
                 "check",
                 False,
-                hint="Makes a fight on Conflicts from the Maneuver, Enemy and "
-                "Size: the leader and his group against the enemy's groups "
-                "from the Standard Combat Groups (Lords of Men pp. 105-108). "
-                "Play it, then come back to record the event.",
+                hint="Makes a fight on Conflicts: the leader's group against the "
+                "enemy's (LoM pp. 105-108). Then record the event.",
             ),
             DialogField(
                 "company",
-                "His company is one group",
+                "Their company is one group",
                 "check",
                 False,
                 show_if=lambda v: bool(v.get("play_fight")),
-                hint="A Knight Banneret's or Mercenary Captain's company stays "
-                "one group whatever the Weight of Numbers (Lords of Men p. "
-                "104); ticked for him by the Virtue.",
+                hint="A Knight Banneret's or Mercenary Captain's company stays one "
+                "group (LoM p. 104); the Virtue ticks it for them.",
             ),
             DialogField(
                 "own_troop",
-                "His group",
+                "Their group",
                 "select",
                 bf.own_troop_options()[4][1],
                 options=bf.own_troop_options(),

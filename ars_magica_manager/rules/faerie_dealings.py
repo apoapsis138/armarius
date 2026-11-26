@@ -468,9 +468,8 @@ def outcome(
             )
         elif worked:
             text = (
-                "A faerie comes and is held: it must attend and listen, and he "
-                "is warded against its attacks and powers until either ends "
-                "the summoning."
+                "A faerie comes and is held: it must attend and listen, and they're "
+                "warded against its attacks and powers until either ends the summoning."
             )
         elif penetrated is False:
             text = (
@@ -479,8 +478,8 @@ def outcome(
             )
         else:
             text = (
-                "A faerie comes but is not held: it may ignore him, attack him "
-                "or leave at will, and he can't send it away."
+                "A faerie comes but is not held: it may ignore them, attack them or "
+                "leave at will, and they can't send it away."
             )
         return Outcome(worked, penetrated, text)
     if botched:
@@ -498,18 +497,17 @@ def outcome(
             "bearer; one benefit is chosen now. A new bond ends the old."
         ),
         CAPTIVATING: (
-            "He and the faerie change places; each keeps his Personality "
-            "Traits and Confidence, and he his Sympathy Traits. His body gains "
-            "a Warping Point a season and one a year; both are immune to "
-            "Faerie Calling meanwhile."
+            "They and the faerie change places; each keeps their own Personality Traits"
+            " and Confidence, and the character their Sympathy Traits. Their body gains"
+            " a Warping Point a season and one a year; both are immune to Faerie "
+            "Calling meanwhile."
         ),
         DISMISSING: {
             CANCEL: "The effect is cancelled.",
             END: "The effect on the being ends.",
             RELEASE: (
-                "The being is freed from the agreement; he takes the debt "
-                "upon himself, losing no Sympathy, though the faerie may "
-                "resent it."
+                "The being is freed from the agreement; they take the debt upon "
+                "themselves, losing no Sympathy, though the faerie may resent it."
             ),
         }[target.dismissal],
     }[power]

@@ -197,7 +197,7 @@ def shortfalls(character: Character, guild: towns.Guild, rank_key: str) -> list[
     if rank.leadership:
         leadership = scores.ability_level(character, "Leadership")
         if leadership * 2 < craft:
-            found.append(f"Leadership half his Craft (has {leadership})")
+            found.append(f"Leadership half their Craft (has {leadership})")
     if rank.artes and scores.ability_level(character, "Artes Liberales") < 1:
         found.append("Artes Liberales")
     if not {vf.vf_id for vf in character.virtues_flaws} & rank.virtues:
@@ -482,10 +482,10 @@ def member_info(saga: Saga, neighbour: Neighbour, row: int) -> str:
     ]
     lacking = shortfalls(character, guild, entry.get("rank") or "apprentice")
     if lacking:
-        lines.append("[$text-warning]For his rank he lacks [dim](pp. 43-50)[/]:[/]")
+        lines.append("[$text-warning]For their rank they lack (pp. 43-50):[/]")
         lines += [f"{BULLET} {escape(what)}" for what in lacking]
     else:
-        lines.append("[$text-success]He has what his rank needs (pp. 43-50).[/]")
+        lines.append("[$text-success]They have what their rank needs (pp. 43-50).[/]")
     if entry.get("note"):
         lines.append(escape(entry.get("note", "")))
     return "\n".join(lines)
@@ -562,5 +562,5 @@ GUILDS_TAB = KindTab(
         ),
     ),
     icon="faction",
-    panel="[dim]Choose a guild to see its ranks, or a member his standing.[/]",
+    panel="[dim]Choose a guild to see its ranks, or a member their standing.[/]",
 )

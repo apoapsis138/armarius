@@ -141,13 +141,13 @@ def letter_form(
         reading = values.get("mode") == tc.READ
         if total >= found.ease:
             outcome = (
-                "The tale's purpose is plain to him."
+                "The tale's purpose is plain to them."
                 if reading
                 else "The message is well wrapped in its tale."
             )
         else:
             outcome = (
-                "The tale's purpose escapes him."
+                "The tale's purpose escapes them."
                 if reading
                 else "The tale muddles the message."
             )
@@ -336,8 +336,8 @@ def greek_fire_fields(saga: Saga, character: Character) -> list[DialogField]:
             "The laboratory's Safety",
             "int",
             _safety(saga, character),
-            hint="His own laboratory's, unless he works in another's "
-            "workshop; it takes away botch dice.",
+            hint="Their own laboratory's, unless they work in another's workshop; it "
+            "takes away botch dice.",
         ),
     ]
 
@@ -366,8 +366,8 @@ def greek_fire_live(character: Character) -> Any:
             f"{'die' if count == 1 else 'dice'}: it matters only if it botches, "
             f"and then the batch explodes ([b]{chance:.1f}%[/]) "
             "[dim](The Sundered Eagle p. 47)[/].",
-            f"[dim]A master alchemist's workshop: he can lead {leadership} "
-            "subordinates (his Leadership), each making two or more doses.[/]",
+            f"[dim]A master alchemist's workshop: they can lead {leadership} "
+            "subordinates (their Leadership), each making two or more doses.[/]",
             f"[dim]The hand-held siphon (Profession: Naffatun): Init {init:+d}, "
             f"Atk {attack:+d}, Dfn {defense:+d}, Dam {damage:+d}, Range {reach}, "
             f"Str {strength:+d}, Load {load}, {cost}; a shield's Defense adds to "
@@ -469,10 +469,10 @@ def icon_fields(saga: Saga) -> list[DialogField]:
         ),
         DialogField(
             "patron",
-            "His patron saint",
+            "Patron saint",
             "check",
             False,
-            hint="Adds his Pious trait.",
+            hint="Adds their Pious trait.",
         ),
         DialogField(
             "other",
@@ -713,7 +713,7 @@ CURSE = "A Mother's Curse"
 
 def curse_fields() -> list[DialogField]:
     return [
-        DialogField("mother", "His mother", "text", "", required=True),
+        DialogField("mother", "Mother", "text", "", required=True),
         DialogField(
             "expertise",
             "Area of expertise",
@@ -728,9 +728,9 @@ def curse_fields() -> list[DialogField]:
             "text",
             "",
             required=True,
-            placeholder="e.g. rescue his captured sister",
-            hint="A curse needs a good reason; most demand he set a family "
-            "matter right.",
+            placeholder="e.g. rescue their captured sister",
+            hint="A curse needs a good reason; most demand they set a family matter "
+            "right.",
         ),
     ]
 
@@ -742,8 +742,8 @@ def curse_live(character: Character) -> Any:
         lines = [
             f"[b]{escape(_vf_name(tc.MOTHERS_CURSE, {'expertise': area}))}[/], "
             f"on {escape(character.name)}'s sheet.",
-            f"[b]{tc.CURSE_PENALTY}[/] to every {area} roll, until he "
-            f"completes it: {task} [dim](The Sundered Eagle p. 136)[/].",
+            f"[b]{tc.CURSE_PENALTY}[/] to every {area} roll, until they "
+            f"complete it: {task} [dim](The Sundered Eagle p. 136)[/].",
             "[dim]Only the task done, or divine intervention, lifts it; a "
             "saint may refuse.[/]",
         ]
@@ -767,8 +767,8 @@ def curse_form(saga: Saga, character: Character | None) -> Command:
         mother = str(values.get("mother") or "").strip()
         task = str(values.get("task") or "").strip()
         line = (
-            f"{mother} cursed him: {tc.CURSE_PENALTY} to every {area} roll until "
-            f"he completes his task: {task}."
+            f"{mother} cursed them: {tc.CURSE_PENALTY} to every {area} roll until "
+            f"they complete their task: {task}."
         )
         _diary(saga, f"{mother}'s curse", line, character)
         return notes(

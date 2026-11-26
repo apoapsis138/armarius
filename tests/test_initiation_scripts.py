@@ -128,7 +128,7 @@ def test_an_ungifted_initiate_needs_an_ordeal():
 def test_an_ungifted_initiate_can_t_initiate_himself():
     saga = _saga()
     assert _problems(saga, _plan(**_minor_ordeal())) == [
-        "Wulf can't Initiate himself: an unGifted Mystagogue must know the power "
+        "Wulf can't Initiate themselves: an unGifted Mystagogue must know the power "
         "(Hedge Magic Revised Edition p. 14)."
     ]
 

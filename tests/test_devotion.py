@@ -205,7 +205,7 @@ def test_anyone_may_ask_the_virgin_or_his_patron():
     assert dv.petition(thomas, "the Queen of Heaven", dv.Situation()).total == 3
     dv.set_patron(thomas, "Saint Crispin")
     assert dv.petition(thomas, "St. Crispin", dv.Situation()).familiar == (
-        "his patron saint"
+        "their patron saint"
     )
 
 
@@ -216,7 +216,9 @@ def test_the_saints_own_relic_adds_two_a_faith_point_and_lifts_the_minus_15():
     held = dv.Situation(relic_faith=3, relic_of_the_saint=True)
     found = dv.petition(thomas, "Saint Edmund", held)
     assert found.total == 3 + 6
-    assert "+ relic 6" in found.terms and found.familiar == "he holds the saint's relic"
+    assert (
+        "+ relic 6" in found.terms and found.familiar == "they hold the saint's relic"
+    )
 
 
 def test_another_saints_relic_or_no_church_keeps_the_plus_one():
@@ -344,7 +346,7 @@ def test_invoking_with_the_saints_relic_from_a_church():
     values = _values(form, saint=forms.OTHER, other="Saint Edmund", relic="ch:0")
     live = form.live(values)
     assert "Simple die + [b]7[/]" in live
-    assert "No -15: he holds the saint's relic" in live
+    assert "No -15: they hold the saint's relic" in live
     lines = form.apply(values)
     # 3 + relic 4 + 9 = 16 against 15 + 4 = 19: not heard.
     assert lines[0] == "Simple die 9, +7 = 16 against 15 + Simple die 4 = 19."
@@ -361,7 +363,7 @@ def test_a_heard_invocation_is_a_miracle_in_the_diary():
     # 3 + Devotion 1 + relic 6 + 10 = 20 against 16.
     lines = form.apply(values)
     assert lines[0] == "Simple die 10, +10 = 20 against 15 + Simple die 1 = 16."
-    assert "Saint Peter hears him and works a miracle: Expel Demons." in lines[1]
+    assert "Saint Peter hears them and works a miracle: Expel Demons." in lines[1]
     assert "5 to 10 Devotion Points" in lines[2]
     assert thomas.diary[-1].name == "Miracle of Saint Peter"
     assert "Expel Demons, 1 point" in form.live(values)
@@ -441,7 +443,7 @@ def test_threatening_spends_confidence_and_is_written_down():
     assert dv.refused(thomas) == []
     assert form.validate is not None
     again = _values(form, saint="Saint Peter", confidence=1)
-    assert "refused his invocation" in str(form.validate(again))
+    assert "refused their invocation" in str(form.validate(again))
     dv.note_answer(thomas, "Saint Peter", False, "Spring", 1220)
     assert "only 1 Confidence" in str(form.validate({**again, "confidence": 3}))
 
@@ -499,7 +501,7 @@ def test_the_patron_saint_is_chosen_on_its_own():
     assert form.validate(_values(form, saint=forms.OTHER)) == "Name the saint."
     lines = form.apply(_values(form, saint=forms.OTHER, other="Saint Crispin"))
     assert dv.patron(thomas) == "Saint Crispin"
-    assert lines == ["Saint Crispin is now his patron saint."]
+    assert lines == ["Saint Crispin is now their patron saint."]
     assert thomas.diary[-1].name == "Patron saint"
     again = _form(forms.patron_form(saga, thomas))
     assert again.fields()[0].value == "Saint Crispin"

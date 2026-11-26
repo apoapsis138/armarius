@@ -113,10 +113,10 @@ RELIC_PER_FAITH = 2
 
 #: The threat modifiers (RoP: The Divine p. 88).
 THREATS: dict[str, tuple[str, int]] = {
-    "bones": ("Exposing his bones", 1),
-    "whipping": ("Defiling his relics", 2),
-    "berating": ("Berating him before others", 1),
-    "barring": ("Barring others from him", 3),
+    "bones": ("Exposing their bones", 1),
+    "whipping": ("Defiling their relics", 2),
+    "berating": ("Berating them before others", 1),
+    "barring": ("Barring others from them", 3),
     "peril": ("Imminent peril", 1),
 }
 #: A miss this far below the Ease Factor brings a minor curse.
@@ -255,9 +255,9 @@ def creation_problem(character: Character, saint: str, points: int) -> str | Non
     if not allowed:
         return "Only a character with a positive Pious trait starts with Devotions."
     if saints > allowed:
-        return f"No more than {allowed} Devotions at creation (his Pious)."
+        return f"No more than {allowed} Devotions at creation (their Pious)."
     if spent > allowed:
-        return f"Only {allowed} Devotion Points at creation (his Pious)."
+        return f"Only {allowed} Devotion Points at creation (their Pious)."
     return None
 
 
@@ -371,7 +371,7 @@ def familiar(
     Devotion, the Virgin (`anyone`), a matter in his care, his relic held
     (The Church's rule), an Irish patron for one of Irish birth."""
     if same_saint(patron(character), saint):
-        return "his patron saint"
+        return "their patron saint"
     if the_church and devoted(character, saint):
         return "devoted to the saint"
     if anyone or saint_key(saint) == "mary":
@@ -383,9 +383,9 @@ def familiar(
         and situation.relic_faith is not None
         and situation.relic_of_the_saint
     ):
-        return "he holds the saint's relic"
+        return "they hold the saint's relic"
     if irish_patron and situation.irish:
-        return "a patron of Ireland, and he is Irish-born"
+        return "a patron of Ireland, and they're Irish-born"
     return ""
 
 

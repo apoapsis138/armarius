@@ -525,11 +525,11 @@ def drink_great_elixir(magus: Character, age: int, test: GreatTest) -> str:
         if was_immortal:
             return (
                 "Failed: the new Great Elixir is wasted, with no other ill effect; "
-                f"his Magic Might stays {magus.magic_might} ({GREAT_SOURCE})."
+                f"their Magic Might stays {magus.magic_might} ({GREAT_SOURCE})."
             )
         return (
             "Failed: the Become a Being of Magic and Grant Might effects of this "
-            "potion did not work for him; a new dose of the Lesser Elixir and new "
+            "potion didn't work for them; a new dose of the Lesser Elixir and new "
             f"effects make the next potion ({GREAT_SOURCE})."
         )
     alchemy_.great_attempts = 0
@@ -537,14 +537,14 @@ def drink_great_elixir(magus: Character, age: int, test: GreatTest) -> str:
         before = magus.magic_might
         magus.magic_might = max(before, test.might)
         return (
-            f"Success: his Magic Might is now {magus.magic_might} (was {before}) "
+            f"Success: their Magic Might is now {magus.magic_might} (was {before}) "
             f"({GREAT_SOURCE})."
         )
     alchemy_.immortal_age = age
     magus.magic_might = test.might
     return (
-        f"Success: at {age} he becomes an immortal being of the Magic realm, with "
-        f"Magic Might {test.might}. He no longer ages nor gains Warping, and "
+        f"Success: at {age} they become an immortal being of the Magic realm, with "
+        f"Magic Might {test.might}. They no longer age nor gain Warping, and "
         f"later potions are tested against the Ease Factor of this age "
         f"({GREAT_SOURCE})."
     )
@@ -577,8 +577,8 @@ def talisman_notes(magus: Character) -> list[str]:
         )
     if _has(magus, CONSUMMATE_TALISMAN):
         found.append(
-            "Consummate Talisman: its Personal Muto Vim effects work on his "
-            "Formulaic spells, its Names of Power on any spell he casts (spoken "
+            "Consummate Talisman: its Personal Muto Vim effects work on their "
+            "Formulaic spells, its Names of Power on any spell they cast (spoken "
             f"aloud), their bonus at most Magic Theory ({theory}) "
             f"({CONSUMMATE_SOURCE})."
         )

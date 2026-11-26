@@ -186,7 +186,7 @@ def live(saga: Saga) -> Callable[[dict[str, Any]], str]:
             lines.append(
                 f"Perception + Finesse {base} + a stress die against "
                 + (str(ease) if ease is not None else "the Ease Factor typed")
-                + f"; his Workshop Total {total} makes her {quality} (HP p. 63)."
+                + f"; their Workshop Total {total} makes her {quality} (HP p. 63)."
             )
         elif builder is not None:
             base = builder.characteristics.intelligence + _score(builder, "Finesse")

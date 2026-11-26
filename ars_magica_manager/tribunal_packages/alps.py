@@ -117,7 +117,7 @@ def chairs_field(
         "optint",
         chairs(tribunal).get(covenant.id) if covenant is not None else None,
         hint=f"Chairs it has bought: each registers {CHAIR_PAWNS} pawns of vis a "
-        "year for one magus's upkeep with the Quaesitores, so he may vote. A "
+        "year for one magus's upkeep with the Quaesitores, so they may vote. A "
         "magus with none is a vagrant.",
     )
 
@@ -177,9 +177,8 @@ def ostracism_grid(saga: Saga, tribunal: Tribunal) -> Grid:
         ["Magus", "Voted", "Sherds", "Exile", "Why"],
         rows,
         list(range(len(rows))),
-        "No magus ostracised: at each meeting the magus most named on the "
-        "sherds leaves the Greater Alps for twenty-one years, if one magus in "
-        "four named him.",
+        "No magus ostracised: at each meeting the magus most named on the sherds leaves"
+        " the Greater Alps for twenty-one years, if one magus in four named them.",
         styles,
         caps=[20, 6, 10, 18, 0],
     )
@@ -208,18 +207,18 @@ def ostracism_fields(saga: Saga, entry: dict[str, Any] | None) -> list[DialogFie
         ),
         DialogField(
             "sherds",
-            "Sherds against him",
+            "Sherds against them",
             "int",
             e.get("sherds", 0),
-            hint="The sherds naming him, the most of any magus.",
+            hint="The sherds naming them, the most of any magus.",
         ),
         DialogField(
             "voters",
             "Sherds cast",
             "int",
             e.get("voters", 0),
-            hint="Every sherd in the urn, blank ones too: at least one in four "
-            "must name him.",
+            hint="Every sherd in the urn, blank ones too: at least one in four must "
+            "name them.",
         ),
         DialogField(
             "until",
@@ -239,10 +238,10 @@ def ostracism_problem(values: dict[str, Any]) -> str | None:
     if sherds < 0 or voters < 0:
         return "Sherds can't be fewer than none."
     if sherds > voters:
-        return "More sherds name him than were cast."
+        return "More sherds name them than were cast."
     if sherds * SHARE < voters:
         return (
-            f"Only {sherds} of {voters} sherds name him: at least one magus in "
+            f"Only {sherds} of {voters} sherds name them: at least one magus in "
             "four must, or no one is ostracised."
         )
     end = values.get("until")

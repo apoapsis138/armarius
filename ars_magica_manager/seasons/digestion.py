@@ -117,11 +117,11 @@ def _tend(
     days = days_out(plan)
     why = ""
     if days is None:
-        why = "the season took him out of the laboratory"
+        why = "the season took them out of the laboratory"
     elif alchemy.spoils(days):
         why = f"{days} days away (more than {alchemy.MOST_DAYS_AWAY})"
     elif plan is not None and plan.experimenting:
-        why = "he experimented while it digested"
+        why = "they experimented while it digested"
     found: list[str] = []
     work = None
     if not why:

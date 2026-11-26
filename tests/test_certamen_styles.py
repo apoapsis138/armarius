@@ -230,7 +230,7 @@ def test_the_sheet_names_the_school():
     text = certamen.school_text(_magus("hoplomachus"))
     assert text.startswith("Certamen school: Hoplomachus, the Hoplites")
     assert "HoH: TL p. 137" in text
-    assert "not his House's style" in certamen.school_text(_magus("bestiarius"))
+    assert "not their House's style" in certamen.school_text(_magus("bestiarius"))
 
 
 def test_the_hermetic_form_offers_the_schools():

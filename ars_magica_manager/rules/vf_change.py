@@ -251,14 +251,14 @@ def gain_notes(
         )
     if grog and entry.side == "Virtue" and entry.tier == "Major":
         found.append(
-            "A grog gaining a Major Virtue: the troupe should be cautious, "
-            "unless he is becoming a companion (Grogs p. 63)."
+            "A grog gaining a Major Virtue: the troupe should be cautious, unless "
+            "they're becoming a companion (Grogs p. 63)."
         )
     if in_category(entry, "Story"):
         if grog:
             found.append(
-                "A grog shouldn't gain a Story Flaw unless it is temporary or he "
-                "is becoming a companion (Grogs p. 62)."
+                "A grog shouldn't gain a Story Flaw unless it's temporary or they're "
+                "becoming a companion (Grogs p. 62)."
             )
         if any(in_category(h, "Story") for h in held):
             found.append(

@@ -605,7 +605,7 @@ def _talisman_mystery_lines(saga: Saga, device: EnchantedDevice) -> list[str]:
         on_him = tmre_alchemy.consummate_effects(device.effects)
         if on_him:
             names = ", ".join(escape(e.name) or "(unnamed)" for e in on_him)
-            lines.append(f"[b]On his Formulaic spells:[/] {names}")
+            lines.append(f"[b]On their Formulaic spells:[/] {names}")
     return lines
 
 

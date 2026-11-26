@@ -120,20 +120,19 @@ INTEREST_OF: dict[str, str] = {
 
 #: What each action on the Deeds chapter does, in a line.
 NOTES: dict[str, str] = {
-    "end_session": "Confidence Points for a session of play, and its "
-    "noteworthy deeds as experience in his Reputations.",
-    "what_changed": "His scores, spells, Virtues, Warping, wounds and holdings "
-    "since the last Session played.",
-    "reputation_roll": "Whether someone has heard of him: a stress die and "
-    "a Reputation against how far away they are.",
+    "end_session": "Confidence and Reputation experience for the session.",
+    "what_changed": "Their scores, spells, Virtues, Warping, wounds and holdings since "
+    "the last session.",
+    "reputation_roll": "Whether someone has heard of them: Reputation against how far "
+    "away they are.",
     "house_acclaim": "An award of House Acclaim, or a roll with it, for a "
     "magus of Bonisagus or Flambeau.",
     "melee_event": "A roll on the Melee Events Table in a tournament's grand charge.",
     "disputatio": "A schoolmen's debate with another character.",
     "make_ligature": "A small charm that helps one roll, tied to Artes "
     "Liberales, Philosophiae or Medicine.",
-    "font_of_knowledge": "Drawing on Font of Knowledge to use an Ability "
-    "he lacks as if he had it at 2.",
+    "font_of_knowledge": "Use an Ability they lack as if they had it at 2, through Font"
+    " of Knowledge.",
     "tmre_divination": "A divination answering one question, as a "
     "Momentary Intellego spell would.",
     "tmre_astrology": "An astrological reckoning: Intelligence + Artes "
@@ -154,11 +153,10 @@ NOTES: dict[str, str] = {
     "an Infernal aura.",
     "ars_goetia": "The total of a Goetic Art against a spirit's Might.",
     "turbulence": "A Gifted child's untrained Gift lashing out.",
-    "gauntlet": "The parens' test of his apprentice.",
+    "gauntlet": "The parens' test of their apprentice.",
     "lose_the_gift": "Failing an apprentice: the Gift lost or suppressed.",
     "discipline_grog": "A reward or punishment for one of the covenfolk.",
-    "grog_pension": "A grog retires on a pension, or pays rent for his "
-    "lodging instead.",
+    "grog_pension": "A grog retires on a pension, or pays rent for their lodging.",
 }
 
 #: The actions the Deeds chapter sets out.
@@ -215,20 +213,19 @@ SEASON_NOTES: dict[str, str] = {
     "tourney_season": "A season on the tourney circuit, as a knight or as "
     "the patron who hosts it.",
     "labor_story": "The Labor Points a story gives a craftsman or merchant.",
-    "invest_labor": "What he does with surplus Labor Points or money.",
+    "invest_labor": "What they do with surplus Labor Points or money.",
     "sell_goods": "A sale the story calls for, settled with a roll.",
     "apothecary_store": "A season keeping an apothecary's store of medicinals.",
     "make_greek_fire": "A season making Greek Fire, an alchemical reagent.",
-    "artist_career": "An artist's Reputation for his Craft or Profession, "
-    "and what raises it.",
-    "scholar_career": "A scholar's steps between his seasons, from a place "
-    "at a school onward.",
+    "artist_career": "An artist's Reputation for their Craft or Profession, and what "
+    "raises it.",
+    "scholar_career": "A scholar's steps between their seasons, from a place at a "
+    "school onward.",
     "turbulence": NOTES["turbulence"],
-    "grog_story_xp": "A story's experience for a grog, and the season it "
-    "takes from his yearly update.",
+    "grog_story_xp": "A story's experience for a grog, and the season it takes from "
+    "their yearly update.",
     "pilgrimage": "A pilgrimage's road, from its aim to its end.",
-    "philosophic_alchemy": "An alchemical vis extraction left to digest "
-    "while he does other work.",
+    "philosophic_alchemy": "Vis extraction left to digest while they do other work.",
 }
 
 
@@ -399,8 +396,8 @@ OPTIONAL: tuple[str, ...] = tuple(i for i in INTERESTS if i != SESSION)
 
 #: The laboratory's lab work besides the plan, under its Planning.
 LAB_NOTES: dict[str, str] = {
-    "create_familiar": "Bind the owner's familiar: a season's lab work, "
-    "while he has none.",
+    "create_familiar": "Bind the owner's familiar: a season's lab work, while they have"
+    " none.",
     "perform_ritual": "Perform a Longevity Ritual from one of the "
     "laboratory's Lab Texts.",
 }

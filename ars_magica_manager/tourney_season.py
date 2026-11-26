@@ -35,7 +35,7 @@ def tourney_fields(character: Character) -> list[DialogField]:
         str(chosen) if chosen is not None else NEW,
         options=[
             *((f"{escape(r.name)} ({r.score:+d})", str(i)) for i, r in enumerate(reps)),
-            ("Start one: Prudhomme, Noble (1 if his first Noble Reputation)", NEW),
+            ("Start one: Prudhomme, Noble (1 if their first Noble Reputation)", NEW),
         ],
         required=True,
         hint="The deeds below are experience points in it (Lords of Men "
@@ -60,7 +60,7 @@ def tourney_fields(character: Character) -> list[DialogField]:
             "optint",
             None,
             show_if=_hosting,
-            hint="1 more point if it is at least his Prudhomme.",
+            hint="1 more point if it's at least their Prudhomme.",
         ),
         DialogField(
             "patrons",
@@ -73,7 +73,7 @@ def tourney_fields(character: Character) -> list[DialogField]:
     ]
     bad = [(f"{escape(r.name)} ({r.score:+d})", str(i)) for i, r in enumerate(reps)]
     ransom = [
-        DialogField("unpaid", "Ransoms he didn't pay", "int", 0),
+        DialogField("unpaid", "Ransoms they didn't pay", "int", 0),
         DialogField(
             "unpaid_to",
             "Counted toward",
@@ -165,13 +165,13 @@ def _reckoning(character: Character, prudhomme: int) -> list[str]:
     per_season = tournament.labor_per_season(character)
     seasons = tournament.seasons_to_live(character)
     lines = [
-        f"As patron he should spend {tournament.patron_spend(prudhomme)} pounds "
-        f"on a tournament; a prize for him is worth about "
+        f"As patron they should spend {tournament.patron_spend(prudhomme)} pounds "
+        f"on a tournament; a prize for them is worth about "
         f"{tournament.prize_value(prudhomme)}."
     ]
     if seasons is not None:
         lines.append(
-            f"On the circuit he makes {per_season} Labor Points a season: "
+            f"On the circuit they make {per_season} Labor Points a season: "
             f"{seasons} season(s) a year keep an errant knight "
             f"({tournament.LIVING_LABOR} a year)."
         )

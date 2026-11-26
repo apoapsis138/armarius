@@ -411,13 +411,13 @@ def outer_mystery_problem(mystagogue: Character, opens_arts: bool = True) -> str
     if mystagogue.characteristics.presence + lore < OUTER_MYSTAGOGUE_LEAST:
         return (
             f"{mystagogue.name}'s Presence + Verditius Cult Lore is below "
-            f"{OUTER_MYSTAGOGUE_LEAST}: he can't give the Outer Mystery "
+            f"{OUTER_MYSTAGOGUE_LEAST}: they can't give the Outer Mystery "
             f"({INITIATION_SOURCE})."
         )
     if opens_arts and lore < LORE_TO_OPEN_ARTS:
         return (
             f"{mystagogue.name} needs Verditius Cult Lore {LORE_TO_OPEN_ARTS} to "
-            f"open an apprentice's Arts as he initiates him ({INITIATION_SOURCE})."
+            f"open an apprentice's Arts while initiating them ({INITIATION_SOURCE})."
         )
     return ""
 
@@ -982,7 +982,7 @@ def forge_companion_lines(
     most = max(0, _score(magus, "Leadership"))
     if len(companions) > most:
         notes.append(
-            f"{magus.name} may have {most} forge-companions (his Leadership); "
+            f"{magus.name} may have {most} forge-companions (their Leadership); "
             f"only the first {most} help ({FORGE_SOURCE})."
         )
     for companion in companions[:most]:
@@ -990,7 +990,7 @@ def forge_companion_lines(
         if not bonus:
             notes.append(
                 f"{companion.name} adds nothing: a forge-companion helps with "
-                f"{craft or 'the Craft his master uses'} at 5 or more."
+                f"{craft or 'the Craft their master uses'} at 5 or more."
             )
             continue
         lines.append(
@@ -1068,7 +1068,7 @@ def price_lines(saga: Saga, device: EnchantedDevice) -> list[str]:
         return [
             "House price: it takes no vis, so the price to a magus is twice the "
             "vis its maker could have extracted in the seasons it took (work it "
-            "out from his Vim extraction Lab Total); to a mundane buyer, "
+            "out from their Vim extraction Lab Total); to a mundane buyer, "
             f"{MUNDANE_POUNDS_PER_PAWN} Mythic Pounds a pawn of that vis; "
             f"{xp_text} ({PRICES_SOURCE})."
         ]
@@ -1184,7 +1184,7 @@ def refusal_lines(magus: Character) -> list[str]:
         if own < refusal.hubris:
             needs.append(f"Hubris back to {refusal.hubris} (now {own})")
         if not refusal.waged:
-            needs.append("a vendetta waged on him")
+            needs.append("a vendetta waged on them")
         who = refusal.magus or "the magus refused"
         lines.append(f"Refused {who}: needs {' and '.join(needs) or 'nothing'}.")
     return lines

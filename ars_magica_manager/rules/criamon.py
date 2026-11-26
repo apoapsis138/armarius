@@ -686,7 +686,7 @@ def outsider_warning(name: str) -> str:
     """The warning for a guide not of House Criamon."""
     return (
         f"{name} isn't of House Criamon: a guide from outside the House is "
-        f"unusual, though he knows its Lore ({MC} p. 59)."
+        f"unusual, though they know its Lore ({MC} p. 59)."
     )
 
 
@@ -751,11 +751,11 @@ def avenue(
     needs = lore_needed(place)
     if cult_lore(character) < needs:
         problems.append(
-            f"But his House Criamon Lore is {cult_lore(character)}: the "
+            f"But their House Criamon Lore is {cult_lore(character)}: the "
             f"{ordinal(place)} station needs {needs}."
         )
     if guide is None:
-        problems.append("Choose his guide: the one named is no longer in the saga.")
+        problems.append("Choose their guide: the one named is no longer in the saga.")
     warnings = (outsider_warning(guide.name),) if guide and guide.outsider else ()
     return Avenue(
         place, station, guide, script, target(reduction), tuple(problems), warnings
@@ -942,7 +942,7 @@ def initiation_notes(initiate: Character, key: str) -> list[str]:
     current = path_of(initiate)
     if current is not None and current is not path:
         notes.append(
-            f"He steps from {current.title} onto {path.title}: he keeps only his "
+            f"They step from {current.title} onto {path.title}: they keep only their "
             f"Enigmatic Wisdom of the old path's stations ({MC} p. 58)."
         )
     return notes
@@ -962,4 +962,4 @@ def reduction_words(sizes: Iterable[tuple[str, int, int]]) -> str:
     if best is None or not best[2]:
         return ""
     size, since, _ = best
-    return f"his {ordinal(since + 1)} Initiation since a {size} Ordeal"
+    return f"their {ordinal(since + 1)} Initiation since a {size} Ordeal"

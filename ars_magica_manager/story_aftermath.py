@@ -122,7 +122,7 @@ def close_chapter(
                         ADVENTURE,
                         options=[
                             ("Takes the Adventure", ADVENTURE),
-                            ("Keeps his laboratory work", LAB),
+                            ("Keeps their laboratory work", LAB),
                         ],
                     ),
                 ]
@@ -187,9 +187,9 @@ def _keep_lab(saga: Saga, character: Character, chapter: CovenantDiaryEntry) -> 
     plan = plan_for(saga, character, chapter.season, chapter.year)
     days = chapter.days or 0
     if plan is None or not days:
-        return f"{character.name} keeps his season's work."
+        return f"{character.name} keeps their season's work."
     set_plan(saga, replace(plan, days_away=plan.days_away + days))
-    return f"{character.name} keeps his laboratory work, {days} days away."
+    return f"{character.name} keeps their laboratory work, {days} days away."
 
 
 def _subjects(

@@ -272,7 +272,7 @@ def first_aid(
     if treated:
         lines.append(
             f"First aid: +{half(from_score)} to the wounds' Recovery rolls "
-            "(at most the palliative chirurgeon's Chirurgy with his care)."
+            "(at most the palliative chirurgeon's Chirurgy, with their care)."
         )
     else:
         lines.append("No injury left without first aid: no further bonus.")

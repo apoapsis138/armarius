@@ -706,7 +706,7 @@ def season_stirpes(saga: Saga, rng: random.Random) -> list[SeasonRecordLine]:
                         season=saga.current_season,
                         name=f"Stirps untended: {stirps.name}",
                         details=(
-                            f"{character.name} oversees no more Stirpes than his "
+                            f"{character.name} oversees no more Stirpes than their "
                             f"Viresculture score ({vc.score(character)}): "
                             f"{stirps.name} doesn't breed.\nRules: {vc.SOURCE}"
                         ),

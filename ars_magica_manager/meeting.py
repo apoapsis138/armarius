@@ -2228,7 +2228,7 @@ def _march_fields(case: Case, kept: dict[str, Any]) -> list[DialogField]:
                 "optint",
                 kept.get("refused"),
                 hint=f"Times the convicted magus refused a lesser penalty: at "
-                f"{hermetic_law.REFUSALS} he is Marched (HoH: TL p. 59).",
+                f"{hermetic_law.REFUSALS} they're Marched (HoH: TL p. 59).",
             )
         )
     return found

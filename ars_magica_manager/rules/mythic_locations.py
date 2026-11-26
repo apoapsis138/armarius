@@ -163,7 +163,7 @@ def purification_problems(caster: Character, target: Character) -> list[str]:
     """Why Purification can't be cast on `target` (empty when it can)."""
     problems: list[str] = []
     if caster.id == target.id:
-        problems.append("The caster can't cast Purification on himself.")
+        problems.append("The caster can't cast Purification on themselves.")
     if target.aging.decrepitude < 1:
         problems.append(f"{target.name} has no Decrepitude: the ritual does nothing.")
     return problems

@@ -44,7 +44,7 @@ MOST_ROUNDS = 40
 VIS_BONUS = 2
 TECHNIQUE, FORM, BETTER = "technique", "form", "better"
 ATTACKS: dict[str, str] = {
-    BETTER: "With whichever Art is better for him",
+    BETTER: "With whichever Art is better for them",
     TECHNIQUE: "With the Technique",
     FORM: "With the Form",
 }

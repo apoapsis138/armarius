@@ -54,7 +54,7 @@ def test_redeeming_gratitude_spends_the_points_and_writes_the_diaries():
     assert form.validate({"reward": "manor", "spent": 7}) == (
         "Bacheler to lord of the manor needs 10 Gratitude."
     )
-    assert form.validate({"reward": "knight", "spent": 8}) == "He owes only 7 points."
+    assert form.validate({"reward": "knight", "spent": 8}) == "They owe only 7 points."
     lines = form.apply({"reward": "knight", "spent": 5, "what": "his spurs"})
     entry = lord.details["gratitude"][0]
     assert entry["points"] == 2

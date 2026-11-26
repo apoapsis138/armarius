@@ -302,7 +302,7 @@ def change_fields(saga: Saga, character: Character) -> list[DialogField]:
             "What happened",
             "text",
             "",
-            placeholder="for the Diary, e.g. lost his hand at the ford",
+            placeholder="for the Diary, e.g. lost their hand at the ford",
         ),
     ]
 

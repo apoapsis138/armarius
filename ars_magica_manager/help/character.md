@@ -269,7 +269,7 @@ sheet says who holds it: the parens, or the first magus up the line of
 parentes who does when the parens doesn't hold their own. A parens of the
 saga's who has died no longer holds it (DE p. 16).
 
-For a Tremere whose parens still holds the sigil, **Has challenged for his
+For a Tremere whose parens still holds the sigil, **Has challenged for their
 sigil** records that they've made their one challenge for it, at a time of
 their choosing. After that they may challenge only at the House's
 Decennials, every ten years (1218, 1228...), and the sheet says when the
@@ -1232,7 +1232,7 @@ up to a year ahead.
   and the maker doesn't know it.
 - One ligature at a time helps a person. None helps a season's work, such
   as study or a Lab Total, and a medical one helps no Recovery roll.
-- Each takes 1 Labor Point from an apothecary's store. Tick "From his own
+- Each takes 1 Labor Point from an apothecary's store. Tick "From their own
   store" when it's the maker's own, and the point comes off their Labor
   Points.
 
@@ -1688,7 +1688,7 @@ acts of piety:
 - **Threaten a Saint** (RoP: The Divine pp. 87-88): the humiliation of a
   saint who has refused an invocation. It's offered only while a saint who
   refused them is on record, from an invocation the saint didn't answer.
-  The Faith section lists those under **Refused him**, and only such a
+  The Faith section lists those under **Refused them**, and only such a
   saint may be chosen. A threat, or a later miracle from the saint, takes
   them off the list.
   - **The roll**: Presence + Leadership + the threats + a stress die,
@@ -1970,7 +1970,7 @@ named, spellcasting too. It lasts until one fails or the scene ends. A 0
 rolls three botch dice, and a botch is divine disfavour: struck dumb,
 blind or clumsy until penance.
 
-Tick **For his followers too** to ask it for those in the character's
+Tick **For their followers too** to ask it for those in the character's
 spiritual care, and they and the one praying gain the bonus. With the
 Ceremony Ability the one praying leads them, adding it and each one's
 Communication + Dominion Lore.
@@ -2240,7 +2240,7 @@ Punishments, in order of severity:
 4. **Flogging**: 1, 5 or 10 blows, giving 1, 2 or 3 Light Wounds and 1, 3 or 5 Long-Term Fatigue levels.
 5. **Reduction in rank**, for good. The grog surrenders the equipment they were given.
 6. **Whipping.** 10 lashes give a Light Wound, 30 a Medium, 50 a Heavy, and the short whip two of each. It takes a week to recover, or a day for ten lashes or fewer. Pay is docked for longer.
-7. **Dismissal.** Tick **He leaves the covenant** to take the grog off its lists.
+7. **Dismissal.** Tick **They leave the covenant** to take the grog off its lists.
 8. **Fustuarium**: beaten to death by the blindfolded turb. Few covenants have the right to order it.
 
 What it costs in Loyalty (Covenants pp. 38-39). A fitting punishment from the turb captain, steward or chamberlain costs nothing. One a magus orders costs Loyalty points by what it counts as:
@@ -2254,7 +2254,7 @@ What it costs in Loyalty (Covenants pp. 38-39). A fitting punishment from the tu
 
 With a positive Prevailing Loyalty, only an unjust one costs anything. **Counts as** starts at the usual row for the punishment. A blow is minor, the shaming ones public, reduced rations restraint, and a flogging, whipping or fustuarium brutal. The victim's **Reputation** among the covenfolk adds to the penalty if they're loved, and takes from it if they're disliked. A wound the magus deals in person costs its own points too (light -3, medium -6, heavy -9, death -15), one step worse by magic. The points go into the covenant Diary as a Loyalty Event, which Actions and Events adds up.
 
-**His Loyal changes by** moves the grog's Loyal to Covenant (or Loyal) trait. The books leave it to the troupe (Grogs p. 24).
+**Their Loyal changes by** moves the grog's Loyal to Covenant (or Loyal) trait. The books leave it to the troupe (Grogs p. 24).
 
 Free time, lodging and families (Grogs pp. 23, 25). A grog who doesn't sleep in their free time loses a Long-Term Fatigue level until they sleep two watches straight. Punishment duties are done in free time. Married covenfolk often have a room of their own, and covenants encourage matches among their covenfolk.
 
@@ -2506,7 +2506,7 @@ More beside a galdraman's Abilities. A song calls a spirit to work one effect (*
 
 The total is Com + Music + Galdor Wisdom + the Song + the aura + a stress die, and it must be greater than the level. Landvaettir count as Faerie in every aura but a Magic one, so a Dominion hurts as a faerie would feel it. The spirit's Might is the total, and Penetration is reckoned as the Definitive Edition does.
 
-With **Hours he holds the song**, the app rolls Sta + Music for each hour, against 6 + the hours. Up to 3 short costs a Fatigue level, and worse ends the song. A total of twice the level leaves a Concentration effect working on for a die of hours. No vis boosts a song. It goes in the Diary, and a botch's zeroes give Warping Points.
+With **Hours they hold the song**, the app rolls Sta + Music for each hour, against 6 + the hours. Up to 3 short costs a Fatigue level, and worse ends the song. A total of twice the level leaves a Concentration effect working on for a die of hours. No vis boosts a song. It goes in the Diary, and a botch's zeroes give Warping Points.
 
 **At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. The die field is hidden then. See [Table rolls](help:table-rolls).
 
@@ -2535,7 +2535,7 @@ A missed tithe or service breaks a deal and may bring reprisals.
 
 More beside a galdraman's Abilities, once a deal with a lord is on their sheet (*Land of Fire & Ice* p. 49). The galdraman needs no laboratory, only the tools to make the item, and the spirit is bound as they make it.
 
-- **For his lifetime**, the total must reach double the level plus the Effect Frequency Table's levels. The Duration is Momentary or Concentration, and Constant Use adds 5 to a Concentration effect's level.
+- **For their lifetime**, the total must reach double the level plus the Effect Frequency Table's levels. The Duration is Momentary or Concentration, and Constant Use adds 5 to a Concentration effect's level.
 - **A single service** needs only the level, and lasts a year and a day.
 
 The total is Com + Music + Galdor Wisdom + the Song + the item's bonuses + the aura + a stress die. Galdor Wisdom and the Song each count no higher than the **Craft used**. Craft: Runes, the book's Scribe Runes, may stand as the Craft and inscribes a ready-made item, but adds nothing. The Song must be at least the magnitude. The spirit takes about the vis a magus would spend, first. The item goes on the tradition's Effects and Items.
@@ -3333,7 +3333,7 @@ they're away.
 
 Their seasons, laboratory work, aging and warping stay at home. Set them
 back **At home** when they return. While they're a guest at another
-covenant ([Stay as Guest](help:guest-stay)), **Where he is a guest** takes
+covenant ([Stay as Guest](help:guest-stay)), **Where they're a guest** takes
 the place of At home and counts that covenant's aura.
 
 ## Stay as Guest
@@ -3575,7 +3575,7 @@ kept in the Diary.
   The refusal is kept. They lose the Reputation only once they've regained
   the score they had and waged a vendetta on the magus they refused (p.
   115).
-- **Wages the vendetta on a magus he refused**, offered once they've
+- **Wages the vendetta on a magus they refused**, offered once they've
   refused one, marks it waged. The inspector says what each refusal still
   needs. When the Hubris score is back too, the Reputation goes.
 - **Resisting a vendetta**: a Personality Trait that works against Hubris
@@ -4057,7 +4057,7 @@ It keeps the season on Stations, and reminds you to add the new stigma. A Flaw t
 ## Change Path
 <!-- help: change-path -->
 
-Sets the path the magus walks, or **As his stations show**, and their guide. For a ghostly Primus, give the Presence they had in life. Their House Criamon Lore is 9 (p. 60). Give too the path a head bound in infancy, or a like modification, suits, for +3 to its first station only. A cone suits Seeming, a double-lobed skull the Body (p. 51). Add any notes.
+Sets the path the magus walks, or **As their stations show**, and their guide. For a ghostly Primus, give the Presence they had in life. Their House Criamon Lore is 9 (p. 60). Give too the path a head bound in infancy, or a like modification, suits, for +3 to its first station only. A cone suits Seeming, a double-lobed skull the Body (p. 51). Add any notes.
 
 Changing path sets aside the magus's stations on the old one (p. 58). The Path of the Mirror is offered only to the Primus (pp. 57, 59), a magus whose Hermetic background names them as the House's Primus.
 
@@ -4594,10 +4594,10 @@ it in the character's Diary under the agent's name and the task.
   Factor** to its highest (Easy 6, Hard 12, Impressive 18). Lower it for
   an easier deed within the band. One above the band is warned of, since
   the agent's agreement didn't cover it.
-- **Risk to him**: none rolls a simple die. Embarrassment or reputation is
+- **Risk to them**: none rolls a simple die. Embarrassment or reputation is
   a stress die with 1 botch die, injury or imprisonment 3, death 5.
 
-**His Roll** shows the total, the Ease Factor and the die the agent needs
+**Their Roll** shows the total, the Ease Factor and the die the agent needs
 before you roll.
 
 **At the table.** While a Session is under way, the host rolls the dice and the roll goes to the [Chronicle](help:chronicle), seen as **Who sees the roll** says. See [Table rolls](help:table-rolls).
@@ -4698,7 +4698,7 @@ A Muslim seeks a holy forbear's blessing, the forbear's baraka, as a
 Christian invokes a saint (Realms of Power: The Divine pp. 103-105). The
 roll is as for [a saint](help:devotion), with the modifiers below, and
 the storyguide's die is rolled in secret. The petitioner must be at
-the forbear's shrine, usually their tomb (tick **At his shrine**). The
+the forbear's shrine, usually their tomb (tick **At their shrine**). The
 Qur'an itself may be invoked anywhere. A forbear is never threatened.
 
 **The forbears** are the book's, each with where their baraka is sought
@@ -4835,7 +4835,7 @@ they never keep both.
   to swap it on Virtues & Flaws rather than doing it.
 - Wealthy and Poor aren't Social Statuses and are never touched.
 
-The Ordination season offers the swap with **Swap his Social Status for
+The Ordination season offers the swap with **Swap their Social Status for
 the clergy's**, ticked by default. Untick it to leave their status for the
 troupe to change on Virtues & Flaws. A major order means celibacy from
 then on (p. 35).

@@ -278,7 +278,7 @@ def test_an_excommunication_shows_as_his_standing():
     assert isinstance(form, Form)
     values = {f.key: f.value for f in form.fields()}
     values |= {"verdict": GUILTY, "punishment": cl.EXCOMMUNICATION, "role": ACCUSED}
-    assert "Shown on Holy Orders as his standing." in form.live(values)  # type: ignore[misc]
+    assert "Shown on Holy Orders as their standing." in form.live(values)  # type: ignore[misc]
     form.apply(values)
     assert c.church.standing == EXCOMMUNICATED
     assert c.church.cases[0].punishment == cl.EXCOMMUNICATION

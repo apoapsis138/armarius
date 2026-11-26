@@ -57,7 +57,7 @@ def gauntlet_fields(character: Character) -> list[DialogField]:
             "select",
             gt.STORY,
             options=[(label, key) for key, label in gt.METHODS.items()],
-            hint="Each parens sets his own test, passed to his satisfaction "
+            hint="Each parens sets their own test, passed to their satisfaction "
             "(Apprentices pp. 59-60).",
         ),
         DialogField(
@@ -74,10 +74,10 @@ def gauntlet_fields(character: Character) -> list[DialogField]:
             "select",
             "Magic Theory",
             options=_abilities(character),
-            hint="One fitting his House (the Houses of Hermes summary, DE).",
+            hint="One fitting their House (the Houses of Hermes summary, DE).",
             show_if=lambda v: _method(v) == gt.ROLLED,
         ),
-        DialogField("test", "The test", "text", "", placeholder="What he was set"),
+        DialogField("test", "The test", "text", "", placeholder="What they were set"),
     ]
 
 
@@ -94,10 +94,10 @@ def gauntlet_lines(
             "apprentice; botched, something dire."
         )
     elif method == gt.AUTOMATIC:
-        lines.append("He passes, having served his seasons of study.")
+        lines.append("They pass, having served their seasons of study.")
     lines.append(
-        "Passed, Hermetic Magus replaces Apprentice and, after the Oath, "
-        "Parma Magica's final key is his."
+        "Passed: Hermetic Magus replaces Apprentice, and after the Oath, Parma Magica's"
+        " final key is theirs."
     )
     return lines
 
@@ -112,7 +112,7 @@ def gauntlet_problem(
         and served < gt.APPRENTICESHIP_YEARS
     ):
         return (
-            f"{served} years served: passing without a story needs his "
+            f"{served} years served: passing without a story needs their "
             f"{gt.APPRENTICESHIP_YEARS} years of study."
         )
     return None
@@ -131,7 +131,7 @@ def take_gauntlet(
         passed = verdict.passed
     else:
         passed = method == gt.AUTOMATIC or values.get("verdict") == gt.PASS
-        lines.append("Passed." if passed else "Failed, in his parens' judgement.")
+        lines.append("Passed." if passed else "Failed, in their parens' judgement.")
     lines += gt.fail_gauntlet(character) if not passed else gt.pass_gauntlet(character)
     test = str(values.get("test") or "").strip()
     character.diary.append(
@@ -214,10 +214,9 @@ def lose_lines(character: Character, values: dict[str, Any]) -> list[str]:
             )
         ]
     return [
-        "Suppressed Gift (Major Hermetic Flaw) is added: his existing "
-        "Supernatural Virtues and Abilities still work, but no new "
-        "Supernatural or Hermetic Virtues while it lasts. It may return, by a "
-        "story."
+        "Suppressed Gift (Major Hermetic Flaw) is added: their existing Supernatural "
+        "Virtues and Abilities still work, but no new ones while it lasts. A story may "
+        "restore it."
     ]
 
 
@@ -287,7 +286,7 @@ def cantation_fields(saga: Saga, character: Character) -> list[DialogField]:
             "select",
             spells[0].id if spells else "",
             options=[(f"{s.name} ({spl.shorthand(s)})", s.id) for s in spells],
-            hint="The spontaneous spell he kept casting, as a formulaic one.",
+            hint="The spontaneous spell they kept casting, as a formulaic one.",
         ),
         DialogField(
             "times",
@@ -315,8 +314,8 @@ def cantation_lines(
         f"{spell.name} is level {level}: cast at least {level} times, and "
         f"{gt.cantation_cost(level)} xp of this adventure's experience, given "
         "that much less to Abilities and Arts.",
-        "He knows it as a formulaic spell: cast at a casting total short of "
-        "its level by under 10, it still works, for a Fatigue level.",
+        "They know it as a formulaic spell: cast short of its level by under 10, it "
+        "still works, for a Fatigue level.",
     ]
 
 

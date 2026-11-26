@@ -192,7 +192,7 @@ def test_the_fief_counts_the_manors_rows_or_the_typed_count_without_them():
     assert lords.manors(lord) == 5
     assert lords.income(lord) == 100
     facts = {f.label: f.value for f in lords.facts(saga, lord)}
-    assert facts["Manors"] == "5 (from his Manors tab)"
+    assert facts["Manors"] == "5 (from their Manors tab)"
     assert facts["Income"].startswith("100 pounds a year")
     assert facts["Surplus"] == "100 pounds a year (LoM p. 32)"
     # Relief: a year's income, at most 5 a manor and 100 for a count.

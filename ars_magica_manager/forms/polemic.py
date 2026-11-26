@@ -53,7 +53,7 @@ ARGUMENT_CAPS = [48, 12, 12, 0]
 TEXT_CAPS = [9, 22, 32, 0]
 
 REACH_OPTIONS: list[tuple[str, str]] = [
-    ("A magus (3, or his Reputation)", "magus"),
+    ("A magus (3, or their Reputation)", "magus"),
     ("A covenant (6)", "covenant"),
     ("A Tribunal (9)", "tribunal"),
     ("A House (12)", "house"),
@@ -515,7 +515,7 @@ def argument_fields(
         ),
         DialogField(
             "magus_reputation",
-            "His Reputation",
+            "Reputation",
             "int",
             attr(argument, "magus_reputation", 0),
             hint="The magus's Reputation, if it is higher than 3.",
@@ -745,7 +745,7 @@ def text_fields(
             options=_magi_options(saga),
             allow_blank=True,
             placeholder="(its author)",
-            hint="A sponsor may circulate it with his own Reputation (p. 29).",
+            hint="A sponsor may circulate it with their own Reputation (p. 29).",
         ),
         DialogField(
             "seasons_spent",

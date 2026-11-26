@@ -192,7 +192,7 @@ def test_conjure_holds_the_song_hour_by_hour_at_a_fatigue_cost(monkeypatch):
     said = forms.conjure(
         saga(), c, values(level=10, duration="Concentration", die=9, hours=3)
     )
-    assert "He holds the song 3 hours, for 3 Fatigue levels." in said
+    assert "They hold the song 3 hours, for 3 Fatigue levels." in said
     assert c.fatigue_level == FATIGUE_LEVELS[3]
 
 
@@ -206,7 +206,7 @@ def test_conjure_ends_when_a_song_falls_more_than_three_short(monkeypatch):
         saga(), c, values(level=10, duration="Concentration", die=9, hours=5)
     )
     assert any("The song fails in hour 2" in line for line in said)
-    assert not any("after he stops" in line for line in said)
+    assert not any("after they stop" in line for line in said)
 
 
 def test_conjure_refuses_a_level_above_the_song_or_none():

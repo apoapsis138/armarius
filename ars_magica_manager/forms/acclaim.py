@@ -175,7 +175,7 @@ def _deed_fields(character: Character) -> list[DialogField]:
     fields = [
         DialogField(
             "place",
-            "His place",
+            "Their place",
             "select",
             "competed",
             options=[
@@ -218,7 +218,7 @@ def _roll_fields() -> list[DialogField]:
     return [
         DialogField(
             "style",
-            "His way of arguing",
+            "Their way of arguing",
             "select",
             LOUD,
             options=[
@@ -233,7 +233,7 @@ def _roll_fields() -> list[DialogField]:
             "int",
             0,
             show_if=_what(FOLIO),
-            hint="His own stress roll with his House Acclaim; the higher total wins.",
+            hint="Their own stress roll with House Acclaim; the higher total wins.",
         ),
         DialogField(
             "communication",
@@ -515,9 +515,9 @@ def roll_lines(character: Character, values: dict[str, Any]) -> list[str]:
     column = dict(ac.heard_eases(rep.type)).get(ease, "")
     where = f" ({column.lower()})" if column else ""
     return [
-        f"Stress die + {bonus} against {ease}{where}: equal or beat it and he "
-        f"has heard of {rep.name}; the more it beats it by, the more he "
-        f"knows ({ac.HEARD_SOURCE}).",
+        f"Stress die + {bonus} against {ease}{where}: equal or beat it and they've "
+        f"heard of {rep.name}; the more it beats it by, the more they "
+        f"know ({ac.HEARD_SOURCE}).",
     ]
 
 

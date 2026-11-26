@@ -258,11 +258,11 @@ _ALL = "all"
 STORY_AWARDS: tuple[StoryAward, ...] = (
     StoryAward("subplot", "A subplot of a bigger story the magi deal with", 0.5, 39),
     StoryAward("danger", "Severe danger or hardship to finish the subplot", 1, 39),
-    StoryAward("pivotal", "His subplot is pivotal to the main story's end", 1.5, 39),
-    StoryAward("central", "He is the story's central character", 2, 39),
+    StoryAward("pivotal", "Their subplot is pivotal to the main story's end", 1.5, 39),
+    StoryAward("central", "They're the story's central character", 2, 39),
     StoryAward(
         "repercussions",
-        "Failure would bring severe repercussions on his city or covenant",
+        "Failure would bring severe repercussions on their city or covenant",
         2.5,
         39,
     ),
@@ -288,8 +288,8 @@ STORY_AWARDS: tuple[StoryAward, ...] = (
         0,
         112,
         _ALL,
-        "It promotes him to Wealthy, or, already Wealthy, to the average of "
-        "the next Social Status: change his Virtues by hand.",
+        "It promotes them to Wealthy, or from Wealthy to the next Social Status's "
+        "average: change their Virtues by hand.",
     ),
     StoryAward("hard_time", "Hard time: a friend rehabilitated", 1, 114, _ALL),
     StoryAward("legal_witness", "Legal action: the witness found", 1, 114, _ALL),
@@ -318,7 +318,7 @@ STORY_AWARDS: tuple[StoryAward, ...] = (
         1.5,
         114,
         _ALL,
-        "With the Heir Virtue it may raise his Social Status at once instead.",
+        "With the Heir Virtue it may raise their Social Status at once instead.",
     ),
     StoryAward("disaster", "Natural disaster: consortia formed", 1.5, 115, _ALL),
     StoryAward("prodigal", "The prodigal returns", 0, 115, _ALL),
@@ -365,7 +365,7 @@ STORY_AWARDS: tuple[StoryAward, ...] = (
         1,
         119,
         ADVENTURER,
-        "Success raises his Reputation; failure damages it.",
+        "Success raises their Reputation; failure damages it.",
     ),
     StoryAward(
         "convoy_invested",
@@ -390,7 +390,7 @@ STORY_AWARDS: tuple[StoryAward, ...] = (
         1,
         120,
         ADVENTURER,
-        "A new backer is needed each voyage until his Reputation is 3 or more.",
+        "A new backer is needed each voyage until their Reputation is 3 or more.",
     ),
     StoryAward(
         "investors_invested", "Finding investors, invested", 0.5, 120, ADVENTURER
@@ -416,8 +416,8 @@ STORY_AWARDS: tuple[StoryAward, ...] = (
         1.5,
         121,
         ADVENTURER,
-        "A seasonal Dexterity + Profession roll against 15; failing, the "
-        "blockaders know him and fight.",
+        "A seasonal Dexterity + Profession roll against 15; failing, the blockaders "
+        "know them and fight.",
     ),
     StoryAward(
         "blockade_invested",
@@ -473,7 +473,7 @@ STORY_AWARDS: tuple[StoryAward, ...] = (
         1,
         128,
         FACTOR,
-        "The recruit owes him a Favor.",
+        "The recruit owes them a Favor.",
     ),
     StoryAward(
         "factor_cleanup", "Selecting factors: cleaning up after one", 1, 129, CAPO
@@ -632,7 +632,7 @@ def boom_return(total: int, set_aside: int, botched: bool) -> tuple[int, str]:
     of every 10 lost; a botch, the business destroyed."""
     if botched:
         return set_aside, (
-            "A botch: his business is destroyed (the troupe decides what is left)."
+            "A botch: their business is destroyed (the troupe decides what is left)."
         )
     if total >= BOOM_PREPARED:
         return set_aside * 2, "Prepared years ahead: two seasons back for each one."

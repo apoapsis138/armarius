@@ -80,7 +80,7 @@
       Edition p. 418); churches keep their own (C&G pp. 10-11)
 
   ▌
-  ▌  Choose a lord or a citizen to see his hold or his link.
+  ▌  Choose a lord or a citizen to see their hold or link.
   ▌
 
 
@@ -123,7 +123,7 @@
 
 
   ▌
-  ▌  Choose a guild to see its ranks, or a member his standing.
+  ▌  Choose a guild to see its ranks, or a member their standing.
   ▌
 
 
@@ -162,7 +162,7 @@
       beside it.
       Shaming:    The stocks or the pillory, for a time, in a public place. For
       minor crimes: prostitution, begging, petty thievery.
-      A defendant who insists he is innocent may choose a trial by ordeal, which
+      A defendant who insists they're innocent may choose a trial by ordeal, which
       many charters limit or ban (C&G p. 30).                                     ▇▇
 
   ▌

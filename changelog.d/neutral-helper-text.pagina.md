@@ -1,0 +1,1 @@
+**Verbosity pass and gender normalization on helper text.** The app keeps no gender for a character, so its labels, hints, descriptions and results now say "they" and "their" instead of "he" or "his", on the terminal and the desktop, and many say it in fewer words. Rules text summarised from the books keeps the books' wording.

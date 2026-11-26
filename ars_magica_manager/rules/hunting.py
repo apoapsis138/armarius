@@ -519,7 +519,7 @@ def quest(
         )
         if not quiet.succeeded:
             done.lines.append(
-                f"{man.name} tracks a beast to its lair ({said(track)}), but his "
+                f"{man.name} tracks a beast to its lair ({said(track)}), but their "
                 f"lymer gives tongue and it is startled away ({said(quiet)})."
             )
             continue
@@ -527,11 +527,11 @@ def quest(
         done.found = True
         done.judged = done.judged or bool(judge.succeeded)
         done.lines.append(
-            f"{man.name} tracks a beast to its lair and keeps his lymer quiet"
+            f"{man.name} tracks a beast to its lair and keeps their lymer quiet"
             + (
-                f"; he judges its age and condition ({said(judge)})."
+                f"; they judge its age and condition ({said(judge)})."
                 if judge.succeeded
-                else f"; he cannot vouch for its age or condition ({said(judge)})."
+                else f"; they can't vouch for its age or condition ({said(judge)})."
             )
         )
     if done.found:
@@ -1033,7 +1033,7 @@ TOWNSMAN_ABROAD = "townsman"
 COUNTRYMAN_IN_TOWN = "countryman"
 AWAY_PENALTY = 3
 AWAY: dict[str, str] = {
-    AT_HOME: "Where he spends his time",
+    AT_HOME: "Where they spend their time",
     TOWNSMAN_ABROAD: "A townsman in the hinterland (-3)",
     COUNTRYMAN_IN_TOWN: "A countryman in the city (-3)",
 }

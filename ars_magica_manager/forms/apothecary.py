@@ -120,7 +120,7 @@ def ligature_fields(character: Character) -> list[DialogField]:
         ),
         DialogField(
             "own_store",
-            "From his own store",
+            "From their own store",
             "check",
             store,
             hint=f"{ph.LIGATURE_LABOR} Labor Point of an apothecary's store; "
@@ -149,10 +149,10 @@ def ligature_live(character: Character) -> Any:
         lines = [
             f"[b]{escape(character.name)}[/]  [$label]Intelligence + "
             f"{escape(ability or 'the Ability')} {base:+d}[/]",
-            f"His roll: a stress die + [b]{base}[/]; the Ligature Bonus Table "
+            f"Their roll: a stress die + [b]{base}[/]; the Ligature Bonus Table "
             f"{table} (the most) [dim](A&A p. 69)[/]",
             f"A botch works against the action: {ph.LIGATURE_BOTCH_PENALTY} and "
-            f"{ph.LIGATURE_BOTCH_DICE} extra botch dice, and he doesn't know it.",
+            f"{ph.LIGATURE_BOTCH_DICE} extra botch dice, and they don't know it.",
             "One ligature at a time helps a person; none helps a season's work, "
             "and a medical one no Recovery roll.",
         ]
@@ -171,7 +171,7 @@ def apply_ligature(
     total = base + die
     if botched:
         outcome = (
-            f"Botched, unknown to him: the action takes {ph.LIGATURE_BOTCH_PENALTY} "
+            f"Botched, unknown to them: the action takes {ph.LIGATURE_BOTCH_PENALTY} "
             f"and {ph.LIGATURE_BOTCH_DICE} extra botch dice."
         )
     elif bonus := ph.ligature_bonus(total):
@@ -182,7 +182,7 @@ def apply_ligature(
     if values.get("own_store"):
         character.labor_points -= ph.LIGATURE_LABOR
         lines.append(
-            f"{ph.LIGATURE_LABOR} Labor Point from his store: "
+            f"{ph.LIGATURE_LABOR} Labor Point from their store: "
             f"{character.labor_points} now."
         )
     diaries.write(
@@ -252,8 +252,8 @@ def store_fields(saga: Saga, character: Character) -> list[DialogField]:
             "int",
             0,
             show_if=searching,
-            hint="His Area Lore where he searches, if he knows it (no broader "
-            "than a region or one feature: the Black Forest).",
+            hint="Their Area Lore where they search, if they know it (a region or one "
+            "feature at most: the Black Forest).",
         ),
         DialogField(
             "assistants",
@@ -261,7 +261,7 @@ def store_fields(saga: Saga, character: Character) -> list[DialogField]:
             "int",
             0,
             show_if=searching,
-            hint=f"-1 each; at most his Leadership "
+            hint=f"-1 each; at most their Leadership "
             f"({ap.most_assistants(character)}), each with Profession: "
             f"Apothecary {ap.ASSISTANT_PROFESSION} or Area Lore "
             f"{ap.ASSISTANT_AREA_LORE}.",
@@ -332,7 +332,7 @@ def _store_validate(character: Character) -> Any:
         if assistants > ap.most_assistants(character):
             return (
                 f"{character.name} leads at most {ap.most_assistants(character)} "
-                "assistants (his Leadership)."
+                "assistants (their Leadership)."
             )
         return _die_problem(values, stress=True)
 
@@ -398,8 +398,8 @@ def apply_store(
         total = ap.search_base(character) + die
         if botched:
             outcome = (
-                "A botch: the wrong ground or the wrong time of year; he can't "
-                "find it, nor anything to stand in for it."
+                "A botch: the wrong ground or time of year; they can't find it, nor a "
+                "substitute."
             )
         elif found := ap.found_points(total, ease):
             outcome = (
@@ -407,7 +407,7 @@ def apply_store(
                 "month (or fewer found sooner, a point over for each halving)."
             )
         else:
-            outcome = f"{total} against {ease}: nothing found this month; he may search again."
+            outcome = f"{total} against {ease}: nothing found this month; they may search again."
         name = f"Searched for: {ingredient}"
         lines = [f"Searching for {ingredient}. {shown}.", outcome]
     diaries.write(

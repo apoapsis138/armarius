@@ -58,8 +58,8 @@ def fields(saga: Saga, place: Neighbour) -> list[DialogField]:
             options=people,
             allow_blank=True,
             placeholder="(no one in particular)",
-            hint="His faerie Virtues and Flaws count from his sheet; his "
-            "emotion and life change are asked.",
+            hint="Their faerie Virtues and Flaws count from their sheet; their emotion "
+            "and life change are asked.",
         ),
         DialogField(
             "border",
@@ -90,7 +90,7 @@ def fields(saga: Saga, place: Neighbour) -> list[DialogField]:
         ),
         DialogField(
             "life_change",
-            "His life change",
+            "Life change",
             "select",
             None,
             options=[(f"{k} ({v})", k) for k, v in ft.LIFE_CHANGES.items()],

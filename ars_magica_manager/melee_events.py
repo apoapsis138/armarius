@@ -83,8 +83,8 @@ def roll(
             f"A fair ransom: {tournament.ransom_due(line)} (p. 67).",
         ]
         if wounds:
-            lines.append(f"His opponents carry {wounds} short-term Light Wound(s).")
-    who = "His company" if values.get("company") else character.name
+            lines.append(f"Their opponents carry {wounds} short-term Light Wound(s).")
+    who = "Their company" if values.get("company") else character.name
     diaries.write(
         saga.current_year,
         saga.current_season,

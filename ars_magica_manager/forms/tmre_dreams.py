@@ -37,7 +37,7 @@ ROLLS: tuple[tuple[str, str], ...] = (
     ("A spell in the dream (Technique + Imaginem)", SPELL),
     ("The dreamer notices travelers (Per + Awareness)", AWARE),
     ("The dreamer reshapes the dream (Int + bonuses)", RESHAPE),
-    ("A wound in the dream (Stamina, or he wakes)", WOUND),
+    ("A wound in the dream (Stamina, or they wake)", WOUND),
     ("The entranced body is disturbed (Concentration)", DISTURBED),
 )
 SPONTANEOUS = "__spontaneous__"
@@ -170,8 +170,8 @@ def dream_fields(saga: Saga, character: Character) -> list[DialogField]:
             options=spells,
             required=True,
             show_if=in_spell,
-            hint="Cast with his Technique and Imaginem, whatever its Form "
-            "(TMRE p. 103).",
+            hint="Cast with their Technique and Imaginem, whatever its Form (TMRE p. "
+            "103).",
         ),
         DialogField(
             "technique",
@@ -207,8 +207,8 @@ def dream_fields(saga: Saga, character: Character) -> list[DialogField]:
             "int",
             0,
             show_if=in_spell,
-            hint="0 or less: the wounds taken in this dream (his real ones stay "
-            "with the body).",
+            hint="0 or less: the wounds taken in this dream (their real ones stay with "
+            "the body).",
         ),
         DialogField(
             "split_parma",
@@ -227,9 +227,8 @@ def dream_fields(saga: Saga, character: Character) -> list[DialogField]:
             allow_blank=True,
             placeholder="(whose dream it is)",
             show_if=_is(AWARE, RESHAPE),
-            hint="These are the dreamer's own rolls against travelers in the "
-            "dream: usually someone else, the traveler himself only in his "
-            "own dream (TMRE pp. 104-105).",
+            hint="The dreamer's rolls against travelers: usually someone else, the "
+            "traveler only in their own dream (TMRE pp. 104-105).",
         ),
         DialogField(
             "magus_power",
@@ -371,7 +370,7 @@ def dream_lines(saga: Saga, character: Character, values: dict[str, Any]) -> lis
         return [
             f"[b]{name}[/] casts {escape(what)} in the dream as Imaginem.",
             f"Casting Score [b]{int(score.total)}[/] ({_terms(score)}); {how}.",
-            f"His Magic Resistance in the dream [b]{int(resistance.total)}[/] "
+            f"Their Magic Resistance in the dream [b]{int(resistance.total)}[/] "
             f"({_terms(resistance)}) [dim](TMRE p. 103)[/]",
             escape(dr.body_note(bool(values.get("split_parma")))),
             "A botch gains real Warping Points; Twilight is real, timed in the "
@@ -410,9 +409,9 @@ def dream_lines(saga: Saga, character: Character, values: dict[str, Any]) -> lis
             f"[b]{name}[/] stays in the dream on a stress die + "
             f"[b]{int(base.total)}[/] ({_terms(base)}) against [b]{ease}[/], "
             "the total Wound Penalty [dim](TMRE p. 106)[/]",
-            "Failing, he wakes from the shock; the wounds aren't real, and heal "
-            "once enough dream time passes. An Incapacitating wound leaves him "
-            "Incapacitated even if he stays.",
+            "Failing, they wake from the shock; the wounds aren't real and heal with "
+            "dream time. An Incapacitating wound leaves them Incapacitated even if they"
+            " stay.",
         ]
     disturbance = str(values.get("disturbance") or dr.DISTURBANCES[0][0])
     base = dr.disturbance_base(character)
@@ -420,7 +419,7 @@ def dream_lines(saga: Saga, character: Character, values: dict[str, Any]) -> lis
         f"[b]{name}[/] stays in the trance on a stress die + [b]{base}[/] "
         "(Stamina + Concentration, the body's wounds three times) against "
         f"[b]{dr.disturbance_ease(disturbance)}[/] [dim](TMRE p. 102; DE p. 215)[/]",
-        "Failing, he wakes and is pulled out of the dream.",
+        "Failing, they wake and are pulled out of the dream.",
     ]
 
 
@@ -496,7 +495,7 @@ def _dreams(
 
 def _stays(total: int, ease: int, botched: bool, woken: str) -> str:
     if not botched and total >= ease:
-        return f"{total} against {ease}: he stays in the dream."
+        return f"{total} against {ease}: they stay in the dream."
     return f"{'A botch' if botched else total} against {ease}: {woken}"
 
 
@@ -510,7 +509,7 @@ def _wounded(
     ease = dr.shock_ease(character, earlier.add(wound))
     return f"Dream: a {wound} wound", [
         f"{character.name} takes a {wound} wound in a dream. {shown}.",
-        _stays(base + die, ease, botched, "the shock wakes him; it was only a dream."),
+        _stays(base + die, ease, botched, "the shock wakes them; it was only a dream."),
     ]
 
 
@@ -523,7 +522,7 @@ def _disturbed(
     total = dr.disturbance_base(character) + die
     return f"Dream: {disturbance.lower()}", [
         f"{character.name}'s body: {disturbance.lower()}. {shown}.",
-        _stays(total, ease, botched, "he wakes, pulled out of the dream."),
+        _stays(total, ease, botched, "they wake, pulled out of the dream."),
     ]
 
 

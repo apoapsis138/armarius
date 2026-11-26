@@ -311,8 +311,8 @@ def contribute_fields(saga: Saga, magus_id: str | None) -> list[DialogField]:
             options=books,
             allow_blank=True,
             placeholder="(not one of the saga's books)",
-            hint="A copy will do; it need not be his own work. The original "
-            "stays where it is.",
+            hint="A copy will do; it need not be their own work. The original stays "
+            "where it is.",
             show_if=lambda v: v.get("kind") in (gl.BOOK, gl.GREAT),
         ),
         DialogField(
@@ -321,7 +321,7 @@ def contribute_fields(saga: Saga, magus_id: str | None) -> list[DialogField]:
             "text",
             "",
             placeholder='e.g. 4 pawns of Vim, a "donation"',
-            hint="What he gave, in a few words (blank: the book's name).",
+            hint="What they gave, in a few words (blank: the book's name).",
         ),
         DialogField("seasons", "Seasons of credit", "int", gl.CREDIT[gl.BOOK]),
     ]
@@ -365,9 +365,9 @@ def contribute_form(
             and not values.get("book")
             and not (values.get("what") or "").strip()
         ):
-            return "Choose the book he gives, or say what it is."
+            return "Choose the book they give, or say what it is."
         if kind == gl.VIS and not (values.get("what") or "").strip():
-            return "Say how much vis he gives."
+            return "Say how much vis they give."
         return None
 
     def apply(values: dict[str, Any]) -> None:
@@ -418,8 +418,8 @@ def ledger_fields(saga: Saga, ledger: dict[str, Any]) -> list[DialogField]:
             "Seasons granted besides",
             "int",
             int(ledger.get("granted") or 0),
-            hint="The librarian's own grant beyond what was given (less than "
-            "none for a contribution he refused).",
+            hint="The librarian's own grant beyond what was given (less than none for a"
+            " contribution they refused).",
         ),
         DialogField(
             "used",
@@ -468,7 +468,7 @@ def credit_ops(saga: Saga, tribunal: Tribunal) -> SectionOps:
 
         return Confirm(
             f"Delete {escape(_name(saga, ledger.get('magus_id')))}'s credit at "
-            "the Great Library? His searches stay listed.",
+            "the Great Library? Their searches stay listed.",
             apply,
         )
 
@@ -595,14 +595,14 @@ def _extra_lines(saga: Saga, entry: dict[str, Any]) -> list[str]:
     if entry.get("credit_taken"):
         paid = seasons_paid(entry)
         lines.append(
-            "[$label]Credit:[/] a season of his credit."
+            "[$label]Credit:[/] a season of their credit."
             if paid == 1
-            else f"[$label]Credit:[/] {_seasons(paid)} of his credit."
+            else f"[$label]Credit:[/] {_seasons(paid)} of their credit."
         )
     if entry.get("lore_used"):
         lines.append(
-            "[dim]He added his Durenmar Lore: its next use in this subject is at "
-            "-1 more.[/]"
+            "[dim]They added their Durenmar Lore: its next use in this subject is at -1"
+            " more.[/]"
         )
     if entry.get("note"):
         lines.append(f"[i]{escape(entry['note'])}[/]")
@@ -701,7 +701,7 @@ def search_fields(saga: Saga, magus_id: str | None) -> list[DialogField]:
         DialogField("level", "Level wanted", "int", 15, show_if=_shows_level),
         DialogField(
             "lore",
-            "Add his Durenmar Lore to the Quality",
+            "Add their Durenmar Lore to the Quality",
             "check",
             False,
             hint="-1 for each earlier use of it in the same Art or Ability.",
@@ -718,10 +718,10 @@ def search_fields(saga: Saga, magus_id: str | None) -> list[DialogField]:
         ),
         DialogField(
             "read",
-            "He reads what is found this season",
+            "They read what is found this season",
             "check",
             True,
-            hint="A season of his credit, unless he is exempt.",
+            hint="A season of their credit, unless they're exempt.",
             show_if=_shows_read,
         ),
         DialogField(
@@ -754,13 +754,13 @@ def search_live(saga: Saga, tribunal: Tribunal, values: dict[str, Any]) -> str:
     if wanted.sought in gl.BOOKS and not gl.durenmar_lore(magus) and values.get("lore"):
         lines.append(f"[$text-warning]{escape(magus.name)} has no Durenmar Lore.[/]")
     if gl.is_exempt(saga, magus):
-        lines.append(f"{escape(magus.name)} is exempt: he needs no credit.")
+        lines.append(f"{escape(magus.name)} is exempt: they need no credit.")
     elif _takes_credit(saga, magus, values):
         ledger = ledger_of(tribunal, magus.id)
         left = credit_left(ledger) if ledger is not None else 0
         colour = "$text-error" if left <= 0 else "$label"
         lines.append(
-            f"[{colour}]Reading it takes a season of his credit: {left} left.[/]"
+            f"[{colour}]Reading it takes a season of their credit: {left} left.[/]"
         )
     lines.append(
         f"[dim]{GOTF} pp. 56-57. Lab notes and records need no credit; books take "
@@ -945,7 +945,7 @@ def edit_search_form(
                 seasons_paid(entry),
                 hint="The loan covers these seasons, from the search's on: a "
                 "Library book is studied only in a season of credit paid for it"
-                + (" (he is exempt: no credit is taken)" if exempt else "")
+                + (" (they're exempt: no credit is taken)" if exempt else "")
                 + f" ({GOTF} p. 55).",
             )
         ]

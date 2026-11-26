@@ -307,15 +307,15 @@ def reminders(magus: Character) -> list[str]:
     found: list[str] = []
     if lab_virtues.has(magus, MUTANTUM_MAGIC):
         found.append(
-            "Mutantum Magic: he invents Formulaic spells and invested items "
-            "that are Boosted, Harnessed or Tethered, and learns and casts "
+            "Mutantum Magic: they invent Formulaic spells and invested items "
+            "that are Boosted, Harnessed or Tethered, and learn and cast "
             f"them all ({TL} pp. 101, 107)."
         )
     if lab_virtues.has(magus, TAMED_MAGIC):
         found.append(
-            "Tamed Magic: any of his Spontaneous or Formulaic spells, or item "
-            "effects he activates, may be harnessed or tethered; they aren't "
-            f"Arcane Connections to him and don't end when he dies ({TL} p. 107)."
+            "Tamed Magic: any of their Spontaneous or Formulaic spells, or item "
+            "effects they activate, may be harnessed or tethered; these aren't "
+            f"Arcane Connections to them and don't end at their death ({TL} p. 107)."
         )
     return found
 

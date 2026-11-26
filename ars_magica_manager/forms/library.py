@@ -556,8 +556,8 @@ def _book_authorship_fields(
             "Raw (author's shorthand)",
             "check",
             bool(attr(book, "raw", False)),
-            hint="Only the author, and whoever has decoded his texts, can use "
-            "it until he rewrites it.",
+            hint="Only the author, and whoever has decoded their texts, can use it "
+            "until they rewrite it.",
             show_if=shows.lab_text,
         ),
         *(

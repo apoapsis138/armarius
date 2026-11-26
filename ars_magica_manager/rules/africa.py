@@ -213,7 +213,7 @@ def court_keeps_off_acclimation(strength: int, might: int) -> str:
     if frequent is not None and aura >= frequent:
         return "visiting it often keeps Acclimation off"
     if half is not None and aura >= half:
-        return "half his time among it keeps Acclimation off"
+        return "half their time among it keeps Acclimation off"
     if always is not None and aura >= always:
         return "only dwelling among it always keeps Acclimation off"
     return "the Court is too weak to keep Acclimation off"
@@ -750,7 +750,7 @@ def transformed_anthropophagus(feasts: int) -> str:
     """What a human who shares the feast (Transformed Human with Greater
     Malediction) has become after so many feasts."""
     if feasts >= FEASTS_TO_LEAVE:
-        return "monstrous: he must leave human society for his new kin"
+        return "monstrous: they must leave human society for their new kin"
     if feasts >= FEASTS_TO_DISFIGURED:
         return "Disfigured"
     return "still human in looks"

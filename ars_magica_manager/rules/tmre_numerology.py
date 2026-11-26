@@ -585,7 +585,7 @@ def reminders(saga: Saga | None, magus: Character) -> list[str]:
     found: list[str] = []
     if _has(magus, NUMEROLOGY):
         bonus = book_bonus(saga, magus) if saga is not None else 0
-        book = f"; his book adds +{bonus} consulted (an extra round)" if bonus else ""
+        book = f"; their book adds +{bonus} consulted (an extra round)" if bonus else ""
         known = rotes_known(magus)
         rotes = (
             " Rotes known: "

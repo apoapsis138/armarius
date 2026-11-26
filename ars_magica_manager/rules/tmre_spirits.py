@@ -333,7 +333,7 @@ def ghost_problems(ritual_level: int, size_levels: int, limit: int) -> list[str]
     said = []
     if ritual_level < limit:
         said.append(
-            f"The Transformation must be at least level {limit}, his "
+            f"The Transformation must be at least level {limit}, their "
             "transformation limit."
         )
     if ritual_level - size_levels <= 0:

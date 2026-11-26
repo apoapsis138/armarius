@@ -321,7 +321,7 @@ def test_nobody_studies_his_own_tractatus_or_a_book_he_cant_read():
     tract = next(b for b in saga.books if b.id == "tract")
     tract.author, tract.author_id = "Tiberius", "tib"
     worked = _outcome(saga, _plan("tib", rules.READ, book_id="tract"))
-    assert any("a tractatus of his own" in p for p in worked.problems)
+    assert any("a tractatus of their own" in p for p in worked.problems)
     tract.author_id = None
     tract.author = "Someone"
     student = saga.characters[0]

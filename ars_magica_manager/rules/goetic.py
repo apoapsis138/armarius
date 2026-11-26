@@ -251,14 +251,14 @@ def outcome(
         if total_value >= level:
             return Result(
                 True,
-                "Summoned and held in the circle until he dismisses it, or the "
-                "next midday or midnight.",
+                "Summoned and held in the circle until they dismiss it, or the next "
+                "midday or midnight.",
             )
         if total_value >= might + extra:
             return Result(
                 True,
-                "Summoned, but it stays only while he concentrates; talking "
-                "with it asks Stamina + Concentration rolls to keep the circle.",
+                "Summoned, but it stays only while they concentrate; talking with it "
+                "asks Stamina + Concentration rolls to keep the circle.",
             )
         return Result(False, "No spirit answers.")
     if art in (BINDING, COMMANDING) and not resists and in_circle:

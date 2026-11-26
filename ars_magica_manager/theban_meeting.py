@@ -406,9 +406,8 @@ def _reparation_fields(magus: Character, held: dict[str, Any]) -> list[DialogFie
             "text",
             paid.get("what", ""),
             placeholder="e.g. a summa on Corpus, an invested item",
-            hint="The magus sets it himself (The Sundered Eagle p. 33): seven "
-            "or more pawns, a summa or an invested item from one with many "
-            "enemies or who defied the Tribunal.",
+            hint="The magus sets it themselves (TSE p. 33): seven or more pawns, a "
+            "summa, or an invested item from one with many enemies or who defied the Tribunal.",
             show_if=lambda values: bool(values.get(ticked)),
         ),
         DialogField(
@@ -492,7 +491,7 @@ def reparation_text(paid: Mapping[str, Any]) -> str:
     short = int(paid.get("wanted") or 0) - pawns
     words = " and ".join(parts) or "nothing recorded"
     if short > 0:
-        words += f" ({short} of the pawns offered he hadn't)"
+        words += f" ({short} of the pawns offered they hadn't)"
     return words
 
 
@@ -1452,7 +1451,7 @@ def presentation_problem(
         bids = child_bids(values, index)
         idents = [ident for ident, _ in bids]
         if len(idents) != len(set(idents)):
-            return "A magus gives his tokens to a child once: add them together."
+            return "A magus gives their tokens to a child once: add them together."
         for ident, tokens in bids:
             if tokens < 1:
                 return "Each magus bidding gives a child at least one token."
@@ -1461,8 +1460,8 @@ def presentation_problem(
         claimed = values.get(f"claim_{index}")
         if claimed and master and master != claimed:
             return (
-                "A Bonisagus's claim stands by the Oath: leave her master to "
-                "him, or clear the claim."
+                "A Bonisagus's claim stands by the Oath: leave the child to them, or "
+                "clear the claim."
             )
         if master and bids and master not in idents:
             return (
@@ -1486,7 +1485,7 @@ def _apprentice(
     """The child given, as a sketch character at her master's covenant."""
     covenant = saga.covenant(master.covenant_id)
     keeps = (
-        f" She keeps {kept} token{'' if kept == 1 else 's'}, to spend once a maga."
+        f" They keep {kept} token{'' if kept == 1 else 's'}, to spend once a magus."
         if kept
         else ""
     )
@@ -1559,8 +1558,8 @@ class ApprenticePresentation(core.Step):
                 "intro",
                 "",
                 "info",
-                "Each child the troupe's magi interviewed, the tokens each "
-                "magus gave her, and who delivered her to the Council.",
+                "Each child the troupe's magi interviewed, the tokens each magus gave "
+                "them, and who delivered them to the Council.",
             )
         ]
         for i in range(CHILD_SLOTS):
@@ -1641,22 +1640,22 @@ class ApprenticePresentation(core.Step):
                         options=bonisagi,
                         allow_blank=True,
                         placeholder="(no Bonisagus)",
-                        hint="A Bonisagus may claim any child by the Oath, "
-                        "bid or no bid; her choice doesn't override him.",
+                        hint="A Bonisagus may claim any child by the Oath, bid or no "
+                        "bid; their choice doesn't override it.",
                         show_if=named,
                     )
                 )
             found.append(
                 DialogField(
                     f"master_{i}",
-                    "  Her master",
+                    "  Their master",
                     "select",
                     None,
                     options=everyone,
                     allow_blank=True,
-                    placeholder="(her choice: the most tokens)",
-                    hint="She chooses among those who gave her tokens; one "
-                    "given none may be claimed by any magus, even one with a shard.",
+                    placeholder="(their choice: the most tokens)",
+                    hint="They choose among those who gave them tokens; one given none "
+                    "may be claimed by any magus, even one with a shard.",
                     show_if=named,
                 )
             )
@@ -1768,9 +1767,9 @@ class ApprenticePresentation(core.Step):
     def guide(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         return (
             "Who each child goes to, from the tokens given at the interviews.",
-            "Her master's tokens leave him and stay with her; the other "
-            "bidders keep theirs. Each child becomes a sketch character at "
-            "her master's covenant, and whoever delivered her earns a token.",
+            "Their master's tokens pass to them; the other bidders keep theirs. Each "
+            "child becomes a sketch character at their master's covenant, and whoever "
+            "delivered them earns a token.",
         )
 
     def save_label(self):
@@ -1915,7 +1914,7 @@ class ConductOfArchai(core.Step):
             if not FINE_LEAST <= fine <= FINE_MOST:
                 return f"A fine is of {FINE_LEAST} to {FINE_MOST} shards."
             if values.get(f"by_{n}") == against:
-                return "A magistrate can't bring a complaint against himself."
+                return "A magistrate can't bring a complaint against themselves."
         return None
 
     def apply(
@@ -2151,9 +2150,8 @@ class CommonVis(core.Step):
     def guide(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         return (
             "Each common source, its gatherer and the vis brought in.",
-            "A gatherer earns a token (a shard if he neglected it), and the "
-            "pawns go into the treasury; the sources are kept for the next "
-            "meeting.",
+            "A gatherer earns a token (a shard if they neglected it), and the pawns go "
+            "into the treasury; the sources are kept for the next meeting.",
         )
 
     def save_label(self):

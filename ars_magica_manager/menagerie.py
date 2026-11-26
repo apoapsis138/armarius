@@ -160,7 +160,7 @@ def reputation_text(saga: Saga, project: HermeticProject) -> str:
         (r for r in owner.reputations if r.name.casefold() == name.casefold()), None
     )
     if found is None:
-        return f"{name} 0 ({owner.name}'s, not yet on his sheet)"
+        return f"{name} 0 ({owner.name}'s, not yet on their sheet)"
     return f"{found.name} {found.score} ({found.deeds} xp)"
 
 
@@ -518,7 +518,7 @@ def project_fields(
         ),
         DialogField(
             "reputation",
-            "His Reputation",
+            "Reputation",
             "text",
             project.reputation if project else "",
             placeholder="Keeper of Beasts",
@@ -1364,7 +1364,7 @@ def _working(
     if existing is not None:
         problems.append(
             f"{character.name} already has a plan for {season} {year}: change it "
-            "on his Seasons."
+            "on their Seasons."
         )
     if problems:
         return character, 0, "", problems, season, year
@@ -1564,7 +1564,7 @@ def award_form(saga: Saga, covenant: Covenant, _index: int | None = None) -> Com
     if owner is None or not project.reputation.strip():
         return Refuse(
             REPUTATION_AWARD,
-            "Name the menagerie's owner and his Reputation first (Edit Project).",
+            "Name the menagerie's owner and their Reputation first (Edit Project).",
         )
 
     def live(values: dict[str, Any]) -> str:

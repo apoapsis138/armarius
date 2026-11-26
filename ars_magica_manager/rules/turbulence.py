@@ -318,7 +318,7 @@ def result_lines(
         f"{controlling.player_total} against Warping Score {controlling.warping} + "
         f"{_die(controlling.warping_die, controlling.warping_botched)} = "
         f"{controlling.warping_total}"
-        + (" (Turbulence Prone: he can't control it)" if controlling.prone else "")
+        + (" (Turbulence Prone: they can't control it)" if controlling.prone else "")
         + f": {verdict}."
     )
     if controlling.stamina_botched or controlling.warping_botched:
@@ -348,7 +348,7 @@ def result_lines(
         else "No Penetration: it can't touch anything with Magic Resistance."
     )
     if occasion == LAB and not controlling.controlled:
-        lines.append("His aid to the Lab Total is halved this season.")
+        lines.append("Their aid to the Lab Total is halved this season.")
     return lines
 
 
@@ -466,6 +466,6 @@ def gift_roll_line(rolled: GiftRoll) -> str:
         )
     return (
         f"Losing the Gift: a 0, and {zeros} of {rolled.botch_dice} botch dice "
-        "show 0: the apprentice loses his Gift (the botches and his place in the "
+        "show 0: the apprentice loses their Gift (the botches and their place in the "
         "saga say whether for good: More, Lose the Gift)."
     )

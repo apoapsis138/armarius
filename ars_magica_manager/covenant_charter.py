@@ -386,7 +386,7 @@ def charter_text(saga: Saga, covenant: Covenant) -> str:
         lines.append(f"[dim]{escape(note)}[/]")
     for line in probations_ended(saga, covenant):
         lines.append(
-            f"[$text-warning]{escape(line)}: Seal the Charter to make him a "
+            f"[$text-warning]{escape(line)}: Seal the Charter to make them a "
             "full member, or extend it.[/]"
         )
     if out := still_resident(saga, covenant):
@@ -487,8 +487,8 @@ def personal_warning(withheld: list[str]) -> str:
     if not own:
         return ""
     return (
-        f"{' and '.join(own)}: most Tribunals take a magus's laboratory for "
-        "his own, and to withhold what is his deprives him of his magical "
+        f"{' and '.join(own)}: most Tribunals treat a magus's laboratory as "
+        "their own, and withholding it deprives them of their magical "
         f"power, against the Oath of Hermes ({COV} p. 36). Unless the "
         "charter makes it a privilege, this is on shaky legal ground."
     )
@@ -525,7 +525,7 @@ def gloss(clause: CharterClause, binds: bool) -> str:
         return (
             f"[dim]The charter says how it may be altered ({COV} p. 33). "
             "Several Tribunals hold that it may not change a member's "
-            "obligation without his agreement; doing so is a High Crime "
+            "obligation without their agreement; doing so is a High Crime "
             f"({COV} p. 35).[/]"
         )
     return ""

@@ -194,8 +194,8 @@ def divination_fields(saga: Saga, character: Character) -> list[DialogField]:
             fills=_fills_bonus,
             hint=""
             if td.methods(character)
-            else "His Virtue names no method: "
-            "the table's (TMRE p. 61); name his on the Virtue to keep it.",
+            else "Their Virtue names no method: the table's (TMRE p. 61); name theirs "
+            "on the Virtue to keep it.",
         ),
         *_question_fields(character),
         DialogField(
@@ -616,9 +616,8 @@ def astrology_lines(character: Character, values: dict[str, Any]) -> list[str]:
         )
     else:
         found.append(
-            "A single round, once he knows the place's conditions (Divine "
-            "Heaven's Aspect); a failure may be tried again, a botch botches "
-            "the spell (TMRE p. 54)."
+            "A single round, once they know the place's conditions (Divine Heaven's "
+            "Aspect); a failure may be retried, a botch botches the spell (TMRE p. 54)."
         )
     problem = astrology_problem(character)(values)
     if problem:
