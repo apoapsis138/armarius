@@ -20,7 +20,16 @@ from dataclasses import replace
 from functools import cache
 from pathlib import Path
 
-from PySide6.QtCore import QByteArray, QMarginsF, QPointF, QRectF, QSizeF, Qt
+from PySide6.QtCore import (
+    QByteArray,
+    QMarginsF,
+    QPoint,
+    QPointF,
+    QRectF,
+    QSizeF,
+    Qt,
+    QUrl,
+)
 from PySide6.QtGui import (
     QColor,
     QFont,
@@ -32,16 +41,22 @@ from PySide6.QtGui import (
     QPdfWriter,
     QPen,
     QPixmap,
+    QRegion,
     QTextDocument,
+    QTextOption,
 )
 from PySide6.QtSvg import QSvgRenderer
+from PySide6.QtWidgets import QWidget
 
 from .. import artwork
 from .. import print_layout as pl
 from ..pdf_outline import add_outline
 from ..print_records import printed_palette
 from . import marks, pictures
+from .markup_html import to_html
 from .style import liveries
+from .style.illumination import IlluminatedInitial
+from .style.ornaments import ShortRule
 from .style.paper import paper
 from .themes import SCRIPTORUM, Palette
 
@@ -160,6 +175,13 @@ class Sheet:
         self.writer = writer or pdf_writer(path, doc.title, options.paper)
         self.width = width - LEFT - RIGHT
         self.height = height - TOP - BOTTOM
+        #: Where the printed area starts on each page, in points.
+        self.left, self.top = LEFT, TOP
+        #: How many pages the document took, once it is being drawn.
+        self.page_count = 0
+        #: Each picture's pixmap by its bytes, read once while this sheet
+        #: is drawn (None for bytes that aren't a picture).
+        self._pictures: dict[bytes, QPixmap | None] = {}
         self.painter: QPainter | None = None
         self.ink = QColor(self.p["foreground"])
         self.red = QColor(self.p["heading"])
@@ -185,6 +207,9 @@ class Sheet:
             pl.GrimoireTitle: lambda b, w: 62.0,
             pl.Spell: self._spell_h,
             pl.Blanks: lambda b, w: 4.0 + b.lines * 14,
+            pl.Passage: lambda b, w: self._passage_doc(b, w).size().height(),
+            pl.Flourish: lambda b, w: float(ShortRule.HEIGHT),
+            pl.Picture: self._picture_h,
             pl.NewPage: lambda b, w: 0.0,
         }
         self._painters: dict[type, Callable] = {
@@ -204,6 +229,9 @@ class Sheet:
             pl.GrimoireTitle: self._grimoire_title,
             pl.Spell: self._spell,
             pl.Blanks: self._blanks,
+            pl.Passage: self._passage,
+            pl.Flourish: self._flourish,
+            pl.Picture: self._placed_picture,
             pl.NewPage: lambda *args: None,
         }
 
@@ -506,6 +534,8 @@ class Sheet:
             self._spell(block, x, y, w, part)
         elif isinstance(block, pl.Flow):
             self._flow(block, x, y, w, part)
+        elif isinstance(block, pl.Passage):
+            self._passage(block, x, y, w, part)
         else:
             self._painters[type(block)](block, x, y, w)
 
@@ -931,6 +961,138 @@ class Sheet:
             self.text(QRectF(x + 10, top, w - 10, rows[k]), parts[k], _font(9.5))
             at += rows[k]
 
+    # ------------------------------------------------------------ handouts
+
+    #: An illuminated initial's side on paper, in points: about three
+    #: lines of a passage.
+    INITIAL = 40
+    #: The tallest a placed picture is printed, in points, and the room a
+    #: picture Handout leaves under its title.
+    PICTURE_TALLEST, UNDER_TITLE = 260.0, 90.0
+    #: A picture not to hand: a ruled box this tall naming it.
+    PLACEHOLDER = 54.0
+
+    def _passage_doc(self, block: pl.Passage, width: float) -> QTextDocument:
+        """A written Handout's passage as one paragraph `width` wide: its
+        markup's bold and italic kept, set where it stands, an initial's
+        letter illuminated and floated at its left."""
+        doc = QTextDocument()
+        doc.documentLayout().setPaintDevice(self.writer)
+        doc.setDocumentMargin(0)
+        doc.setDefaultFont(
+            _font(13, bold=True, caps=True) if block.heading else _font(11.5)
+        )
+        option = QTextOption(ALIGN.get(block.align, LEFT_ALIGN))
+        option.setWrapMode(QTextOption.WrapMode.WordWrap)
+        doc.setDefaultTextOption(option)
+        doc.setTextWidth(width)
+        colour = self.p["heading"] if block.heading else self.p["foreground"]
+        body = to_html(block.text, self.p)
+        if block.initial:
+            # An image's size in HTML is in pixels of 96 to the inch.
+            side = (self.INITIAL + 2 * round(self.INITIAL * 0.1)) * (
+                96 / self.writer.logicalDpiX()
+            )
+            doc.addResource(
+                QTextDocument.ResourceType.ImageResource,
+                QUrl("initial:"),
+                rendered(IlluminatedInitial(block.initial, self.p, self.INITIAL)),
+            )
+            body = (
+                f'<img src="initial:" width="{side}" height="{side}" align="left">'
+                f"{body}"
+            )
+        doc.setHtml(f'<div style="color:{colour}">{body}</div>')
+        return doc
+
+    def _passage_rows(self, block: pl.Passage, width: float) -> tuple[float, ...]:
+        """Each of a passage's lines' heights, top to bottom, so one longer
+        than a page can run on between its lines."""
+        doc = self._passage_doc(block, width)
+        layout = doc.documentLayout()
+        tops: set[float] = set()
+        line_block = doc.begin()
+        while line_block.isValid():
+            top = layout.blockBoundingRect(line_block).top()
+            lines = line_block.layout()
+            tops.update(top + lines.lineAt(k).y() for k in range(lines.lineCount()))
+            line_block = line_block.next()
+        found = sorted(tops) or [0.0]
+        ends = [*found[1:], doc.size().height()]
+        return tuple(end - top for top, end in zip(found, ends, strict=True))
+
+    def _passage(
+        self,
+        block: pl.Passage,
+        x: float,
+        y: float,
+        w: float,
+        part: pl.Placement | None = None,
+    ) -> None:
+        """A passage, or the part of its lines (`first` to `last`) that a
+        page has room for."""
+        doc = self._passage_doc(block, w)
+        skip, tall = 0.0, doc.size().height()
+        if part is not None and part.last:
+            rows = self._passage_rows(block, w)
+            skip = sum(rows[: part.first])
+            tall = sum(rows[part.first : part.last])
+        self.qp.save()
+        self.qp.translate(x, y - skip)
+        doc.drawContents(self.qp, QRectF(0, skip, w, tall))
+        self.qp.restore()
+
+    def _loaded(self, data: bytes | None) -> QPixmap | None:
+        """A picture's bytes as a pixmap, once a sheet; None for none, or
+        bytes that aren't a picture."""
+        if data is None:
+            return None
+        if data not in self._pictures:
+            found = QPixmap()
+            drawn = found.loadFromData(data) and not found.isNull()
+            self._pictures[data] = found if drawn else None
+        return self._pictures[data]
+
+    def _flourish(self, block: pl.Flourish, x: float, y: float, w: float) -> None:
+        del block
+        wide = min(w, 220.0)
+        picture = rendered(ShortRule(self.p), wide, ShortRule.HEIGHT)
+        where = QRectF(x + (w - wide) / 2, y, wide, ShortRule.HEIGHT)
+        self.qp.drawPixmap(where, picture, QRectF(picture.rect()))
+
+    def _picture_size(self, block: pl.Picture, width: float) -> QSizeF | None:
+        """The size a picture is printed at: its own, a pixel a point, or
+        smaller to fit the column and its height; None when it can't be
+        drawn."""
+        found = self._loaded(block.data)
+        if found is None:
+            return None
+        tallest = self.height - self.UNDER_TITLE if block.page else self.PICTURE_TALLEST
+        scale = min(1.0, width / found.width(), tallest / found.height())
+        return QSizeF(found.width() * scale, found.height() * scale)
+
+    def _picture_h(self, block: pl.Picture, width: float) -> float:
+        size = self._picture_size(block, width)
+        return self.PLACEHOLDER if size is None else size.height()
+
+    def _placed_picture(self, block: pl.Picture, x: float, y: float, w: float) -> None:
+        size = self._picture_size(block, w)
+        found = self._loaded(block.data)
+        if size is None or found is None:
+            self.qp.setPen(QPen(self.rule, 0.8, Qt.PenStyle.DashLine))
+            self.qp.drawRect(QRectF(x, y, w, self.PLACEHOLDER))
+            named = f"Picture {block.number}: " if block.number else ""
+            self.text(
+                QRectF(x, y, w, self.PLACEHOLDER),
+                f"{named}{block.caption}",
+                _font(10.5, italic=True),
+                self.label,
+                Align.AlignCenter,
+            )
+            return
+        where = QRectF(x + (w - size.width()) / 2, y, size.width(), size.height())
+        self.qp.drawPixmap(where, found, QRectF(found.rect()))
+
     # ------------------------------------------------------------ pages
 
     def frame(self, number: int) -> None:
@@ -1014,6 +1176,19 @@ class Sheet:
                 pieces.append(self._table_piece(block, self.width))
             elif isinstance(block, pl.Flow):
                 pieces.append(self._flow_piece(block, self.width))
+            elif isinstance(block, pl.Passage):
+                # Whole on one page, from a new one if need be; run on
+                # between its lines only when longer than a page.
+                rows = self._passage_rows(block, self.width)
+                pieces.append(
+                    pl.Piece(
+                        sum(rows),
+                        GAP,
+                        pl.keeps_with_next(block),
+                        rows=rows,
+                        whole=True,
+                    )
+                )
             elif isinstance(block, pl.Spell):
                 # Whole on one page, from a new one if need be; split
                 # between its paragraphs only when longer than a page.
@@ -1065,6 +1240,7 @@ class Sheet:
         starting a new page first when `new_page` (a book's later sheets);
         how many pages it took."""
         pages = pl.paginate(self.pieces(), self.height)
+        self.page_count = len(pages)
         self.painter = painter
         self.qp.setRenderHint(QPainter.RenderHint.Antialiasing)
         try:
@@ -1074,10 +1250,32 @@ class Sheet:
                 self.frame(number)
                 for place in page:
                     block = self.doc.blocks[place.index]
-                    self.paint(block, LEFT, TOP + place.top, self.width, place)
+                    self.paint(
+                        block, self.left, self.top + place.top, self.width, place
+                    )
         finally:
             self.painter = None
         return len(pages)
+
+
+#: How many pixels a point an ornament is drawn at before it goes on the
+#: page: the PDF writer flattens gradients, so a gilt or glowing ornament
+#: goes on as a sharp picture.
+PIXELS_PER_POINT = 4
+
+
+def rendered(widget: QWidget, width: float = 0, height: float = 0) -> QPixmap:
+    """`widget` (an ornament, as the screen draws it) as a sharp picture
+    on a clear ground, its pixels taken as points: at its own size, or
+    `width` by `height`."""
+    if width and height:
+        widget.resize(round(width), round(height))
+    size = widget.size()
+    picture = QPixmap(size.width() * PIXELS_PER_POINT, size.height() * PIXELS_PER_POINT)
+    picture.setDevicePixelRatio(PIXELS_PER_POINT)
+    picture.fill(Qt.GlobalColor.transparent)
+    widget.render(picture, QPoint(), QRegion(), QWidget.RenderFlag.DrawChildren)
+    return picture
 
 
 def pdf_writer(path: Path, title: str, paper: str) -> QPdfWriter:

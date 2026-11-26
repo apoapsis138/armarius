@@ -211,6 +211,8 @@ LAYERS: tuple[tuple[str, frozenset[str]], ...] = (
                 "meeting",
                 "markdown_sheet",
                 "print_layout",
+                # Any Handout a player holds laid out for paper.
+                "print_handouts",
                 "print_records",
                 "rhine_meeting",
                 "ruins",

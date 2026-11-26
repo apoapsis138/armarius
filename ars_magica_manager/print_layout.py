@@ -332,6 +332,38 @@ class Blanks:
 
 
 @dataclass(frozen=True)
+class Passage:
+    """A written Handout's words as its Stationery sets them: `text` in
+    the app's markup (handout_markup's blocks), where it stands ("l", "c",
+    "r"), whether it is a heading, and for a paragraph opening on an
+    illuminated initial, the letter drawn large beside it."""
+
+    text: str
+    align: str = "l"
+    heading: bool = False
+    initial: str = ""
+
+
+@dataclass(frozen=True)
+class Flourish:
+    """A short ornamental rule, centred."""
+
+
+@dataclass(frozen=True)
+class Picture:
+    """A picture, as large as fits the column: its bytes as shown (None
+    for one not to hand, printed as a box naming it), the words it is named
+    by, its number among a written Handout's own (0 for none), and whether
+    it may fill the rest of the page (a picture Handout) rather than stand
+    at a placed picture's height."""
+
+    data: bytes | None
+    caption: str
+    number: int = 0
+    page: bool = False
+
+
+@dataclass(frozen=True)
 class NewPage:
     """The next block starts a page; a `soft` one only when less than
     about a third of the page is left."""
@@ -356,25 +388,33 @@ Block = (
     | GrimoireTitle
     | Spell
     | Blanks
+    | Passage
+    | Flourish
+    | Picture
     | NewPage
 )
 
 
 def keeps_with_next(block: Block) -> bool:
     """Whether `block` goes on a page only with the block after it: a
-    heading with what it heads, and the Combat box with Weapons and
-    Equipment, so those never sit alone on a page."""
+    heading (a written Handout's too) with what it heads, and the Combat
+    box with Weapons and Equipment, so those never sit alone on a page."""
+    if isinstance(block, Passage):
+        return block.heading
     return isinstance(block, Heading | CombatSummary | Weapons)
 
 
 @dataclass
 class Document:
     """A record's printed sheet: its name (the running head), the line the
-    foot of each page repeats, and its blocks in order."""
+    foot of each page repeats, and its blocks in order. A written Handout
+    names the Stationery its pages are drawn on (handout_layout.STATIONERY;
+    "" for the printed sheet's own frame)."""
 
     title: str
     subtitle: str
     blocks: list[Block] = field(default_factory=list)
+    stationery: str = ""
 
 
 # ---------------------------------------------------------------- pagination

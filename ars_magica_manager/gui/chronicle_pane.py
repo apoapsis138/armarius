@@ -75,6 +75,8 @@ from ..rules import dice as dice_rules
 from ..style import fonts
 from . import handout_copy, motion, pictures, sounds
 from .figures import linked_value
+from .forms import offer_pdf
+from .handout_page import HandoutWindow
 from .style import gilding
 from .style.ornaments import ShortRule
 from .style.paper import paper
@@ -596,6 +598,10 @@ class ShownPicture(QDialog):
         else:
             self.picture.setText("This picture can't be drawn.")
         column.addWidget(self.picture)
+        #: The buttons under it (Save as PDF).
+        self.buttons_row = QHBoxLayout()
+        self.buttons_row.addStretch(1)
+        column.addLayout(self.buttons_row)
 
 
 #: The size a shown record's copy opens at, in pixels.
@@ -623,6 +629,10 @@ class ShownCopy(QDialog):
             | QTextDocument.MarkdownFeature.MarkdownNoHTML,
         )
         column.addWidget(self.text)
+        #: The buttons under it (Save as PDF).
+        self.buttons_row = QHBoxLayout()
+        self.buttons_row.addStretch(1)
+        column.addLayout(self.buttons_row)
 
 
 #: One character of a Roll request, as its card shows it: the name,
@@ -1529,19 +1539,28 @@ class ChroniclePane(QWidget):
             self.run(Refuse(show_forms.TITLE, escape(found)))
             return
         self.open_show_number = entry.number
-        reading = show_forms.copy_form(found).reading
+        form = show_forms.copy_form(found)
         if found.picture is not None:
-            self.shown_picture = ShownPicture(found, self)
-            self.shown_picture.open()
-        elif reading is not None:
+            window: ShownPicture | ShownCopy | HandoutWindow = ShownPicture(found, self)
+            self.shown_picture = window
+        elif form.reading is not None:
             # A written Handout: on its Stationery, as its Preview draws it.
-            window = handout_copy.copy_window(reading, self)
+            window = handout_copy.copy_window(form.reading, self)
             self.shown_copy = window
-            window.open()
         else:
-            copy = ShownCopy(found, self)
-            self.shown_copy = copy
-            copy.open()
+            window = ShownCopy(found, self)
+            self.shown_copy = window
+        if form.printed is not None:
+            number = entry.number
+            offer_pdf(
+                window,
+                window.buttons_row,
+                form.printed,
+                self.p,
+                # Withdrawn meanwhile (_close_withdrawn): nothing is saved.
+                still=lambda: self.open_show_number == number,
+            )
+        window.open()
 
     def withdraw_show(self, entry: chronicle.Entry) -> None:
         """Withdraw Show `entry`, after asking: at the host's Chronicle, or

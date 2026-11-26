@@ -12,11 +12,13 @@ reads everything is asked at all (print_layout.reader_for).
 from __future__ import annotations
 
 from collections.abc import Callable
+from pathlib import Path
 from typing import Any
 
-from .. import settings, viewing
-from ..commands import Form
+from .. import settings, storage, viewing
+from ..commands import ChooseFile, Form
 from ..form_spec import DialogField
+from ..markup import escape
 from ..models import Saga
 from ..print_layout import (
     A4,
@@ -31,7 +33,7 @@ from ..print_layout import (
     STORYGUIDE_COPY,
     PrintOptions,
 )
-from ..print_records import THEME_NAMES
+from ..print_records import THEME_NAMES, file_stem
 
 #: The settings key the last choices are kept under.
 PRINT_SETTINGS = "print_options"
@@ -156,6 +158,51 @@ def _theme(value: object) -> str:
     return next(
         (name for name in (HOUSE_COLOURS, *THEME_NAMES) if value == name),
         DEFAULT_OPTIONS.theme,
+    )
+
+
+def _kept_paper(paper: str) -> None:
+    """Keep `paper` as the paper chosen last, with the other choices."""
+    saved = settings.load_settings().get(PRINT_SETTINGS)
+    kept = (saved if isinstance(saved, dict) else {}) | {"paper": paper}
+    settings.update_settings(**{PRINT_SETTINGS: kept})
+
+
+def handout_pdf_form(title: str, draw: Callable[[PrintOptions, Path], int]) -> Form:
+    """Save a Handout a player holds as a PDF: only the paper (kept with
+    the other print choices; the Stationery or the copy sets the rest),
+    then where to save it; `draw` prints it there and says how many
+    pages it took."""
+    folder = storage.exports_dir()
+
+    def where(values: dict[str, Any]) -> ChooseFile:
+        paper = values.get("paper")
+        options = PrintOptions(paper=paper if paper in PAPER_SIZES else LETTER)
+        _kept_paper(options.paper)
+
+        def save(path: Path) -> list[str]:
+            folder.mkdir(parents=True, exist_ok=True)
+            pages = draw(options, path)
+            return [f"{pages} page{'s' if pages != 1 else ''} saved to {path}."]
+
+        return ChooseFile(
+            f"Save {escape(title)} as PDF",
+            ".pdf",
+            folder / f"{file_stem(title)}.pdf",
+            save,
+            save=True,
+        )
+
+    return Form(
+        "Save as PDF",
+        lambda: [
+            field
+            for field in print_fields(saved_options(), character=False)
+            if field.key == "paper"
+        ],
+        where,
+        save_label="Next",
+        help_id="handouts",
     )
 
 

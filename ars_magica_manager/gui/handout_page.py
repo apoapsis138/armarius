@@ -45,7 +45,7 @@ from PySide6.QtWidgets import (
 
 from .. import handout_layout as layout
 from .. import handout_markup as hm
-from ..handout_layout import Laid, Placed, Preview
+from ..handout_layout import Laid, Placed, Preview, Stationery
 from ..models import PROCLAMATION, SEALED_LETTER, VELLUM
 from ..style import fonts
 from ..style.palettes import DRAWN, PIGMENTS
@@ -291,24 +291,37 @@ class HandoutPage(QWidget):
 
     def paintEvent(self, _event: QPaintEvent) -> None:
         painter = QPainter(self)
-        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-        page = QRectF(self.rect())
-        sheet = self.laid.stationery
-        _paper(painter, page, sheet.name)
-        for fold in range(1, sheet.folds + 1):
-            _crease(painter, page, page.height() * fold / (sheet.folds + 1))
-        inset = PAGE_WIDTH * sheet.margin * 0.45
-        edge = page.adjusted(inset, inset, -inset, -inset)
-        if sheet.edge == layout.EDGE_RULED:
-            _ruled(painter, edge)
-        elif sheet.edge == layout.EDGE_GILT:
-            gilt_frame(painter, edge, INK)
-            corner_flourishes(painter, edge.adjusted(6, 6, -6, -6), INK, 22)
-        if sheet.seal:
-            hanging = sheet.edge == layout.EDGE_GILT
-            cx = page.center().x() if hanging else page.right() - inset - SEAL
-            _seal(painter, QPointF(cx, page.bottom() - inset - SEAL / 2 - 4), hanging)
+        paint_stationery(painter, QRectF(self.rect()), self.laid.stationery)
         painter.end()
+
+
+def paint_stationery(
+    painter: QPainter, page: QRectF, sheet: Stationery, *, sealed: bool = True
+) -> None:
+    """A Stationery's page under its words: the paper, toned, its creases,
+    its edge and, where it has one and `sealed`, its seal (on a printed
+    Handout, only its last page's). The window's page and the printed
+    pages are drawn by this alone, so they can't disagree."""
+    painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+    _paper(painter, page, sheet.name)
+    for fold in range(1, sheet.folds + 1):
+        _crease(painter, page, page.top() + page.height() * fold / (sheet.folds + 1))
+    inset = edge_inset(sheet, page.width())
+    edge = page.adjusted(inset, inset, -inset, -inset)
+    if sheet.edge == layout.EDGE_RULED:
+        _ruled(painter, edge)
+    elif sheet.edge == layout.EDGE_GILT:
+        gilt_frame(painter, edge, INK)
+        corner_flourishes(painter, edge.adjusted(6, 6, -6, -6), INK, 22)
+    if sheet.seal and sealed:
+        hanging = sheet.edge == layout.EDGE_GILT
+        cx = page.center().x() if hanging else page.right() - inset - SEAL
+        _seal(painter, QPointF(cx, page.bottom() - inset - SEAL / 2 - 4), hanging)
+
+
+def edge_inset(sheet: Stationery, width: float) -> float:
+    """How far a Stationery's edge is drawn in from a page `width` wide."""
+    return width * sheet.margin * 0.45
 
 
 def _display(size: float) -> QFont:
@@ -466,10 +479,11 @@ class HandoutWindow(QDialog):
         column.addWidget(area, 1)
         self.close_button = QPushButton("Close")
         self.close_button.clicked.connect(self.accept)
-        row = QHBoxLayout()
-        row.addStretch(1)
-        row.addWidget(self.close_button)
-        column.addLayout(row)
+        #: The buttons under the page (Save as PDF joins Close here).
+        self.buttons_row = QHBoxLayout()
+        self.buttons_row.addStretch(1)
+        self.buttons_row.addWidget(self.close_button)
+        column.addLayout(self.buttons_row)
         scrollbar = area.verticalScrollBar().sizeHint().width()
         self.resize(
             PAGE_WIDTH + scrollbar + 40,
