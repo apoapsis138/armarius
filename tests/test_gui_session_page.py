@@ -12,13 +12,27 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from PySide6.QtWidgets import QApplication, QLabel, QPushButton
 
-from ars_magica_manager import commands, players, seat, storage, virtual_tabletop
+from ars_magica_manager import (
+    chronicle,
+    commands,
+    players,
+    seat,
+    storage,
+    virtual_tabletop,
+)
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.session_page import SessionPage
 from ars_magica_manager.gui.sessions_section import sessions_section
 from ars_magica_manager.gui.themes import SCRIPTORUM
 from ars_magica_manager.gui.window import MainWindow
-from ars_magica_manager.models import Casting, Character, Player, Saga, Session
+from ars_magica_manager.models import (
+    AccountLine,
+    Casting,
+    Character,
+    Player,
+    Saga,
+    Session,
+)
 
 
 @pytest.fixture(scope="module")
@@ -115,7 +129,41 @@ def test_the_preview_adds_begin_to_the_page_and_edit_edits_its_session() -> None
     buttons = _buttons(page)
 
     assert "Begin Session" in buttons
+    assert "The evening" not in _words(page)  # planned: nothing yet
     buttons["Edit"].click()
     [step] = ran
     assert isinstance(step, commands.Form)
     assert step.title == "Edit the Session of 21 Nov 2026"
+
+
+@pytest.mark.usefixtures("app")
+def test_a_played_sessions_page_reads_the_evening_by_scene() -> None:
+    saga = _saga()
+    session = saga.sessions[0]
+    session.played = True
+    session.account = [
+        AccountLine("roll", "Storyguide: Stress die 7, +0 = 7"),
+        AccountLine(
+            "scene set", "Scene: The ford, at A ford", scene="The ford", play=1
+        ),
+        AccountLine(
+            "roll",
+            "Aelfric: Stress die 2 [Blind]",
+            chronicle.STORYGUIDE,
+            [],
+            "The ford",
+            play=1,
+        ),
+    ]
+
+    page = SessionPage(saga, session, SCRIPTORUM, lambda _command: None)
+    scenes = [w.text() for w in page.findChildren(QLabel, "evening-scene")]
+    lines = [w.text() for w in page.findChildren(QLabel, "evening-line")]
+
+    assert "The evening" in _words(page)
+    assert scenes == ["Before the first Scene", "The ford"]
+    assert lines == [
+        "Storyguide: Stress die 7, +0 = 7",
+        "Scene: The ford, at A ford",
+        "Aelfric: Stress die 2 [Blind]",  # the host is its storyguide
+    ]

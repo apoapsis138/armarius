@@ -14,7 +14,11 @@ from ars_magica_manager.forms import menu as menu_forms
 from ars_magica_manager.forms import more
 from ars_magica_manager.forms import page as page_forms
 from ars_magica_manager.models import Player, Saga, Session
-from ars_magica_manager.sections import SESSIONS_SECTION
+from ars_magica_manager.sections import (
+    SESSION_EVENING_SECTION,
+    SESSION_INFO_SECTION,
+    SESSIONS_SECTION,
+)
 
 VERBS = ("begin_session", "close_session", "read_chronicle")
 
@@ -138,5 +142,10 @@ def test_the_chronicle_shows_only_what_its_reader_may_see() -> None:
 
 def test_the_verbs_change_the_sessions_list_and_reading_saves_nothing() -> None:
     assert more.REFRESH["begin_session"].sections == (SESSIONS_SECTION,)
-    assert more.REFRESH["close_session"].sections == (SESSIONS_SECTION,)
+    # On the Session's own page, it reads Played and its evening fills in.
+    assert more.REFRESH["close_session"].sections == (
+        SESSIONS_SECTION,
+        SESSION_INFO_SECTION,
+        SESSION_EVENING_SECTION,
+    )
     assert more.REFRESH["read_chronicle"].saves is False

@@ -119,7 +119,11 @@ def test_a_kind_must_say_who_it_is_for() -> None:
     """A new kind can't forget its rule: leaving it out is refused."""
     with pytest.raises(TypeError):
         chronicle.Kind(  # type: ignore[call-arg]
-            "handout", lambda _body: "A handout.", held_back=(), body=chronicle.NoBody
+            "handout",
+            lambda _body: "A handout.",
+            held_back=(),
+            body=chronicle.NoBody,
+            account=lambda _entry, _book: None,
         )
 
 
@@ -131,6 +135,7 @@ def test_a_kind_must_say_what_it_holds_back_from_seats() -> None:
             lambda _body: "A handout.",
             for_whom=chronicle.for_whom,
             body=chronicle.NoBody,
+            account=lambda _entry, _book: None,
         )
 
 

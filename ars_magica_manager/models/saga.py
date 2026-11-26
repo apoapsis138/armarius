@@ -179,6 +179,30 @@ class SceneUse:
 
 
 @dataclass
+class AccountLine:
+    """One line of a played Session's account (evening.py): what happened,
+    folded from its Chronicle at End Session. `kind` is the Chronicle
+    entry's it came from; who may read it is that entry's Audience
+    (`audience`: "table", "storyguide" or "chosen", with its `players`);
+    `scene` is the title of the Scene it fell in ("" outside one), and
+    `play` how many Scenes had been set by then (0 before the first), so
+    a Scene played twice reads as two. A `starred` line goes into the next
+    Previously On."""
+
+    kind: str
+    text: str
+    audience: str = "table"
+    players: list[str] = field(default_factory=list)
+    scene: str = ""
+    starred: bool = False
+    play: int = 0
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> AccountLine:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
 class Session:
     """One evening of play at the table (sessions.py): when it is or was,
     its storyguide, who is coming and who is Away, who played whom, and
@@ -216,12 +240,19 @@ class Session:
     played_year: int | None = None
     #: The Scenes loaded into it, in the order they are to be played.
     scenes: list[SceneUse] = field(default_factory=list)
+    #: The evening's account, written by End Session from its Chronicle
+    #: (evening.py); empty before then, and for a Session never begun.
+    account: list[AccountLine] = field(default_factory=list)
+    #: Whether its account was written (it may hold no lines): a Session
+    #: played before accounts were kept is folded once, when the saga opens.
+    account_kept: bool = False
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Session:
         d = dict(data)
         d["castings"] = [Casting.from_dict(c) for c in d.get("castings", [])]
         d["scenes"] = [SceneUse.from_dict(s) for s in d.get("scenes", [])]
+        d["account"] = [AccountLine.from_dict(a) for a in d.get("account", [])]
         return cls(**known_fields(cls, d))
 
 

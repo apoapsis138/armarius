@@ -44,6 +44,7 @@ def test_a_kind_must_say_its_body() -> None:
             lambda _body: "A handout.",
             for_whom=chronicle.for_whom,
             held_back=(),
+            account=lambda _entry, _book: None,
         )
 
 

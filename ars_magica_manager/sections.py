@@ -38,6 +38,11 @@ SESSION_SCENES_TAB = "tab-session-scenes"
 #: whom (e edits the Session; sheets/session.py).
 SESSION_INFO_SECTION = "section-session-info"
 
+#: A played Session page's account of the evening, by Scene (evening.py),
+#: and the terminal's tab that holds it.
+SESSION_EVENING_SECTION = "section-session-evening"
+SESSION_EVENING_TAB = "tab-session-evening"
+
 #: The Saga Content sheet's sections.
 BOOKS_SECTION = "section-books-in-play"
 SOURCES_SECTION = "section-saga-sources"

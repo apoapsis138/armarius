@@ -1232,15 +1232,22 @@ def note_outcome(
     )
 
 
-def request_line(body: dict[str, Any]) -> str:
-    """A Roll request's line."""
+def asked_line(body: dict[str, Any]) -> str:
+    """What a Roll request asks, of whom, and what for: "Perception for
+    Aelfric (Tracks)"."""
     what = body["characteristic"]
     if body.get("ability"):
         what += f" + {body['ability']}"
     who = ", ".join(str(c["name"]) for c in body["characters"])
-    line = f"Roll request: {what} for {who}"
+    line = f"{what} for {who}"
     if body.get("for"):
         line += f" ({body['for']})"
+    return line
+
+
+def request_line(body: dict[str, Any]) -> str:
+    """A Roll request's line."""
+    line = f"Roll request: {asked_line(body)}"
     if body.get("ease_factor") is not None:
         line += f", against {body['ease_factor']}"
     return line
@@ -1824,6 +1831,40 @@ def _offered_to(entry: Entry, session: Session, saga: Saga | None) -> frozenset[
     return frozenset(rollers - {"", storyguide_of(session, saga)})
 
 
+#: A kind's line in the evening's account, given the entry and the
+#: Chronicle it is in, or None (one kind's rule: Strategy).
+AccountRule = Callable[[Entry, "HasEntries"], "str | None"]
+
+
+def _no_account(_entry: Entry, _book: HasEntries) -> str | None:
+    """No line in the account: the evening is told without it."""
+    return None
+
+
+def _as_read(entry: Entry, _book: HasEntries) -> str | None:
+    """Its line as the Chronicle reads it (a roll's with Blind or Private,
+    a Confidence spend's with the roll's new total)."""
+    return _line(entry, {})
+
+
+def _show_account(entry: Entry, book: HasEntries) -> str | None:
+    """A Show's line, unless the storyguide withdrew it: it was taken back."""
+    taken_back = any(
+        e.kind == WITHDRAWN and e.body["withdraws"] == entry.number
+        for e in book.entries
+    )
+    return None if taken_back else _line(entry, {})
+
+
+def _outcome_account(entry: Entry, book: HasEntries) -> str | None:
+    """An outcome's line, naming the Roll request it is of (the account
+    keeps no entry numbers)."""
+    request = _request(book, int(entry.body["request"]))
+    if request is None:
+        return f"Outcome: {entry.body['text']}"
+    return f"Outcome of {asked_line(request.body)}: {entry.body['text']}"
+
+
 @dataclass(frozen=True)
 class Kind:
     """One kind of entry, described once. `typed`: the keys of its body
@@ -1843,13 +1884,16 @@ class Kind:
     `body`: the type its body has (a TypedDict), which every reader may
     rely on; an entry whose body doesn't fit is damaged (`checked`), and
     read by no one. `untyped`: for a kind with no `typed` keys, why its
-    body holds no words anyone typed."""
+    body holds no words anyone typed. `account`: its line in the evening's
+    account End Session writes (evening.py), or None for none; every kind
+    names it, `_no_account` included."""
 
     name: str
     line: Callable[[dict[str, Any]], str]
     for_whom: ForWhom
     held_back: tuple[str, ...]
     body: type
+    account: AccountRule
     typed: tuple[str, ...] = ()
     untyped: str = ""
     strikable: bool = False
@@ -1869,6 +1913,7 @@ KINDS: dict[str, Kind] = {
             for_whom=_no_one,
             held_back=(),
             body=NoBody,
+            account=_no_account,
             untyped="An empty body.",
         ),
         Kind(
@@ -1877,6 +1922,7 @@ KINDS: dict[str, Kind] = {
             for_whom=_no_one,
             held_back=(),
             body=NoBody,
+            account=_no_account,
             untyped="An empty body.",
         ),
         Kind(
@@ -1891,6 +1937,7 @@ KINDS: dict[str, Kind] = {
             for_whom=_blind_number,
             held_back=(),
             body=RollBody,
+            account=_as_read,
         ),
         Kind(
             FORM_ROLL,
@@ -1905,6 +1952,7 @@ KINDS: dict[str, Kind] = {
             for_whom=_blind_number,
             held_back=(),
             body=FormRollBody,
+            account=_as_read,
         ),
         # Its "for" copies its roll's, already checked; kept typed all the same.
         Kind(
@@ -1916,6 +1964,7 @@ KINDS: dict[str, Kind] = {
             for_whom=_rolled_for,
             held_back=(),
             body=RolledBody,
+            account=_no_account,
         ),
         Kind(
             VOID,
@@ -1926,6 +1975,7 @@ KINDS: dict[str, Kind] = {
             for_whom=_no_one,
             held_back=(),
             body=StrikeBody,
+            account=_no_account,
         ),
         Kind(
             CONFIDENCE,
@@ -1934,6 +1984,7 @@ KINDS: dict[str, Kind] = {
             for_whom=_no_one,
             held_back=(),
             body=ConfidenceBody,
+            account=_as_read,
             untyped="Numbers, and the character's name from the saga.",
         ),
         Kind(
@@ -1947,6 +1998,7 @@ KINDS: dict[str, Kind] = {
             # the answers are rolled in stays here (the storyguide's).
             held_back=("aura",),
             body=RequestBody,
+            account=_as_read,
         ),
         Kind(
             REQUEST_EASE,
@@ -1959,6 +2011,7 @@ KINDS: dict[str, Kind] = {
             for_whom=_no_one,
             held_back=(),
             body=EaseKeptBody,
+            account=_no_account,
             untyped="Numbers alone.",
         ),
         Kind(
@@ -1969,6 +2022,7 @@ KINDS: dict[str, Kind] = {
             for_whom=_no_one,
             held_back=(),
             body=OutcomeBody,
+            account=_outcome_account,
         ),
         Kind(
             MESSAGE,
@@ -1980,6 +2034,7 @@ KINDS: dict[str, Kind] = {
             # the others' names; their ids stay here (ADR 0031).
             held_back=("to",),
             body=MessageBody,
+            account=_no_account,
         ),
         Kind(
             SHOW,
@@ -1991,6 +2046,7 @@ KINDS: dict[str, Kind] = {
             # As a Whisper's: the Players shown by name only (ADR 0031).
             held_back=("to",),
             body=ShowBody,
+            account=_show_account,
         ),
         # A Show taken back: a note seen by whoever saw the Show, whose
         # card it changes to read withdrawn; for no one, as a Strike is.
@@ -2003,6 +2059,7 @@ KINDS: dict[str, Kind] = {
             for_whom=_no_one,
             held_back=(),
             body=WithdrawnBody,
+            account=_no_account,
         ),
         # A Scene's banner and its end: words from the saga, and the place
         # as the players know it (scene_play.py); for the Table, so no one.
@@ -2013,6 +2070,7 @@ KINDS: dict[str, Kind] = {
             for_whom=_no_one,
             held_back=(),
             body=SceneSetBody,
+            account=_as_read,
             untyped="The Scene's title, place and aura, from the saga.",
         ),
         Kind(
@@ -2021,6 +2079,7 @@ KINDS: dict[str, Kind] = {
             for_whom=_no_one,
             held_back=(),
             body=SceneEndedBody,
+            account=_no_account,
             untyped="The Scene's title, from the saga.",
         ),
     )
