@@ -1,0 +1,1 @@
+**Hubris and Sympathy Traits show their experience.** Hubris and lasting faerie Sympathy Traits now gain experience by themselves, so their experience shows beside the score; a Sympathy Trait below 0 shows its progress toward the next step. Hubris written with its flavour, such as Hubris (Arrogant), now counts as Hubris on every Lab Total and in More's Hubris.

@@ -48,6 +48,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 
 from ..models import ScoredTrait
+from ..models import traits as trait_models
 
 SOURCE = (
     "Realms of Power: Faerie, Sympathy, pp. 102-104; Errata p. 68; The "
@@ -55,7 +56,7 @@ SOURCE = (
 )
 
 #: The kind a Personality Trait has when it is a Sympathy Trait.
-SYMPATHY = "Sympathy"
+SYMPATHY = trait_models.SYMPATHY
 #: The kind of a temporary Sympathy Trait, from sympathetic influence or a
 #: Grant rite (pp. 103, 127).
 TEMPORARY = "Sympathy, temporary"

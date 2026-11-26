@@ -3,6 +3,7 @@ Abilities, spells and their Mastery."""
 
 from __future__ import annotations
 
+import re
 import uuid
 from dataclasses import dataclass, field
 from typing import Any
@@ -249,6 +250,42 @@ class ScoredTrait:
             total=xp_rules.ability_xp(self.score) + self.deeds,
             next_total=xp_rules.ability_xp(self.score + 1),
         )
+
+    @classmethod
+    def personality_from_dict(cls, data: dict[str, Any]) -> ScoredTrait:
+        """A saved Personality Trait. Hubris and a lasting Sympathy Trait
+        gain experience by the rules (DE p. 241; RoP: Faerie p. 103),
+        whether or not their save says so."""
+        trait = cls(**known_fields(cls, data))
+        if gains_xp_by_rule(trait):
+            trait.gains_xp = True
+        return trait
+
+
+#: The Hubris Personality Trait's name, and its flavour written after it in
+#: brackets, "Hubris (Arrogant)" (DE p. 241; HoH:MC p. 119).
+HUBRIS_TRAIT = re.compile(r"Hubris( \(.*\))?")
+#: The kind a Personality Trait has when it is a lasting faerie Sympathy
+#: Trait (rules.faerie_sympathy).
+SYMPATHY = "Sympathy"
+
+
+def is_hubris(trait: ScoredTrait) -> bool:
+    """Whether the Personality Trait is Hubris: "Hubris", or "Hubris" with
+    its flavour in brackets after it."""
+    return is_hubris_name(trait.name)
+
+
+def is_hubris_name(name: str) -> bool:
+    """Whether a Personality Trait's name names Hubris (is_hubris)."""
+    return HUBRIS_TRAIT.fullmatch(name.strip()) is not None
+
+
+def gains_xp_by_rule(trait: ScoredTrait) -> bool:
+    """Whether the rules make the Personality Trait grow from experience:
+    Hubris (DE p. 241) and a lasting Sympathy Trait (RoP: Faerie p. 103);
+    a temporary one can't be raised (p. 127)."""
+    return is_hubris(trait) or trait.type == SYMPATHY
 
 
 ACADEMIC_REPUTATION = "Academic"

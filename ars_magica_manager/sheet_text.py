@@ -36,6 +36,7 @@ from .rules import (
     disease,
     equipment,
     faerie_blood,
+    faerie_sympathy,
     house_magic,
     integrations,
     penetration,
@@ -427,9 +428,15 @@ def trait_rows(
 
 def trait_xp(trait: ScoredTrait) -> str:
     """A trait's experience as its list shows it, total over the next
-    score's total ("18/30"), or "" for a trait that doesn't gain any."""
+    score's total ("18/30"), or "" for a trait that doesn't gain any. A
+    Sympathy Trait below 0 has no Ability total: its experience toward the
+    next step over what that step costs ("6/15"; RoP: Faerie p. 103)."""
     progress = trait.progress
-    return f"{progress.total}/{progress.next_total}" if progress else ""
+    if progress is not None:
+        return f"{progress.total}/{progress.next_total}"
+    if trait.gains_xp and trait.score < 0 and trait.type == faerie_sympathy.SYMPATHY:
+        return f"{trait.deeds}/{faerie_sympathy.xp_to_raise(trait.score)}"
+    return ""
 
 
 def known_spell_rows(saga: Saga, character: Character) -> list[tuple[int | None, str]]:
