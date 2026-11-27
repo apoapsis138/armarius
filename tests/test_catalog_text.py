@@ -91,8 +91,24 @@ def _virtues_and_flaws() -> Iterator[tuple[str, dict[str, object]]]:
             yield entry_id, entry
 
 
+#: A pipe table (a header row, a rule of dashes, then rows): drawn as a
+#: table, not read as a paragraph. Pipe lines with no rule are text.
+TABLE = re.compile(
+    r"^[ \t]*\|.*\|[ \t]*\n[ \t]*\|(?:[ \t]*:?-+:?[ \t]*\|)+[ \t]*$"
+    r"(?:\n[ \t]*\|.*\|[ \t]*$)*",
+    re.MULTILINE,
+)
+#: The start of a list item (`- `, `* `, `+ `, `1. `, `1) `) on its line.
+LIST_ITEM = re.compile(r"\n(?=[ \t]*(?:[-*+]|[0-9]+[.)]) )")
+
+
 def _over_cap(text: str) -> bool:
-    return any(len(p) > PARAGRAPH_CAP for p in re.split(r"\n\s*\n", text))
+    """Whether a paragraph, or a list item, is longer than the cap; a
+    table's lines don't count."""
+    for paragraph in re.split(r"\n\s*\n", TABLE.sub("", text)):
+        if any(len(item) > PARAGRAPH_CAP for item in LIST_ITEM.split(paragraph)):
+            return True
+    return False
 
 
 def test_no_split_ligatures():
@@ -164,3 +180,10 @@ def test_the_checks_catch_what_they_look_for():
     assert split_ligatures("LFI p. 12") == []
     assert _over_cap("x" * (PARAGRAPH_CAP + 1))
     assert not _over_cap(("x" * PARAGRAPH_CAP + "\n\n") * 3)
+    # A table isn't a paragraph, and each list item is read on its own.
+    row = "| " + "x" * 40 + " | y |"
+    assert not _over_cap("| A | B |\n|---|---|\n" + "\n".join([row] * 30))
+    assert not _over_cap("\n".join(["- " + "x" * 400, "1. " + "x" * 400]))
+    assert _over_cap("- " + "x" * 400 + "\nrun on " + "x" * 400)
+    # Pipe lines with no rule under the first are drawn as text, so count.
+    assert _over_cap("\n".join([row] * 30))

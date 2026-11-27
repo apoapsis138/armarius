@@ -1,0 +1,1 @@
+**The Mysteries' long Virtues read like the book.** Twelve, among them Dream Magic, Divination and Augury, Celestial Magic and Ascendancy to the Hall of Heroes, now have the book's paragraphs, headings, spells and lists, their wording checked against the page. Divination and Augury's Ceremonial Augury Phenomena is a real table.

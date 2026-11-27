@@ -1,6 +1,5 @@
 vf_abandoned_apprentice
 vf_academic_concentration_subject
-vf_additional_divination_method
 vf_alluring_to_being
 vf_almogaten
 vf_amorphous
@@ -8,11 +7,8 @@ vf_amorphous_major
 vf_animae_magic
 vf_arcadian_travel
 vf_archieunuch
-vf_ascendancy_to_the_hall_of_heroes
 vf_astrological_cyclic_magic_negative
-vf_astrological_cyclic_magic_positive
 vf_astrological_mutable_flaw
-vf_astrological_mutable_virtue
 vf_atlantean_magic
 vf_automata
 vf_awakening
@@ -29,14 +25,12 @@ vf_blood_of_heroes
 vf_blood_of_the_nephilim
 vf_cabal_legacy
 vf_cathedral_school_master
-vf_celestial_magic
 vf_charm_magic
 vf_chthonic_magic
 vf_chthonic_sorginak_magic
 vf_clan_ilfetu
 vf_clerk
 vf_commanding_aura
-vf_consummate_talisman
 vf_corrupted_abilities
 vf_corrupted_beast
 vf_corrupted_spells
@@ -49,10 +43,8 @@ vf_demonic_blood
 vf_dhampir
 vf_diabolist
 vf_diedne_magic
-vf_divination_and_augury
 vf_doctor_in_faculty
 vf_domestic_animal
-vf_dream_magic
 vf_ecstatic_magic
 vf_elemental_magic
 vf_elysian_ecstasy
@@ -87,7 +79,6 @@ vf_ghostly_warder
 vf_gigantic
 vf_gild_trained
 vf_glamour
-vf_great_talisman
 vf_greater_benediction
 vf_greater_charm
 vf_greater_immunity
@@ -277,8 +268,6 @@ vf_temporary_might
 vf_the_constant_expression
 vf_the_falling_evil
 vf_the_false_gift
-vf_the_great_elixir
-vf_the_greater_dream_grimoire
 vf_the_lesser_elixir
 vf_theriomorphy
 vf_theurgic_spirit_familiar
