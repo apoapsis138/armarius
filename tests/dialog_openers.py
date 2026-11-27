@@ -7,11 +7,14 @@ import inspect
 import random
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
+from typing import Any, cast
 
 from support import NODES, everything_saga, strip_markup, wait_until
-from textual.screen import ModalScreen
+from textual.app import App
+from textual.pilot import Pilot
+from textual.screen import ModalScreen, Screen
 from textual.widget import Widget
-from textual.widgets import TabbedContent, Tree
+from textual.widgets import Collapsible, TabbedContent, Tree
 
 from ars_magica_manager import (
     battle_muster,
@@ -40,12 +43,14 @@ from ars_magica_manager import (
     viewing,
     virtual_tabletop,
     vis,
+    worksheet,
 )
 from ars_magica_manager import economics as eco
 from ars_magica_manager import enchanted_devices as ed
 from ars_magica_manager import goods as gd
 from ars_magica_manager import house_rules as hr
 from ars_magica_manager import mystery_cults as cult_core
+from ars_magica_manager.commands import Choose, Command, Form, SectionOps
 from ars_magica_manager.forms import agents as agent_forms
 from ars_magica_manager.forms import animal as animal_forms
 from ars_magica_manager.forms import certamen_duel as certamen_forms
@@ -94,17 +99,21 @@ from ars_magica_manager.models import (
     Case,
     Character,
     CharterClause,
+    Covenant,
     CovenantDiaryEntry,
     CraftDevice,
     CultDegree,
     CultScript,
     DeepCover,
+    EnchantedDevice,
+    Familiar,
     GuestStay,
     Handout,
     HermeticProject,
     IncomeSource,
     Inhabitant,
     KnownSpell,
+    Laboratory,
     LandProject,
     Marriage,
     MysteryCult,
@@ -122,6 +131,7 @@ from ars_magica_manager.models import (
     Session,
     Ship,
     Spell,
+    Tribunal,
     VirtueFlawInstance,
 )
 from ars_magica_manager.models.criamon import Stigma
@@ -146,8 +156,16 @@ from ars_magica_manager.tui import screens as scr
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens.forms import _mastery_dialog
 from ars_magica_manager.tui.screens.prompts import ListFieldScreen
+from ars_magica_manager.tui.screens.sheets.base import SheetView
 from ars_magica_manager.tui.screens.steps import ChooseScreen
 from ars_magica_manager.tui.screens.widgets import section_stop
+from ars_magica_manager.tui.screens.workspace import WorkspaceScreen
+
+#: Opens a dialog, given the workspace screen; a coroutine it returns is
+#: awaited.
+type OpenFrom = Callable[[WorkspaceScreen], object]
+#: An opener built by one of the helpers below, which is a coroutine.
+type AsyncOpen = Callable[[WorkspaceScreen], Awaitable[None]]
 
 
 def contract_saga() -> Saga:
@@ -189,11 +207,56 @@ def contract_saga() -> Saga:
     return saga
 
 
-def _add_story_event_with_pools(ws) -> None:
+# -- what the workspace has on show, which an opener's node puts there --
+
+
+def _view(ws: WorkspaceScreen) -> SheetView:
+    view = ws._current_sheet_view()
+    assert view is not None, "no sheet on show"
+    return view
+
+
+def _character(ws: WorkspaceScreen) -> Character:
+    character = ws.selected_character
+    assert character is not None, "no character on show"
+    return character
+
+
+def _covenant(ws: WorkspaceScreen) -> Covenant:
+    covenant = ws.selected_covenant
+    assert covenant is not None, "no covenant on show"
+    return covenant
+
+
+def _laboratory(ws: WorkspaceScreen) -> Laboratory:
+    laboratory = ws.selected_laboratory
+    assert laboratory is not None, "no laboratory on show"
+    return laboratory
+
+
+def _familiar(ws: WorkspaceScreen) -> Familiar:
+    familiar = ws.selected_familiar
+    assert familiar is not None, "no familiar on show"
+    return familiar
+
+
+def present[T](record: T | None) -> T:
+    """`record`, which is there: looked up by id in the fixture saga or a
+    catalog, or a part of a record the fixture or a form fills in."""
+    assert record is not None, "missing from the saga or the catalog"
+    return record
+
+
+def _hugo(ws: WorkspaceScreen) -> Character:
+    """The fixture saga's grog."""
+    return present(ws.saga.character("grog9"))
+
+
+def _add_story_event_with_pools(ws: WorkspaceScreen) -> None:
     """The covenant's Diary form, once the covenant holds a Hidden
     Resources Boon ("bh-hr") and an Illusory Resources Hook ("bh-ir")
     for a Story Event to count against."""
-    covenant = ws.selected_covenant
+    covenant = _covenant(ws)
     for vf_id, bh_id in (
         ("covbh_boon_minor_hidden_resources", "bh-hr"),
         ("covbh_hook_minor_illusory_resources", "bh-ir"),
@@ -216,35 +279,47 @@ class Opener:
     #: Tree node to select first (a NODES key), or None for the saga picker.
     node: str | None
     #: Opens the dialog, given the workspace (or saga picker) screen.
-    open: Callable[[object], object]
+    open: OpenFrom
     #: The More action (more.MORE_MENU) whose form this opens, if any:
     #: its contract counts for that action (test_more_action_registered).
     action: str = ""
 
 
-def _refused_then_threaten(ws) -> None:
+def _review_interests(ws: WorkspaceScreen) -> None:
+    """The Review Interests step's Edit Interests, for a magus just made:
+    In Creation, with interests not yet chosen."""
+    magus = _character(ws)
+    magus.in_creation, magus.interests_chosen = True, False
+    actions = worksheet.panel_for(magus, "interests").actions(ws.saga, magus)
+    [edit] = [a for a in actions if a.label == "Edit Interests"]
+    ws._run_steps(edit.start())
+
+
+def _refused_then_threaten(ws: WorkspaceScreen) -> None:
     """Threaten a Saint, once The Magi have refused his invocation: only
     then is it offered (RoP: The Divine p. 87)."""
-    devotion_rules.note_answer(ws.selected_character, "The Magi", False, "Spring", 1220)
+    devotion_rules.note_answer(_character(ws), "The Magi", False, "Spring", 1220)
     ws._run_more("threaten_saint")
 
 
-def _built(open_editor):
+def _built(open_editor: OpenFrom) -> AsyncOpen:
     """Open a dialog from a section on a tab not built yet: build the
     sheet's tabs first."""
 
-    async def opener(ws) -> None:
-        await ws._current_sheet_view().build_all_tabs()
+    async def opener(ws: WorkspaceScreen) -> None:
+        await _view(ws).build_all_tabs()
         open_editor(ws)
 
     return opener
 
 
-async def _on_lords_row(ws, section_id: str, key: str, rows: list, action) -> None:
+async def _on_lords_row(
+    ws: WorkspaceScreen, section_id: str, key: str, rows: list, action: OpenFrom
+) -> None:
     """A More command on Gottfried's Manors tab, on the first of `rows`
     put under `key` in memory (saved only with the form)."""
-    ws.saga.neighbour("gottfried").details[key] = rows
-    view = ws._current_sheet_view()
+    present(ws.saga.neighbour("gottfried")).details[key] = rows
+    view = _view(ws)
     await view.build_all_tabs()
     view.refresh_section(section_id)
     listed = view.query_one(
@@ -255,7 +330,7 @@ async def _on_lords_row(ws, section_id: str, key: str, rows: list, action) -> No
     action(ws)
 
 
-async def _assart(ws) -> None:
+async def _assart(ws: WorkspaceScreen) -> None:
     """Assart on a manor with 60 acres of waste."""
     await _on_lords_row(
         ws,
@@ -266,7 +341,7 @@ async def _assart(ws) -> None:
     )
 
 
-async def _winter_roll(ws) -> None:
+async def _winter_roll(ws: WorkspaceScreen) -> None:
     """The Winter Roll on Excellent stables."""
     await _on_lords_row(
         ws,
@@ -277,12 +352,12 @@ async def _winter_roll(ws) -> None:
     )
 
 
-async def _court_roll(ws) -> None:
+async def _court_roll(ws: WorkspaceScreen) -> None:
     """The Court Roll on a case put before Soest's court in memory (saved
     only with the form)."""
-    soest = ws.saga.neighbour("soest")
+    soest = present(ws.saga.neighbour("soest"))
     soest.details["court_cases"] = [{"accused": "Hartmut", "charge": "Theft"}]
-    view = ws._current_sheet_view()
+    view = _view(ws)
     await view.build_all_tabs()
     view.refresh_section("section-nb-court-cases")
     rows = view.query_one("#nb-court-cases-list", scr.SelectableList)
@@ -291,36 +366,36 @@ async def _court_roll(ws) -> None:
     ws.action_court_roll()
 
 
-def _grogs_aging_chart(ws) -> None:
+def _grogs_aging_chart(ws: WorkspaceScreen) -> None:
     """The Grogs Aging Chart for the grog Hugo, made 45 in memory (saved
     only with the form)."""
-    grog = ws.saga.character("grog9")
+    grog = _hugo(ws)
     grog.background.year_born = ws.saga.current_year - 45
     ws._run_steps(wf.grog_aging_chart(ws.saga, grog))
 
 
-def _found_covenant(ws) -> None:
+def _found_covenant(ws: WorkspaceScreen) -> None:
     """More's Found a Covenant Here, on the place marked a ruin first."""
-    ws.saga.neighbour("drachenfels").details["ruined"] = True
+    present(ws.saga.neighbour("drachenfels")).details["ruined"] = True
     ws._run_more("found_covenant")
 
 
-async def _open_saga_source(ws) -> None:
+async def _open_saga_source(ws: WorkspaceScreen) -> None:
     """Edit a saga source, made in memory (saved only with the edit)."""
     if not ws.saga.sources:
         ws.saga.sources.append(SagaSource("HR", "House rules"))
     await _core_edit("section-saga-sources", "content-sources-list")(ws)
 
 
-async def _open_own_spell(ws) -> None:
+async def _open_own_spell(ws: WorkspaceScreen) -> None:
     """Edit the saga's first own spell, chosen in the Spells list."""
-    view = ws._current_sheet_view()
+    view = _view(ws)
     await view.build_all_tabs()
     shown = view.query_one(scr.SpellListView).shown
     await _core_edit("section-spells", "spell-list", shown.index(ws.saga.spells[0]))(ws)
 
 
-def _move_to_source(ws) -> None:
+def _move_to_source(ws: WorkspaceScreen) -> None:
     """Move to Source, with a saga source and a House Rule to move, made in
     memory (saved only with the move)."""
     if not ws.saga.sources:
@@ -332,11 +407,13 @@ def _move_to_source(ws) -> None:
     ws.action_move_to_source()
 
 
-def _filter_neighbours(ws) -> None:
+def _filter_neighbours(ws: WorkspaceScreen) -> None:
     """Filter Neighbours, the Region already narrowed to the
     Siebengebirge, from its Lords and Towns."""
     neighbour_filter.choose(ws.saga, neighbour_filter.Filter(region="siebengebirge"))
-    ws._region_sheet_view.refresh_all()
+    region = ws._region_sheet_view
+    assert region is not None, "no Region sheet on show"
+    region.refresh_all()
     ws._filter_neighbours()
 
 
@@ -349,35 +426,35 @@ def _param_vf() -> str:
     )
 
 
-async def _open_param_prompt(ws, vf_id: str | None = None) -> None:
+async def _open_param_prompt(ws: WorkspaceScreen, vf_id: str | None = None) -> None:
     """Add a Virtue with a parameter (from the Virtues section): the picker
     asks for it."""
-    view = ws._current_sheet_view()
+    view = _view(ws)
     view.query_one(TabbedContent).active = "tab-vf"
     # The tab is built as it is first shown.
     await until(lambda: view.query("#section-vf-virtues CollapsibleTitle"))
-    section_stop(view.query_one("#section-vf-virtues")).focus()
+    section_stop(view.query_one("#section-vf-virtues", Collapsible)).focus()
     await until(lambda: ws._active_section() == "section-vf-virtues")
     await _pick_virtue_flaw(ws, "section-vf-virtues", vf_id or _param_vf())
 
 
-async def _open_secrets(ws) -> None:
+async def _open_secrets(ws: WorkspaceScreen) -> None:
     """Edit on the Secrets tab, shown first (it is built when shown)."""
-    view = ws._current_sheet_view()
+    view = _view(ws)
     view.query_one(TabbedContent).active = "tab-secrets"
     await until(lambda: view.query("#section-secrets CollapsibleTitle"))
     ws._core_verb("section-secrets", "edit")
 
 
-async def _open_virtue_change(ws) -> None:
+async def _open_virtue_change(ws: WorkspaceScreen) -> None:
     """Change what a Virtue names (Edit on the Virtues list): Puissant
     Magic Theory, taken first, chosen in the list."""
-    magus = ws.selected_character
+    magus = _character(ws)
     if not any(vf.vf_id == "vf_puissant_ability" for vf in magus.virtues_flaws):
         magus.virtues_flaws.append(
             VirtueFlawInstance("vf_puissant_ability", {"ability": "magic theory"})
         )
-    view = ws._current_sheet_view()
+    view = _view(ws)
     view.query_one(TabbedContent).active = "tab-vf"
     await until(lambda: view.query("#section-vf-virtues CollapsibleTitle"))
     view.refresh_all()
@@ -390,18 +467,18 @@ async def _open_virtue_change(ws) -> None:
     ws._core_verb("section-vf-virtues", "edit")
 
 
-async def _open_lab_virtue_change(ws) -> None:
+async def _open_lab_virtue_change(ws: WorkspaceScreen) -> None:
     """Change a laboratory Virtue's Specialization (Edit on the lab's
     Virtues list): Idyllic Surroundings for Creo, taken first, chosen in
     the list."""
-    lab = ws.selected_laboratory
+    lab = _laboratory(ws)
     if not any(vf.vf_id == "labvf_idyllic_surroundings" for vf in lab.virtues_flaws):
         lab.virtues_flaws.append(
             VirtueFlawInstance(
                 "labvf_idyllic_surroundings", {"specialization": "Creo"}, id="idyll"
             )
         )
-    view = ws._current_sheet_view()
+    view = _view(ws)
     view.query_one(TabbedContent).active = "tab-lab-vf"
     await until(lambda: view.query("#section-lab-vf-virtues CollapsibleTitle"))
     view.refresh_all()
@@ -415,32 +492,35 @@ async def _open_lab_virtue_change(ws) -> None:
 
 
 async def _open_lab_choice_prompt(
-    ws, section: str = "section-lab-vf-flaws", vf_id: str = "labvf_disorganized"
+    ws: WorkspaceScreen,
+    section: str = "section-lab-vf-flaws",
+    vf_id: str = "labvf_disorganized",
 ) -> None:
     """Add a laboratory Virtue or Flaw that asks for something (a Flaw
     whose Specialization the owner chooses, a Servant): the picker asks
     for it."""
-    view = ws._current_sheet_view()
+    view = _view(ws)
     view.query_one(TabbedContent).active = "tab-lab-vf"
     # The tab is built as it is first shown.
     await until(lambda: view.query(f"#{section} CollapsibleTitle"))
-    section_stop(view.query_one(f"#{section}")).focus()
+    section_stop(view.query_one(f"#{section}", Collapsible)).focus()
     await until(lambda: ws._active_section() == section)
     await _pick_virtue_flaw(ws, section, vf_id)
 
 
-def _open_mastery_ability(ws) -> None:
+def _open_mastery_ability(ws: WorkspaceScreen) -> None:
     """Add a Mastery Ability: the list editor the Mastery form's Mastery
     Abilities field opens, then its Add."""
-    known = ws.selected_character.spells_known[0]
+    known = _character(ws).spells_known[0]
     form = _mastery_dialog("Spell", known)
     spec = next(f for f in form.fields if f.key == "mastery_abilities")
+    assert spec.picker is not None
     editor = spec.picker(spec.value)
     ws.app.push_screen(editor)
     ws.app.call_later(editor.action_add)
 
 
-async def _grow_a_story(ws) -> None:
+async def _grow_a_story(ws: WorkspaceScreen) -> None:
     """Grow into a Threat on an open story the troupe's covenant's Diary
     holds, chosen on the Region's Open Stories."""
     covenant = ws.saga.covenants[0]
@@ -458,7 +538,7 @@ async def _grow_a_story(ws) -> None:
                 concerns="characters:mag1",
             )
         )
-    view = ws._current_sheet_view()
+    view = _view(ws)
     view.refresh_all()
     rows = await mounted(view, "#region-stories-list", scr.SelectableList)
     await until(lambda: rows.row_count > 1)
@@ -467,14 +547,14 @@ async def _grow_a_story(ws) -> None:
     ws.action_grow_story()
 
 
-async def _take_up_a_story(ws) -> None:
+async def _take_up_a_story(ws: WorkspaceScreen) -> None:
     """Take Up the Tale on an open story, chosen (and focused) on the
     Region's Open Stories."""
     await _grow_a_story_chosen(ws)
     ws.action_take_up_story()
 
 
-async def _grow_a_story_chosen(ws) -> None:
+async def _grow_a_story_chosen(ws: WorkspaceScreen) -> None:
     """The open story of _grow_a_story, chosen and focused on the Region's
     Open Stories."""
     covenant = ws.saga.covenants[0]
@@ -489,7 +569,7 @@ async def _grow_a_story_chosen(ws) -> None:
                 status="Open",
             )
         )
-    view = ws._current_sheet_view()
+    view = _view(ws)
     view.refresh_all()
     rows = await mounted(view, "#region-stories-list", scr.SelectableList)
     await until(lambda: rows.row_count > 1)
@@ -498,21 +578,21 @@ async def _grow_a_story_chosen(ws) -> None:
     await until(lambda: ws._active_section() == "section-region-stories")
 
 
-def _with_crown_on_a_track(ws) -> None:
+def _with_crown_on_a_track(ws: WorkspaceScreen) -> None:
     """Add a trigger once the Hollow Crown moves along a track, which a
     trigger can move."""
-    crown = ws.saga.neighbour("crown")
+    crown = present(ws.saga.neighbour("crown"))
     crown.details["moves"] = "A track"
     ws._core_verb("section-nb-triggers", "add")
 
 
-def _pick(open_editor, list_id: str, index: int = 0):
+def _pick(open_editor: OpenFrom, list_id: str, index: int = 0) -> AsyncOpen:
     """Open a dialog that edits a list's chosen row: the one at `index` of
     the list `list_id`, chosen first."""
 
-    async def opener(ws) -> None:
+    async def opener(ws: WorkspaceScreen) -> None:
         # The chosen row is looked for in the section's tab: build it.
-        view = ws._current_sheet_view()
+        view = _view(ws)
         await view.build_all_tabs()
         rows = view.query_one(f"#{list_id}", scr.SelectableList)
         rows.select_data_index(index)
@@ -522,38 +602,38 @@ def _pick(open_editor, list_id: str, index: int = 0):
     return opener
 
 
-async def _open_tradition_effect(ws) -> None:
+async def _open_tradition_effect(ws: WorkspaceScreen) -> None:
     """Add an effect in Leandro's vitki chapter (built first, as its
     tab is first shown)."""
-    view = ws._current_sheet_view()
+    view = _view(ws)
     await view.build_all_tabs()
     ws._core_verb("section-teff-trad_vitkir", "add")
 
 
-async def _open_power(ws) -> None:
+async def _open_power(ws: WorkspaceScreen) -> None:
     """Add a power on Leandro's Virtues & Flaws tab."""
-    view = ws._current_sheet_view()
+    view = _view(ws)
     await view.build_all_tabs()
     ws._core_verb("section-char-powers", "add")
 
 
-async def _open_agent(ws) -> None:
+async def _open_agent(ws: WorkspaceScreen) -> None:
     """Add an agent on Leandro's Agents tab."""
-    view = ws._current_sheet_view()
+    view = _view(ws)
     await view.build_all_tabs()
     ws._core_verb("section-char-agents", "add")
 
 
-async def _open_good(ws) -> None:
+async def _open_good(ws: WorkspaceScreen) -> None:
     """Add a good of the saga's own on Saga Content's Goods tab."""
-    view = ws._current_sheet_view()
+    view = _view(ws)
     await view.build_all_tabs()
     ws._core_verb("section-content-goods", "add")
 
 
-async def _open_purity(ws) -> None:
+async def _open_purity(ws: WorkspaceScreen) -> None:
     """More's Add a Purity on silver, chosen on the Goods tab."""
-    view = ws._current_sheet_view()
+    view = _view(ws)
     await view.build_all_tabs()
     index = [g.name for g in gd.listed(ws.saga)].index("Silver")
     rows = view.query_one("#content-goods-list", scr.SelectableList)
@@ -564,11 +644,11 @@ async def _open_purity(ws) -> None:
     ws.action_add_purity()
 
 
-def _with_agents(ws) -> Character:
+def _with_agents(ws: WorkspaceScreen) -> Character:
     """Leandro with an agent of Bond +1 and an impressed potential agent
     of resistance 3, and 10 Agency experience (once, however often the
     form is opened)."""
-    character = ws.selected_character
+    character = _character(ws)
     if not character.agents:
         character.agents = [
             Agent(
@@ -586,60 +666,60 @@ def _with_agents(ws) -> Character:
     return character
 
 
-async def _open_agent_task(ws) -> None:
+async def _open_agent_task(ws: WorkspaceScreen) -> None:
     """More's Set a Task for Leandro's first agent."""
     character = _with_agents(ws)
-    view = ws._current_sheet_view()
+    view = _view(ws)
     await view.build_all_tabs()
     ws._run_steps(agent_forms.set_task(ws.saga, character, 0))
 
 
-async def _open_agent_resolve(ws) -> None:
+async def _open_agent_resolve(ws: WorkspaceScreen) -> None:
     """More's Resolve the Task for Leandro's first agent."""
     character = _with_agents(ws)
-    view = ws._current_sheet_view()
+    view = _view(ws)
     await view.build_all_tabs()
     ws._run_steps(agent_forms.resolve(ws.saga, character, 0))
 
 
-async def _open_agency_spend(ws) -> None:
+async def _open_agency_spend(ws: WorkspaceScreen) -> None:
     """More's Spend Agency Experience on Leandro's potential agent."""
     character = _with_agents(ws)
-    view = ws._current_sheet_view()
+    view = _view(ws)
     await view.build_all_tabs()
     ws._run_steps(agent_forms.spend(character, 1))
 
 
-def _with_clause(ws):
+def _with_clause(ws: WorkspaceScreen) -> Covenant:
     """The covenant with one clause in its charter (once, however often
     the form is opened)."""
-    covenant = ws.selected_covenant
+    covenant = _covenant(ws)
     charter = covenant.charter_of_covenant
     if not charter.clauses:
         charter.clauses = [CharterClause("1", "All vis is shared.", 1200, "Spring")]
     return covenant
 
 
-async def _open_charter_verb(ws, section: str, verb: str) -> None:
+async def _open_charter_verb(ws: WorkspaceScreen, section: str, verb: str) -> None:
     """The Charter tab's own Edit or Add, as its key runs it."""
     _with_clause(ws)
-    await ws._current_sheet_view().build_all_tabs()
+    await _view(ws).build_all_tabs()
     ws._core_verb(section, verb)
 
 
-async def _open_edit_clause(ws) -> None:
+async def _open_edit_clause(ws: WorkspaceScreen) -> None:
     covenant = _with_clause(ws)
-    await ws._current_sheet_view().build_all_tabs()
-    ws._run_steps(charter_forms.clause_ops(ws.saga, covenant).edit(0))
+    await _view(ws).build_all_tabs()
+    ws._run_steps(_edit(charter_forms.clause_ops(ws.saga, covenant), 0))
 
 
-async def _open_break_clause(ws) -> None:
+async def _open_break_clause(ws: WorkspaceScreen) -> None:
     covenant = _with_clause(ws)
-    await ws._current_sheet_view().build_all_tabs()
+    await _view(ws).build_all_tabs()
     ws._run_steps(charter_forms.break_clause(ws.saga, covenant, 0))
 
 
-def _with_broken_clause(ws, *, notarized: bool = False):
+def _with_broken_clause(ws: WorkspaceScreen, *, notarized: bool = False) -> Covenant:
     """The covenant's one clause broken by Leandro (and its charter
     notarized, so a breach can be charged at Tribunal)."""
     covenant = _with_clause(ws)
@@ -650,56 +730,56 @@ def _with_broken_clause(ws, *, notarized: bool = False):
     return covenant
 
 
-async def _open_censure_clause(ws) -> None:
+async def _open_censure_clause(ws: WorkspaceScreen) -> None:
     covenant = _with_broken_clause(ws)
-    await ws._current_sheet_view().build_all_tabs()
+    await _view(ws).build_all_tabs()
     ws._run_steps(charter_forms.censure_clause(ws.saga, covenant, 0))
 
 
-async def _open_charge_clause(ws) -> None:
+async def _open_charge_clause(ws: WorkspaceScreen) -> None:
     covenant = _with_broken_clause(ws, notarized=True)
-    await ws._current_sheet_view().build_all_tabs()
+    await _view(ws).build_all_tabs()
     ws._run_steps(charter_forms.charge(ws.saga, covenant, 0))
 
 
-async def _open_use_template(ws) -> None:
-    await ws._current_sheet_view().build_all_tabs()
+async def _open_use_template(ws: WorkspaceScreen) -> None:
+    await _view(ws).build_all_tabs()
     ws.action_use_charter_template()
 
 
-async def _open_save_template(ws) -> None:
+async def _open_save_template(ws: WorkspaceScreen) -> None:
     _with_clause(ws)
-    await ws._current_sheet_view().build_all_tabs()
+    await _view(ws).build_all_tabs()
     ws.action_save_charter_template()
 
 
-def _with_guest(ws):
+def _with_guest(ws: WorkspaceScreen) -> Covenant:
     """Severinus of Fengheld as a guest of the Keep, owing 3 pawns of vis
     this year, with 5 pawns of Vim (in memory, saved only with the
     form)."""
     guest = next(c for c in ws.saga.characters if c.id == "mag_sketch")
     guest.raw_vis = {"vim": 5}
     guest.stay = GuestStay(
-        ws.selected_covenant.id, ws.saga.current_year, "Spring", fee_kind="vis", fee=3
+        _covenant(ws).id, ws.saga.current_year, "Spring", fee_kind="vis", fee=3
     )
-    return ws.selected_covenant
+    return _covenant(ws)
 
 
-async def _open_pay_fee(ws) -> None:
+async def _open_pay_fee(ws: WorkspaceScreen) -> None:
     covenant = _with_guest(ws)
-    await ws._current_sheet_view().build_all_tabs()
+    await _view(ws).build_all_tabs()
     ws._run_steps(guest_stays.pay_form(ws.saga, covenant, 0))
 
 
-async def _open_seal_charter(ws) -> None:
-    await ws._current_sheet_view().build_all_tabs()
+async def _open_seal_charter(ws: WorkspaceScreen) -> None:
+    await _view(ws).build_all_tabs()
     ws.action_seal_charter()
 
 
-def _as_merchant(ws) -> Character:
+def _as_merchant(ws: WorkspaceScreen) -> Character:
     """Leandro as a merchant too, with a Profession and 40 Labor Points
     (in memory, saved only with the form)."""
-    character = ws.selected_character
+    character = _character(ws)
     if not any(vf.vf_id == "vf_merchant" for vf in character.virtues_flaws):
         character.virtues_flaws.append(VirtueFlawInstance("vf_merchant"))
         character.abilities.append(Ability("Profession: Merchant", xp=75))
@@ -707,30 +787,30 @@ def _as_merchant(ws) -> Character:
     return character
 
 
-async def _open_labor_story(ws) -> None:
+async def _open_labor_story(ws: WorkspaceScreen) -> None:
     """More's Labor Points from a Story on Leandro's This Season."""
     _as_merchant(ws)
     ws._run_more("labor_story")
 
 
-async def _open_invest_labor(ws) -> None:
+async def _open_invest_labor(ws: WorkspaceScreen) -> None:
     """More's Invest Time or Money on Leandro's This Season."""
     _as_merchant(ws)
     ws._run_more("invest_labor")
 
 
-async def _open_sell_goods(ws) -> None:
+async def _open_sell_goods(ws: WorkspaceScreen) -> None:
     """More's Sell Finished Goods on Leandro's This Season, as a smith."""
-    character = ws.selected_character
+    character = _character(ws)
     if not any(a.name == "Craft: Smith" for a in character.abilities):
         character.abilities.append(Ability("Craft: Smith", xp=75))
     ws._run_more("sell_goods")
 
 
-async def _open_apothecary(ws, which: str) -> None:
+async def _open_apothecary(ws: WorkspaceScreen, which: str) -> None:
     """More's Make a Ligature or Apothecary's Store on Leandro, given
     Medicine and Profession: Apothecary."""
-    character = ws.selected_character
+    character = _character(ws)
     for name in ("Medicine", "Profession: Apothecary"):
         if not any(a.name == name for a in character.abilities):
             character.abilities.append(Ability(name, xp=15))
@@ -740,13 +820,13 @@ async def _open_apothecary(ws, which: str) -> None:
         ws._run_more("apothecary_store")
 
 
-def _on_conflict_row(list_id: str, step):
+def _on_conflict_row(list_id: str, step: Callable[[Saga], Command]) -> AsyncOpen:
     """A step of a More command on Conflicts' first battle, siege or fight
     (chosen first), run on its own: Muster's and Siege Actions' steps are
     each a form."""
 
-    async def opener(ws) -> None:
-        view = ws._current_sheet_view()
+    async def opener(ws: WorkspaceScreen) -> None:
+        view = _view(ws)
         await view.build_all_tabs()
         rows = view.query_one(f"#{list_id}", scr.SelectableList)
         rows.select_data_index(0)
@@ -756,15 +836,15 @@ def _on_conflict_row(list_id: str, step):
     return opener
 
 
-async def _open_cover(ws) -> None:
+async def _open_cover(ws: WorkspaceScreen) -> None:
     """Add a Cover for Leandro (the section shows only for a Tytalus or
     one with a cover, so the form is run on its own)."""
-    view = ws._current_sheet_view()
+    view = _view(ws)
     await view.build_all_tabs()
-    ws._run_steps(cover_forms.ops(ws.selected_character).add())
+    ws._run_steps(_add(cover_forms.ops(_character(ws))))
 
 
-def _with_harbour(ws) -> None:
+def _with_harbour(ws: WorkspaceScreen) -> None:
     """A Place to stop at, The Sound (in memory, saved only with the form)."""
     if ws.saga.neighbour("the_sound") is None:
         ws.saga.neighbours.append(
@@ -772,53 +852,53 @@ def _with_harbour(ws) -> None:
         )
 
 
-def _open_add_stop(ws) -> None:
+def _open_add_stop(ws: WorkspaceScreen) -> None:
     """More's Add a Stop, on any covenant."""
     _with_harbour(ws)
     ws._run_more("add_stop")
 
 
-def _open_plan_route(ws) -> None:
+def _open_plan_route(ws: WorkspaceScreen) -> None:
     """More's Plan Route on Whereabouts."""
     _with_harbour(ws)
     ws.action_plan_route()
 
 
-async def _open_ship_fate(ws) -> None:
+async def _open_ship_fate(ws: WorkspaceScreen) -> None:
     """More's Sunk or Taken on the covenant's first ship, Seehund."""
     await _open_ship(ws, "fate")
 
 
-async def _open_constant_effect(ws) -> None:
+async def _open_constant_effect(ws: WorkspaceScreen) -> None:
     """Add a constant effect under Leandro's Aging & Warping."""
-    view = ws._current_sheet_view()
+    view = _view(ws)
     await view.build_all_tabs()
     ws._core_verb("section-char-constant-effects", "add")
 
 
-async def _open_lab_trait(ws) -> None:
+async def _open_lab_trait(ws: WorkspaceScreen) -> None:
     """Add a Personality Trait on the lab's Virtues & Flaws tab."""
-    view = ws._current_sheet_view()
+    view = _view(ws)
     await view.build_all_tabs()
     ws._core_verb("section-lab-personality-traits", "add")
 
 
-async def _open_bound_being(ws) -> None:
+async def _open_bound_being(ws: WorkspaceScreen) -> None:
     """Add a being bound in Leandro's vitki chapter."""
-    view = ws._current_sheet_view()
+    view = _view(ws)
     await view.build_all_tabs()
     ws._core_verb("section-tbond-trad_vitkir", "add")
 
 
-def _open_meeting(saga: Saga, tribunal) -> None:
+def _open_meeting(saga: Saga, tribunal: Tribunal) -> None:
     """Open the Tribunal's meeting (its roll call as it comes), once: the
     dialog is opened again after a cancel."""
     if tribunal.meeting is None:
-        opening = meeting.hold(saga, tribunal)
+        opening = _form(meeting.hold(saga, tribunal))
         opening.apply({f.key: f.value for f in opening.fields() if f.kind != "info"})
 
 
-async def _open_attendance(ws) -> None:
+async def _open_attendance(ws: WorkspaceScreen) -> None:
     """Attendance and proxies, the meeting opened first."""
     tribunal = ws.saga.tribunals[0]
     _open_meeting(ws.saga, tribunal)
@@ -828,12 +908,12 @@ async def _open_attendance(ws) -> None:
     )(ws)
 
 
-def _open_meeting_step(row: int, list_id: str):
+def _open_meeting_step(row: int, list_id: str) -> AsyncOpen:
     """The meeting opened, then Edit on `list_id`'s row `row`: the
     Order of Business's second row is the Opening, its third the Rhine's
     rite, its fourth the first case's debate."""
 
-    async def opener(ws) -> None:
+    async def opener(ws: WorkspaceScreen) -> None:
         tribunal = ws.saga.tribunals[0]
         _open_meeting(ws.saga, tribunal)
         section = "section-" + list_id
@@ -842,18 +922,18 @@ def _open_meeting_step(row: int, list_id: str):
     return opener
 
 
-def _settle_contested(ws) -> None:
+def _settle_contested(ws: WorkspaceScreen) -> None:
     """Settle a contested source of income."""
-    covenant = ws.selected_covenant
+    covenant = _covenant(ws)
     source = IncomeSource("rents", "Rents", contested=True)
     covenant.economics.income_sources.append(source)
     ws._run_steps(cov_forms.settle_form(ws.saga, covenant, source))
 
 
-def _vis_source(ws, **fields) -> Possession:
+def _vis_source(ws: WorkspaceScreen, **fields: Any) -> Possession:
     """A vis source of the covenant harvested this season (added in memory,
     saved only with the form)."""
-    covenant = ws.selected_covenant
+    covenant = _covenant(ws)
     # Reopened after Cancel, the dialog finds the source it added then.
     for kept in covenant.possessions:
         if kept.id == "harvest_well":
@@ -871,23 +951,23 @@ def _vis_source(ws, **fields) -> Possession:
     return source
 
 
-def _harvest_vis(ws) -> None:
+def _harvest_vis(ws: WorkspaceScreen) -> None:
     """More's Harvest on a vis source in its season, with Harvest Vis by
     Hand on."""
     ws.saga.harvest_vis_by_hand = True
     source = _vis_source(ws)
-    ws._run_steps(cov_forms.harvest_form(ws.saga, ws.selected_covenant, source))
+    ws._run_steps(cov_forms.harvest_form(ws.saga, _covenant(ws), source))
 
 
-def _settle_vis_source(ws) -> None:
+def _settle_vis_source(ws: WorkspaceScreen) -> None:
     """More's Settle on a contested vis source."""
     source = _vis_source(ws, contested=True)
-    ws._run_steps(cov_forms.settle_form(ws.saga, ws.selected_covenant, source))
+    ws._run_steps(cov_forms.settle_form(ws.saga, _covenant(ws), source))
 
 
-def _covenfolk_line(ws):
+def _covenfolk_line(ws: WorkspaceScreen) -> covenfolk.InhabitantEntry:
     """A turb line of 3, as the covenfolk forms act on."""
-    covenant = ws.selected_covenant
+    covenant = _covenant(ws)
     covenant.inhabitants.append(
         Inhabitant(id="watch", kind="turb", name="The watch", quantity=3)
     )
@@ -898,25 +978,25 @@ def _covenfolk_line(ws):
     )
 
 
-def _recruit(ws) -> None:
+def _recruit(ws: WorkspaceScreen) -> None:
     line = _covenfolk_line(ws)
-    ws._run_steps(inhabitant_forms.recruit_form(ws.saga, ws.selected_covenant, line))
+    ws._run_steps(inhabitant_forms.recruit_form(ws.saga, _covenant(ws), line))
 
 
-def _depart(ws) -> None:
+def _depart(ws: WorkspaceScreen) -> None:
     line = _covenfolk_line(ws)
-    ws._run_steps(inhabitant_forms.depart_form(ws.saga, ws.selected_covenant, line))
+    ws._run_steps(inhabitant_forms.depart_form(ws.saga, _covenant(ws), line))
 
 
-def _add_purchase(ws) -> None:
-    ws._run_steps(cov_forms.purchase_ops(ws.saga, ws.selected_covenant).add())
+def _add_purchase(ws: WorkspaceScreen) -> None:
+    ws._run_steps(_add(cov_forms.purchase_ops(ws.saga, _covenant(ws))))
 
 
-def _economics_row(which: str, key: str):
+def _economics_row(which: str, key: str) -> AsyncOpen:
     """Edit the Yearly Expenditure / Cost Savings row with `key`."""
 
-    async def opener(ws) -> None:
-        summary = eco.summarize(ws.saga, ws.selected_covenant)
+    async def opener(ws: WorkspaceScreen) -> None:
+        summary = eco.summarize(ws.saga, _covenant(ws))
         rows = summary.expenditure if which == "expenditure" else summary.savings
         row = next(i for i, r in enumerate(rows) if r.key == key)
         await _core_edit(f"section-eco-{which}", f"eco-{which}-list", row)(ws)
@@ -924,7 +1004,7 @@ def _economics_row(which: str, key: str):
     return opener
 
 
-def _edit_scene_use(ws) -> None:
+def _edit_scene_use(ws: WorkspaceScreen) -> None:
     """A Scene loaded into a Session (added in memory, saved only with the
     form): its use's form, as e on the Session page's Scenes opens it."""
     saga = ws.saga
@@ -937,29 +1017,29 @@ def _edit_scene_use(ws) -> None:
     ws._run_steps(scene_forms.use_form(saga, session, session.scenes[0]))
 
 
-def _core_add(section: str):
+def _core_add(section: str) -> OpenFrom:
     """Runs the table's Add for `section`, as its `a` key does."""
     return lambda ws: ws._core_verb(section, "add")
 
 
-def _core_edit(section: str, list_id: str, index: int = 0):
+def _core_edit(section: str, list_id: str, index: int = 0) -> AsyncOpen:
     """Runs the table's Edit on row `index` of the list `list_id`, as its
     `e` key does."""
     return _pick(lambda ws: ws._core_verb(section, "edit"), list_id, index)
 
 
-async def _open_trait_gaining_xp(ws) -> None:
+async def _open_trait_gaining_xp(ws: WorkspaceScreen) -> None:
     """Edit the magus's first Personality Trait, made to gain experience
     with 3 toward its next point."""
-    trait = ws.selected_character.personality_traits[0]
+    trait = _character(ws).personality_traits[0]
     trait.gains_xp, trait.deeds = True, 3
     await _core_edit("section-personality-traits", "personality-traits-list")(ws)
 
 
-def _new_inhabitant(kind: str):
+def _new_inhabitant(kind: str) -> AsyncOpen:
     """Opens the form for a new inhabitant of `kind` with no sheet behind it."""
 
-    async def opener(ws) -> None:
+    async def opener(ws: WorkspaceScreen) -> None:
         ws._core_verb(f"section-inh-{kind}", "add")
         # Grogs and sheets on offer come first: the first choice is a new
         # person, with no sheet.
@@ -972,7 +1052,7 @@ def _new_inhabitant(kind: str):
     return opener
 
 
-def _open_ritual_again(ws) -> None:
+def _open_ritual_again(ws: WorkspaceScreen) -> None:
     """Perform the ritual again, Leandro holding Creo 5: from its Lab Text
     he may use at most his Creo score in Creo vis (DE p. 261)."""
     leandro = next(c for c in ws.saga.characters if c.name == "Leandro")
@@ -980,67 +1060,89 @@ def _open_ritual_again(ws) -> None:
     ws._run_more("perform_ritual")
 
 
-def _core_step(ws, section: str, verb: str, row: int = 0):
+def _ops(saga: Saga, record: object, section: str) -> SectionOps:
+    """`section`'s Add, Edit and Delete on `record`, which it has."""
+    ops = section_verbs.section_ops(saga, record, section)
+    assert ops is not None, f"no table for {section}"
+    return ops
+
+
+def _add(ops: SectionOps) -> Command:
+    assert ops.add is not None, "the section has no Add"
+    return ops.add()
+
+
+def _edit(ops: SectionOps, row: int) -> Command:
+    assert ops.edit is not None, "the section has no Edit"
+    return ops.edit(row)
+
+
+def _form(step: Command) -> Form:
+    assert isinstance(step, Form), step
+    return step
+
+
+def _choose(step: Command) -> Choose:
+    assert isinstance(step, Choose), step
+    return step
+
+
+def _core_step(ws: WorkspaceScreen, section: str, verb: str, row: int = 0) -> Command:
     """The first step of the core table's `verb` on the record on show: the
     sheet's `row` (its list's index) for Edit and Delete."""
     record = ws._core_record()
-    ops = section_verbs.section_ops(ws.saga, record, section)
+    ops = _ops(ws.saga, record, section)
     if verb == "add":
-        return ops.add()
+        return _add(ops)
     return getattr(ops, verb)(section_verbs.table_row(record, section, row))
 
 
-def _open_device_edit(ws) -> None:
+def _open_device_edit(ws: WorkspaceScreen) -> None:
     """Edit the laboratory's device `dev-lab` (its own row, not an effect's)."""
-    lab = ws.selected_laboratory
+    lab = _laboratory(ws)
     targets = ed.device_targets(ws.saga, "laboratory", lab.id)
     row = next(
         i
         for i, (d, effect) in enumerate(targets)
         if d.id == "dev-lab" and effect is None
     )
-    ops = section_verbs.section_ops(ws.saga, lab, "section-lab-devices")
-    ws._run_steps(ops.edit(row))
+    ops = _ops(ws.saga, lab, "section-lab-devices")
+    ws._run_steps(_edit(ops, row))
 
 
-def _open_lab_feature_details(ws) -> None:
+def _open_lab_feature_details(ws: WorkspaceScreen) -> None:
     """Edit the lab's first Feature: its first form (which Feature, on which
     Virtue) is accepted as prefilled, which opens the details form."""
-    ops = section_verbs.section_ops(
-        ws.saga, ws.selected_laboratory, "section-lab-features"
-    )
-    first = ops.edit(0)
+    ops = _ops(ws.saga, _laboratory(ws), "section-lab-features")
+    first = _form(_edit(ops, 0))
     ws._run_steps(first.apply({f.key: f.value for f in first.fields()}))
 
 
-def _open_research_goal(ws) -> None:
+def _open_research_goal(ws: WorkspaceScreen) -> None:
     ws._run_steps(_core_step(ws, "section-research-goals", "add"))
 
 
-def _open_personal_weapon(ws) -> None:
+def _open_personal_weapon(ws: WorkspaceScreen) -> None:
     """Add a Personal Gear item, the kind chosen: a weapon."""
-    ws._run_steps(_core_step(ws, "section-inventory", "add").apply("weapon"))
+    ws._run_steps(_choose(_core_step(ws, "section-inventory", "add")).apply("weapon"))
 
 
-def _open_plan_season(ws) -> None:
+def _open_plan_season(ws: WorkspaceScreen) -> None:
     """The first step of the section's Plan (a form once planned, else the
     grog's Yearly Update)."""
-    ops = section_verbs.section_ops(
-        ws.saga, ws.selected_character, "section-char-season"
-    )
-    assert ops is not None
-    ws._run_steps(ops.add() if ops.add is not None else ops.edit(0))
+    ops = _ops(ws.saga, _character(ws), "section-char-season")
+    ws._run_steps(ops.add() if ops.add is not None else _edit(ops, 0))
 
 
-def _open_plan_opening(ws) -> None:
+def _open_plan_opening(ws: WorkspaceScreen) -> None:
     """Plan Season for Leandro, once Alys has The Gift, so he may open
     her Arts."""
-    alys = ws.saga.character("comp1")
+    alys = present(ws.saga.character("comp1"))
     alys.virtues_flaws.append(VirtueFlawInstance("vf_the_gift"))
     _open_plan_season(ws)
 
 
-async def _pick_virtue_flaw(ws, section: str, vf_id: str) -> None:
+async def _pick_virtue_flaw(ws: WorkspaceScreen, section: str, vf_id: str) -> None:
     """Add to a Virtues or Flaws list and choose the entry `vf_id`, which
     asks for something."""
     ws._core_verb(section, "add")
@@ -1055,7 +1157,7 @@ async def _pick_virtue_flaw(ws, section: str, vf_id: str) -> None:
     )
 
 
-async def _open_ability_details(ws) -> None:
+async def _open_ability_details(ws: WorkspaceScreen) -> None:
     """Add an Ability: pick Athletics, which asks for its details."""
     ws._run_steps(_core_step(ws, "tab-abilities", "add"))
     picker = await wait_for_screen(ws.app, ChooseScreen)
@@ -1069,7 +1171,7 @@ async def _open_ability_details(ws) -> None:
     )
 
 
-async def _open_boon_details(ws) -> None:
+async def _open_boon_details(ws: WorkspaceScreen) -> None:
     """Add a Boon: pick Edifice, which asks for its detail."""
     ws._core_verb("section-cov-boons", "add")
     picker = await wait_for_screen(ws.app, ChooseScreen)
@@ -1083,14 +1185,14 @@ async def _open_boon_details(ws) -> None:
     )
 
 
-def _open_research_bonuses(ws) -> None:
+def _open_research_bonuses(ws: WorkspaceScreen) -> None:
     """The covenant library's research bonuses, with its summa on Ignem."""
     book = next(b for b in ws.saga.books if b.id == "b-cov")
     book.art, book.level, book.quality = "Ignem", 10, 12
     ws._run_more("research_bonuses")
 
 
-def _open_book_craft(ws) -> None:
+def _open_book_craft(ws: WorkspaceScreen) -> None:
     """Edit the covenant's summa under the extended book Quality rule."""
     ws.saga.rule_options = {"extended_book_quality": True}
     book = next(b for b in ws.saga.books if b.id == "b-cov")
@@ -1098,17 +1200,17 @@ def _open_book_craft(ws) -> None:
     ws._book_form(book)
 
 
-def _with_rhine_ranks(ws) -> None:
+def _with_rhine_ranks(ws: WorkspaceScreen) -> None:
     """Severinus of Fengheld a master of House Tytalus, as Brother Oda is
     of it; Stentorius of Fengheld an archmage (once, however often the
     form is opened)."""
     saga = ws.saga
     if any(c.id == "arch1" for c in saga.characters):
         return
-    severinus = saga.character("mag_sketch")
+    severinus = present(saga.character("mag_sketch"))
     severinus.virtues_flaws.append(VirtueFlawInstance("vf_master_rhine_tribunal"))
     severinus.hermetic.house = "house_tytalus"
-    saga.character("mag2").hermetic.house = "house_tytalus"
+    present(saga.character("mag2")).hermetic.house = "house_tytalus"
     saga.characters.append(
         Character(
             id="arch1",
@@ -1120,15 +1222,15 @@ def _with_rhine_ranks(ws) -> None:
     )
 
 
-def _open_rhine_verb(action: str):
-    async def opener(ws) -> None:
+def _open_rhine_verb(action: str) -> AsyncOpen:
+    async def opener(ws: WorkspaceScreen) -> None:
         _with_rhine_ranks(ws)
         await _pick(lambda ws: getattr(ws, f"action_{action}")(), "trib-gilds-list")(ws)
 
     return opener
 
 
-async def _open_rhine_rite(ws) -> None:
+async def _open_rhine_rite(ws: WorkspaceScreen) -> None:
     """The meeting opened with Severinus made master since the last one:
     Edit on the Order of Business's third row, the Rhine's rite."""
     _with_rhine_ranks(ws)
@@ -1150,12 +1252,12 @@ async def _open_rhine_rite(ws) -> None:
 # -- the guides' gaps, round two --
 
 
-def _run(build):
+def _run(build: Callable[[WorkspaceScreen], Command]) -> OpenFrom:
     """An opener that runs `build(ws)`'s first step."""
     return lambda ws: ws._run_steps(build(ws))
 
 
-def _sheet_roll(ws) -> None:
+def _sheet_roll(ws: WorkspaceScreen) -> None:
     """Roll from the sheet: the Virtual Tabletop preview on and a Session
     begun by the host, as its storyguide, before the card first opens."""
     virtual_tabletop.set_on(True)
@@ -1163,10 +1265,10 @@ def _sheet_roll(ws) -> None:
         session = Session("contract-vtt")
         ws.saga.sessions.append(session)
         chronicle.begin(ws.saga, session, by=viewing.HOST)
-    ws._run_steps(sheet_roll_forms.roll_form(ws.saga, ws.selected_character))
+    ws._run_steps(sheet_roll_forms.roll_form(ws.saga, _character(ws)))
 
 
-def _send_message(ws) -> None:
+def _send_message(ws: WorkspaceScreen) -> None:
     """A Message: a Session begun by the host, as its storyguide, as for
     a roll from the sheet."""
     virtual_tabletop.set_on(True)
@@ -1178,7 +1280,7 @@ def _send_message(ws) -> None:
     ws._run_steps(message_forms.message_here(ws.saga, session))
 
 
-def _set_scene(ws) -> None:
+def _set_scene(ws: WorkspaceScreen) -> None:
     """Set Scene: a Session begun by the host, as its storyguide, as for a
     Message, with the ford (Magic 3) loaded into it."""
     virtual_tabletop.set_on(True)
@@ -1195,7 +1297,7 @@ def _set_scene(ws) -> None:
     ws._run_steps(scene_verb_forms.set_here(ws.saga, session))
 
 
-def _show(ws, preset: bool) -> None:
+def _show(ws: WorkspaceScreen, preset: bool) -> None:
     """A Show: a Session begun by the host, as its storyguide, as for a
     Message; opened at the Session, or on the chosen character's page."""
     virtual_tabletop.set_on(True)
@@ -1205,7 +1307,7 @@ def _show(ws, preset: bool) -> None:
         ws.saga.sessions.append(session)
         chronicle.begin(ws.saga, session, by=viewing.HOST)
     if preset:
-        ws._run_steps(show_forms.show_record(ws.saga, ws.selected_character))
+        ws._run_steps(show_forms.show_record(ws.saga, _character(ws)))
     else:
         ws._run_steps(show_forms.show_here(ws.saga, session))
 
@@ -1214,7 +1316,7 @@ def _show(ws, preset: bool) -> None:
 SHOWN_HANDOUT = "contract-handout"
 
 
-def _show_handout(ws) -> None:
+def _show_handout(ws: WorkspaceScreen) -> None:
     """More's Show on the Handouts list: a Session begun by the host, as
     for Show, and a written Handout to choose, the list's first row."""
     virtual_tabletop.set_on(True)
@@ -1239,7 +1341,7 @@ HANDOUT_PLAYER = "contract-pat"
 HANDOUT_TITLE = "Contract handout"
 
 
-def _arrange_handout(ws, step: str) -> None:
+def _arrange_handout(ws: WorkspaceScreen, step: str) -> None:
     """One of Pat's Handouts arranged (Rename, or Move to folder): Pat is
     shown the first character at a Session the host begins, and arranges
     it as themselves."""
@@ -1266,14 +1368,16 @@ def _arrange_handout(ws, step: str) -> None:
     kept = handout_arrangement.load(saga.id, HANDOUT_PLAYER)
     [shown] = handout_arrangement.arranged(found, kept)
     chooser = player_handouts.arranging(reads, HANDOUT_PLAYER, shown.kept)
-    ws._run_steps(chooser.apply(step))  # type: ignore[union-attr]
+    ws._run_steps(_choose(chooser).apply(step))
 
 
-async def _open_staged(ws, kind: str, open_form) -> None:
+async def _open_staged(
+    ws: WorkspaceScreen, kind: str, open_form: Callable[[], object]
+) -> None:
     """A form of the covenant's Projects tab with a staged project of
     `kind` shown, Vulcan's Hearth, its chapter's stages (added in memory,
     saved only with the form)."""
-    covenant = ws.selected_covenant
+    covenant = _covenant(ws)
     if not any(p.id == "hearth" for p in covenant.hermetic_projects):
         covenant.hermetic_projects.insert(
             0,
@@ -1286,28 +1390,28 @@ async def _open_staged(ws, kind: str, open_form) -> None:
         )
         covenant.project_shown = "hearth"
         await ws._show_covenant_detail(covenant)
-    view = ws._current_sheet_view()
+    view = _view(ws)
     await view.build_all_tabs()
     open_form()
 
 
-def _staged(kind: str, form):
+def _staged(kind: str, form: OpenFrom) -> OpenFrom:
     """An opener running `form(ws)` with a staged project of `kind` shown."""
     return lambda ws: _open_staged(ws, kind, lambda: form(ws))
 
 
-async def _open_menagerie_award(ws) -> None:
+async def _open_menagerie_award(ws: WorkspaceScreen) -> None:
     """More's Reputation Award on the Spur Menagerie, Alys its owner."""
 
     def form() -> None:
-        project = ws.selected_covenant.hermetic_projects[0]
+        project = _covenant(ws).hermetic_projects[0]
         project.owner_id, project.reputation = "comp1", "Keeper of Beasts"
-        ws._run_steps(menagerie.award_form(ws.saga, ws.selected_covenant))
+        ws._run_steps(menagerie.award_form(ws.saga, _covenant(ws)))
 
     await _open_menagerie(ws, form)
 
 
-def _with_war(ws):
+def _with_war(ws: WorkspaceScreen) -> Command:
     """A Wizard's War on the Rhine's docket: Leandro on Brother Oda."""
     tribunal = ws.saga.tribunals[0]
     if not any(c.id == "war-contract" for c in tribunal.cases):
@@ -1327,10 +1431,10 @@ def _with_war(ws):
     return wizards_war.end_form(ws.saga, tribunal, 0)
 
 
-def _faerie_hill(ws):
+def _faerie_hill(ws: WorkspaceScreen) -> Command:
     """Cross the Threshold at the Drachenfels, made a Faerie place of aura
     5 with Realms of Power: Faerie in play (in memory)."""
-    place = ws.saga.neighbour("drachenfels")
+    place = present(ws.saga.neighbour("drachenfels"))
     place.realm = "Faerie"
     place.details["levels"] = []
     if ws.saga.books_in_play is not None and "RoP:F" not in ws.saga.books_in_play:
@@ -1338,26 +1442,28 @@ def _faerie_hill(ws):
     return threshold_forms.threshold_form(ws.saga, place)
 
 
-def _with_cover(ws):
+def _with_cover(ws: WorkspaceScreen) -> Command:
     """A Disguise Roll for Leandro, given a cover (in memory)."""
-    character = ws.selected_character
+    character = _character(ws)
     if not character.covers:
         character.covers.append(DeepCover("Reynard", role="a mercenary"))
     return cover_forms.disguise_form(ws.saga, character)
 
 
-def _with_hook(ws):
+def _with_hook(ws: WorkspaceScreen) -> Command:
     """Suggest a Story from Rabenstein's Hook."""
-    return hook_story_forms.story_form(ws.saga, ws.selected_covenant)
+    return hook_story_forms.story_form(ws.saga, _covenant(ws))
 
 
-def _leandro(ws):
-    return ws.saga.character("mag1")
+def _leandro(ws: WorkspaceScreen) -> Character:
+    return present(ws.saga.character("mag1"))
 
 
-def _springing(ws, *, ward: bool = False, acted: bool = False) -> tombs.Springing:
+def _springing(
+    ws: WorkspaceScreen, *, ward: bool = False, acted: bool = False
+) -> tombs.Springing:
     """Overcome It part way through, on the sample tomb, for Leandro alone."""
-    place = ws.saga.neighbour("drachenfels")
+    place = present(ws.saga.neighbour("drachenfels"))
     obstacle = (
         tombs.Obstacle("Turn the Interloper", 15, "its effect", penetration=0)
         if ward
@@ -1370,14 +1476,20 @@ def _springing(ws, *, ward: bool = False, acted: bool = False) -> tombs.Springin
     return spring
 
 
-def _tomb_step(step) -> Opener:
+def _create_saga(picker: Screen[Any]) -> None:
+    """New Saga, the one opener given the saga picker, not the workspace."""
+    assert isinstance(picker, scr.SagaPickerScreen)
+    picker.action_create_saga()
+
+
+def _tomb_step(step: Callable[[WorkspaceScreen], Command]) -> Opener:
     """Open one of Overcome It's later steps directly."""
     return Opener("place", _built(lambda ws: ws._run_steps(step(ws))))
 
 
 OPENERS: dict[str, Opener] = {
     # Saga level
-    "create saga": Opener(None, lambda p: p.action_create_saga()),
+    "create saga": Opener(None, _create_saga),
     "edit saga": Opener("saga", lambda ws: ws._edit_saga()),
     "set date": Opener("saga", lambda ws: ws._run_more("set_date"), action="set_date"),
     "add secret": Opener(
@@ -1746,7 +1858,7 @@ OPENERS: dict[str, Opener] = {
             creation_forms.grog_template_steps(
                 ws.saga,
                 {"name": "Ulla", "covenant_id": "cov1"},
-                grog_templates.find("gt_animal_trainer"),
+                present(grog_templates.find("gt_animal_trainer")),
             ),
             tree=True,
         ),
@@ -1757,7 +1869,7 @@ OPENERS: dict[str, Opener] = {
             choice_forms.choice_template_steps(
                 ws.saga,
                 {"name": "Ulla", "covenant_id": "cov1"},
-                choice_templates.find("ct_quick_martial"),
+                present(choice_templates.find("ct_quick_martial")),
             ),
             tree=True,
         ),
@@ -1768,7 +1880,7 @@ OPENERS: dict[str, Opener] = {
             choice_forms.choice_template_steps(
                 ws.saga,
                 {"name": "Ulla", "covenant_id": "cov1"},
-                choice_templates.find("ct_mc_faerie_doctor"),
+                present(choice_templates.find("ct_mc_faerie_doctor")),
             ),
             tree=True,
         ),
@@ -1779,7 +1891,7 @@ OPENERS: dict[str, Opener] = {
             choice_forms.choice_template_steps(
                 ws.saga,
                 {"name": "Ulla", "covenant_id": "cov1"},
-                choice_templates.find("ct_anne_holy_hermit"),
+                present(choice_templates.find("ct_anne_holy_hermit")),
             ),
             tree=True,
         ),
@@ -1790,7 +1902,7 @@ OPENERS: dict[str, Opener] = {
             choice_forms.grog_companion_steps(
                 ws.saga,
                 {"name": "Ulla", "covenant_id": "cov1"},
-                grog_templates.find("gt_animal_trainer"),
+                present(grog_templates.find("gt_animal_trainer")),
             ),
             tree=True,
         ),
@@ -1801,7 +1913,7 @@ OPENERS: dict[str, Opener] = {
             creation_forms.grog_template_steps(
                 ws.saga,
                 {"name": "Rex", "covenant_id": "cov1"},
-                grog_templates.find("at_dog"),
+                present(grog_templates.find("at_dog")),
             ),
             tree=True,
         ),
@@ -1840,8 +1952,8 @@ OPENERS: dict[str, Opener] = {
         lambda ws: ws._run_steps(
             menu_steps.improve_form(
                 ws.saga,
-                ws.selected_covenant.economics.income_sources[0],
-                ws.selected_covenant,
+                _covenant(ws).economics.income_sources[0],
+                _covenant(ws),
             )
         ),
     ),
@@ -1894,8 +2006,8 @@ OPENERS: dict[str, Opener] = {
             giving.give(
                 ws.saga,
                 giving.VIS,
-                ws.selected_character,
-                vis.held(ws.selected_character)[0],
+                _character(ws),
+                vis.held(_character(ws))[0],
             )
         ),
     ),
@@ -1948,9 +2060,7 @@ OPENERS: dict[str, Opener] = {
     "edit natural weapon": Opener(
         "familiar",
         lambda ws: ws._run_steps(
-            section_verbs.section_ops(
-                ws.saga, ws.selected_familiar, "section-fam-natural-weapons"
-            ).edit(0)
+            _edit(_ops(ws.saga, _familiar(ws), "section-fam-natural-weapons"), 0)
         ),
     ),
     # Laboratory
@@ -1990,24 +2100,18 @@ OPENERS: dict[str, Opener] = {
     ),
     "reward or punish": Opener(
         "character",
-        lambda ws: ws._run_steps(
-            grog_forms.discipline_form(ws.saga, ws.saga.character("grog9"))
-        ),
+        lambda ws: ws._run_steps(grog_forms.discipline_form(ws.saga, _hugo(ws))),
     ),
     "retire a grog": Opener(
         "character",
-        lambda ws: ws._run_steps(
-            grog_forms.pension_form(ws.saga, ws.saga.character("grog9"))
-        ),
+        lambda ws: ws._run_steps(grog_forms.pension_form(ws.saga, _hugo(ws))),
     ),
     "craft by magic": Opener(
         "character", lambda ws: ws._run_more("craft_by_magic"), action="craft_by_magic"
     ),
     "grog yearly update": Opener(
         "character",
-        lambda ws: ws._run_steps(
-            season_forms.grog_year_form(ws.saga.character("grog9"))
-        ),
+        lambda ws: ws._run_steps(season_forms.grog_year_form(_hugo(ws))),
     ),
     "add arcane connection": Opener(
         "laboratory", lambda ws: ws._core_verb("section-lab-connections", "add")
@@ -2157,9 +2261,7 @@ OPENERS: dict[str, Opener] = {
     "edit bond power": Opener(
         "familiar",
         lambda ws: ws._run_steps(
-            section_verbs.section_ops(
-                ws.saga, ws.selected_familiar, "tab-fam-powers"
-            ).edit(0)
+            _edit(_ops(ws.saga, _familiar(ws), "tab-fam-powers"), 0)
         ),
     ),
     "add lab raw vis": Opener(
@@ -2193,7 +2295,7 @@ OPENERS: dict[str, Opener] = {
         lambda ws: ws._run_steps(
             wf.spend_xp(
                 ws.saga,
-                ws.selected_character,
+                _character(ws),
                 "childhood",
                 creation_xp.childhood_targets(),
             )
@@ -2201,7 +2303,7 @@ OPENERS: dict[str, Opener] = {
     ),
     "native language": Opener(
         "character",
-        lambda ws: ws._run_steps(wf.native_language(ws.selected_character)),
+        lambda ws: ws._run_steps(wf.native_language(_character(ws))),
     ),
     # The first array placed on Hugo, whose Dexterity is highest now.
     "array placement": Opener(
@@ -2213,31 +2315,29 @@ OPENERS: dict[str, Opener] = {
     # The fixture's grog, Hugo, made a dog.
     "animal form": Opener(
         "character",
-        lambda ws: ws._run_steps(
-            animal_forms.animal_form(ws.saga, ws.saga.character("grog9"))
-        ),
+        lambda ws: ws._run_steps(animal_forms.animal_form(ws.saga, _hugo(ws))),
     ),
     "general spell level": Opener(
         "character",
         lambda ws: ws._run_steps(
             wf.spell_level_form(
-                ws.selected_character,
+                _character(ws),
                 "apprenticeship_spells",
-                catalog.find_spell(ws.saga, "spell_aegis_of_the_hearth"),
+                present(catalog.find_spell(ws.saga, "spell_aegis_of_the_hearth")),
             )
         ),
     ),
     "gauntlet conditions": Opener(
         "character",
-        lambda ws: ws._run_steps(wf.gauntlet_conditions(ws.selected_character)),
+        lambda ws: ws._run_steps(wf.gauntlet_conditions(_character(ws))),
     ),
     "grogs aging chart": Opener("character", _grogs_aging_chart),
     "power level": Opener(
-        "covenant", lambda ws: ws._run_steps(wf.power_level(ws.selected_covenant))
+        "covenant", lambda ws: ws._run_steps(wf.power_level(_covenant(ws)))
     ),
     "buy specialist": Opener(
         "covenant",
-        lambda ws: ws._run_steps(wf.buy_specialist(ws.saga, ws.selected_covenant)),
+        lambda ws: ws._run_steps(wf.buy_specialist(ws.saga, _covenant(ws))),
     ),
     "edit charter": Opener(
         "covenant",
@@ -2269,7 +2369,7 @@ OPENERS: dict[str, Opener] = {
         "character",
         lambda ws: ws._run_steps(
             wf.use_childhood(
-                ws.selected_character,
+                _character(ws),
                 next(c for c in creation_xp.CHILDHOODS if c.name == "Traveling"),
             )
         ),
@@ -2287,7 +2387,7 @@ OPENERS: dict[str, Opener] = {
     # A young character's parent's vocation (Apprentices).
     "parent vocation": Opener(
         "character",
-        lambda ws: ws._run_steps(wf.parent_vocation(ws.selected_character)),
+        lambda ws: ws._run_steps(wf.parent_vocation(_character(ws))),
     ),
     # Art & Academe's ligatures and the apothecary's store.
     "make a ligature": Opener("character", lambda ws: _open_apothecary(ws, "ligature")),
@@ -2400,6 +2500,7 @@ OPENERS: dict[str, Opener] = {
     "interests": Opener(
         "character", lambda ws: ws._run_more("edit_interests"), action="edit_interests"
     ),
+    "review interests": Opener("character", _review_interests),
     "covenant interests": Opener(
         "covenant", lambda ws: ws._run_more("edit_interests"), action="edit_interests"
     ),
@@ -2706,28 +2807,28 @@ OPENERS: dict[str, Opener] = {
     # The guides' gaps, round two.
     "grog story experience": Opener(
         "character",
-        _run(lambda ws: grog_story.story_form(ws.saga, ws.saga.character("grog9"))),
+        _run(lambda ws: grog_story.story_form(ws.saga, _hugo(ws))),
     ),
     "melee event": Opener(
         "character",
-        _run(lambda ws: melee_events.melee_form(ws.saga, ws.selected_character)),
+        _run(lambda ws: melee_events.melee_form(ws.saga, _character(ws))),
         action="melee_event",
     ),
     "certamen": Opener(
         "character",
-        _run(lambda ws: certamen_forms.duel_form(ws.saga, ws.selected_character)),
+        _run(lambda ws: certamen_forms.duel_form(ws.saga, _character(ws))),
     ),
     "where he is": Opener(
         "character",
-        _run(lambda ws: whereabouts.where_form(ws.saga, ws.selected_character)),
+        _run(lambda ws: whereabouts.where_form(ws.saga, _character(ws))),
     ),
     "stay as guest": Opener(
         "character",
-        _run(lambda ws: guest_stays.stay_form(ws.saga, ws.selected_character)),
+        _run(lambda ws: guest_stays.stay_form(ws.saga, _character(ws))),
     ),
     "trait roll": Opener(
         "character",
-        _run(lambda ws: trait_roll_forms.roll_form(ws.saga, ws.selected_character)),
+        _run(lambda ws: trait_roll_forms.roll_form(ws.saga, _character(ws))),
         action="trait_roll",
     ),
     "sheet roll": Opener("character", _sheet_roll, action="sheet_roll"),
@@ -2746,7 +2847,7 @@ OPENERS: dict[str, Opener] = {
     ),
     "build a ship": Opener(
         "covenant",
-        _run(lambda ws: ship_build.build_form(ws.saga, ws.selected_covenant)),
+        _run(lambda ws: ship_build.build_form(ws.saga, _covenant(ws))),
     ),
     "suggest a story": Opener("covenant", _run(_with_hook)),
     "disguise roll": Opener("character", _run(_with_cover), action="disguise_roll"),
@@ -2783,7 +2884,7 @@ OPENERS: dict[str, Opener] = {
 }
 
 
-async def _on_marriage(ws, action) -> None:
+async def _on_marriage(ws: WorkspaceScreen, action: OpenFrom) -> None:
     """A command on Gottfried's Marriages tab, on his marriage to Adelheid
     of Sayn, added in memory (saved only with the form)."""
     if not ws.saga.marriages:
@@ -2795,7 +2896,7 @@ async def _on_marriage(ws, action) -> None:
                 lands=4,
             )
         )
-    view = ws._current_sheet_view()
+    view = _view(ws)
     await view.build_all_tabs()
     view.refresh_section("section-nb-marriages")
     listed = view.query_one("#nb-marriages-list", scr.SelectableList)
@@ -2804,17 +2905,17 @@ async def _on_marriage(ws, action) -> None:
     action(ws)
 
 
-def _open_biographical_academe(ws) -> None:
+def _open_biographical_academe(ws: WorkspaceScreen) -> None:
     """Edit Biographical Detail with Art & Academe's medicine on."""
     ws.saga.rule_options = {**ws.saga.rule_options, "art_academe_medicine": True}
     ws._edit_biographical_detail()
 
 
-def _device(ws, device_id: str):
+def _device(ws: WorkspaceScreen, device_id: str) -> EnchantedDevice:
     return next(d for d in ws.saga.enchanted_devices if d.id == device_id)
 
 
-async def until(condition, timeout: float = 3.0) -> bool:
+async def until(condition: Callable[[], object], timeout: float = 3.0) -> bool:
     """Wait (without a pilot) until `condition()` holds."""
     elapsed = 0.0
     while not condition() and elapsed < timeout:
@@ -2831,35 +2932,41 @@ async def mounted[W: Widget](view: Widget, selector: str, kind: type[W]) -> W:
     return view.query_one(selector, kind)
 
 
-async def wait_for_screen(app, cls, timeout: float = 3.0):
+async def wait_for_screen[S: Screen[Any]](
+    app: App[Any], cls: type[S], timeout: float = 3.0
+) -> S:
     """Wait (without a pilot) until the top screen is a `cls`."""
     await until(lambda: isinstance(app.screen, cls), timeout)
-    return app.screen
+    screen = app.screen
+    assert isinstance(screen, cls), f"top screen: {type(screen).__name__}"
+    return screen
 
 
 async def open_dialog(
-    pilot, app, name: str, saga: Saga | None = None
-) -> tuple[object, object]:
+    pilot: Pilot[None], app: ArsMagicaManagerApp, name: str, saga: Saga | None = None
+) -> tuple[Screen[Any], Screen[Any]]:
     """Start at the saga picker with `saga` saved (default contract_saga()),
     reach `name`'s tree node and open the dialog. Returns (the screen the
     dialog was opened from, the dialog)."""
-    opener = OPENERS[name]
+    node = OPENERS[name].node
     await pilot.pause()
-    if opener.node is None:
+    if node is None:
         base = app.screen
     else:
         await pilot.press("enter")  # picker -> workspace
         assert await wait_until(
             pilot, lambda: isinstance(app.screen, scr.WorkspaceScreen)
         )
-        base = app.screen
-        tree = base.query_one(Tree)
+        workspace = app.screen
+        assert isinstance(workspace, WorkspaceScreen)
+        base = workspace
+        tree = workspace.query_one(Tree)
 
         def find_node():
             stack = [tree.root]
             while stack:
                 candidate = stack.pop()
-                if candidate.data == NODES[opener.node]:
+                if candidate.data == NODES[node]:
                     return candidate
                 stack.extend(candidate.children)
             return None
@@ -2867,22 +2974,28 @@ async def open_dialog(
         assert await wait_until(pilot, lambda: find_node() is not None)
         tree.select_node(find_node())
         assert await wait_until(
-            pilot, lambda: base.selected_kind == NODES[opener.node][0]
+            pilot, lambda: workspace.selected_kind == NODES[node][0]
         )
-        if opener.node != "saga":
+        if node != "saga":
             assert await wait_until(
-                pilot, lambda: base._current_sheet_view() is not None
+                pilot, lambda: workspace._current_sheet_view() is not None
             )
-            view = base._current_sheet_view()
+            view = _view(workspace)
             assert await wait_until(pilot, lambda: view.initial_tab_seen)
         await pilot.pause()
     return base, await reopen_dialog(pilot, app, base, name)
 
 
-async def reopen_dialog(pilot, app, base, name: str) -> object:
+async def reopen_dialog(
+    pilot: Pilot[None], app: ArsMagicaManagerApp, base: Screen[Any], name: str
+) -> Screen[Any]:
     """Open `name`'s dialog again from `base` (the screen open_dialog
     returned, back on top), and return it."""
-    opened = OPENERS[name].open(base)
+    # The workspace, but for the one opener with no node: the saga picker,
+    # which that opener checks for itself.
+    opener = OPENERS[name]
+    assert opener.node is None or isinstance(base, WorkspaceScreen)
+    opened = opener.open(cast(WorkspaceScreen, base))
     if inspect.isawaitable(opened):
         await opened
     assert await wait_until(pilot, lambda: _is_dialog(app.screen, base), timeout=3.0), (
@@ -2902,7 +3015,7 @@ _ON_THE_WAY = (
 )
 
 
-def _is_dialog(screen, base) -> bool:
+def _is_dialog(screen: Screen[Any], base: Screen[Any]) -> bool:
     return (
         screen is not base
         and isinstance(screen, ModalScreen)
@@ -2915,18 +3028,15 @@ def new_app(saga: Saga | None = None) -> ArsMagicaManagerApp:
     return ArsMagicaManagerApp()
 
 
-Opens = Callable[..., Awaitable[tuple[object, object]]]
-
-
-def _open_byzantine(ws, which: str) -> None:
+def _open_byzantine(ws: WorkspaceScreen, which: str) -> None:
     """A Byzantine custom's More command on Leandro: painting needs him a
     priest with Theology 3, venerating an icon on Cologne's Relics."""
-    character = ws.selected_character
+    character = _character(ws)
     if which == "paint":
         character.virtues_flaws.append(VirtueFlawInstance("vf_eastern_priest"))
         character.abilities.append(Ability("Theology: Christian", xp=30))
     if which == "venerate":
-        church = ws.saga.neighbour("cologne")
+        church = present(ws.saga.neighbour("cologne"))
         church.details.setdefault("relics", []).append(
             {
                 "name": "The Hodegetria",
@@ -2945,10 +3055,10 @@ def _open_byzantine(ws, which: str) -> None:
     }[which]()
 
 
-def _open_sin(ws, which: str) -> None:
+def _open_sin(ws: WorkspaceScreen, which: str) -> None:
     """More's Confidence through Sin, Infernal Influence or Ars Goetia on
     Leandro, given a cruel streak and the Summoning Art."""
-    character = ws.selected_character
+    character = _character(ws)
     if not any(t.name == "Cruel (Envious)" for t in character.personality_traits):
         character.personality_traits.append(ScoredTrait("Cruel (Envious)", 3))
     if not any(a.name == "Summoning" for a in character.abilities):
@@ -2961,14 +3071,13 @@ def _open_sin(ws, which: str) -> None:
         ws._run_more("ars_goetia")
 
 
-def _open_treasury_kind(ws, kind: str) -> None:
+def _open_treasury_kind(ws: WorkspaceScreen, kind: str) -> None:
     """The treasury's Add on Transylvania, with `kind` chosen."""
-    ops = tribunal_forms.treasury_ops(ws.saga.tribunal("transylvania"))
-    assert ops.add is not None
-    ws._run_steps(ops.add().apply(kind))
+    ops = tribunal_forms.treasury_ops(present(ws.saga.tribunal("transylvania")))
+    ws._run_steps(_choose(_add(ops)).apply(kind))
 
 
-async def _on_hagen(ws, which: str) -> None:
+async def _on_hagen(ws: WorkspaceScreen, which: str) -> None:
     """The Hunt or Area Lore on Gottfried's manor of Hagen."""
     await _on_lords_row(
         ws,
@@ -2983,10 +3092,10 @@ async def _on_hagen(ws, which: str) -> None:
     )
 
 
-def _open_apprentice(ws, which: str) -> None:
+def _open_apprentice(ws: WorkspaceScreen, which: str) -> None:
     """Turbulence, the Gauntlet, Lose the Gift or Learn a Cantation on
     Leandro, made an apprentice (and the cantations option turned on)."""
-    character = ws.selected_character
+    character = _character(ws)
     if which in ("gauntlet", "lose") and not any(
         vf.vf_id == "vf_apprentice" for vf in character.virtues_flaws
     ):
@@ -3002,10 +3111,10 @@ def _open_apprentice(ws, which: str) -> None:
         ws._run_more("learn_cantation")
 
 
-def _open_career(ws, which: str) -> None:
+def _open_career(ws: WorkspaceScreen, which: str) -> None:
     """An Artist's Career (Leandro given Craft: Painting) or A Scholar's
     Career on Leandro."""
-    character = ws.selected_character
+    character = _character(ws)
     if which == "artist":
         if not any(a.name == "Craft: Painting" for a in character.abilities):
             character.abilities.append(Ability("Craft: Painting", xp=15))
@@ -3014,11 +3123,11 @@ def _open_career(ws, which: str) -> None:
         ws._run_more("scholar_career")
 
 
-def _open_galdor(ws, which: str) -> None:
+def _open_galdor(ws: WorkspaceScreen, which: str) -> None:
     """Conjure a Spirit, Bargain with a Lord or Bind an Item on Leandro,
     made a galdraman with Ol-galdor 5, Galdor Wisdom 5, Craft: Runes 5 and
     a deal."""
-    character = ws.selected_character
+    character = _character(ws)
     if "trad_galdramen" not in character.traditions:
         character.traditions.append("trad_galdramen")
         character.virtues_flaws += [
@@ -3040,10 +3149,10 @@ def _open_galdor(ws, which: str) -> None:
     }[which]()
 
 
-def _open_faerie(ws, which: str) -> None:
+def _open_faerie(ws: WorkspaceScreen, which: str) -> None:
     """Ars Fabulosa, A Faerie Bargain or An Offer to Faerie on Leandro,
     given (Faerie) Summoning and an Oak +2 Sympathy Trait."""
-    character = ws.selected_character
+    character = _character(ws)
     if not any(a.name == "(Faerie) Summoning" for a in character.abilities):
         character.abilities.append(Ability("(Faerie) Summoning", xp=15, xp_table="art"))
     if not any(t.name == "Oak" for t in character.personality_traits):
@@ -3056,12 +3165,12 @@ def _open_faerie(ws, which: str) -> None:
         ws._run_more("faerie_offer")
 
 
-def _open_mystic(ws, which: str) -> None:
+def _open_mystic(ws: WorkspaceScreen, which: str) -> None:
     """A holy life's More forms on the magus on show, made Pious +3 with
     Sense Holiness and Unholiness and Confidence to spend: a contemplative
     on a path to Premonitions, a monist after an Ascent, the Font of
     Knowledge, or an archbishop."""
-    character = ws.selected_character
+    character = _character(ws)
     if not any(t.name == "Pious" for t in character.personality_traits):
         character.personality_traits.append(ScoredTrait("Pious", 3))
     if not any(a.name == "Sense Holiness and Unholiness" for a in character.abilities):
@@ -3096,9 +3205,9 @@ def _open_mystic(ws, which: str) -> None:
         ws._run_more("commanding_aura")
 
 
-def _open_hubris(ws) -> None:
+def _open_hubris(ws: WorkspaceScreen) -> None:
     """More's Hubris on the magus on show, given the Flaw and Hubris 1."""
-    character = ws.selected_character
+    character = _character(ws)
     if VirtueFlawInstance("vf_hubris") not in character.virtues_flaws:
         character.virtues_flaws.append(VirtueFlawInstance("vf_hubris"))
     if not any(t.name == "Hubris" for t in character.personality_traits):
@@ -3106,19 +3215,19 @@ def _open_hubris(ws) -> None:
     ws._run_more("verditius_hubris")
 
 
-def _open_spirits(ws) -> None:
+def _open_spirits(ws: WorkspaceScreen) -> None:
     """More's Spirits and Names on the magus on show, given Hermetic
     Theurgy."""
-    character = ws.selected_character
+    character = _character(ws)
     if VirtueFlawInstance("vf_hermetic_theurgy") not in character.virtues_flaws:
         character.virtues_flaws.append(VirtueFlawInstance("vf_hermetic_theurgy"))
     ws._run_more("spirits_and_names")
 
 
-def _open_dreams(ws, which: str) -> None:
+def _open_dreams(ws: WorkspaceScreen, which: str) -> None:
     """More's Dream Working (given Dream Magic) or Hermetic Sacrifice (given
     the Virtue and a known level 30 Ritual) on the magus on show."""
-    character = ws.selected_character
+    character = _character(ws)
     vf_id = "vf_dream_magic" if which == "dream" else "vf_hermetic_sacrifice"
     if VirtueFlawInstance(vf_id) not in character.virtues_flaws:
         character.virtues_flaws.append(VirtueFlawInstance(vf_id))
@@ -3133,10 +3242,10 @@ def _open_dreams(ws, which: str) -> None:
     ws._run_more("hermetic_sacrifice")
 
 
-def _open_acclaim(ws) -> None:
+def _open_acclaim(ws: WorkspaceScreen) -> None:
     """More's House Acclaim on the magus on show, made a Bonisagus without
     House Acclaim yet."""
-    character = ws.selected_character
+    character = _character(ws)
     character.hermetic.house = "house_bonisagus"
     character.reputations = [
         r for r in character.reputations if not r.name.startswith("House Acclaim")
@@ -3144,19 +3253,19 @@ def _open_acclaim(ws) -> None:
     ws._run_more("house_acclaim")
 
 
-def _open_reputation_roll(ws) -> None:
+def _open_reputation_roll(ws: WorkspaceScreen) -> None:
     """More's Reputation Roll on the character on show, given a Reputation."""
-    character = ws.selected_character
+    character = _character(ws)
     if not character.reputations:
         character.reputations.append(ScoredTrait("Dragon-slayer", 3, type="Local"))
     ws._run_more("reputation_roll")
 
 
-def _open_tmre_divination(ws, which: str) -> None:
+def _open_tmre_divination(ws: WorkspaceScreen, which: str) -> None:
     """More's Divination (given Divination & Augury by Pyromancy and
     Divination 3) or Astrology (given Planetary Magic) on the person on
     show."""
-    character = ws.selected_character
+    character = _character(ws)
     if which == "divine":
         augury = VirtueFlawInstance("vf_divination_and_augury", {"method": "Pyromancy"})
         if augury not in character.virtues_flaws:
@@ -3170,10 +3279,10 @@ def _open_tmre_divination(ws, which: str) -> None:
     ws._run_more("tmre_astrology")
 
 
-def _open_alchemy(ws) -> None:
+def _open_alchemy(ws: WorkspaceScreen) -> None:
     """More's Philosophic Alchemy on This Season, given Hermetic Alchemy,
     the Major Virtue and a laboratory."""
-    character = ws.selected_character
+    character = _character(ws)
     for vf_id in ("vf_hermetic_alchemy", "vf_philosophic_alchemy_major"):
         if VirtueFlawInstance(vf_id) not in character.virtues_flaws:
             character.virtues_flaws.append(VirtueFlawInstance(vf_id))
@@ -3181,10 +3290,10 @@ def _open_alchemy(ws) -> None:
     ws._run_more("philosophic_alchemy")
 
 
-def _open_great_elixir(ws) -> None:
+def _open_great_elixir(ws: WorkspaceScreen) -> None:
     """More's Test the Great Elixir on Aging & Warping, given Unaging, the
     Lesser and Great Elixirs and an age of 60."""
-    character = ws.selected_character
+    character = _character(ws)
     for vf_id in ("vf_unaging", "vf_the_lesser_elixir", "vf_the_great_elixir"):
         if VirtueFlawInstance(vf_id) not in character.virtues_flaws:
             character.virtues_flaws.append(VirtueFlawInstance(vf_id))
@@ -3192,7 +3301,7 @@ def _open_great_elixir(ws) -> None:
     ws._run_more("great_elixir")
 
 
-async def _open_own_ability(ws) -> None:
+async def _open_own_ability(ws: WorkspaceScreen) -> None:
     """Edit one of the saga's own Abilities in House Rules: Speak with Ravens,
     held by no one."""
     if not ws.saga.custom_abilities:
@@ -3212,10 +3321,10 @@ async def _open_own_ability(ws) -> None:
     await _core_edit("section-house-rules", "house-rules-list", row)(ws)
 
 
-async def _open_ship(ws, which: str) -> None:
+async def _open_ship(ws: WorkspaceScreen, which: str) -> None:
     """More's Stress Check or Ship Combat on the covenant's first ship,
     Seehund (added in memory, saved only with the form)."""
-    covenant = ws.selected_covenant
+    covenant = _covenant(ws)
     if not any(p.kind == "ship" for p in covenant.possessions):
         covenant.possessions.insert(
             0,
@@ -3226,7 +3335,7 @@ async def _open_ship(ws, which: str) -> None:
                 ship=Ship(ship_type="buss", kind_name="Coastal buss"),
             ),
         )
-    view = ws._current_sheet_view()
+    view = _view(ws)
     await view.build_all_tabs()
     rows = view.query_one("#pos-ship-list", scr.SelectableList)
     rows.select_data_index(0)
@@ -3242,22 +3351,24 @@ async def _open_ship(ws, which: str) -> None:
         ws.action_ship_combat()
 
 
-def _open_settle_land(ws) -> None:
+def _open_settle_land(ws: WorkspaceScreen) -> None:
     """Settle the New Land on a finished 3-mile island (its four Rituals
     cast by Leandro; added in memory, saved only with the form)."""
-    covenant = ws.selected_covenant
+    covenant = _covenant(ws)
     if not covenant.land_projects:
         covenant.land_projects.append(LandProject("isle", "Insula"))
-        magus = ws.saga.character("mag1")
+        magus = _leandro(ws)
         magus.progress.append(Progress("land_shaping", "Insula", 4, 4))
     ws._run_steps(land_forms.settle_form(ws.saga, covenant, covenant.land_projects[0]))
 
 
-async def _open_library(ws, open_editor, list_id: str = "") -> None:
+async def _open_library(
+    ws: WorkspaceScreen, open_editor: OpenFrom, list_id: str = ""
+) -> None:
     """A form of the Rhine's Great Library tab: Leandro holds two seasons of
     credit there and has sought a Vim tractatus (in memory, saved only with
     the form); the row of `list_id` is chosen first."""
-    tribunal = ws.saga.tribunal("rhine")
+    tribunal = present(ws.saga.tribunal("rhine"))
     data = tribunal.package_data.setdefault("rhine", {})
     if not data.get("library_credit"):
         data["library_credit"] = [
@@ -3288,7 +3399,7 @@ async def _open_library(ws, open_editor, list_id: str = "") -> None:
                 "credit_taken": False,
             }
         ]
-    view = ws._current_sheet_view()
+    view = _view(ws)
     await view.build_all_tabs()
     if list_id:
         rows = view.query_one(f"#{list_id}", scr.SelectableList)
@@ -3297,16 +3408,16 @@ async def _open_library(ws, open_editor, list_id: str = "") -> None:
     open_editor(ws)
 
 
-async def _open_church(ws, which: str) -> None:
+async def _open_church(ws: WorkspaceScreen, which: str) -> None:
     """A form of Leandro's Church tab: he is made an exorcist of Konstanz
     (in memory, saved only with the form) and shown again, so the sheet
     has the tab, built."""
-    character = ws.selected_character
+    character = _character(ws)
     if not character.church.grade:
         character.church.grade = "Exorcist"
         character.church.diocese = "Konstanz"
         await ws._show_character_detail(character)
-    view = ws._current_sheet_view()
+    view = _view(ws)
     await view.build_all_tabs()
     if which == "exorcism":
         ws._run_more("perform_exorcism")
@@ -3321,7 +3432,7 @@ async def _open_church(ws, which: str) -> None:
     ws._core_verb(section, verb)
 
 
-def _with_cult(ws) -> None:
+def _with_cult(ws: WorkspaceScreen) -> None:
     """The Spinner's Thread, the saga's own cult (once, however often the
     form is opened): its first degree's Script is +10; the first character
     has its Lore 5 and the Virtue."""
@@ -3355,10 +3466,12 @@ def _with_cult(ws) -> None:
     catalog.use_saga(saga)
 
 
-async def _open_cults(ws, list_id: str | None, section: str, verb: str) -> None:
+async def _open_cults(
+    ws: WorkspaceScreen, list_id: str | None, section: str, verb: str
+) -> None:
     """A verb on Saga Content's Mystery Cults tab (an empty saga for Add
     Mystery Cult), on the first row of `list_id` when given."""
-    view = ws._current_sheet_view()
+    view = _view(ws)
     if section != "section-content-cults":
         _with_cult(ws)
     await view.build_all_tabs()
@@ -3377,11 +3490,11 @@ async def _open_cults(ws, list_id: str | None, section: str, verb: str) -> None:
     ws._core_verb(section, verb)
 
 
-async def _open_tower(ws, open_form) -> None:
+async def _open_tower(ws: WorkspaceScreen, open_form: Callable[[], object]) -> None:
     """A form of the covenant's Projects tab: the Schattenbach Spire, its
     two rituals (one shoddy) and a craft device, added in memory (saved
     only with the form); the sheet is shown again with its Projects tab."""
-    covenant = ws.selected_covenant
+    covenant = _covenant(ws)
     if not covenant.hermetic_projects:
         covenant.hermetic_projects.append(
             HermeticProject(
@@ -3406,27 +3519,27 @@ async def _open_tower(ws, open_form) -> None:
             )
         )
         await ws._show_covenant_detail(covenant)
-        await ws._current_sheet_view().build_all_tabs()
+        await _view(ws).build_all_tabs()
     open_form()
 
 
-def _open_tunnel(ws) -> None:
+def _open_tunnel(ws: WorkspaceScreen) -> None:
     """Open a Tunnel for Leandro, who knows The Cursed Day (added in
     memory, saved only with the form)."""
-    magus = ws.selected_character
+    magus = _character(ws)
     if not any(k.spell_id == "spell_the_curs_d_day" for k in magus.spells_known):
         magus.spells_known.append(KnownSpell("spell_the_curs_d_day"))
     ws._run_more("open_tunnel")
 
 
-def _open_temporary(ws) -> None:
+def _open_temporary(ws: WorkspaceScreen) -> None:
     """Gain or Lose in Play for Leandro, whose Virtue is marked temporary
     (in memory, saved only with the form)."""
-    ws.selected_character.virtues_flaws[0].temporary = True
+    _character(ws).virtues_flaws[0].temporary = True
     ws._run_more("change_virtues_flaws")
 
 
-async def _open_fleet(ws, open_editor) -> None:
+async def _open_fleet(ws: WorkspaceScreen, open_editor: OpenFrom) -> None:
     """A form on a battle at sea, chosen first: the covenant's Seehund and
     Möwe against two pirate ships (added in memory, saved only with the
     form)."""
@@ -3454,7 +3567,7 @@ async def _open_fleet(ws, open_editor) -> None:
                 ],
             ),
         )
-    view = ws._current_sheet_view()
+    view = _view(ws)
     await view.build_all_tabs()
     view.refresh_section("section-conflict-battles")
     rows = view.query_one("#conflict-battles-list", scr.SelectableList)
@@ -3463,12 +3576,14 @@ async def _open_fleet(ws, open_editor) -> None:
     open_editor(ws)
 
 
-async def _open_menagerie(ws, open_form, rows: str = "", row: int = 0) -> None:
+async def _open_menagerie(
+    ws: WorkspaceScreen, open_form: Callable[[], object], rows: str = "", row: int = 0
+) -> None:
     """A form of the covenant's Projects tab with the Spur Menagerie shown:
     Bock and Geiß (tamed Goats of Virtue), four wild Hares of Virtue, and
     a breeding of the goats; Alys its lead handler (added in memory, saved
     only with the form). `rows` names the list whose `row` is chosen."""
-    covenant = ws.selected_covenant
+    covenant = _covenant(ws)
     if not any(p.id == "spur" for p in covenant.hermetic_projects):
         covenant.hermetic_projects.insert(
             0,
@@ -3494,7 +3609,7 @@ async def _open_menagerie(ws, open_form, rows: str = "", row: int = 0) -> None:
         )
         covenant.project_shown = "spur"
         await ws._show_covenant_detail(covenant)
-    view = ws._current_sheet_view()
+    view = _view(ws)
     await view.build_all_tabs()
     if rows:
         found = view.query_one(f"#cov-menagerie-{rows}-list", scr.SelectableList)
@@ -3507,12 +3622,14 @@ CRIAMON_PATH = "section-char-criamon-path"
 STIGMATA = "section-char-stigmata"
 
 
-async def _open_criamon(ws, open_form, choose: bool = False) -> None:
+async def _open_criamon(
+    ws: WorkspaceScreen, open_form: Callable[[], object], choose: bool = False
+) -> None:
     """A form of Leandro's The Enigma tab: he is made a Criamon magus two
     stations along the Path of Seeming, with House Criamon Lore 4 and a
     stigma on his temples (in memory, saved only with the form), and shown
     again so the sheet has the tab; `choose` picks the stigma first."""
-    character = ws.selected_character
+    character = _character(ws)
     if character.hermetic.house != "house_criamon":
         character.hermetic.house = "house_criamon"
         for vf_id in (
@@ -3528,7 +3645,7 @@ async def _open_criamon(ws, open_form, choose: bool = False) -> None:
             Stigma("Temples", "Rings of open eyes", "riddle", year=1196)
         )
         await ws._show_character_detail(character)
-    view = ws._current_sheet_view()
+    view = _view(ws)
     await view.build_all_tabs()
     if choose:
         rows = view.query_one("#char-stigmata-list", scr.SelectableList)
@@ -3537,13 +3654,15 @@ async def _open_criamon(ws, open_form, choose: bool = False) -> None:
     open_form()
 
 
-async def _on_argument(ws, open_form, text: bool = False) -> None:
+async def _on_argument(
+    ws: WorkspaceScreen, open_form: OpenFrom, text: bool = False
+) -> None:
     """A form of the Rhine's Arguments tab, on an argument for its first
     case with a summa on Code of Hermes in the library to write it in (in
     memory, saved only with the form); `text` gives it its polemic, not
     yet circulated, chosen first."""
     saga = ws.saga
-    tribunal = saga.tribunal("rhine")
+    tribunal = present(saga.tribunal("rhine"))
     if not any(b.id == "b-polemic" for b in saga.books):
         saga.books.append(
             Book(
@@ -3566,7 +3685,7 @@ async def _on_argument(ws, open_form, text: bool = False) -> None:
         if text:
             argument.texts.append(PolemicText(book_id="b-polemic", author_id="mag1"))
         tribunal.arguments.append(argument)
-    view = ws._current_sheet_view()
+    view = _view(ws)
     await view.build_all_tabs()
     view.refresh_section("section-trib-arguments")
     if text:
@@ -3576,18 +3695,18 @@ async def _on_argument(ws, open_form, text: bool = False) -> None:
     open_form(ws)
 
 
-async def _on_charter_lord(ws, open_form) -> None:
+async def _on_charter_lord(ws: WorkspaceScreen, open_form: OpenFrom) -> None:
     """A Charter Strength command on Soest's charter, its lord the
     Archbishop of Cologne with his strength drafted at 0, the saga using
     the optional rule (in memory, saved only with the form)."""
     saga = ws.saga
     saga.rule_options["charter_strength"] = True
-    town = saga.neighbour("soest")
+    town = present(saga.neighbour("soest"))
     if not town.details.get("charter_lords"):
         town.details["charter_lords"] = [
             {"lord": "The Archbishop of Cologne", "superior_strength": 0}
         ]
-    view = ws._current_sheet_view()
+    view = _view(ws)
     await view.build_all_tabs()
     view.refresh_section("section-nb-charter-lords")
     rows = view.query_one("#nb-charter-lords-list", scr.SelectableList)
