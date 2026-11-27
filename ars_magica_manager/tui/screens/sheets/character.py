@@ -1321,7 +1321,7 @@ class CharacterSheetView(SheetView):
 
     def _ability_info_text(self, index: int | None) -> str:
         return st.ability_info_text(
-            self.character.abilities, index, self.character.virtues_flaws
+            self.character.abilities, index, self.character.virtues_flaws, READ_HINT
         )
 
     def _vf_rows(self, vf_type: str) -> list[tuple[int | None, str]]:

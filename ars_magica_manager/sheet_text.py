@@ -243,15 +243,24 @@ def ability_info_text(
     abilities: Sequence[Ability],
     index: int | None,
     virtues_flaws: Sequence[VirtueFlawInstance] = (),
+    read_hint: str | None = entry_reading.READ_HINT,
 ) -> str:
+    """The details panel for the Ability at `index`: its xp, what it
+    covers and what else bears on it. A long catalog entry
+    (entry_reading.is_long) shows its summary and `read_hint`, as Read in
+    full shows the rest; `read_hint` None: the whole text always, where
+    nothing offers Read in full (a creature's sheet)."""
     if index is None:
         return "[dim]Select an Ability to see its details.[/]"
     ability = abilities[index]
     definition = ability_definition(ability.name)
     if definition is None or not definition.description:
         description = "[dim](no catalog description)[/]"
+    elif read_hint is not None and entry_reading.is_long(definition.description):
+        shown = entry_reading.panel_text(definition.description, definition.summary)
+        description = f"{shown}\n\n{read_hint}"
     else:
-        description = escape(definition.description)
+        description = entry_reading.whole_text(definition.description)
     bonus, bonus_from = scores.ability_bonus(virtues_flaws, ability.name)
     parts = [xp_line(ability.progress, bonus, bonus_from), description]
     ease = senses.ease_text(ability.name)
@@ -265,11 +274,13 @@ def ability_info_text(
 
 def ability_entry_text(definition: AbilityDef) -> str:
     """A catalog Ability as the picker shows it under the list: its
-    category, what it needs naming, what it covers and its book."""
+    category, what it needs naming, what it covers (a long entry's
+    summary, entry_reading.short_view) and its book."""
     lines = [f"[b]Category:[/] {escape(definition.category)}"]
     if definition.parameters:
         lines.append(f"[b]Needs:[/] {escape(', '.join(definition.parameters))}")
-    lines += ["", escape(definition.description) or "[dim](no description)[/]"]
+    text = entry_reading.short_view(definition.description, definition.summary)
+    lines += ["", text or "[dim](no description)[/]"]
     lines += ["", f"[dim]Source: {escape(sourcebooks.titles(definition.source))}[/]"]
     return "\n".join(lines)
 

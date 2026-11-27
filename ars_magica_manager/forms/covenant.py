@@ -10,11 +10,14 @@ Diary in forms/diary.py.
 
 from __future__ import annotations
 
+from collections.abc import Callable
+from functools import partial
 from typing import Any
 
 from .. import (
     boon_hook_text,
     catalog,
+    entry_reading,
     mobile_covenants,
     places,
     sourcebooks,
@@ -38,6 +41,7 @@ from ..commands import (
 )
 from ..covenants import boon_hook_is_unknown
 from ..form_spec import EMPHASIS_HINT, DialogField, description_field, pairs
+from ..handout_layout import Reading
 from ..markup import escape
 from ..models import (
     BOON_HOOK_DESCRIPTION,
@@ -382,9 +386,47 @@ def boon_hook_choices(saga: Saga, covenant: Covenant, kind: str) -> list[Choice]
             e,
             boon_hook_text.boon_hook_entry_text(e, by_id),
             f"{e.name} {e.category} {e.tier} {e.description}",
+            read=boon_hook_read(e),
         )
         for e in entries
     ]
+
+
+def boon_hook_page(definition: CovenantBoonHookDef) -> Reading:
+    """The catalog Boon or Hook laid out to read in full (entry_reading):
+    the page a sheet's Read in full and a picker's both open."""
+    return entry_reading.reading(
+        definition.name,
+        f"{definition.tier} {definition.type}",
+        definition.category,
+        definition.summary,
+        definition.description,
+        definition.source,
+        entry_reading.READ_HELP,
+    )
+
+
+def boon_hook_read(definition: CovenantBoonHookDef) -> Callable[[], Reading] | None:
+    """A picker's Choice.read for the catalog Boon or Hook: its page, when
+    it is long (entry_reading.is_long); None for a short one."""
+    if not entry_reading.is_long(definition.description):
+        return None
+    return partial(boon_hook_page, definition)
+
+
+def long_boon_hook(covenant: object, index: int | None) -> CovenantBoonHookDef | None:
+    """The catalog entry of a covenant's Boon or Hook at `index` (into
+    covenant.boons_hooks, as the sheet's lists give their rows), when it
+    is long enough to read in full; None otherwise."""
+    if not isinstance(covenant, Covenant):
+        return None
+    if index is None or not 0 <= index < len(covenant.boons_hooks):
+        return None
+    by_id = catalog.load_covenant_boon_hook_catalog_by_id()
+    definition = by_id.get(covenant.boons_hooks[index].vf_id)
+    if definition is None or not entry_reading.is_long(definition.description):
+        return None
+    return definition
 
 
 def add_boon_hook(saga: Saga, covenant: Covenant, kind: str) -> Choose:

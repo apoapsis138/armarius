@@ -10,7 +10,7 @@ from support import wait_until
 from textual.app import App
 from textual.widgets import Input
 
-from ars_magica_manager import commands
+from ars_magica_manager import commands, entry_reading
 from ars_magica_manager.forms import virtue as virtue_forms
 from ars_magica_manager.models import Character, Saga
 from ars_magica_manager.tui.screens.handout_reading import HandoutReading
@@ -54,7 +54,7 @@ async def test_f4_reads_a_long_entry_and_esc_returns_to_the_picker() -> None:
     assert hint.rstrip().endswith("F4: Read in full shows all of it.")
     assert opened and isinstance(reading, HandoutReading)
     assert reading.laid.title == "Verditius Elder Runes"
-    assert reading.help_id == virtue_forms.READ_HELP
+    assert reading.help_id == entry_reading.READ_HELP
     assert back and kept == "Elder Runes"
 
 

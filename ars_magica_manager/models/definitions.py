@@ -323,6 +323,9 @@ class CovenantBoonHookDef:
     #: Inhabitants tab.
     governance: bool = False
     parameters: list[str] = field(default_factory=list)
+    #: A one-line paraphrase, shown in place of a long description
+    #: (entry_reading.is_long); "" for most entries, which are short.
+    summary: str = ""
 
     def __post_init__(self) -> None:
         _validate_vf_tier_cost(self.id, self.tier, self.cost)
@@ -425,6 +428,9 @@ class AbilityDef:
     #: hedge Art. Any other is usable at 0 with three extra botch dice
     #: (DE p. 157).
     needs_experience: bool = False
+    #: A one-line paraphrase, shown in place of a long description
+    #: (entry_reading.is_long); "" for most entries, which are short.
+    summary: str = ""
 
     def __post_init__(self) -> None:
         if self.category not in ABILITY_CATEGORIES:

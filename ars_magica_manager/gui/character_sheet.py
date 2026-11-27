@@ -53,6 +53,7 @@ from .. import (
     catalog,
     connections,
     deeds,
+    entry_reading,
     giving,
     marriages,
     picture_files,
@@ -90,11 +91,11 @@ from ..forms import menu as menu_forms
 from ..forms import menu_steps, player_handouts
 from ..forms import notes_goals as goal_forms
 from ..forms import power as power_forms
+from ..forms import read_in_full as read_forms
 from ..forms import religion as religion_forms
 from ..forms import reveal as reveal_forms
 from ..forms import season as season_forms
 from ..forms import secrets as secret_forms
-from ..forms import virtue as virtue_forms
 from ..forms import whereabouts as whereabouts_forms
 from ..forms import world as world_forms
 from ..markup import escape
@@ -104,7 +105,6 @@ from ..models import (
     Agent,
     Character,
     Characteristics,
-    Familiar,
     Saga,
     ScoredTrait,
     TraditionDef,
@@ -1248,20 +1248,13 @@ class CharacterSheet(QWidget):
         chooser = Chooser()
         ops = self._table()[section_verbs.ABILITIES_SECTION]
 
-        def show(index: object) -> None:
-            assert isinstance(index, int)
-            chooser.choose(index)
-            ability = c.abilities[index]
-            specialty = f"  ·  {ability.specialty}" if ability.specialty else ""
-            self.inspect(
-                ability.name,
-                f"{ability.category} Ability{specialty}",
-                st.ability_info_text(c.abilities, index, c.virtues_flaws),
-                ability_mark(ability.name, ability.category, p),
-            )
-
         rows = cs.abilities_chapter_table(c)
-        self.ability_table = ability_view(rows, p, show, memory=f"{c.id}:Abilities")
+        self.ability_table = ability_view(
+            rows,
+            p,
+            lambda index: self._show_ability(chooser, index),
+            memory=f"{c.id}:Abilities",
+        )
         return scrolling_page(
             p,
             section(
@@ -1276,6 +1269,8 @@ class CharacterSheet(QWidget):
         )
 
     def _show_ability(self, chooser: Chooser, index: object) -> None:
+        """The Ability at `index` in the inspector (the Abilities chapter's
+        or a tradition's), Read in full under a long one's summary."""
         assert isinstance(index, int)
         p, c = self.p, self.character
         chooser.choose(index)
@@ -1286,6 +1281,9 @@ class CharacterSheet(QWidget):
             f"{ability.category} Ability{specialty}",
             st.ability_info_text(c.abilities, index, c.virtues_flaws),
             ability_mark(ability.name, ability.category, p),
+            extra=read_in_full_button(
+                c, section_verbs.ABILITIES_SECTION, index, p, self.run
+            ),
         )
 
     def _tradition(self, tradition: TraditionDef) -> QWidget:
@@ -1477,7 +1475,10 @@ class CharacterSheet(QWidget):
                 card.name,
                 f"{card.tier}  ·  {card.category}",
                 st.vf_info_text(c.virtues_flaws, card.index),
-                extra=read_in_full_button(c, card.index, self.p, self.run),
+                # Either side's section reads its row alike.
+                extra=read_in_full_button(
+                    c, "section-vf-virtues", card.index, self.p, self.run
+                ),
             ),
         )
 
@@ -2343,20 +2344,22 @@ def ability_mark(name: str, category: str, p: Palette) -> QPixmap:
 
 
 def read_in_full_button(
-    owner: Character | Familiar,
+    record: object,
+    section: str,
     index: int,
     p: Palette,
     run: Callable[[Command], None],
 ) -> QPushButton | None:
-    """Read in full, under a long Virtue or Flaw's summary in the
-    inspector (the More registry's read_in_full, by the same core rule);
-    None for an entry short enough to show whole."""
-    if virtue_forms.long_entry(owner, index) is None:
+    """Read in full, under a long entry's summary in the inspector: the
+    row at `index` of `section` (a Virtue or Flaw, an Ability, a Boon or
+    Hook), by the More registry's read_in_full rule; None for an entry
+    short enough to show whole."""
+    if not read_forms.offered(record, section, index):
         return None
     return edit_button(
-        virtue_forms.READ_TITLE,
+        entry_reading.READ_TITLE,
         p,
-        lambda: run(virtue_forms.read_in_full(owner, index)),
+        lambda: run(read_forms.read_in_full(record, section, index)),
         "lab_text",
     )
 

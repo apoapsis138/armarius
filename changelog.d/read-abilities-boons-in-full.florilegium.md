@@ -1,0 +1,1 @@
+**Read long Abilities and Boons and Hooks in full.** Hex, Corpse Magic, Chase and the other long entries now show a short summary on the sheet and in the Add lists, and Read in full opens the whole of each, as for a long Virtue or Flaw.

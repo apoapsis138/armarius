@@ -14,7 +14,7 @@ import re
 from collections.abc import Iterator
 from pathlib import Path
 
-from ars_magica_manager import handout_markup
+from ars_magica_manager import entry_reading, handout_markup
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
@@ -22,8 +22,13 @@ STILL_LONG_FILE = Path(__file__).with_name("catalog_long_paragraphs.txt")
 
 #: A paragraph longer than this is hard to read in a details panel.
 PARAGRAPH_CAP = 750
-#: An entry whose description is longer than this is "long" and needs a summary.
-LONG_ENTRY = 750
+#: The catalogs whose long entries (entry_reading.is_long) show a summary
+#: and Read in full, so each long one needs a summary.
+READABLE = {
+    "virtue_flaw_catalog.json",
+    "ability_catalog.json",
+    "covenant_boon_hook_catalog.json",
+}
 
 #: A word the PDF split after its "fi" or "fl" ligature: "specifi c", "Fi rst".
 #: (A word in capitals, such as a book's abbreviation "LFI", is left alone.)
@@ -111,14 +116,27 @@ def test_no_stray_underscores():
     assert not found, "stray underscores from the PDF:\n" + "\n".join(found)
 
 
-def test_every_long_virtue_or_flaw_has_a_summary():
+def _readable() -> Iterator[tuple[str, str, dict[str, object]]]:
+    """Every entry of the catalogs that offer Read in full on a long entry:
+    Virtues and Flaws, Abilities, and Boons and Hooks."""
+    for name, entry_id, entry in _entries():
+        if name in READABLE:
+            yield name, entry_id, entry
+
+
+def test_every_long_entry_has_a_summary():
     missing = [
-        entry_id
-        for entry_id, entry in _virtues_and_flaws()
-        if len(str(entry.get("description") or "")) > LONG_ENTRY
+        f"{name} {entry_id}"
+        for name, entry_id, entry in _readable()
+        if entry_reading.is_long(str(entry.get("description") or ""))
         and not str(entry.get("summary") or "").strip()
     ]
     assert not missing, "long entries with no summary:\n" + "\n".join(missing)
+
+
+def test_the_summary_rule_covers_every_readable_catalog():
+    names = {name for name, _id, _entry in _readable()}
+    assert names == READABLE
 
 
 def test_no_new_over_long_paragraph():
@@ -141,13 +159,13 @@ def test_no_new_over_long_paragraph():
     )
 
 
-def test_every_virtue_or_flaw_reads_as_blocks():
+def test_every_readable_entry_reads_as_blocks():
     """Read in full lays each description out through the Handout parser:
     every one gives at least one block, and none is read as a tag (a pipe
     table is a table)."""
     read_as = {handout_markup.TEXT, handout_markup.TABLE}
     empty = []
-    for entry_id, entry in _virtues_and_flaws():
+    for _name, entry_id, entry in _readable():
         text = str(entry.get("description") or "")
         found = handout_markup.blocks(text, tables=True)
         if text.strip() and not found:

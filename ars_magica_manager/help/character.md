@@ -2376,6 +2376,16 @@ description under the list.
 new Ability from the catalog; the list shows the chosen Ability's
 description beside it.
 <!-- /gui -->
+A long Ability, such as Hex or Corpse Magic, shows its summary instead,
+and [Read in full](help:read-in-full) opens the whole of it.
+<!-- tui -->
+Press `m` for More and choose **Read in full**, or click the link at the
+foot of its details; in the Add list, press `F4`.
+<!-- /tui -->
+<!-- gui -->
+Click **Read in full** under its summary in the inspector, or under the
+preview in the Add list.
+<!-- /gui -->
 **Divination** (Supernatural) is given at 1 by Divination & Augury or Hermetic Dream Interpreter. A magus with either may buy it at creation (The Mysteries Revised Edition pp. 59, 62).
 
 Abilities from supplements are listed only while their book is in play, such as the Divine's Holy Powers and Methods, Mythic Herbalism or Mechanica of Heron. **Hedge Art** is the category for a hedge tradition's Arts, such as the learned elementalists' Elementalist Fire. Like a Supernatural Ability, one is learned through the Virtue that grants it.
@@ -2984,16 +2994,16 @@ as Poor Perception to Poor Dexterity.
 ### Read in full
 <!-- help: read-in-full -->
 
-A long Virtue or Flaw, one whose text runs past 750 characters, shows only its summary beside the list and in the Add list. Read in full opens the whole entry to read: its name, its tier and type, its category, the summary, then all of its text, with its source at the foot. It changes nothing, and a player at a Remote seat can read it too.
+A long Virtue or Flaw, Ability, or covenant Boon or Hook, one whose text runs past 750 characters, shows only its summary beside the list and in the Add list. Read in full opens the whole entry to read: its name, its tier and type, its category, the summary, then all of its text, with its source at the foot. It changes nothing, and a player at a Remote seat can read it too.
 <!-- tui -->
-Choose the Virtue or Flaw, then press `m` for More and choose **Read in full**, or click **Read in full** at the foot of its details. It opens on a page of its own that scrolls; `Esc` closes it.
+Choose the entry, then press `m` for More and choose **Read in full**, or click **Read in full** at the foot of its details. It opens on a page of its own that scrolls; `Esc` closes it.
 
-In the Add Virtue or Flaw list, highlight a long entry and press `F4`. `Esc` takes you back to the list, your search as you left it.
+In the Add Virtue or Flaw, Add Ability or Add Boon or Hook list, highlight a long entry and press `F4`. `Esc` takes you back to the list, your search as you left it.
 <!-- /tui -->
 <!-- gui -->
-Choose the Virtue or Flaw's card, then click **Read in full** under its summary in the inspector. It opens on vellum in a window of its own, as a Handout does; **Close** closes it.
+Choose the entry's card or row, then click **Read in full** under its summary in the inspector. It opens on vellum in a window of its own, as a Handout does; **Close** closes it.
 
-In the Add Virtue or Flaw list, highlight a long entry and click **Read in full** under its preview. **Close** takes you back to the list, your search as you left it.
+In the Add Virtue or Flaw, Add Ability or Add Boon or Hook list, highlight a long entry and click **Read in full** under its preview. **Close** takes you back to the list, your search as you left it.
 <!-- /gui -->
 
 A Virtue or Flaw's text can have paragraphs (a blank line between them), \*\*bold\*\* and \*italic\*, lists (lines starting `- `) and tables, as a House Rules entry's can. A table is drawn only on the Read in full page, so an entry with one always opens there, however short it is. Write it with bars between its cells and a rule of dashes under its header:

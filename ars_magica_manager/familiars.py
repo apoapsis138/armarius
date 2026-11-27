@@ -214,8 +214,14 @@ def ability_rows(familiar: Familiar) -> list[tuple[int | None, str]]:
     return st.ability_rows(familiar.abilities, familiar.virtues_flaws)
 
 
-def ability_info_text(familiar: Familiar, index: int | None) -> str:
-    return st.ability_info_text(familiar.abilities, index, familiar.virtues_flaws)
+def ability_info_text(
+    familiar: Familiar,
+    index: int | None,
+    read_hint: str | None = entry_reading.READ_HINT,
+) -> str:
+    return st.ability_info_text(
+        familiar.abilities, index, familiar.virtues_flaws, read_hint
+    )
 
 
 def bond_power_rows(familiar: Familiar) -> list[tuple[int, str]]:

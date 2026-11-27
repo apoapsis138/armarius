@@ -467,21 +467,17 @@ def side_indices(owner: Owner, side: str | None) -> list[int]:
     return found
 
 
-#: Read in full's title, its help page, and what it says with no long
-#: entry chosen.
-READ_TITLE = "Read in full"
-READ_HELP = "read-in-full"
-READ_REFUSED = "Choose a long Virtue or Flaw in its list first."
-
 #: The Virtues and Flaws sections Read in full is offered in: a
 #: character's and a familiar's.
 READ_SECTIONS = frozenset({*CHARACTER_VF_SIDES, *FAMILIAR_VF_SIDES})
 
 
-def long_entry(owner: Character | Familiar, index: int | None) -> VirtueFlawDef | None:
-    """The catalog entry of the owner's Virtue or Flaw at `index` (into its
-    whole list, as a sheet's Virtues or Flaws list gives its rows), when it
-    is long enough to read in full; None otherwise."""
+def long_entry(owner: object, index: int | None) -> VirtueFlawDef | None:
+    """The catalog entry of a character's or familiar's Virtue or Flaw at
+    `index` (into its whole list, as a sheet's Virtues or Flaws list gives
+    its rows), when it is long enough to read in full; None otherwise."""
+    if not isinstance(owner, Character | Familiar):
+        return None
     if index is None or not 0 <= index < len(owner.virtues_flaws):
         return None
     by_id = catalog.load_virtue_flaw_catalog_by_id()
@@ -489,35 +485,6 @@ def long_entry(owner: Character | Familiar, index: int | None) -> VirtueFlawDef 
     if definition is None or not entry_reading.is_long(definition.description):
         return None
     return definition
-
-
-def offers_read_in_full(owner: object, section: str, index: int | None) -> bool:
-    """Whether Read in full is offered in `section` on its chosen row (the
-    Virtue or Flaw at `index`): a character's or familiar's Virtues and
-    Flaws, and a long entry. The one rule both front-ends ask."""
-    return (
-        section in READ_SECTIONS
-        and isinstance(owner, Character | Familiar)
-        and long_entry(owner, index) is not None
-    )
-
-
-def read_in_full(owner: Character | Familiar, index: int | None) -> Form | Refuse:
-    """Read in full, on the owner's Virtue or Flaw at `index`: its catalog
-    entry on a reading page, each front-end drawing it in place of fields
-    (entry_reading). Only a long entry is offered it; closing it changes
-    nothing."""
-    definition = long_entry(owner, index)
-    if definition is None:
-        return Refuse(READ_TITLE, READ_REFUSED)
-    return Form(
-        f"{READ_TITLE}: {escape(definition.name)}",
-        list,
-        lambda _values: None,
-        save_label="Close",
-        help_id=READ_HELP,
-        reading=entry_page(definition),
-    )
 
 
 def entry_page(definition: VirtueFlawDef) -> Reading:
@@ -530,7 +497,7 @@ def entry_page(definition: VirtueFlawDef) -> Reading:
         definition.summary,
         definition.description,
         definition.source,
-        READ_HELP,
+        entry_reading.READ_HELP,
     )
 
 

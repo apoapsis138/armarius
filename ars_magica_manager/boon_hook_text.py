@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 
-from . import catalog, sourcebooks
+from . import catalog, entry_reading, sourcebooks
 from . import covenant_diary as cov_diary
 from . import sheet_text as st
 from .covenants import (
@@ -99,11 +99,18 @@ def boon_hook_rows(covenant: Covenant, kind: str) -> list[tuple[int, str]]:
     ]
 
 
-def boon_hook_info_text(covenant: Covenant, index: int | None) -> str:
+def boon_hook_info_text(
+    covenant: Covenant,
+    index: int | None,
+    read_hint: str | None = entry_reading.READ_HINT,
+) -> str:
     """The details panel for the attached Boon/Hook at `index` into
     covenant.boons_hooks: its name, type, notes, the user's own
     description (if any), then the official rules text and the book it
-    comes from."""
+    comes from. A long entry (entry_reading.is_long) shows its summary
+    and `read_hint` in place of the rules text, as Read in full shows it;
+    `read_hint` None: the whole text always, where nothing offers Read in
+    full (the Creation Worksheet)."""
     if index is None:
         return "[dim]Select a Boon or Hook to see its details.[/]"
     by_id = catalog.load_covenant_boon_hook_catalog_by_id()
@@ -129,7 +136,12 @@ def boon_hook_info_text(covenant: Covenant, index: int | None) -> str:
     description = instance.params.get(BOON_HOOK_DESCRIPTION, "").strip()
     if description:
         lines += ["", "[b]Description:[/]", markdown_text(description)]
-    lines += ["", "[b]Rules:[/]", escape(definition.description)]
+    rules = definition.description
+    if read_hint is not None and entry_reading.is_long(rules):
+        shown = entry_reading.panel_text(rules, definition.summary)
+        lines += ["", "[b]Rules:[/]", shown, "", read_hint]
+    else:
+        lines += ["", "[b]Rules:[/]", entry_reading.whole_text(rules)]
     if definition.source:
         lines += ["", f"[dim]Source: {escape(definition.source)}[/]"]
     return "\n".join(lines)
@@ -164,7 +176,8 @@ def boon_hook_entry_text(
     definition: CovenantBoonHookDef, by_id: Mapping[str, CovenantBoonHookDef]
 ) -> str:
     """A catalog Boon or Hook as the picker shows it under the list: its
-    type, tier, rules and book."""
+    type, tier, rules (a long entry's summary, entry_reading.short_view)
+    and book."""
     lines = []
     if definition.category:
         lines.append(f"[b]Type:[/] {definition.category}")
@@ -172,6 +185,9 @@ def boon_hook_entry_text(
     if definition.unknown:
         lines.append("[dim]May be Unknown.[/]")
     lines += _boon_hook_rule_lines(definition, by_id)
-    lines += ["", escape(definition.description)]
+    lines += [
+        "",
+        entry_reading.short_view(definition.description, definition.summary),
+    ]
     lines += ["", f"[dim]Source: {escape(sourcebooks.titles(definition.source))}[/]"]
     return "\n".join(lines)

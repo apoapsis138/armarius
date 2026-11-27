@@ -100,6 +100,7 @@ from .character_sheet import (
     columns_text,
     connections_section,
     device_section,
+    read_in_full_button,
     relations,
     secrets_chapter,
     section,
@@ -324,9 +325,14 @@ class CovenantPage(QWidget):
         return self.codex.chapters()
 
     def inspect(
-        self, title: str, subtitle: str, markup: str, symbol: Symbol | None = None
+        self,
+        title: str,
+        subtitle: str,
+        markup: str,
+        symbol: Symbol | None = None,
+        extra: QWidget | None = None,
     ) -> None:
-        self.codex.inspect(title, subtitle, markup, symbol)
+        self.codex.inspect(title, subtitle, markup, symbol, extra=extra)
 
     def _table(self, covenant: Covenant) -> dict[str, SectionOps]:
         """The core's Add, Edit and Delete for each of the covenant sheet's
@@ -672,6 +678,10 @@ class CovenantPage(QWidget):
             card.name,
             f"{card.tier}  ·  {card.category}" if card.category else card.tier,
             boon_hook_text.boon_hook_info_text(covenant, card.index),
+            # Boons and Hooks read their row (an index into all of them) alike.
+            extra=read_in_full_button(
+                covenant, section_verbs.BOONS_SECTION, card.index, p, self.run
+            ),
         )
         return frame
 

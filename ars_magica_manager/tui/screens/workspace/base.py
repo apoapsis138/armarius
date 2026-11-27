@@ -39,6 +39,7 @@ from .... import (
     catalog,
     creatures,
     deeds,
+    entry_reading,
     giving,
     help_text,
     hosting,
@@ -71,7 +72,6 @@ from ....forms import menu as menu_forms
 from ....forms import menu_refresh, menu_steps, more
 from ....forms import neighbour as neighbour_forms
 from ....forms import page as page_forms
-from ....forms import virtue as virtue_forms
 from ....forms.more import MORE_MENU, NEW_MENU
 from ....markup import escape
 from ....models import (
@@ -1010,8 +1010,8 @@ class WorkspaceBase(Screen[None]):
             self._run_more("read_in_full")
         else:
             self.notify(
-                virtue_forms.READ_REFUSED,
-                title=virtue_forms.READ_TITLE,
+                entry_reading.READ_REFUSED,
+                title=entry_reading.READ_TITLE,
                 severity="warning",
             )
 
