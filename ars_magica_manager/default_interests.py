@@ -93,7 +93,8 @@ def rule(fn: Rule) -> Rule:
 
 
 #: What each type of character takes up, and how its reason names it. An
-#: animal grog is a grog with an animal form, looked up as ANIMAL_GROG.
+#: animal grog is a grog with an animal form, looked up as ANIMAL_GROG;
+#: any other type with an animal form keeps its own type's.
 ANIMAL_GROG = "animal grog"
 BY_TYPE: dict[str, tuple[str, tuple[str, ...]]] = {
     "magus": ("a magus", (RESEARCH, TRIBUNAL)),
@@ -107,7 +108,9 @@ BY_TYPE: dict[str, tuple[str, tuple[str, ...]]] = {
 @rule
 def by_type(character: Character) -> list[Reason]:
     """The interests its type takes up."""
-    kind = ANIMAL_GROG if character.animal is not None else character.type
+    kind = character.type
+    if kind == "grog" and character.animal is not None:
+        kind = ANIMAL_GROG
     why, interests = BY_TYPE.get(kind, ("", ()))
     return [(interest, why) for interest in interests]
 

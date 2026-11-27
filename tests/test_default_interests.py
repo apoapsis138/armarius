@@ -47,6 +47,11 @@ def _new(character_type: CharacterType, *, animal: bool = False) -> Character:
         ("mythic companion", False, {deeds.RELIGION}),
         ("grog", False, {deeds.COVENFOLK, deeds.CRAFT}),
         ("grog", True, {deeds.COVENFOLK}),
+        # Only a grog with an animal form is an animal grog; anyone else
+        # with one keeps the defaults of its type.
+        ("magus", True, {deeds.RESEARCH, deeds.TRIBUNAL}),
+        ("companion", True, {deeds.RELIGION}),
+        ("mythic companion", True, {deeds.RELIGION}),
     ],
 )
 def test_each_type_starts_with_its_own_interests_and_the_session(
@@ -317,6 +322,20 @@ def test_a_sketch_covenants_new_magus_starts_with_the_magus_defaults():
     assert magus.interests_chosen and _on(magus) == ON["magus"]
 
 
+def test_a_sketch_covenants_new_magus_starts_with_its_houses_defaults():
+    saga = Saga(id="s", name="S")
+    covenant = creation.add_covenant(saga, "Fengheld")
+    add = world_forms.magus_ops(saga, covenant).add
+    assert add is not None
+    form = add()
+    assert isinstance(form, Form)
+    values = {f.key: f.value for f in form.fields()}
+    form.apply(values | {"name": "Ysolde", "house": "house_merinita"})
+    (magus,) = saga.characters
+    assert magus.interests_chosen
+    assert {deeds.MYSTERY_CULTS, deeds.FAERIE} <= set(_on(magus))
+
+
 def test_a_house_change_in_creation_moves_the_interests_until_chosen():
     magus = _unchosen("magus")
     magus.hermetic.house = "house_flambeau"
@@ -449,6 +468,16 @@ def test_a_type_change_in_creation_hands_the_interests_back_to_the_defaults():
     assert made.interests_chosen
     _edit_info(saga, made, type="companion")
     assert not made.interests_chosen and _on(made) == ON["companion"]
+
+
+@pytest.mark.parametrize("character_type", ["companion", "mythic companion"])
+def test_an_animal_grog_made_a_companion_takes_up_the_companion_defaults(
+    character_type: CharacterType,
+):
+    hound = _made_from(catalog.load_animal_template_catalog()[0])
+    assert hound.animal is not None and _on(hound) == [deeds.COVENFOLK]
+    _edit_info(Saga(id="s", name="S"), hound, type=character_type)
+    assert hound.animal is not None and _on(hound) == ON[character_type]
 
 
 def test_a_type_change_in_play_keeps_the_interests():
