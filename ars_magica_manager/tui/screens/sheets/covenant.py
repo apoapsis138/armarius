@@ -86,7 +86,7 @@ from ..widgets import (
     fact_markup,
     marked_title,
 )
-from .base import SheetView
+from .base import READ_HINT, SheetView
 from .kind_tabs import KindTabsView
 
 
@@ -1178,4 +1178,4 @@ class CovenantSheetView(KindTabsView):
         return boon_hook_rows(self.covenant, kind)
 
     def _bh_info_text(self, index: int | None) -> str:
-        return boon_hook_info_text(self.covenant, index)
+        return boon_hook_info_text(self.covenant, index, READ_HINT)

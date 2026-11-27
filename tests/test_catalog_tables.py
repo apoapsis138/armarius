@@ -12,7 +12,7 @@ from textual.app import App
 from ars_magica_manager import catalog, entry_reading, handout_layout
 from ars_magica_manager import handout_markup as hm
 from ars_magica_manager.commands import Form
-from ars_magica_manager.forms import virtue as virtue_forms
+from ars_magica_manager.forms import read_in_full as read_forms
 from ars_magica_manager.markup import plain
 from ars_magica_manager.models import Character, VirtueFlawInstance
 from ars_magica_manager.tui.screens.handout_reading import table
@@ -50,7 +50,7 @@ async def test_read_in_full_draws_elder_runes_table_in_the_terminal() -> None:
         type="magus",
         virtues_flaws=[VirtueFlawInstance(vf_id="vf_verditius_elder_runes")],
     )
-    form = virtue_forms.read_in_full(magus, 0)
+    form = read_forms.read_in_full(magus, "section-vf-virtues", 0)
     assert isinstance(form, Form) and form.reading is not None
     app: App[Any] = App()
     async with app.run_test(size=(120, 45)) as pilot:

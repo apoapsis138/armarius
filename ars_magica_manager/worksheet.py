@@ -1813,7 +1813,8 @@ def _boons_hooks_rows(saga: Saga, record: Record) -> list[Row]:
             name = catalog.describe_boon_hook(bh, by_id)
             label = f"{pad(name, BH_NAME)}{points:>7g}"
             note = ""
-            details = boon_hook_info_text(covenant, index)
+            # The worksheet offers no Read in full: the whole text.
+            details = boon_hook_info_text(covenant, index, None)
             if bh.vf_id in cov_rules.RESOURCE_HOOKS:
                 source = cov_rules.linked_source(covenant, bh)
                 if source is None:

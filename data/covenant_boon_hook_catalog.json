@@ -695,6 +695,7 @@
     "modifiers": [],
     "unknown": false,
     "source": "Covenants",
+    "summary": "The covenant's land is embodied in a self-aware, friendly being, such as a faerie noble, that senses harm done to the territory and can warn the magi.",
     "description": "The covenant lies in a symbolically embodied place. It is incarnate in a self-aware, friendly figure. For example, there are several Merinita covenants that are ruled, in a mystical sense, by a faerie noble who is aware of disturbances to the natural order of the territory. Most such nobles sense these disturbances through sympathetic pains that they feel, which they have learned to interpret in order to identify damage of certain types, and in particular locations, but some can see from the eyes of the animals in the aura, feel what the grass feels, or have similar exotic senses. For example, a sea mist haunts a spring covenant off the coast. It is able to communicate by constructing pale images, which alert the magi to potential problems. Some covenfolk claim that, recently, the sea mist's shadow has taken human shape. Some suggest the mist is the ghost of a drowned girl — a bride of the Selkie king."
   },
   {
@@ -769,6 +770,7 @@
     "modifiers": [],
     "unknown": false,
     "source": "Covenants",
+    "summary": "Time at the site, usually a regio, runs slower or faster than in the rest of Mythic Europe, so its people live longer or study faster as outsiders see it; its vis sources usually refresh in mundane time.",
     "description": "The covenant resides in a place, usually a regio, where time does not run at the rate usual to Mythic Europe. Dilated time allows the magi to live for longer periods, from the perspective of outsiders, but they develop only slowly compared to those living at the standard rate. Contracted time, on the other hand, allows the members of the covenant to study faster, and develop their covenant more swiftly, than the rest of Mythic Europe, although to outsiders they appear to age rapidly. In some regiones, the time difference is unnoticed until the visitor leaves, when age fades from them, or comes crushing down. In others, they age in local time.\n\nVis sources within the regio usually refresh in mundane time. A handful of mildly time-contracted regiones have sources that replenish in local time. This is paid for separately in covenant creation, by paying for the vis that the source yields in a mundane year rather than a local year. The Redcaps have been searching avidly for quick regiones that replenish in local time, but have never confirmed their existence."
   },
   {
@@ -1216,6 +1218,7 @@
     "modifiers": [],
     "unknown": true,
     "source": "Covenants",
+    "summary": "Something at the site, such as a swamp's miasma, gives everyone regularly exposed -1 on Aging rolls, though not those with Hermetic longevity enchantments; up to three times, and magic or labor may cure it.",
     "description": "The covenant's members suffer a dramatically reduced lifespan due to an environmental factor at the covenant's site. All people regularly exposed to the environmental factor suffer a –1 penalty to their Aging rolls. This Hook may be taken up to three times, but does not affect those who have Hermetic longevity enchantments.\n\nThis condition is a Hook because these environmental problems are often reparable with magic or labor. For example, a covenant where people suffer the miasmatic effects of a nearby swamp can ameliorate this effect in several ways. Cutting channels to a nearby river, or a magical effect, could drain the swamp. The miasma might be destroyed with magic. It might be rendered ineffective by planting of an orchard of sweetly flowering trees as a defensive perimeter. Deeply noxious environmental conditions might have mystical defenders, like bog trolls, which would have to be dealt with before the Hook itself could be eliminated.\n\nThis Boon may be Unknown, but becomes known as an increasing number of covenfolk feel its effects."
   },
   {
@@ -1287,6 +1290,7 @@
     "modifiers": [],
     "unknown": false,
     "source": "Covenants",
+    "summary": "A stone house and wooden outbuildings in a bailey behind a shallow ditch and a low wall: proof against predators and brigands, not soldiers or magic, and not a castle, so it alarms no nobles.",
     "description": "This style of home often used by a particularly rich farmer, or minor landholder. It is comprised of a large, stone building, often two stories tall, and minor outbuildings, which are wooden an indefensible. A manor house is surrounded by a secure space, called a bailey, defended by a shallow ditch and a thin stone wall about six feet high, without a walkway along its top. Some poorer nobles have wooden manor houses, or wooden bailey walls, but Hermetic magi rarely build in wood.\n\nA manor house defends its inhabitants from predators and brigands, but cannot hold against a group of professional soldiers or magical assault. It lacks the space to act as a defensible staging area for knights. Possession of a manor house does not alarm nearby nobility, and a manor house is not a castle"
   },
   {
@@ -1418,6 +1422,7 @@
     "modifiers": [],
     "unknown": false,
     "source": "Covenants",
+    "summary": "Gate works (walls, portcullises, drawbridges, murder holes) and a moat at least twenty feet wide against mining; free with Curtain Walls and Mural Towers, otherwise bought as Edifices and Important Buildings.",
     "description": "A barbican, for game purposes, is a series of works that limit access to the gatehouse by an invader, including walls and yards that channel invaders into a narrow space overlooked by archers. It includes barriers like portcullises, drawbridges and fall-away causeways. It also includes murder holes, pit traps, and whatever other fiendish devices the magi can come up with to kill invaders. A covenant with the Curtain Walls and Mural Towers Boon may take as many of these devices as they like. Standard Castles (that is, those without the Curtain Walls and Mural Towers Boon) may take barbicans as Edifices.\n\nA moat is a body of water at least twenty feet wide and six feet deep that surrounds the covenant. The key function of a moat is to prevent enemies from mining under the covenant's walls. The walls can rise either directly from the moat, or from a berm, a small circuit of land that separates the moat and the castle. If the moat flows swiftly from a natural body of water, like a stream or lake, then its water is fresh. Otherwise, a moat is a stagnant ditch that is probably an open sewer. Many castles do not have moats, and instead use ditches. A covenant with the Curtain Walls and Mural Towers Boon may have a moat without additional cost. Other covenants may buy moats as Important Buildings.\n\nMoat monsters should be purchased with the Local Ally Minor Boon."
   },
   {
@@ -1466,6 +1471,7 @@
     ],
     "unknown": false,
     "source": "Covenants",
+    "summary": "A mundane castle so far beyond its age, such as one with concentric walls, that it seems magical; neighbors fear and envy it, and building one without royal leave defies the king.",
     "description": "This Boon is used for castles that are not magical but appear to be, because they exceed all mundane expectation of what is possible or affordable. Players, for example, may wish their covenant to have concentric layers of defensive walls. This style of castle does not exist in 1220, although its forebears, like the walls of Constantinople and Krak de Chevaliers, certainly do, and a creative maga might extend the concepts they express in the defense of her own home.\n\nThese sites appear all but unnatural to surrounding noblemen, and evoke fear, distrust, and envy. They assure the viewer that the lords of the castle expect war with forces of such power that only a king could rally them. They also express the capacity to pour out wealth as if it were of no consequence. Just as no nobleman may ignore a nearby castle, no king may ignore a concentric castle in private hands. To build such a place, without permission, is a declaration of independence that assails the legitimacy of the monarch."
   },
   {
@@ -2332,6 +2338,7 @@
     "modifiers": [],
     "unknown": false,
     "source": "Covenants",
+    "summary": "The covenfolk split into rival factions, each with its own Prevailing Loyalty; points one faction gains cost the others half as many, and a gap of 3 or more brings a story.",
     "description": "The covenant is divided into factions, and the Prevailing Loyalty is calculated separately for each faction. These factions may be professional, political, or personal, but they are in competition with each other. Actions that affect the loyalty points (see Chapter 3: Governance) of the covenant as a whole affect all factions. Actions which benefit the loyalty of one faction over the others will cause a decrease in loyalty of the other factions equal to one half of the loyalty points gained. If the gap in Prevailing Loyalty between factions ever reaches 3 or more points, then a story results based on the tensions between the factions. This Hook is compatible with other Residents Boons and Hooks that affect loyalty; work out the total loyalty points, then divide them between the factions — but not necessarily equally."
   },
   {
@@ -2604,6 +2611,7 @@
     "modifiers": [],
     "unknown": false,
     "source": "Covenants",
+    "summary": "The aura marks children born at the covenant: every birth twins, children very rare, or children with odd flaws, skills or inhuman traits, usually on one theme.",
     "description": "Something about the covenant's aura is affecting the next generation of covenfolk. In some covenants, the Hook is that every child born is a twin. Many women die in labor, the covenant's population booms, and stories involving mistaken identity are common. As the population increases, the covenant needs to expand, possibly to the detriment of its neighbors. In other covenants children are very rare, which leads to folk and faerie remedies for bringing about pregnancy, the nurturing of children communally, and the constant need for immigrants. In some covenants, the children have odd flaws or skills, or are not human at all. This warping usually follows a single theme. In one Alpine covenant, for example, all people born are suited to temperatures far below the human norm."
   },
   {
@@ -3301,6 +3309,7 @@
     "modifiers": [],
     "unknown": false,
     "source": "Covenants",
+    "summary": "A tamed royal or noble forest granted to the covenant for hunting, kept free of predators by gamekeepers; its servants gather firewood and forage there, and criminals hide in it.",
     "description": "A chase is an area of royal forest, or other forest that once belonged to a major nobleman, that has been granted to the covenant for its use. The intended function of the chase is the breeding and capture of game animals, like deer, and the chase probably includes hides and runs, to aid in hunting. The covenant, in turn, usually allows its servants use of the chase. Poaching is typically forbidden, as is tree felling, but the magi may vary this as suits them, to reward exceptional service. Most peasants collect firewood in the chase, harvest wild nuts and berries, and run small groups of pigs.\n\nThe chase is a thoroughly domesticated piece of woodland. It usually lacks large predators, like wolves, but the covenant employs gamekeepers to ensure that new marauders do not migrate into the chase. Gamekeepers may live in the chase, with their families. Chases also attract criminals as hiding places."
   },
   {

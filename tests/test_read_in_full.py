@@ -26,7 +26,7 @@ from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import handouts as handout_forms
 from ars_magica_manager.forms import menu as menu_forms
 from ars_magica_manager.forms import more
-from ars_magica_manager.forms import virtue as virtue_forms
+from ars_magica_manager.forms import read_in_full as read_forms
 from ars_magica_manager.forms.handouts import HANDOUTS_HELP
 from ars_magica_manager.forms.page import Page
 from ars_magica_manager.markup import plain
@@ -48,6 +48,7 @@ LONG_VF = "vf_verditius_elder_runes"
 SHORT_VF = "vf_ablating"
 SHORT_FLAW = "vf_afflicted_tongue"
 LONG_FLAW = "vf_abandoned_apprentice"
+VIRTUES = "section-vf-virtues"
 
 
 def _details(vf_id: str, hint: str = entry_reading.READ_HINT) -> str:
@@ -90,20 +91,20 @@ def test_read_in_full_opens_the_chosen_long_virtue_on_a_reading_page() -> None:
     entry = catalog.load_virtue_flaw_catalog_by_id()[LONG_VF]
     magus = _magus(SHORT_VF, LONG_VF)
 
-    form = virtue_forms.read_in_full(magus, 1)
+    form = read_forms.read_in_full(magus, VIRTUES, 1)
 
     assert isinstance(form, Form) and form.reading is not None
     assert form.reading.laid.title == entry.name
     assert form.save_label == "Close" and form.fields() == []
-    assert form.help_id == virtue_forms.READ_HELP
+    assert form.help_id == entry_reading.READ_HELP
 
 
 def test_read_in_full_refuses_a_short_entry_or_no_row() -> None:
     magus = _magus(SHORT_VF, LONG_VF)
 
-    assert isinstance(virtue_forms.read_in_full(magus, 0), Refuse)
-    assert isinstance(virtue_forms.read_in_full(magus, None), Refuse)
-    assert isinstance(virtue_forms.read_in_full(magus, 2), Refuse)
+    assert isinstance(read_forms.read_in_full(magus, VIRTUES, 0), Refuse)
+    assert isinstance(read_forms.read_in_full(magus, VIRTUES, None), Refuse)
+    assert isinstance(read_forms.read_in_full(magus, VIRTUES, 2), Refuse)
 
 
 #: Flaws and Virtues taken in mixed order: a sheet's list gives each row as
@@ -165,7 +166,7 @@ def test_a_player_or_a_seat_may_read_in_full() -> None:
 
 
 async def test_the_terminal_reads_the_entry_full_screen_with_its_own_help() -> None:
-    form = virtue_forms.read_in_full(_magus(LONG_VF), 0)
+    form = read_forms.read_in_full(_magus(LONG_VF), VIRTUES, 0)
     app: App[Any] = App()
     async with app.run_test(size=(120, 45)) as pilot:
         run_steps(app, form, lambda _e: None)
@@ -180,7 +181,7 @@ async def test_the_terminal_reads_the_entry_full_screen_with_its_own_help() -> N
 
     assert read[0] == "— Minor Virtue —"
     assert "Verditius Elder Runes" in read
-    assert help_id == virtue_forms.READ_HELP
+    assert help_id == entry_reading.READ_HELP
     assert closed
 
 

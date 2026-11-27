@@ -269,11 +269,11 @@ class FamiliarPage(QWidget):
                     card,
                     p[tone],
                     p,
-                    lambda card=card: self.inspect(
+                    lambda card=card, where=section_of_side[side]: self.inspect(
                         card.name,
                         f"{card.tier}  ·  {card.category}",
                         fam.vf_info_text(f, card.index),
-                        extra=read_in_full_button(f, card.index, p, self.run),
+                        extra=read_in_full_button(f, where, card.index, p, self.run),
                     ),
                 )
                 for card in fs.vf_cards(f, side)
@@ -350,6 +350,9 @@ class FamiliarPage(QWidget):
                 f"{ability.category} Ability{specialty}",
                 st.ability_info_text(f.abilities, index, f.virtues_flaws),
                 ability_mark(ability.name, ability.category, p),
+                extra=read_in_full_button(
+                    f, section_verbs.FAMILIAR_ABILITIES_SECTION, index, p, self.run
+                ),
             )
 
         self.ability_table = ability_view(fs.ability_table(f), p, show)

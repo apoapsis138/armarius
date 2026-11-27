@@ -204,7 +204,8 @@ class CreaturePage(QWidget):
             self.codex.inspect(
                 ability.name,
                 f"{ability.category} Ability{specialty}",
-                st.ability_info_text(c.abilities, index, c.virtues_flaws),
+                # A creature's sheet has no Read in full: the whole text.
+                st.ability_info_text(c.abilities, index, c.virtues_flaws, None),
                 ability_mark(ability.name, ability.category, p),
             )
 

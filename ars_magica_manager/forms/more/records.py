@@ -6,13 +6,12 @@ from functools import partial
 
 from ... import storyguides
 from ...actions import ActionFacts
-from ...commands import Command, Refuse
-from ...models import Character, Familiar
+from ...commands import Command
 from ...sections import DIARY_SECTION, NEIGHBOUR_INFO_SECTION, STAGES_SECTION
 from .. import player_handouts, take_up
+from .. import read_in_full as read_forms
 from .. import reveal as reveal_forms
 from .. import show as show_forms
-from .. import virtue as virtue_forms
 from ..menu_refresh import INFO_SECTIONS, Refresh, calculator, changes
 from ..menu_steps import (
     arms_command,
@@ -56,30 +55,28 @@ from .rules import (
 
 
 def _read_in_full(page: Page) -> Command:
-    """Read in full on the chosen row of the Virtues and Flaws section focus
-    is in (forms/virtue.py)."""
+    """Read in full on the chosen row of the section focus is in
+    (forms/read_in_full.py)."""
     section = page.active_section() or ""
-    owner = page.record_to_delete()
-    if not isinstance(owner, Character | Familiar) or (
-        section not in virtue_forms.READ_SECTIONS
-    ):
-        return Refuse(virtue_forms.READ_TITLE, virtue_forms.READ_REFUSED)
-    return virtue_forms.read_in_full(owner, page.chosen_row(section))
+    return read_forms.read_in_full(
+        page.record_to_delete(), section, page.chosen_row(section)
+    )
 
 
 def _reads_in_full(facts: ActionFacts, section: str) -> bool:
-    """Read in full is offered on a long entry chosen in a Virtues and Flaws
-    section. The section is checked first, as a sheet can only look up the
+    """Read in full is offered on a long entry chosen in a section that has
+    it. The section is checked first, as a sheet can only look up the
     chosen row of a section it has."""
-    return section in virtue_forms.READ_SECTIONS and virtue_forms.offers_read_in_full(
+    return read_forms.reader(section) is not None and read_forms.offered(
         facts.record_to_delete(), section, facts.chosen_row(section)
     )
 
 
 #: This area's actions, in the order More lists them.
 ENTRIES: tuple[MoreAction, ...] = (
-    # A long Virtue or Flaw's whole text on a reading page: the inspector's
-    # own button on the desktop. It writes nothing.
+    # A long Virtue or Flaw, Ability, or Boon or Hook's whole text on a
+    # reading page: the inspector's own button on the desktop. It writes
+    # nothing.
     MoreAction(
         "read_in_full",
         "f",

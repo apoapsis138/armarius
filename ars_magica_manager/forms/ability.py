@@ -10,14 +10,16 @@ A character and a familiar share them.
 from __future__ import annotations
 
 from collections.abc import Callable, Collection, Sequence
+from functools import partial
 from typing import Any
 
-from .. import catalog, sourcebooks
+from .. import catalog, entry_reading, sourcebooks
 from .. import sheet_text as st
 from ..commands import Choice, Choose, Command, Form, SectionOps, delete
 from ..form_spec import DialogField, attr
+from ..handout_layout import Reading
 from ..markup import escape
-from ..models import Ability, AbilityDef, VirtueFlawInstance
+from ..models import Ability, AbilityDef, Character, Familiar, VirtueFlawInstance
 from ..rules import creation_access as access
 from ..rules import scores
 from .virtue import param_fields, params_from
@@ -99,14 +101,54 @@ def ability_label(ability: Ability) -> str:
 
 
 def ability_choice(entry: AbilityDef) -> Choice:
-    """A catalog Ability as the Add list offers it."""
+    """A catalog Ability as the Add list offers it; a long one can be read
+    in full from the list (ability_read)."""
     needs = catalog.needs_note(entry.name, entry.parameters)
     return Choice(
         escape(f"{entry.name}  [{entry.category}]{needs}"),
         entry,
         st.ability_entry_text(entry),
         entry.category,
+        read=ability_read(entry),
     )
+
+
+def ability_page(definition: AbilityDef) -> Reading:
+    """The catalog Ability laid out to read in full (entry_reading): the
+    page a sheet's Read in full and a picker's both open."""
+    return entry_reading.reading(
+        catalog.blank_name(definition.name),
+        f"{definition.category} Ability",
+        "",
+        definition.summary,
+        definition.description,
+        definition.source,
+        entry_reading.READ_HELP,
+    )
+
+
+def ability_read(definition: AbilityDef) -> Callable[[], Reading] | None:
+    """A picker's Choice.read for the catalog Ability: its page, when it
+    is long (entry_reading.is_long); None for a short one."""
+    if not entry_reading.is_long(definition.description):
+        return None
+    return partial(ability_page, definition)
+
+
+def long_ability(owner: object, index: int | None) -> tuple[AbilityDef, str] | None:
+    """The catalog entry of a character's or familiar's Ability at `index`
+    (into its Abilities, as a sheet's list gives its rows) and the name
+    the owner holds it by (as "Area Lore: Rhine"), when it is long enough
+    to read in full; None otherwise."""
+    if not isinstance(owner, Character | Familiar):
+        return None
+    if index is None or not 0 <= index < len(owner.abilities):
+        return None
+    name = owner.abilities[index].name
+    definition = st.ability_definition(name)
+    if definition is None or not entry_reading.is_long(definition.description):
+        return None
+    return definition, name
 
 
 def abilities_offered(

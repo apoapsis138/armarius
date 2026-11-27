@@ -9,7 +9,7 @@ from __future__ import annotations
 from dataclasses import replace
 from typing import Any
 
-from ars_magica_manager import catalog, commands
+from ars_magica_manager import catalog, commands, entry_reading
 from ars_magica_manager.forms import virtue as virtue_forms
 from ars_magica_manager.markup import plain
 
@@ -29,7 +29,7 @@ def test_a_long_entry_offers_its_reading_page() -> None:
     assert choice.read is not None
     reading = choice.read()
     assert reading.laid.title == entry.name
-    assert reading.help_id == virtue_forms.READ_HELP
+    assert reading.help_id == entry_reading.READ_HELP
 
 
 def test_a_short_entry_offers_nothing_to_read() -> None:
