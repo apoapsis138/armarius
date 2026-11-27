@@ -91,8 +91,19 @@ def _virtues_and_flaws() -> Iterator[tuple[str, dict[str, object]]]:
             yield entry_id, entry
 
 
+#: The start of a list item's line (`- `, `* `, `+ `, `1. ` or `1) `) or of
+#: a table row (`|`).
+LIST_ITEM = re.compile(r"\n(?=[ \t]*(?:(?:[-*+]|\d+[.)])[ \t]|\|))")
+
+
 def _over_cap(text: str) -> bool:
-    return any(len(p) > PARAGRAPH_CAP for p in re.split(r"\n\s*\n", text))
+    """Whether a paragraph, one item of a list or one row of a table runs
+    over the cap."""
+    return any(
+        len(piece) > PARAGRAPH_CAP
+        for paragraph in re.split(r"\n\s*\n", text)
+        for piece in LIST_ITEM.split(paragraph)
+    )
 
 
 def test_no_split_ligatures():
@@ -164,3 +175,10 @@ def test_the_checks_catch_what_they_look_for():
     assert split_ligatures("LFI p. 12") == []
     assert _over_cap("x" * (PARAGRAPH_CAP + 1))
     assert not _over_cap(("x" * PARAGRAPH_CAP + "\n\n") * 3)
+    # A list's items are read one by one, so each is measured on its own.
+    assert not _over_cap("Lead-in:\n" + ("- " + "x" * 700 + "\n") * 3)
+    assert not _over_cap(("1. " + "x" * 700 + "\n") * 3)
+    assert _over_cap("- short\n- " + "x" * (PARAGRAPH_CAP + 1))
+    # A table is drawn row by row, so each row is measured on its own.
+    assert not _over_cap("| A | B |\n|---|---|\n" + ("| " + "x" * 300 + " | y |\n") * 5)
+    assert _over_cap("| A |\n|---|\n| " + "x" * (PARAGRAPH_CAP + 1) + " |")
