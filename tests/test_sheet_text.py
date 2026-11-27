@@ -6,7 +6,9 @@ panel, and record the pane's rendered text. The result is compared with
 tests/golden/sheet_text/<node>-<W>x<H>.txt, so a refactor of the sheet
 views (compose, refresh, CSS, shared widgets) that changes what is on
 screen fails here. Each sheet is then refreshed section by section and
-must still show exactly the same text. After an intended change,
+must still show exactly the same text. The tribunals but Rhine are Rhine's
+view with other words: each shows only its tabs in TRIBUNAL_TABS, and is
+refreshed only by the refresh test. After an intended change,
 regenerate the files with
 
     UPDATE_GOLDEN=1 uv run pytest tests/test_sheet_text.py
@@ -34,6 +36,7 @@ from ars_magica_manager import storage
 from ars_magica_manager.models import Saga
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import WorkspaceScreen
+from ars_magica_manager.tui.screens.sheets.tribunal import TribunalSheetView
 from ars_magica_manager.tui.screens.widgets import (
     DETAILS_PANEL_MAX_HEIGHT,
     DETAILS_PANEL_MIN_HEIGHT,
@@ -72,6 +75,25 @@ SHEETS = {
     "creature",
     "armarium",
     "custodia",
+}
+
+#: Rhine (the `tribunal` node) is walked in full. The other tribunals are
+#: the same view with other words and nothing on their rolls, so each walks
+#: only the tabs where it differs from Rhine: the header (above every tab),
+#: the docket's year, the meeting's order of business, the code tab's
+#: customs, and its package's own tabs. A new tribunal pack adds a row.
+_TRIBUNAL_DIFFERS = ("tab-trib-docket", "tab-trib-meeting", "tab-trib-code")
+TRIBUNAL_TABS: dict[str, tuple[str, ...]] = {
+    "alps_tribunal": (*_TRIBUNAL_DIFFERS, "tab-trib-ostracism"),
+    "hibernia_tribunal": (*_TRIBUNAL_DIFFERS, "tab-trib-ambassadors"),
+    "normandy_tribunal": (*_TRIBUNAL_DIFFERS, "tab-trib-tenure", "tab-trib-tourney"),
+    "theban_tribunal": (*_TRIBUNAL_DIFFERS, "tab-trib-tokens"),
+    # Its roster calls its covenants oppida.
+    "transylvania_tribunal": (
+        "tab-trib-roster",
+        *_TRIBUNAL_DIFFERS,
+        "tab-trib-privileges",
+    ),
 }
 
 
@@ -128,9 +150,27 @@ def _check_details_panel(app, pane, tab: TabPane | None, where: str) -> None:
         assert panel is panel.parent.children[-1], where
 
 
-async def _all_tabs(pilot, app, workspace, check_panels: bool = False) -> list[str]:
-    """Every tab's text, each under a "===== <tab id>" line; with
-    `check_panels`, each tab's details panel is checked on the way."""
+def _walked(tabbed: TabbedContent, tabs: tuple[str, ...] | None) -> list[TabPane]:
+    """The tabs of `tabbed` named in `tabs` (None: all), in their order;
+    a name with no tab fails, so a row of TRIBUNAL_TABS can't walk less
+    than it says."""
+    panes = list(tabbed.query(TabPane))
+    if tabs is None:
+        return panes
+    assert set(tabs) <= {p.id for p in panes}, f"no such tab: {tabs}"
+    return [p for p in panes if p.id in tabs]
+
+
+async def _all_tabs(
+    pilot,
+    app,
+    workspace,
+    check_panels: bool = False,
+    tabs: tuple[str, ...] | None = None,
+) -> list[str]:
+    """Every tab's text (or only those named in `tabs`), each under a
+    "===== <tab id>" line; with `check_panels`, each tab's details panel is
+    checked on the way."""
     pane = workspace._detail_pane()
     tabbed = next(iter(pane.query(TabbedContent)), None)
     if tabbed is None:
@@ -139,7 +179,7 @@ async def _all_tabs(pilot, app, workspace, check_panels: bool = False) -> list[s
             _check_details_panel(app, pane, None, "(no tabs)")
         return ["===== (no tabs)", *_pane_text(app, workspace)]
     lines: list[str] = []
-    for tab in tabbed.query(TabPane):
+    for tab in _walked(tabbed, tabs):
         app.screen.set_focus(None)
         tabbed.active = tab.id
         await wait_until(pilot, lambda tab=tab: tabbed.active == tab.id)
@@ -208,13 +248,16 @@ async def _reopen(pilot, workspace: WorkspaceScreen, node: str) -> None:
     await _show_node(pilot, workspace, node)
 
 
-async def _refreshed(pilot, app, workspace, view) -> str:
-    """The sheet's text after every section and tab id is refreshed."""
+async def _refreshed(
+    pilot, app, workspace, view, tabs: tuple[str, ...] | None = None
+) -> str:
+    """The sheet's text (its tabs named in `tabs`, or all) after every
+    section and tab id is refreshed."""
     for widget in view.query("Collapsible, TabPane"):
         if widget.id:
             view.refresh_section(widget.id)
     await _settle(pilot)
-    refreshed = "\n".join(await _all_tabs(pilot, app, workspace)) + "\n"
+    refreshed = "\n".join(await _all_tabs(pilot, app, workspace, tabs=tabs)) + "\n"
     assert view is workspace._current_sheet_view()  # not re-mounted
     return refreshed
 
@@ -228,15 +271,17 @@ def _check_golden(node: str, size: tuple[int, int], shown: str) -> None:
     assert shown == expected, _diff(expected, shown)
 
 
-async def _check_footer_rebuilds(pilot, app, view) -> None:
+async def _check_footer_rebuilds(
+    pilot, app, view, tabs: tuple[str, ...] | None = None
+) -> None:
     """The performance guard on the Footer (CONTRIBUTING.md "Performance rules"):
-    switching to each tab (its first visit, which builds it), focusing a
-    section and arrowing down a list each rebuild the Footer at most once,
-    and leave it showing the keys there are. Run with the sheet's own focus
-    moves, before its text is walked."""
+    switching to each tab (or each named in `tabs`; its first visit, which
+    builds it), focusing a section and arrowing down a list each rebuild the
+    Footer at most once, and leave it showing the keys there are. Run with
+    the sheet's own focus moves, before its text is walked."""
     check_footer_current(app, "opening the sheet")
     tabbed = view.query_one(TabbedContent)
-    panes = list(tabbed.query(TabPane))
+    panes = _walked(tabbed, tabs)
     for pane in panes[1:] + panes[:1]:
         before = footer(app).rebuilds
         tabbed.active = pane.id or ""
@@ -266,6 +311,12 @@ def test_the_suite_runs_the_app_with_animations_off():
     assert ArsMagicaManagerApp().animation_level == "none"
 
 
+def test_every_tribunal_but_rhine_names_what_it_walks():
+    """A new tribunal node adds its row to TRIBUNAL_TABS."""
+    tribunals = {node for node, data in NODES.items() if data[0] == "tribunal"}
+    assert set(TRIBUNAL_TABS) == tribunals - {"tribunal"}
+
+
 @pytest.mark.parametrize("node", sorted(NODES))
 async def test_sheet_text(node):
     """One app session per node: for a sheet, the Footer guard first (it
@@ -273,7 +324,9 @@ async def test_sheet_text(node):
     which the sheet is built again with focus kept out; then the text at
     each size, the terminal resized and the sheet built again between them,
     checking the details panels; and, at the first size, that refreshing
-    every section changes nothing."""
+    every section changes nothing. A tribunal in TRIBUNAL_TABS does all of
+    that on its named tabs only, and skips the refresh."""
+    tabs = TRIBUNAL_TABS.get(node)
     storage.save_saga(everything_saga())
     app = ArsMagicaManagerApp()
     async with app.run_test(size=SIZES[0]) as pilot:
@@ -281,7 +334,12 @@ async def test_sheet_text(node):
             pilot, app, node, keep_focus_out=node not in SHEETS
         )
         if node in SHEETS:
-            await _check_footer_rebuilds(pilot, app, workspace._current_sheet_view())
+            view = workspace._current_sheet_view()
+            if tabs is not None:
+                assert isinstance(view, TribunalSheetView)
+                package = {extra.tab_id for extra in view.package.tabs}
+                assert package <= set(tabs), f"{node} walks its package's tabs"
+            await _check_footer_rebuilds(pilot, app, view, tabs)
             await _reopen(pilot, workspace, node)
         for size in SIZES:
             if size != SIZES[0]:
@@ -289,9 +347,9 @@ async def test_sheet_text(node):
                 await pilot.resize_terminal(*size)
                 await _reopen(pilot, workspace, node)
             view = workspace._current_sheet_view()
-            shown = "\n".join(await _all_tabs(pilot, app, workspace, True)) + "\n"
+            shown = "\n".join(await _all_tabs(pilot, app, workspace, True, tabs)) + "\n"
             _check_golden(node, size, shown)
-            if view is not None and size == SIZES[0]:
+            if view is not None and size == SIZES[0] and tabs is None:
                 refreshed = await _refreshed(pilot, app, workspace, view)
                 assert refreshed == shown, _diff(shown, refreshed)
 
@@ -358,7 +416,9 @@ async def test_refresh_shows_changed_data(node):
         view = workspace._current_sheet_view()
         assert view is not None
         _fill(workspace.saga)
-        refreshed = await _refreshed(pilot, app, workspace, view)
+        refreshed = await _refreshed(
+            pilot, app, workspace, view, TRIBUNAL_TABS.get(node)
+        )
     expected = golden.read_text(encoding="utf-8")
     assert refreshed == expected, _diff(expected, refreshed)
 
