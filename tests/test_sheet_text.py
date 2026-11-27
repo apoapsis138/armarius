@@ -6,9 +6,10 @@ panel, and record the pane's rendered text. The result is compared with
 tests/golden/sheet_text/<node>-<W>x<H>.txt, so a refactor of the sheet
 views (compose, refresh, CSS, shared widgets) that changes what is on
 screen fails here. Each sheet is then refreshed section by section and
-must still show exactly the same text. The tribunals but Rhine are Rhine's
-view with other words: each shows only its tabs in TRIBUNAL_TABS, and is
-refreshed only by the refresh test. After an intended change,
+must still show exactly the same text. Every tribunal other than Rhine
+shares Rhine's view with other words: each shows only its tabs in
+TRIBUNAL_TABS, and is refreshed only by the refresh test. After an
+intended change,
 regenerate the files with
 
     UPDATE_GOLDEN=1 uv run pytest tests/test_sheet_text.py
@@ -322,9 +323,12 @@ def test_every_tribunal_but_rhine_names_what_it_walks():
     assert set(TRIBUNAL_TABS) == tribunals - {"tribunal"}
     saga = everything_saga()
     with_covenants = {c.tribunal_id for c in saga.covenants}
-    for node, tabs in TRIBUNAL_TABS.items():
-        if NODES[node][1] in with_covenants:
-            assert "tab-trib-roster" in tabs, f"{node} has a covenant"
+    unwalked = [
+        node
+        for node, tabs in TRIBUNAL_TABS.items()
+        if NODES[node][1] in with_covenants and "tab-trib-roster" not in tabs
+    ]
+    assert not unwalked, f"these have a covenant but don't walk the roster: {unwalked}"
 
 
 @pytest.mark.parametrize("node", sorted(NODES))

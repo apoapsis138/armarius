@@ -3,9 +3,10 @@
 For every section (Collapsible) and tab of every kind of sheet, focus it,
 press each section-dispatched key (a, e, d, More and Filter) and record what happens: whether the
 binding is enabled, and which dialog opens (with its title) or which
-notice appears. The tribunals but Rhine are Rhine's view: each records only
-its tabs in test_sheet_text's TRIBUNAL_TABS. The result is compared with tests/golden/dispatch_matrix.json,
-so a refactor of the dispatch/routing code that changes any of it fails
+notice appears. Every tribunal other than Rhine shares Rhine's view, so
+each records only its tabs in test_sheet_text's TRIBUNAL_TABS (its top
+panel is Rhine's too). The result is compared with
+tests/golden/dispatch_matrix.json, so a refactor of the dispatch/routing code that changes any of it fails
 here. After an intended change, regenerate the file with
 
     UPDATE_GOLDEN=1 uv run pytest -p no:xdist tests/test_dispatch_matrix.py
