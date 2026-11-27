@@ -1,6 +1,7 @@
 """Help: the help files are well formed, every tab and section
 of every sheet has help, and ? / F1 open Help on what has focus."""
 
+import asyncio
 import re
 from pathlib import Path
 
@@ -757,10 +758,24 @@ async def test_whats_new_fills_in_and_another_topic_can_replace_it_midway(
         assert await wait_until(pilot, lambda: isinstance(app.screen, HelpScreen))
         topics = app.screen.query_one("#help-topics", OptionList)
         page = app.screen.query_one("#help-page", Markdown)
+        # Hold the page after its first piece, so the topic changes while
+        # it is still filling in, however fast the pieces render.
+        appending, go_on = asyncio.Event(), asyncio.Event()
+        append = page.append
+
+        async def held_append(chunk: str) -> None:
+            appending.set()
+            await go_on.wait()
+            await append(chunk)
+
+        monkeypatch.setattr(page, "append", held_append)
         topics.highlighted = topics.get_option_index("ref:whats-new")
-        assert await wait_until(pilot, lambda: page.source.startswith("# What's New"))
+        assert await wait_until(pilot, appending.is_set)
+        assert page.source.startswith("# What's New")
         assert page.source != sample  # still filling
         topics.highlighted = topics.get_option_index("ref:keys")
+        await pilot.pause()
+        go_on.set()
         assert await wait_until(pilot, lambda: page.source.startswith("# Keys"))
         await pilot.pause()
         assert "What's New" not in page.source
