@@ -15,6 +15,7 @@ from collections.abc import Iterator
 from pathlib import Path
 
 from ars_magica_manager import handout_markup
+from ars_magica_manager.markup import LIST_LINE, plain
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
@@ -91,8 +92,26 @@ def _virtues_and_flaws() -> Iterator[tuple[str, dict[str, object]]]:
             yield entry_id, entry
 
 
+def _drawn_pieces(text: str) -> Iterator[str]:
+    """The pieces Read in full draws, as the reader parses them: each
+    paragraph, each item of a list on its own, and each row of a table."""
+    for block in handout_markup.blocks(text, tables=True):
+        if block.kind == handout_markup.TABLE:
+            yield from (" | ".join(map(plain, row)) for row in block.rows)
+            continue
+        item: list[str] = []
+        for line in plain(block.text).split("\n"):
+            if item and LIST_LINE.match(line):
+                yield "\n".join(item)
+                item = []
+            item.append(line)
+        yield "\n".join(item)
+
+
 def _over_cap(text: str) -> bool:
-    return any(len(p) > PARAGRAPH_CAP for p in re.split(r"\n\s*\n", text))
+    """Whether a paragraph, one item of a list or one row of a table runs
+    over the cap."""
+    return any(len(piece) > PARAGRAPH_CAP for piece in _drawn_pieces(text))
 
 
 def test_no_split_ligatures():
@@ -164,3 +183,14 @@ def test_the_checks_catch_what_they_look_for():
     assert split_ligatures("LFI p. 12") == []
     assert _over_cap("x" * (PARAGRAPH_CAP + 1))
     assert not _over_cap(("x" * PARAGRAPH_CAP + "\n\n") * 3)
+    # A list's items are read one by one, so each is measured on its own.
+    assert not _over_cap("Lead-in:\n" + ("- " + "x" * 700 + "\n") * 3)
+    assert not _over_cap(("1. " + "x" * 700 + "\n") * 3)
+    assert _over_cap("- short\n- " + "x" * (PARAGRAPH_CAP + 1))
+    # A table is drawn row by row, so each row is measured on its own.
+    assert not _over_cap("| A | B |\n|---|---|\n" + ("| " + "x" * 300 + " | y |\n") * 5)
+    assert _over_cap("| A |\n|---|\n| " + "x" * (PARAGRAPH_CAP + 1) + " |")
+    # Only what is drawn as a list or a table is split: a year opening a
+    # line, or rows with no rule under a header, stay one paragraph.
+    assert _over_cap("x" * 400 + "\n1220. " + "x" * 400)
+    assert _over_cap(("| " + "x" * 400 + " |\n") * 2)
