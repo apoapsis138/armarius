@@ -175,8 +175,10 @@ A rule or game system is built from the books: the *Ars Magica Definitive
 Edition* first, then the supplements that extend it, with the Definitive
 Edition winning wherever they disagree, and the official errata over both.
 Cite book and printed page in the module's `SOURCE` and the commit message.
-Summarize a rule with its page; don't copy the books' text. Packs hold only
-what the books print: never invent lists or figures to fill a gap.
+Every book the app draws on is released under CC BY-SA 4.0 (see
+[NOTICE.md](NOTICE.md)), so a catalog or pack may hold a book's full text;
+a summary is used only where it reads better. Packs hold only what the
+books print: never invent lists or figures to fill a gap.
 
 ## Performance rules
 
