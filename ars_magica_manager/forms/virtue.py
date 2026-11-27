@@ -17,10 +17,12 @@ from __future__ import annotations
 import copy
 from collections.abc import Sequence
 from dataclasses import replace
+from functools import partial
 from typing import Any
 
 from .. import catalog, entry_reading, sourcebooks
 from .. import laboratories as lab_rules
+from .. import sheet_text as st
 from ..arts import ARTS, FORMS, TECHNIQUES
 from ..commands import (
     Choice,
@@ -34,7 +36,8 @@ from ..commands import (
     not_offered,
 )
 from ..form_spec import DialogField, pairs
-from ..markup import escape
+from ..handout_layout import Reading
+from ..markup import escape, markdown_text
 from ..models import (
     FOCUS_FLAWS,
     Character,
@@ -513,15 +516,21 @@ def read_in_full(owner: Character | Familiar, index: int | None) -> Form | Refus
         lambda _values: None,
         save_label="Close",
         help_id=READ_HELP,
-        reading=entry_reading.reading(
-            definition.name,
-            f"{definition.tier} {definition.type}",
-            definition.category_label,
-            definition.summary,
-            definition.description,
-            definition.source,
-            READ_HELP,
-        ),
+        reading=entry_page(definition),
+    )
+
+
+def entry_page(definition: VirtueFlawDef) -> Reading:
+    """The catalog entry laid out to read in full (entry_reading): the
+    page a sheet's Read in full and a picker's both open."""
+    return entry_reading.reading(
+        definition.name,
+        f"{definition.tier} {definition.type}",
+        definition.category_label,
+        definition.summary,
+        definition.description,
+        definition.source,
+        READ_HELP,
     )
 
 
@@ -712,15 +721,35 @@ def choose_virtue_flaw(
 
 def virtue_flaw_choice(entry: VirtueFlawDef) -> Choice:
     """A character catalog entry as the Add list offers it: its name, tier,
-    type and what it needs naming; its book text beside the list."""
+    type and what it needs naming; its book text beside the list. A long
+    entry (entry_reading.is_long) can be read in full from the list, and
+    shows its summary and Effect lines there instead of its whole text,
+    when it has a summary (entry_reading.shortens; one without keeps its
+    whole text, and can still be read in full). Its Source heads both."""
     needs = catalog.needs_note(entry.name, entry.parameters)
     facts = f"{entry.tier} {entry.type}, {entry.category_label}"
-    text = entry.description or entry.summary
+    source = f"[dim]{escape('Source: ' + entry.source)}[/]"
+    if entry_reading.shortens(entry.description, entry.summary):
+        detail = "\n".join(
+            [source, escape(entry.summary), *st.effect_lines(entry.modifiers)]
+        )
+    else:
+        text = (
+            markdown_text(entry.description)
+            if entry.description
+            else escape(entry.summary)
+        )
+        detail = f"{source}\n{text}"
     return Choice(
         escape(f"{catalog.blank_name(entry.name)}  [{facts}]{needs}"),
         entry,
-        f"[dim]{escape('Source: ' + entry.source)}[/]\n{escape(text)}",
+        detail,
         f"{entry.type} {entry.category_label} {entry.tier} {entry.summary}",
+        read=(
+            partial(entry_page, entry)
+            if entry_reading.is_long(entry.description)
+            else None
+        ),
     )
 
 

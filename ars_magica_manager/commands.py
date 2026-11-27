@@ -106,6 +106,10 @@ class Choice:
     #: The entry's value for each of its Choose's `filters`, as (filter,
     #: value) pairs: ("Type", "Study").
     facets: tuple[tuple[str, str], ...] = ()
+    #: When set, the entry can be read in full before it is chosen: this
+    #: builds its reading page (a long catalog entry), which each
+    #: front-end's picker opens its own way. Built only when asked for.
+    read: Callable[[], Reading] | None = None
 
 
 @dataclass(frozen=True)
@@ -172,6 +176,7 @@ def not_offered(choice: Choice, why: str) -> Choice:
         f"[$text-warning]Not offered: {escape(why)}[/]\n{choice.detail}",
         f"{choice.search} {why}",
         choice.facets,
+        choice.read,
     )
 
 
