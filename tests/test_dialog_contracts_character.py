@@ -1278,6 +1278,21 @@ CONTRACTS: dict[str, Contract] = {
         saved=lambda s: character(s).interests_off,
         expected=["Knightly"],
     ),
+    # A magus just made opens on the type's Default Interests; saving
+    # makes them the player's own.
+    "review interests": Contract(
+        prefill={"Knightly": False, "Tribunal & Order": True, "Covenfolk": False},
+        edits={"Knightly": True},
+        saved=lambda s: (
+            character(s).interests_chosen,
+            [
+                i
+                for i in ("Knightly", "Tribunal & Order")
+                if i in character(s).interests_off
+            ],
+        ),
+        expected=(True, []),
+    ),
     "font of knowledge": Contract(
         prefill={"Times drawn on today": "0"},
         edits={"The untrained Ability": "Hunt", "Times drawn on today": "1"},

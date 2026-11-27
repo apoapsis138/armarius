@@ -43,6 +43,7 @@ from ars_magica_manager import (
     viewing,
     virtual_tabletop,
     vis,
+    worksheet,
 )
 from ars_magica_manager import economics as eco
 from ars_magica_manager import enchanted_devices as ed
@@ -277,6 +278,16 @@ class Opener:
     #: The More action (more.MORE_MENU) whose form this opens, if any:
     #: its contract counts for that action (test_more_action_registered).
     action: str = ""
+
+
+def _review_interests(ws: WorkspaceScreen) -> None:
+    """The Review Interests step's Edit Interests, for a magus just made:
+    In Creation, with interests not yet chosen."""
+    magus = _character(ws)
+    magus.in_creation, magus.interests_chosen = True, False
+    actions = worksheet.panel_for(magus, "interests").actions(ws.saga, magus)
+    [edit] = [a for a in actions if a.label == "Edit Interests"]
+    ws._run_steps(edit.start())
 
 
 def _refused_then_threaten(ws: WorkspaceScreen) -> None:
@@ -2492,6 +2503,7 @@ OPENERS: dict[str, Opener] = {
     "interests": Opener(
         "character", lambda ws: ws._run_more("edit_interests"), action="edit_interests"
     ),
+    "review interests": Opener("character", _review_interests),
     "covenant interests": Opener(
         "covenant", lambda ws: ws._run_more("edit_interests"), action="edit_interests"
     ),
