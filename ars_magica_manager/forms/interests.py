@@ -17,6 +17,7 @@ from .. import action_books, deeds, default_interests, sourcebooks
 from ..commands import Act, Form, FormCard, notes
 from ..deeds import OPTIONAL
 from ..form_spec import DialogField
+from ..markup import escape
 from ..models import Character, Covenant, Saga
 from ..rules import faiths
 
@@ -207,7 +208,7 @@ def covenant_interests_form(
             for i in deeds.COVENANT_INTERESTS
             if not values.get(_key(i), i not in covenant.interests_off)
         ]
-        return notes(f"{covenant.name}: {covenant_interests_text(covenant)}")
+        return notes(f"{escape(covenant.name)}: {covenant_interests_text(covenant)}")
 
     return Form(
         TITLE,
@@ -245,7 +246,8 @@ def defaults_text(character: Character) -> str:
         if interest != default_interests.SESSION:
             by_source.setdefault(why, set()).add(interest)
     lines = [
-        f"From {_source(why)}: {', '.join(i for i in OPTIONAL if i in interests)}."
+        f"From {escape(_source(why))}: "
+        f"{', '.join(i for i in OPTIONAL if i in interests)}."
         for why, interests in by_source.items()
     ]
     return "\n".join(lines) or "None."
@@ -274,7 +276,7 @@ def restore_defaults(character: Character) -> Act:
     def apply() -> list[str]:
         deeds.follow_defaults(character)
         on = ", ".join(deeds.interests_on(character)) or f"only {deeds.SESSION}"
-        return notes(f"{character.name} is back to the defaults: {on}.")
+        return notes(f"{escape(character.name)} is back to the defaults: {on}.")
 
     return Act(apply, TITLE)
 
@@ -314,7 +316,7 @@ def interests_form(saga: Saga, character: Character, names: Mapping[str, str]) -
             i for i in OPTIONAL if not values.get(_key(i), i not in off)
         ]
         character.interests_chosen = True
-        return notes(f"{character.name}: {interests_text(character)}")
+        return notes(f"{escape(character.name)}: {interests_text(character)}")
 
     return Form(
         TITLE,
