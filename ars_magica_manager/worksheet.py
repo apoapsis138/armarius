@@ -391,7 +391,8 @@ def _virtue_rows(saga: Saga, record: Record) -> list[Row]:
                 Row(
                     f"{pad(name, VF_NAME)}{definition.tier:<{VF_TIER}}"
                     f"{escape(definition.category_label)}",
-                    st.vf_info_text(character.virtues_flaws, index),
+                    # No Read in full here, so the whole text.
+                    st.vf_info_text(character.virtues_flaws, index, None),
                     delete=_remove_virtue_flaw(saga, character, instance),
                     cells=[
                         escape(name),

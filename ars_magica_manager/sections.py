@@ -94,6 +94,10 @@ CUSTODIA_SECTION = "section-custodia"
 #: The lab's Virtues and Flaws sections: either refreshes both lists and
 #: their shared details panel.
 LAB_VF_SECTIONS = ("section-lab-vf-virtues", "section-lab-vf-flaws")
+#: A character's and a familiar's Virtues and Flaws sections, and the side
+#: each lists.
+CHARACTER_VF_SIDES = {"section-vf-virtues": "Virtue", "section-vf-flaws": "Flaw"}
+FAMILIAR_VF_SIDES = {"section-fam-vf-virtues": "Virtue", "section-fam-vf-flaws": "Flaw"}
 #: A Warping laboratory's Personality Traits (forms/trait.py).
 LAB_TRAITS_SECTION = "section-lab-personality-traits"
 #: What a laboratory's magic items give it (forms/lab_item.py).

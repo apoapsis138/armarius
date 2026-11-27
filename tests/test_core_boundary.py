@@ -153,6 +153,8 @@ LAYERS: tuple[tuple[str, frozenset[str]], ...] = (
                 "handout_markup",
                 # Its blocks laid on a Stationery, for each front-end to draw.
                 "handout_layout",
+                # A long catalog entry read in full, on a Handout's reading page.
+                "entry_reading",
                 "launch",
                 "lockout",
                 "markup",

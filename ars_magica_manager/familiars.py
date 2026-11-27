@@ -6,7 +6,7 @@ Health, Abilities, Bond Powers.
 
 from __future__ import annotations
 
-from . import catalog, experiment_text, storage
+from . import catalog, entry_reading, experiment_text, storage
 from . import possessions as pos
 from . import sheet_text as st
 from .markup import escape
@@ -172,8 +172,12 @@ def vf_rows(familiar: Familiar, vf_type: str) -> list[tuple[int | None, str]]:
     return st.vf_rows(familiar.virtues_flaws, vf_type)
 
 
-def vf_info_text(familiar: Familiar, index: int | None) -> str:
-    return st.vf_info_text(familiar.virtues_flaws, index)
+def vf_info_text(
+    familiar: Familiar,
+    index: int | None,
+    read_hint: str | None = entry_reading.READ_HINT,
+) -> str:
+    return st.vf_info_text(familiar.virtues_flaws, index, read_hint)
 
 
 def personality_trait_rows(familiar: Familiar) -> list[tuple[int | None, str]]:

@@ -141,7 +141,9 @@ Leave the die blank to roll it. The result is shown, not kept.
 <!-- help: section-fam-vf-virtues; tui -->
 
 The familiar's Virtues, each with its tier, and their points in the title.
-`a` and `e` work as on a character's [Virtues](help:section-vf-virtues).
+`a` and `e` work as on a character's [Virtues](help:section-vf-virtues),
+and a long one shows its summary with [Read in full](help:read-in-full) in
+More (`m`).
 
 ### Flaws
 <!-- help: section-fam-vf-flaws; tui -->
@@ -167,7 +169,8 @@ The familiar's Reputations, typed as a character's
 <!-- help: tab-fam-vf; gui -->
 
 The familiar's Virtues and Flaws, side by side, each a card. Clicking one
-shows its effects and rules text in the inspector.
+shows its effects and rules text in the inspector; a long one shows its
+summary and a **Read in full** button ([help](help:read-in-full)).
 
 **You type:** nothing; each is picked from the catalog. **The app works
 out:** each side's points, in the section titles.

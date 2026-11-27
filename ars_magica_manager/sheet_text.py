@@ -9,9 +9,9 @@ from __future__ import annotations
 from collections.abc import Collection, Sequence
 
 from . import books as bk
-from . import catalog, sourcebooks
+from . import catalog, entry_reading, sourcebooks
 from . import spells as spl
-from .markup import escape, problem
+from .markup import escape, markdown_text, problem
 from .models import (
     ABILITY_CATEGORIES,
     Ability,
@@ -349,9 +349,16 @@ def effect_lines(modifiers: Sequence[Modifier]) -> list[str]:
     ]
 
 
-def vf_info_text(instances: Sequence[VirtueFlawInstance], index: int | None) -> str:
+def vf_info_text(
+    instances: Sequence[VirtueFlawInstance],
+    index: int | None,
+    read_hint: str | None = entry_reading.READ_HINT,
+) -> str:
     """The details panel for the attached Virtue/Flaw at `index`: its name,
-    category, tier, effects, and the official rules text."""
+    category, tier, effects, and the official rules text; for a long entry
+    (entry_reading.shortens) its summary and `read_hint` instead of the
+    text, which Read in full shows. `read_hint` None: the whole text
+    always, where nothing offers Read in full."""
     if index is None:
         return "[dim]Select a Virtue or Flaw to see its details.[/]"
     vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
@@ -382,7 +389,12 @@ def vf_info_text(instances: Sequence[VirtueFlawInstance], index: int | None) -> 
         lines.append(f"[b]In play:[/] {escape(battle_transformation.RIASTRADH_TEXT)}")
     if instance.vf_id == battle_transformation.LUAN_LAITH:
         lines.append(f"[b]In play:[/] {escape(battle_transformation.LUAN_TEXT)}")
-    lines += ["", "[b]Rules:[/]", escape(definition.description)]
+    if read_hint is not None and entry_reading.shortens(
+        definition.description, definition.summary
+    ):
+        lines += ["", "[b]Rules:[/]", escape(definition.summary), "", read_hint]
+    else:
+        lines += ["", "[b]Rules:[/]", markdown_text(definition.description)]
     if definition.source:
         lines += ["", f"[dim]Source: {escape(definition.source)}[/]"]
     return "\n".join(lines)

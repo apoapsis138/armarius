@@ -94,9 +94,13 @@ class HandoutReading(ModalDialog[None]):
 
     help_id = HANDOUTS_HELP
 
-    def __init__(self, laid: Laid) -> None:
+    def __init__(self, laid: Laid, help_id: str = "") -> None:
+        """`help_id`: the page F1 opens, when not the Handouts' own (a
+        catalog entry read in full)."""
         super().__init__()
         self.laid = laid
+        if help_id:
+            self.help_id = help_id
 
     def compose(self) -> ComposeResult:
         laid = self.laid

@@ -30,6 +30,7 @@ from .character_sheet import (
     ability_mark,
     ability_view,
     characteristic_cards,
+    read_in_full_button,
     section,
     side_by_side,
     trait_section,
@@ -117,9 +118,14 @@ class FamiliarPage(QWidget):
         return self.codex.chapters()
 
     def inspect(
-        self, title: str, subtitle: str, markup: str, symbol: Symbol | None = None
+        self,
+        title: str,
+        subtitle: str,
+        markup: str,
+        symbol: Symbol | None = None,
+        extra: QWidget | None = None,
     ) -> None:
-        self.codex.inspect(title, subtitle, markup, symbol)
+        self.codex.inspect(title, subtitle, markup, symbol, extra=extra)
 
     def _table(self) -> dict[str, SectionOps]:
         """The core's Add, Edit and Delete for each of the sheet's sections,
@@ -267,6 +273,7 @@ class FamiliarPage(QWidget):
                         card.name,
                         f"{card.tier}  ·  {card.category}",
                         fam.vf_info_text(f, card.index),
+                        extra=read_in_full_button(f, card.index, p, self.run),
                     ),
                 )
                 for card in fs.vf_cards(f, side)

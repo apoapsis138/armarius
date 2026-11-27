@@ -211,6 +211,8 @@ class Reading:
 
     laid: Laid
     pictures: tuple[bytes | None, ...] = ()
+    #: The help page its reading window opens on F1 ("": the Handouts').
+    help_id: str = ""
 
 
 def reading(
