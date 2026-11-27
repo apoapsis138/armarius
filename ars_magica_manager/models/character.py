@@ -1137,6 +1137,11 @@ class Character:
     #: The interests (deeds.INTERESTS) the player has turned off, whose
     #: actions the sheet then leaves out. Older saves load with none off.
     interests_off: list[str] = field(default_factory=list)
+    #: Whether interests_off is the player's own choice. While a character
+    #: is In Creation and this is False, its interests follow its Default
+    #: Interests (deeds.turned_off). Older saves, and characters the app
+    #: makes itself, are chosen.
+    interests_chosen: bool = True
     #: Where the starting xp went, step by step.
     creation_xp: list[CreationXp] = field(default_factory=list)
     #: Years past Gauntlet and pre-play aging.

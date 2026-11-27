@@ -15,6 +15,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass
 
+from . import default_interests
 from .models import Character, Covenant
 from .rules import faiths
 
@@ -416,15 +417,75 @@ UNDERTAKING_NOTES: dict[str, str] = {
 }
 
 
+def applies(character: Character, interest: str) -> bool:
+    """Whether `interest` applies to `character` at all (MAGI_ONLY)."""
+    return character.type == "magus" or interest not in MAGI_ONLY
+
+
+def turned_off(character: Character) -> list[str]:
+    """The interests turned off for `character`, before its record keeps
+    any on: while it is In Creation and its interests aren't chosen, every
+    one that applies and its Default Interests leave out; otherwise those
+    the player turned off."""
+    if following_defaults(character):
+        return defaults_off(character)
+    return list(character.interests_off)
+
+
+def following_defaults(character: Character) -> bool:
+    """Whether `character`'s interests follow its Default Interests: while
+    it is In Creation and the player hasn't chosen them."""
+    return character.in_creation and not character.interests_chosen
+
+
+def defaults_off(character: Character) -> list[str]:
+    """Every interest that applies to `character` and its Default Interests
+    leave out, but never one its record keeps on (CHARACTER_GATES): kept
+    as its own, an interest the player has only ever seen on stays on
+    once the record no longer holds it."""
+    on = {interest for interest, _ in default_interests.defaults(character)}
+    return _not_kept_on(
+        character, [i for i in OPTIONAL if i not in on and applies(character, i)]
+    )
+
+
+def kept_on(character: Character, interest: str) -> bool:
+    """Whether `character`'s record keeps `interest` on whatever was chosen
+    (CHARACTER_GATES)."""
+    gate = CHARACTER_GATES.get(interest)
+    return gate is not None and gate.kept_on(character)
+
+
+def _not_kept_on(character: Character, off: list[str]) -> list[str]:
+    """Those of `off` that `character`'s record doesn't keep on."""
+    return [i for i in off if not kept_on(character, i)]
+
+
+def keep_interests(character: Character) -> None:
+    """Make `character`'s interests, as they are now, its own: they no
+    longer follow its Default Interests."""
+    character.interests_off = turned_off(character)
+    character.interests_chosen = True
+
+
+def follow_defaults(character: Character) -> None:
+    """Hand `character`'s interests back to its Default Interests, which
+    follow it again until the player next chooses them."""
+    character.interests_off = []
+    character.interests_chosen = False
+
+
 def interests_off(character: Character) -> list[str]:
-    """The interests that are off for `character`: those turned off, but
-    never one its record keeps on (CHARACTER_GATES)."""
-    gates = CHARACTER_GATES
-    return [
-        i
-        for i in character.interests_off
-        if i not in gates or not gates[i].kept_on(character)
-    ]
+    """The interests that are off for `character`: those turned off
+    (turned_off), but never one its record keeps on (CHARACTER_GATES)."""
+    return _not_kept_on(character, turned_off(character))
+
+
+def interests_on(character: Character) -> list[str]:
+    """The interests on for `character` besides Session & Reputation, in
+    the order of INTERESTS."""
+    off = interests_off(character)
+    return [i for i in OPTIONAL if applies(character, i) and i not in off]
 
 
 def covenant_interests_off(covenant: Covenant) -> list[str]:

@@ -7,7 +7,7 @@ import random
 from collections.abc import Callable, Collection, Sequence
 from dataclasses import dataclass, field
 
-from .. import catalog, dice_text, manors
+from .. import catalog, deeds, dice_text, manors
 from .. import economics as eco
 from ..enchanted_devices import new_day
 from ..markup import escape, problem, todo
@@ -151,6 +151,12 @@ def _found_child(
     )
     child.background.year_born = outcome.plan.year - FOUND_CHILD_AGE
     child.virtues_flaws.append(VirtueFlawInstance("vf_the_gift"))
+    # An apprentice's interests: its Default Interests and Apprenticeship,
+    # which its Apprentice Virtue gives once the Arts are opened.
+    child.interests_off = [
+        i for i in deeds.defaults_off(child) if i != deeds.APPRENTICESHIP
+    ]
+    child.interests_chosen = True
     child.description.biography = (
         f"Found in {outcome.plan.season} {outcome.plan.year} by {character.name}, "
         "searching for an apprentice; name and build the child, then open the "

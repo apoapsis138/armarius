@@ -1,0 +1,1 @@
+**New characters start with interests that fit them.** A new character takes up what its type, House and Virtues and Flaws suggest, such as Dealings with Faerie for a Merinita magus. They follow the character until you save Edit Interests; Restore the defaults hands them back. Saved characters keep theirs. Each walkthrough shows only what it uses.

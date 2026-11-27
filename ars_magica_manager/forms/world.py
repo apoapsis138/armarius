@@ -635,8 +635,10 @@ def magus_ops(saga: Saga, covenant: Covenant) -> SectionOps:
     def add() -> Command:
         def apply(values: dict[str, Any]) -> None:
             magus = creation.add_character(saga, values["name"], "magus", covenant.id)
-            magus.in_creation = False
+            # The House first, so the interests kept on leaving In
+            # Creation include its defaults.
             _set_magus(magus, values)
+            creation.set_in_creation(saga, magus, False)
 
         return Form("Add a Magus", lambda: magus_fields(None), apply, save_label="Add")
 

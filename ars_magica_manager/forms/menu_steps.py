@@ -200,6 +200,8 @@ def change_detail(saga: Saga, record: Character | Covenant, detail: str) -> Comm
         record.detail = detail
         if detail == FULL:
             creation.set_in_creation(saga, record, True)
+        elif isinstance(record, Character):
+            creation.set_in_creation(saga, record, False)
         else:
             record.in_creation = False
 

@@ -10,7 +10,7 @@ from __future__ import annotations
 import random
 from collections.abc import Sequence
 
-from . import seasons, storage, viewing
+from . import deeds, seasons, storage, viewing
 from .arts import ARTS
 from .models import (
     SEASONS,
@@ -81,6 +81,8 @@ def add_character(
         type=character_type,
         covenant_id=covenant_id,
         in_creation=True,
+        # Its interests follow its Default Interests until they are chosen.
+        interests_chosen=False,
     )
     maker = viewing.seated_player()
     if maker is not None:
@@ -321,9 +323,12 @@ def set_in_creation(
     """Move `record` to In Creation or In Play. A covenant moving to In Play
     turns its unspent Build Points into pounds in its Wealth, then keeps
     what its Build Points were spent on (the Build tab's Initial column);
-    moving back to In Creation lets it change again."""
+    moving back to In Creation lets it change again. A character moving to
+    In Play keeps its interests as they are (deeds.keep_interests)."""
     if isinstance(record, Covenant) and record.in_creation and not in_creation:
         creation_covenant.convert_remaining(saga, record)
+    if isinstance(record, Character) and not in_creation:
+        deeds.keep_interests(record)
     record.in_creation = in_creation
     if isinstance(record, Covenant):
         if in_creation:
