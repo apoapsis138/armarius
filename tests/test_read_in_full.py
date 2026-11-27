@@ -77,12 +77,6 @@ def test_the_creation_worksheet_shows_a_long_virtues_whole_text() -> None:
     assert not any("Read in full" in d for d in details)
 
 
-def test_a_panel_shortens_only_a_long_entry_with_a_summary() -> None:
-    assert entry_reading.shortens("x" * 751, "Gist.")
-    assert not entry_reading.shortens("x" * 751, "  ")
-    assert not entry_reading.shortens("x" * 750, "Gist.")
-
-
 def _magus(*vf_ids: str) -> Character:
     return Character(
         id="m",

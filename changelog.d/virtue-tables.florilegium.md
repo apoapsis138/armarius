@@ -1,0 +1,1 @@
+**Tables in Virtues and Flaws.** Read in full now draws a Virtue or Flaw's table as a real table, starting with Verditius Elder Runes: its runes, trees and Arts in rows, its text in the book's paragraphs, and its Initiation Script set apart. A House Rules entry can hold a table too.

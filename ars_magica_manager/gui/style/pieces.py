@@ -31,6 +31,8 @@ def serif(
     size: float, *, italic: bool = False, bold: bool = False, caps: bool = False
 ) -> QFont:
     font = QFont(fonts.SERIF)
+    # Runes, which EB Garamond hasn't, come from the bundled runic face.
+    font.setFamilies([fonts.SERIF, fonts.RUNIC])
     font.setPointSizeF(size)
     font.setItalic(italic)
     font.setBold(bold)

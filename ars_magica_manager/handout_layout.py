@@ -120,6 +120,8 @@ class Placed:
     initial: str = ""
     picture: int = 0
     caption: str = ""
+    #: A table's rows, the header first, each cell safe markup.
+    rows: tuple[tuple[str, ...], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -157,18 +159,25 @@ def split_initial(text: str) -> tuple[str, str]:
 
 
 def lay_out(
-    title: str, stationery_name: str, text: str, pictures: Sequence[str] = ()
+    title: str,
+    stationery_name: str,
+    text: str,
+    pictures: Sequence[str] = (),
+    *,
+    tables: bool = False,
 ) -> Laid:
     """The Handout titled `title` laid on the Stationery `stationery_name`:
     `text` read into blocks (handout_markup.blocks), `pictures` the names
     its pictures are shown by, in order (a `[picture n]` beyond them is
-    text)."""
+    text). `tables`: pipe tables too (a catalog entry's text)."""
     placed: list[Placed] = []
-    for block in hm.blocks(text, len(pictures)):
+    for block in hm.blocks(text, len(pictures), tables=tables):
         align = _ALIGN.get(block.kind, LEFT)
         if block.kind == hm.INITIAL:
             letter, rest = split_initial(block.text)
             placed.append(Placed(block.kind, rest, align, initial=letter))
+        elif block.kind == hm.TABLE:
+            placed.append(Placed(block.kind, align=align, rows=block.rows))
         elif block.kind == hm.PICTURE:
             caption = pictures[block.picture - 1]
             placed.append(

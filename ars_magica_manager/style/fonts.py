@@ -2,7 +2,8 @@
 for headings, in small caps, and prose; Uncial Antiqua for one decorative
 flourish; Manufacturing Consent for a title page's name and illuminated
 initials (and the Societates' headings); Cinzel for the True Lineages'
-headings. Labels, numbers and tables use the system's own UI font.
+headings; Noto Sans Runic for runes, which the serif falls back to. Labels,
+numbers and tables use the system's own UI font.
 """
 
 from __future__ import annotations
@@ -19,6 +20,8 @@ TITLE = "Manufacturing Consent"
 INSCRIPTION = "Cinzel"
 #: Labels, numbers and tables: Windows's own UI face, else the system's.
 UI = "Segoe UI"
+#: Runes (Verditius Elder Runes' table), which the serif falls back to.
+RUNIC = "Noto Sans Runic"
 
 #: The bundled typefaces' files, by family name.
 FONTS: dict[str, tuple[Path, ...]] = {
@@ -29,4 +32,5 @@ FONTS: dict[str, tuple[Path, ...]] = {
     DISPLAY: (ASSETS / "fonts" / "UncialAntiqua-Regular.ttf",),
     TITLE: (ASSETS / "fonts" / "ManufacturingConsent-Regular.ttf",),
     INSCRIPTION: (ASSETS / "fonts" / "Cinzel-wght.ttf",),
+    RUNIC: (ASSETS / "fonts" / "NotoSansRunic-Regular.ttf",),
 }

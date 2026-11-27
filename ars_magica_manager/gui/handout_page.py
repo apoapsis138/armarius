@@ -96,6 +96,34 @@ def _label(words: str, font: QFont, align: str, colour: str) -> QLabel:
     return label
 
 
+def _table(block: Placed) -> QLabel:
+    """A table block as a ruled table in the page's ink: its first row the
+    header in small capitals, a rule under it and under each row."""
+    rule = f"border-bottom:1px solid {INK['rule']}; padding:4px 10px"
+    caps = f"; font-variant:small-caps; color:{INK['label']}"
+
+    def cells(row: tuple[str, ...], tag: str) -> str:
+        return "".join(
+            f'<{tag} style="{rule}; text-align:left{caps if tag == "th" else ""}">'
+            f"{to_html(cell, INK)}</{tag}>"
+            for cell in row
+        )
+
+    header, *rows = block.rows or ((),)
+    body = "".join(f"<tr>{cells(row, 'td')}</tr>" for row in rows)
+    label = QLabel(
+        f'<table cellspacing="0" width="100%"><tr>{cells(header, "th")}</tr>'
+        f"{body}</table>"
+    )
+    label.setObjectName("handout-table")
+    label.setTextFormat(Qt.TextFormat.RichText)
+    label.setWordWrap(True)
+    label.setFont(serif(12.5))
+    label.setStyleSheet(f"color:{INK['foreground']}; background:transparent")
+    label.setTextInteractionFlags(Qt.TextInteractionFlag.NoTextInteraction)
+    return label
+
+
 _ALIGN = {
     layout.LEFT: Qt.AlignmentFlag.AlignLeft,
     layout.CENTRE: Qt.AlignmentFlag.AlignHCenter,
@@ -253,6 +281,8 @@ class HandoutPage(QWidget):
             return ShortRule(INK)
         if block.kind == hm.PICTURE:
             return self._picture(block)
+        if block.kind == hm.TABLE:
+            return _table(block)
         if block.kind == hm.INITIAL and block.initial:
             row = QWidget()
             line = QHBoxLayout(row)

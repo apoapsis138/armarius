@@ -104,8 +104,6 @@ def picture_document(shown: Shown) -> Document:
 #: The marks markdown_sheet sets a styled cell or paragraph in, longest
 #: first, so bold is never read as italic.
 _STYLES = (("**", "bold"), ("~~", "struck"), ("*", "italic"))
-#: A table's cell bars, those escaped in its words left alone.
-_BAR = re.compile(r"(?<!\\)\|")
 #: A Virtue or Flaw: its name, its tier and category, its summary.
 _ENTRY = re.compile(r"^- \*\*(.+?)\*\*(?: \((.*?)\))?(?:: (.*))?$")
 
@@ -157,16 +155,12 @@ def _widths(header: list[str], rows: list[list[str]]) -> list[float]:
     return [share / sum(shares) for share in shares]
 
 
-def _cells(line: str) -> list[str]:
-    inside = line.strip().removeprefix("|").removesuffix("|")
-    return [cell.strip().replace("\\|", "|") for cell in _BAR.split(inside)]
-
-
 def _table(lines: list[str]) -> Block:
     """A GitHub table read back: a header of blanks over bold labels is a
     sheet's facts; a row of a bold name and blanks names the group of the
     rows under it."""
-    header, rows = _cells(lines[0]), [_cells(line) for line in lines[2:]]
+    header = hm.table_cells(lines[0])
+    rows = [hm.table_cells(line) for line in lines[2:]]
     if not any(header) and len(header) == 2:
         pairs = [(_styled(label)[0], value) for label, value in rows]
         return Facts(tuple(pairs))
