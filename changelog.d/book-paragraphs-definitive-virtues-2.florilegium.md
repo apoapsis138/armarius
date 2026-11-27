@@ -1,0 +1,1 @@
+**More Definitive Edition Virtues and Flaws read like the book.** Long Virtues from Priest to Withstand Casting and Flaws from Abandoned Apprentice to Waster of Vis now have the Definitive Edition's wording and paragraphs, with sidebars and examples set apart and Study Bonus's and (Form) Monstrosity's examples as real tables. Sufi asks for a Minor Story Flaw such as Mentor.
