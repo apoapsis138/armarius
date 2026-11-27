@@ -104,6 +104,7 @@ from ars_magica_manager.models import (
     CultDegree,
     CultScript,
     DeepCover,
+    EnchantedDevice,
     Familiar,
     GuestStay,
     Handout,
@@ -673,7 +674,7 @@ async def _open_agency_spend(ws: WorkspaceScreen) -> None:
     ws._run_steps(agent_forms.spend(character, 1))
 
 
-def _with_clause(ws: WorkspaceScreen):
+def _with_clause(ws: WorkspaceScreen) -> Covenant:
     """The covenant with one clause in its charter (once, however often
     the form is opened)."""
     covenant = _covenant(ws)
@@ -702,7 +703,7 @@ async def _open_break_clause(ws: WorkspaceScreen) -> None:
     ws._run_steps(charter_forms.break_clause(ws.saga, covenant, 0))
 
 
-def _with_broken_clause(ws: WorkspaceScreen, *, notarized: bool = False):
+def _with_broken_clause(ws: WorkspaceScreen, *, notarized: bool = False) -> Covenant:
     """The covenant's one clause broken by Leandro (and its charter
     notarized, so a breach can be charged at Tribunal)."""
     covenant = _with_clause(ws)
@@ -736,7 +737,7 @@ async def _open_save_template(ws: WorkspaceScreen) -> None:
     ws.action_save_charter_template()
 
 
-def _with_guest(ws: WorkspaceScreen):
+def _with_guest(ws: WorkspaceScreen) -> Covenant:
     """Severinus of Fengheld as a guest of the Keep, owing 3 pawns of vis
     this year, with 5 pawns of Vim (in memory, saved only with the
     form)."""
@@ -948,7 +949,7 @@ def _settle_vis_source(ws: WorkspaceScreen) -> None:
     ws._run_steps(cov_forms.settle_form(ws.saga, _covenant(ws), source))
 
 
-def _covenfolk_line(ws: WorkspaceScreen):
+def _covenfolk_line(ws: WorkspaceScreen) -> covenfolk.InhabitantEntry:
     """A turb line of 3, as the covenfolk forms act on."""
     covenant = _covenant(ws)
     covenant.inhabitants.append(
@@ -1394,7 +1395,7 @@ async def _open_menagerie_award(ws: WorkspaceScreen) -> None:
     await _open_menagerie(ws, form)
 
 
-def _with_war(ws: WorkspaceScreen):
+def _with_war(ws: WorkspaceScreen) -> Command:
     """A Wizard's War on the Rhine's docket: Leandro on Brother Oda."""
     tribunal = ws.saga.tribunals[0]
     if not any(c.id == "war-contract" for c in tribunal.cases):
@@ -1414,7 +1415,7 @@ def _with_war(ws: WorkspaceScreen):
     return wizards_war.end_form(ws.saga, tribunal, 0)
 
 
-def _faerie_hill(ws: WorkspaceScreen):
+def _faerie_hill(ws: WorkspaceScreen) -> Command:
     """Cross the Threshold at the Drachenfels, made a Faerie place of aura
     5 with Realms of Power: Faerie in play (in memory)."""
     place = _found(ws.saga.neighbour("drachenfels"))
@@ -1425,7 +1426,7 @@ def _faerie_hill(ws: WorkspaceScreen):
     return threshold_forms.threshold_form(ws.saga, place)
 
 
-def _with_cover(ws: WorkspaceScreen):
+def _with_cover(ws: WorkspaceScreen) -> Command:
     """A Disguise Roll for Leandro, given a cover (in memory)."""
     character = _character(ws)
     if not character.covers:
@@ -1433,7 +1434,7 @@ def _with_cover(ws: WorkspaceScreen):
     return cover_forms.disguise_form(ws.saga, character)
 
 
-def _with_hook(ws: WorkspaceScreen):
+def _with_hook(ws: WorkspaceScreen) -> Command:
     """Suggest a Story from Rabenstein's Hook."""
     return hook_story_forms.story_form(ws.saga, _covenant(ws))
 
@@ -2084,13 +2085,13 @@ OPENERS: dict[str, Opener] = {
     "reward or punish": Opener(
         "character",
         lambda ws: ws._run_steps(
-            grog_forms.discipline_form(ws.saga, ws.saga.character("grog9"))
+            grog_forms.discipline_form(ws.saga, _found(ws.saga.character("grog9")))
         ),
     ),
     "retire a grog": Opener(
         "character",
         lambda ws: ws._run_steps(
-            grog_forms.pension_form(ws.saga, ws.saga.character("grog9"))
+            grog_forms.pension_form(ws.saga, _found(ws.saga.character("grog9")))
         ),
     ),
     "craft by magic": Opener(
@@ -2797,7 +2798,11 @@ OPENERS: dict[str, Opener] = {
     # The guides' gaps, round two.
     "grog story experience": Opener(
         "character",
-        _run(lambda ws: grog_story.story_form(ws.saga, ws.saga.character("grog9"))),
+        _run(
+            lambda ws: grog_story.story_form(
+                ws.saga, _found(ws.saga.character("grog9"))
+            )
+        ),
     ),
     "melee event": Opener(
         "character",
@@ -2901,7 +2906,7 @@ def _open_biographical_academe(ws: WorkspaceScreen) -> None:
     ws._edit_biographical_detail()
 
 
-def _device(ws: WorkspaceScreen, device_id: str):
+def _device(ws: WorkspaceScreen, device_id: str) -> EnchantedDevice:
     return next(d for d in ws.saga.enchanted_devices if d.id == device_id)
 
 
@@ -2983,7 +2988,9 @@ async def reopen_dialog(
     returned, back on top), and return it."""
     # The workspace, but for the one opener with no node: the saga picker,
     # which that opener checks for itself.
-    opened = OPENERS[name].open(cast(WorkspaceScreen, base))
+    opener = OPENERS[name]
+    assert opener.node is None or isinstance(base, WorkspaceScreen)
+    opened = opener.open(cast(WorkspaceScreen, base))
     if inspect.isawaitable(opened):
         await opened
     assert await wait_until(pilot, lambda: _is_dialog(app.screen, base), timeout=3.0), (
@@ -3014,9 +3021,6 @@ def _is_dialog(screen: Screen[Any], base: Screen[Any]) -> bool:
 def new_app(saga: Saga | None = None) -> ArsMagicaManagerApp:
     storage.save_saga(saga if saga is not None else contract_saga())
     return ArsMagicaManagerApp()
-
-
-Opens = Callable[..., Awaitable[tuple[object, object]]]
 
 
 def _open_byzantine(ws: WorkspaceScreen, which: str) -> None:

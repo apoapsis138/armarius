@@ -27,6 +27,16 @@ from ars_magica_manager.models import AnimalForm, VirtueFlawInstance
 from ars_magica_manager.rules import creation_characteristics as cch
 from ars_magica_manager.rules import divine_state as ds
 from ars_magica_manager.rules import merchants
+from ars_magica_manager.tui.screens.fields import FieldsDialog
+from ars_magica_manager.tui.screens.workspace import WorkspaceScreen
+
+
+def _found[T](record: T | None) -> T:
+    """`record`, which the saved saga has: a record looked up by id, or a
+    part of one the form has just filled in."""
+    assert record is not None, "missing from the saved saga (a record or a part)"
+    return record
+
 
 CONTRACTS: dict[str, Contract] = {
     "add secret": Contract(
@@ -111,7 +121,7 @@ CONTRACTS: dict[str, Contract] = {
         prefill={"Aging": "average", "Take the chart's crises": False},
         edits={"Aging": "harsh", "Move the Ability cap": True},
         saved=lambda s: (
-            (c := s.character("grog9")).creation_conditions.aging_chart,
+            (c := _found(s.character("grog9"))).creation_conditions.aging_chart,
             c.creation_conditions.aging_chart_cap,
             c.creation_conditions.aged_to,
             c.aging.decrepitude_points,
@@ -133,7 +143,7 @@ CONTRACTS: dict[str, Contract] = {
         },
         edits={"Dexterity": "-3", "Quickness": "2"},
         saved=lambda s: tuple(
-            getattr(s.character("grog9").characteristics, key)
+            getattr(_found(s.character("grog9")).characteristics, key)
             for key, _ in cch.CHARACTERISTICS
         ),
         expected=(2, 2, 2, 1, 1, -1, -3, 2),
@@ -678,10 +688,10 @@ CONTRACTS: dict[str, Contract] = {
             "Why": "asleep on watch",
         },
         saved=lambda s: (
-            s.character("grog9").wounds.light,
-            s.character("grog9").long_term_fatigue,
-            [d.kind for d in s.character("grog9").discipline],
-            [e.loyalty for e in s.covenant("cov1").diary if e.loyalty],
+            _found(s.character("grog9")).wounds.light,
+            _found(s.character("grog9")).long_term_fatigue,
+            [d.kind for d in _found(s.character("grog9")).discipline],
+            [e.loyalty for e in _found(s.covenant("cov1")).diary if e.loyalty],
         ),
         expected=(2, 3, ["flogging"], [-12]),
         invalid={"Reward or punishment": "promotion", "Rank now": ""},
@@ -693,8 +703,8 @@ CONTRACTS: dict[str, Contract] = {
         prefill={"They retire on": "pension"},
         edits={"They retire on": "rent", "Note": "keeps the gate"},
         saved=lambda s: (
-            [(d.kind, d.note) for d in s.character("grog9").discipline],
-            s.character("grog9").diary[-1].name,
+            [(d.kind, d.note) for d in _found(s.character("grog9")).discipline],
+            _found(s.character("grog9")).diary[-1].name,
         ),
         expected=([("retired", "rent")], "Retired, paying rent"),
     ),
@@ -705,7 +715,7 @@ CONTRACTS: dict[str, Contract] = {
             "Precise Casting on the spell": "0",
         },
         edits={"The work": "Hard", "Work for one craftsman": "A season"},
-        saved=lambda s: s.character("mag1").diary,
+        saved=lambda s: _found(s.character("mag1")).diary,
         expected=[],
         invalid={"Precise Casting on the spell": "x"},
         live={"#fields-live": "against 21"},
@@ -719,10 +729,10 @@ CONTRACTS: dict[str, Contract] = {
             "Story awards this year": "1",
         },
         saved=lambda s: (
-            s.character("grog9").grog_year.vocational,
-            s.character("grog9").grog_year.practice,
-            s.character("grog9").grog_year.exposure,
-            s.character("grog9").grog_year.story_awards,
+            (year := _found(_found(s.character("grog9")).grog_year)).vocational,
+            year.practice,
+            year.exposure,
+            year.story_awards,
         ),
         expected=("Single Weapon", "Brawl", "Awareness", 1),
         invalid={"Vocational xp": "x"},
@@ -867,7 +877,7 @@ CONTRACTS: dict[str, Contract] = {
     "edit character traditions": Contract(
         prefill={"Vitkir (HMRE)": True},
         edits={"Vitkir (HMRE)": False},
-        saved=lambda s: s.character("mag1").traditions,
+        saved=lambda s: _found(s.character("mag1")).traditions,
         expected=[],
     ),
     # A craftsman's sale of his finished goods (City & Guild).
@@ -961,7 +971,7 @@ CONTRACTS: dict[str, Contract] = {
     "paint an icon": Contract(
         prefill={"Depicting": "", "Kept at": "cologne"},
         edits={"Depicting": "St Ursula", "Seasons of Standard decoration": "1"},
-        saved=lambda s: s.neighbour("cologne").details["relics"][-1]["name"],
+        saved=lambda s: _found(s.neighbour("cologne")).details["relics"][-1]["name"],
         expected="An icon of St Ursula",
         invalid=[{"Depicting": ""}, {"Seasons of Standard decoration": "-1"}],
         live={"#fields-live": "Aesthetic Quality"},
@@ -994,8 +1004,8 @@ CONTRACTS: dict[str, Contract] = {
         prefill={"The sinful trait": "Cruel (Envious)", "How they sin": "season"},
         edits={"How they sin": "ceremony"},
         saved=lambda s: (
-            s.character("mag1").background.confidence_points,
-            s.character("mag1").aging.warping_realms,
+            _found(s.character("mag1")).background.confidence_points,
+            _found(s.character("mag1")).aging.warping_realms,
         ),
         expected=(1, {"Infernal": 1}),
         live={"#fields-live": "Infernal Warping Point"},
@@ -1007,7 +1017,7 @@ CONTRACTS: dict[str, Contract] = {
             "The trait awakened": "Envious",
         },
         edits={"The trait awakened": "Cruel"},
-        saved=lambda s: s.character("mag1").diary[-1].name,
+        saved=lambda s: _found(s.character("mag1")).diary[-1].name,
         expected="Infernal Influence",
         invalid={"The trait awakened": ""},
         live={"#fields-live": "Presence + Leadership"},
@@ -1015,7 +1025,7 @@ CONTRACTS: dict[str, Contract] = {
     "ars goetia": Contract(
         prefill={"Goetic Art": "Summoning", "The spirit's Might": "10"},
         edits={"The spirit's Might": "5"},
-        saved=lambda s: s.character("mag1").diary,
+        saved=lambda s: _found(s.character("mag1")).diary,
         expected=[],
         invalid={"The spirit's Might": "x"},
         live={"#fields-live": "Against 10"},
@@ -1024,7 +1034,7 @@ CONTRACTS: dict[str, Contract] = {
     "turbulence": Contract(
         prefill={"Why": "botch", "Aegis they had no part in": "0"},
         edits={"Sympathetic multiplier": "1"},
-        saved=lambda s: s.character("mag1").diary[-1].name,
+        saved=lambda s: _found(s.character("mag1")).diary[-1].name,
         expected="Turbulence",
         invalid={"Confidence spent on incurring": "99"},
         live={"#fields-live": "Incurring"},
@@ -1032,7 +1042,7 @@ CONTRACTS: dict[str, Contract] = {
     "the gauntlet": Contract(
         prefill={"How it is decided": "story", "The parens' verdict": "pass"},
         edits={"The parens' verdict": "fail", "The test": "an owl's egg"},
-        saved=lambda s: s.character("mag1").diary[-1].name,
+        saved=lambda s: _found(s.character("mag1")).diary[-1].name,
         expected="The Gauntlet failed",
         live={"#fields-live": "Hermetic Magus replaces Apprentice"},
     ),
@@ -1041,7 +1051,7 @@ CONTRACTS: dict[str, Contract] = {
         edits={"What happened": "a laboratory accident"},
         saved=lambda s: (
             "vf_suppressed_gift"
-            in {vf.vf_id for vf in s.character("mag1").virtues_flaws}
+            in {vf.vf_id for vf in _found(s.character("mag1")).virtues_flaws}
         ),
         expected=True,
         invalid={"What happened": ""},
@@ -1050,7 +1060,7 @@ CONTRACTS: dict[str, Contract] = {
     "learn a cantation": Contract(
         prefill={"Times cast spontaneously": "0"},
         edits={"The spell": "spell_ager_belli", "Times cast spontaneously": "10"},
-        saved=lambda s: s.character("mag1").spells_known[-1].spell_id,
+        saved=lambda s: _found(s.character("mag1")).spells_known[-1].spell_id,
         expected="spell_ager_belli",
         invalid={"Times cast spontaneously": "0"},
         live={"#fields-live": "Ager Belli is level 10"},
@@ -1306,7 +1316,7 @@ CONTRACTS: dict[str, Contract] = {
             "The spell-like power's level": "10",
         },
         edits={"The spirit's Might": "20", "Levels added for Penetration": "5"},
-        saved=lambda s: s.character("mag1").diary,
+        saved=lambda s: _found(s.character("mag1")).diary,
         expected=[],
         invalid={"The spirit's Might": "x"},
         live={"#fields-live": "Penetration +"},
@@ -1387,7 +1397,7 @@ CONTRACTS: dict[str, Contract] = {
     "philosophic alchemy": Contract(
         prefill={"It makes": "vis:", "Vessel's Shape and Material bonus": "0"},
         edits={"Vessel's Shape and Material bonus": "2"},
-        saved=lambda s: character(s).alchemy.digestion.shape_bonus,
+        saved=lambda s: _found(_found(character(s).alchemy).digestion).shape_bonus,
         expected=2,
         invalid=[
             {"Vessel's Shape and Material bonus": "-1"},
@@ -1497,7 +1507,7 @@ CONTRACTS: dict[str, Contract] = {
     "open a tunnel": Contract(
         prefill={"Level cast": "20", "It lasts": "Years or decades"},
         edits={"Level cast": "25", "Target's Parma Magica": "3"},
-        saved=lambda s: s.character("mag1").diary,
+        saved=lambda s: _found(s.character("mag1")).diary,
         expected=[],
         invalid={"Level cast": "x"},
         live={"#fields-live": "up to level 20"},
@@ -1508,8 +1518,8 @@ CONTRACTS: dict[str, Contract] = {
         prefill={"What changes": "gain_flaw"},
         edits={"What changes": "temporary_ends", "Virtue or Flaw ending": "0"},
         saved=lambda s: (
-            len(s.character("mag1").virtues_flaws),
-            s.character("mag1")
+            len(_found(s.character("mag1")).virtues_flaws),
+            _found(s.character("mag1"))
             .diary[-1]
             .name.startswith("A temporary Virtue or Flaw ends"),
         ),
@@ -1586,9 +1596,13 @@ CONTRACTS: dict[str, Contract] = {
         prefill={"Experience": "5"},
         edits={"The story": "Wolves", "Ability": "Brawl"},
         saved=lambda s: (
-            next(a.xp for a in s.character("grog9").abilities if a.name == "Brawl"),
-            s.character("grog9").grog_year.story_awards,
-            s.character("grog9").diary[-1].name,
+            next(
+                a.xp
+                for a in _found(s.character("grog9")).abilities
+                if a.name == "Brawl"
+            ),
+            _found(_found(s.character("grog9")).grog_year).story_awards,
+            _found(s.character("grog9")).diary[-1].name,
         ),
         expected=(5, 1, "Story experience: Wolves"),
         invalid={"Ability": "Brawl", "Experience": "6"},
@@ -1623,10 +1637,10 @@ CONTRACTS: dict[str, Contract] = {
         # 3 years and 3 pawns of vis a year (GotF p. 20).
         edits={"Staying at": "cov_sketch"},
         saved=lambda s: (
-            character(s).stay.host_id,
-            character(s).stay.until_year,
-            character(s).stay.fee_kind,
-            character(s).stay.fee,
+            (stay := _found(character(s).stay)).host_id,
+            stay.until_year,
+            stay.fee_kind,
+            stay.fee,
         ),
         expected=("cov_sketch", 1222, "vis", 3),
         invalid=[{"Staying at": "cov_sketch", "Since (year)": "x"}],
@@ -1666,7 +1680,7 @@ CONTRACTS: dict[str, Contract] = {
 
 
 @pytest.mark.parametrize("name", list(CONTRACTS))
-async def test_form_contract(name):
+async def test_form_contract(name: str):
     await run_contract(name, CONTRACTS[name])
 
 
@@ -1681,10 +1695,13 @@ async def test_form_contract(name):
         ("edit natural weapon", ("natural",)),
     ],
 )
-async def test_weapon_forms_offer_the_books_tables_for_their_sheet(name, tables):
+async def test_weapon_forms_offer_the_books_tables_for_their_sheet(
+    name: str, tables: tuple[str, ...]
+):
     app = new_app()
     async with app.run_test(size=(140, 70)) as pilot:
         _, dialog = await open_dialog(pilot, app, name)
+        assert isinstance(dialog, FieldsDialog)
         [book] = [f for f in dialog.fields if f.key == "gear_id"]
     assert [value for _, value in book.options] == [
         w.id for w in catalog.load_weapon_catalog(tables=tables)
@@ -1711,15 +1728,16 @@ async def test_conjure_a_spirit_says_what_came():
 
 
 @pytest.mark.parametrize("action", ["conjure", "bind"])
-async def test_a_galdor_form_with_nothing_to_choose_opens(action):
+async def test_a_galdor_form_with_nothing_to_choose_opens(action: str):
     """No Song, deal or Craft: a terminal Select can't be empty unless it may
     be blank, so the form must allow that and refuse on Save."""
     app = new_app()
     async with app.run_test(size=(140, 70)) as pilot:
         base, dialog = await open_dialog(pilot, app, "conjure a spirit")
+        assert isinstance(base, WorkspaceScreen)
         await dialog.dismiss(None)
         await pilot.pause()
-        magus = base.selected_character
+        magus = _found(base.selected_character)
         magus.abilities = []
         magus.bound_beings = []
         base._run_more(f"galdor_{action}")
