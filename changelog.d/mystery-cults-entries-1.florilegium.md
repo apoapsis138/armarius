@@ -1,0 +1,1 @@
+**Mystery Cults entries read like the book.** Seventeen long Virtues from Houses of Hermes: Mystery Cults, such as Automata, Animae Magic and Bind Curse, now read in full in the book's paragraphs and wording, with their headings, guidelines, Initiation Scripts and tables (Arcadian Travel's trods, Awakening's area sizes, Enchant Casting Tools' effects) set out as printed.
