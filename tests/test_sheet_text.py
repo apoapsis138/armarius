@@ -5,12 +5,10 @@ show every tab of its detail pane at two terminal sizes, check its details
 panel, and record the pane's rendered text. The result is compared with
 tests/golden/sheet_text/<node>-<W>x<H>.txt, so a refactor of the sheet
 views (compose, refresh, CSS, shared widgets) that changes what is on
-screen fails here. Each sheet is then refreshed section by section and
-must still show exactly the same text. Every tribunal other than Rhine
-shares Rhine's view with other words: each shows only its tabs in
-TRIBUNAL_TABS, and is refreshed only by the refresh test. After an
-intended change,
-regenerate the files with
+screen fails here, and test_refresh_shows_changed_data checks that a
+refreshed sheet shows the same text. Every tribunal other than Rhine shares Rhine's view with
+other words: each shows only its tabs in TRIBUNAL_TABS. After an intended
+change, regenerate the files with
 
     UPDATE_GOLDEN=1 uv run pytest tests/test_sheet_text.py
 
@@ -26,6 +24,7 @@ import pytest
 from footer_guard import check_footer_current, check_footer_rebuilds, footer
 from support import (
     NODES,
+    build_all_tabs,
     everything_saga,
     screen_lines,
     settled,
@@ -256,11 +255,13 @@ async def _refreshed(
     pilot, app, workspace, view, tabs: tuple[str, ...] | None = None
 ) -> str:
     """The sheet's text (its tabs named in `tabs`, or all) after every
-    section and tab id is refreshed."""
-    for widget in view.query("Collapsible, TabPane"):
-        if widget.id:
-            view.refresh_section(widget.id)
-    await _settle(pilot)
+    section and tab id is refreshed twice: a refresh must replace what it
+    shows, so the second must not add to the first."""
+    for _ in range(2):
+        for widget in view.query("Collapsible, TabPane"):
+            if widget.id:
+                view.refresh_section(widget.id)
+        await _settle(pilot)
     refreshed = "\n".join(await _all_tabs(pilot, app, workspace, tabs=tabs)) + "\n"
     assert view is workspace._current_sheet_view()  # not re-mounted
     return refreshed
@@ -337,9 +338,9 @@ async def test_sheet_text(node):
     needs the sheet's own focus moves and each tab's first visit), after
     which the sheet is built again with focus kept out; then the text at
     each size, the terminal resized and the sheet built again between them,
-    checking the details panels; and, at the first size, that refreshing
-    every section changes nothing. A tribunal in TRIBUNAL_TABS does all of
-    that on its named tabs only, and skips the refresh."""
+    checking the details panels. A tribunal in TRIBUNAL_TABS does all of
+    that on its named tabs only. Refreshing is checked by
+    test_refresh_shows_changed_data."""
     tabs = TRIBUNAL_TABS.get(node)
     storage.save_saga(everything_saga())
     app = ArsMagicaManagerApp()
@@ -360,12 +361,8 @@ async def test_sheet_text(node):
                 # A table sizes its columns as it is built: build it again.
                 await pilot.resize_terminal(*size)
                 await _reopen(pilot, workspace, node)
-            view = workspace._current_sheet_view()
             shown = "\n".join(await _all_tabs(pilot, app, workspace, True, tabs)) + "\n"
             _check_golden(node, size, shown)
-            if view is not None and size == SIZES[0] and tabs is None:
-                refreshed = await _refreshed(pilot, app, workspace, view)
-                assert refreshed == shown, _diff(shown, refreshed)
 
 
 _RECORD_LISTS = ("covenants", "characters", "laboratories", "familiars")
@@ -419,7 +416,8 @@ async def test_refresh_shows_changed_data(node):
     """A sheet opened on nearly empty records, then refreshed section by
     section after the records get their full data, shows exactly what a
     sheet composed on the full data shows -- so every widget that shows
-    record data is refreshed by some section. Which widgets refresh doesn't
+    record data is refreshed by some section, and refreshing it again
+    replaces its rows rather than adding to them. Which widgets refresh doesn't
     depend on the terminal size, so one size does."""
     size = SIZES[0]
     golden = GOLDEN_DIR / f"{node}-{size[0]}x{size[1]}.txt"
@@ -429,6 +427,11 @@ async def test_refresh_shows_changed_data(node):
         workspace = await _open_node(pilot, app, node)
         view = workspace._current_sheet_view()
         assert view is not None
+        # Tabs are built on their first visit, from the data then: build
+        # them all on the sparse data, or one built later shows the full
+        # data without its refresh ever running.
+        await build_all_tabs(pilot, view)
+        await _settle(pilot)
         _fill(workspace.saga)
         refreshed = await _refreshed(
             pilot, app, workspace, view, TRIBUNAL_TABS.get(node)
