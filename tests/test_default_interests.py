@@ -47,6 +47,11 @@ def _new(character_type: CharacterType, *, animal: bool = False) -> Character:
         ("mythic companion", False, {deeds.RELIGION}),
         ("grog", False, {deeds.COVENFOLK, deeds.CRAFT}),
         ("grog", True, {deeds.COVENFOLK}),
+        # Only a grog with an animal form is an animal grog; anyone else
+        # with one keeps the defaults of its type.
+        ("magus", True, {deeds.RESEARCH, deeds.TRIBUNAL}),
+        ("companion", True, {deeds.RELIGION}),
+        ("mythic companion", True, {deeds.RELIGION}),
     ],
 )
 def test_each_type_starts_with_its_own_interests_and_the_session(
@@ -449,6 +454,16 @@ def test_a_type_change_in_creation_hands_the_interests_back_to_the_defaults():
     assert made.interests_chosen
     _edit_info(saga, made, type="companion")
     assert not made.interests_chosen and _on(made) == ON["companion"]
+
+
+@pytest.mark.parametrize("character_type", ["companion", "mythic companion"])
+def test_an_animal_grog_made_a_companion_takes_up_the_companion_defaults(
+    character_type: CharacterType,
+):
+    hound = _made_from(catalog.load_animal_template_catalog()[0])
+    assert hound.animal is not None and _on(hound) == [deeds.COVENFOLK]
+    _edit_info(Saga(id="s", name="S"), hound, type=character_type)
+    assert hound.animal is not None and _on(hound) == ON[character_type]
 
 
 def test_a_type_change_in_play_keeps_the_interests():
