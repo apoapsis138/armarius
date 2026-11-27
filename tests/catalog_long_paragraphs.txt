@@ -1,9 +1,5 @@
-vf_additional_divination_method
-vf_ascendancy_to_the_hall_of_heroes
 vf_astrological_cyclic_magic_negative
-vf_astrological_cyclic_magic_positive
 vf_astrological_mutable_flaw
-vf_astrological_mutable_virtue
 vf_atlantean_magic
 vf_automata
 vf_awakening
@@ -13,18 +9,14 @@ vf_bind_curse
 vf_bind_magical_creatures
 vf_blood_of_heroes
 vf_cabal_legacy
-vf_celestial_magic
 vf_charm_magic
 vf_chthonic_magic
 vf_clan_ilfetu
 vf_clerk
-vf_consummate_talisman
 vf_corrupted_beast
 vf_craving_for_travel
 vf_curse_of_slander
 vf_cursed_guile
-vf_divination_and_augury
-vf_dream_magic
 vf_elysian_ecstasy
 vf_enchant_casting_tools
 vf_exotic_casting
@@ -37,7 +29,6 @@ vf_folk_magic
 vf_ghostly_warder
 vf_gild_trained
 vf_glamour
-vf_great_talisman
 vf_greater_charm
 vf_guardian_of_nature
 vf_gullible
@@ -109,8 +100,6 @@ vf_templar_commander
 vf_templar_confrere_or_consoeur
 vf_templar_office_holder
 vf_the_falling_evil
-vf_the_great_elixir
-vf_the_greater_dream_grimoire
 vf_theurgic_spirit_familiar
 vf_thief_of_emotions
 vf_tragic_life
