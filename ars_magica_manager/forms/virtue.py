@@ -723,16 +723,16 @@ def virtue_flaw_choice(entry: VirtueFlawDef) -> Choice:
     """A character catalog entry as the Add list offers it: its name, tier,
     type and what it needs naming; its book text beside the list. A long
     entry (entry_reading.is_long) can be read in full from the list, and
-    shows its summary and Effect lines there instead of its whole text,
-    when it has a summary (entry_reading.shortens; one without keeps its
-    whole text, and can still be read in full). Its Source heads both."""
+    shows what a details panel shows of it there (entry_reading.panel_text:
+    its summary, or with none its text without its tables) and its Effect
+    lines. Its Source heads both."""
     needs = catalog.needs_note(entry.name, entry.parameters)
     facts = f"{entry.tier} {entry.type}, {entry.category_label}"
     source = f"[dim]{escape('Source: ' + entry.source)}[/]"
-    if entry_reading.shortens(entry.description, entry.summary):
-        detail = "\n".join(
-            [source, escape(entry.summary), *st.effect_lines(entry.modifiers)]
-        )
+    long = entry_reading.is_long(entry.description)
+    if long:
+        shown = entry_reading.panel_text(entry.description, entry.summary)
+        detail = "\n".join([source, shown, *st.effect_lines(entry.modifiers)])
     else:
         text = (
             markdown_text(entry.description)
@@ -745,11 +745,7 @@ def virtue_flaw_choice(entry: VirtueFlawDef) -> Choice:
         entry,
         detail,
         f"{entry.type} {entry.category_label} {entry.tier} {entry.summary}",
-        read=(
-            partial(entry_page, entry)
-            if entry_reading.is_long(entry.description)
-            else None
-        ),
+        read=partial(entry_page, entry) if long else None,
     )
 
 

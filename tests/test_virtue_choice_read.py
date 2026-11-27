@@ -1,7 +1,8 @@
 """Read in full in the Add Virtue or Flaw list, in the core: a long entry's
-preview shows its source, summary and Effect lines, and the entry carries
-its reading page (Choice.read); a short entry shows its whole text and
-offers nothing to read."""
+preview shows its source, summary and Effect lines (with no summary, its
+text without its tables), and the entry carries its reading page
+(Choice.read); a short entry shows its whole text and offers nothing to
+read."""
 
 from __future__ import annotations
 
@@ -43,6 +44,22 @@ def test_a_long_entrys_preview_shows_its_source_and_summary_not_its_text() -> No
     assert detail.startswith(f"Source: {entry.source}\n")
     assert " ".join(entry.summary.split()) in " ".join(detail.split())
     assert entry.description[:200] not in detail
+
+
+def test_a_long_entry_without_a_summary_shows_its_text_but_not_its_table() -> None:
+    # Long because its description holds a table.
+    entry = replace(
+        _entry(SHORT_VF),
+        summary="",
+        description="Its words.\n\n| Rune | Meaning |\n|---|---|\n| Birch | Health |",
+    )
+
+    choice = virtue_forms.virtue_flaw_choice(entry)
+    detail = plain(choice.detail)
+
+    assert choice.read is not None
+    assert "Its words." in detail
+    assert "Birch" not in detail
 
 
 def test_a_short_entrys_preview_shows_its_whole_text() -> None:
