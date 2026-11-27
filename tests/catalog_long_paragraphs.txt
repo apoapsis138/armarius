@@ -5,8 +5,6 @@ vf_alluring_to_being
 vf_almogaten
 vf_amorphous
 vf_amorphous_major
-vf_animae_magic
-vf_arcadian_travel
 vf_archieunuch
 vf_ascendancy_to_the_hall_of_heroes
 vf_astrological_cyclic_magic_negative
@@ -24,7 +22,6 @@ vf_beloved_rival_major
 vf_berserk
 vf_bind_curse
 vf_bind_magical_creatures
-vf_binding_the_gift
 vf_blood_of_heroes
 vf_blood_of_the_nephilim
 vf_cabal_legacy
@@ -115,7 +112,6 @@ vf_homunculus_wizard
 vf_hubris
 vf_imagined_folk_tradition_vulnerability
 vf_imbued_with_the_spirit_of_form
-vf_immortal_ascension_as_repose
 vf_immune_to_source
 vf_immune_to_source_major
 vf_improved_powers_quality
@@ -184,8 +180,6 @@ vf_mercurian_magic
 vf_miniature
 vf_minor_magical_focus
 vf_monstrous_blood
-vf_mystery_of_the_anima
-vf_mystery_of_the_chimera
 vf_mystery_of_the_epitome
 vf_mythic_blood
 vf_mythic_blood_zmey
