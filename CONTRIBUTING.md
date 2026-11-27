@@ -71,9 +71,11 @@ test whose message names each offender, not a parametrized case per file.
   runs the Footer rebuild guard (`tests/footer_guard.py`) on every tab.
 - The tribunals share one view, so Rhine's sheet is checked in full and
   each other tribunal only where it differs: its row in `test_sheet_text`'s
-  `TRIBUNAL_TABS` names the tabs it walks, at both sizes, with the Footer
-  guard run once over them and no refresh pass; its dispatch matrix
-  records only its package's tabs. A new tribunal pack adds a row.
+  `TRIBUNAL_TABS` names the tabs it walks (the docket, meeting and code
+  tabs, and its package's own), at both sizes, with the Footer guard run
+  once over them. The snapshot test skips its refresh pass for them (the
+  refresh test still covers those tabs), and the dispatch matrix records
+  only those tabs. A new tribunal pack adds a row.
 
 After an *intended* change to either, regenerate both once, when the UI is
 settled, with `uv run python tools/story_check.py --goldens` (it takes

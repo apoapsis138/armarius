@@ -78,10 +78,12 @@ SHEETS = {
 }
 
 #: Rhine (the `tribunal` node) is walked in full. The other tribunals are
-#: the same view with other words and nothing on their rolls, so each walks
-#: only the tabs where it differs from Rhine: the header (above every tab),
-#: the docket's year, the meeting's order of business, the code tab's
-#: customs, and its package's own tabs. A new tribunal pack adds a row.
+#: the same view with other words and no covenant of their own, so each
+#: walks only the tabs where it differs from Rhine: the header (above every
+#: tab), the docket's year, the meeting's order of business, the code tab's
+#: customs, and its package's own tabs. A new tribunal pack adds a row. A
+#: covenant in one of them changes its roster (its package's columns): its
+#: row then walks the roster too (test_..._names_what_it_walks).
 _TRIBUNAL_DIFFERS = ("tab-trib-docket", "tab-trib-meeting", "tab-trib-code")
 TRIBUNAL_TABS: dict[str, tuple[str, ...]] = {
     "alps_tribunal": (*_TRIBUNAL_DIFFERS, "tab-trib-ostracism"),
@@ -157,7 +159,8 @@ def _walked(tabbed: TabbedContent, tabs: tuple[str, ...] | None) -> list[TabPane
     panes = list(tabbed.query(TabPane))
     if tabs is None:
         return panes
-    assert set(tabs) <= {p.id for p in panes}, f"no such tab: {tabs}"
+    missing = set(tabs) - {p.id for p in panes}
+    assert not missing, f"no such tab: {sorted(missing)}"
     return [p for p in panes if p.id in tabs]
 
 
@@ -312,9 +315,16 @@ def test_the_suite_runs_the_app_with_animations_off():
 
 
 def test_every_tribunal_but_rhine_names_what_it_walks():
-    """A new tribunal node adds its row to TRIBUNAL_TABS."""
+    """A new tribunal node adds its row to TRIBUNAL_TABS, and one whose
+    Tribunal has a covenant walks its roster, where its package's columns
+    show (Rhine's empty-roster text is no stand-in for them)."""
     tribunals = {node for node, data in NODES.items() if data[0] == "tribunal"}
     assert set(TRIBUNAL_TABS) == tribunals - {"tribunal"}
+    saga = everything_saga()
+    with_covenants = {c.tribunal_id for c in saga.covenants}
+    for node, tabs in TRIBUNAL_TABS.items():
+        if NODES[node][1] in with_covenants:
+            assert "tab-trib-roster" in tabs, f"{node} has a covenant"
 
 
 @pytest.mark.parametrize("node", sorted(NODES))

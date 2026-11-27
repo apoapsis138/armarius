@@ -1828,6 +1828,66 @@
     }
   },
   "theban_tribunal": {
+    "SheetSection#section-trib-cases": {
+      "active": "section-trib-cases",
+      "keys": {
+        "a": "FieldsDialog: Add a Case",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(nothing)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-past": {
+      "active": "section-trib-past",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-meeting-business": {
+      "active": "section-meeting-business",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Hold Tribunal: Theban Tribunal",
+        "d": "notice: No meeting is being held.",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-meeting-vote": {
+      "active": "section-meeting-vote",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(nothing)",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-meeting-attendance": {
+      "active": "section-meeting-attendance",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(nothing)",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-code": {
+      "active": "section-trib-code",
+      "keys": {
+        "a": "FieldsDialog: Add a Ruling",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-trib-tokens": {
       "active": "section-trib-tokens",
       "keys": {
@@ -1850,6 +1910,66 @@
     }
   },
   "normandy_tribunal": {
+    "SheetSection#section-trib-cases": {
+      "active": "section-trib-cases",
+      "keys": {
+        "a": "FieldsDialog: Add a Case",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(nothing)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-past": {
+      "active": "section-trib-past",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-meeting-business": {
+      "active": "section-meeting-business",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Hold Tribunal: Normandy Tribunal",
+        "d": "notice: No meeting is being held.",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-meeting-vote": {
+      "active": "section-meeting-vote",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(nothing)",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-meeting-attendance": {
+      "active": "section-meeting-attendance",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(nothing)",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-code": {
+      "active": "section-trib-code",
+      "keys": {
+        "a": "FieldsDialog: Add a Ruling",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-trib-tenure": {
       "active": "section-trib-tenure",
       "keys": {
@@ -2964,6 +3084,86 @@
     }
   },
   "transylvania_tribunal": {
+    "SheetSection#section-trib-roster": {
+      "active": "section-trib-roster",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(nothing)",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-magi": {
+      "active": "section-trib-magi",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(disabled)",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-cases": {
+      "active": "section-trib-cases",
+      "keys": {
+        "a": "FieldsDialog: Add a Case",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(nothing)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-past": {
+      "active": "section-trib-past",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-meeting-business": {
+      "active": "section-meeting-business",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Hold Tribunal: Transylvania Tribunal",
+        "d": "notice: No meeting is being held.",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-meeting-vote": {
+      "active": "section-meeting-vote",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(nothing)",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-meeting-attendance": {
+      "active": "section-meeting-attendance",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(nothing)",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-code": {
+      "active": "section-trib-code",
+      "keys": {
+        "a": "FieldsDialog: Add a Ruling",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-trib-privileges": {
       "active": "section-trib-privileges",
       "keys": {
@@ -2976,6 +3176,66 @@
     }
   },
   "hibernia_tribunal": {
+    "SheetSection#section-trib-cases": {
+      "active": "section-trib-cases",
+      "keys": {
+        "a": "FieldsDialog: Add a Case",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(nothing)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-past": {
+      "active": "section-trib-past",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-meeting-business": {
+      "active": "section-meeting-business",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Hold Tribunal: Hibernia Tribunal",
+        "d": "notice: No meeting is being held.",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-meeting-vote": {
+      "active": "section-meeting-vote",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Hold Tribunal: Hibernia Tribunal",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-meeting-attendance": {
+      "active": "section-meeting-attendance",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(nothing)",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-code": {
+      "active": "section-trib-code",
+      "keys": {
+        "a": "FieldsDialog: Add a Ruling",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-trib-ambassadors": {
       "active": "section-trib-ambassadors",
       "keys": {
@@ -3040,6 +3300,66 @@
     }
   },
   "alps_tribunal": {
+    "SheetSection#section-trib-cases": {
+      "active": "section-trib-cases",
+      "keys": {
+        "a": "FieldsDialog: Add a Case",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(nothing)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-past": {
+      "active": "section-trib-past",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-meeting-business": {
+      "active": "section-meeting-business",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Hold Tribunal: Greater Alps Tribunal",
+        "d": "notice: No meeting is being held.",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-meeting-vote": {
+      "active": "section-meeting-vote",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(nothing)",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-meeting-attendance": {
+      "active": "section-meeting-attendance",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(nothing)",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-code": {
+      "active": "section-trib-code",
+      "keys": {
+        "a": "FieldsDialog: Add a Ruling",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-trib-ostracism": {
       "active": "section-trib-ostracism",
       "keys": {
