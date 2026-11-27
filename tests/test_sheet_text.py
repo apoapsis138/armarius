@@ -5,9 +5,8 @@ show every tab of its detail pane at two terminal sizes, check its details
 panel, and record the pane's rendered text. The result is compared with
 tests/golden/sheet_text/<node>-<W>x<H>.txt, so a refactor of the sheet
 views (compose, refresh, CSS, shared widgets) that changes what is on
-screen fails here. The refresh test opens each sheet on nearly empty
-records, fills them and refreshes every section twice: it must then show
-the same text. Every tribunal other than Rhine shares Rhine's view with
+screen fails here, and test_refresh_shows_changed_data checks that a
+refreshed sheet shows the same text. Every tribunal other than Rhine shares Rhine's view with
 other words: each shows only its tabs in TRIBUNAL_TABS. After an intended
 change, regenerate the files with
 
@@ -25,6 +24,7 @@ import pytest
 from footer_guard import check_footer_current, check_footer_rebuilds, footer
 from support import (
     NODES,
+    build_all_tabs,
     everything_saga,
     screen_lines,
     settled,
@@ -428,8 +428,9 @@ async def test_refresh_shows_changed_data(node):
         view = workspace._current_sheet_view()
         assert view is not None
         # Tabs are built on their first visit, from the data then: build
-        # them all on the sparse data, or a refresh skips the unbuilt ones.
-        await view.build_all_tabs()
+        # them all on the sparse data, or one built later shows the full
+        # data without its refresh ever running.
+        await build_all_tabs(pilot, view)
         await _settle(pilot)
         _fill(workspace.saga)
         refreshed = await _refreshed(
