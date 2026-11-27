@@ -570,6 +570,13 @@ def test_review_interests_names_the_few_on_rather_than_the_many_off():
     assert "Turned off" not in text
 
 
+def test_the_interests_text_leaves_out_what_no_longer_applies():
+    character = _new("magus")
+    character.interests_off = [deeds.RESEARCH, deeds.SCHOLARLY]
+    character.type = "companion"
+    assert interests.interests_text(character) == "Turned off: Scholarly."
+
+
 def _actions(character: Character) -> dict[str, worksheet.Action]:
     saga = Saga(id="s", name="S")
     panel = worksheet.panel_for(character, "interests")

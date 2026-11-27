@@ -226,15 +226,15 @@ def interests_text(character: Character) -> str:
     """Which of `character`'s interests are on, in words: those turned off,
     or those on when they're fewer."""
     off = deeds.interests_off(character)
-    turned_off = [i for i in OPTIONAL if i in off]
-    if not turned_off:
+    shown_off = [i for i in OPTIONAL if i in off and deeds.applies(character, i)]
+    if not shown_off:
         return "Every interest is ticked."
     on = deeds.interests_on(character)
     if not on:
         return f"Only {deeds.SESSION} is on."
-    if len(on) < len(turned_off):
+    if len(on) < len(shown_off):
         return "On: " + ", ".join(on) + ". The rest are off."
-    return "Turned off: " + ", ".join(turned_off) + "."
+    return "Turned off: " + ", ".join(shown_off) + "."
 
 
 def defaults_text(character: Character) -> str:
