@@ -148,8 +148,6 @@ def _found_child(
         type="companion",
         covenant_id=character.covenant_id,
         in_creation=True,
-        # Its interests follow its Default Interests until they are chosen.
-        interests_chosen=False,
     )
     child.background.year_born = outcome.plan.year - FOUND_CHILD_AGE
     child.virtues_flaws.append(VirtueFlawInstance("vf_the_gift"))
