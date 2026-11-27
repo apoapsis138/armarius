@@ -322,6 +322,20 @@ def test_a_sketch_covenants_new_magus_starts_with_the_magus_defaults():
     assert magus.interests_chosen and _on(magus) == ON["magus"]
 
 
+def test_a_sketch_covenants_new_magus_starts_with_its_houses_defaults():
+    saga = Saga(id="s", name="S")
+    covenant = creation.add_covenant(saga, "Fengheld")
+    add = world_forms.magus_ops(saga, covenant).add
+    assert add is not None
+    form = add()
+    assert isinstance(form, Form)
+    values = {f.key: f.value for f in form.fields()}
+    form.apply(values | {"name": "Ysolde", "house": "house_merinita"})
+    (magus,) = saga.characters
+    assert magus.interests_chosen
+    assert {deeds.MYSTERY_CULTS, deeds.FAERIE} <= set(_on(magus))
+
+
 def test_a_house_change_in_creation_moves_the_interests_until_chosen():
     magus = _unchosen("magus")
     magus.hermetic.house = "house_flambeau"
