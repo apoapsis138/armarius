@@ -700,58 +700,55 @@ async def test_whats_new_is_listed_after_about_and_shows_the_changelog():
         )
 
 
-#: A short changelog: three features, an edition each and nine versions.
-#: Its What's New page still fills in a few pieces at a time, and renders
-#: far faster than the real one (test_changelog.py reads that, and the
-#: test above shows it in Help). Laid out like test_changelog.py's SAMPLE.
-_SAMPLE_FEATURES = ("Packs", "Help", "Saga")
-SAMPLE_CHANGELOG = """# Changelog
-
-## Features
-
-| Feature | What it is |
-| --- | --- |
-| Packs | The Tribunal packs |
-| Help | Help and its guides |
-| Saga | The saga and its records |
-
-## Editions
-
-| Edition | Title | Finished in | What it brought |
-| --- | --- | --- | --- |
-| Packs I | The Rhine | 1.1.0 | The first pack |
-| Help I | Guides | 1.2.0 | How-to guides |
-| Saga I | Seasons | 1.3.0 | Seasons advance |
-
-## Major versions
-
-| Major | Name | What it marked |
-| --- | --- | --- |
-| 1 | Creo | the first version |
-
-## Milestones
-
-| Milestone | Version | What it marked |
-| --- | --- | --- |
-| Incipit | 1.0.0 | the first version |
-
-""" + "\n".join(
-    f"## 1.{minor}.0 — 2026-10-{10 + minor}\n\n"
+#: A short changelog: eight features, an edition each, and ten versions
+#: with work on every feature. Its What's New page still fills in several
+#: pieces at a time, but renders far faster than the real one, which
+#: test_changelog.py reads and
+#: test_whats_new_is_listed_after_about_and_shows_the_changelog shows in
+#: Help. Laid out like test_changelog.py's SAMPLE.
+_SAMPLE_FEATURES = (
+    "Packs",
+    "Help",
+    "Saga",
+    "Seasons",
+    "Books",
+    "Combat",
+    "Remote",
+    "Desktop",
+)
+_SAMPLE_CHANGELOG = (
+    "# Changelog\n\n## Features\n\n| Feature | What it is |\n| --- | --- |\n"
     + "".join(
-        f"### {feature}\n\n"
-        + "".join(f"- **{feature} change {minor}.{n}.** Done.\n" for n in range(4))
-        + "\n"
-        for feature in _SAMPLE_FEATURES
+        f"| {feature} | The {feature.lower()} |\n" for feature in _SAMPLE_FEATURES
     )
-    for minor in range(8, -1, -1)
+    + "\n## Editions\n\n| Edition | Title | Finished in | What it brought |\n"
+    "| --- | --- | --- | --- |\n"
+    + "".join(
+        f"| {feature} I | First | 1.{n}.0 | The first |\n"
+        for n, feature in enumerate(_SAMPLE_FEATURES)
+    )
+    + "\n## Major versions\n\n| Major | Name | What it marked |\n"
+    "| --- | --- | --- |\n| 1 | Creo | the first version |\n"
+    "\n## Milestones\n\n| Milestone | Version | What it marked |\n"
+    "| --- | --- | --- |\n| Incipit | 1.0.0 | the first version |\n\n"
+    + "\n".join(
+        f"## 1.{minor}.0 — 2026-10-{1 + minor:02}\n\n"
+        + "".join(
+            f"### {feature}\n\n"
+            + "".join(f"- **{feature} change {minor}.{n}.** Done.\n" for n in range(3))
+            + "\n"
+            for feature in _SAMPLE_FEATURES
+        )
+        for minor in range(9, -1, -1)
+    )
 )
 
 
 async def test_whats_new_fills_in_and_another_topic_can_replace_it_midway(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    sample = changelog.whats_new(SAMPLE_CHANGELOG)
-    assert len(page_chunks(sample)) >= 3  # it fills in piece by piece
+    sample = changelog.whats_new(_SAMPLE_CHANGELOG)
+    assert len(page_chunks(sample)) >= 5  # it fills in piece by piece
     monkeypatch.setattr(ht, "whats_new_text", lambda: sample)
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(120, 45)) as pilot:
