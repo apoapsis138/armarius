@@ -129,7 +129,7 @@ The Activity list offers what this character may do. Activities marked "magi" ar
   - Reaching it, the Abilities and their Virtues are lost when the season is applied. Only at double it or more may the master choose to keep them, with **Keep Supernatural Abilities**, or convert them, with **Or convert them into** and up to two more (DE p. 271).
   - Converting gives one of the master's own Hermetic Virtues for each Ability, of its own size: Major for a Major, Minor for a Minor. It's checked when the season is played. Those not converted are lost. A similar Virtue the master lacks is the troupe's call, added by hand.
   - When the season is applied, the magus claims the child as their apprentice (DE p. 270). The Apprentice Social Status is added, and the child's Parens and House are set to the master's, so The Gauntlet can follow.
-  - A successful **Search for an apprentice** adds the Gifted child to the saga as a character at the magus's covenant, seven years old and In Creation, for you to name and build (DE p. 269).
+  - A successful **Search for an apprentice** adds the Gifted child to the saga as a character at the magus's covenant, seven years old and In Creation, for you to name and build (DE p. 269). The child starts with a companion's interests and Apprenticeship.
   - An inborn Ex Miscellanea tradition Virtue needs no Lab Total (DE p. 270). Leave it out of the child's Virtues until the Arts are open.
 - **The free House Virtue** (DE p. 272): in Houses Bonisagus, Guernicus, Mercere, Tremere, Flambeau, Jerbiton and Tytalus, an apprentice takes on their parens's House Virtue after 10 seasons of one-to-one work with them.
   - An apprentice is a character not yet a magus whose Parens (Hermetic Background) names a magus of the saga.

@@ -30,8 +30,11 @@ from ars_magica_manager.models import (
     CharacterType,
     Covenant,
     Saga,
+    SeasonPlan,
     VirtueFlawInstance,
 )
+from ars_magica_manager.rules import activities, apprentice_seasons
+from ars_magica_manager.seasons import advance
 
 
 def _new(character_type: CharacterType, *, animal: bool = False) -> Character:
@@ -400,6 +403,19 @@ def test_a_new_character_starts_with_its_defaults(character_type: CharacterType)
     made = creation.add_character(saga, "New", character_type, None)
     assert made.in_creation and not made.interests_chosen
     assert _on(made) == ON[character_type]
+
+
+def test_a_child_found_for_an_apprentice_starts_on_an_apprentices_defaults():
+    magus = _new("magus")
+    saga = Saga(id="s", name="S", characters=[magus])
+    plan = SeasonPlan("c", 1220, "Summer", apprentice_seasons.SEARCH)
+    found = activities.Outcome("c", plan, None, effects=[activities.FoundChild()])
+    advance.EFFECT_APPLIERS[activities.FoundChild](
+        saga, magus, found, activities.FoundChild()
+    )
+    child = saga.characters[-1]
+    assert child.in_creation
+    assert _on(child) == [deeds.RELIGION, deeds.APPRENTICESHIP]
 
 
 def test_a_new_grog_made_an_animal_starts_with_the_animal_defaults():
