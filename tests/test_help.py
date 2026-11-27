@@ -1,6 +1,7 @@
 """Help: the help files are well formed, every tab and section
 of every sheet has help, and ? / F1 open Help on what has focus."""
 
+import asyncio
 import re
 from pathlib import Path
 
@@ -9,7 +10,7 @@ from screen_helpers import _show_tab
 from support import NODES, build_all_tabs, everything_saga, screen_lines, wait_until
 from textual.widgets import Markdown, OptionList, TabbedContent, TextArea, Tree
 
-from ars_magica_manager import __version__, staged_projects, storage
+from ars_magica_manager import __version__, changelog, staged_projects, storage
 from ars_magica_manager import help_text as ht
 from ars_magica_manager.forms import season as season_forms
 from ars_magica_manager.models import (
@@ -700,7 +701,56 @@ async def test_whats_new_is_listed_after_about_and_shows_the_changelog():
         )
 
 
-async def test_whats_new_fills_in_and_another_topic_can_replace_it_midway():
+#: A short changelog: eight features, an edition each, and ten versions
+#: with work on every feature. Its What's New page still fills in several
+#: pieces at a time, but renders far faster than the real one, which
+#: test_changelog.py reads and
+#: test_whats_new_is_listed_after_about_and_shows_the_changelog shows in
+#: Help. Laid out like test_changelog.py's SAMPLE.
+_SAMPLE_FEATURES = (
+    "Packs",
+    "Help",
+    "Saga",
+    "Seasons",
+    "Books",
+    "Combat",
+    "Remote",
+    "Desktop",
+)
+_SAMPLE_CHANGELOG = (
+    "# Changelog\n\n## Features\n\n| Feature | What it is |\n| --- | --- |\n"
+    + "".join(
+        f"| {feature} | The {feature.lower()} |\n" for feature in _SAMPLE_FEATURES
+    )
+    + "\n## Editions\n\n| Edition | Title | Finished in | What it brought |\n"
+    "| --- | --- | --- | --- |\n"
+    + "".join(
+        f"| {feature} I | First | 1.{n}.0 | The first |\n"
+        for n, feature in enumerate(_SAMPLE_FEATURES)
+    )
+    + "\n## Major versions\n\n| Major | Name | What it marked |\n"
+    "| --- | --- | --- |\n| 1 | Creo | the first version |\n"
+    "\n## Milestones\n\n| Milestone | Version | What it marked |\n"
+    "| --- | --- | --- |\n| Incipit | 1.0.0 | the first version |\n\n"
+    + "\n".join(
+        f"## 1.{minor}.0 — 2026-10-{1 + minor:02}\n\n"
+        + "".join(
+            f"### {feature}\n\n"
+            + "".join(f"- **{feature} change {minor}.{n}.** Done.\n" for n in range(3))
+            + "\n"
+            for feature in _SAMPLE_FEATURES
+        )
+        for minor in range(9, -1, -1)
+    )
+)
+
+
+async def test_whats_new_fills_in_and_another_topic_can_replace_it_midway(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    sample = changelog.whats_new(_SAMPLE_CHANGELOG)
+    assert len(page_chunks(sample)) >= 5  # it fills in piece by piece
+    monkeypatch.setattr(ht, "whats_new_text", lambda: sample)
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(120, 45)) as pilot:
         await wait_until(pilot, lambda: isinstance(app.screen, SagaPickerScreen))
@@ -708,17 +758,30 @@ async def test_whats_new_fills_in_and_another_topic_can_replace_it_midway():
         assert await wait_until(pilot, lambda: isinstance(app.screen, HelpScreen))
         topics = app.screen.query_one("#help-topics", OptionList)
         page = app.screen.query_one("#help-page", Markdown)
+        # Hold the page after its first piece, so the topic changes while
+        # it is still filling in, however fast the pieces render.
+        appending, go_on = asyncio.Event(), asyncio.Event()
+        append = page.append
+
+        async def held_append(chunk: str) -> None:
+            appending.set()
+            await go_on.wait()
+            await append(chunk)
+
+        monkeypatch.setattr(page, "append", held_append)
         topics.highlighted = topics.get_option_index("ref:whats-new")
-        assert await wait_until(pilot, lambda: page.source.startswith("# What's New"))
-        topics.highlighted = topics.get_option_index("ref:keys")  # still filling
+        assert await wait_until(pilot, appending.is_set)
+        assert page.source.startswith("# What's New")
+        assert page.source != sample  # still filling
+        topics.highlighted = topics.get_option_index("ref:keys")
+        await pilot.pause()
+        go_on.set()
         assert await wait_until(pilot, lambda: page.source.startswith("# Keys"))
         await pilot.pause()
         assert "What's New" not in page.source
 
         topics.highlighted = topics.get_option_index("ref:whats-new")
-        assert await wait_until(
-            pilot, lambda: page.source == whats_new_text(), timeout=10.0
-        )
+        assert await wait_until(pilot, lambda: page.source == sample)
 
 
 def test_a_long_page_is_cut_at_headings_into_pieces_that_join_up():

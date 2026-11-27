@@ -26,6 +26,11 @@ os.environ["ARMARIUS_MOTION"] = "off"
 # ...and never asks GitHub for an App update (updates.py); a test of the
 # check passes its own fetch.
 os.environ["ARMARIUS_UPDATES"] = "off"
+# Textual's animations are off too, so a test waits only for frames, never
+# for a tab underline to slide. Textual reads this once, when it is first
+# imported: nothing above imports it (the core never does). The app itself
+# keeps its animations.
+os.environ["TEXTUAL_ANIMATIONS"] = "none"
 
 
 def pytest_addoption(parser):

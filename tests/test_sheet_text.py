@@ -5,9 +5,11 @@ show every tab of its detail pane at two terminal sizes, check its details
 panel, and record the pane's rendered text. The result is compared with
 tests/golden/sheet_text/<node>-<W>x<H>.txt, so a refactor of the sheet
 views (compose, refresh, CSS, shared widgets) that changes what is on
-screen fails here. Each sheet is then refreshed section by section and
-must still show exactly the same text. After an intended change,
-regenerate the files with
+screen fails here. test_refresh_shows_changed_data opens a sheet on
+nearly empty records, fills them, refreshes it and compares it with the
+same golden. Every tribunal other than Rhine is Rhine's view with its own
+words, so each walks only its tabs in support.TRIBUNAL_TABS. After an
+intended change, regenerate the files with
 
     UPDATE_GOLDEN=1 uv run pytest tests/test_sheet_text.py
 
@@ -23,6 +25,8 @@ import pytest
 from footer_guard import check_footer_current, check_footer_rebuilds, footer
 from support import (
     NODES,
+    TRIBUNAL_TABS,
+    build_all_tabs,
     everything_saga,
     screen_lines,
     settled,
@@ -34,11 +38,13 @@ from ars_magica_manager import storage
 from ars_magica_manager.models import Saga
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import WorkspaceScreen
+from ars_magica_manager.tui.screens.sheets.tribunal import TribunalSheetView
 from ars_magica_manager.tui.screens.widgets import (
     DETAILS_PANEL_MAX_HEIGHT,
     DETAILS_PANEL_MIN_HEIGHT,
     DetailsPanel,
     SelectableList,
+    SplitFooter,
 )
 
 GOLDEN_DIR = Path(__file__).parent / "golden" / "sheet_text"
@@ -75,8 +81,20 @@ SHEETS = {
 
 
 async def _settle(pilot) -> None:
+    """Frame pauses around what can still land after them. With animations
+    off (under test) an animated scroll or underline still takes its final
+    value on the animator's next tick, so wait for that tick, not for an
+    animation to play. A Footer rebuild still pending would be counted
+    against the next action's Footer guard, or leave the Footer stale."""
     await pilot.pause()
-    await pilot.wait_for_scheduled_animations()
+    await pilot.wait_for_animation()
+    split = SplitFooter.of(pilot.app.screen)
+    if split is not None:
+        assert await wait_until(pilot, lambda: split.idle), (
+            f"the Footer never finished rebuilding: held={split._held} "
+            f"asked_while_held={split._asked_while_held} "
+            f"pending={split._rebuild_pending!r}"
+        )
     await pilot.pause()
 
 
@@ -115,9 +133,28 @@ def _check_details_panel(app, pane, tab: TabPane | None, where: str) -> None:
         assert panel is panel.parent.children[-1], where
 
 
-async def _all_tabs(pilot, app, workspace, check_panels: bool = False) -> list[str]:
-    """Every tab's text, each under a "===== <tab id>" line; with
-    `check_panels`, each tab's details panel is checked on the way."""
+def _walked(tabbed: TabbedContent, tabs: tuple[str, ...] | None) -> list[TabPane]:
+    """The tabs of `tabbed` named in `tabs` (None: all), in their order;
+    a name with no tab fails, so a row of TRIBUNAL_TABS can't walk less
+    than it says."""
+    panes = list(tabbed.query(TabPane))
+    if tabs is None:
+        return panes
+    missing = set(tabs) - {p.id for p in panes}
+    assert not missing, f"no such tab: {sorted(missing)}"
+    return [p for p in panes if p.id in tabs]
+
+
+async def _all_tabs(
+    pilot,
+    app,
+    workspace,
+    check_panels: bool = False,
+    tabs: tuple[str, ...] | None = None,
+) -> list[str]:
+    """Every tab's text (or only those named in `tabs`), each under a
+    "===== <tab id>" line; with `check_panels`, each tab's details panel is
+    checked on the way."""
     pane = workspace._detail_pane()
     tabbed = next(iter(pane.query(TabbedContent)), None)
     if tabbed is None:
@@ -126,7 +163,7 @@ async def _all_tabs(pilot, app, workspace, check_panels: bool = False) -> list[s
             _check_details_panel(app, pane, None, "(no tabs)")
         return ["===== (no tabs)", *_pane_text(app, workspace)]
     lines: list[str] = []
-    for tab in tabbed.query(TabPane):
+    for tab in _walked(tabbed, tabs):
         app.screen.set_focus(None)
         tabbed.active = tab.id
         await wait_until(pilot, lambda tab=tab: tabbed.active == tab.id)
@@ -174,7 +211,8 @@ async def _show_node(pilot, workspace: WorkspaceScreen, node: str) -> None:
 
     assert await wait_until(pilot, lambda: find_node() is not None)
     tree.select_node(find_node())
-    assert await wait_until(pilot, lambda: workspace.selected_kind == NODES[node][0])
+    kind, *_ = NODES[node]
+    assert await wait_until(pilot, lambda: workspace.selected_kind == kind)
     # selected_kind changes before the sheet is mounted and recorded.
     if node in SHEETS:
         assert await wait_until(
@@ -195,13 +233,18 @@ async def _reopen(pilot, workspace: WorkspaceScreen, node: str) -> None:
     await _show_node(pilot, workspace, node)
 
 
-async def _refreshed(pilot, app, workspace, view) -> str:
-    """The sheet's text after every section and tab id is refreshed."""
-    for widget in view.query("Collapsible, TabPane"):
-        if widget.id:
-            view.refresh_section(widget.id)
-    await _settle(pilot)
-    refreshed = "\n".join(await _all_tabs(pilot, app, workspace)) + "\n"
+async def _refreshed(
+    pilot, app, workspace, view, tabs: tuple[str, ...] | None = None
+) -> str:
+    """The sheet's text (its tabs named in `tabs`, or all) after every
+    section and tab id is refreshed twice: a refresh must replace what it
+    shows, so the second must not add to the first."""
+    for _ in range(2):
+        for widget in view.query("Collapsible, TabPane"):
+            if widget.id:
+                view.refresh_section(widget.id)
+        await _settle(pilot)
+    refreshed = "\n".join(await _all_tabs(pilot, app, workspace, tabs=tabs)) + "\n"
     assert view is workspace._current_sheet_view()  # not re-mounted
     return refreshed
 
@@ -215,15 +258,17 @@ def _check_golden(node: str, size: tuple[int, int], shown: str) -> None:
     assert shown == expected, _diff(expected, shown)
 
 
-async def _check_footer_rebuilds(pilot, app, view) -> None:
+async def _check_footer_rebuilds(
+    pilot, app, view, tabs: tuple[str, ...] | None = None
+) -> None:
     """The performance guard on the Footer (CONTRIBUTING.md "Performance rules"):
-    switching to each tab (its first visit, which builds it), focusing a
-    section and arrowing down a list each rebuild the Footer at most once,
-    and leave it showing the keys there are. Run with the sheet's own focus
-    moves, before its text is walked."""
+    switching to each tab (or each named in `tabs`; its first visit, which
+    builds it), focusing a section and arrowing down a list each rebuild the
+    Footer at most once, and leave it showing the keys there are. Run with
+    the sheet's own focus moves, before its text is walked."""
     check_footer_current(app, "opening the sheet")
     tabbed = view.query_one(TabbedContent)
-    panes = list(tabbed.query(TabPane))
+    panes = _walked(tabbed, tabs)
     for pane in panes[1:] + panes[:1]:
         before = footer(app).rebuilds
         tabbed.active = pane.id or ""
@@ -248,14 +293,66 @@ async def _check_footer_rebuilds(pilot, app, view) -> None:
                 check_footer_rebuilds(app, before, f"arrowing down {lists[0].id}")
 
 
+def test_the_suite_runs_the_app_with_animations_off():
+    """`_settle` waits only for the animator's next tick, not for an
+    animation to play out: with animations off, that tick lands every
+    animated value at its end."""
+    assert ArsMagicaManagerApp().animation_level == "none"
+
+
+def test_every_tribunal_but_rhine_names_what_it_walks():
+    """A new tribunal node adds its row to TRIBUNAL_TABS, and one whose
+    Tribunal has a covenant walks its roster, where its package's columns
+    show (Rhine's empty-roster text is no stand-in for them)."""
+    tribunals = {node for node, (kind, *_) in NODES.items() if kind == "tribunal"}
+    assert set(TRIBUNAL_TABS) == tribunals - {"tribunal"}
+    with_covenants = {c.tribunal_id for c in everything_saga().covenants}
+    unwalked = [
+        node
+        for node, tabs in TRIBUNAL_TABS.items()
+        if _tribunal_id(node) in with_covenants and "tab-trib-roster" not in tabs
+    ]
+    assert not unwalked, f"these have a covenant but don't walk the roster: {unwalked}"
+
+
+#: The tabs that show an empty state for a Tribunal with nothing in them:
+#: Rhine has a covenant, a treasury and minutes, so only another tribunal
+#: shows these.
+_EMPTY_STATE_TABS = {"tab-trib-roster", "tab-trib-treasury", "tab-trib-diary"}
+
+
+def _tribunal_id(node: str) -> str:
+    _, tribunal_id = NODES[node]
+    return tribunal_id
+
+
+def test_some_tribunal_walks_the_empty_states():
+    """An empty Tribunal's roster, treasury and diary say there is nothing
+    yet: some tribunal with none walks those tabs, so their goldens (and
+    the dispatch matrix's rows for them) still check that text."""
+    saga = everything_saga()
+    with_covenants = {c.tribunal_id for c in saga.covenants}
+    empty = {
+        t.id for t in saga.tribunals if not t.treasury and not t.diary
+    } - with_covenants
+    walking = [
+        node
+        for node, tabs in TRIBUNAL_TABS.items()
+        if _tribunal_id(node) in empty and _EMPTY_STATE_TABS <= set(tabs)
+    ]
+    assert walking, f"no empty tribunal walks {sorted(_EMPTY_STATE_TABS)}"
+
+
 @pytest.mark.parametrize("node", sorted(NODES))
 async def test_sheet_text(node):
     """One app session per node: for a sheet, the Footer guard first (it
     needs the sheet's own focus moves and each tab's first visit), after
     which the sheet is built again with focus kept out; then the text at
     each size, the terminal resized and the sheet built again between them,
-    checking the details panels; and, at the first size, that refreshing
-    every section changes nothing."""
+    checking the details panels. A tribunal in TRIBUNAL_TABS does all of
+    that on its named tabs only. Refreshing is checked by
+    test_refresh_shows_changed_data."""
+    tabs = TRIBUNAL_TABS.get(node)
     storage.save_saga(everything_saga())
     app = ArsMagicaManagerApp()
     async with app.run_test(size=SIZES[0]) as pilot:
@@ -263,19 +360,20 @@ async def test_sheet_text(node):
             pilot, app, node, keep_focus_out=node not in SHEETS
         )
         if node in SHEETS:
-            await _check_footer_rebuilds(pilot, app, workspace._current_sheet_view())
+            view = workspace._current_sheet_view()
+            if tabs is not None:
+                assert isinstance(view, TribunalSheetView)
+                package = {extra.tab_id for extra in view.package.tabs}
+                assert package <= set(tabs), f"{node} walks its package's tabs"
+            await _check_footer_rebuilds(pilot, app, view, tabs)
             await _reopen(pilot, workspace, node)
         for size in SIZES:
             if size != SIZES[0]:
                 # A table sizes its columns as it is built: build it again.
                 await pilot.resize_terminal(*size)
                 await _reopen(pilot, workspace, node)
-            view = workspace._current_sheet_view()
-            shown = "\n".join(await _all_tabs(pilot, app, workspace, True)) + "\n"
+            shown = "\n".join(await _all_tabs(pilot, app, workspace, True, tabs)) + "\n"
             _check_golden(node, size, shown)
-            if view is not None and size == SIZES[0]:
-                refreshed = await _refreshed(pilot, app, workspace, view)
-                assert refreshed == shown, _diff(shown, refreshed)
 
 
 _RECORD_LISTS = ("covenants", "characters", "laboratories", "familiars")
@@ -329,7 +427,8 @@ async def test_refresh_shows_changed_data(node):
     """A sheet opened on nearly empty records, then refreshed section by
     section after the records get their full data, shows exactly what a
     sheet composed on the full data shows -- so every widget that shows
-    record data is refreshed by some section. Which widgets refresh doesn't
+    record data is refreshed by some section, and refreshing it again
+    replaces its rows rather than adding to them. Which widgets refresh doesn't
     depend on the terminal size, so one size does."""
     size = SIZES[0]
     golden = GOLDEN_DIR / f"{node}-{size[0]}x{size[1]}.txt"
@@ -339,8 +438,15 @@ async def test_refresh_shows_changed_data(node):
         workspace = await _open_node(pilot, app, node)
         view = workspace._current_sheet_view()
         assert view is not None
+        # Tabs are built on their first visit, from the data then: build
+        # them all on the sparse data, or one built later shows the full
+        # data without its refresh ever running.
+        await build_all_tabs(pilot, view)
+        await _settle(pilot)
         _fill(workspace.saga)
-        refreshed = await _refreshed(pilot, app, workspace, view)
+        refreshed = await _refreshed(
+            pilot, app, workspace, view, TRIBUNAL_TABS.get(node)
+        )
     expected = golden.read_text(encoding="utf-8")
     assert refreshed == expected, _diff(expected, refreshed)
 

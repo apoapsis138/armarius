@@ -1,11 +1,14 @@
 """Golden test of WorkspaceScreen's key dispatch.
 
 For every section (Collapsible) and tab of every kind of sheet, focus it,
-press each section-dispatched key (a, e, d, More and Filter) and record what happens: whether the
-binding is enabled, and which dialog opens (with its title) or which
-notice appears. The result is compared with tests/golden/dispatch_matrix.json,
-so a refactor of the dispatch/routing code that changes any of it fails
-here. After an intended change, regenerate the file with
+press each section-dispatched key (a, e, d, More and Filter) and record
+what happens: whether the binding is enabled, and which dialog opens
+(with its title) or which notice appears. Every tribunal other than Rhine
+shares Rhine's view, so each records only its tabs in support's
+TRIBUNAL_TABS (its top panel is Rhine's too). The result is compared with
+tests/golden/dispatch_matrix.json, so a refactor of the dispatch/routing
+code that changes any of it fails here. After an intended change,
+regenerate the file with
 
     UPDATE_GOLDEN=1 uv run pytest -p no:xdist tests/test_dispatch_matrix.py
 
@@ -20,7 +23,14 @@ from pathlib import Path
 
 import pytest
 from rich.text import Text
-from support import NODES, build_all_tabs, everything_saga, settled, wait_until
+from support import (
+    NODES,
+    TRIBUNAL_TABS,
+    build_all_tabs,
+    everything_saga,
+    settled,
+    wait_until,
+)
 from textual.widgets import Collapsible, TabbedContent, TabPane, Tree
 
 from ars_magica_manager import storage
@@ -105,6 +115,14 @@ def _label(target) -> str:
     still a TabPane there)."""
     kind = "TabPane" if isinstance(target, TabPane) else type(target).__name__
     return f"{kind}#{target.id}"
+
+
+def _tab_id(target) -> str | None:
+    """The id of the tab `target` is, or is in (None: in no tab)."""
+    if isinstance(target, TabPane):
+        return target.id
+    pane = next((a for a in target.ancestors if isinstance(a, TabPane)), None)
+    return pane.id if pane is not None else None
 
 
 async def _focus_target(pilot, app, view, target) -> None:
@@ -271,6 +289,8 @@ async def _matrix_for(
             for w in view.query("Collapsible, TabPane")
             if w.id and not (isinstance(w, TabPane) and w.query(Collapsible))
         ]
+        if kind in TRIBUNAL_TABS:  # Rhine's view: only the tabs that differ
+            targets = [t for t in targets if _tab_id(t) in TRIBUNAL_TABS[kind]]
         labels = [_label(t) for t in targets]
         if shard is not None:
             targets = targets[shard::shards]

@@ -46,9 +46,12 @@ setup error, fails the job.
 
 Tests are isolated per test (a temporary saga folder and settings path, and
 conftest closes every Qt window a test leaves open), so parallel runs are
-safe. Screen tests (Pilot or Qt; `tools/tiers.py` says which) are marked
-`ui`, so `-m "not ui"` runs the fast tier alone. When a new source file's
-name doesn't say which screen tests check it, add it to
+safe. Textual's animations are off for the whole run (conftest sets
+`TEXTUAL_ANIMATIONS=none` before Textual is first imported, as Textual
+reads it only then), so no test waits for one to finish; the app keeps
+its animations. Screen tests (Pilot or Qt; `tools/tiers.py` says which)
+are marked `ui`, so `-m "not ui"` runs the fast tier alone. When a new
+source file's name doesn't say which screen tests check it, add it to
 `tools/slice_tests.py`'s `AREA_TESTS`.
 
 Nearly all the suite's time is the screen tests building sheets and
@@ -64,8 +67,20 @@ test whose message names each offender, not a parametrized case per file.
 - `tests/test_dispatch_matrix.py` records every sheet section x a / e / d /
   More / Filter: it fails if key routing changes.
 - `tests/test_sheet_text.py` records every tab's rendered text at 140x70
-  and 120x45, checks that refreshing every section changes nothing, and
-  runs the Footer rebuild guard (`tests/footer_guard.py`).
+  and 120x45 and runs the Footer rebuild guard (`tests/footer_guard.py`)
+  on every tab it walks. Its refresh test fills a sheet's nearly empty
+  records and refreshes every section twice: the sheet must then match
+  the golden, so a section its refresh misses, or one that adds rows
+  instead of replacing them, fails it.
+- The tribunals share one view, so Rhine's sheet is checked in full and
+  each other tribunal only where it differs: its row in
+  `tests/support.py`'s `TRIBUNAL_TABS` names the tabs it walks (the
+  docket, meeting and code tabs, its package's own, and its roster where
+  that differs, as it must once it has a covenant), at both sizes, with
+  the Footer guard run once over them. Alps also walks its empty roster,
+  treasury and diary, which Rhine fills. The refresh test walks the same
+  tabs, and the dispatch matrix records only those tabs. A new tribunal
+  pack adds a row.
 
 After an *intended* change to either, regenerate both once, when the UI is
 settled, with `uv run python tools/story_check.py --goldens` (it takes
