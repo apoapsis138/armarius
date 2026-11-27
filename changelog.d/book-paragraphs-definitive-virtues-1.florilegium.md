@@ -1,0 +1,1 @@
+**More Virtues read like the book.** Sixty-seven long Virtues, from Academic Concentration to Potent Magic, now have the Definitive Edition's wording and paragraphs, with their sidebars set apart under headings, the sample magical foci as lists and Mythic Blood's invocation table as a real table.

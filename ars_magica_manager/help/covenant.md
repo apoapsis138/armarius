@@ -318,6 +318,17 @@ The covenant's Boons, chosen from the catalogue with **Add**. Edit one
 with **Edit** to give its detail and description, and to change what it
 names. The points they cost are under the title.
 <!-- /gui -->
+A long Boon or Hook, such as Chase or Infants, shows its summary in its
+details, and [Read in full](help:read-in-full) opens the whole of it.
+<!-- tui -->
+Press `m` for More and choose **Read in full**, or click the link at the
+foot of its details; in the Add list, press `F4`.
+<!-- /tui -->
+<!-- gui -->
+Click **Read in full** under its summary in the inspector, or under the
+preview in the Add list.
+<!-- /gui -->
+
 That total and the Hooks' total share one colour:
 
 - plain while there are points still to spend
@@ -356,6 +367,9 @@ The covenant's Hooks, chosen from the catalogue with **Add** and edited
 with **Edit**. The points they provide are under the title, coloured
 together with the Boons' total.
 <!-- /gui -->
+A long Hook shows its summary, with [Read in full](help:read-in-full), as
+a long Boon does.
+
 A Hook the catalogue allows to be unknown can be marked so. It then
 counts a fixed number of points, shown on its row. A Story Event in the
 Diary can be linked to a Hook, and the Hook's details then say how many

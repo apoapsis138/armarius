@@ -303,7 +303,7 @@ class FamiliarSheetView(SheetView):
         if list_id == "fam-abilities-list":
             event.stop()
             self.query_one("#fam-ability-info", Static).update(
-                fam.ability_info_text(self.familiar, event.data_index)
+                fam.ability_info_text(self.familiar, event.data_index, READ_HINT)
             )
             return
         if list_id == "fam-bond-powers-list":

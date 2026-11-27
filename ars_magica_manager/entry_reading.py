@@ -28,6 +28,12 @@ LONG = 750
 #: front-end can give its own, naming its key or button.
 READ_HINT = "[dim]A long entry: Read in full shows all of it.[/]"
 
+#: Read in full's title, its help page, and what it says with no long
+#: entry chosen.
+READ_TITLE = "Read in full"
+READ_HELP = "read-in-full"
+READ_REFUSED = "Choose a long entry in its list first."
+
 
 def is_long(description: str) -> bool:
     """Whether an entry with `description` is too long for a panel: past
@@ -63,6 +69,14 @@ def panel_text(description: str, summary: str) -> str:
         for block in markup.blocks(description, tables=True)
         if block.kind != markup.TABLE
     )
+
+
+def short_view(description: str, summary: str) -> str:
+    """What a panel or a picker's preview shows of an entry's text
+    (markup): a long one's panel_text, a short one's whole_text."""
+    if is_long(description):
+        return panel_text(description, summary)
+    return whole_text(description)
 
 
 def _line(words: str, tag: str = "") -> str:

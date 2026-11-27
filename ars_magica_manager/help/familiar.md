@@ -295,6 +295,9 @@ new Ability from the catalog.
 character's [Abilities](help:tab-abilities). The familiar shares its
 magus's Language scores, so there's no need to add them.
 
+A long Ability shows its summary, with [Read in full](help:read-in-full),
+as on a character's sheet.
+
 ## Bond Powers
 <!-- help: tab-fam-powers -->
 

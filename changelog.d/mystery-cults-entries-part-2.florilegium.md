@@ -1,0 +1,1 @@
+**Mystery Cults Virtues and Flaws laid out as printed.** Thirty-three more long Mysteries, among them the Criamon Stations, Hubris, Nature Lore, Spell Timing and Reforging Enchanted Items, now read in the book's own words and paragraphs, with their tables, lists and Initiation Scripts.

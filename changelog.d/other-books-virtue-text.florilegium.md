@@ -1,0 +1,1 @@
+**More Virtues and Flaws read like the book.** The long entries from the Realms of Power, True Lineages, Against the Dark and other supplements now have the book's paragraphs and wording, their lists one item to a line, Initiation Scripts set apart, and the Gigantic, Miniature, Figurine Magic and Elysian Ecstasy charts as real tables.
