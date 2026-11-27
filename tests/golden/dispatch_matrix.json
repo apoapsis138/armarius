@@ -1828,46 +1828,6 @@
     }
   },
   "theban_tribunal": {
-    "PinnedCollapsible#section-trib-info": {
-      "active": "section-trib-info",
-      "keys": {
-        "a": "(disabled)",
-        "e": "FieldsDialog: Edit Tribunal",
-        "d": "ConfirmScreen",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "SheetSection#section-trib-roster": {
-      "active": "section-trib-roster",
-      "keys": {
-        "a": "(disabled)",
-        "e": "(nothing)",
-        "d": "(disabled)",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "SheetSection#section-trib-magi": {
-      "active": "section-trib-magi",
-      "keys": {
-        "a": "(disabled)",
-        "e": "(disabled)",
-        "d": "(disabled)",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "TabPane#tab-trib-history": {
-      "active": "section-trib-info",
-      "keys": {
-        "a": "(disabled)",
-        "e": "FieldsDialog: Edit Tribunal",
-        "d": "ConfirmScreen",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
     "SheetSection#section-trib-cases": {
       "active": "section-trib-cases",
       "keys": {
@@ -1885,36 +1845,6 @@
         "e": "(nothing)",
         "d": "(nothing)",
         "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "SheetSection#section-trib-arguments": {
-      "active": "section-trib-arguments",
-      "keys": {
-        "a": "FieldsDialog: Add Argument",
-        "e": "(nothing)",
-        "d": "(nothing)",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "SheetSection#section-trib-argument": {
-      "active": "section-trib-argument",
-      "keys": {
-        "a": "(disabled)",
-        "e": "notice: Add an argument first.",
-        "d": "(disabled)",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "SheetSection#section-trib-argument-texts": {
-      "active": "section-trib-argument-texts",
-      "keys": {
-        "a": "notice: Add an argument first.",
-        "e": "(nothing)",
-        "d": "(nothing)",
-        "m": "notice: Choose a text of an argument first.",
         "slash": "(disabled)"
       }
     },
@@ -1958,16 +1888,6 @@
         "slash": "(disabled)"
       }
     },
-    "SheetSection#section-trib-treasury": {
-      "active": "section-trib-treasury",
-      "keys": {
-        "a": "ChooseScreen: Add to the Treasury",
-        "e": "(nothing)",
-        "d": "(nothing)",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
     "SheetSection#section-trib-tokens": {
       "active": "section-trib-tokens",
       "keys": {
@@ -1987,69 +1907,9 @@
         "m": "(disabled)",
         "slash": "(disabled)"
       }
-    },
-    "SheetSection#section-trib-diary": {
-      "active": "section-trib-diary",
-      "keys": {
-        "a": "FieldsDialog: Add a Diary Entry",
-        "e": "(nothing)",
-        "d": "(nothing)",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "SheetSection#section-secrets": {
-      "active": "section-secrets",
-      "keys": {
-        "a": "FieldsDialog: New Secret of Theban",
-        "e": "(nothing)",
-        "d": "(nothing)",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
     }
   },
   "normandy_tribunal": {
-    "PinnedCollapsible#section-trib-info": {
-      "active": "section-trib-info",
-      "keys": {
-        "a": "(disabled)",
-        "e": "FieldsDialog: Edit Tribunal",
-        "d": "ConfirmScreen",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "SheetSection#section-trib-roster": {
-      "active": "section-trib-roster",
-      "keys": {
-        "a": "(disabled)",
-        "e": "(nothing)",
-        "d": "(disabled)",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "SheetSection#section-trib-magi": {
-      "active": "section-trib-magi",
-      "keys": {
-        "a": "(disabled)",
-        "e": "(disabled)",
-        "d": "(disabled)",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "TabPane#tab-trib-history": {
-      "active": "section-trib-info",
-      "keys": {
-        "a": "(disabled)",
-        "e": "FieldsDialog: Edit Tribunal",
-        "d": "ConfirmScreen",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
     "SheetSection#section-trib-cases": {
       "active": "section-trib-cases",
       "keys": {
@@ -2067,36 +1927,6 @@
         "e": "(nothing)",
         "d": "(nothing)",
         "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "SheetSection#section-trib-arguments": {
-      "active": "section-trib-arguments",
-      "keys": {
-        "a": "FieldsDialog: Add Argument",
-        "e": "(nothing)",
-        "d": "(nothing)",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "SheetSection#section-trib-argument": {
-      "active": "section-trib-argument",
-      "keys": {
-        "a": "(disabled)",
-        "e": "notice: Add an argument first.",
-        "d": "(disabled)",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "SheetSection#section-trib-argument-texts": {
-      "active": "section-trib-argument-texts",
-      "keys": {
-        "a": "notice: Add an argument first.",
-        "e": "(nothing)",
-        "d": "(nothing)",
-        "m": "notice: Choose a text of an argument first.",
         "slash": "(disabled)"
       }
     },
@@ -2140,16 +1970,6 @@
         "slash": "(disabled)"
       }
     },
-    "SheetSection#section-trib-treasury": {
-      "active": "section-trib-treasury",
-      "keys": {
-        "a": "ChooseScreen: Add to the Treasury",
-        "e": "(nothing)",
-        "d": "(nothing)",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
     "SheetSection#section-trib-tenure": {
       "active": "section-trib-tenure",
       "keys": {
@@ -2166,26 +1986,6 @@
         "a": "FieldsDialog: Add a Tourney Result",
         "e": "FieldsDialog: Edit a Tourney Result",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "SheetSection#section-trib-diary": {
-      "active": "section-trib-diary",
-      "keys": {
-        "a": "FieldsDialog: Add a Diary Entry",
-        "e": "(nothing)",
-        "d": "(nothing)",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "SheetSection#section-secrets": {
-      "active": "section-secrets",
-      "keys": {
-        "a": "FieldsDialog: New Secret of Normandy",
-        "e": "(nothing)",
-        "d": "(nothing)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -3284,16 +3084,6 @@
     }
   },
   "transylvania_tribunal": {
-    "PinnedCollapsible#section-trib-info": {
-      "active": "section-trib-info",
-      "keys": {
-        "a": "(disabled)",
-        "e": "FieldsDialog: Edit Tribunal",
-        "d": "ConfirmScreen",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
     "SheetSection#section-trib-roster": {
       "active": "section-trib-roster",
       "keys": {
@@ -3310,16 +3100,6 @@
         "a": "(disabled)",
         "e": "(disabled)",
         "d": "(disabled)",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "TabPane#tab-trib-history": {
-      "active": "section-trib-info",
-      "keys": {
-        "a": "(disabled)",
-        "e": "FieldsDialog: Edit Tribunal",
-        "d": "ConfirmScreen",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -3341,36 +3121,6 @@
         "e": "(nothing)",
         "d": "(nothing)",
         "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "SheetSection#section-trib-arguments": {
-      "active": "section-trib-arguments",
-      "keys": {
-        "a": "FieldsDialog: Add Argument",
-        "e": "(nothing)",
-        "d": "(nothing)",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "SheetSection#section-trib-argument": {
-      "active": "section-trib-argument",
-      "keys": {
-        "a": "(disabled)",
-        "e": "notice: Add an argument first.",
-        "d": "(disabled)",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "SheetSection#section-trib-argument-texts": {
-      "active": "section-trib-argument-texts",
-      "keys": {
-        "a": "notice: Add an argument first.",
-        "e": "(nothing)",
-        "d": "(nothing)",
-        "m": "notice: Choose a text of an argument first.",
         "slash": "(disabled)"
       }
     },
@@ -3414,16 +3164,6 @@
         "slash": "(disabled)"
       }
     },
-    "SheetSection#section-trib-treasury": {
-      "active": "section-trib-treasury",
-      "keys": {
-        "a": "ChooseScreen: Add to the Treasury",
-        "e": "(nothing)",
-        "d": "(nothing)",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
     "SheetSection#section-trib-privileges": {
       "active": "section-trib-privileges",
       "keys": {
@@ -3433,69 +3173,9 @@
         "m": "(disabled)",
         "slash": "(disabled)"
       }
-    },
-    "SheetSection#section-trib-diary": {
-      "active": "section-trib-diary",
-      "keys": {
-        "a": "FieldsDialog: Add a Diary Entry",
-        "e": "(nothing)",
-        "d": "(nothing)",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "SheetSection#section-secrets": {
-      "active": "section-secrets",
-      "keys": {
-        "a": "FieldsDialog: New Secret of Transylvania",
-        "e": "(nothing)",
-        "d": "(nothing)",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
     }
   },
   "hibernia_tribunal": {
-    "PinnedCollapsible#section-trib-info": {
-      "active": "section-trib-info",
-      "keys": {
-        "a": "(disabled)",
-        "e": "FieldsDialog: Edit Tribunal",
-        "d": "ConfirmScreen",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "SheetSection#section-trib-roster": {
-      "active": "section-trib-roster",
-      "keys": {
-        "a": "(disabled)",
-        "e": "(nothing)",
-        "d": "(disabled)",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "SheetSection#section-trib-magi": {
-      "active": "section-trib-magi",
-      "keys": {
-        "a": "(disabled)",
-        "e": "(disabled)",
-        "d": "(disabled)",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "TabPane#tab-trib-history": {
-      "active": "section-trib-info",
-      "keys": {
-        "a": "(disabled)",
-        "e": "FieldsDialog: Edit Tribunal",
-        "d": "ConfirmScreen",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
     "SheetSection#section-trib-cases": {
       "active": "section-trib-cases",
       "keys": {
@@ -3513,36 +3193,6 @@
         "e": "(nothing)",
         "d": "(nothing)",
         "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "SheetSection#section-trib-arguments": {
-      "active": "section-trib-arguments",
-      "keys": {
-        "a": "FieldsDialog: Add Argument",
-        "e": "(nothing)",
-        "d": "(nothing)",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "SheetSection#section-trib-argument": {
-      "active": "section-trib-argument",
-      "keys": {
-        "a": "(disabled)",
-        "e": "notice: Add an argument first.",
-        "d": "(disabled)",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "SheetSection#section-trib-argument-texts": {
-      "active": "section-trib-argument-texts",
-      "keys": {
-        "a": "notice: Add an argument first.",
-        "e": "(nothing)",
-        "d": "(nothing)",
-        "m": "notice: Choose a text of an argument first.",
         "slash": "(disabled)"
       }
     },
@@ -3586,16 +3236,6 @@
         "slash": "(disabled)"
       }
     },
-    "SheetSection#section-trib-treasury": {
-      "active": "section-trib-treasury",
-      "keys": {
-        "a": "ChooseScreen: Add to the Treasury",
-        "e": "(nothing)",
-        "d": "(nothing)",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
     "SheetSection#section-trib-ambassadors": {
       "active": "section-trib-ambassadors",
       "keys": {
@@ -3612,26 +3252,6 @@
         "a": "FieldsDialog: Add a Treaty",
         "e": "FieldsDialog: Edit a Treaty",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "SheetSection#section-trib-diary": {
-      "active": "section-trib-diary",
-      "keys": {
-        "a": "FieldsDialog: Add a Diary Entry",
-        "e": "(nothing)",
-        "d": "(nothing)",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "SheetSection#section-secrets": {
-      "active": "section-secrets",
-      "keys": {
-        "a": "FieldsDialog: New Secret of Hibernia",
-        "e": "(nothing)",
-        "d": "(nothing)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -3680,46 +3300,6 @@
     }
   },
   "alps_tribunal": {
-    "PinnedCollapsible#section-trib-info": {
-      "active": "section-trib-info",
-      "keys": {
-        "a": "(disabled)",
-        "e": "FieldsDialog: Edit Tribunal",
-        "d": "ConfirmScreen",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "SheetSection#section-trib-roster": {
-      "active": "section-trib-roster",
-      "keys": {
-        "a": "(disabled)",
-        "e": "(nothing)",
-        "d": "(disabled)",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "SheetSection#section-trib-magi": {
-      "active": "section-trib-magi",
-      "keys": {
-        "a": "(disabled)",
-        "e": "(disabled)",
-        "d": "(disabled)",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "TabPane#tab-trib-history": {
-      "active": "section-trib-info",
-      "keys": {
-        "a": "(disabled)",
-        "e": "FieldsDialog: Edit Tribunal",
-        "d": "ConfirmScreen",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
     "SheetSection#section-trib-cases": {
       "active": "section-trib-cases",
       "keys": {
@@ -3737,36 +3317,6 @@
         "e": "(nothing)",
         "d": "(nothing)",
         "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "SheetSection#section-trib-arguments": {
-      "active": "section-trib-arguments",
-      "keys": {
-        "a": "FieldsDialog: Add Argument",
-        "e": "(nothing)",
-        "d": "(nothing)",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "SheetSection#section-trib-argument": {
-      "active": "section-trib-argument",
-      "keys": {
-        "a": "(disabled)",
-        "e": "notice: Add an argument first.",
-        "d": "(disabled)",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "SheetSection#section-trib-argument-texts": {
-      "active": "section-trib-argument-texts",
-      "keys": {
-        "a": "notice: Add an argument first.",
-        "e": "(nothing)",
-        "d": "(nothing)",
-        "m": "notice: Choose a text of an argument first.",
         "slash": "(disabled)"
       }
     },
@@ -3810,42 +3360,12 @@
         "slash": "(disabled)"
       }
     },
-    "SheetSection#section-trib-treasury": {
-      "active": "section-trib-treasury",
-      "keys": {
-        "a": "ChooseScreen: Add to the Treasury",
-        "e": "(nothing)",
-        "d": "(nothing)",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
     "SheetSection#section-trib-ostracism": {
       "active": "section-trib-ostracism",
       "keys": {
         "a": "FieldsDialog: Add an Ostracism",
         "e": "FieldsDialog: Edit an Ostracism",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "SheetSection#section-trib-diary": {
-      "active": "section-trib-diary",
-      "keys": {
-        "a": "FieldsDialog: Add a Diary Entry",
-        "e": "(nothing)",
-        "d": "(nothing)",
-        "m": "(disabled)",
-        "slash": "(disabled)"
-      }
-    },
-    "SheetSection#section-secrets": {
-      "active": "section-secrets",
-      "keys": {
-        "a": "FieldsDialog: New Secret of Greater Alps",
-        "e": "(nothing)",
-        "d": "(nothing)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
