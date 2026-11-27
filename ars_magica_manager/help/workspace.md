@@ -1228,7 +1228,7 @@ The list of the saga's own entries. The Inspector shows the one last clicked in 
 ### What house rules don't do
 <!-- help: house-rules-limits -->
 
-House rules are text only, and the rules engine applies no effects for them. Two entries of the same kind can't share a name, type and tier. Delete won't delete an entry that a character, laboratory or covenant still holds. The message names them, so remove it there first.
+House rules are text only, and the rules engine applies no effects for them. A Virtue or Flaw's Description can hold paragraphs, lists and tables, read as the catalog's are ([Read in full](help:read-in-full)). Two entries of the same kind can't share a name, type and tier. Delete won't delete an entry that a character, laboratory or covenant still holds. The message names them, so remove it there first.
 
 An Ability has no type, tier or points, and no two Abilities, the catalog's or the saga's, can share a name. Delete won't delete an Ability someone holds. Deleting one leaves its Virtue, which is deleted on its own. Whether an Ability is Accelerated can't change while someone holds it, since their score would change with it. On the desktop, its mark is its category's.
 

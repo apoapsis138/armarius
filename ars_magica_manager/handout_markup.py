@@ -12,6 +12,10 @@ bullets) plus six handout tags, each starting a line:
 - `[flourish]`, alone on its line: a flourish;
 - `[picture 2]`, alone on its line: the Handout's second picture, placed.
 
+A catalog entry read in full (entry_reading) is read the same way, and
+may also hold pipe tables (`| Rune | Tree |`, a rule of dashes, then its
+rows); a Handout's text has none.
+
 Nothing else is a tag. Any other bracket, a tag mid-line, a tag with
 nothing after it, or a picture the Handout hasn't got comes out as text,
 escaped; a block never holds a file name or an address, only a picture's
@@ -57,15 +61,68 @@ MOST_PICTURES = 4
 _TAGGED = re.compile(r"^\[([A-Za-z]+)(?: ([0-9]+))?\](.*)$")
 
 
+#: A pipe table: its first row the header, each cell safe markup.
+TABLE = "table"
+
+#: The most rows (header included) a table holds, the rest read as text
+#: after it; and the most columns, a wider one read as text.
+MOST_TABLE_ROWS = 60
+MOST_TABLE_COLUMNS = 8
+
+#: A table row: a line opening and closing with a bar; and the line under
+#: a table's header, its cells dashes (with an optional colon each side).
+_TABLE_ROW = re.compile(r"^\s*\|.*\|\s*$")
+_TABLE_RULE = re.compile(r"^\s*\|(\s*:?-+:?\s*\|)+\s*$")
+#: A bar between cells: one not written `\|`.
+_CELL_BAR = re.compile(r"(?<!\\)\|")
+
+
 @dataclass(frozen=True)
 class Block:
     """One block of a Handout: what it is, its words as safe markup (for
     text, a heading, a centred or right line, or an initial's paragraph),
-    or the number of the picture it places (1 for the first)."""
+    the number of the picture it places (1 for the first), or a table's
+    rows, the header first, each cell safe markup."""
 
     kind: str
     text: str = ""
     picture: int = 0
+    rows: tuple[tuple[str, ...], ...] = ()
+
+
+def table_cells(line: str) -> list[str]:
+    """A pipe table row's cells, as written between its bars (`\\|` is a
+    bar in a cell's words). The one reading of a row, for the reading page
+    and a printed record's copy alike."""
+    inner = line.strip().removeprefix("|").removesuffix("|")
+    return [cell.strip().replace("\\|", "|") for cell in _CELL_BAR.split(inner)]
+
+
+def _table(lines: list[str], at: int) -> tuple[Block, int] | None:
+    """The pipe table starting at line `at` (a header row, a rule of
+    dashes, then its rows) and the line after it; None when the lines there
+    aren't one, or it is wider than a table may be. It ends at the first
+    line that isn't a row of the header's width, or at its last row."""
+    if at + 1 >= len(lines) or not _TABLE_ROW.match(lines[at]):
+        return None
+    if not _TABLE_RULE.match(lines[at + 1]):
+        return None
+    header = table_cells(lines[at])
+    rule = table_cells(lines[at + 1])
+    if len(rule) != len(header) or len(header) > MOST_TABLE_COLUMNS:
+        return None
+    rows = [header]
+    end = at + 2
+    while (
+        end < len(lines)
+        and len(rows) < MOST_TABLE_ROWS
+        and _TABLE_ROW.match(lines[end])
+        and len(table_cells(lines[end])) == len(header)
+    ):
+        rows.append(table_cells(lines[end]))
+        end += 1
+    cells = tuple(tuple(markdown_text(cell) for cell in row) for row in rows)
+    return Block(TABLE, rows=cells), end
 
 
 def _tag(line: str, pictures: int) -> Block | None:
@@ -90,9 +147,11 @@ def _tag(line: str, pictures: int) -> Block | None:
     return Block(kind, words)
 
 
-def blocks(text: str, pictures: int = 0) -> list[Block]:
+def blocks(text: str, pictures: int = 0, *, tables: bool = False) -> list[Block]:
     """`text` read into blocks, in order; `pictures` is how many pictures
-    the Handout has (a `[picture n]` beyond them is text)."""
+    the Handout has (a `[picture n]` beyond them is text). With `tables`
+    (a catalog entry's text, not a Handout's), a pipe table is a table
+    block."""
     found: list[Block] = []
     words: list[str] = []
     opening = TEXT
@@ -104,9 +163,19 @@ def blocks(text: str, pictures: int = 0) -> list[Block]:
             words.clear()
         opening = TEXT
 
-    for line in text.splitlines():
+    lines = text.splitlines()
+    at = 0
+    while at < len(lines):
+        line = lines[at]
+        at += 1
         if not line.strip():
             close()
+            continue
+        table = _table(lines, at - 1) if tables else None
+        if table is not None:
+            close()
+            found.append(table[0])
+            at = table[1]
             continue
         tagged = _tag(line, pictures)
         if tagged is None:

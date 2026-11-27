@@ -16,6 +16,8 @@ from __future__ import annotations
 from dataclasses import replace
 
 from . import handout_layout as layout
+from . import handout_markup as markup
+from .markup import escape
 from .models import VELLUM
 
 #: An entry whose description is longer than this, in characters, is long:
@@ -28,14 +30,39 @@ READ_HINT = "[dim]A long entry: Read in full shows all of it.[/]"
 
 
 def is_long(description: str) -> bool:
-    """Whether an entry with `description` is too long for a panel."""
-    return len(description) > LONG
+    """Whether an entry with `description` is too long for a panel: past
+    LONG characters, or holding a table, which only the reading page has
+    room for."""
+    if len(description) > LONG:
+        return True
+    return "|" in description and any(
+        block.kind == markup.TABLE for block in markup.blocks(description, tables=True)
+    )
 
 
-def shortens(description: str, summary: str) -> bool:
-    """Whether a panel shows the summary in place of `description`: a long
-    entry that has a summary to show (one without keeps its whole text)."""
-    return is_long(description) and bool(summary.strip())
+def whole_text(description: str) -> str:
+    """An entry's whole text (markup) where there is no reading page to
+    open: each table's rows as lines of words, its cells set apart by a
+    dot, the header first."""
+    parts: list[str] = []
+    for block in markup.blocks(description, tables=True):
+        if block.kind == markup.TABLE:
+            parts.append("\n".join(" · ".join(row) for row in block.rows))
+        else:
+            parts.append(block.text)
+    return "\n\n".join(parts)
+
+
+def panel_text(description: str, summary: str) -> str:
+    """What a long entry's panel shows of it (markup): its summary, or with
+    none its text without its tables, which only the reading page draws."""
+    if summary.strip():
+        return escape(" ".join(summary.split()))
+    return "\n\n".join(
+        block.text
+        for block in markup.blocks(description, tables=True)
+        if block.kind != markup.TABLE
+    )
 
 
 def _line(words: str, tag: str = "") -> str:
@@ -61,7 +88,7 @@ def reading(
     its `summary` in italics as the lead, then its `description`, and its
     `source` at the foot; F1 opens `help_id`. Brackets are shown as
     written; the description may lay itself out as a Handout's text does
-    (paragraphs, **bold**, lists, a Handout's tags)."""
+    (paragraphs, **bold**, lists, a Handout's tags), and hold pipe tables."""
     parts = [
         _line(category, "centre"),
         _line(summary),
@@ -69,6 +96,6 @@ def reading(
         _line(f"Source: {source}" if source.strip() else "", "right"),
     ]
     text = "\n\n".join(part for part in parts if part.strip())
-    laid = layout.lay_out(title, VELLUM, text)
+    laid = layout.lay_out(title, VELLUM, text, tables=True)
     page = replace(laid.stationery, name="catalog-entry", label=kind)
     return layout.Reading(replace(laid, stationery=page), help_id=help_id)

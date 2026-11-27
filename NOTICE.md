@@ -170,7 +170,9 @@ Font License, version 1.1, with each font's licence beside it: EB Garamond,
 Bonislawsky DBA Astigmatic (AOETI), Reserved Font Name "Uncial Antiqua";
 Manufacturing Consent, © 2019 The Manufacturing Consent Project Authors;
 Cinzel, © 2020 The Cinzel Project Authors
-(https://github.com/NDISCOVER/Cinzel), from the Google Fonts repository.
+(https://github.com/NDISCOVER/Cinzel), from the Google Fonts repository;
+Noto Sans Runic, © 2022 The Noto Project Authors
+(https://github.com/notofonts/runic), unchanged.
 
 **The user-docs website** (built from `site/` by `tools/build_site.py`)
 serves EB Garamond, Cinzel and Uncial Antiqua unchanged, each with its

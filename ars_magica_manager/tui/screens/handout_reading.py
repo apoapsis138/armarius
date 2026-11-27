@@ -11,6 +11,8 @@ from __future__ import annotations
 
 from typing import ClassVar
 
+from rich.table import Table
+from rich.text import Text
 from textual.app import ComposeResult
 from textual.binding import BindingType
 from textual.containers import Horizontal, Vertical, VerticalScroll
@@ -38,6 +40,18 @@ def reading(block: Placed) -> str:
     if block.kind == hm.INITIAL and block.initial:
         return f"[b $accent]{escape(block.initial)}[/]{block.text}"
     return block.text
+
+
+def table(block: Placed) -> Table:
+    """A laid-out table block as a Rich table: its first row the header,
+    its cells' markup drawn as markup (it is already safe)."""
+    header, *rows = block.rows or ((),)
+    drawn = Table(expand=True, show_edge=False)
+    for cell in header:
+        drawn.add_column(Text.from_markup(cell), overflow="fold")
+    for row in rows:
+        drawn.add_row(*(Text.from_markup(cell) for cell in row))
+    return drawn
 
 
 class HandoutReading(ModalDialog[None]):
@@ -119,6 +133,11 @@ class HandoutReading(ModalDialog[None]):
                         classes="handout-block handout-centre",
                     )
                 for block in laid.blocks:
+                    if block.kind == hm.TABLE:
+                        yield Static(
+                            table(block), classes="handout-block handout-table"
+                        )
+                        continue
                     yield Static(
                         reading(block),
                         classes=f"handout-block handout-{block.align}",

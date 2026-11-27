@@ -2990,7 +2990,13 @@ Choose the Virtue or Flaw, then press `m` for More and choose **Read in full**, 
 Choose the Virtue or Flaw's card, then click **Read in full** under its summary in the inspector. It opens on vellum in a window of its own, as a Handout does; **Close** closes it.
 <!-- /gui -->
 
-A Virtue or Flaw's text can have paragraphs (a blank line between them), \*\*bold\*\* and \*italic\*, and lists (lines starting `- `), as a House Rules entry's can.
+A Virtue or Flaw's text can have paragraphs (a blank line between them), \*\*bold\*\* and \*italic\*, lists (lines starting `- `) and tables, as a House Rules entry's can. A table is drawn only on the Read in full page, so an entry with one always opens there, however short it is. Write it with bars between its cells and a rule of dashes under its header:
+
+```
+| Meaning | Tree | Art |
+|---|---|---|
+| Health | Birch | Creo |
+```
 
 **See also:** [Virtues](help:section-vf-virtues), [Flaws](help:section-vf-flaws)
 
