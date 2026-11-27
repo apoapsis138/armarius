@@ -1,4 +1,4 @@
-"""Entered dice (STORY-2459): a source of chance that gives out the
+"""Entered dice: a source of chance that gives out the
 faces a person read off their own d10s, in order, instead of rolling.
 
 When a rule throws a die the person hasn't entered yet, the source stops

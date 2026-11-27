@@ -3,7 +3,7 @@
 # makes: ghcr.io/apoapsis138/armarius:X.Y.Z, for amd64 (a NAS on an Intel
 # or AMD chip, most servers) and arm64 (a Raspberry Pi, an ARM server).
 # Only the version tag is pushed, never "latest": a host moves to a newer
-# version on purpose (ADR 0022, STORY-2284).
+# version on purpose (ADR 0022).
 name: Image
 
 on:

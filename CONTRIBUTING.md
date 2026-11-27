@@ -96,7 +96,8 @@ them. The `tests/test_dialog_contracts_<area>.py` files drive each form by
 its field labels (fits 120x45, prefill, cancel, each invalid entry, save,
 and what the sheet shows after saving): add an entry there (and an opener
 in `tests/dialog_openers.py`) for a new form, and a `test_list_flows.py`
-case for a new list.
+case for a new list that acts on its chosen row. Prefer these over a
+bespoke `test_screens_*.py` test of the same flow.
 
 **Help.** A new sheet tab or section needs a help topic (its widget id) in
 `ars_magica_manager/help/*.md`, and a new process dialog a `help_id` and a
@@ -111,7 +112,10 @@ gets them from its entry in `actions.SECTION_VERBS` plus its handlers in
 `_section_ops` (`tests/test_menu_items.py` checks the two agree); a new rare
 action is one `MoreAction` entry in its area's module of `forms/more/`
 (its letter and label, where it shows, when it's offered, its first step and
-what it changes) plus its key in `registry.ORDER`. Don't bind a new letter.
+what it changes) plus its key in `registry.ORDER`;
+`tests/test_more_action_registered.py` names, in one run, every other
+registry it still needs (an opener, help). Don't bind a new letter. A
+focused list always has a row chosen, so nothing asks "which one?".
 
 ## Code rules
 
@@ -130,9 +134,13 @@ naming the field: build a saga with `storage.saga_from_data`, a plain
 record file with `shapes.build`, and a loosely typed number with
 `shapes.whole` / `shapes.real`.
 
-**A saved dict gets a type.** A record kept as a dict gets a `TypedDict`
-describing its keys. Values are converted and checked once, when a saga is
-loaded or a pack imported, with a message naming the record.
+**A saved dict gets a type.** A record kept as a dict
+(`Neighbour.details[...]`, a Tribunal meeting, a world-turn change) gets a
+`TypedDict` describing its keys, so pyright checks them; the file format
+doesn't change. Values are converted and checked once, when a saga is
+loaded or a pack imported, with a message naming the record, not with
+`int(entry.get("k") or 0)` where a sheet reads them: a bad value there
+crashes a tab instead of being reported.
 
 **Renaming or moving a saved field breaks existing saves.** Add a load-time
 migration, or use `models.known_fields()` to filter a stale dict to the
@@ -148,10 +156,13 @@ conftest fixtures point it at the test's temporary folder. Ask
 `paths.data_dir()` each time; never cache a path from it in a module
 constant.
 
-**Comments** state the rule or design choice plainly. Story and bug
-numbers belong in commit messages and pull request titles or
-descriptions, not in changelog fragments (they're for the user), code
-comments or docstrings.
+**Comments** state the rule or design choice plainly, not who decided it
+or when. Story and bug numbers belong in commit messages and pull request
+titles or descriptions, not in changelog fragments (they're for the user),
+code comments or docstrings. `tests/test_source_hygiene.py` fails on a new
+STORY-n or FEAT-nn in code, a workflow or a fragment, and on an invisible
+character (a NUL, a zero-width space, a byte-order mark, a bidirectional
+control) in any tracked text file.
 
 **No generative-AI art.** Every image, icon, symbol, texture or font the
 app ships or draws is either drawn in code or taken from a source under a
@@ -169,16 +180,23 @@ what the books print: never invent lists or figures to fill a gap.
 
 ## Performance rules
 
+The app's slowness has come from the screen, not the data: a saga saves in
+under a millisecond, while every `refresh_bindings()` made Textual's Footer
+recompose, and sheets built every tab on open.
+
 - Call `refresh_bindings()` only when the available keys can actually
   change, never from handlers that fire constantly (focus, row highlight,
   every tab activation).
-- Guard with counts, not timings: the guard tests count Footer recomposes
-  per action and widgets mounted per sheet. Raise a budget only
-  deliberately.
+- Guard with counts, not timings: timing asserts flake under parallel
+  runs. The guard tests count Footer recomposes per action and widgets
+  mounted per sheet. Raise a budget only deliberately.
 - For a change that adds a sheet, tab or list, run
   `uv run python tools/perf_probe.py` (add `--scale 10` for list-heavy
-  screens) before and after.
-- Read a file once per flow, and pass the data along.
+  screens) before and after, and give both numbers in the pull request.
+- Read a file once per flow: when one form or action needs a file's data
+  in several places (the packs a New Saga form lists, then their
+  stories), parse it once and pass the data along. Guard it with a count
+  of reads.
 
 ## Branches
 
@@ -273,6 +291,17 @@ goes up once per release, by the largest change in it: a change that adds
 or changes what the app does is MINOR; a fix, code-health, test or docs
 change is PATCH. MAJOR marks a finished phase of the plan, when the maintainer says.
 
+**Editions and features are named by the maintainer.** When a round of
+work on a feature is finished, its edition joins CHANGELOG.md's Editions
+table: the feature's next numeral, a title with a medieval or Ars Magica
+flavour, the version it was finished in, and one line on what it brought.
+Until then that work shows on What's New as the feature's next edition, in
+progress. A new feature is a row in the Features table, with a Plain name
+(what it is in a word or two: Help, Self-hosting) that What's New and the
+release notes show first. A new MAJOR version needs a row in the Major
+versions table, which the title page shows; `tests/test_changelog.py` fails
+until it has one.
+
 **A release**, in order (see "Release rhythm" for when):
 
 1. From an up-to-date `main` (`git switch main`, `git pull`), run
@@ -313,12 +342,22 @@ change is PATCH. MAJOR marks a finished phase of the plan, when the maintainer s
 Passing tests don't prove a layout is right. For a layout change, look at
 it:
 
-- **Text dump:** a throwaway probe script starts with `import probe_kit`
-  (`tools/probe_kit.py`; its docstring has the API and a demo). It keeps
-  the probe silent and on a throwaway copy of a saga, and writes the screen
-  as text. Check 140x60 and 120x45.
-- **SVG:** run the screen with `App.run_test(size=(140, 70))` and
-  `app.save_screenshot(...)` for colour and pixel questions.
+- **Text dump (the default):** a throwaway probe script, kept outside the
+  repo, starts with `import probe_kit` (`tools/probe_kit.py`; its docstring
+  has the API and a demo). It keeps the probe silent (sounds off), UTF-8
+  safe and on the right `sys.path`; `temp_saga()` gives a throwaway copy of
+  the real save, and `tui_dump` writes the screen under a `===== label`
+  line. Check 140x60 and 120x45, and print `widget.region` for a quick
+  fits-on-screen check.
+- **SVG:** run the screen with `App.run_test(size=(140, 70))` on a copy of
+  the save loaded in memory, and `app.save_screenshot(...)` for colour and
+  pixel questions; crop it by setting the SVG's `viewBox`. The first
+  screenshot often times out: try again.
+- **A new formula against the real app:** before hand-computing a test's
+  expected value, a one-off script that builds the exact fixture and prints
+  the relevant `summarize`/`*_text` output catches rounding and
+  exclusion-list slips. Expected values for a rule still come from the
+  book.
 
 ## Textual and Pilot gotchas
 
@@ -337,7 +376,8 @@ it:
   display fall back to the top panel; on a real switch focus the tab's
   first stop, or `self.screen.set_focus(None)` when it has none.
 - `pilot.click(selector)` needs the target on screen. Prefer
-  `widget.press()` or setting `.index` directly.
+  `widget.press()` or setting `.index` directly, and
+  `Tree.select_node(node)` over clicking a tree.
 - Under load a bare `pilot.pause()` can be not quite enough, and a fixed
   extra delay only makes the failure rarer. Poll for the real condition
   (a `_wait_until(pilot, condition)` helper) at the lowest shared call site.

@@ -1,4 +1,4 @@
-"""One dice line for every roll the app makes (STORY-2348): the die, each
+"""One dice line for every roll the app makes: the die, each
 stress doubling, the botch dice, the modifiers, the total and any Ease
 Factor, in the words the Chronicle card uses. The Chronicle, its desktop
 pane and terminal, Diary lines, reports and every rolling form's result
