@@ -9,7 +9,7 @@ from screen_helpers import _show_tab
 from support import NODES, build_all_tabs, everything_saga, screen_lines, wait_until
 from textual.widgets import Markdown, OptionList, TabbedContent, TextArea, Tree
 
-from ars_magica_manager import __version__, staged_projects, storage
+from ars_magica_manager import __version__, changelog, staged_projects, storage
 from ars_magica_manager import help_text as ht
 from ars_magica_manager.forms import season as season_forms
 from ars_magica_manager.models import (
@@ -700,7 +700,59 @@ async def test_whats_new_is_listed_after_about_and_shows_the_changelog():
         )
 
 
-async def test_whats_new_fills_in_and_another_topic_can_replace_it_midway():
+#: A short changelog: three features, an edition each and nine versions.
+#: Its What's New page still fills in a few pieces at a time, and renders
+#: far faster than the real one (test_changelog.py reads that, and the
+#: test above shows it in Help). Laid out like test_changelog.py's SAMPLE.
+_SAMPLE_FEATURES = ("Packs", "Help", "Saga")
+SAMPLE_CHANGELOG = """# Changelog
+
+## Features
+
+| Feature | What it is |
+| --- | --- |
+| Packs | The Tribunal packs |
+| Help | Help and its guides |
+| Saga | The saga and its records |
+
+## Editions
+
+| Edition | Title | Finished in | What it brought |
+| --- | --- | --- | --- |
+| Packs I | The Rhine | 1.1.0 | The first pack |
+| Help I | Guides | 1.2.0 | How-to guides |
+| Saga I | Seasons | 1.3.0 | Seasons advance |
+
+## Major versions
+
+| Major | Name | What it marked |
+| --- | --- | --- |
+| 1 | Creo | the first version |
+
+## Milestones
+
+| Milestone | Version | What it marked |
+| --- | --- | --- |
+| Incipit | 1.0.0 | the first version |
+
+""" + "\n".join(
+    f"## 1.{minor}.0 — 2026-10-{10 + minor}\n\n"
+    + "".join(
+        f"### {feature}\n\n"
+        + "".join(f"- **{feature} change {minor}.{n}.** Done.\n" for n in range(4))
+        + "\n"
+        for feature in _SAMPLE_FEATURES
+    )
+    for minor in range(8, -1, -1)
+)
+
+
+async def test_whats_new_fills_in_and_another_topic_can_replace_it_midway(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    sample = changelog.whats_new(SAMPLE_CHANGELOG)
+    assert len(page_chunks(sample)) >= 3  # it fills in piece by piece
+    monkeypatch.setattr(ht, "whats_new_text", lambda: sample)
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(120, 45)) as pilot:
         await wait_until(pilot, lambda: isinstance(app.screen, SagaPickerScreen))
@@ -710,15 +762,14 @@ async def test_whats_new_fills_in_and_another_topic_can_replace_it_midway():
         page = app.screen.query_one("#help-page", Markdown)
         topics.highlighted = topics.get_option_index("ref:whats-new")
         assert await wait_until(pilot, lambda: page.source.startswith("# What's New"))
-        topics.highlighted = topics.get_option_index("ref:keys")  # still filling
+        assert page.source != sample  # still filling
+        topics.highlighted = topics.get_option_index("ref:keys")
         assert await wait_until(pilot, lambda: page.source.startswith("# Keys"))
         await pilot.pause()
         assert "What's New" not in page.source
 
         topics.highlighted = topics.get_option_index("ref:whats-new")
-        assert await wait_until(
-            pilot, lambda: page.source == whats_new_text(), timeout=10.0
-        )
+        assert await wait_until(pilot, lambda: page.source == sample)
 
 
 def test_a_long_page_is_cut_at_headings_into_pieces_that_join_up():
