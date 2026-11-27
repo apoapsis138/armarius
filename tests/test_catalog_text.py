@@ -91,8 +91,13 @@ def _virtues_and_flaws() -> Iterator[tuple[str, dict[str, object]]]:
             yield entry_id, entry
 
 
+#: Where a paragraph ends: at a blank line, or before a list item or table
+#: row, each of which is read on a line of its own.
+PARAGRAPH_BREAK = re.compile(r"\n\s*\n|\n(?=\s*(?:- |\d+\. |\|))")
+
+
 def _over_cap(text: str) -> bool:
-    return any(len(p) > PARAGRAPH_CAP for p in re.split(r"\n\s*\n", text))
+    return any(len(p) > PARAGRAPH_CAP for p in PARAGRAPH_BREAK.split(text))
 
 
 def test_no_split_ligatures():
@@ -164,3 +169,6 @@ def test_the_checks_catch_what_they_look_for():
     assert split_ligatures("LFI p. 12") == []
     assert _over_cap("x" * (PARAGRAPH_CAP + 1))
     assert not _over_cap(("x" * PARAGRAPH_CAP + "\n\n") * 3)
+    item = "- " + "x" * (PARAGRAPH_CAP - 2)
+    assert not _over_cap(f"A list:\n{item}\n{item}\n{item}")
+    assert _over_cap(f"A list:\n{item}x")
