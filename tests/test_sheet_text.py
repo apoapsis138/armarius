@@ -88,12 +88,12 @@ async def _settle(pilot) -> None:
     against the next action's Footer guard, or leave the Footer stale."""
     await pilot.pause()
     await pilot.wait_for_animation()
-    footer = SplitFooter.of(pilot.app.screen)
-    if footer is not None:
-        assert await wait_until(pilot, lambda: footer.idle), (
-            f"the Footer never finished rebuilding: held={footer._held} "
-            f"asked_while_held={footer._asked_while_held} "
-            f"pending={footer._rebuild_pending!r}"
+    split = SplitFooter.of(pilot.app.screen)
+    if split is not None:
+        assert await wait_until(pilot, lambda: split.idle), (
+            f"the Footer never finished rebuilding: held={split._held} "
+            f"asked_while_held={split._asked_while_held} "
+            f"pending={split._rebuild_pending!r}"
         )
     await pilot.pause()
 
@@ -294,7 +294,9 @@ async def _check_footer_rebuilds(
 
 
 def test_the_suite_runs_the_app_with_animations_off():
-    """`_settle` waits for no animation, so there must be none to finish."""
+    """`_settle` waits only for the animator's next tick, not for an
+    animation to play out: with animations off, that tick lands every
+    animated value at its end."""
     assert ArsMagicaManagerApp().animation_level == "none"
 
 
