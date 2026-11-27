@@ -104,6 +104,7 @@ from .widgets import (
     TitledRows,
     ToggleSwitch,
     card_grid,
+    edit_button,
     filter_choice,
     serif,
     table_style,
@@ -780,9 +781,14 @@ class _ListField(QWidget):
         self.form._changed(self.spec)()
 
 
+#: The button under a picker's preview that reads an entry in full.
+READ_IN_FULL = "Read in full"
+
+
 class ChooseDialog(_Sheet):
     """A searchable list of `choices`, with the highlighted one's details
-    beside it; `chosen` holds the value picked, after exec() returns
+    beside it, and Read in full under them for an entry that can be read
+    (Choice.read); `chosen` holds the value picked, after exec() returns
     Accepted (a double-click picks too)."""
 
     def __init__(
@@ -827,9 +833,18 @@ class ChooseDialog(_Sheet):
         self.details.setTextFormat(Qt.TextFormat.RichText)
         self.details.setWordWrap(True)
         self.details.setAlignment(Qt.AlignmentFlag.AlignTop)
-        details = QScrollArea()
-        details.setWidgetResizable(True)
-        details.setWidget(self.details)
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setWidget(self.details)
+        #: Under the preview, for a list with an entry to read (a long
+        #: catalog entry): on while such an entry is highlighted.
+        self.read_button = edit_button(READ_IN_FULL, p, self.read_in_full, "lab_text")
+        self.read_button.setEnabled(False)
+        details = QWidget()
+        beside = QVBoxLayout(details)
+        beside.setContentsMargins(0, 0, 0, 0)
+        beside.addWidget(scroll, 1)
+        beside.addWidget(self.read_button, 0, Qt.AlignmentFlag.AlignLeft)
         split = QSplitter()
         split.addWidget(self.list)
         split.addWidget(details)
@@ -879,6 +894,7 @@ class ChooseDialog(_Sheet):
         with nothing typed or chosen, the recent ones first."""
         wanted = words.lower().split()
         chosen = self.wanted()
+        self.read_button.setVisible(any(choice.read for choice in self.choices))
         self.list.clear()
         listed: list[tuple[str, Choice, int]] = []
         if not wanted and not any(v is not None for v in chosen.values()):
@@ -926,10 +942,22 @@ class ChooseDialog(_Sheet):
             if self.list.item(i).data(Qt.ItemDataRole.UserRole) is not None
         ]
 
+    def _highlighted(self) -> Choice | None:
+        item = self.list.currentItem()
+        return self._choice_at(item) if item is not None else None
+
     def _show(self, row: int) -> None:
         item = self.list.item(row)
         choice = self._choice_at(item) if item is not None else None
         self.details.setText(to_html(choice.detail, self.p) if choice else "")
+        self.read_button.setEnabled(choice is not None and choice.read is not None)
+
+    def read_in_full(self) -> None:
+        """The highlighted entry's page, in the window a shown Handout
+        opens in, over the picker; closing it leaves the list as it was."""
+        choice = self._highlighted()
+        if choice is not None and choice.read is not None:
+            copy_window(choice.read(), self).exec()
 
     def choose(self, label: str) -> None:
         """Highlight the (first) listed entry called `label`."""
@@ -941,8 +969,7 @@ class ChooseDialog(_Sheet):
         self.list.setCurrentRow(rows[self.shown().index(label)])
 
     def try_save(self) -> None:
-        item = self.list.currentItem()
-        choice = self._choice_at(item) if item is not None else None
+        choice = self._highlighted()
         if choice is None:
             self.refuse("Choose one first.")
             return

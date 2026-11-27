@@ -2949,6 +2949,8 @@ Press `m` for More and choose **Read in full**, or click the link at the foot of
 Click **Read in full** under its summary in the inspector.
 <!-- /gui -->
 
+The Add list shows a long entry's summary too, and [Read in full](help:read-in-full) opens it before you take it.
+
 A magus's House Virtue is marked Free and counts no points (Ars Magica Definitive Edition, Chapter 3: Characters, Hermetic Houses).
 
 The catalog lists a supplement's Virtues and Flaws only while its book is in play (Saga Content's Books in Play). Some supplements print a Virtue or Flaw the Definitive Edition also prints, such as Art & Academe's Failed Student or The Church's Brother-Priest (the DE's Brother Chaplain). The catalog then has the Definitive Edition's alone, with its name, tier and text, whichever books are in play.
@@ -2982,12 +2984,16 @@ as Poor Perception to Poor Dexterity.
 ### Read in full
 <!-- help: read-in-full -->
 
-A long Virtue or Flaw, one whose text runs past 750 characters, shows only its summary beside the list. Read in full opens the whole entry to read: its name, its tier and type, its category, the summary, then all of its text, with its source at the foot. It changes nothing, and a player at a Remote seat can read it too.
+A long Virtue or Flaw, one whose text runs past 750 characters, shows only its summary beside the list and in the Add list. Read in full opens the whole entry to read: its name, its tier and type, its category, the summary, then all of its text, with its source at the foot. It changes nothing, and a player at a Remote seat can read it too.
 <!-- tui -->
-Choose the Virtue or Flaw, then press `m` for More and choose **Read in full**, or click **Read in full** at the foot of its details. It fills the screen and scrolls; `Esc` closes it.
+Choose the Virtue or Flaw, then press `m` for More and choose **Read in full**, or click **Read in full** at the foot of its details. It opens on a page of its own that scrolls; `Esc` closes it.
+
+In the Add Virtue or Flaw list, highlight a long entry and press `F4`. `Esc` takes you back to the list, your search as you left it.
 <!-- /tui -->
 <!-- gui -->
 Choose the Virtue or Flaw's card, then click **Read in full** under its summary in the inspector. It opens on vellum in a window of its own, as a Handout does; **Close** closes it.
+
+In the Add Virtue or Flaw list, highlight a long entry and click **Read in full** under its preview. **Close** takes you back to the list, your search as you left it.
 <!-- /gui -->
 
 A Virtue or Flaw's text can have paragraphs (a blank line between them), \*\*bold\*\* and \*italic\*, and lists (lines starting `- `), as a House Rules entry's can.

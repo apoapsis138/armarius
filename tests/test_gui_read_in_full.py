@@ -1,6 +1,7 @@
 """The desktop's Read in full: a long Virtue's inspector shows its summary
 and a Read in full button under it, which opens the whole entry on vellum
-in the window a shown Handout opens in; a short one has no button."""
+in the window a shown Handout opens in; a short one has no button. The Add
+Virtue picker has the button under its preview, on for a long entry."""
 
 from __future__ import annotations
 
@@ -14,9 +15,10 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 from PySide6.QtWidgets import QApplication, QPushButton
 
 from ars_magica_manager import commands
+from ars_magica_manager.forms import virtue as virtue_forms
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.character_sheet import CharacterSheet
-from ars_magica_manager.gui.forms import step_dialog
+from ars_magica_manager.gui.forms import ChooseDialog, step_dialog
 from ars_magica_manager.gui.handout_page import HandoutWindow
 from ars_magica_manager.gui.themes import SCRIPTORUM
 from ars_magica_manager.gui.widgets import ClickableCard
@@ -90,3 +92,42 @@ def test_a_short_virtues_inspector_has_no_read_in_full() -> None:
     _choose_card(sheet, "Ablating")
 
     assert _read_button(sheet) == []
+
+
+def _add_virtue_dialog() -> ChooseDialog:
+    magus = Character(id="m", name="Magus", type="magus")
+    saga = Saga(id="s", name="Saga", characters=[magus])
+    ops = virtue_forms.virtue_flaw_ops(saga, magus, "Virtue")
+    assert ops.add is not None
+    step = ops.add()
+    assert isinstance(step, commands.Choose)
+    dialog = step_dialog(step, SCRIPTORUM, None)
+    assert isinstance(dialog, ChooseDialog)
+    return dialog
+
+
+@pytest.mark.usefixtures("app")
+def test_the_pickers_read_in_full_opens_a_long_entry_and_keeps_the_picker(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    opened: list[HandoutWindow] = []
+    monkeypatch.setattr(HandoutWindow, "exec", lambda self: opened.append(self) or 0)
+    dialog = _add_virtue_dialog()
+    dialog.search.setText("Elder Runes")
+
+    assert dialog.read_button.isEnabled()
+    dialog.read_button.click()
+
+    [window] = opened
+    assert window.page.laid.title == "Verditius Elder Runes"
+    assert dialog.search.text() == "Elder Runes" and not dialog.result()
+    dialog.close()
+
+
+@pytest.mark.usefixtures("app")
+def test_the_pickers_read_in_full_is_off_on_a_short_entry() -> None:
+    dialog = _add_virtue_dialog()
+    dialog.search.setText("Ablating")
+
+    assert not dialog.read_button.isEnabled()
+    dialog.close()

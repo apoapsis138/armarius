@@ -1,0 +1,1 @@
+**Read in full before you choose.** The Add Virtue or Flaw list shows a long entry's summary beside the list, and opens the whole entry to read before you take it: F4 in the terminal, a Read in full button under the preview on the desktop.

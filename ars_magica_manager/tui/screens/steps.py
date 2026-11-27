@@ -47,8 +47,9 @@ from .prompts import ConfirmScreen, terminal_fields
 class ChooseScreen(SearchablePickerScreen[int, int | None]):
     """A core Choose: its choices, searchable, with the highlighted one's
     details under the list; F3 lists the ones not offered too (each marked
-    with why). A Choose with filters gets a drop-down for each above the
-    list (F2 steps through the first), the list headed by each entry's
+    with why), and F4 reads the highlighted one in full (Choice.read). A
+    Choose with filters gets a drop-down for each above the list (F2 steps
+    through the first), the list headed by each entry's
     value of the first, and its recent entries first while nothing narrows
     it. Dismisses with the chosen entry's index into its entries, or None
     (`value_of` gives the value)."""
@@ -58,7 +59,13 @@ class ChooseScreen(SearchablePickerScreen[int, int | None]):
 
     BINDINGS: ClassVar[list[BindingType]] = [
         Binding("f2", "next_filter_value", "Next type", show=False),
+        # Named in the preview of an entry that has a page to read (a
+        # picker has no Footer), so moving the highlight rebuilds no keys.
+        Binding("f4", "read_in_full", "Read in full", show=False),
     ]
+
+    #: The line a readable entry's preview ends with.
+    READ_HINT: ClassVar[str] = "[dim]F4: Read in full shows all of it.[/]"
 
     DEFAULT_CSS = """
     ChooseScreen #choose-filters {
@@ -171,10 +178,24 @@ class ChooseScreen(SearchablePickerScreen[int, int | None]):
         return f"choice-{entry}"
 
     def _details(self, entry: int) -> str:
-        return self._all()[entry].detail
+        choice = self._all()[entry]
+        if choice.read is None:
+            return choice.detail
+        return f"{choice.detail}\n\n{self.READ_HINT}"
 
     def _on_entry_selected(self, entry: int) -> None:
         self.dismiss(entry)
+
+    def action_read_in_full(self) -> None:
+        """The highlighted entry's page, full screen over the picker (a
+        long catalog entry); Esc comes back to the list as it was. An
+        entry with nothing to read does nothing."""
+        option = self._option_list().highlighted_option
+        entry = self._by_item_id.get(option.id) if option and option.id else None
+        read = self._all()[entry].read if entry is not None else None
+        if read is not None:
+            reading = read()
+            self.app.push_screen(HandoutReading(reading.laid, reading.help_id))
 
     def value_of(self, index: int) -> Any:
         return self._all()[index].value
