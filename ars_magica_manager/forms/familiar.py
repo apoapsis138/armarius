@@ -40,7 +40,7 @@ from ..models import (
 from ..rules import creation_access as access
 from ..rules import familiar_seasons, scores
 from . import experimental_effects
-from .ability import ability_fields, ability_from, ability_problem, entry_read
+from .ability import ability_fields, ability_from, ability_problem, ability_read
 from .character import (
     characteristics_fields,
     characteristics_from,
@@ -373,7 +373,7 @@ def ability_choices(
             entry,
             st.ability_entry_text(entry),
             entry.category,
-            read=entry_read(entry),
+            read=ability_read(entry),
         )
         found.append(not_offered(choice, why) if why else choice)
     return found

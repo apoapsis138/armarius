@@ -119,6 +119,8 @@ async def test_f4_reads_a_long_boon_in_the_add_boon_list() -> None:
         picker = app.screen
         assert isinstance(picker, ChooseScreen)
         await pilot.pause()
+        picker.query_one("#picker-search", Input).value = "Chase"
+        await pilot.pause()
         [chase] = [
             i
             for i, c in enumerate(picker.choices)
@@ -137,4 +139,4 @@ async def test_f4_reads_a_long_boon_in_the_add_boon_list() -> None:
     assert hint.rstrip().endswith("F4: Read in full shows all of it.")
     assert opened and isinstance(reading, HandoutReading)
     assert reading.laid.title == "Chase"
-    assert back and search == ""
+    assert back and search == "Chase"

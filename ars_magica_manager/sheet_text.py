@@ -254,11 +254,14 @@ def ability_info_text(
         return "[dim]Select an Ability to see its details.[/]"
     ability = abilities[index]
     definition = ability_definition(ability.name)
+    hint = None
     if definition is None or not definition.description:
         description = "[dim](no catalog description)[/]"
     elif read_hint is not None and entry_reading.is_long(definition.description):
-        shown = entry_reading.panel_text(definition.description, definition.summary)
-        description = f"{shown}\n\n{read_hint}"
+        description = entry_reading.panel_text(
+            definition.description, definition.summary
+        )
+        hint = read_hint
     else:
         description = entry_reading.whole_text(definition.description)
     bonus, bonus_from = scores.ability_bonus(virtues_flaws, ability.name)
@@ -269,6 +272,9 @@ def ability_info_text(
     # Guile's disguises and Persona's identities (Houses of Hermes: Societates).
     if house_text := house_magic.ability_text(ability.name, ability.progress.score):
         parts.append(escape(house_text))
+    # Read in full's hint closes the panel, below all it shows.
+    if hint:
+        parts.append(hint)
     return "\n\n".join(parts)
 
 

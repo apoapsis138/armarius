@@ -102,18 +102,18 @@ def ability_label(ability: Ability) -> str:
 
 def ability_choice(entry: AbilityDef) -> Choice:
     """A catalog Ability as the Add list offers it; a long one can be read
-    in full from the list (entry_read)."""
+    in full from the list (ability_read)."""
     needs = catalog.needs_note(entry.name, entry.parameters)
     return Choice(
         escape(f"{entry.name}  [{entry.category}]{needs}"),
         entry,
         st.ability_entry_text(entry),
         entry.category,
-        read=entry_read(entry),
+        read=ability_read(entry),
     )
 
 
-def entry_page(definition: AbilityDef) -> Reading:
+def ability_page(definition: AbilityDef) -> Reading:
     """The catalog Ability laid out to read in full (entry_reading): the
     page a sheet's Read in full and a picker's both open."""
     return entry_reading.reading(
@@ -127,26 +127,28 @@ def entry_page(definition: AbilityDef) -> Reading:
     )
 
 
-def entry_read(definition: AbilityDef) -> Callable[[], Reading] | None:
+def ability_read(definition: AbilityDef) -> Callable[[], Reading] | None:
     """A picker's Choice.read for the catalog Ability: its page, when it
     is long (entry_reading.is_long); None for a short one."""
     if not entry_reading.is_long(definition.description):
         return None
-    return partial(entry_page, definition)
+    return partial(ability_page, definition)
 
 
-def long_entry(owner: object, index: int | None) -> AbilityDef | None:
+def long_ability(owner: object, index: int | None) -> tuple[AbilityDef, str] | None:
     """The catalog entry of a character's or familiar's Ability at `index`
-    (into its Abilities, as a sheet's list gives its rows), when it is
-    long enough to read in full; None otherwise."""
+    (into its Abilities, as a sheet's list gives its rows) and the name
+    the owner holds it by (as "Area Lore: Rhine"), when it is long enough
+    to read in full; None otherwise."""
     if not isinstance(owner, Character | Familiar):
         return None
     if index is None or not 0 <= index < len(owner.abilities):
         return None
-    definition = st.ability_definition(owner.abilities[index].name)
+    name = owner.abilities[index].name
+    definition = st.ability_definition(name)
     if definition is None or not entry_reading.is_long(definition.description):
         return None
-    return definition
+    return definition, name
 
 
 def abilities_offered(

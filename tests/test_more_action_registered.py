@@ -214,8 +214,9 @@ NO_CONTRACT: dict[str, str] = {
     "with nothing to fill (test_preview_handout.py, test_gui_preview_handout.py "
     "and test_tui_shown_handout.py drive it).",
     "read_in_full": "It only reads: a long entry on a reading page, with "
-    "nothing to fill (test_read_in_full.py drives it in the core and both "
-    "front-ends).",
+    "nothing to fill (test_read_in_full.py and "
+    "test_read_in_full_abilities_boons.py drive it in the core, and their "
+    "test_gui_ and test_tui_ files on both front-ends).",
     "open_session": "opens the Session's page, not a dialog "
     "(test_session_page.py, test_tui_session_page.py)",
 }

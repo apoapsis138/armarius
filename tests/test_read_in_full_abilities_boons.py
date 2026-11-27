@@ -92,6 +92,18 @@ def test_a_long_abilitys_panel_shows_its_summary_and_the_hint() -> None:
     assert entry.description[:80] not in shown
 
 
+def test_a_long_abilitys_hint_is_at_the_foot_of_its_panel(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # Hex has no ease text of its own; give it one to follow the summary.
+    monkeypatch.setattr(st.senses, "ease_text", lambda _name: "Ease 9")
+
+    shown = plain(st.ability_info_text(_hedge_witch().abilities, 1, read_hint="Read!"))
+
+    assert "Ease 9" in shown
+    assert shown.rstrip().endswith("Read!")
+
+
 def test_a_short_abilitys_panel_shows_its_whole_text_and_no_hint() -> None:
     entry = catalog.load_ability_catalog_by_id()[SHORT_ABILITY]
 
