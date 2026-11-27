@@ -120,8 +120,8 @@ def _card(
         reader = _FOR.get(faiths.religion(character), "their faith")
     detail = _detail(names, interest, ready, waiting, others)
     fixed = "" if interest in OPTIONAL else ALWAYS_ON
-    gate = deeds.CHARACTER_GATES.get(interest)
-    if gate is not None and gate.kept_on(character):
+    if deeds.kept_on(character, interest):
+        gate = deeds.CHARACTER_GATES[interest]
         fixed = gate.fixed
         detail = f"[$label]{gate.why}[/]\n\n{detail}"
     return FormCard(
@@ -132,7 +132,7 @@ def _card(
         if members
         else f"The {interest} chapter",
         detail,
-        usable=bool(ready or others) or gate is not None,
+        usable=bool(ready or others) or interest in deeds.CHARACTER_GATES,
         fixed=fixed,
     )
 
@@ -302,11 +302,7 @@ def interests_form(saga: Saga, character: Character, names: Mapping[str, str]) -
                 hint=deeds.SUMMARIES[i],
             )
             for i in OPTIONAL
-            if deeds.applies(character, i)
-            and not (
-                i in deeds.CHARACTER_GATES
-                and deeds.CHARACTER_GATES[i].kept_on(character)
-            )
+            if deeds.applies(character, i) and not deeds.kept_on(character, i)
         ]
 
     def apply(values: dict[str, Any]) -> list[str]:
