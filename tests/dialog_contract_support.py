@@ -28,6 +28,8 @@ from typing import Any
 
 from dialog_openers import contract_saga, new_app, open_dialog, reopen_dialog
 from support import build_all_tabs, strip_markup, wait_until
+from textual.pilot import Pilot
+from textual.screen import Screen
 from textual.widget import Widget
 from textual.widgets import (
     Button,
@@ -43,7 +45,9 @@ from textual.widgets import (
 
 from ars_magica_manager import chronicle, storage
 from ars_magica_manager.models import Possession, Saga, VirtueFlawInstance
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import SelectableList
+from ars_magica_manager.tui.screens.fields import FieldsDialog
 from ars_magica_manager.tui.screens.prompts import ConfirmScreen
 
 SAGA_ID = contract_saga().id
@@ -152,7 +156,7 @@ def _text(widget: Widget) -> str:
     return str(widget.render()).strip().rstrip(":").strip()
 
 
-def field_widget(dialog, label: str, aliases: dict[str, str]) -> Widget:
+def field_widget(dialog: Screen[Any], label: str, aliases: dict[str, str]) -> Widget:
     """The input widget for the field labelled `label` in `dialog`; an
     alias wins, for a label the dialog's own title also starts with."""
     if label in aliases:
@@ -168,9 +172,20 @@ def field_widget(dialog, label: str, aliases: dict[str, str]) -> Widget:
     raise AssertionError(f"no field labelled {label!r}")
 
 
+def _picker_dialog(button: Button) -> FieldsDialog[Any]:
+    """The dialog a picker field's button sits in: only a FieldsDialog
+    draws them."""
+    dialog = button.screen
+    assert isinstance(dialog, FieldsDialog), (
+        f"a picker outside a FieldsDialog: {dialog}"
+    )
+    return dialog
+
+
 def field_value(widget: Widget) -> Any:
     if isinstance(widget, Button):  # a picker field: what it holds
-        return widget.screen._picked.get((widget.id or "").removeprefix("fld-"))
+        dialog = _picker_dialog(widget)
+        return dialog._picked.get((widget.id or "").removeprefix("fld-"))
     if isinstance(widget, (Input, Select)):
         return widget.value
     if isinstance(widget, TextArea):
@@ -181,7 +196,7 @@ def field_value(widget: Widget) -> Any:
 
 def set_field(widget: Widget, value: Any) -> None:
     if isinstance(widget, Button):  # a picker field: as if it were chosen
-        dialog = widget.screen
+        dialog = _picker_dialog(widget)
         dialog._picked[(widget.id or "").removeprefix("fld-")] = value
         dialog._react()
         return
@@ -194,15 +209,15 @@ def set_field(widget: Widget, value: Any) -> None:
         widget.value = value
 
 
-def save_button(dialog) -> Button:
+def save_button(dialog: Screen[Any]) -> Button:
     return next(b for b in dialog.query(Button) if b.id in SAVE_BUTTON_IDS)
 
 
-def cancel_button(dialog) -> Button:
+def cancel_button(dialog: Screen[Any]) -> Button:
     return dialog.query_one("#btn-cancel", Button)
 
 
-def error_text(dialog) -> str:
+def error_text(dialog: Screen[Any]) -> str:
     """Any error message the dialog shows."""
     return " ".join(
         _text(w)
@@ -234,7 +249,9 @@ def last_chronicle_entry() -> chronicle.Entry | None:
     return book.entries[-1] if book.entries else None
 
 
-async def _fill(pilot, dialog, contract: Contract, values: dict[str, Any]) -> None:
+async def _fill(
+    pilot: Pilot[None], dialog: Screen[Any], contract: Contract, values: dict[str, Any]
+) -> None:
     for label, value in values.items():
         set_field(field_widget(dialog, label, contract.aliases), value)
     await pilot.pause()
@@ -248,7 +265,7 @@ def _invalid_entries(contract: Contract) -> list[dict[str, Any]]:
     return contract.invalid
 
 
-def shown_text(screen, selector: str) -> str:
+def shown_text(screen: Screen[Any], selector: str) -> str:
     """What `screen` shows at `selector`: a Collapsible's title, a list's
     rows (one per line), a Tree's node labels (one per line) or a Static's
     text, markup stripped."""
@@ -269,7 +286,9 @@ def shown_text(screen, selector: str) -> str:
     return strip_markup(text)
 
 
-async def _close(pilot, app, dialog, button: Button) -> None:
+async def _close(
+    pilot: Pilot[None], app: ArsMagicaManagerApp, dialog: Screen[Any], button: Button
+) -> None:
     button.press()
     assert await wait_until(pilot, lambda: app.screen is not dialog), (
         f"still open: {error_text(dialog)!r}"
