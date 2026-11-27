@@ -76,13 +76,20 @@ SHEETS = {
 
 
 async def _settle(pilot) -> None:
-    """Frame pauses around the Footer finishing its rebuild (animations are
-    off under test). A rebuild still pending would be counted against the
-    next action's Footer guard, or leave the Footer stale."""
+    """Frame pauses around what can still land after them. With animations
+    off (under test) an animated scroll or underline still takes its final
+    value on the animator's next tick, so wait for that tick, not for an
+    animation to play. A Footer rebuild still pending would be counted
+    against the next action's Footer guard, or leave the Footer stale."""
     await pilot.pause()
+    await pilot.wait_for_animation()
     footer = SplitFooter.of(pilot.app.screen)
     if footer is not None:
-        assert await wait_until(pilot, lambda: footer.idle)
+        assert await wait_until(pilot, lambda: footer.idle), (
+            f"the Footer never finished rebuilding: held={footer._held} "
+            f"asked_while_held={footer._asked_while_held} "
+            f"pending={footer._rebuild_pending!r}"
+        )
     await pilot.pause()
 
 
