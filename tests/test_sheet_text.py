@@ -39,6 +39,7 @@ from ars_magica_manager.tui.screens.widgets import (
     DETAILS_PANEL_MIN_HEIGHT,
     DetailsPanel,
     SelectableList,
+    SplitFooter,
 )
 
 GOLDEN_DIR = Path(__file__).parent / "golden" / "sheet_text"
@@ -75,8 +76,20 @@ SHEETS = {
 
 
 async def _settle(pilot) -> None:
+    """Frame pauses around what can still land after them. With animations
+    off (under test) an animated scroll or underline still takes its final
+    value on the animator's next tick, so wait for that tick, not for an
+    animation to play. A Footer rebuild still pending would be counted
+    against the next action's Footer guard, or leave the Footer stale."""
     await pilot.pause()
-    await pilot.wait_for_scheduled_animations()
+    await pilot.wait_for_animation()
+    footer = SplitFooter.of(pilot.app.screen)
+    if footer is not None:
+        assert await wait_until(pilot, lambda: footer.idle), (
+            f"the Footer never finished rebuilding: held={footer._held} "
+            f"asked_while_held={footer._asked_while_held} "
+            f"pending={footer._rebuild_pending!r}"
+        )
     await pilot.pause()
 
 
@@ -246,6 +259,11 @@ async def _check_footer_rebuilds(pilot, app, view) -> None:
                 await pilot.press("down")
                 await _settle(pilot)
                 check_footer_rebuilds(app, before, f"arrowing down {lists[0].id}")
+
+
+def test_the_suite_runs_the_app_with_animations_off():
+    """`_settle` waits for no animation, so there must be none to finish."""
+    assert ArsMagicaManagerApp().animation_level == "none"
 
 
 @pytest.mark.parametrize("node", sorted(NODES))

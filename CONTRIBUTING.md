@@ -46,9 +46,12 @@ setup error, fails the job.
 
 Tests are isolated per test (a temporary saga folder and settings path, and
 conftest closes every Qt window a test leaves open), so parallel runs are
-safe. Screen tests (Pilot or Qt; `tools/tiers.py` says which) are marked
-`ui`, so `-m "not ui"` runs the fast tier alone. When a new source file's
-name doesn't say which screen tests check it, add it to
+safe. Textual's animations are off for the whole run (conftest sets
+`TEXTUAL_ANIMATIONS=none` before Textual is first imported, as Textual
+reads it only then), so no test waits for one to finish; the app keeps
+its animations. Screen tests (Pilot or Qt; `tools/tiers.py` says which)
+are marked `ui`, so `-m "not ui"` runs the fast tier alone. When a new
+source file's name doesn't say which screen tests check it, add it to
 `tools/slice_tests.py`'s `AREA_TESTS`.
 
 Nearly all the suite's time is the screen tests building sheets and
