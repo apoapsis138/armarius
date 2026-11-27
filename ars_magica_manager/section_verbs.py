@@ -87,10 +87,12 @@ from .sections import (
     AGENTS_SECTION,
     BOOKS_SECTION,
     CHAR_AHEAD_SECTION,
+    CHARACTER_VF_SIDES,
     CONSTANT_EFFECTS_SECTION,
     COV_AHEAD_SECTION,
     COVERS_SECTION,
     DEVICE_SECTIONS,
+    FAMILIAR_VF_SIDES,
     GOODS_SECTION,
     HANDOUTS_SECTION,
     HOUSE_RULES_SECTION,
@@ -142,8 +144,8 @@ LAB_FEATURE_SECTIONS = (LAB_FEATURES_SECTION, *LAB_VF_SECTIONS)
 
 #: Per kind of record, each Virtues & Flaws section and the side it lists.
 VIRTUE_FLAW_SIDES: dict[type, dict[str, str]] = {
-    Character: {"section-vf-virtues": "Virtue", "section-vf-flaws": "Flaw"},
-    Familiar: {"section-fam-vf-virtues": "Virtue", "section-fam-vf-flaws": "Flaw"},
+    Character: CHARACTER_VF_SIDES,
+    Familiar: FAMILIAR_VF_SIDES,
     Laboratory: dict(zip(LAB_VF_SECTIONS, ("Virtue", "Flaw"), strict=True)),
 }
 

@@ -25,7 +25,7 @@ from ..widgets import (
     TableHeader,
     TwoColumns,
 )
-from .base import SheetView
+from .base import READ_HINT, SheetView
 
 
 class FamiliarSheetView(SheetView):
@@ -316,5 +316,5 @@ class FamiliarSheetView(SheetView):
             return
         event.stop()
         self.query_one("#fam-vf-info", Static).update(
-            fam.vf_info_text(self.familiar, event.data_index)
+            fam.vf_info_text(self.familiar, event.data_index, READ_HINT)
         )

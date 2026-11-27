@@ -235,7 +235,8 @@ def _show(app: App[Any], step: Question, answer: Callable[[object], None]) -> No
     if isinstance(step, Form) and step.reading is not None:
         # A shown written Handout's copy, read under its Stationery's name:
         # closing it answers with no values.
-        app.push_screen(HandoutReading(step.reading.laid), lambda _closed: answer({}))
+        reading = HandoutReading(step.reading.laid, step.reading.help_id)
+        app.push_screen(reading, lambda _closed: answer({}))
     elif isinstance(step, Form):
         form = step
 

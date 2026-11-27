@@ -54,6 +54,13 @@ from ..widgets import (
 )
 from .lists import BookListView
 
+#: How a long catalog entry's details panel ends, in the terminal: Read in
+#: full, a link to click, and its key in More (entry_reading.READ_HINT).
+READ_HINT = (
+    "[dim]A long entry:[/] [@click=screen.read_entry_in_full]Read in full[/] "
+    "[dim](m, More) shows all of it.[/]"
+)
+
 
 class LazyTabPane(TabPane):
     """A sheet tab whose contents are built the first time it's shown: mounting every

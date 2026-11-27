@@ -2941,6 +2941,14 @@ how, in the Diary ([help](help:vf-change)).
 <!-- /gui -->
 The choices are the ones Add offers. So a second Puissant Magic Theory is still refused, and a Great Characteristic can only move to a Characteristic at +3. Changing a Great or Poor Characteristic moves both scores. Great Intelligence to Great Stamina takes Intelligence down a point and Stamina up one, and the form says so before you save. A new choice counts from now on, and xp already earned stays where it is. To take a different Virtue, delete this one and add the other. A Virtue that names nothing has nothing to change.
 
+A Virtue or Flaw whose text runs past 750 characters, such as an Inner Mystery with its Initiation Script, shows its one-line summary beside the list instead of the whole text. [Read in full](help:read-in-full) opens all of it.
+<!-- tui -->
+Press `m` for More and choose **Read in full**, or click the link at the foot of its details.
+<!-- /tui -->
+<!-- gui -->
+Click **Read in full** under its summary in the inspector.
+<!-- /gui -->
+
 A magus's House Virtue is marked Free and counts no points (Ars Magica Definitive Edition, Chapter 3: Characters, Hermetic Houses).
 
 The catalog lists a supplement's Virtues and Flaws only while its book is in play (Saga Content's Books in Play). Some supplements print a Virtue or Flaw the Definitive Edition also prints, such as Art & Academe's Failed Student or The Church's Brother-Priest (the DE's Brother Chaplain). The catalog then has the Definitive Edition's alone, with its name, tier and text, whichever books are in play.
@@ -2970,6 +2978,21 @@ Like Virtues, Flaws can be added, changed and deleted. **Add** opens the
 catalog on its Flaws, and **Edit** changes what the chosen one names, such
 as Poor Perception to Poor Dexterity.
 <!-- /gui -->
+
+### Read in full
+<!-- help: read-in-full -->
+
+A long Virtue or Flaw, one whose text runs past 750 characters, shows only its summary beside the list. Read in full opens the whole entry to read: its name, its tier and type, its category, the summary, then all of its text, with its source at the foot. It changes nothing, and a player at a Remote seat can read it too.
+<!-- tui -->
+Choose the Virtue or Flaw, then press `m` for More and choose **Read in full**, or click **Read in full** at the foot of its details. It fills the screen and scrolls; `Esc` closes it.
+<!-- /tui -->
+<!-- gui -->
+Choose the Virtue or Flaw's card, then click **Read in full** under its summary in the inspector. It opens on vellum in a window of its own, as a Handout does; **Close** closes it.
+<!-- /gui -->
+
+A Virtue or Flaw's text can have paragraphs (a blank line between them), \*\*bold\*\* and \*italic\*, and lists (lines starting `- `), as a House Rules entry's can.
+
+**See also:** [Virtues](help:section-vf-virtues), [Flaws](help:section-vf-flaws)
 
 ### Powers
 <!-- help: section-char-powers -->

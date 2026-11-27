@@ -5,10 +5,14 @@ from __future__ import annotations
 from functools import partial
 
 from ... import storyguides
+from ...actions import ActionFacts
+from ...commands import Command, Refuse
+from ...models import Character, Familiar
 from ...sections import DIARY_SECTION, NEIGHBOUR_INFO_SECTION, STAGES_SECTION
 from .. import player_handouts, take_up
 from .. import reveal as reveal_forms
 from .. import show as show_forms
+from .. import virtue as virtue_forms
 from ..menu_refresh import INFO_SECTIONS, Refresh, calculator, changes
 from ..menu_steps import (
     arms_command,
@@ -25,6 +29,7 @@ from ..menu_steps import (
     take_up_command,
     update_command,
 )
+from ..page import Page
 from .entry import MoreAction
 from .rules import (
     acts_on_device,
@@ -49,8 +54,41 @@ from .rules import (
     updates_record,
 )
 
+
+def _read_in_full(page: Page) -> Command:
+    """Read in full on the chosen row of the Virtues and Flaws section focus
+    is in (forms/virtue.py)."""
+    section = page.active_section() or ""
+    owner = page.record_to_delete()
+    if not isinstance(owner, Character | Familiar) or (
+        section not in virtue_forms.READ_SECTIONS
+    ):
+        return Refuse(virtue_forms.READ_TITLE, virtue_forms.READ_REFUSED)
+    return virtue_forms.read_in_full(owner, page.chosen_row(section))
+
+
+def _reads_in_full(facts: ActionFacts, section: str) -> bool:
+    """Read in full is offered on a long entry chosen in a Virtues and Flaws
+    section. The section is checked first, as a sheet can only look up the
+    chosen row of a section it has."""
+    return section in virtue_forms.READ_SECTIONS and virtue_forms.offers_read_in_full(
+        facts.record_to_delete(), section, facts.chosen_row(section)
+    )
+
+
 #: This area's actions, in the order More lists them.
 ENTRIES: tuple[MoreAction, ...] = (
+    # A long Virtue or Flaw's whole text on a reading page: the inspector's
+    # own button on the desktop. It writes nothing.
+    MoreAction(
+        "read_in_full",
+        "f",
+        "Read in full",
+        step=_read_in_full,
+        refresh=calculator(),
+        on_page=False,
+        in_section=_reads_in_full,
+    ),
     MoreAction(
         "restore",
         "r",

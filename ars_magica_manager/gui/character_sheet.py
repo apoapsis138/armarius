@@ -94,6 +94,7 @@ from ..forms import religion as religion_forms
 from ..forms import reveal as reveal_forms
 from ..forms import season as season_forms
 from ..forms import secrets as secret_forms
+from ..forms import virtue as virtue_forms
 from ..forms import whereabouts as whereabouts_forms
 from ..forms import world as world_forms
 from ..markup import escape
@@ -103,6 +104,7 @@ from ..models import (
     Agent,
     Character,
     Characteristics,
+    Familiar,
     Saga,
     ScoredTrait,
     TraditionDef,
@@ -835,9 +837,14 @@ class CharacterSheet(QWidget):
         self.codex.open_chapter(name)
 
     def inspect(
-        self, title: str, subtitle: str, markup: str, symbol: Symbol = None
+        self,
+        title: str,
+        subtitle: str,
+        markup: str,
+        symbol: Symbol = None,
+        extra: QWidget | None = None,
     ) -> None:
-        self.codex.inspect(title, subtitle, markup, symbol)
+        self.codex.inspect(title, subtitle, markup, symbol, extra=extra)
 
     # The header
 
@@ -1470,6 +1477,7 @@ class CharacterSheet(QWidget):
                 card.name,
                 f"{card.tier}  ·  {card.category}",
                 st.vf_info_text(c.virtues_flaws, card.index),
+                extra=read_in_full_button(c, card.index, self.p, self.run),
             ),
         )
 
@@ -2332,6 +2340,25 @@ def ability_icon(name: str, category: str, p: Palette) -> QIcon:
 def ability_mark(name: str, category: str, p: Palette) -> QPixmap:
     """An Ability's mark as the panel beside the chapter shows it."""
     return marks.pixmap(name, category, p["heading"], ABILITY_MARK_LARGE)
+
+
+def read_in_full_button(
+    owner: Character | Familiar,
+    index: int,
+    p: Palette,
+    run: Callable[[Command], None],
+) -> QPushButton | None:
+    """Read in full, under a long Virtue or Flaw's summary in the
+    inspector (the More registry's read_in_full, by the same core rule);
+    None for an entry short enough to show whole."""
+    if virtue_forms.long_entry(owner, index) is None:
+        return None
+    return edit_button(
+        virtue_forms.READ_TITLE,
+        p,
+        lambda: run(virtue_forms.read_in_full(owner, index)),
+        "lab_text",
+    )
 
 
 def vf_card(

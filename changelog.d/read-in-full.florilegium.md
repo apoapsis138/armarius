@@ -1,0 +1,1 @@
+**Read in full.** A long Virtue or Flaw, such as an Inner Mystery with its Initiation Script, now shows its one-line summary beside the list instead of a wall of text. Read in full opens the whole entry on its own page: in More or from the details panel in the terminal, and from a button in the desktop's inspector.

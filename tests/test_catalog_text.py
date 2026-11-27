@@ -14,6 +14,8 @@ import re
 from collections.abc import Iterator
 from pathlib import Path
 
+from ars_magica_manager import handout_markup
+
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
 STILL_LONG_FILE = Path(__file__).with_name("catalog_long_paragraphs.txt")
@@ -137,6 +139,20 @@ def test_no_new_over_long_paragraph():
     assert not done, (
         f"now short enough, take off {STILL_LONG_FILE.name}:\n" + "\n".join(done)
     )
+
+
+def test_every_virtue_or_flaw_reads_as_blocks():
+    """Read in full lays each description out through the Handout parser:
+    every one gives at least one block, and none is read as a tag."""
+    empty = []
+    for entry_id, entry in _virtues_and_flaws():
+        text = str(entry.get("description") or "")
+        found = handout_markup.blocks(text)
+        if text.strip() and not found:
+            empty.append(entry_id)
+        elif any(block.kind != handout_markup.TEXT for block in found):
+            empty.append(f"{entry_id} (read as a tag)")
+    assert not empty, "descriptions that don't read as text:\n" + "\n".join(empty)
 
 
 def test_the_checks_catch_what_they_look_for():

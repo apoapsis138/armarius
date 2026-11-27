@@ -71,6 +71,7 @@ from ....forms import menu as menu_forms
 from ....forms import menu_refresh, menu_steps, more
 from ....forms import neighbour as neighbour_forms
 from ....forms import page as page_forms
+from ....forms import virtue as virtue_forms
 from ....forms.more import MORE_MENU, NEW_MENU
 from ....markup import escape
 from ....models import (
@@ -1001,6 +1002,18 @@ class WorkspaceBase(Screen[None]):
         )
         if handler is not None:
             handler()
+
+    def action_read_entry_in_full(self) -> None:
+        """The Read in full link a long entry's details panel ends with:
+        More's Read in full, where it is offered."""
+        if self._available("read_in_full"):
+            self._run_more("read_in_full")
+        else:
+            self.notify(
+                virtue_forms.READ_REFUSED,
+                title=virtue_forms.READ_TITLE,
+                severity="warning",
+            )
 
     def _more_page(self) -> page_forms.Page:
         """The page on show as the core's More commands ask about it."""

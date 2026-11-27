@@ -557,6 +557,8 @@ LOOKING_ACTIONS: frozenset[str] = frozenset(
         "cast_in_lacuna",
         # Wizard's War's tunnel (Hermetic Projects): a calculator too.
         "open_tunnel",
+        # A long catalog entry's whole text: it only reads.
+        "read_in_full",
     }
 )
 

@@ -80,7 +80,7 @@ from ..widgets import (
     TwoColumns,
     marked_title,
 )
-from .base import SheetView
+from .base import READ_HINT, SheetView
 from .lists import BookListView
 
 #: What the Research Log is read from: the goals, and the log itself.
@@ -1344,7 +1344,7 @@ class CharacterSheetView(SheetView):
         )
 
     def _vf_info_text(self, index: int | None) -> str:
-        return st.vf_info_text(self.character.virtues_flaws, index)
+        return st.vf_info_text(self.character.virtues_flaws, index, READ_HINT)
 
     def _aging_text(self) -> str:
         return cs.aging_text(self.character, self.saga)
