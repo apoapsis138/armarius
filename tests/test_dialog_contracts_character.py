@@ -18,12 +18,12 @@ from dialog_contract_support import (
     save_button,
     set_field,
 )
-from dialog_openers import new_app, open_dialog
+from dialog_openers import new_app, open_dialog, present
 from support import wait_until
 from textual.widgets import Select
 
 from ars_magica_manager import catalog, chronicle
-from ars_magica_manager.models import AnimalForm, VirtueFlawInstance
+from ars_magica_manager.models import AnimalForm, Character, Saga, VirtueFlawInstance
 from ars_magica_manager.rules import creation_characteristics as cch
 from ars_magica_manager.rules import divine_state as ds
 from ars_magica_manager.rules import merchants
@@ -31,11 +31,9 @@ from ars_magica_manager.tui.screens.fields import FieldsDialog
 from ars_magica_manager.tui.screens.workspace import WorkspaceScreen
 
 
-def _found[T](record: T | None) -> T:
-    """`record`, which the saved saga has: a record looked up by id, or a
-    part of one the form has just filled in."""
-    assert record is not None, "missing from the saved saga (a record or a part)"
-    return record
+def _hugo(saga: Saga) -> Character:
+    """The saved saga's grog."""
+    return present(saga.character("grog9"))
 
 
 CONTRACTS: dict[str, Contract] = {
@@ -121,7 +119,7 @@ CONTRACTS: dict[str, Contract] = {
         prefill={"Aging": "average", "Take the chart's crises": False},
         edits={"Aging": "harsh", "Move the Ability cap": True},
         saved=lambda s: (
-            (c := _found(s.character("grog9"))).creation_conditions.aging_chart,
+            (c := _hugo(s)).creation_conditions.aging_chart,
             c.creation_conditions.aging_chart_cap,
             c.creation_conditions.aged_to,
             c.aging.decrepitude_points,
@@ -143,8 +141,7 @@ CONTRACTS: dict[str, Contract] = {
         },
         edits={"Dexterity": "-3", "Quickness": "2"},
         saved=lambda s: tuple(
-            getattr(_found(s.character("grog9")).characteristics, key)
-            for key, _ in cch.CHARACTERISTICS
+            getattr(_hugo(s).characteristics, key) for key, _ in cch.CHARACTERISTICS
         ),
         expected=(2, 2, 2, 1, 1, -1, -3, 2),
         invalid={"Quickness": "2"},
@@ -688,10 +685,10 @@ CONTRACTS: dict[str, Contract] = {
             "Why": "asleep on watch",
         },
         saved=lambda s: (
-            _found(s.character("grog9")).wounds.light,
-            _found(s.character("grog9")).long_term_fatigue,
-            [d.kind for d in _found(s.character("grog9")).discipline],
-            [e.loyalty for e in _found(s.covenant("cov1")).diary if e.loyalty],
+            _hugo(s).wounds.light,
+            _hugo(s).long_term_fatigue,
+            [d.kind for d in _hugo(s).discipline],
+            [e.loyalty for e in present(s.covenant("cov1")).diary if e.loyalty],
         ),
         expected=(2, 3, ["flogging"], [-12]),
         invalid={"Reward or punishment": "promotion", "Rank now": ""},
@@ -703,8 +700,8 @@ CONTRACTS: dict[str, Contract] = {
         prefill={"They retire on": "pension"},
         edits={"They retire on": "rent", "Note": "keeps the gate"},
         saved=lambda s: (
-            [(d.kind, d.note) for d in _found(s.character("grog9")).discipline],
-            _found(s.character("grog9")).diary[-1].name,
+            [(d.kind, d.note) for d in _hugo(s).discipline],
+            _hugo(s).diary[-1].name,
         ),
         expected=([("retired", "rent")], "Retired, paying rent"),
     ),
@@ -715,7 +712,7 @@ CONTRACTS: dict[str, Contract] = {
             "Precise Casting on the spell": "0",
         },
         edits={"The work": "Hard", "Work for one craftsman": "A season"},
-        saved=lambda s: _found(s.character("mag1")).diary,
+        saved=lambda s: character(s).diary,
         expected=[],
         invalid={"Precise Casting on the spell": "x"},
         live={"#fields-live": "against 21"},
@@ -729,7 +726,7 @@ CONTRACTS: dict[str, Contract] = {
             "Story awards this year": "1",
         },
         saved=lambda s: (
-            (year := _found(_found(s.character("grog9")).grog_year)).vocational,
+            (year := present(_hugo(s).grog_year)).vocational,
             year.practice,
             year.exposure,
             year.story_awards,
@@ -877,7 +874,7 @@ CONTRACTS: dict[str, Contract] = {
     "edit character traditions": Contract(
         prefill={"Vitkir (HMRE)": True},
         edits={"Vitkir (HMRE)": False},
-        saved=lambda s: _found(s.character("mag1")).traditions,
+        saved=lambda s: character(s).traditions,
         expected=[],
     ),
     # A craftsman's sale of his finished goods (City & Guild).
@@ -971,7 +968,7 @@ CONTRACTS: dict[str, Contract] = {
     "paint an icon": Contract(
         prefill={"Depicting": "", "Kept at": "cologne"},
         edits={"Depicting": "St Ursula", "Seasons of Standard decoration": "1"},
-        saved=lambda s: _found(s.neighbour("cologne")).details["relics"][-1]["name"],
+        saved=lambda s: present(s.neighbour("cologne")).details["relics"][-1]["name"],
         expected="An icon of St Ursula",
         invalid=[{"Depicting": ""}, {"Seasons of Standard decoration": "-1"}],
         live={"#fields-live": "Aesthetic Quality"},
@@ -1004,8 +1001,8 @@ CONTRACTS: dict[str, Contract] = {
         prefill={"The sinful trait": "Cruel (Envious)", "How they sin": "season"},
         edits={"How they sin": "ceremony"},
         saved=lambda s: (
-            _found(s.character("mag1")).background.confidence_points,
-            _found(s.character("mag1")).aging.warping_realms,
+            character(s).background.confidence_points,
+            character(s).aging.warping_realms,
         ),
         expected=(1, {"Infernal": 1}),
         live={"#fields-live": "Infernal Warping Point"},
@@ -1017,7 +1014,7 @@ CONTRACTS: dict[str, Contract] = {
             "The trait awakened": "Envious",
         },
         edits={"The trait awakened": "Cruel"},
-        saved=lambda s: _found(s.character("mag1")).diary[-1].name,
+        saved=lambda s: character(s).diary[-1].name,
         expected="Infernal Influence",
         invalid={"The trait awakened": ""},
         live={"#fields-live": "Presence + Leadership"},
@@ -1025,7 +1022,7 @@ CONTRACTS: dict[str, Contract] = {
     "ars goetia": Contract(
         prefill={"Goetic Art": "Summoning", "The spirit's Might": "10"},
         edits={"The spirit's Might": "5"},
-        saved=lambda s: _found(s.character("mag1")).diary,
+        saved=lambda s: character(s).diary,
         expected=[],
         invalid={"The spirit's Might": "x"},
         live={"#fields-live": "Against 10"},
@@ -1034,7 +1031,7 @@ CONTRACTS: dict[str, Contract] = {
     "turbulence": Contract(
         prefill={"Why": "botch", "Aegis they had no part in": "0"},
         edits={"Sympathetic multiplier": "1"},
-        saved=lambda s: _found(s.character("mag1")).diary[-1].name,
+        saved=lambda s: character(s).diary[-1].name,
         expected="Turbulence",
         invalid={"Confidence spent on incurring": "99"},
         live={"#fields-live": "Incurring"},
@@ -1042,7 +1039,7 @@ CONTRACTS: dict[str, Contract] = {
     "the gauntlet": Contract(
         prefill={"How it is decided": "story", "The parens' verdict": "pass"},
         edits={"The parens' verdict": "fail", "The test": "an owl's egg"},
-        saved=lambda s: _found(s.character("mag1")).diary[-1].name,
+        saved=lambda s: character(s).diary[-1].name,
         expected="The Gauntlet failed",
         live={"#fields-live": "Hermetic Magus replaces Apprentice"},
     ),
@@ -1050,8 +1047,7 @@ CONTRACTS: dict[str, Contract] = {
         prefill={"The Gift is": "suppressed", "What happened": ""},
         edits={"What happened": "a laboratory accident"},
         saved=lambda s: (
-            "vf_suppressed_gift"
-            in {vf.vf_id for vf in _found(s.character("mag1")).virtues_flaws}
+            "vf_suppressed_gift" in {vf.vf_id for vf in character(s).virtues_flaws}
         ),
         expected=True,
         invalid={"What happened": ""},
@@ -1060,7 +1056,7 @@ CONTRACTS: dict[str, Contract] = {
     "learn a cantation": Contract(
         prefill={"Times cast spontaneously": "0"},
         edits={"The spell": "spell_ager_belli", "Times cast spontaneously": "10"},
-        saved=lambda s: _found(s.character("mag1")).spells_known[-1].spell_id,
+        saved=lambda s: character(s).spells_known[-1].spell_id,
         expected="spell_ager_belli",
         invalid={"Times cast spontaneously": "0"},
         live={"#fields-live": "Ager Belli is level 10"},
@@ -1287,11 +1283,11 @@ CONTRACTS: dict[str, Contract] = {
             character(s).interests_chosen,
             [
                 i
-                for i in ("Knightly", "Tribunal & Order")
+                for i in ("Knightly", "Tribunal & Order", "Covenfolk")
                 if i in character(s).interests_off
             ],
         ),
-        expected=(True, []),
+        expected=(True, ["Covenfolk"]),
     ),
     "font of knowledge": Contract(
         prefill={"Times drawn on today": "0"},
@@ -1331,7 +1327,7 @@ CONTRACTS: dict[str, Contract] = {
             "The spell-like power's level": "10",
         },
         edits={"The spirit's Might": "20", "Levels added for Penetration": "5"},
-        saved=lambda s: _found(s.character("mag1")).diary,
+        saved=lambda s: character(s).diary,
         expected=[],
         invalid={"The spirit's Might": "x"},
         live={"#fields-live": "Penetration +"},
@@ -1412,7 +1408,7 @@ CONTRACTS: dict[str, Contract] = {
     "philosophic alchemy": Contract(
         prefill={"It makes": "vis:", "Vessel's Shape and Material bonus": "0"},
         edits={"Vessel's Shape and Material bonus": "2"},
-        saved=lambda s: _found(_found(character(s).alchemy).digestion).shape_bonus,
+        saved=lambda s: present(present(character(s).alchemy).digestion).shape_bonus,
         expected=2,
         invalid=[
             {"Vessel's Shape and Material bonus": "-1"},
@@ -1522,7 +1518,7 @@ CONTRACTS: dict[str, Contract] = {
     "open a tunnel": Contract(
         prefill={"Level cast": "20", "It lasts": "Years or decades"},
         edits={"Level cast": "25", "Target's Parma Magica": "3"},
-        saved=lambda s: _found(s.character("mag1")).diary,
+        saved=lambda s: character(s).diary,
         expected=[],
         invalid={"Level cast": "x"},
         live={"#fields-live": "up to level 20"},
@@ -1533,10 +1529,8 @@ CONTRACTS: dict[str, Contract] = {
         prefill={"What changes": "gain_flaw"},
         edits={"What changes": "temporary_ends", "Virtue or Flaw ending": "0"},
         saved=lambda s: (
-            len(_found(s.character("mag1")).virtues_flaws),
-            _found(s.character("mag1"))
-            .diary[-1]
-            .name.startswith("A temporary Virtue or Flaw ends"),
+            len(character(s).virtues_flaws),
+            character(s).diary[-1].name.startswith("A temporary Virtue or Flaw ends"),
         ),
         expected=(1, True),
         invalid=[{"What changes": "temporary_ends"}],
@@ -1611,13 +1605,9 @@ CONTRACTS: dict[str, Contract] = {
         prefill={"Experience": "5"},
         edits={"The story": "Wolves", "Ability": "Brawl"},
         saved=lambda s: (
-            next(
-                a.xp
-                for a in _found(s.character("grog9")).abilities
-                if a.name == "Brawl"
-            ),
-            _found(_found(s.character("grog9")).grog_year).story_awards,
-            _found(s.character("grog9")).diary[-1].name,
+            next(a.xp for a in _hugo(s).abilities if a.name == "Brawl"),
+            present(_hugo(s).grog_year).story_awards,
+            _hugo(s).diary[-1].name,
         ),
         expected=(5, 1, "Story experience: Wolves"),
         invalid={"Ability": "Brawl", "Experience": "6"},
@@ -1652,7 +1642,7 @@ CONTRACTS: dict[str, Contract] = {
         # 3 years and 3 pawns of vis a year (GotF p. 20).
         edits={"Staying at": "cov_sketch"},
         saved=lambda s: (
-            (stay := _found(character(s).stay)).host_id,
+            (stay := present(character(s).stay)).host_id,
             stay.until_year,
             stay.fee_kind,
             stay.fee,
@@ -1752,7 +1742,7 @@ async def test_a_galdor_form_with_nothing_to_choose_opens(action: str):
         assert isinstance(base, WorkspaceScreen)
         await dialog.dismiss(None)
         await pilot.pause()
-        magus = _found(base.selected_character)
+        magus = present(base.selected_character)
         magus.abilities = []
         magus.bound_beings = []
         base._run_more(f"galdor_{action}")

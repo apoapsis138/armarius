@@ -240,11 +240,16 @@ def _familiar(ws: WorkspaceScreen) -> Familiar:
     return familiar
 
 
-def _found[T](record: T | None) -> T:
-    """`record`, looked up by id in the fixture saga or a catalog, which
-    has it."""
-    assert record is not None, "not in the fixture saga or the catalog"
+def present[T](record: T | None) -> T:
+    """`record`, which is there: looked up by id in the fixture saga or a
+    catalog, or a part of a record the fixture or a form fills in."""
+    assert record is not None, "missing from the saga or the catalog"
     return record
+
+
+def _hugo(ws: WorkspaceScreen) -> Character:
+    """The fixture saga's grog."""
+    return present(ws.saga.character("grog9"))
 
 
 def _add_story_event_with_pools(ws: WorkspaceScreen) -> None:
@@ -313,7 +318,7 @@ async def _on_lords_row(
 ) -> None:
     """A More command on Gottfried's Manors tab, on the first of `rows`
     put under `key` in memory (saved only with the form)."""
-    _found(ws.saga.neighbour("gottfried")).details[key] = rows
+    present(ws.saga.neighbour("gottfried")).details[key] = rows
     view = _view(ws)
     await view.build_all_tabs()
     view.refresh_section(section_id)
@@ -350,7 +355,7 @@ async def _winter_roll(ws: WorkspaceScreen) -> None:
 async def _court_roll(ws: WorkspaceScreen) -> None:
     """The Court Roll on a case put before Soest's court in memory (saved
     only with the form)."""
-    soest = _found(ws.saga.neighbour("soest"))
+    soest = present(ws.saga.neighbour("soest"))
     soest.details["court_cases"] = [{"accused": "Hartmut", "charge": "Theft"}]
     view = _view(ws)
     await view.build_all_tabs()
@@ -364,14 +369,14 @@ async def _court_roll(ws: WorkspaceScreen) -> None:
 def _grogs_aging_chart(ws: WorkspaceScreen) -> None:
     """The Grogs Aging Chart for the grog Hugo, made 45 in memory (saved
     only with the form)."""
-    grog = _found(ws.saga.character("grog9"))
+    grog = _hugo(ws)
     grog.background.year_born = ws.saga.current_year - 45
     ws._run_steps(wf.grog_aging_chart(ws.saga, grog))
 
 
 def _found_covenant(ws: WorkspaceScreen) -> None:
     """More's Found a Covenant Here, on the place marked a ruin first."""
-    _found(ws.saga.neighbour("drachenfels")).details["ruined"] = True
+    present(ws.saga.neighbour("drachenfels")).details["ruined"] = True
     ws._run_more("found_covenant")
 
 
@@ -576,7 +581,7 @@ async def _grow_a_story_chosen(ws: WorkspaceScreen) -> None:
 def _with_crown_on_a_track(ws: WorkspaceScreen) -> None:
     """Add a trigger once the Hollow Crown moves along a track, which a
     trigger can move."""
-    crown = _found(ws.saga.neighbour("crown"))
+    crown = present(ws.saga.neighbour("crown"))
     crown.details["moves"] = "A track"
     ws._core_verb("section-nb-triggers", "add")
 
@@ -1132,7 +1137,7 @@ def _open_plan_season(ws: WorkspaceScreen) -> None:
 def _open_plan_opening(ws: WorkspaceScreen) -> None:
     """Plan Season for Leandro, once Alys has The Gift, so he may open
     her Arts."""
-    alys = _found(ws.saga.character("comp1"))
+    alys = present(ws.saga.character("comp1"))
     alys.virtues_flaws.append(VirtueFlawInstance("vf_the_gift"))
     _open_plan_season(ws)
 
@@ -1202,10 +1207,10 @@ def _with_rhine_ranks(ws: WorkspaceScreen) -> None:
     saga = ws.saga
     if any(c.id == "arch1" for c in saga.characters):
         return
-    severinus = _found(saga.character("mag_sketch"))
+    severinus = present(saga.character("mag_sketch"))
     severinus.virtues_flaws.append(VirtueFlawInstance("vf_master_rhine_tribunal"))
     severinus.hermetic.house = "house_tytalus"
-    _found(saga.character("mag2")).hermetic.house = "house_tytalus"
+    present(saga.character("mag2")).hermetic.house = "house_tytalus"
     saga.characters.append(
         Character(
             id="arch1",
@@ -1429,7 +1434,7 @@ def _with_war(ws: WorkspaceScreen) -> Command:
 def _faerie_hill(ws: WorkspaceScreen) -> Command:
     """Cross the Threshold at the Drachenfels, made a Faerie place of aura
     5 with Realms of Power: Faerie in play (in memory)."""
-    place = _found(ws.saga.neighbour("drachenfels"))
+    place = present(ws.saga.neighbour("drachenfels"))
     place.realm = "Faerie"
     place.details["levels"] = []
     if ws.saga.books_in_play is not None and "RoP:F" not in ws.saga.books_in_play:
@@ -1451,14 +1456,14 @@ def _with_hook(ws: WorkspaceScreen) -> Command:
 
 
 def _leandro(ws: WorkspaceScreen) -> Character:
-    return _found(ws.saga.character("mag1"))
+    return present(ws.saga.character("mag1"))
 
 
 def _springing(
     ws: WorkspaceScreen, *, ward: bool = False, acted: bool = False
 ) -> tombs.Springing:
     """Overcome It part way through, on the sample tomb, for Leandro alone."""
-    place = _found(ws.saga.neighbour("drachenfels"))
+    place = present(ws.saga.neighbour("drachenfels"))
     obstacle = (
         tombs.Obstacle("Turn the Interloper", 15, "its effect", penetration=0)
         if ward
@@ -1853,7 +1858,7 @@ OPENERS: dict[str, Opener] = {
             creation_forms.grog_template_steps(
                 ws.saga,
                 {"name": "Ulla", "covenant_id": "cov1"},
-                _found(grog_templates.find("gt_animal_trainer")),
+                present(grog_templates.find("gt_animal_trainer")),
             ),
             tree=True,
         ),
@@ -1864,7 +1869,7 @@ OPENERS: dict[str, Opener] = {
             choice_forms.choice_template_steps(
                 ws.saga,
                 {"name": "Ulla", "covenant_id": "cov1"},
-                _found(choice_templates.find("ct_quick_martial")),
+                present(choice_templates.find("ct_quick_martial")),
             ),
             tree=True,
         ),
@@ -1875,7 +1880,7 @@ OPENERS: dict[str, Opener] = {
             choice_forms.choice_template_steps(
                 ws.saga,
                 {"name": "Ulla", "covenant_id": "cov1"},
-                _found(choice_templates.find("ct_mc_faerie_doctor")),
+                present(choice_templates.find("ct_mc_faerie_doctor")),
             ),
             tree=True,
         ),
@@ -1886,7 +1891,7 @@ OPENERS: dict[str, Opener] = {
             choice_forms.choice_template_steps(
                 ws.saga,
                 {"name": "Ulla", "covenant_id": "cov1"},
-                _found(choice_templates.find("ct_anne_holy_hermit")),
+                present(choice_templates.find("ct_anne_holy_hermit")),
             ),
             tree=True,
         ),
@@ -1897,7 +1902,7 @@ OPENERS: dict[str, Opener] = {
             choice_forms.grog_companion_steps(
                 ws.saga,
                 {"name": "Ulla", "covenant_id": "cov1"},
-                _found(grog_templates.find("gt_animal_trainer")),
+                present(grog_templates.find("gt_animal_trainer")),
             ),
             tree=True,
         ),
@@ -1908,7 +1913,7 @@ OPENERS: dict[str, Opener] = {
             creation_forms.grog_template_steps(
                 ws.saga,
                 {"name": "Rex", "covenant_id": "cov1"},
-                _found(grog_templates.find("at_dog")),
+                present(grog_templates.find("at_dog")),
             ),
             tree=True,
         ),
@@ -2095,24 +2100,18 @@ OPENERS: dict[str, Opener] = {
     ),
     "reward or punish": Opener(
         "character",
-        lambda ws: ws._run_steps(
-            grog_forms.discipline_form(ws.saga, _found(ws.saga.character("grog9")))
-        ),
+        lambda ws: ws._run_steps(grog_forms.discipline_form(ws.saga, _hugo(ws))),
     ),
     "retire a grog": Opener(
         "character",
-        lambda ws: ws._run_steps(
-            grog_forms.pension_form(ws.saga, _found(ws.saga.character("grog9")))
-        ),
+        lambda ws: ws._run_steps(grog_forms.pension_form(ws.saga, _hugo(ws))),
     ),
     "craft by magic": Opener(
         "character", lambda ws: ws._run_more("craft_by_magic"), action="craft_by_magic"
     ),
     "grog yearly update": Opener(
         "character",
-        lambda ws: ws._run_steps(
-            season_forms.grog_year_form(_found(ws.saga.character("grog9")))
-        ),
+        lambda ws: ws._run_steps(season_forms.grog_year_form(_hugo(ws))),
     ),
     "add arcane connection": Opener(
         "laboratory", lambda ws: ws._core_verb("section-lab-connections", "add")
@@ -2316,9 +2315,7 @@ OPENERS: dict[str, Opener] = {
     # The fixture's grog, Hugo, made a dog.
     "animal form": Opener(
         "character",
-        lambda ws: ws._run_steps(
-            animal_forms.animal_form(ws.saga, _found(ws.saga.character("grog9")))
-        ),
+        lambda ws: ws._run_steps(animal_forms.animal_form(ws.saga, _hugo(ws))),
     ),
     "general spell level": Opener(
         "character",
@@ -2326,7 +2323,7 @@ OPENERS: dict[str, Opener] = {
             wf.spell_level_form(
                 _character(ws),
                 "apprenticeship_spells",
-                _found(catalog.find_spell(ws.saga, "spell_aegis_of_the_hearth")),
+                present(catalog.find_spell(ws.saga, "spell_aegis_of_the_hearth")),
             )
         ),
     ),
@@ -2810,11 +2807,7 @@ OPENERS: dict[str, Opener] = {
     # The guides' gaps, round two.
     "grog story experience": Opener(
         "character",
-        _run(
-            lambda ws: grog_story.story_form(
-                ws.saga, _found(ws.saga.character("grog9"))
-            )
-        ),
+        _run(lambda ws: grog_story.story_form(ws.saga, _hugo(ws))),
     ),
     "melee event": Opener(
         "character",
@@ -3043,7 +3036,7 @@ def _open_byzantine(ws: WorkspaceScreen, which: str) -> None:
         character.virtues_flaws.append(VirtueFlawInstance("vf_eastern_priest"))
         character.abilities.append(Ability("Theology: Christian", xp=30))
     if which == "venerate":
-        church = _found(ws.saga.neighbour("cologne"))
+        church = present(ws.saga.neighbour("cologne"))
         church.details.setdefault("relics", []).append(
             {
                 "name": "The Hodegetria",
@@ -3080,7 +3073,7 @@ def _open_sin(ws: WorkspaceScreen, which: str) -> None:
 
 def _open_treasury_kind(ws: WorkspaceScreen, kind: str) -> None:
     """The treasury's Add on Transylvania, with `kind` chosen."""
-    ops = tribunal_forms.treasury_ops(_found(ws.saga.tribunal("transylvania")))
+    ops = tribunal_forms.treasury_ops(present(ws.saga.tribunal("transylvania")))
     ws._run_steps(_choose(_add(ops)).apply(kind))
 
 
@@ -3364,7 +3357,7 @@ def _open_settle_land(ws: WorkspaceScreen) -> None:
     covenant = _covenant(ws)
     if not covenant.land_projects:
         covenant.land_projects.append(LandProject("isle", "Insula"))
-        magus = _found(ws.saga.character("mag1"))
+        magus = _leandro(ws)
         magus.progress.append(Progress("land_shaping", "Insula", 4, 4))
     ws._run_steps(land_forms.settle_form(ws.saga, covenant, covenant.land_projects[0]))
 
@@ -3375,7 +3368,7 @@ async def _open_library(
     """A form of the Rhine's Great Library tab: Leandro holds two seasons of
     credit there and has sought a Vim tractatus (in memory, saved only with
     the form); the row of `list_id` is chosen first."""
-    tribunal = _found(ws.saga.tribunal("rhine"))
+    tribunal = present(ws.saga.tribunal("rhine"))
     data = tribunal.package_data.setdefault("rhine", {})
     if not data.get("library_credit"):
         data["library_credit"] = [
@@ -3669,7 +3662,7 @@ async def _on_argument(
     memory, saved only with the form); `text` gives it its polemic, not
     yet circulated, chosen first."""
     saga = ws.saga
-    tribunal = _found(saga.tribunal("rhine"))
+    tribunal = present(saga.tribunal("rhine"))
     if not any(b.id == "b-polemic" for b in saga.books):
         saga.books.append(
             Book(
@@ -3708,7 +3701,7 @@ async def _on_charter_lord(ws: WorkspaceScreen, open_form: OpenFrom) -> None:
     the optional rule (in memory, saved only with the form)."""
     saga = ws.saga
     saga.rule_options["charter_strength"] = True
-    town = _found(saga.neighbour("soest"))
+    town = present(saga.neighbour("soest"))
     if not town.details.get("charter_lords"):
         town.details["charter_lords"] = [
             {"lord": "The Archbishop of Cologne", "superior_strength": 0}
