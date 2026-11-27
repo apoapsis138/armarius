@@ -5,10 +5,11 @@ show every tab of its detail pane at two terminal sizes, check its details
 panel, and record the pane's rendered text. The result is compared with
 tests/golden/sheet_text/<node>-<W>x<H>.txt, so a refactor of the sheet
 views (compose, refresh, CSS, shared widgets) that changes what is on
-screen fails here, and test_refresh_shows_changed_data checks that a
-refreshed sheet shows the same text. Every tribunal other than Rhine shares Rhine's view with
-other words: each shows only its tabs in TRIBUNAL_TABS. After an intended
-change, regenerate the files with
+screen fails here. test_refresh_shows_changed_data opens a sheet on
+nearly empty records, fills them, refreshes it and compares it with the
+same golden. Every tribunal other than Rhine is Rhine's view with its own
+words, so each walks only its tabs in support.TRIBUNAL_TABS. After an
+intended change, regenerate the files with
 
     UPDATE_GOLDEN=1 uv run pytest tests/test_sheet_text.py
 
@@ -24,6 +25,7 @@ import pytest
 from footer_guard import check_footer_current, check_footer_rebuilds, footer
 from support import (
     NODES,
+    TRIBUNAL_TABS,
     build_all_tabs,
     everything_saga,
     screen_lines,
@@ -75,27 +77,6 @@ SHEETS = {
     "creature",
     "armarium",
     "custodia",
-}
-
-#: Rhine (the `tribunal` node) is walked in full. The other tribunals are
-#: the same view with other words and no covenant of their own, so each
-#: walks only the tabs where it differs from Rhine: the header (above every
-#: tab), the docket's year, the meeting's order of business, the code tab's
-#: customs, and its package's own tabs. A new tribunal pack adds a row. A
-#: covenant in one of them changes its roster (its package's columns): its
-#: row then walks the roster too (test_..._names_what_it_walks).
-_TRIBUNAL_DIFFERS = ("tab-trib-docket", "tab-trib-meeting", "tab-trib-code")
-TRIBUNAL_TABS: dict[str, tuple[str, ...]] = {
-    "alps_tribunal": (*_TRIBUNAL_DIFFERS, "tab-trib-ostracism"),
-    "hibernia_tribunal": (*_TRIBUNAL_DIFFERS, "tab-trib-ambassadors"),
-    "normandy_tribunal": (*_TRIBUNAL_DIFFERS, "tab-trib-tenure", "tab-trib-tourney"),
-    "theban_tribunal": (*_TRIBUNAL_DIFFERS, "tab-trib-tokens"),
-    # Its roster calls its covenants oppida.
-    "transylvania_tribunal": (
-        "tab-trib-roster",
-        *_TRIBUNAL_DIFFERS,
-        "tab-trib-privileges",
-    ),
 }
 
 
@@ -230,7 +211,8 @@ async def _show_node(pilot, workspace: WorkspaceScreen, node: str) -> None:
 
     assert await wait_until(pilot, lambda: find_node() is not None)
     tree.select_node(find_node())
-    assert await wait_until(pilot, lambda: workspace.selected_kind == NODES[node][0])
+    kind, *_ = NODES[node]
+    assert await wait_until(pilot, lambda: workspace.selected_kind == kind)
     # selected_kind changes before the sheet is mounted and recorded.
     if node in SHEETS:
         assert await wait_until(
@@ -320,16 +302,43 @@ def test_every_tribunal_but_rhine_names_what_it_walks():
     """A new tribunal node adds its row to TRIBUNAL_TABS, and one whose
     Tribunal has a covenant walks its roster, where its package's columns
     show (Rhine's empty-roster text is no stand-in for them)."""
-    tribunals = {node for node, data in NODES.items() if data[0] == "tribunal"}
+    tribunals = {node for node, (kind, *_) in NODES.items() if kind == "tribunal"}
     assert set(TRIBUNAL_TABS) == tribunals - {"tribunal"}
-    saga = everything_saga()
-    with_covenants = {c.tribunal_id for c in saga.covenants}
+    with_covenants = {c.tribunal_id for c in everything_saga().covenants}
     unwalked = [
         node
         for node, tabs in TRIBUNAL_TABS.items()
-        if NODES[node][1] in with_covenants and "tab-trib-roster" not in tabs
+        if _tribunal_id(node) in with_covenants and "tab-trib-roster" not in tabs
     ]
     assert not unwalked, f"these have a covenant but don't walk the roster: {unwalked}"
+
+
+#: The tabs that show an empty state for a Tribunal with nothing in them:
+#: Rhine has a covenant, a treasury and minutes, so only another tribunal
+#: shows these.
+_EMPTY_STATE_TABS = {"tab-trib-roster", "tab-trib-treasury", "tab-trib-diary"}
+
+
+def _tribunal_id(node: str) -> str:
+    _, tribunal_id = NODES[node]
+    return tribunal_id
+
+
+def test_some_tribunal_walks_the_empty_states():
+    """An empty Tribunal's roster, treasury and diary say there is nothing
+    yet: some tribunal with none walks those tabs, so their goldens (and
+    the dispatch matrix's rows for them) still check that text."""
+    saga = everything_saga()
+    with_covenants = {c.tribunal_id for c in saga.covenants}
+    empty = {
+        t.id for t in saga.tribunals if not t.treasury and not t.diary
+    } - with_covenants
+    walking = [
+        node
+        for node, tabs in TRIBUNAL_TABS.items()
+        if _tribunal_id(node) in empty and _EMPTY_STATE_TABS <= set(tabs)
+    ]
+    assert walking, f"no empty tribunal walks {sorted(_EMPTY_STATE_TABS)}"
 
 
 @pytest.mark.parametrize("node", sorted(NODES))

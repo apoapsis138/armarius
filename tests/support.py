@@ -283,6 +283,36 @@ NODES: dict[str, tuple[str, ...]] = {
     "conflicts": ("conflicts",),
 }
 
+#: Rhine (the `tribunal` node) is walked in full. The other tribunals are
+#: the same view with other words and no covenant of their own, so each
+#: walks only the tabs where it differs from Rhine: the header (above every
+#: tab), the docket's year, the meeting's order of business, the code tab's
+#: customs, and its package's own tabs. A new tribunal pack adds a row. A
+#: covenant in one of them changes its roster (its package's columns): its
+#: row then walks the roster too. Rhine's roster, treasury and diary have
+#: entries, so one empty tribunal (Alps) walks those tabs for their
+#: "nothing yet" text. Read by test_sheet_text (the tabs it walks) and
+#: test_dispatch_matrix (the tabs it records).
+_TRIBUNAL_DIFFERS = ("tab-trib-docket", "tab-trib-meeting", "tab-trib-code")
+TRIBUNAL_TABS: dict[str, tuple[str, ...]] = {
+    "alps_tribunal": (
+        "tab-trib-roster",
+        *_TRIBUNAL_DIFFERS,
+        "tab-trib-treasury",
+        "tab-trib-ostracism",
+        "tab-trib-diary",
+    ),
+    "hibernia_tribunal": (*_TRIBUNAL_DIFFERS, "tab-trib-ambassadors"),
+    "normandy_tribunal": (*_TRIBUNAL_DIFFERS, "tab-trib-tenure", "tab-trib-tourney"),
+    "theban_tribunal": (*_TRIBUNAL_DIFFERS, "tab-trib-tokens"),
+    # Its roster calls its covenants oppida.
+    "transylvania_tribunal": (
+        "tab-trib-roster",
+        *_TRIBUNAL_DIFFERS,
+        "tab-trib-privileges",
+    ),
+}
+
 
 def first_vf(vf_type: str) -> str:
     """The first core-book (DE) Virtue or Flaw without parameters, so the

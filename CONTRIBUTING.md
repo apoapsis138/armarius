@@ -68,17 +68,19 @@ test whose message names each offender, not a parametrized case per file.
   More / Filter: it fails if key routing changes.
 - `tests/test_sheet_text.py` records every tab's rendered text at 140x70
   and 120x45 and runs the Footer rebuild guard (`tests/footer_guard.py`)
-  on every tab. Its refresh test fills a sheet's nearly empty records and
-  refreshes every section twice: the sheet must then match the golden, so
-  a section its refresh misses, or one that adds rows instead of
-  replacing them, fails it.
+  on every tab it walks. Its refresh test fills a sheet's nearly empty
+  records and refreshes every section twice: the sheet must then match
+  the golden, so a section its refresh misses, or one that adds rows
+  instead of replacing them, fails it.
 - The tribunals share one view, so Rhine's sheet is checked in full and
-  each other tribunal only where it differs: its row in `test_sheet_text`'s
-  `TRIBUNAL_TABS` names the tabs it walks (the docket, meeting and code
-  tabs, its package's own, and its roster where that differs, as it must once it has a covenant), at
-  both sizes, with the Footer guard run
-  once over them; the refresh test walks the same tabs, and the dispatch
-  matrix records only those tabs. A new tribunal pack adds a row.
+  each other tribunal only where it differs: its row in
+  `tests/support.py`'s `TRIBUNAL_TABS` names the tabs it walks (the
+  docket, meeting and code tabs, its package's own, and its roster where
+  that differs, as it must once it has a covenant), at both sizes, with
+  the Footer guard run once over them. Alps also walks its empty roster,
+  treasury and diary, which Rhine fills. The refresh test walks the same
+  tabs, and the dispatch matrix records only those tabs. A new tribunal
+  pack adds a row.
 
 After an *intended* change to either, regenerate both once, when the UI is
 settled, with `uv run python tools/story_check.py --goldens` (it takes

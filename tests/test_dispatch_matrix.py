@@ -1,13 +1,14 @@
 """Golden test of WorkspaceScreen's key dispatch.
 
 For every section (Collapsible) and tab of every kind of sheet, focus it,
-press each section-dispatched key (a, e, d, More and Filter) and record what happens: whether the
-binding is enabled, and which dialog opens (with its title) or which
-notice appears. Every tribunal other than Rhine shares Rhine's view, so
-each records only its tabs in test_sheet_text's TRIBUNAL_TABS (its top
-panel is Rhine's too). The result is compared with
-tests/golden/dispatch_matrix.json, so a refactor of the dispatch/routing code that changes any of it fails
-here. After an intended change, regenerate the file with
+press each section-dispatched key (a, e, d, More and Filter) and record
+what happens: whether the binding is enabled, and which dialog opens
+(with its title) or which notice appears. Every tribunal other than Rhine
+shares Rhine's view, so each records only its tabs in support's
+TRIBUNAL_TABS (its top panel is Rhine's too). The result is compared with
+tests/golden/dispatch_matrix.json, so a refactor of the dispatch/routing
+code that changes any of it fails here. After an intended change,
+regenerate the file with
 
     UPDATE_GOLDEN=1 uv run pytest -p no:xdist tests/test_dispatch_matrix.py
 
@@ -22,8 +23,14 @@ from pathlib import Path
 
 import pytest
 from rich.text import Text
-from support import NODES, build_all_tabs, everything_saga, settled, wait_until
-from test_sheet_text import TRIBUNAL_TABS
+from support import (
+    NODES,
+    TRIBUNAL_TABS,
+    build_all_tabs,
+    everything_saga,
+    settled,
+    wait_until,
+)
 from textual.widgets import Collapsible, TabbedContent, TabPane, Tree
 
 from ars_magica_manager import storage
