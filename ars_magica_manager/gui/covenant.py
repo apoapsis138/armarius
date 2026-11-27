@@ -463,7 +463,10 @@ class CovenantPage(QWidget):
                 _points_line(total, placed if kind == "Hook" else [], line_height)
             )
             cards = cvs.boon_hook_cards(covenant, kind)
-            frames = [self._boon_hook_card(covenant, card, p[tone]) for card in cards]
+            frames = [
+                self._boon_hook_card(covenant, card, p[tone], section_of_kind[kind])
+                for card in cards
+            ]
             choose_cards(frames, chooser)
             for frame in frames:
                 stack.addWidget(frame)
@@ -660,7 +663,7 @@ class CovenantPage(QWidget):
         return scrolling_page(p, *parts)
 
     def _boon_hook_card(
-        self, covenant: Covenant, card: cvs.BoonHookCard, colour: str
+        self, covenant: Covenant, card: cvs.BoonHookCard, colour: str, section_id: str
     ) -> ClickableCard:
         p = self.p
         frame = ClickableCard(p, edge=colour, pad=10)
@@ -678,10 +681,7 @@ class CovenantPage(QWidget):
             card.name,
             f"{card.tier}  ·  {card.category}" if card.category else card.tier,
             boon_hook_text.boon_hook_info_text(covenant, card.index),
-            # Boons and Hooks read their row (an index into all of them) alike.
-            extra=read_in_full_button(
-                covenant, section_verbs.BOONS_SECTION, card.index, p, self.run
-            ),
+            extra=read_in_full_button(covenant, section_id, card.index, p, self.run),
         )
         return frame
 

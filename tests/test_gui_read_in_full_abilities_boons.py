@@ -36,6 +36,7 @@ LONG_ABILITY = "ab_hex"
 SHORT_ABILITY = "ab_athletics"
 LONG_BOON = "covbh_boon_minor_chase"
 SHORT_BOON = "covbh_boon_minor_wealth"
+LONG_HOOK = "covbh_hook_minor_infants"
 
 
 @pytest.fixture(scope="module")
@@ -106,6 +107,7 @@ def _covenant_page(ran: list[commands.Command]) -> CovenantPage:
     covenant = Covenant(id="c", saga_id="s", name="Keep")
     covenant.boons_hooks = [
         VirtueFlawInstance(vf_id=SHORT_BOON),
+        VirtueFlawInstance(vf_id=LONG_HOOK),
         VirtueFlawInstance(vf_id=LONG_BOON),
     ]
     saga = Saga(id="s", name="Saga", covenants=[covenant])
@@ -139,6 +141,21 @@ def test_a_long_boons_inspector_opens_it_in_full() -> None:
     [form] = ran
     window = _opened(form)
     assert window.page.laid.title == "Chase"
+    window.close()
+
+
+@pytest.mark.usefixtures("app")
+def test_a_long_hooks_inspector_opens_it_in_full() -> None:
+    ran: list[commands.Command] = []
+    page = _covenant_page(ran)
+    _click_card(page, "Infants")
+    [button] = _read_buttons(page.inspector)
+
+    button.click()
+
+    [form] = ran
+    window = _opened(form)
+    assert window.page.laid.title == "Infants"
     window.close()
 
 

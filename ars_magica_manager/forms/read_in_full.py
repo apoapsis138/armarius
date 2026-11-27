@@ -21,6 +21,7 @@ from .. import entry_reading
 from ..commands import Form, Refuse
 from ..handout_layout import Reading
 from ..markup import escape
+from ..models import Character, Familiar
 from ..section_verbs import (
     ABILITIES_SECTION,
     BOONS_SECTION,
@@ -45,7 +46,10 @@ def _virtue_flaw(owner: object, index: int | None) -> tuple[Reading, str] | None
 
 def _ability(owner: object, index: int | None) -> tuple[Reading, str] | None:
     entry = ability_forms.long_entry(owner, index)
-    return (ability_forms.entry_page(entry), entry.name) if entry else None
+    if entry is None or not isinstance(owner, Character | Familiar) or index is None:
+        return None
+    # The owner's own name, as "Area Lore: Rhine", not the catalog's template.
+    return ability_forms.entry_page(entry), owner.abilities[index].name
 
 
 def _boon_hook(covenant: object, index: int | None) -> tuple[Reading, str] | None:

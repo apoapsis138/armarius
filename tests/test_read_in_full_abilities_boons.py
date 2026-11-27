@@ -6,6 +6,8 @@ and Hooks (forms/read_in_full)."""
 
 from __future__ import annotations
 
+import pytest
+
 from ars_magica_manager import boon_hook_text, catalog, entry_reading, familiars
 from ars_magica_manager import sheet_text as st
 from ars_magica_manager.actions import NodeKind
@@ -218,6 +220,24 @@ def test_more_reads_a_long_ability_in_full() -> None:
     assert form.reading.laid.title == "Hex"
     assert form.save_label == "Close" and form.fields() == []
     assert form.help_id == entry_reading.READ_HELP
+
+
+def test_a_templated_abilitys_read_in_full_is_titled_with_its_own_name(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # No shipped templated Ability is long; take every entry as long.
+    monkeypatch.setattr(entry_reading, "is_long", lambda _text: True)
+    witch = Character(
+        id="m",
+        name="Agnes",
+        type="companion",
+        abilities=[Ability(name="Area Lore: Rhine", category="Academic", xp=5)],
+    )
+
+    form = read_forms.read_in_full(witch, ABILITIES_SECTION, 0)
+
+    assert isinstance(form, Form)
+    assert form.title == f"{entry_reading.READ_TITLE}: Area Lore: Rhine"
 
 
 def test_a_traditions_chapter_reads_its_long_ability_in_full() -> None:

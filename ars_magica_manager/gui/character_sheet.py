@@ -1413,7 +1413,8 @@ class CharacterSheet(QWidget):
             ops = table[section_of_side[side]]
             points = cs.virtue_flaw_points(c, side)
             cards = [
-                self._vf_card(card, p[tone]) for card in cs.virtue_flaw_cards(c, side)
+                self._vf_card(card, p[tone], section_of_side[side])
+                for card in cs.virtue_flaw_cards(c, side)
             ]
             choose_cards(cards, chooser)
             column = QWidget()
@@ -1465,7 +1466,9 @@ class CharacterSheet(QWidget):
             buttons=verb_buttons(self._table()[POWERS_SECTION], chooser, self.run, p),
         )
 
-    def _vf_card(self, card: cs.VirtueFlawCard, colour: str) -> ClickableCard:
+    def _vf_card(
+        self, card: cs.VirtueFlawCard, colour: str, section_id: str
+    ) -> ClickableCard:
         c = self.character
         return vf_card(
             card,
@@ -1475,10 +1478,7 @@ class CharacterSheet(QWidget):
                 card.name,
                 f"{card.tier}  ·  {card.category}",
                 st.vf_info_text(c.virtues_flaws, card.index),
-                # Either side's section reads its row alike.
-                extra=read_in_full_button(
-                    c, "section-vf-virtues", card.index, self.p, self.run
-                ),
+                extra=read_in_full_button(c, section_id, card.index, self.p, self.run),
             ),
         )
 
