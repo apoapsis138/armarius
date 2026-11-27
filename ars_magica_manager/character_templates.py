@@ -19,7 +19,7 @@ from __future__ import annotations
 import re
 from dataclasses import replace
 
-from . import catalog, sourcebooks, storage
+from . import catalog, deeds, sourcebooks, storage
 from . import possessions as pos
 from .markup import escape
 from .models import (
@@ -155,6 +155,9 @@ def apply(
     if template.house:
         c.hermetic.house = template.house
     c.description.biography = _biography(template)
+    # Ready to play: it starts with its Default Interests, kept as its own.
+    c.in_creation, c.interests_chosen = True, False
+    deeds.keep_interests(c)
     c.in_creation = False
 
 

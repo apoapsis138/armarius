@@ -926,7 +926,11 @@ def apply_character_info(
 ) -> None:
     character.name = result["name"]
     character.summary = result.get("summary", character.summary)
-    character.type = result.get("type", character.type)
+    new_type = result.get("type", character.type)
+    if new_type != character.type and character.in_creation:
+        # A new type while In Creation: its Default Interests apply again.
+        character.interests_chosen = False
+    character.type = new_type
     character.covenant_id = result["covenant_id"]
     if character.type == "magus":
         assign_laboratory(saga, character, result.get("laboratory_id"))

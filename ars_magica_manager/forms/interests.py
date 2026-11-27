@@ -13,10 +13,11 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import Any
 
-from .. import action_books, deeds, sourcebooks
-from ..commands import Form, FormCard, notes
+from .. import action_books, deeds, default_interests, sourcebooks
+from ..commands import Act, Form, FormCard, notes
 from ..deeds import OPTIONAL
 from ..form_spec import DialogField
+from ..markup import escape
 from ..models import Character, Covenant, Saga
 from ..rules import faiths
 
@@ -119,8 +120,8 @@ def _card(
         reader = _FOR.get(faiths.religion(character), "their faith")
     detail = _detail(names, interest, ready, waiting, others)
     fixed = "" if interest in OPTIONAL else ALWAYS_ON
-    gate = deeds.CHARACTER_GATES.get(interest)
-    if gate is not None and gate.kept_on(character):
+    if deeds.kept_on(character, interest):
+        gate = deeds.CHARACTER_GATES[interest]
         fixed = gate.fixed
         detail = f"[$label]{gate.why}[/]\n\n{detail}"
     return FormCard(
@@ -131,14 +132,9 @@ def _card(
         if members
         else f"The {interest} chapter",
         detail,
-        usable=bool(ready or others) or gate is not None,
+        usable=bool(ready or others) or interest in deeds.CHARACTER_GATES,
         fixed=fixed,
     )
-
-
-def _has(character: Character, interest: str) -> bool:
-    """Whether the interest applies to him at all."""
-    return character.type == "magus" or interest not in deeds.MAGI_ONLY
 
 
 def interest_cards(
@@ -150,7 +146,7 @@ def interest_cards(
     return [
         _card(saga, character, interest, names)
         for interest in deeds.INTERESTS
-        if _has(character, interest)
+        if deeds.applies(character, interest)
     ]
 
 
@@ -212,7 +208,7 @@ def covenant_interests_form(
             for i in deeds.COVENANT_INTERESTS
             if not values.get(_key(i), i not in covenant.interests_off)
         ]
-        return notes(f"{covenant.name}: {covenant_interests_text(covenant)}")
+        return notes(f"{escape(covenant.name)}: {covenant_interests_text(covenant)}")
 
     return Form(
         TITLE,
@@ -227,41 +223,96 @@ def covenant_interests_form(
 
 
 def interests_text(character: Character) -> str:
-    """The interests he has turned off, in words."""
-    off = [i for i in OPTIONAL if i in deeds.interests_off(character)]
-    if not off:
+    """Which of `character`'s interests are on, in words: those turned off,
+    or those on when they're fewer."""
+    off = deeds.interests_off(character)
+    shown_off = [i for i in OPTIONAL if i in off and deeds.applies(character, i)]
+    if not shown_off:
         return "Every interest is ticked."
-    return "Turned off: " + ", ".join(off) + "."
+    on = deeds.interests_on(character)
+    if not on:
+        return f"Only {deeds.SESSION} is on."
+    if len(on) < len(shown_off):
+        return "On: " + ", ".join(on) + ". The rest are off."
+    return "Turned off: " + ", ".join(shown_off) + "."
+
+
+def defaults_text(character: Character) -> str:
+    """`character`'s Default Interests besides Session & Reputation, a line
+    for each source ("From being a magus: Research, Tribunal & Order."),
+    its interests in the order of the cards (deeds.INTERESTS)."""
+    by_source: dict[str, set[str]] = {}
+    for interest, why in default_interests.defaults(character):
+        if interest != default_interests.SESSION:
+            by_source.setdefault(why, set()).add(interest)
+    lines = [
+        f"From {escape(_source(why))}: "
+        f"{', '.join(i for i in OPTIONAL if i in interests)}."
+        for why, interests in by_source.items()
+    ]
+    return "\n".join(lines) or "None."
+
+
+def whose_text(character: Character) -> str:
+    """Whether `character`'s interests are still its Default Interests or
+    the player's own."""
+    if deeds.following_defaults(character):
+        return (
+            "These are the defaults: they follow the character's type, House "
+            "and Virtues and Flaws until Edit Interests is saved."
+        )
+    if character.in_creation:
+        return (
+            "These are the player's own. Restore the defaults hands them back "
+            "to the defaults."
+        )
+    return "These are the player's own."
+
+
+def restore_defaults(character: Character) -> Act:
+    """The Restore the defaults button: hand the interests back to the
+    Default Interests (deeds.follow_defaults), and say which are on now."""
+
+    def apply() -> list[str]:
+        deeds.follow_defaults(character)
+        on = ", ".join(deeds.interests_on(character)) or f"only {deeds.SESSION}"
+        return notes(f"{escape(character.name)} is back to the defaults: {on}.")
+
+    return Act(apply, TITLE)
+
+
+def _source(why: str) -> str:
+    """A reason as its line names it: "being a magus", "House Merinita"."""
+    return f"being {why}" if why.startswith(("a ", "an ")) else why
 
 
 def interests_form(saga: Saga, character: Character, names: Mapping[str, str]) -> Form:
-    """A tick for each interest he may turn off."""
+    """A tick for each interest the character may turn off, ticked as they
+    are now (the Default Interests, until chosen). Saving makes the choice
+    the player's."""
 
     def fields() -> list[DialogField]:
+        off = deeds.turned_off(character)
         return [
             DialogField(
                 _key(i),
                 i,
                 "check",
-                value=i not in character.interests_off,
+                value=i not in off,
                 hint=deeds.SUMMARIES[i],
             )
             for i in OPTIONAL
-            if _has(character, i)
-            and not (
-                i in deeds.CHARACTER_GATES
-                and deeds.CHARACTER_GATES[i].kept_on(character)
-            )
+            if deeds.applies(character, i) and not deeds.kept_on(character, i)
         ]
 
     def apply(values: dict[str, Any]) -> list[str]:
-        # An interest with no field here (kept on) stays as it was chosen.
+        # An interest with no field here (kept on) stays as it was.
+        off = deeds.turned_off(character)
         character.interests_off = [
-            i
-            for i in OPTIONAL
-            if not values.get(_key(i), i not in character.interests_off)
+            i for i in OPTIONAL if not values.get(_key(i), i not in off)
         ]
-        return notes(f"{character.name}: {interests_text(character)}")
+        character.interests_chosen = True
+        return notes(f"{escape(character.name)}: {interests_text(character)}")
 
     return Form(
         TITLE,
