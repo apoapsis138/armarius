@@ -9,9 +9,7 @@ vf_animae_magic
 vf_arcadian_travel
 vf_archieunuch
 vf_ascendancy_to_the_hall_of_heroes
-vf_astrological_cyclic_magic_negative
 vf_astrological_cyclic_magic_positive
-vf_astrological_mutable_flaw
 vf_astrological_mutable_virtue
 vf_atlantean_magic
 vf_automata
@@ -27,7 +25,6 @@ vf_bind_magical_creatures
 vf_binding_the_gift
 vf_blood_of_heroes
 vf_blood_of_the_nephilim
-vf_cabal_legacy
 vf_cathedral_school_master
 vf_celestial_magic
 vf_charm_magic
@@ -205,12 +202,8 @@ vf_patron_angel
 vf_perfectus
 vf_perfectus_mythic
 vf_performance_magic
-vf_periapt
 vf_perpetuity
 vf_personal_power
-vf_philosophic_alchemy
-vf_philosophic_alchemy_major
-vf_planetary_magic
 vf_potent_magic
 vf_potent_magic_major
 vf_priest
@@ -222,7 +215,6 @@ vf_redcap
 vf_reforging_enchanted_items
 vf_ritual_power
 vf_ritual_power_quality
-vf_road_magic
 vf_role_bound
 vf_samovily_blood
 vf_savantism
@@ -235,8 +227,6 @@ vf_sever_the_ties_that_bind_major
 vf_skinchanger
 vf_skinchanger_dove
 vf_sleep_disorder
-vf_sorcerous_music
-vf_spell_binding
 vf_spell_timing
 vf_spirit_familiar
 vf_spiritual_pact
@@ -267,7 +257,6 @@ vf_summoner
 vf_supernatural_beauty
 vf_suppressed_gift
 vf_symbolic_magic
-vf_synthemata_magia
 vf_tainted_treasure
 vf_templar_administrator
 vf_templar_commander
@@ -281,7 +270,6 @@ vf_the_great_elixir
 vf_the_greater_dream_grimoire
 vf_the_lesser_elixir
 vf_theriomorphy
-vf_theurgic_spirit_familiar
 vf_thief_of_emotions
 vf_threshold_of_corporeal_repose
 vf_traditional_ward
@@ -300,7 +288,6 @@ vf_variable_power
 vf_vengeful_powers
 vf_verditius_elder_runes
 vf_viaticarus
-vf_vulgar_alchemy
 vf_vulnerable_casting
 vf_warped_senses
 vf_waster_of_vis

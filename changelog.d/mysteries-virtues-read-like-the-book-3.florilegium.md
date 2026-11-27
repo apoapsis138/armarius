@@ -1,0 +1,1 @@
+**More Mysteries Virtues read like the book.** Fifteen long Virtues and Flaws from The Mysteries, Revised Edition, among them Names of Power, Spirit Familiar, Vulgar Alchemy and Spell Binding, now come in the book's own words and paragraphs, with headings set apart and Vulgar Alchemy's new Shape and Material Bonuses as a table.

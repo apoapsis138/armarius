@@ -91,8 +91,22 @@ def _virtues_and_flaws() -> Iterator[tuple[str, dict[str, object]]]:
             yield entry_id, entry
 
 
+#: A line of a list, with the markers the reader draws as one ("- ", "* ",
+#: "+ ", "1. ", "1) "), or of a pipe table ("|").
+LIST_OR_TABLE_LINE = re.compile(r"\s*(?:[-*+][ \t]+\S|\d{1,3}[.)][ \t]+\S|\|)")
+
+
 def _over_cap(text: str) -> bool:
-    return any(len(p) > PARAGRAPH_CAP for p in re.split(r"\n\s*\n", text))
+    """Whether any paragraph is over the cap. A list or a table is not one
+    paragraph: each of its lines is measured on its own."""
+    for chunk in re.split(r"\n\s*\n", text):
+        lines = chunk.splitlines()
+        if lines and all(LIST_OR_TABLE_LINE.match(line) for line in lines):
+            if any(len(line) > PARAGRAPH_CAP for line in lines):
+                return True
+        elif len(chunk) > PARAGRAPH_CAP:
+            return True
+    return False
 
 
 def test_no_split_ligatures():
@@ -164,3 +178,11 @@ def test_the_checks_catch_what_they_look_for():
     assert split_ligatures("LFI p. 12") == []
     assert _over_cap("x" * (PARAGRAPH_CAP + 1))
     assert not _over_cap(("x" * PARAGRAPH_CAP + "\n\n") * 3)
+    item = "- " + "x" * (PARAGRAPH_CAP - 2)
+    assert not _over_cap("\n".join([item] * 3))
+    assert _over_cap("- " + "x" * PARAGRAPH_CAP)
+    for marker in ("+ ", "* ", "1. ", "12) "):
+        assert not _over_cap("\n".join([marker + "x" * 700] * 3)), marker
+    row = "| " + "x" * (PARAGRAPH_CAP - 4) + " |"
+    assert not _over_cap("| a |\n|---|\n" + "\n".join([row] * 3))
+    assert _over_cap("- a list\nthen a paragraph " + "x" * PARAGRAPH_CAP)
