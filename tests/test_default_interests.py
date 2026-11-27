@@ -6,6 +6,7 @@ on."""
 from __future__ import annotations
 
 import pytest
+from textual.content import Content
 
 from ars_magica_manager import (
     catalog,
@@ -27,6 +28,7 @@ from ars_magica_manager.models import (
     AnimalForm,
     Character,
     CharacterType,
+    Covenant,
     Saga,
     VirtueFlawInstance,
 )
@@ -532,6 +534,15 @@ def test_review_interests_says_where_each_default_comes_from(
     assert "every character" not in text
 
 
+def test_review_interests_keeps_a_virtues_typed_brackets_literal():
+    companion = _unchosen("companion")
+    companion.virtues_flaws.append(
+        VirtueFlawInstance(vf_id="vf_type_divining", params={"type": "[/b] stars"})
+    )
+    shown = Content.from_markup(_review(companion)).plain
+    assert "From [/B] Stars Divining: Insight." in shown
+
+
 def test_review_interests_says_when_the_session_is_the_only_default(
     monkeypatch: pytest.MonkeyPatch,
 ):
@@ -559,6 +570,13 @@ def test_review_interests_names_the_few_on_rather_than_the_many_off():
     assert "Turned off" not in text
 
 
+def test_the_interests_text_leaves_out_what_no_longer_applies():
+    character = _new("magus")
+    character.interests_off = [deeds.RESEARCH, deeds.SCHOLARLY]
+    character.type = "companion"
+    assert interests.interests_text(character) == "Turned off: Scholarly."
+
+
 def _actions(character: Character) -> dict[str, worksheet.Action]:
     saga = Saga(id="s", name="S")
     panel = worksheet.panel_for(character, "interests")
@@ -573,6 +591,27 @@ def test_restore_the_defaults_hands_the_interests_back_and_says_whats_on():
     assert outcome == Finished(["C is back to the defaults: Craft & Trade, Covenfolk."])
     assert not grog.interests_chosen and grog.interests_off == []
     assert _on(grog) == ON["grog"]
+
+
+def test_the_interests_notes_keep_a_names_brackets_literal():
+    grog = _unchosen("grog")
+    grog.name = "[/b] Hob"
+    covenant = Covenant(id="v", saga_id="s", name="[/b] Fengheld")
+    saga = Saga(id="s", name="S")
+    restored = drive(_actions(grog)["Restore the defaults"].start(), lambda _: None)
+    form = interests.interests_form(saga, grog, more.LABELS)
+    covenant_form = interests.covenant_interests_form(saga, covenant, more.LABELS)
+    assert isinstance(restored, Finished) and isinstance(restored.end, list)
+    lines: list[str] = [
+        *restored.end,
+        *form.apply({f.key: f.value for f in form.fields()}),
+        *covenant_form.apply({f.key: f.value for f in covenant_form.fields()}),
+    ]
+    assert [Content.from_markup(line).plain for line in lines] == [
+        "[/b] Hob is back to the defaults: Craft & Trade, Covenfolk.",
+        "[/b] Hob: On: Craft & Trade, Covenfolk. The rest are off.",
+        "[/b] Fengheld: Every interest is ticked.",
+    ]
 
 
 def test_restore_the_defaults_is_offered_only_in_creation():

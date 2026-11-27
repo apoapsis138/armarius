@@ -17,6 +17,7 @@ from .. import action_books, deeds, default_interests, sourcebooks
 from ..commands import Act, Form, FormCard, notes
 from ..deeds import OPTIONAL
 from ..form_spec import DialogField
+from ..markup import escape
 from ..models import Character, Covenant, Saga
 from ..rules import faiths
 
@@ -119,8 +120,8 @@ def _card(
         reader = _FOR.get(faiths.religion(character), "their faith")
     detail = _detail(names, interest, ready, waiting, others)
     fixed = "" if interest in OPTIONAL else ALWAYS_ON
-    gate = deeds.CHARACTER_GATES.get(interest)
-    if gate is not None and gate.kept_on(character):
+    if deeds.kept_on(character, interest):
+        gate = deeds.CHARACTER_GATES[interest]
         fixed = gate.fixed
         detail = f"[$label]{gate.why}[/]\n\n{detail}"
     return FormCard(
@@ -131,7 +132,7 @@ def _card(
         if members
         else f"The {interest} chapter",
         detail,
-        usable=bool(ready or others) or gate is not None,
+        usable=bool(ready or others) or interest in deeds.CHARACTER_GATES,
         fixed=fixed,
     )
 
@@ -207,7 +208,7 @@ def covenant_interests_form(
             for i in deeds.COVENANT_INTERESTS
             if not values.get(_key(i), i not in covenant.interests_off)
         ]
-        return notes(f"{covenant.name}: {covenant_interests_text(covenant)}")
+        return notes(f"{escape(covenant.name)}: {covenant_interests_text(covenant)}")
 
     return Form(
         TITLE,
@@ -225,15 +226,15 @@ def interests_text(character: Character) -> str:
     """Which of `character`'s interests are on, in words: those turned off,
     or those on when they're fewer."""
     off = deeds.interests_off(character)
-    turned_off = [i for i in OPTIONAL if i in off]
-    if not turned_off:
+    shown_off = [i for i in OPTIONAL if i in off and deeds.applies(character, i)]
+    if not shown_off:
         return "Every interest is ticked."
     on = deeds.interests_on(character)
     if not on:
         return f"Only {deeds.SESSION} is on."
-    if len(on) < len(turned_off):
+    if len(on) < len(shown_off):
         return "On: " + ", ".join(on) + ". The rest are off."
-    return "Turned off: " + ", ".join(turned_off) + "."
+    return "Turned off: " + ", ".join(shown_off) + "."
 
 
 def defaults_text(character: Character) -> str:
@@ -245,7 +246,8 @@ def defaults_text(character: Character) -> str:
         if interest != default_interests.SESSION:
             by_source.setdefault(why, set()).add(interest)
     lines = [
-        f"From {_source(why)}: {', '.join(i for i in OPTIONAL if i in interests)}."
+        f"From {escape(_source(why))}: "
+        f"{', '.join(i for i in OPTIONAL if i in interests)}."
         for why, interests in by_source.items()
     ]
     return "\n".join(lines) or "None."
@@ -274,7 +276,7 @@ def restore_defaults(character: Character) -> Act:
     def apply() -> list[str]:
         deeds.follow_defaults(character)
         on = ", ".join(deeds.interests_on(character)) or f"only {deeds.SESSION}"
-        return notes(f"{character.name} is back to the defaults: {on}.")
+        return notes(f"{escape(character.name)} is back to the defaults: {on}.")
 
     return Act(apply, TITLE)
 
@@ -300,11 +302,7 @@ def interests_form(saga: Saga, character: Character, names: Mapping[str, str]) -
                 hint=deeds.SUMMARIES[i],
             )
             for i in OPTIONAL
-            if deeds.applies(character, i)
-            and not (
-                i in deeds.CHARACTER_GATES
-                and deeds.CHARACTER_GATES[i].kept_on(character)
-            )
+            if deeds.applies(character, i) and not deeds.kept_on(character, i)
         ]
 
     def apply(values: dict[str, Any]) -> list[str]:
@@ -314,7 +312,7 @@ def interests_form(saga: Saga, character: Character, names: Mapping[str, str]) -
             i for i in OPTIONAL if not values.get(_key(i), i not in off)
         ]
         character.interests_chosen = True
-        return notes(f"{character.name}: {interests_text(character)}")
+        return notes(f"{escape(character.name)}: {interests_text(character)}")
 
     return Form(
         TITLE,

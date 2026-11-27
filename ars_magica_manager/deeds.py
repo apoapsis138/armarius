@@ -449,10 +449,16 @@ def defaults_off(character: Character) -> list[str]:
     )
 
 
+def kept_on(character: Character, interest: str) -> bool:
+    """Whether `character`'s record keeps `interest` on whatever was chosen
+    (CHARACTER_GATES)."""
+    gate = CHARACTER_GATES.get(interest)
+    return gate is not None and gate.kept_on(character)
+
+
 def _not_kept_on(character: Character, off: list[str]) -> list[str]:
     """Those of `off` that `character`'s record doesn't keep on."""
-    gates = CHARACTER_GATES
-    return [i for i in off if i not in gates or not gates[i].kept_on(character)]
+    return [i for i in off if not kept_on(character, i)]
 
 
 def keep_interests(character: Character) -> None:
