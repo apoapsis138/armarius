@@ -13,7 +13,8 @@ pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from gui_steps import answering, assert_framed, section_buttons
-from PySide6.QtGui import QImage
+from PySide6.QtCore import QRect
+from PySide6.QtGui import QImage, QScreen
 from PySide6.QtWidgets import QApplication, QLabel, QToolButton
 from test_shows import _begun, _hilda_ref, _show
 
@@ -34,7 +35,7 @@ from ars_magica_manager.gui.chronicle_pane import (
     ShownPicture,
 )
 from ars_magica_manager.gui.forms import ChooseDialog
-from ars_magica_manager.gui.themes import SCRIPTORUM
+from ars_magica_manager.gui.themes import SCRIPTORUM, SCRIPTORUM_DARK
 from ars_magica_manager.gui.window import MainWindow
 
 HOST = viewing.HOST
@@ -82,6 +83,39 @@ def test_a_show_card_opens_its_copy_and_never_by_itself() -> None:
     copy.close()
     _click(pane, "open-live")
     assert opened == [_hilda_ref()]
+
+
+@pytest.mark.usefixtures("app")
+def test_a_copy_opens_under_its_heading_without_its_name_line_twice() -> None:
+    saga, session, book = _begun()
+    pane = ChroniclePane(SCRIPTORUM, lambda _c: None)
+    pane.attach(saga, session, book, "ana")
+    _show(book, saga, session, chronicle.ShowCall("Hilda", _hilda_ref(), to=("ana",)))
+
+    _click(pane, "open-show")
+
+    copy = pane.shown_copy
+    assert isinstance(copy, ShownCopy)
+    assert copy.column.itemAt(0).widget().text() == "Hilda"
+    first = copy.text.document().firstBlock()
+    assert not (first.text() == "Hilda" and first.blockFormat().headingLevel() == 1)
+    copy.close()
+
+
+@pytest.mark.usefixtures("app")
+def test_a_viewer_opened_after_a_theme_change_wears_the_new_paper() -> None:
+    saga, session, book = _begun()
+    pane = ChroniclePane(SCRIPTORUM, lambda _c: None)
+    pane.attach(saga, session, book, "ana")
+    _show(book, saga, session, chronicle.ShowCall("Hilda", _hilda_ref(), to=("ana",)))
+
+    pane.set_palette(SCRIPTORUM_DARK)
+    _click(pane, "open-show")
+
+    copy = pane.shown_copy
+    assert isinstance(copy, ShownCopy)
+    assert copy.p is SCRIPTORUM_DARK and copy.page.p is SCRIPTORUM_DARK
+    copy.close()
 
 
 @pytest.mark.usefixtures("app")
@@ -259,21 +293,60 @@ def test_a_withdrawn_shows_open_picture_closes() -> None:
     assert not picture.isVisible()
 
 
+def _work_area(monkeypatch: pytest.MonkeyPatch, width: int, height: int) -> None:
+    """Every screen's free area (less the taskbar) is `width` x `height`."""
+    monkeypatch.setattr(
+        QScreen, "availableGeometry", lambda _screen: QRect(0, 0, width, height)
+    )
+
+
+def _picture_window(folder: Path, width: int, height: int) -> ShownPicture:
+    image = QImage(width, height, QImage.Format.Format_RGB32)
+    image.fill(0)
+    file = folder / f"{width}x{height}.png"
+    assert image.save(str(file))
+    return ShownPicture(shows.Shown("A picture", picture=file.read_bytes()), SCRIPTORUM)
+
+
 @pytest.mark.usefixtures("app")
 def test_a_small_picture_is_drawn_at_its_own_size_a_large_one_fits(
-    tmp_path: Path,
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    _work_area(monkeypatch, 1920, 1040)
+
     def drawn(width: int, height: int) -> tuple[int, int]:
-        image = QImage(width, height, QImage.Format.Format_RGB32)
-        image.fill(0)
-        file = tmp_path / f"{width}x{height}.png"
-        assert image.save(str(file))
-        window = ShownPicture(
-            shows.Shown("A picture", picture=file.read_bytes()), SCRIPTORUM
-        )
+        window = _picture_window(tmp_path, width, height)
         found = window.picture.pixmap()
         window.close()
         return found.width(), found.height()
 
     assert drawn(150, 200) == (150, 200)
     assert drawn(1800, 700) == (900, 350)
+
+
+@pytest.mark.usefixtures("app")
+def test_a_large_picture_on_a_short_screen_fits_with_its_close_in_reach(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _work_area(monkeypatch, 1366, 728)
+    window = _picture_window(tmp_path, 2000, 1500)
+    window.show()
+    try:
+        least = window.minimumSizeHint()
+        assert least.height() <= 728 and least.width() <= 1366
+        assert window.frameGeometry().bottom() < 728
+        assert window.picture.pixmap().height() < 700
+        assert window.close_button.isVisible()
+    finally:
+        window.close()
+
+
+@pytest.mark.usefixtures("app")
+def test_a_picture_on_a_tiny_screen_is_still_drawn(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _work_area(monkeypatch, 120, 90)
+    window = _picture_window(tmp_path, 2000, 1500)
+    drawn = window.picture.pixmap()
+    window.close()
+    assert not drawn.isNull() and drawn.height() > 0

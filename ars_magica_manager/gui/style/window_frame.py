@@ -1,6 +1,6 @@
 """Window: the frame every window the desktop opens over the main window
 is built on (docs/adr/0033). No system title bar but the app's own
-(style/frame.py): the app's name to drag it by and the glyph buttons its
+(frame.py): the app's name to drag it by and the glyph buttons its
 `controls` name, grips when it can maximise, Windows' snapping, and an
 opening size fitted to the screen. Inside, the theme's paper and a column
 for a subclass to fill, with a heading over the hedera rule to put at its
@@ -22,11 +22,12 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from ..paths import APP_NAME
-from .markup_html import plain
-from .style import snapping
-from .style.families import DIALOG
-from .style.frame import (
+from ...markup import plain
+from ...paths import APP_NAME
+from ...style.palettes import Palette
+from . import snapping
+from .families import DIALOG
+from .frame import (
     CLOSE,
     MAXIMISE,
     DragStrip,
@@ -35,11 +36,10 @@ from .style.frame import (
     keep_on_screen,
     native_frame_event,
 )
-from .style.ornaments import FleuronRule
-from .style.paper import Paper
-from .style.pieces import text
-from .style.pieces import title as title_font
-from .themes import Palette
+from .ornaments import FleuronRule
+from .paper import Paper
+from .pieces import text
+from .pieces import title as title_font
 
 
 class _Page(Paper):
@@ -61,9 +61,20 @@ class Window(QDialog):
     #: The title bar's buttons; a window that can maximise also resizes.
     controls: tuple[str, ...] = (MAXIMISE, CLOSE)
 
-    def __init__(self, title: str, p: Palette, parent: QWidget | None) -> None:
+    def __init__(
+        self,
+        title: str,
+        p: Palette,
+        parent: QWidget | None,
+        *,
+        as_written: bool = False,
+    ) -> None:
+        """`title` is the app's markup, read as plain words; one
+        `as_written` (a record's own words) is kept as it is, brackets
+        and all, here and in the window's heading (add_heading)."""
         super().__init__(parent)
-        self.setWindowTitle(plain(title))
+        self.as_written = as_written
+        self.setWindowTitle(title if as_written else plain(title))
         self.setWindowFlags(Qt.WindowType.Dialog | Qt.WindowType.FramelessWindowHint)
         self.p = p
         page = self.page = _Page(p)
@@ -79,15 +90,16 @@ class Window(QDialog):
         self.column.setContentsMargins(26, 6, 26, 18)
         body.addLayout(self.column, 1)
 
-    def add_heading(self, title: str, *, as_written: bool = False) -> QLabel:
-        """Put `title` as a heading over a hedera rule in the column; one
-        `as_written` (a record's own words) keeps its brackets, is never
-        read as HTML, and wraps, so a long one never widens its window."""
-        words = title if as_written else plain(title)
+    def add_heading(self, title: str) -> QLabel:
+        """Put `title` as a heading over a hedera rule in the column; in a
+        window whose title is `as_written` (a record's own words), it keeps
+        its brackets, is never read as HTML, and wraps, so a long one never
+        widens its window."""
+        words = title if self.as_written else plain(title)
         heading = text(
-            words, self.p["heading"], title_font(17, self.p), wrap=as_written
+            words, self.p["heading"], title_font(17, self.p), wrap=self.as_written
         )
-        if as_written:
+        if self.as_written:
             heading.setTextFormat(Qt.TextFormat.PlainText)
         self.column.addWidget(heading)
         self.column.addWidget(FleuronRule(self.p))

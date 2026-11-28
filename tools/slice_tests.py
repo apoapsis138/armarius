@@ -288,7 +288,7 @@ AREA_TESTS: dict[str, tuple[str, ...]] = {
         "test_activity_picker.py",
     ),
     # The frame every window wears: the frame tests, and the forms on it.
-    "ars_magica_manager/gui/window_frame.py": (
+    "ars_magica_manager/gui/style/window_frame.py": (
         "test_gui_frame.py",
         "test_dialog_frames.py",
         "test_gui_edit_shared.py",

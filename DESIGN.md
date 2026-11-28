@@ -97,7 +97,7 @@ When the steps finish, `run` saves the saga and redraws the page.
   saga (the Host for Players window, `gui/hosting.py`) calls `drive` and
   `ask_question` itself, and is built on `gui/forms.py`'s `FormWindow`
   for Cancel and the error line. Every window builds on
-  `gui/window_frame.py`'s `Window` for the app's paper and title bar
+  `gui/style/window_frame.py`'s `Window` for the app's paper and title bar
   (ADR 0033). Lists
   that refill as data changes use `widgets.ledger_table`; the core's
   fixed tables use `widgets.table_view`.

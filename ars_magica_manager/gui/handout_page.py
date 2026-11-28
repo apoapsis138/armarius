@@ -53,8 +53,8 @@ from .style.illumination import IlluminatedInitial
 from .style.ornaments import Headpiece, ShortRule, corner_flourishes
 from .style.paper import paper, shade
 from .style.pieces import serif
+from .style.window_frame import Window
 from .themes import SCRIPTORUM, Palette
-from .window_frame import Window
 
 #: The palette every Handout is drawn in, whatever the app's theme.
 INK: Palette = SCRIPTORUM
@@ -486,8 +486,8 @@ WINDOW_TALLEST = 860
 
 class HandoutWindow(Window):
     """A Handout drawn on its Stationery in a window of its own, on the
-    theme's paper under its title, the page scrolling when it is taller
-    than the window, with Close under it."""
+    theme's paper, the page scrolling when it is taller than the window,
+    with Close under it. No heading: the Stationery draws its title."""
 
     def __init__(
         self,
@@ -498,10 +498,8 @@ class HandoutWindow(Window):
     ) -> None:
         # Both parts are plain text already.
         title = f"{laid.title} ({laid.stationery.label})"
-        super().__init__(title, p, parent)
+        super().__init__(title, p, parent, as_written=True)
         self.setObjectName("handout-window")
-        self.setWindowTitle(title)
-        self.add_heading(title, as_written=True)
         head = self.head_room()
         #: The HandoutPage (Window's `page` is the frame's paper round it).
         self.handout = HandoutPage(laid, pictures)

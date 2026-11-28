@@ -27,6 +27,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QDialog, QFileDialog, QPushButton, QWidget
 
 from ars_magica_manager.gui.forms import ChooseDialog, ConfirmDialog, FieldsDialog
+from ars_magica_manager.paths import APP_NAME
 
 
 def answering(window: Any, *answers: Any) -> list[QDialog]:
@@ -145,7 +146,7 @@ def assert_framed(window: Any) -> None:
     """`window` (a viewer) wears the app's frame (no system title bar, the
     app's name on its own), with Close at the end of its buttons row."""
     assert window.windowFlags() & Qt.WindowType.FramelessWindowHint
-    assert window.drag.title == "Armarius"
+    assert window.drag.title == APP_NAME
     row = window.buttons_row
     last = row.itemAt(row.count() - 1).widget()
     assert isinstance(last, QPushButton) and last.text() == "Close"
