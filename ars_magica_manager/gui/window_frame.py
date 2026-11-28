@@ -63,14 +63,14 @@ class Window(QDialog):
         outer = QVBoxLayout(self)
         outer.setContentsMargins(0, 0, 0, 0)
         outer.addWidget(page)
-        sheet = QVBoxLayout(page)
-        sheet.setContentsMargins(0, 0, 0, 0)
-        sheet.setSpacing(0)
-        sheet.addLayout(self._title_bar())
+        body = QVBoxLayout(page)
+        body.setContentsMargins(0, 0, 0, 0)
+        body.setSpacing(0)
+        body.addLayout(self._title_bar())
         self.column = QVBoxLayout()
         self.column.setSpacing(8)
         self.column.setContentsMargins(26, 6, 26, 18)
-        sheet.addLayout(self.column, 1)
+        body.addLayout(self.column, 1)
 
     def add_heading(self, title: str) -> QLabel:
         """Put `title` as a heading over a hedera rule in the column."""

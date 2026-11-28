@@ -96,9 +96,11 @@ When the steps finish, `run` saves the saga and redraws the page.
 - **A window of its own.** A window that runs commands without saving the
   saga (the Host for Players window, `gui/hosting.py`) calls `drive` and
   `ask_question` itself, and is built on `gui/forms.py`'s `FormWindow`
-  for the app's paper, title bar and Cancel. Every window builds on
-  `gui/window_frame.py`'s `Window`, the frame alone (ADR 0033). Lists that refill as data changes use
-  `widgets.ledger_table`; the core's fixed tables use `widgets.table_view`.
+  for Cancel and the error line. Every window builds on
+  `gui/window_frame.py`'s `Window` for the app's paper and title bar
+  (ADR 0033). Lists
+  that refill as data changes use `widgets.ledger_table`; the core's
+  fixed tables use `widgets.table_view`.
 
 ## 3. Design patterns in use
 

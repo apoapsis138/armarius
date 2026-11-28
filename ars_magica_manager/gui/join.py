@@ -110,14 +110,14 @@ def offers_update(error: Exception) -> bool:
     )
 
 
-def update_button(sheet: FormWindow) -> QPushButton:
+def update_button(window: FormWindow) -> QPushButton:
     """Update, under a refusal that offers it (offers_update): it opens the
     app's Releases page. Hidden until then."""
     button = QPushButton("Update")
     button.setToolTip("Open the app's Releases page, to download the host's version")
     button.clicked.connect(lambda: QDesktopServices.openUrl(QUrl(updates.RELEASES_URL)))
     button.hide()
-    sheet.column.addWidget(button, 0, Qt.AlignmentFlag.AlignLeft)
+    window.column.addWidget(button, 0, Qt.AlignmentFlag.AlignLeft)
     return button
 
 
