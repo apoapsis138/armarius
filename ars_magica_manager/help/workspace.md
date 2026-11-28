@@ -227,7 +227,8 @@ A covenant, laboratory or character still being made is In Creation. Its page is
 
 - A section's **Add**, **Edit** and **Delete** buttons act on that section. Edit and Delete act on the row or card last clicked in it, or the only one there is, and stay greyed out until there is one. Delete asks first.
 - A form, a list to choose from and a question such as Delete's open in a window of their own over the page. When a button asks several things they come one after another, and the page waits until the window is closed.
-  - Each window has the app's title bar. Drag it to move the window, and use its close button. A form or list also has a maximise button, or double-click the bar, and a form's edges resize it.
+  - Each window has the app's title bar, with the window's own title as a heading under it. Drag the bar to move the window, and use its close button. A form, a list, a Show's copy or a Handout also has a maximise button, or double-click the bar, and its edges resize it. A picture, a question or a notice only closes.
+  - A picture, a Show's copy or a Handout has **Close** at the bottom too.
   - Choosing a file or folder uses the system's own window.
   - A window is sized to what it holds, and grows when a choice shows more fields, as Lab Work's does. Past the height of the screen its fields scroll inside it, above its buttons, so a long form such as Export Pack's list of ticks can be read to its end.
   - **Save** keeps what you typed, and **Cancel** leaves things as they were. If you've changed anything, Cancel, the close button and Esc ask first, so a slip doesn't lose your work. A form that only works something out has Close in place of Cancel, and doesn't ask.
@@ -1580,7 +1581,7 @@ The copies are kept on the host's computer, in a folder beside the saga, never w
 To Show, choose the Session under way in the Sessions list, press `m` for More and choose **Show**; on a record's page, More offers **Show to the Table**, and on a written Handout in Saga Content's Handouts tab, **Show**. To read a Show, choose the Session and choose **Open a Show** in More: a record's copy is shown as text, a written Handout's as its text under its Stationery's name, and a picture is named (open it on the desktop to see it). To withdraw one, choose **Withdraw a Show** there.
 <!-- /tui -->
 <!-- gui -->
-To Show, choose **Show to the Table** in a record's Manage chapter, choose a written Handout in Saga Content's Handouts and click **Show**, or choose the Session under way in Sessions and click **Show**. Click **Open** on a Show card to read its copy, in a window of its own, as a picture opens; a written Handout's is drawn on its Stationery. The storyguide's card has **Withdraw** beside Open.
+To Show, choose **Show to the Table** in a record's Manage chapter, choose a written Handout in Saga Content's Handouts and click **Show**, or choose the Session under way in Sessions and click **Show**. Click **Open** on a Show card to read its copy, in a window of its own with **Close** at its foot, as a picture opens; a written Handout's is drawn on its Stationery. The storyguide's card has **Withdraw** beside Open.
 <!-- /gui -->
 
 **See also:** [The Chronicle](help:chronicle), [Messages and Whispers](help:chronicle-messages), [Handouts](help:handouts)
@@ -1677,7 +1678,7 @@ A roll from the sheet has a line under what it's for saying how its modifier was
 - **Message**, below it, sends a [Message or a Whisper](help:chronicle-messages). A Message is a card of who it's from, in small italic, and its words; a record it names that you may open is a link.
 - **Roll Request**, below it for the Session's storyguide on the host's computer, makes a [Roll request](help:roll-requests).
 - A [Show](help:chronicle-shows) is a card of its title and to whom, with **Open** for the copy as it was shown and, when you may read the record now, **Open the live record**.
-- A Scene's banner, when the storyguide [sets a Scene](help:scenes), is a card of its title in capitals, where it is, its aura when the table is told it, and **See the map** for its map, which opens in a window of its own. See [Setting and ending a Scene](help:scenes-play).
+- A Scene's banner, when the storyguide [sets a Scene](help:scenes), is a card of its title in capitals, where it is, its aura when the table is told it, and **See the map** for its map, which opens in a window of its own, with **Close**. See [Setting and ending a Scene](help:scenes-play).
 - **›** collapses the pane to a thin gilt strip on the right edge, its name running up it and the count of entries come since in a small seal at its head. Click the strip to open it again. **Chronicle** in the top bar opens or collapses it too.
 - A Blind roll's number, for the Session's storyguide, the line telling you one was rolled for your character, a Whisper or a Show to you, or a Roll request offered to your character pulses the strip once. Not with **Reduce motion** on. The pane never opens by itself.
 - A roll landing plays a soft tock, with **Sounds** on.

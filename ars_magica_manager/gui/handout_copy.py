@@ -18,6 +18,7 @@ from PySide6.QtWidgets import QWidget
 
 from ..handout_layout import Reading
 from .handout_page import HandoutWindow
+from .themes import Palette
 
 
 def pixmaps(pictures: Sequence[bytes | None]) -> list[QPixmap | None]:
@@ -31,9 +32,11 @@ def pixmaps(pictures: Sequence[bytes | None]) -> list[QPixmap | None]:
     return found
 
 
-def copy_window(reading: Reading, parent: QWidget | None = None) -> HandoutWindow:
+def copy_window(
+    reading: Reading, p: Palette, parent: QWidget | None = None
+) -> HandoutWindow:
     """The window a shown written Handout's copy opens in: its page on its
-    Stationery, with Close."""
-    window = HandoutWindow(reading.laid, pixmaps(reading.pictures), parent)
+    Stationery, on the theme's paper, with Close."""
+    window = HandoutWindow(reading.laid, p, pixmaps(reading.pictures), parent)
     window.setObjectName("shown-handout")
     return window

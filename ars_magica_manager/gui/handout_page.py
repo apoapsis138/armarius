@@ -34,10 +34,8 @@ from PySide6.QtGui import (
     QRadialGradient,
 )
 from PySide6.QtWidgets import (
-    QDialog,
     QHBoxLayout,
     QLabel,
-    QPushButton,
     QScrollArea,
     QVBoxLayout,
     QWidget,
@@ -56,6 +54,7 @@ from .style.ornaments import Headpiece, ShortRule, corner_flourishes
 from .style.paper import paper, shade
 from .style.pieces import serif
 from .themes import SCRIPTORUM, Palette
+from .window_frame import Window
 
 #: The palette every Handout is drawn in, whatever the app's theme.
 INK: Palette = SCRIPTORUM
@@ -485,43 +484,48 @@ def preview_pictures(preview: Preview) -> list[QPixmap | None]:
 WINDOW_TALLEST = 860
 
 
-class HandoutWindow(QDialog):
-    """A Handout drawn on its Stationery in a window of its own, the page
-    scrolling when it is taller than the window, with Close under it."""
+class HandoutWindow(Window):
+    """A Handout drawn on its Stationery in a window of its own, on the
+    theme's paper under its title, the page scrolling when it is taller
+    than the window, with Close under it."""
 
     def __init__(
         self,
         laid: Laid,
+        p: Palette,
         pictures: Sequence[QPixmap | None] = (),
         parent: QWidget | None = None,
     ) -> None:
-        super().__init__(parent)
-        self.setObjectName("handout-window")
         # Both parts are plain text already.
-        self.setWindowTitle(f"{laid.title} ({laid.stationery.label})")
-        self.page = HandoutPage(laid, pictures)
+        title = f"{laid.title} ({laid.stationery.label})"
+        super().__init__(title, p, parent)
+        self.setObjectName("handout-window")
+        self.setWindowTitle(title)
+        self.add_heading(title, as_written=True)
+        head = self.head_room()
+        #: The HandoutPage (Window's `page` is the frame's paper round it).
+        self.handout = HandoutPage(laid, pictures)
         area = QScrollArea()
-        area.setWidget(self.page)
+        area.setWidget(self.handout)
         area.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        area.setStyleSheet(f"QScrollArea {{ background:{INK['panel']}; border:none }}")
-        column = QVBoxLayout(self)
-        column.addWidget(area, 1)
-        self.close_button = QPushButton("Close")
-        self.close_button.clicked.connect(self.accept)
+        area.setStyleSheet("QScrollArea { background:transparent; border:none }")
+        area.viewport().setAutoFillBackground(False)
+        self.column.addWidget(area, 1)
         #: The buttons under the page (Save as PDF joins Close here).
-        self.buttons_row = QHBoxLayout()
-        self.buttons_row.addStretch(1)
-        self.buttons_row.addWidget(self.close_button)
-        column.addLayout(self.buttons_row)
+        self.buttons_row = self.add_close_row()
         scrollbar = area.verticalScrollBar().sizeHint().width()
+        margins = self.column.contentsMargins()
         self.resize(
-            PAGE_WIDTH + scrollbar + 40,
-            min(WINDOW_TALLEST, self.page.minimumHeight() + 70),
+            # The page and its scroll bar, with a little room either side.
+            PAGE_WIDTH + scrollbar + 18 + margins.left() + margins.right(),
+            min(WINDOW_TALLEST, self.handout.minimumHeight() + 70) + head,
         )
 
 
-def preview_window(preview: Preview, parent: QWidget | None = None) -> HandoutWindow:
+def preview_window(
+    preview: Preview, p: Palette, parent: QWidget | None = None
+) -> HandoutWindow:
     """The window a storyguide's Preview opens: the Handout as it stands,
     its pictures from this computer's files."""
-    return HandoutWindow(preview.laid, preview_pictures(preview), parent)
+    return HandoutWindow(preview.laid, p, preview_pictures(preview), parent)

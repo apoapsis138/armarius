@@ -13,6 +13,7 @@ import pytest
 pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
+from gui_steps import assert_framed
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QImage
 from PySide6.QtWidgets import QApplication, QLabel, QPushButton, QTableView
@@ -95,10 +96,11 @@ def test_preview_opens_the_chosen_handout_on_its_stationery() -> None:
     assert isinstance(form, commands.Form)
     window = step_dialog(form, SCRIPTORUM, None)
     assert isinstance(window, HandoutWindow)
-    assert window.page.laid.title == "The Count's Letter"
-    assert window.page.laid.stationery.name == PROCLAMATION
-    assert window.page.findChild(QLabel, "handout-picture") is not None
-    placeholder = window.page.findChild(QLabel, "handout-placeholder")
+    assert_framed(window)
+    assert window.handout.laid.title == "The Count's Letter"
+    assert window.handout.laid.stationery.name == PROCLAMATION
+    assert window.handout.findChild(QLabel, "handout-picture") is not None
+    placeholder = window.handout.findChild(QLabel, "handout-placeholder")
     assert isinstance(placeholder, QLabel)
     gone = handouts.picture_name(saga, saga.handouts[0].pictures[1])
     assert placeholder.text() == f"Picture 2: {gone}"

@@ -230,7 +230,7 @@ def test_a_show_withdrawn_while_saving_is_not_saved(
     target = tmp_path / "kept.pdf"
     told: list[str] = []
     shown = shows.Shown("Hilda", "# Hilda\n\nWords.")
-    window = ShownCopy(shown)
+    window = ShownCopy(shown, SCRIPTORUM)
     held = [True]
 
     def ask(dialog: QDialog) -> int:
@@ -251,15 +251,21 @@ def test_a_show_withdrawn_while_saving_is_not_saved(
     assert told == [WITHDRAWN_NOTE]
 
 
-def test_a_handout_shown_in_the_chronicle_offers_save_as_pdf(
+def test_a_handout_shown_in_the_chronicle_offers_save_as_pdf_beside_close(
     app: QCoreApplication,
 ) -> None:
     for window in (
-        ShownPicture(shows.Shown("Map", picture=b"x")),
-        ShownCopy(shows.Shown("Hilda", "# Hilda")),
+        ShownPicture(shows.Shown("Map", picture=b"x"), SCRIPTORUM),
+        ShownCopy(shows.Shown("Hilda", "# Hilda"), SCRIPTORUM),
     ):
         offer_pdf(window, window.buttons_row, lambda: pl.Document("x", ""), SCRIPTORUM)
-        assert window.findChild(QPushButton, "save-pdf") is not None
+        row = window.buttons_row
+        buttons = [
+            found.text()
+            for found in (row.itemAt(i).widget() for i in range(row.count()))
+            if isinstance(found, QPushButton)
+        ]
+        assert buttons == ["Save as PDF...", "Close"]
 
 
 def test_a_record_copy_prints_on_the_printed_sheet(

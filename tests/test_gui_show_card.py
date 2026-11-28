@@ -12,7 +12,7 @@ import pytest
 pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from gui_steps import answering, section_buttons
+from gui_steps import answering, assert_framed, section_buttons
 from PySide6.QtGui import QImage
 from PySide6.QtWidgets import QApplication, QLabel, QToolButton
 from test_shows import _begun, _hilda_ref, _show
@@ -77,6 +77,7 @@ def test_a_show_card_opens_its_copy_and_never_by_itself() -> None:
     copy = pane.shown_copy
     assert isinstance(copy, ShownCopy)
     assert copy.windowTitle() == "Hilda"
+    assert_framed(copy)
     assert "SHOWN-SECRET" in copy.text.toPlainText()
     copy.close()
     _click(pane, "open-live")
@@ -149,7 +150,7 @@ def test_a_redraw_works_out_the_withdrawn_shows_once(
 @pytest.mark.usefixtures("app")
 def test_a_copy_shows_markup_in_it_as_words_never_as_html() -> None:
     shown = shows.Shown("Hilda", '<span style="font-size:72pt">big</span> words')
-    window = ShownCopy(shown)
+    window = ShownCopy(shown, SCRIPTORUM)
     words = window.text.toPlainText()
     window.close()
     assert '<span style="font-size:72pt">big</span>' in words
@@ -233,7 +234,29 @@ def test_a_shown_picture_opens_in_its_own_window() -> None:
     shown = pane.shown_picture
     assert isinstance(shown, ShownPicture)
     assert shown.windowTitle() == "The Rhine"
-    shown.close()
+    assert_framed(shown)
+    shown.close_button.click()
+    assert not shown.isVisible()
+
+
+@pytest.mark.usefixtures("app")
+def test_a_withdrawn_shows_open_picture_closes() -> None:
+    saga, session, book = _begun()
+    pane = ChroniclePane(SCRIPTORUM, lambda _c: None)
+    pane.attach(saga, session, book, "ben")
+    shown = _show(
+        book,
+        saga,
+        session,
+        chronicle.ShowCall("The Rhine", picture=("maps", "rhine.png"), to=("ben",)),
+    )
+    _click(pane, "open-show")
+    picture = pane.shown_picture
+    assert isinstance(picture, ShownPicture) and picture.isVisible()
+
+    shows.withdraw(book, saga, session, shown.number, by=HOST)
+
+    assert not picture.isVisible()
 
 
 @pytest.mark.usefixtures("app")
@@ -245,7 +268,9 @@ def test_a_small_picture_is_drawn_at_its_own_size_a_large_one_fits(
         image.fill(0)
         file = tmp_path / f"{width}x{height}.png"
         assert image.save(str(file))
-        window = ShownPicture(shows.Shown("A picture", picture=file.read_bytes()))
+        window = ShownPicture(
+            shows.Shown("A picture", picture=file.read_bytes()), SCRIPTORUM
+        )
         found = window.picture.pixmap()
         window.close()
         return found.width(), found.height()
