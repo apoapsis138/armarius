@@ -47,7 +47,7 @@ from ..forms.remote_seats import NEW_PASSCODE, IssuedInvite, SeatsDesk
 from ..remote.identity import NoKeychainError
 from ..remote.plan import RemotePlan
 from . import pictures, sounds
-from .forms import Ask, NoticeDialog, Sheet, ask_question
+from .forms import Ask, FormWindow, NoticeDialog, ask_question
 from .pictures import SERIF
 from .themes import Palette, wash_style
 from .widgets import (
@@ -167,7 +167,7 @@ class RailPages(QWidget):
             item.setText(name)
 
 
-class InviteDialog(Sheet):
+class InviteDialog(FormWindow):
     """What Issue Invite ends with: the line to paste into a chat, with a
     Copy button, and the host's six words to read out. Shown once: the
     host keeps only a hash of the code."""
@@ -229,7 +229,7 @@ def _words_label(words: str, p: Palette) -> QLabel:
     return label
 
 
-class HostingWindow(Sheet):
+class HostingWindow(FormWindow):
     """The Host for Players window (see the module's docstring)."""
 
     def __init__(
