@@ -13,7 +13,14 @@ from __future__ import annotations
 import shiboken6
 from PySide6.QtCore import QByteArray, QEvent, Qt
 from PySide6.QtGui import QShowEvent
-from PySide6.QtWidgets import QDialog, QHBoxLayout, QLabel, QVBoxLayout, QWidget
+from PySide6.QtWidgets import (
+    QDialog,
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
+)
 
 from ..paths import APP_NAME
 from .markup_html import plain
@@ -72,12 +79,37 @@ class Window(QDialog):
         self.column.setContentsMargins(26, 6, 26, 18)
         body.addLayout(self.column, 1)
 
-    def add_heading(self, title: str) -> QLabel:
-        """Put `title` as a heading over a hedera rule in the column."""
-        heading = text(plain(title), self.p["heading"], title_font(17, self.p))
+    def add_heading(self, title: str, *, as_written: bool = False) -> QLabel:
+        """Put `title` as a heading over a hedera rule in the column; one
+        `as_written` (a record's own words) keeps its brackets, is never
+        read as HTML, and wraps, so a long one never widens its window."""
+        words = title if as_written else plain(title)
+        heading = text(
+            words, self.p["heading"], title_font(17, self.p), wrap=as_written
+        )
+        if as_written:
+            heading.setTextFormat(Qt.TextFormat.PlainText)
         self.column.addWidget(heading)
         self.column.addWidget(FleuronRule(self.p))
         return heading
+
+    def head_room(self) -> int:
+        """The height the bar and what is in the column so far take: what
+        a viewer sized for its body (put in after its heading) grows by."""
+        layout = self.page.layout()
+        assert layout is not None
+        return layout.sizeHint().height()
+
+    def add_close_row(self) -> QHBoxLayout:
+        """A row of buttons at the foot of the column, ending in Close
+        (which accepts); a viewer's other buttons go in front of it."""
+        self.close_button = QPushButton("Close")
+        self.close_button.clicked.connect(self.accept)
+        row = QHBoxLayout()
+        row.addStretch(1)
+        row.addWidget(self.close_button)
+        self.column.addLayout(row)
+        return row
 
     def exec(self) -> int:
         """Show the window and wait. exec() hands a dialog to Python, away

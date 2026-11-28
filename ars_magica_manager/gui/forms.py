@@ -475,7 +475,7 @@ class FieldsDialog(FormWindow):
         """Open the form's Preview of the values as they stand, as a
         window over it; nothing is saved."""
         assert self.preview is not None
-        self.ask(preview_window(self.preview(self._as_they_stand()), self))
+        self.ask(preview_window(self.preview(self._as_they_stand()), self.p, self))
 
     def try_save(self) -> None:
         """Save if every field parses and `validate` allows it, else say
@@ -848,7 +848,7 @@ class ChooseDialog(FormWindow):
         opens in, over the picker; closing it leaves the list as it was."""
         choice = self._highlighted()
         if choice is not None and choice.read is not None:
-            copy_window(choice.read(), self).exec()
+            copy_window(choice.read(), self.p, self).exec()
 
     def choose(self, label: str) -> None:
         """Highlight the (first) listed entry called `label`."""
@@ -1115,7 +1115,7 @@ def step_dialog(
     if isinstance(step, ChooseFile):
         return file_dialog(step, parent)
     if isinstance(step, Form) and step.reading is not None:
-        window = copy_window(step.reading, parent)
+        window = copy_window(step.reading, p, parent)
         if step.printed is not None:
             offer_pdf(window, window.buttons_row, step.printed, p, ask)
         return window

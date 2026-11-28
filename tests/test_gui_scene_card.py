@@ -12,6 +12,7 @@ import pytest
 pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
+from gui_steps import assert_framed
 from PySide6.QtWidgets import QApplication, QLabel, QToolButton
 from test_scene_play import HOST, _begun, _set
 
@@ -132,3 +133,4 @@ def test_see_the_map_opens_the_scenes_map_from_the_picture_source() -> None:
     assert asked == [(paths.MAPS, "rhine.png")]
     assert isinstance(pane.shown_picture, ShownPicture)
     assert pane.shown_picture.windowTitle() == "The ford"
+    assert_framed(pane.shown_picture)

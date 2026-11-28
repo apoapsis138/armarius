@@ -78,12 +78,14 @@ from .figures import linked_value
 from .forms import offer_pdf
 from .handout_page import HandoutWindow
 from .style import gilding
+from .style.frame import CLOSE
 from .style.ornaments import ShortRule
 from .style.paper import paper
 from .style.pieces import heading as heading_font
 from .style.pieces import heading_ink
 from .themes import Palette
 from .widgets import edit_button, serif, text
+from .window_frame import Window
 
 #: The setting that remembers a collapsed pane.
 COLLAPSED = "chronicle_pane_collapsed"
@@ -574,15 +576,21 @@ def scene_card(
 PICTURE_FIT = (900, 700)
 
 
-class ShownPicture(QDialog):
+class ShownPicture(Window):
     """A shown picture, as it was shown: at its own size, or scaled down
-    to fit PICTURE_FIT."""
+    to fit PICTURE_FIT, under its title, with Close. It only closes: a
+    picture drawn at a fixed size has nothing to maximise into."""
 
-    def __init__(self, shown: shows.Shown, parent: QWidget | None = None) -> None:
-        super().__init__(parent)
+    controls = (CLOSE,)
+
+    def __init__(
+        self, shown: shows.Shown, p: Palette, parent: QWidget | None = None
+    ) -> None:
+        super().__init__(shown.title, p, parent)
         self.setObjectName("shown-picture")
         self.setWindowTitle(shown.title)
-        column = QVBoxLayout(self)
+        if shown.title:  # a Scene's map may come with none
+            self.add_heading(shown.title, as_written=True)
         picture = QPixmap()
         picture.loadFromData(shown.picture or b"")
         self.picture = QLabel()
@@ -597,28 +605,30 @@ class ShownPicture(QDialog):
             self.picture.setPixmap(picture)
         else:
             self.picture.setText("This picture can't be drawn.")
-        column.addWidget(self.picture)
-        #: The buttons under it (Save as PDF).
-        self.buttons_row = QHBoxLayout()
-        self.buttons_row.addStretch(1)
-        column.addLayout(self.buttons_row)
+        self.column.addWidget(self.picture)
+        #: The buttons under it (Save as PDF joins Close here).
+        self.buttons_row = self.add_close_row()
 
 
-#: The size a shown record's copy opens at, in pixels.
+#: The size a shown record's copy opens at, in pixels (and the room its
+#: title bar and heading take).
 COPY_SIZE = (640, 720)
 
 
-class ShownCopy(QDialog):
+class ShownCopy(Window):
     """A shown record's copy, as it was shown: its sheet, read-only, in a
-    window of its own, which the pane closes if the Show is withdrawn. (A
-    written Handout's copy opens on its Stationery: handout_copy.)"""
+    window of its own under its title, with Close, which the pane closes
+    if the Show is withdrawn. (A written Handout's copy opens on its
+    Stationery: handout_copy.)"""
 
-    def __init__(self, shown: shows.Shown, parent: QWidget | None = None) -> None:
-        super().__init__(parent)
+    def __init__(
+        self, shown: shows.Shown, p: Palette, parent: QWidget | None = None
+    ) -> None:
+        super().__init__(shown.title, p, parent)
         self.setObjectName("shown-copy")
         self.setWindowTitle(shown.title)
-        self.resize(*COPY_SIZE)
-        column = QVBoxLayout(self)
+        self.add_heading(shown.title, as_written=True)
+        self.resize(COPY_SIZE[0], COPY_SIZE[1] + self.head_room())
         self.text = QTextBrowser()
         self.text.setObjectName("copy")
         self.text.setOpenLinks(False)
@@ -628,11 +638,9 @@ class ShownCopy(QDialog):
             QTextDocument.MarkdownFeature.MarkdownDialectGitHub
             | QTextDocument.MarkdownFeature.MarkdownNoHTML,
         )
-        column.addWidget(self.text)
-        #: The buttons under it (Save as PDF).
-        self.buttons_row = QHBoxLayout()
-        self.buttons_row.addStretch(1)
-        column.addLayout(self.buttons_row)
+        self.column.addWidget(self.text, 1)
+        #: The buttons under it (Save as PDF joins Close here).
+        self.buttons_row = self.add_close_row()
 
 
 #: One character of a Roll request, as its card shows it: the name,
@@ -1549,14 +1557,16 @@ class ChroniclePane(QWidget):
         self.open_show_number = entry.number
         form = show_forms.copy_form(found)
         if found.picture is not None:
-            window: ShownPicture | ShownCopy | HandoutWindow = ShownPicture(found, self)
+            window: ShownPicture | ShownCopy | HandoutWindow = ShownPicture(
+                found, self.p, self
+            )
             self.shown_picture = window
         elif form.reading is not None:
             # A written Handout: on its Stationery, as its Preview draws it.
-            window = handout_copy.copy_window(form.reading, self)
+            window = handout_copy.copy_window(form.reading, self.p, self)
             self.shown_copy = window
         else:
-            window = ShownCopy(found, self)
+            window = ShownCopy(found, self.p, self)
             self.shown_copy = window
         if form.printed is not None:
             number = entry.number
@@ -1596,7 +1606,7 @@ class ChroniclePane(QWidget):
             return
         title = str(entry.body.get("title") or "")
         shown = shows.Shown(title, picture=found, picture_name=name)
-        self.shown_picture = ShownPicture(shown, self)
+        self.shown_picture = ShownPicture(shown, self.p, self)
         self.shown_picture.open()
 
     def compose(self) -> None:

@@ -18,20 +18,24 @@ from PySide6.QtCore import QEvent, Qt, QTimer
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication
 
+from ars_magica_manager import handout_layout, shows
 from ars_magica_manager.commands import Confirm, Form
 from ars_magica_manager.form_spec import DialogField
 from ars_magica_manager.gui import pictures
+from ars_magica_manager.gui.chronicle_pane import ShownCopy, ShownPicture
 from ars_magica_manager.gui.forms import (
     ChooseDialog,
     FieldsDialog,
     NoticeDialog,
     step_dialog,
 )
+from ars_magica_manager.gui.handout_page import HandoutWindow
 from ars_magica_manager.gui.style.frame import CLOSE, GRIP, MAXIMISE, MINIMISE, TopStrip
 from ars_magica_manager.gui.style.ornaments import FleuronRule
 from ars_magica_manager.gui.themes import PALETTES
 from ars_magica_manager.gui.window import MainWindow
 from ars_magica_manager.gui.window_frame import Window
+from ars_magica_manager.models import VELLUM
 
 
 @pytest.fixture(scope="module")
@@ -149,6 +153,61 @@ def test_forms_and_lists_maximise_and_questions_do_not(app):
     assert MAXIMISE not in confirm.window_buttons.buttons
     assert MAXIMISE not in notice.window_buttons.buttons
     assert not confirm.drag.maximises
+
+
+def _viewers() -> list:
+    p = PALETTES[0]
+    laid = handout_layout.lay_out("The Ford", VELLUM, "Words.")
+    return [
+        ShownPicture(shows.Shown("The Rhine", picture=b"x"), p),
+        ShownCopy(shows.Shown("Hilda", "# Hilda"), p),
+        HandoutWindow(laid, p),
+    ]
+
+
+def test_every_viewer_wears_the_apps_frame_with_its_title_as_heading(app):
+    for viewer, title in zip(
+        _viewers(), ["The Rhine", "Hilda", "The Ford (Vellum)"], strict=True
+    ):
+        assert viewer.windowFlags() & Qt.WindowType.FramelessWindowHint
+        assert viewer.drag.title == "Armarius"
+        assert CLOSE in viewer.window_buttons.buttons
+        heading = viewer.column.itemAt(0).widget()
+        assert heading.text() == title
+        assert isinstance(viewer.column.itemAt(1).widget(), FleuronRule)
+
+
+def test_a_viewer_closes_from_its_bar_and_from_its_close_button(app):
+    for viewer in _viewers():
+        viewer.show()
+        viewer.window_buttons.buttons[CLOSE].click()
+        assert not viewer.isVisible()
+        viewer.show()
+        row = viewer.buttons_row
+        assert row.itemAt(row.count() - 1).widget() is viewer.close_button
+        assert viewer.close_button.text() == "Close"
+        viewer.close_button.click()
+        assert not viewer.isVisible()
+
+
+def test_a_long_title_wraps_rather_than_widening_a_viewer(app):
+    title = "Writ of the Tower Guard concerning the tithes of the mill and ford"
+    long = ShownCopy(shows.Shown(title, "Words."), PALETTES[0])
+    assert long.minimumSizeHint().width() < 300
+    assert long.column.itemAt(0).widget().text() == title
+
+
+def test_a_picture_with_no_title_has_no_empty_heading(app):
+    picture = ShownPicture(shows.Shown("", picture=b"x"), PALETTES[0])
+    assert picture.column.itemAt(0).widget() is picture.picture
+
+
+def test_a_copy_and_a_handout_maximise_and_a_picture_does_not(app):
+    picture, copy, handout = _viewers()
+    assert set(picture.window_buttons.buttons) == {CLOSE}
+    assert not picture.drag.maximises
+    assert MAXIMISE in copy.window_buttons.buttons
+    assert MAXIMISE in handout.window_buttons.buttons
 
 
 class _Bare(Window):

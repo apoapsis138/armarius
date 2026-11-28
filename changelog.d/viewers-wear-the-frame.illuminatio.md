@@ -1,0 +1,1 @@
+**Every viewer wears the app's frame.** A shown picture, a Show's copy and a Handout (its copy, its Preview, and Read in full) open with the app's title bar and their title as a heading on the theme's paper, not the Windows bar on grey. Each has **Close** at the bottom; a copy or Handout also maximises and resizes.
