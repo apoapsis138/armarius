@@ -39,8 +39,8 @@ from ars_magica_manager.gui.handout_page import (
 )
 from ars_magica_manager.gui.saga_content import SagaContentPage
 from ars_magica_manager.gui.style.illumination import IlluminatedInitial
+from ars_magica_manager.gui.style.window_frame import Window
 from ars_magica_manager.gui.themes import SCRIPTORUM, SCRIPTORUM_DARK, Palette
-from ars_magica_manager.gui.window_frame import Window
 from ars_magica_manager.models import (
     PROCLAMATION,
     STATIONERY,

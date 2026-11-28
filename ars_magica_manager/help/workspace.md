@@ -227,8 +227,8 @@ A covenant, laboratory or character still being made is In Creation. Its page is
 
 - A section's **Add**, **Edit** and **Delete** buttons act on that section. Edit and Delete act on the row or card last clicked in it, or the only one there is, and stay greyed out until there is one. Delete asks first.
 - A form, a list to choose from and a question such as Delete's open in a window of their own over the page. When a button asks several things they come one after another, and the page waits until the window is closed.
-  - Each window has the app's title bar, with the window's own title as a heading under it. Drag the bar to move the window, and use its close button. A form, a list, a Show's copy or a Handout also has a maximise button, or double-click the bar, and its edges resize it. A picture, a question or a notice only closes.
-  - A picture, a Show's copy or a Handout has **Close** at the bottom too.
+  - Each window has the app's title bar, with the window's own title as a heading under it (a Handout's is drawn on its Stationery). Drag the bar to move the window, and use its close button. A form, a list, a Show's copy or a Handout also has a maximise button, or double-click the bar, and its edges resize it. A picture, a question or a notice only closes.
+  - A picture, a Show's copy or a Handout has **Close** at the bottom too. A large picture is drawn smaller to fit the screen, so its Close is always in reach.
   - Choosing a file or folder uses the system's own window.
   - A window is sized to what it holds, and grows when a choice shows more fields, as Lab Work's does. Past the height of the screen its fields scroll inside it, above its buttons, so a long form such as Export Pack's list of ticks can be read to its end.
   - **Save** keeps what you typed, and **Cancel** leaves things as they were. If you've changed anything, Cancel, the close button and Esc ask first, so a slip doesn't lose your work. A form that only works something out has Close in place of Cancel, and doesn't ask.

@@ -15,8 +15,9 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 import shiboken6
 from PySide6.QtCore import QEvent, Qt, QTimer
+from PySide6.QtGui import QColor, QPalette
 from PySide6.QtTest import QTest
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QScrollArea
 
 from ars_magica_manager import handout_layout, shows
 from ars_magica_manager.commands import Confirm, Form
@@ -32,10 +33,11 @@ from ars_magica_manager.gui.forms import (
 from ars_magica_manager.gui.handout_page import HandoutWindow
 from ars_magica_manager.gui.style.frame import CLOSE, GRIP, MAXIMISE, MINIMISE, TopStrip
 from ars_magica_manager.gui.style.ornaments import FleuronRule
-from ars_magica_manager.gui.themes import PALETTES
+from ars_magica_manager.gui.style.window_frame import Window
+from ars_magica_manager.gui.themes import PALETTES, SCRIPTORUM_DARK
 from ars_magica_manager.gui.window import MainWindow
-from ars_magica_manager.gui.window_frame import Window
 from ars_magica_manager.models import VELLUM
+from ars_magica_manager.paths import APP_NAME
 
 
 @pytest.fixture(scope="module")
@@ -56,7 +58,7 @@ def _window(app) -> MainWindow:
 def test_the_window_has_no_system_title_bar(app):
     window = _window(app)
     assert window.windowFlags() & Qt.WindowType.FramelessWindowHint
-    assert window.drag.title == "Armarius"
+    assert window.drag.title == APP_NAME
 
 
 def test_maximise_restores_when_pressed_again_and_close_closes(app):
@@ -135,7 +137,7 @@ def _popups() -> list:
 def test_every_popup_has_the_apps_title_bar(app):
     for popup in _popups():
         assert popup.windowFlags() & Qt.WindowType.FramelessWindowHint
-        assert popup.drag.title == "Armarius"
+        assert popup.drag.title == APP_NAME
         assert CLOSE in popup.window_buttons.buttons
 
 
@@ -165,16 +167,83 @@ def _viewers() -> list:
     ]
 
 
-def test_every_viewer_wears_the_apps_frame_with_its_title_as_heading(app):
-    for viewer, title in zip(
-        _viewers(), ["The Rhine", "Hilda", "The Ford (Vellum)"], strict=True
-    ):
+def test_every_viewer_wears_the_apps_frame(app):
+    for viewer in _viewers():
         assert viewer.windowFlags() & Qt.WindowType.FramelessWindowHint
-        assert viewer.drag.title == "Armarius"
+        assert viewer.drag.title == APP_NAME
         assert CLOSE in viewer.window_buttons.buttons
+
+
+def test_a_picture_and_a_copy_wear_their_title_as_heading(app):
+    picture, copy, _handout = _viewers()
+    for viewer, title in ((picture, "The Rhine"), (copy, "Hilda")):
         heading = viewer.column.itemAt(0).widget()
         assert heading.text() == title
         assert isinstance(viewer.column.itemAt(1).widget(), FleuronRule)
+
+
+def test_a_handout_has_no_heading_its_stationery_draws_its_title(app):
+    *_, handout = _viewers()
+    assert isinstance(handout.column.itemAt(0).widget(), QScrollArea)
+    assert handout.findChildren(FleuronRule) == []
+
+
+def test_a_copy_s_own_name_line_gives_way_to_its_heading(app):
+    words = "# Hilda\n\n*Magus of Bonisagus*\n\nWords."
+    copy = ShownCopy(shows.Shown("Hilda", words), PALETTES[0])
+    assert copy.text.toPlainText().split() == ["Magus", "of", "Bonisagus", "Words."]
+
+
+def test_a_copy_keeps_a_first_line_that_is_not_its_name_line(app):
+    words = "## Abilities\n\nWords."
+    copy = ShownCopy(shows.Shown("Hilda", words), PALETTES[0])
+    assert copy.text.toPlainText().split() == ["Abilities", "Words."]
+
+
+def test_a_copy_shown_under_another_title_keeps_the_record_s_name(app):
+    words = "# Hilda\n\nWords."
+    copy = ShownCopy(shows.Shown("A stranger at the gate", words), PALETTES[0])
+    assert copy.text.toPlainText().split() == ["Hilda", "Words."]
+
+
+def test_a_copy_with_no_title_has_no_empty_heading(app):
+    copy = ShownCopy(shows.Shown("", "Words."), PALETTES[0])
+    assert copy.column.itemAt(0).widget() is copy.text
+
+
+@pytest.mark.parametrize(
+    "palette", [PALETTES[0], SCRIPTORUM_DARK], ids=["light", "dark"]
+)
+def test_a_copy_s_words_lie_on_the_window_s_paper_in_its_ink(app, palette):
+    copy = ShownCopy(shows.Shown("Hilda", ""), palette)
+    bare = Window("Hilda", palette, None)
+    copy.show()
+    bare.show()
+    bare.resize(copy.size())
+    app.processEvents()
+    where = copy.text.geometry().center()
+    where = copy.text.parentWidget().mapTo(copy, where)
+    try:
+        seen = copy.grab().toImage().pixelColor(where)
+        assert seen == bare.grab().toImage().pixelColor(where)
+        ink = copy.text.palette().color(QPalette.ColorRole.Text)
+        assert ink.name() == QColor(palette["foreground"]).name()
+    finally:
+        copy.close()
+        bare.close()
+
+
+def test_esc_closes_each_viewer(app):
+    for viewer in _viewers():
+        viewer.show()
+        QTest.keyClick(viewer, Qt.Key.Key_Escape)
+        assert not viewer.isVisible()
+
+
+def test_a_window_s_title_as_written_keeps_its_brackets(app):
+    window = Window("A [i]Window[/i]", PALETTES[0], None, as_written=True)
+    assert window.windowTitle() == "A [i]Window[/i]"
+    assert window.add_heading("A [i]Window[/i]").text() == "A [i]Window[/i]"
 
 
 def test_a_viewer_closes_from_its_bar_and_from_its_close_button(app):
@@ -218,7 +287,7 @@ def test_a_bare_window_wears_the_apps_frame_and_closes(app):
     window = _Bare("A Window", PALETTES[0], None)
     window.show()
     assert window.windowFlags() & Qt.WindowType.FramelessWindowHint
-    assert window.drag.title == "Armarius"
+    assert window.drag.title == APP_NAME
     assert set(window.window_buttons.buttons) == {CLOSE}
     window.window_buttons.buttons[CLOSE].click()
     assert not window.isVisible()

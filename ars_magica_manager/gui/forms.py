@@ -78,6 +78,7 @@ from .markup_html import plain, to_html
 from .style.frame import CLOSE, keep_on_screen
 from .style.ornaments import InspectorFrame
 from .style.paper import lift
+from .style.window_frame import Window
 from .themes import Palette
 from .widgets import (
     ClickableCard,
@@ -91,7 +92,6 @@ from .widgets import (
     table_style,
     text,
 )
-from .window_frame import Window
 
 #: Shows a step's dialog and waits: Accepted or Rejected. The window's
 #: `ask`, which tests replace to answer without showing anything.
@@ -106,7 +106,7 @@ def _shown_text(value: object) -> str:
 
 
 class FormWindow(Window):
-    """A form as a window (window_frame.py): its title over a hedera
+    """A form as a window (style/window_frame.py): its title over a hedera
     rule, a body, an error line and its buttons (Cancel, then the
     action), asking before Cancel loses unsaved changes."""
 
