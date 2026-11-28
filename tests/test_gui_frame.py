@@ -28,8 +28,10 @@ from ars_magica_manager.gui.forms import (
     step_dialog,
 )
 from ars_magica_manager.gui.style.frame import CLOSE, GRIP, MAXIMISE, MINIMISE, TopStrip
+from ars_magica_manager.gui.style.ornaments import FleuronRule
 from ars_magica_manager.gui.themes import PALETTES
 from ars_magica_manager.gui.window import MainWindow
+from ars_magica_manager.gui.window_frame import Window
 
 
 @pytest.fixture(scope="module")
@@ -147,6 +149,29 @@ def test_forms_and_lists_maximise_and_questions_do_not(app):
     assert MAXIMISE not in confirm.window_buttons.buttons
     assert MAXIMISE not in notice.window_buttons.buttons
     assert not confirm.drag.maximises
+
+
+class _Bare(Window):
+    controls = (CLOSE,)
+
+
+def test_a_bare_window_wears_the_apps_frame_and_closes(app):
+    window = _Bare("A Window", PALETTES[0], None)
+    window.show()
+    assert window.windowFlags() & Qt.WindowType.FramelessWindowHint
+    assert window.drag.title == "Armarius"
+    assert set(window.window_buttons.buttons) == {CLOSE}
+    window.window_buttons.buttons[CLOSE].click()
+    assert not window.isVisible()
+
+
+def test_a_windows_heading_reads_its_title_over_the_rule(app):
+    window = Window("A [i]Window[/i]", PALETTES[0], None)
+    heading = window.add_heading("A [i]Window[/i]")
+    assert heading.text() == "A Window"
+    assert window.column.indexOf(heading) == 0
+    rule = window.column.itemAt(1).widget()
+    assert isinstance(rule, FleuronRule)
 
 
 def _form(cancel_label: str = "Cancel") -> FieldsDialog:

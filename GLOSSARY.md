@@ -628,6 +628,11 @@ A theme for one House, built on its House family's form, in the House's
 own colours, mark and texture, and in one mood, light or dark.
 _Avoid_: House skin, House palette
 
+**Window**:
+Anything the desktop opens over the main window (a form, list, question,
+notice or viewer), wearing the app's title bar.
+_Avoid_: Pop-up, dialog
+
 **Settings window**:
 The window the settings gear opens, holding the theme and the app's other
 settings.
