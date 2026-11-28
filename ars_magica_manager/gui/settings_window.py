@@ -40,7 +40,7 @@ from PySide6.QtWidgets import (
 from .. import virtual_tabletop
 from . import motion, pictures, sounds
 from .choices import OwnRows, paint_choice
-from .forms import Sheet
+from .forms import FormWindow
 from .style.frame import CLOSE
 from .style.liveries import GROUPS, THEMES, Theme
 from .style.pieces import heading as heading_font
@@ -218,7 +218,7 @@ class ThemeSelector(OwnRows):
         painter.end()
 
 
-class SettingsWindow(Sheet):
+class SettingsWindow(FormWindow):
     """The Settings window (see the module's docstring). `choose` applies
     a theme by name; `current` is the one in use."""
 

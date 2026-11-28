@@ -91,7 +91,7 @@ def test_a_long_abilitys_inspector_opens_it_in_full() -> None:
 
     [form] = ran
     window = _opened(form)
-    assert window.page.laid.title == "Hex"
+    assert window.handout.laid.title == "Hex"
     window.close()
 
 
@@ -140,7 +140,7 @@ def test_a_long_boons_inspector_opens_it_in_full() -> None:
 
     [form] = ran
     window = _opened(form)
-    assert window.page.laid.title == "Chase"
+    assert window.handout.laid.title == "Chase"
     window.close()
 
 
@@ -155,7 +155,7 @@ def test_a_long_hooks_inspector_opens_it_in_full() -> None:
 
     [form] = ran
     window = _opened(form)
-    assert window.page.laid.title == "Infants"
+    assert window.handout.laid.title == "Infants"
     window.close()
 
 
@@ -193,7 +193,7 @@ def test_the_add_ability_pickers_read_in_full_opens_a_long_entry(
     dialog.read_button.click()
 
     [window] = opened
-    assert window.page.laid.title == "Hex"
+    assert window.handout.laid.title == "Hex"
     assert not short_enabled
     assert dialog.search.text() == "Hex" and not dialog.result()
     dialog.close()
@@ -216,5 +216,5 @@ def test_the_add_boon_pickers_read_in_full_opens_a_long_entry(
     dialog.read_button.click()
 
     [window] = opened
-    assert window.page.laid.title == "Chase"
+    assert window.handout.laid.title == "Chase"
     dialog.close()

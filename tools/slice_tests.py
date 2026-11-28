@@ -287,6 +287,15 @@ AREA_TESTS: dict[str, tuple[str, ...]] = {
         "test_gui_edit_shared.py",
         "test_activity_picker.py",
     ),
+    # The frame every window wears: the frame tests, and the forms on it.
+    "ars_magica_manager/gui/style/window_frame.py": (
+        "test_gui_frame.py",
+        "test_dialog_frames.py",
+        "test_gui_edit_shared.py",
+    ),
+    # Every window in the desktop package wears that frame, whatever file
+    # a new one is in.
+    "ars_magica_manager/gui/": ("test_gui_window_guard.py",),
     "ars_magica_manager/commands.py": ("test_activity_picker.py",),
     "ars_magica_manager/tui/screens/steps.py": ("test_activity_picker.py",),
     "ars_magica_manager/tui/screens/pickers.py": ("test_activity_picker.py",),

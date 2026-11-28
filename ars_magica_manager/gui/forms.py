@@ -21,12 +21,8 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
-import shiboken6
-from PySide6.QtCore import QByteArray, QEvent, Qt
-from PySide6.QtGui import (
-    QColor,
-    QShowEvent,
-)
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QColor
 from PySide6.QtWidgets import (
     QAbstractItemView,
     QCheckBox,
@@ -73,30 +69,16 @@ from ..form_spec import DialogField, FieldError, ListEditor
 from ..forms import printing
 from ..handout_layout import Preview
 from ..markup import escape
-from ..paths import APP_NAME
 from ..shows import WITHDRAWN_NOTE
 from . import shields, sounds
 from .handout_copy import copy_window
 from .handout_page import preview_window
 from .handout_print import print_handout
 from .markup_html import plain, to_html
-from .style import snapping
-from .style.families import DIALOG
-from .style.frame import (
-    CLOSE,
-    MAXIMISE,
-    DragStrip,
-    Grips,
-    WindowButtons,
-    keep_on_screen,
-    native_frame_event,
-)
-from .style.ornaments import (
-    FleuronRule,
-    InspectorFrame,
-)
-from .style.paper import Paper, lift
-from .style.pieces import title as title_font
+from .style.frame import CLOSE, keep_on_screen
+from .style.ornaments import InspectorFrame
+from .style.paper import lift
+from .style.window_frame import Window
 from .themes import Palette
 from .widgets import (
     ClickableCard,
@@ -123,25 +105,10 @@ def _shown_text(value: object) -> str:
     return "" if value is None else str(value)
 
 
-class _Page(Paper):
-    """A dialog's sheet of paper, framed in its theme's look: in
-    Scriptorum ruled round its edge, with a flourish in each corner."""
-
-    def __init__(self, p: Palette) -> None:
-        super().__init__(p, DIALOG)
-
-
-#: The windows closed and waiting for Qt to delete them (_Sheet.exec).
-_closed: list[QDialog] = []
-
-
-class _Sheet(QDialog):
-    """A dialog on paper, as a window over the page: the app's title bar
-    (frame.py, in place of the system's), its title over a hedera rule, a
-    body, an error line and its buttons (Cancel, then the action)."""
-
-    #: The title bar's buttons; a window that can maximise also resizes.
-    controls: tuple[str, ...] = (MAXIMISE, CLOSE)
+class FormWindow(Window):
+    """A form as a window (style/window_frame.py): its title over a hedera
+    rule, a body, an error line and its buttons (Cancel, then the
+    action), asking before Cancel loses unsaved changes."""
 
     def __init__(
         self,
@@ -150,25 +117,8 @@ class _Sheet(QDialog):
         action: str,
         parent: QWidget | None,
     ) -> None:
-        super().__init__(parent)
-        self.setWindowTitle(plain(title))
-        self.setWindowFlags(Qt.WindowType.Dialog | Qt.WindowType.FramelessWindowHint)
-        self.p = p
-        page = self.page = _Page(p)
-        outer = QVBoxLayout(self)
-        outer.setContentsMargins(0, 0, 0, 0)
-        outer.addWidget(page)
-        sheet = QVBoxLayout(page)
-        sheet.setContentsMargins(0, 0, 0, 0)
-        sheet.setSpacing(0)
-        sheet.addLayout(self._title_bar())
-        self.column = QVBoxLayout()
-        self.column.setSpacing(8)
-        self.column.setContentsMargins(26, 6, 26, 18)
-        sheet.addLayout(self.column, 1)
-        self.heading = text(plain(title), p["heading"], title_font(17, p))
-        self.column.addWidget(self.heading)
-        self.column.addWidget(FleuronRule(p))
+        super().__init__(title, p, parent)
+        self.heading = self.add_heading(title)
         self.error = text("", p["text-error"], serif(12, italic=True), wrap=True)
         self.error.hide()
         self.cancel = QPushButton("Cancel")
@@ -176,18 +126,6 @@ class _Sheet(QDialog):
         self.save = QPushButton(action)
         self.save.setDefault(True)
         self.ask: Ask = lambda dialog: dialog.exec()
-
-    def exec(self) -> int:
-        """Show the window and wait. exec() hands a dialog to Python, away
-        from its parent, and a window refers to itself, so the collector
-        would free it with the buttons it holds and delete them twice: it
-        is kept in `_closed` until Qt has deleted it, which is safe. What
-        it holds can still be read until the event loop next runs."""
-        _closed[:] = [sheet for sheet in _closed if shiboken6.isValid(sheet)]
-        result = super().exec()
-        _closed.append(self)
-        self.deleteLater()
-        return result
 
     def unsaved(self) -> bool:
         """Whether leaving now would lose changes: a window that tracks
@@ -211,48 +149,6 @@ class _Sheet(QDialog):
         question.cancel.setText("Keep Editing")
         return self.ask(question) == QDialog.DialogCode.Accepted
 
-    def _title_bar(self) -> QHBoxLayout:
-        """The app's name in the middle (drag it to move the window) and
-        the window's own buttons, as the main window has."""
-        maximises = MAXIMISE in self.controls
-        bar = QHBoxLayout()
-        bar.setContentsMargins(12, 4, 8, 0)
-        self.drag = DragStrip(self, self.p, APP_NAME, maximises)
-        bar.addWidget(self.drag, 1)
-        self.window_buttons = WindowButtons(self, self.p, kinds=self.controls)
-        bar.addWidget(self.window_buttons, 0, Qt.AlignmentFlag.AlignTop)
-        if maximises:
-            self.grips = Grips(self)
-        return bar
-
-    def showEvent(self, event: QShowEvent) -> None:
-        """Every window opens fitted to its screen, where Qt put it (over
-        the window it was opened from): a form sized for a large screen
-        would otherwise run off a small or highly scaled one."""
-        snapping.make_snappable(self)
-        if not self.isMaximized():
-            keep_on_screen(self)
-        super().showEvent(event)
-
-    def nativeEvent(
-        self, eventType: QByteArray | bytes | bytearray | memoryview, message: int
-    ) -> tuple[bool, int]:
-        """Fills the screen's work area when maximised (snapping.py)."""
-        result = native_frame_event(self, eventType, message)
-        if result is not None:
-            return True, result
-        return super().nativeEvent(eventType, message)  # pyright: ignore[reportReturnType]
-
-    def changeEvent(self, event: QEvent) -> None:
-        """Maximise turns to restore (and back) as the window does."""
-        if event.type() == QEvent.Type.WindowStateChange:
-            snapping.make_snappable(self)
-            if MAXIMISE in self.controls:
-                button = self.window_buttons.buttons[MAXIMISE]
-                button.update()
-                button.setToolTip("Restore" if self.isMaximized() else "Maximise")
-        super().changeEvent(event)
-
     def finish(self) -> None:
         """Put the error line and the buttons under the body."""
         self.column.addWidget(self.error)
@@ -268,17 +164,12 @@ class _Sheet(QDialog):
         self.error.show()
 
 
-#: The paper window the forms are built on, for a window of another kind
-#: (the Host for Players window) to share its look and title bar.
-Sheet = _Sheet
-
-
 #: The widest a form opened as a window grows to fit its labels, and the
 #: tallest it grows to fit its fields.
 WIDEST_WINDOW, TALLEST_WINDOW = 1100, 820
 
 
-class FieldsDialog(_Sheet):
+class FieldsDialog(FormWindow):
     """A form from `fields`; `values` holds what it saved, after exec()
     returns Accepted. `validate` and `live` are commands.Form's."""
 
@@ -584,7 +475,7 @@ class FieldsDialog(_Sheet):
         """Open the form's Preview of the values as they stand, as a
         window over it; nothing is saved."""
         assert self.preview is not None
-        self.ask(preview_window(self.preview(self._as_they_stand()), self))
+        self.ask(preview_window(self.preview(self._as_they_stand()), self.p, self))
 
     def try_save(self) -> None:
         """Save if every field parses and `validate` allows it, else say
@@ -785,7 +676,7 @@ class _ListField(QWidget):
 READ_IN_FULL = "Read in full"
 
 
-class ChooseDialog(_Sheet):
+class ChooseDialog(FormWindow):
     """A searchable list of `choices`, with the highlighted one's details
     beside it, and Read in full under them for an entry that can be read
     (Choice.read); `chosen` holds the value picked, after exec() returns
@@ -957,7 +848,7 @@ class ChooseDialog(_Sheet):
         opens in, over the picker; closing it leaves the list as it was."""
         choice = self._highlighted()
         if choice is not None and choice.read is not None:
-            copy_window(choice.read(), self).exec()
+            copy_window(choice.read(), self.p, self).exec()
 
     def choose(self, label: str) -> None:
         """Highlight the (first) listed entry called `label`."""
@@ -977,7 +868,7 @@ class ChooseDialog(_Sheet):
         self.accept()
 
 
-class CardsDialog(_Sheet):
+class CardsDialog(FormWindow):
     """A form's check fields as `cards` (commands.FormCard) beside an
     inspector: each card's switch sets its field, and clicking a card shows
     it in the inspector, with a switch of its own. `values` holds what it
@@ -1126,7 +1017,7 @@ def _scrolled_if_long(label: QLabel, words: str) -> QWidget:
 CONFIRM_WIDTH = 460
 
 
-class ConfirmDialog(_Sheet):
+class ConfirmDialog(FormWindow):
     """A yes-or-no question; Accepted means yes."""
 
     controls = (CLOSE,)
@@ -1175,7 +1066,7 @@ def notice_title(title: str) -> str:
     return f"{action}:\n{rest}"
 
 
-class NoticeDialog(_Sheet):
+class NoticeDialog(FormWindow):
     """A message on paper with an OK button: what a step refused, or the
     notes after it."""
 
@@ -1224,7 +1115,7 @@ def step_dialog(
     if isinstance(step, ChooseFile):
         return file_dialog(step, parent)
     if isinstance(step, Form) and step.reading is not None:
-        window = copy_window(step.reading, parent)
+        window = copy_window(step.reading, p, parent)
         if step.printed is not None:
             offer_pdf(window, window.buttons_row, step.printed, p, ask)
         return window

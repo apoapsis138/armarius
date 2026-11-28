@@ -12,6 +12,7 @@ import pytest
 pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
+from gui_steps import assert_framed
 from PySide6.QtWidgets import QApplication, QPushButton
 
 from ars_magica_manager import commands
@@ -81,8 +82,9 @@ def test_a_long_virtues_inspector_opens_it_in_full_on_vellum() -> None:
     assert isinstance(form, commands.Form)
     window = step_dialog(form, SCRIPTORUM, None)
     assert isinstance(window, HandoutWindow)
-    assert window.page.laid.title == "Verditius Elder Runes"
+    assert window.handout.laid.title == "Verditius Elder Runes"
     assert window.windowTitle() == "Verditius Elder Runes (Minor Virtue)"
+    assert_framed(window)
     window.close()
 
 
@@ -119,7 +121,8 @@ def test_the_pickers_read_in_full_opens_a_long_entry_and_keeps_the_picker(
     dialog.read_button.click()
 
     [window] = opened
-    assert window.page.laid.title == "Verditius Elder Runes"
+    assert window.handout.laid.title == "Verditius Elder Runes"
+    assert_framed(window)
     assert dialog.search.text() == "Elder Runes" and not dialog.result()
     dialog.close()
 

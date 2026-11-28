@@ -23,7 +23,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from PySide6.QtCore import QPoint, QPointF, QRectF, Qt
+from PySide6.QtCore import QPoint, QPointF, QRectF, QSize, Qt
 from PySide6.QtGui import (
     QColor,
     QContextMenuEvent,
@@ -78,10 +78,12 @@ from .figures import linked_value
 from .forms import offer_pdf
 from .handout_page import HandoutWindow
 from .style import gilding
+from .style.frame import CLOSE
 from .style.ornaments import ShortRule
 from .style.paper import paper
 from .style.pieces import heading as heading_font
 from .style.pieces import heading_ink
+from .style.window_frame import Window
 from .themes import Palette
 from .widgets import edit_button, serif, text
 
@@ -570,69 +572,114 @@ def scene_card(
 
 
 #: The most a shown picture is drawn at, in pixels: a larger one is scaled
-#: down to fit; a smaller one is drawn at its own size.
+#: down to fit (less on a screen too small for it); a smaller one is drawn
+#: at its own size.
 PICTURE_FIT = (900, 700)
 
+#: The least a large picture is scaled to, however small its screen.
+PICTURE_LEAST = QSize(64, 64)
 
-class ShownPicture(QDialog):
+
+class ShownPicture(Window):
     """A shown picture, as it was shown: at its own size, or scaled down
-    to fit PICTURE_FIT."""
+    to fit PICTURE_FIT and its screen, under its title, with Close. It
+    only closes: a picture drawn at a fixed size has nothing to maximise
+    into."""
 
-    def __init__(self, shown: shows.Shown, parent: QWidget | None = None) -> None:
-        super().__init__(parent)
+    controls = (CLOSE,)
+
+    def __init__(
+        self, shown: shows.Shown, p: Palette, parent: QWidget | None = None
+    ) -> None:
+        super().__init__(shown.title, p, parent, as_written=True)
         self.setObjectName("shown-picture")
-        self.setWindowTitle(shown.title)
-        column = QVBoxLayout(self)
+        if shown.title:  # a Scene's map may come with none
+            self.add_heading(shown.title)
         picture = QPixmap()
         picture.loadFromData(shown.picture or b"")
         self.picture = QLabel()
         self.picture.setObjectName("picture")
+        self.column.addWidget(self.picture)
+        #: The buttons under it (Save as PDF joins Close here).
+        self.buttons_row = self.add_close_row()
         if not picture.isNull():
-            if picture.width() > PICTURE_FIT[0] or picture.height() > PICTURE_FIT[1]:
+            fit = self._fit()
+            if picture.width() > fit.width() or picture.height() > fit.height():
                 picture = picture.scaled(
-                    *PICTURE_FIT,
+                    fit,
                     Qt.AspectRatioMode.KeepAspectRatio,
                     Qt.TransformationMode.SmoothTransformation,
                 )
             self.picture.setPixmap(picture)
         else:
             self.picture.setText("This picture can't be drawn.")
-        column.addWidget(self.picture)
-        #: The buttons under it (Save as PDF).
-        self.buttons_row = QHBoxLayout()
-        self.buttons_row.addStretch(1)
-        column.addLayout(self.buttons_row)
+
+    def _fit(self) -> QSize:
+        """The most the picture may take: PICTURE_FIT, or less where the
+        screen's free area, less the window's bar, heading and Close row
+        round the picture, is smaller, so the whole window fits on it (a
+        Save as PDF the opener adds later sits in Close's row, adding no
+        height); never so small the picture can't be drawn at all."""
+        layout = self.layout()
+        assert layout is not None
+        whole = layout.sizeHint()
+        empty = self.picture.sizeHint()
+        margins = self.column.contentsMargins()
+        # The screen it opens on: its opener's (Window.showEvent).
+        screen = (self.parentWidget() or self).screen()
+        room = screen.availableGeometry().size() - QSize(
+            margins.left() + margins.right(), whole.height() - empty.height()
+        )
+        return QSize(*PICTURE_FIT).boundedTo(room.expandedTo(PICTURE_LEAST))
 
 
-#: The size a shown record's copy opens at, in pixels.
+def _without_name_line(words: str, title: str) -> str:
+    """A copy's Markdown without the "# Name" line its sheet opens with
+    (markdown_sheet) when the window's heading, `title`, says the same; a
+    Show titled otherwise keeps the record's name."""
+    first, _, rest = words.partition("\n")
+    if first.startswith("# ") and first[2:].strip() == title.strip():
+        return rest.lstrip("\n")
+    return words
+
+
+#: The size a shown record's copy's sheet opens at, in pixels; the window
+#: grows by the room its title bar and heading take (Window.head_room).
 COPY_SIZE = (640, 720)
 
 
-class ShownCopy(QDialog):
+class ShownCopy(Window):
     """A shown record's copy, as it was shown: its sheet, read-only, in a
-    window of its own, which the pane closes if the Show is withdrawn. (A
-    written Handout's copy opens on its Stationery: handout_copy.)"""
+    window of its own under its title, with Close, which the pane closes
+    if the Show is withdrawn. (A written Handout's copy opens on its
+    Stationery: handout_copy.)"""
 
-    def __init__(self, shown: shows.Shown, parent: QWidget | None = None) -> None:
-        super().__init__(parent)
+    def __init__(
+        self, shown: shows.Shown, p: Palette, parent: QWidget | None = None
+    ) -> None:
+        super().__init__(shown.title, p, parent, as_written=True)
         self.setObjectName("shown-copy")
-        self.setWindowTitle(shown.title)
-        self.resize(*COPY_SIZE)
-        column = QVBoxLayout(self)
+        if shown.title:
+            self.add_heading(shown.title)
+        self.resize(COPY_SIZE[0], COPY_SIZE[1] + self.head_room())
         self.text = QTextBrowser()
         self.text.setObjectName("copy")
         self.text.setOpenLinks(False)
+        # The window's paper and ink, never the system's white box.
+        self.text.setStyleSheet(
+            "QTextBrowser { background:transparent; border:none;"
+            f" color:{p['foreground']} }}"
+        )
+        self.text.viewport().setAutoFillBackground(False)
         # Markdown only: any HTML in a record's words is never drawn as such.
         self.text.document().setMarkdown(
-            shown.text,
+            _without_name_line(shown.text, shown.title),
             QTextDocument.MarkdownFeature.MarkdownDialectGitHub
             | QTextDocument.MarkdownFeature.MarkdownNoHTML,
         )
-        column.addWidget(self.text)
-        #: The buttons under it (Save as PDF).
-        self.buttons_row = QHBoxLayout()
-        self.buttons_row.addStretch(1)
-        column.addLayout(self.buttons_row)
+        self.column.addWidget(self.text, 1)
+        #: The buttons under it (Save as PDF joins Close here).
+        self.buttons_row = self.add_close_row()
 
 
 #: One character of a Roll request, as its card shows it: the name,
@@ -1549,14 +1596,16 @@ class ChroniclePane(QWidget):
         self.open_show_number = entry.number
         form = show_forms.copy_form(found)
         if found.picture is not None:
-            window: ShownPicture | ShownCopy | HandoutWindow = ShownPicture(found, self)
+            window: ShownPicture | ShownCopy | HandoutWindow = ShownPicture(
+                found, self.p, self
+            )
             self.shown_picture = window
         elif form.reading is not None:
             # A written Handout: on its Stationery, as its Preview draws it.
-            window = handout_copy.copy_window(form.reading, self)
+            window = handout_copy.copy_window(form.reading, self.p, self)
             self.shown_copy = window
         else:
-            window = ShownCopy(found, self)
+            window = ShownCopy(found, self.p, self)
             self.shown_copy = window
         if form.printed is not None:
             number = entry.number
@@ -1596,7 +1645,7 @@ class ChroniclePane(QWidget):
             return
         title = str(entry.body.get("title") or "")
         shown = shows.Shown(title, picture=found, picture_name=name)
-        self.shown_picture = ShownPicture(shown, self)
+        self.shown_picture = ShownPicture(shown, self.p, self)
         self.shown_picture.open()
 
     def compose(self) -> None:

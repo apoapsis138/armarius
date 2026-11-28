@@ -12,7 +12,8 @@ import pytest
 pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PySide6.QtCore import Qt
+from gui_steps import assert_framed
+from PySide6.QtCore import QPoint, Qt
 from PySide6.QtGui import QColor, QFontMetricsF, QPixmap
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import (
@@ -38,7 +39,8 @@ from ars_magica_manager.gui.handout_page import (
 )
 from ars_magica_manager.gui.saga_content import SagaContentPage
 from ars_magica_manager.gui.style.illumination import IlluminatedInitial
-from ars_magica_manager.gui.themes import SCRIPTORUM
+from ars_magica_manager.gui.style.window_frame import Window
+from ars_magica_manager.gui.themes import SCRIPTORUM, SCRIPTORUM_DARK, Palette
 from ars_magica_manager.models import (
     PROCLAMATION,
     STATIONERY,
@@ -147,7 +149,34 @@ def test_each_stationery_draws_each_tag_s_block(
 
 def test_the_window_s_title_keeps_bracketed_words(app: QApplication) -> None:
     laid = layout.lay_out("Writ of the [Tower] Guard", VELLUM, "")
-    assert HandoutWindow(laid).windowTitle() == "Writ of the [Tower] Guard (Vellum)"
+    assert (
+        HandoutWindow(laid, SCRIPTORUM).windowTitle()
+        == "Writ of the [Tower] Guard (Vellum)"
+    )
+
+
+@pytest.mark.parametrize(
+    "palette", [SCRIPTORUM, SCRIPTORUM_DARK], ids=["light", "dark"]
+)
+def test_the_window_s_margin_is_the_theme_s_paper(
+    app: QApplication, palette: Palette
+) -> None:
+    laid = layout.lay_out("The ford", VELLUM, "Words.")
+    window = HandoutWindow(laid, palette)
+    bare = Window("The ford (Vellum)", palette, None)
+    window.show()
+    bare.show()
+    bare.resize(window.size())
+    # What lies round and behind the Handout's page: only the window's paper.
+    window.handout.hide()
+    app.processEvents()
+    where = QPoint(window.width() // 2, window.height() // 2)
+    seen = window.grab().toImage().pixelColor(where)
+    try:
+        assert seen == bare.grab().toImage().pixelColor(where)
+    finally:
+        window.close()
+        bare.close()
 
 
 def test_a_title_that_looks_like_html_is_drawn_as_written(app: QApplication) -> None:
@@ -239,7 +268,8 @@ def test_the_handout_form_s_preview_button_draws_it_unsaved(
     _clicked(preview)
     (window,) = asked
     assert isinstance(window, HandoutWindow)
-    shown = window.page.laid
+    assert_framed(window)
+    shown = window.handout.laid
     assert shown.title == "Of the tower"
     assert shown.stationery.name == PROCLAMATION
     assert [b.kind for b in shown.blocks] == ["heading", "initial"]

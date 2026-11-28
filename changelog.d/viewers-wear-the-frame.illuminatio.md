@@ -1,0 +1,1 @@
+**Every viewer wears the app's frame.** A shown picture, a Show's copy and a Handout open with the app's title bar on the theme's paper. A picture or copy has its title as a heading, once; a Handout's stays on its Stationery. Each has **Close** at the bottom, and a large picture shrinks to fit a short screen.

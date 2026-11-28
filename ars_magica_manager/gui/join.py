@@ -46,7 +46,7 @@ from ..remote.identity import NoKeychainError
 from ..remote.invites import decode_invite
 from ..remote.seat_session import InviteRefused, SeatEnded, SeatSession
 from ..remote.secure import ChannelError
-from .forms import Sheet
+from .forms import FormWindow
 from .themes import Palette
 from .widgets import serif, text
 
@@ -110,14 +110,14 @@ def offers_update(error: Exception) -> bool:
     )
 
 
-def update_button(sheet: Sheet) -> QPushButton:
+def update_button(window: FormWindow) -> QPushButton:
     """Update, under a refusal that offers it (offers_update): it opens the
     app's Releases page. Hidden until then."""
     button = QPushButton("Update")
     button.setToolTip("Open the app's Releases page, to download the host's version")
     button.clicked.connect(lambda: QDesktopServices.openUrl(QUrl(updates.RELEASES_URL)))
     button.hide()
-    sheet.column.addWidget(button, 0, Qt.AlignmentFlag.AlignLeft)
+    window.column.addWidget(button, 0, Qt.AlignmentFlag.AlignLeft)
     return button
 
 
@@ -130,7 +130,7 @@ def _busy[T](work: Callable[[], T]) -> T:
         QGuiApplication.restoreOverrideCursor()
 
 
-class JoinWindow(Sheet):
+class JoinWindow(FormWindow):
     """The first join (see the module's docstring). Accepted means the
     Player is signed in: `session` holds the conversation."""
 
@@ -379,7 +379,7 @@ class JoinWindow(Sheet):
         super().reject()
 
 
-class PasscodeWindow(Sheet):
+class PasscodeWindow(FormWindow):
     """Signing in again to a Joined game: the passcode only."""
 
     def __init__(
@@ -442,7 +442,7 @@ class PasscodeWindow(Sheet):
         self.adjustSize()  # room for the note's lines
 
 
-class ChangePasscodeWindow(Sheet):
+class ChangePasscodeWindow(FormWindow):
     """Change Passcode: the current one, then the new one twice. The new
     one is checked here and only its scrambled form is sent (ADR 0013)."""
 
